@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rubik+Dirt&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/typicons/2.0.9/typicons.css" rel="stylesheet">
+    <title>Alix.rocks</title>
+
+    
+     <!-- update the version number as needed -->
+     <!--<script defer src="/__/firebase/9.9.3/firebase-app-compat.js"></script>-->
+     <!-- include only the Firebase features as you need -->
+     <!--<script defer src="/__/firebase/9.9.3/firebase-auth-compat.js"></script>
+     <script defer src="/__/firebase/9.9.3/firebase-database-compat.js"></script>
+     <script defer src="/__/firebase/9.9.3/firebase-firestore-compat.js"></script>
+     <script defer src="/__/firebase/9.9.3/firebase-functions-compat.js"></script>
+     <script defer src="/__/firebase/9.9.3/firebase-messaging-compat.js"></script>
+     <script defer src="/__/firebase/9.9.3/firebase-storage-compat.js"></script>
+     <script defer src="/__/firebase/9.9.3/firebase-analytics-compat.js"></script>
+     <script defer src="/__/firebase/9.9.3/firebase-remote-config-compat.js"></script>
+     <script defer src="/__/firebase/9.9.3/firebase-performance-compat.js"></script>-->
+   
+       <!--initialize the SDK after all desired features are loaded, set useEmulator to false
+       to avoid connecting the SDK to running emulators.-->
+     
+     <!--<script defer src="/__/firebase/init.js?useEmulator=false"></script>-->
+   
+  </head>
+  <body>
+  <style name="general">
+
+    body{
+      background: #000;
+      color: #800080;
+    }
+    /* h1 font-size: 36 - 38*/
+    h1{
+      font-family: 'Indie Flower', cursive;
+      font-size: calc(35.53px + 0.19vw);
+    }
+    /* h2 font-size: 26 - 28*/
+    h2, .h2like{
+      font-family: 'Rubik Dirt', cursive;
+      font-size: calc(25.53px + 0.19vw);
+      line-height:1.2em;
+      margin: 1.6em 0 .9em;
+      font-weight: 400;
+    }
+    /* h3 font-size: 20 - 22*/
+    h3{
+      font-family: 'Nunito', sans-serif;
+      font-size: calc(19.53px + 0.19vw);
+      font-weight: 800;
+      line-height:1.4em;
+      margin: 1.6em 0 .9em;
+    }
+    /* p font-size: 16 - 18*/
+    p{
+      font-family: 'Nunito', sans-serif;
+      font-size: calc(15.53px + 0.19vw);
+      font-weight: 600;
+      line-height:1.2em;
+      margin: .6em 0 1em;
+    }
+    a{
+      color:rgba(255,255,0,.5);
+    }
+    a:hover{
+      cursor: pointer;
+      color:rgba(255,255,0,.8);
+    }
+    /*label font-size: 16 - 20*/
+    label, .label{
+      font-family: 'Nunito', sans-serif;
+      font-size: calc(15.06px + 0.38vw);
+      font-weight: 700;
+    }
+    *{font-family: 'Nunito', sans-serif;
+    }
+    .home{text-align: center;}
+    .bottomButton{
+      position:fixed;
+      bottom: 2px;
+      border-top: 1px solid rgba(128,0,128,.6);
+      border-left: 1px solid rgba(128,0,128,.6);
+      border-bottom: 4px solid rgba(128,0,128,.6);
+      border-right: 3px solid rgba(128,0,128,.6);
+      border-radius: 5px;
+      padding: 3px;
+      color:rgba(128,0,128,.8);
+      background-color: #000;
+      line-height:1;
+      text-align: center;
+      font-size: calc(15.06px + 0.38vw);
+    }
+    .bottomButton:hover{
+      background-color: rgba(128,0,128,.2);
+    }
+    .backHome{
+      right: 2px;
+    }
+    .backTop{
+      right: 34px;
+    }
+    .chevronTop{
+      display: inline-block;
+      transform: rotate(270deg);
+    }
+  </style>
+  <script name="general">
+    //ancienne version
+    /*function backHome(){
+      if(document.getElementById('SectPageToy').style.display == "block"){
+        document.getElementById('sureBackHome').style.display = "block";
+        document.getElementById('coverSureBackHome').style.display = "block";
+      } else{
+        var sectionPageAll = document.querySelectorAll('.sectionPage');
+        for(let i = 0; i < sectionPageAll.length; i++){
+          sectionPageAll[i].style.display = "none";
+        }
+        document.getElementById('home').style.display = "block";
+        var menuSectAll = document.querySelectorAll('.menuSect');
+      for(let i = 0; i < menuSectAll.length; i++){
+          menuSectAll[i].checked = false;
+        }
+      }
+    }*/
+    //nouvelle version
+    function backHome(){
+      if(document.getElementById('SectPageToy').style.display == "block"){
+        document.getElementById('sureBackHome').style.display = "block";
+        document.getElementById('coverSureBackHome').style.display = "block";
+      } else{
+        history.go(0);
+        window.scrollTo({ top: 0});
+      }
+    }
+    /*function sureBackHome(){
+      var sectionPageAll = document.querySelectorAll('.sectionPage');
+      for(let i = 0; i < sectionPageAll.length; i++){
+        sectionPageAll[i].style.display = "none";
+      }
+      document.getElementById('home').style.display = "block";
+      var menuSectAll = document.querySelectorAll('.menuSect');
+      for(let i = 0; i < menuSectAll.length; i++){
+        menuSectAll[i].checked = false;
+      }
+    }*/
+    function noBackHome(){
+      document.getElementById('sureBackHome').style.display = "none";
+      document.getElementById('coverSureBackHome').style.display = "none";
+    }
+    function backTop(){
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+  <!--HomePage-->
+    <!--<input type="file" id="photo">
+    <button onclick="uploadImage()">Upload Image</button>-->
+    <div class="home" id="home">
+      <h1>Whatever you think you're doing here,<br>WELCOME!</h1>
+      <h3>That's my space, my mind, my shoes,...<br>Be warned, your insurances don't cover that kind of trauma.</h3>
+      <p>Yeah, that's the only trigger warning you'll get...</p>
+      <div>
+        <h2>Shit of the day</h2>
+        <div class="SotD" id="SotD" onclick="SotD()">
+          <p id="SotDp">Click here to get what you deserve</p>
+        </div>
+      </div>
+      <h2>Your other choices</h2>
+      <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage()" id="Wrote"><label for="Wrote" class="menuSectLabel">I wrote, you read</label></input>
+      <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage()" id="Shit"><label for="Shit" class="menuSectLabel">Quotes, Memes and Shit<br>to make us feel better, or worst</label></input>
+      <input type="radio" name="menuSect" class="menuSect" onclick="showPWfield()" id="Toy"><label for="Toy" class="menuSectLabel" id="ToyLabel">My Toy's training<br><span>(password protected)</span></label></input>
+      <div class="PWfield" id="PWfield">
+        <label class="PWlabel">What's the magid word?</label><div class="inputEye"><input type="password" class="PWinput" id="PWinput" placeholder="The magic word is..."><div class="diveye" onclick="showPW()"><span class="typcn typcn-eye-outline eye"></span><span class="typcn typcn-minus slash" id="slash"></span></div></input></div>
+        <button class="PWbtn" onclick="PWtoPage()"><p>Let's hope you're right!</p></button>
+        <p class="h2like" id="wrong">Wrong!</p>
+      </div>
+    </div>
+    <div class="bottomButton backHome" onclick="backHome()" title="Let's go back home!"><span class="typcn typcn-home"></span></div>
+  <style name="HomePage">
+    .PWfield{
+      visibility: hidden;
+    }
+    .PWfield.visible{
+      visibility: visible;
+    }
+    .inputEye{
+      position: relative;
+      width: fit-content;
+      margin: auto;
+    }
+    .PWinput{
+      background: rgba(128,0,128,.2);
+      border: 2px solid rgba(128,0,128,.7);
+      border-radius: 2px;
+      color: rgba(128,0,128,.9);
+      appearance: none;
+      margin:3px;
+      position: relative;
+    }
+    .PWinput:focus{
+      outline: 1px solid rgba(255,255,255,.5);
+    }
+    .PWinput::placeholder{
+      font-size: 14px;
+      color: rgba(128,0,128,.7);
+    }
+    .diveye{
+      position: absolute;
+      top: 3px;
+      right: 5px;
+    }
+    .eye{
+      position: absolute;
+      right: 2px;
+      color: rgba(128,0,128,.7);
+    }
+    .slash{
+      position: absolute;
+      right: 2px;
+      transform: rotate(315deg) translate(1px, -0.5px);
+      color: rgba(128,0,128,.9);
+      font-size: 18px;
+    }
+    .PWbtn{
+      width:fit-content;
+      border-top: 1px solid rgba(128,0,128,.8);
+      border-left: 1px solid rgba(128,0,128,.8);
+      border-bottom: 4px solid rgba(128,0,128,.8);
+      border-right: 3px solid rgba(128,0,128,.8);
+      border-radius: 5px;
+      padding: 3px 5px;
+      text-align: center;
+      background: #000;
+      color: rgba(128,0,128,.9);
+      margin:2px;
+    }
+    .PWbtn p{
+      margin:0;
+    }
+    .PWbtn:hover{
+      background: rgba(128,0,128,.4);
+      cursor: pointer;
+    }
+    #wrong{
+      visibility: hidden;
+    }
+    
+    .SotD{
+      display: flex;
+      width:200px;
+      min-height: 200px;
+      height: fit-content;
+      border-top: 1px solid rgba(128,0,128,.8);
+      border-left: 1px solid rgba(128,0,128,.8);
+      border-bottom: 4px solid rgba(128,0,128,.8);
+      border-right: 3px solid rgba(128,0,128,.8);
+      border-radius: 5px;
+      margin:auto;
+      padding:5px;
+      font-size: 18px;
+      opacity: 0.8;
+    }
+    .SotD:hover{
+      cursor: pointer;
+    }
+    .SotD p{
+      margin: auto;
+    }
+    .sectionPage{display:none;}
+    input.menuSect{display:none;}
+    .menuSectLabel{
+      display: block;
+      width:fit-content;
+      border-top: 1px solid rgba(128,0,128,.8);
+      border-left: 1px solid rgba(128,0,128,.8);
+      border-bottom: 4px solid rgba(128,0,128,.8);
+      border-right: 3px solid rgba(128,0,128,.8);
+      border-radius: 5px;
+      padding: 3px 5px;
+      margin: 15px auto;
+      text-align: center;
+      background: #000;
+      color: rgba(128,0,128,.9);
+    }
+    .menuSectLabel:hover{
+      background-color: rgba(128,0,128,.4);
+      cursor: pointer;
+    }
+    .menuSectLabel.toychecked{
+      background-color: rgba(128,0,128,.5);
+    }
+    .menuSectLabel span{
+      font-size: calc(1em - 2px);
+      font-weight: 400;
+    }
+  </style>
+  <script name="HomePage">
+     
+    function toSectPage(){
+      var menuSectAll = document.querySelectorAll('.menuSect');
+      var menuSectLabelAll = document.querySelectorAll('.menuSectLabel');
+      var sectionPageAll = document.querySelectorAll('.sectionPage');
+      for(let i = 0; i < menuSectAll.length; i++){
+        sectionPageAll[i].style.display = "none";
+        if(menuSectAll[i].checked == true){
+          sectionPageAll[i].style.display = "block";
+          document.getElementById('home').style.display = "none";
+          window.scrollTo({ top: 0});
+        }
+      }
+    }
+
+    function showPWfield(){
+      document.getElementById('PWfield').classList.toggle('visible');
+      document.getElementById('ToyLabel').classList.toggle('toychecked');
+    }
+    function showPW() {
+      var PW = document.getElementById("PWinput");
+      if (PW.type === "password") {
+        PW.type = "text";
+        document.getElementById('slash').style.visibility = "hidden";
+      } else {
+        PW.type = "password";
+        document.getElementById('slash').style.visibility = "visible";
+      }
+    }
+    const textbox = document.getElementById("PWinput");
+    textbox.addEventListener("keypress", function onEvent(event) {
+      if (event.key === "Enter") {
+        PWtoPage();
+      }
+    });
+    function PWtoPage(){
+      if(document.getElementById('PWinput').value == "Mstrplzuseme"){
+        document.getElementById('wrong').style.visibility = "hidden";
+        document.getElementById('home').style.display = "none";
+        document.getElementById('SectPageToy').style.display = "block";
+        window.scrollTo({ top: 0});
+      } else{
+        document.getElementById('wrong').style.visibility = "visible";
+      }
+    }
+    //Shit of the Day
+    var QMS_Coffee = [
+      "There is no use crying over spilled milk...<br>\nSpilled coffee, however, may get you stabbed.",
+      "I'm just sayin', everyone that confuses correlation with causation eventually ends up dead.",
+      "Doctors are just scamming you if they say you have internal bleeding.<br>\nThat's where blood is supposed to be.",
+      "The secret to a happy life is to let me drink my coffee BEFORE you talk to me.",
+      "New research suggests drinking coffee in the morning helps others live longer.",
+      "Si tu mets du poulet et des œufs dans la même recette;<br>\nça fait un plat bi-générationnel.",
+      "By replacing your morning coffee with green tea, you can lose up to 87% of what little joy you still have left in your life.",
+      "Coffee is my love language.<br>\nIf you love me, you get me coffee.<br>\nIf you get me coffee, I love you.",
+      "I'm at that point in my life where I can tell you what date or day it is,\nbut not both.",
+      "Things don't really get better.<br>\nYou just get used to them.",
+      "I'm writing a novel<br>\nand I just can't wait to read it!",
+      "What had gotten into you and why wasn't it me?",
+      "I have learned two very important lessons in my life.<br>\nI don't remember the first one, but the second one is to write everything down.",
+      "They say you will eat around 23 spiders in your lifetime.<br>\nBut really you can eat as many as you want.<br>\nTreat yourself, you deserve it.",
+      "I'm at a place in my life where errands count as going out.",
+      "Surtout n'oubliez pas:<br>\nCette nuit on change de jour.<br>\nÀ minuit, il sera demain.",
+      "What's the difference between a prison and a CHSLD?<br>\nThey both watch you pee and shit, but only one will wipe you afterward.",
+      "What's the difference between a prison and a CHSLD?<br>\nThey both make you eat balanced but tasteless food, but only one will spoon-feed it to you.",
+      "What's the difference between a prison and a CHSLD?<br>\nThey both choose what clothes you wear, but only one will help you put them on.",
+      "What's the difference between daycare and CHSLD?<br>\nIf you make a sex joke, they actually get it.",
+      "Shit makes flowers grow.",
+      "You are unique.<br>\nJust like everyone else.",
+      'How good do you have to be to be considered a "good person"?',
+      "My doctor told me to start killing people.<br>\nWell not in those exact words.<br>\nSaid I had to reduce stress in my life.<br>\nSame thing.",
+      "Tradition is just peer pressure from dead people.",
+      "Paranormal romance has taught me that you can convince any one to screw up their whole life with the sole promise of being supernaturally screwed their whole life.",
+      "Adults are probably spanked more than children nowadays.",
+      "Mettez pas d'eau au congélateur.<br>\nElle devient toute dure et imbuvable.",
+      "If you think you are smarter than the previous generation...<br>\n50 years ago the owner's manual of a car showed you how to adjust the valves.<br>\nToday it warns you not to drink the contents of the battery.",
+      "etc.<br>\nend of thinking capacity.",
+      "If you can't be a good example, then you'll just have to be a horrible warning.",
+      "Proof that 'I'm sorry' and 'I apologize' aren't the same thing:<br>\ntry saying it at a funeral.",
+      "The best place to hide a dead body is page 2 of Google.",
+      "Damn near had a threesome last night,<br>\njust needed 2 more people.",
+      "Even if \"Diarrhea\" isn't your safe word, I guarantee they'll stop whatever they're doing if you scream it during sex.",
+      "Le DuctTape c'est comme le sexe, c'est toujours plus efficace sur soi-même.",
+      'The phrase "you deserve to be filled the same way you pour" has a totally different meaning in an orgy.',
+      "All sex is a threesome.<br>\nFor those who believe their god is everywhere.",
+      "I really think it's time to take the warning labels off of everything and let stupidity work itself out of the gene pool.",
+      "If you forget your safe word, calling out the wrong name usually works just as well.<br>\nThe more you know.",
+      "I don't like being told what to do.<br>\nUnless I'm naked.",
+      "Don't break people's hearts, they only have one.<br>\nBreak their bones, they have plenty of those.",
+      "Whether I kill you with originality or not, you're still gonna be dead.<br>\nThe only difference is how long they're gonna talk about us on the news.",
+      "Barbie didn't give me a poor body image.<br>\nBarbie taught me you can't reattach a head once it's been removed from the body.",
+      "Assert dominance by moaning your own name during sex.",
+      "J'devrais partir avant que l'autre dise quelque chose que j'pourrais regretter.",
+      "As it turns out, pounding a wooden stake thru a vampire's heart works even if the guy's not a vampire.",
+      "Au pool, c'est comme au sexe:<br>\nPlus t'es saoul; plus tu t'vante; moins t'en rentre!",
+      "Go down a waterslide without water and you'll understand why foreplay is so important.",
+      "When you die, people cry and beg for you to come back,<br>\nbut, when you do, there's the running and the screaming...",
+      "I don't believe in a lot of things, but I do believe in DuctTape!",
+      "Someone's therapist knows about me.",
+      "Adulthood has shown me that you don't need fun to have alcohol.",
+      "I am NOT embarrassed about the number of people I've slept with.<br>\nI am obviously embarrassed about the quality.",
+      "Duct Tape is like violence:<br>\nDoesn't work?<br>\nUse more.",
+      "I'm the reason you need a safe space.",
+      "I don't have a problem with coffee<br>\nI have a problem without coffee.",
+      "I don't need an inspirational quote, what I need is a freaking cup of coffee.",
+      "I like my coffee like I like myself:<br>\nstrong, sweet, and too hot for you.",
+      "I don't need to drink coffee to be awesome.<br>\nI'm already awesome.<br>\nBut it's more fun when I'm awesome and awake.",
+      "This coffee better kick in before reality does.",
+      "You should know that before 10 am, no matter what the question is, my answer is always coffee.",
+      "I will start working when my coffee does.",
+      "I'M NOT AFRAID OF MONSTERS.<br>\nI'm afraid of the coffee maker breaking.",
+      "Life without coffee is like something without something… sorry, I haven’t had any coffee yet.",
+      "With enough caffeine, I can <s>\nrule the world.</s>\n dress myself and use my grownup manners.",
+      "Decaf coffee only works if you throw it at people.",
+      "I'm only awkward around people.",
+      "The more people I meet, the more I love myself.",
+      "There's a 99% chance I don't care.",
+      "I talk to myself because I hate everyone else.",
+      "Why are you still here?"];
+    var BgColor = ["red", "blue", "green", "black", "yellow", "purple", "orange", "white"];
+    var TextColor = ["red", "blue", "green", "black", "yellow", "purple", "orange", "white"];
+    var TextFont = ["'Indie Flower'", "'Rubik Dirt', cursive", "'Nunito', sans-serif"]
+
+    function SotD(){
+      let numBC = getRndInteger(0,BgColor.length);
+      let numTC = getRndInteger(0,TextColor.length);
+      let numTF = getRndInteger(0,TextFont.length);
+      let numQMS = getRndInteger(0,QMS_Coffee.length);
+      if(numBC == numTC){
+        document.getElementById("SotDp").innerHTML = "Please, try again<br>\nMy brain's just not working yet"
+      } else if(numBC == 4 && numTC == 7 || numBC == 7 && numTC == 4){
+        document.getElementById("SotDp").innerHTML = "Please, try again<br>\nMy brain's just not working yet"
+      } else if (numTF == 1){
+        document.getElementById("SotDp").style.fontWeight = "600";
+        document.getElementById("SotD").style.background = BgColor[numBC];
+        document.getElementById("SotD").style.color = TextColor[numTC];
+        document.getElementById("SotDp").style.fontFamily = TextFont[numTF];
+        document.getElementById("SotDp").innerHTML = QMS_Coffee[numQMS];
+      } else {
+        document.getElementById("SotDp").style.fontWeight = "900";
+        document.getElementById("SotD").style.background = BgColor[numBC];
+        document.getElementById("SotD").style.color = TextColor[numTC];
+        document.getElementById("SotDp").style.fontFamily = TextFont[numTF];
+        document.getElementById("SotDp").innerHTML = QMS_Coffee[numQMS];
+    }};
+    function getRndInteger(min, max) {
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
+  </script>
+  <!--I wrote, you read-->
+  <style name="WrotePage">
+    .textPage{display:none;}
+    input.menuText{display:none;}
+    .menuTextLabel{
+      display: inline-block;
+      appearance: none;
+      border-top: 1px solid black;
+      border-left: 1px solid black;
+      border-bottom: 4px solid black;
+      border-right: 3px solid black;
+      border-radius: 5px;
+      padding: 3px 5px;
+      margin: 2px;
+      background: purple;
+      color: #fff;
+    }
+    .menuTextLabel:hover{
+      cursor: pointer;
+      opacity: .7;
+    }
+    .menuTextSection{
+      display: flex;
+      margin:auto;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .textPage{
+      margin:0 10% 5% 5%;
+    }
+    .boxStill{
+      text-align: center;
+      border: 2px solid purple;
+      border-radius: 5px;
+      padding: 5%;
+      width: calc(72.93px + 32.63vw);
+      margin: auto;
+      box-shadow: 5px 5px 5px rgb(128 0 128 / 60%);
+    }
+
+  </style>
+  <script name="WrotePage">
+    function toPage(){
+      var menuTextAll = document.querySelectorAll('.menuText');
+      var menuTextLabelAll = document.querySelectorAll('.menuTextLabel');
+      var textPageAll = document.querySelectorAll('.textPage');
+      for(let i = 0; i < menuTextAll.length; i++){
+        textPageAll[i].style.display = "none";
+        menuTextLabelAll[i].style.background = "purple";
+        if(menuTextAll[i].checked == true){
+          menuTextLabelAll[i].style.background = "#000";
+          textPageAll[i].style.display = "block";
+          window.scrollTo({ top: 0});
+        }
+      }
+    }
+  </script>
+  <div class="sectionPage">
+    <div class="bottomButton backTop" onclick="backTop()" title="Again! From the top!"><span class="typcn typcn-chevron-right chevronTop"></span></div>
+    <div class="menuTextSection">
+      <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Table"><label for="Table" class="menuTextLabel">La table est mise</label></input>
+      <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Torture"><label for="Torture" class="menuTextLabel">Torture</label></input>
+      <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Destin"><label for="Destin" class="menuTextLabel">Destin impitoyable</label></input>
+      <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Slave"><label for="Slave" class="menuTextLabel">Slave or Toy?</label></input>
+      <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Dog"><label for="Dog" class="menuTextLabel">I found a dog!</label></input>
+      <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Alex"><label for="Alex" class="menuTextLabel">Alex, 23 et 49</label></input>
+    </div>
+    <!--La table est mise-->
+    <div class="textPage">
+      <h1>La table est mise</h1>
+      <h2>Présentation</h2>
+      <p>À quelques mètres de la table où son corps nu est allongé, je reste debout, immobile. Je prends le temps de savourer les ombres que la lumière dessine sensuellement sur chacune de ses formes. La position indécente dans laquelle son corps est exposé. Son air à la fois soumis et provoquant. La mise en place est si alléchante. Un grondement intérieur me rappelle alors que je n'ai rien mangé depuis bien trop longtemps...</p>
+      <p>Ses bras, allongés de chaque côté de sa tête, sont attachés par les poignets aux solides pieds de l'autel; les paumes vers le haut, prêtes à recevoir.</p>
+      <p>Ses yeux sont bandés, mais sa bouche est libre, entrouverte, disponible.</p>
+      <p>Son menton, pointé vers le ciel, dégage parfaitement son cou où son collier de cuir noir met en évidence l'anneau argenté; une invitation presque insolente.</p>
+      <p>Le dos arqué et le ventre tendu, seuls les mouvements de sa cage thoracique trahissent sa respiration. Ne sachant toujours pas que je suis là, sa respiration est encore lente et tranquille; le repos avant le festin.</p>
+      <p>Les cuisses bien appuyées sur la surface ferme, les genoux fléchis par dessus-bord, ses jambes sont écartées et ses chevilles attachées.</p>
+      <p>Dans cette position, son corps semble en symbiose avec le meuble... La table est mise. Un véritable buffet de saveurs et de sensations, tant pour les yeux que pour bien d'autres choses encore.</p>
+      <p>Une seule chaise, placée au bout, entre ses jambes écartées. Le repas est servi.</p>
+      <p>Les limites sont claires, les signes convenus; pour le reste il s'agit d'une véritable offrande, avec abandon et dévotion, entièrement et uniquement pour moi, ici et maintenant.</p>
+      <p>Alors que je dévore déjà des yeux ce festin qui m'est dédié, les nombreuses possibilités de ce que je pourrais en faire se bousculent dans ma tête. Tant d'idées et d'images qui me mettent l'eau à la bouche et le feu à l'entre-jambe. Des ondes de chaleur et de plaisir se répandent déjà dans mon corps; mes mains se tordent d'anticipation et mes pieds, sans même que je m'en rende compte, commencent à s'approcher de ce somptueux buffet.</p>
+      <h2>Exploration du menu</h2>
+      <p>Une fois près de la table, à la hauteur de ses épaules, je signale ma présence par un simple tambourinement des doigts sur le meuble et aussitôt sa respiration s'arrête.</p>
+      <p>Une fois la surprise passée, sa respiration reprend tranquillement mais s'intensifie graduellement dans un mélange de peur et de désir, de craintes et d'anticipation.</p>
+      <p>Le simple fait que je puisse, à tout moment, sans préavis, non seulement toucher sa peau, mais le faire comme bon me semble... Son excitation et son désir augmentent donc sans même que j'ai a faire quoi que ce soit. Jamais "ne rien faire" n'aura été aussi efficace!</p>
+      <p>Bien que j'aurais pu rester là pendant des heures à simplement savourer son corps du regard, mes autres sens me rappellent la famine de ces derniers temps et m'implorent d'initier un premier contact. Je dépose donc le bout de mes doigts, tout doucement, dans son cou, juste sous l'oreille et commence à descendre langoureusement le long de son cou. Une simple ligne, un contact si léger. Passé le collier, alors que mes doigts continuent nonchalamment vers le centre de sa poitrine, je vois sa cage thoracique se remplir et son souffle être retenu dans un suspense empreint d'espoir. Espoir que ma caresse divergent d'un côté ou de l'autre. Mais mes doigts restent bien au centre et traversent son torse en ligne droite. Alors que mon exode sensuel continu vers son bas ventre, je sens ses muscles se contracter d'anticipation. Puis, d'un élan presque hésitant, son bassin bascule subtilement vers le haut dans une timide prière. Mais une fois encore, je fais fi de ses attentes et bifurque vers une de ses cuisses pour terminer ma douce caresse à son genou. Une simple ligne, un contact si léger et pourtant tant de réactions. À l'envie de profiter de son corps, s'ajoute l'intrigue de la découverte : combien de sons, de contractions et de réactions différentes pourrais-je encore obtenir? Quelles zones de son corps sont les plus sensibles, les plus érogènes et surtout, pourront-elles finalement me rassasier?</p>
+      <p>De sa bouche maintenant en appétit s'échappent de doux gémissements, une ôde à mon pouvoir. Ses plaintes gourmandes me supplient de continuer tout en sachant pertinemment que seule ma volontée décidera de son sort.</p>
+      <p>C'est donc en surveillant attentivement ses réactions que je reprends mon exploration lascive de ce décadent festin. Au rythme de mes envies, j'effleure sensuellement sa peau de mes mains, de mes doigts. Me nourrissant de chacune de ses délicieuses réactions. Évidemment, je prends bien soin d'éviter son entre-jambe. Le dessert, c'est pour la fin.</p>
+      <h2>Amuse-gueule</h2>
+      <p>Une fois que toutes les autres parties de son corps, chaque autre mets de cet opulent menu, eurent été observées, entamées et testées, je me recule pour admirer mon œuvre.</p>
+      <p>Son corps, débordant de sensations, se tord de désir sur la table devant moi. Une vision à la fois extrêmement satisfaisante et douloureusement appétissante.</p>
+      <p>Sa respiration haletante et la tension sexuelle presque consistante qui émane de son corps, finissent par me faire saliver. Jusqu'à présent, seules mes mains ont pu apprécier sa peau, mais l'idée de pouvoir goûter, lécher, mordiller, savourer sa tendre chair devient vite irrésistible. Alors, sans plus attendre, posant les deux coudes sur la table, je me penche et approche ma bouche d'un de ses mamelons. Sans y toucher, je commence par simplement l'envelopper d'un souffle chaud et perçoit aussitôt le léger frisson qui parcourt son corps. Je donne donc quelques coups de langue et aussitôt le reste de son corps enflammé disparaît complètement de mon esprit. Mon univers ne se résume plus qu'à ce mamelon, qu'à cette bouchée de chair ferme qui roule sur ma langue de façon si exquise. Ce mamelon devient la représentation de son corps entier et ma bouche, celle de tout ce que je voudrais y faire. Mes lèvres l'embrassent, ma langue le masse, mes dents l'agacent. Et alors que ma bouche le dévore tout entier, les concepts se mêlent dans ma tête et les sensations, dans mon corps. Ce n'est qu'au bord de la perte de contrôle que je réussis finalement à m'arrêter. J'abandonne alors mon amuse-gueule avec réluctance et relève finalement la tête.</p>
+      <p>Alors que je tente de récupérer mes esprits et mon souffle, je m'efforce de reprendre une vue d'ensemble du buffet. La vue de son corps qui se démène encore malgré les contentions. La symphonie de sa respiration laborieuse entrecoupée des tintements métalliques des menottes et des claquements de sa chair sur la table. Les chauds parfums de son extase qui se répandent dans la pièce.</p>
+      <p>Puis, ses mouvements d'abord insensés se concentrent peu à peu vers son bassin en une danse indécente et implorante qui détourne inévitablement mon attention vers son bas-ventre.</p>
+      <p>L'ensemble ne tarde pas à m'enivrer à nouveau, mais ma patience et ma force de volonté sont plus grandes encore et je refuse de céder aussi vite à la tentation. Et puis, l'idée même de lui refuser sadiquement ce souhait ne fait qu'augmenter mon propre plaisir. De toutes façons, avant de passer au plat principal, je tiens à tester l'entrée. La bouche, l'ersatz par excellence du fameux dessert au fruit défendu; tout aussi chaude et humide, mais beaucoup plus agile.</p>
+      <h2>Entrée</h2>
+      <p>Je commence alors par approcher mes doigts de sa bouche et dès le premier contact avec ses lèvres, un profond soupir de soulagement parcourt son corps comme si l'attente avait finalement porté fruit. Puis, son corps se fige et, comme si un mouvement brusque aurait pu me faire changer d'idée, sa langue sort tout doucement de sa bouche et lèche mes doigts avec une sensualité à la fois fervente et réservée. Puisque mes doigts restent immobiles, sa tête se soulève tranquillement, et sa bouche se met à les envelopper presque chaleureusement jusqu'à ce que mes ongles frôlent son palais et alors sa langue se met à danser le long de mes doigts, entre, sous et autour, comme si chaque centimètre carré était le plus raffiné des mets et se devait d’être vénéré. Puis sa tête se met à s'éloigner alors que ses joues se creusent par la succion et ses lèvres, bien refermées sur mes doigts, glissent le long de ma peau y laissant un chaud coulis de salive. Arrivée au bout de mes doigts, sa tête reprend son manège à la fois tendrement vénérant et délicieusement pervers. Un soupir de délectation s'échappe de ses lèvres puis les ondulations de sa tête et les acrobaties de sa bouche, ses lèvres et sa langue deviennent de plus en plus explicites et évoquantes.</p>
+      <p>Bien vite, ses prouesses et ses promesses font migrer ma faim vers mon bas-ventre et mon appétit ne s'en trouve que décuplé. Alors que ses chaudes complaintes m'empressent à lui offrir davantage que mes simples doigts, c'est avec une impatience réluctante que je reprends ma main et cesse ainsi tout contact...</p>
+      <p>L'absence soudaine de contact capte son attention dans un mélange d'appréhension et d'espoir ne sachant ce que sera la suite, ni même si suite il y aura. Je considère en faire une punition pour son manque de retenue, et laisser son corps se consumer de désirs inassouvis, mais mes propres besoins me crient leur priorité et je me décide à passer au plat de résistance. Alors que je m'efforce de me diriger calmement vers l'unique chaise de ce banquet, j'apaise ses inquiétudes en faisant glisser mes ongles le long de son corps en feu.</p>
+      <h2>Plat principal</h2>
+      <p>Sachant pertinemment qu'une période d'inactivité ne ferait qu'exacerber son impatience, j'en profite pour prendre le temps de simplement admirer la vue. Ses parties intimes, si généreusement offertes et délicieusement exposées. Les contractions de son périné qui font danser son sexe de façon si alléchante et invitante. Tel un aimant, le spectacle m'attire et m'interpelle, m'implorant de succomber à la faim. Malgré la tentation qui me tiraille de plus en plus; mon bas-ventre qui se contracte de désirs et ma bouche qui en salive d'envie, je reste immobile. Je reste immobile et réalise que mon propre sadisme aura créé plus d'une victime. Je reste immobile et contemple nos supplices s'amplifier au rythme de ma douloureuse inaction. Quel délice!</p>
+      <p>Sa respiration se fait justement de plus en plus haletante, suffoquée par le désir désormais insoutenable. Ses gémissements implorant pitié, me supplient d'un quelconque contact alors que son corps se déchaîne de plus en plus, dans une danse sensuellement aliénée par la perte de contrôle.</p>
+      <p>Prenant pitié de nous deux, je me décide à entamer quelque chose. Espérant rester en contrôle, je tente de maîtriser mes propres pulsions et m'efforce de commencer en douceur. Posant d'abord mes doigts sur ses genoux, je laisse mes ongles agacer sa peau alors que mes mains remontent langoureusement le long de ses cuisses. Je savoure chaque caresse, mais voyant que son attention est encore éparpillée par l'arrière goût de toutes les sensations précédentes, je m'insulte et enfonce brusquement mes ongles dans ses cuisses. Prises en sursaut, ses ardeurs semblent momentanément se calmer, du moins juste assez pour attirer son attention sur moi et sur ce que je suis en train de lui faire.</p>
+      <p>Mes mains et mon visage s'approchent donc peu à peu de son sexe et j'inhale avec délice les arômes de ses plaisirs avant d'appuyer doucement mes lèvres sur l'intérieur de sa cuisse, tout près de l'aine.</p>
+      <p>Sentant l'imminence de l'attention tant désirée, son corps se calme et son esprit se concentre sur mes gestes, craignant probablement un autre arrêt soudain.</p>
+      <p>Tant pour l'exaspérer davantage que pour me mettre moi-même à l'épreuve, je domine mon appétit et prends soin de déguster et de savourer méticuleusement chaque centimètre carré de l'intérieur de ses cuisses, puis chaque parcelle de son sexe avant même de me concentrer sur les zones les plus sensibles.</p>
+      <p>Les frissons qui lui parcourent le corps malgré ses efforts de rester sage sont délicieusement adorables, mais bien vite ses réactions deviennent secondaires; mon esprit rapidement obnubilé par toutes les sensations que cette chair me procure. Les textures sous mes lèvres, les arômes et saveurs sur ma langue, la densité sous mes dents. Mon contrôle s'effrite et se dilue dans l'excitation. Désormais incapable de me soucier de son plaisir, je ne peux que me concentrer sur le mien. Mes mains rejoignant finalement ma bouche, je me délecte de son sexe sans plus autre intention précise que d'assouvir ma faim.</p>
+      <p>Dans une extase possessive, un léger grognement s'échappe de mes lèvres et je réalise alors qu'il n'y a plus une seule bouchée de son être qui ne m'appartienne, qu'entre mes mains et ma bouche je détiens le pouvoir absolu sur son plaisir et le mien.</p>
+      <p>Soudainement, les cris et gémissements s'arrêtent, sa respiration se suspend et son corps se met à trembler subtilement. Le suspens inattendu me ramène à sa réalité et je prends tout d'un coup conscience de l'imminence de son orgasme. Tant par réflexe, par indignation que par entêtement sadique, je me retire aussitôt d'entre ses jambes. Son orgasme m'appartient. Sans ma permission, il devrait lui être interdit d'y succomber. Seule ma volonté pourra faire basculer son supplice vers la complétion.</p>
+      <p>Le besoin impérieux de raffermir ma dominance face à son insolence s'ajoute alors à ma faim toujours insatiable et mon instinct bascule du côté animal prenant momentanément contrôle de mon corps.</p>
+      <h2>Dessert</h2>
+      <p>Sans trop savoir comment, je me retrouve à quatre pattes sur la table, chevauchant son corps désaxé, immobilisé à la fois par l'exténuation et l'anticipation, telle la proie déchirée entre la survie et la fascination. Sournoisement, je commence à m'avancer le long de son corps et m'arrête finalement au-dessus de sa tête, un genou de chaque côté. Mon entre-jambes déjà bouillant de désir est finalement positionné juste au-dessus de son visage, presque accessible.</p>
+      <p>Ayant perçu ma position malgré ses yeux bandés, son corps semble reprendre consistance et sa tête se ressoulève aussitôt. De sa bouche entrouverte et affamée, un gémissement m'implore. Sa langue se met à se lécher langoureusement les lèvres puis à s'élancer vers mon entre-jambes dans l'espoir évident mais vain de pouvoir y goûter. Ses bras, les poings fermés, se mettent alors à tirer sur les menottes avec la force du désespoir. Bien que sa bouche réussisse à s'approcher davantage, je m'assure de rester hors de sa portée. Je m'approche puis m'éloigne, maintenant sa récompense inaccessible. Plus je l'agace, plus l'excitation monte en moi, mais le jeu est risqué.</p>
+      <p>Lorsque que sa langue manque d'atteindre sa cible, je réalise que son avidité est devenue incontrôlable et m'empresse de lui immobiliser la tête d'une main sur le front. Le contrôle m'appartient et doit rester mien. Mais alors que les gémissements suppliants se muent en grognements revendiquants, et que ses muscles se battent de plus en plus contre les contentions, je sens sa docilité s'effriter et ma dominance être ronger par sa rébellion. Je dois remettre ses esprits à leur place et clarifier qui domine et qui n'est que pitance; qui consomme et qui doit se laisser consommer. Sans prévenir, je lui donne une claque au visage, simple mais efficace. La surprise qui résonne dans la pièce et l'extase de la douleur font taire ses grognements ambitieux et ne laissent que sa respiration haletante. Cependant, loin de renoncer, ses supplications, geignements et lampées reprennent vite, quoique plus humbles et serviles.</p>
+      <p>Maintenant que j'ai repris le contrôle de la situation, je me permet de savourer ses candides implorations avec une sadique satisfaction. C'est moi qui possède la clé de son plaisir, le contrôle de ses sensations, le pouvoir sur sa satisfaction.</p>
+      <p>Mais à force de jouer avec sa patience, l'anticipation commence à peser sur moi aussi et l'envie de donner suite à mes promesses se fait de plus en plus impérieuse. Alors, ne désirant plus me retenir davantage, je prends un risque conscient et abaisse minutieusement mon entre-jambes afin de permettre à ses lèvres le plus léger des contacts...</p>
+      <p>Ce fut l'erreur qui entraîna ma défaite. Permettant à ses lèvres de me toucher, sa langue obtint alors beaucoup plus de liberté que ce que j'avais calculé et cette dernière se déchaîne aussitôt sur mon sexe dans un élan poussé par le désespoir. Insensée et pourtant si efficace, sa langue se met à parcourir mon sexe dans tous les meilleurs sens possibles et une vague de plaisir commence à se répandre dans mon corps jusqu'alors intouché. Des spasmes de jouissance me parcourent le corps; ma sensibilité et mes réactions multipliées par l'anticipation. Mon bassin se met à onduler de lui-même, m'obligeant à prendre le contrôle des mouvements de sa tête. Ses lèvres si chaudes et fluides. Sa langue si forte et agile. La délicieuse pression qui monte en moi devient de plus en plus intense. N'ayant plus la force ni la volonté d'arrêter, je m'abandonne à sa bouche et sa langue qui dégustent si avidement mon sexe.</p>
+      <p>Alors que je savoure l'euphorie qui se propage à travers mon corps, sa bouche se met à aspirer autour de mon sexe et aussitôt l'onde de choc créée par la suction me transperce le corps d'un seul coup me faisant cambrer le dos et renverser la tête. La tension accumulée s'échappe alors par ma gorge dans un son guttural presqu'animal et mes ongles, tels des griffes, s'agrippent à son flanc dans un urgent besoin de solidité alors que mon univers explose en mille gouttelettes.</p>
+      <h2>Digestif</h2>
+      <p>Dans un évachement postprandial résolu, mon corps, s'étant laissé tomber sur le dos, se retrouve complètement affaissé sur le sien, mes jambes toujours de chaque côté de sa tête et ma tête tout près de son entre-jambes. Plus rien ne bouge mis à part nos cages thoraciques qui tentent laborieusement de réapprendre à respirer alors que le reste de mon corps essaie de se recomposer, de retourner à un état solide et conscient.</p>
+      <p>Alors que moi je me sens encore flotter sur les vagues de la complétion, la tension qui émane de son corps et un timide gémissement près de mon entre-jambes me rappellent que son corps est encore toujours prisonnier des promesses de l'apéritif.</p>
+      <p>Je considère l'idée de jouer encore, de prolonger sa torture et ajouter à son supplice, mais l'épuisement de l'orgasme envahi toujours mon corps.</p>
+      <p>Malgré ses jérémiades, je prends donc le temps de reprendre mes forces, et en profite pour me réjouir, savourer ce sentiment de plénitude et tranquillement digérer.</p>
+      <p>Ce n'est que lorsque je me sens finalement apte à bouger que je me laisse gauchement rouler sur le côté et m'assoit sur le bord de la table, les jambes pendantes et encore molles.</p>
+      <p>D'une langueur pleinement repue, je me retourne pour contempler le reste de mon œuvre. Parmis les divers coulis de fluides corporels décorant la surface de la table, les restants de sa chair maintenant entièrement consommée de la torture du déni se contorsionnent désespérément. Ses gémissements inarticulés résonnent péniblement, suffoqués par les tensions saturant son corps ravagé. Les arômes émanant de cet amalgame me rappellent avec délice tous les plaisirs du repas, un sourire satisfait se forme finalement sur mes lèvres.</p>
+      <p>Je descends alors de la table et, appréciant une dernière fois du regard les restes de mon somptueux festin, je m'essuis les mains et le visage puis quitte la salle; mon appétit finalement rassasié.</p>
+
+
+    </div>
+    <!--Torture-->
+    <div class="textPage">
+      <h1>Torture</h1>
+      <p>
+        The sky is blue, the sun's shining.<br>
+        People walking, yet here I am,<br>
+        Still standing there, on the sidewalk<br>
+        Facing the door and freaking out!<br><br>
+      </p>
+      <p>Yep, here I am, facing my own hell's door, arguing with myself whether or not to go in.</p>
+      <p>"It's been too long now, you HAVE to do it."</p>
+      <p>"Nah, it's not that bad, I'm sure I can tough it out for another month or two."</p>
+      <p>"No way, in a month or two, you'll be too busy to come back. You have to do it now... So let's just suck it up and go in!"</p>
+      <p>Yet, I stay still, looking diffidently at the door in front of me. That door looks just like every other business door, with the opening hours written on a board and the Interac and PULL stickers near the handle. Nothing scary. Still, I couldn't quite open it. Dread was freezing me.</p>
+      <p>"I have to!", I repeated to myself.</p>
+      <p>True, every once in a while, although as rarely as I could have it, I have to face my fear and do it. The narcissistic part of me kind of wanted to (what a traitor!!)... But still, the rest of me was just too traumatized by all the previous experiences. The end result would, should, be enjoyable, but the process to get there was, and I knew that to the bottom of my being, just too painful.</p>
+      <p>So there I was, still on the sidewalk, in the late afternoon, after a full day of work, looking blankly at the door, my heart beating too fast, my hands wet and my head getting dizzy...</p>
+      <p>"Ok, come on! You'll have to do it sooner or later, so might as well do it now!" I scolded myself one last time, trying to summon what little courage I could muster.</p>
+      <p>So, straightening my back and clenching my teeth, I finally opened the door and walked in...</p>
+      <p>Once I got in and my eyes had adjusted to the gory lights, I could see the dreadful chairs, the tables with all those creepy instruments, and... them. There were three of them, Machiavellianly chatting, probably about their last victim. I don't know if they're a different species or just heartless sadists convinced they're doing the world a favor torturing innocent people, but I've never quite understood them and yes, they kind of scare me. The three of them immediately turned my way, ingrainedly beckoned by the opening door chant, and as soon as they saw me, you could see the light glowing in their eyes, the sheer eagerness of the predator seeing its next prey. But they must have some telepathic powers because they didn't even need to confer to decide which one of them would have me. In less time than it should have taken, two of them turned back towards each other, resuming their disturbing chatter as the third one kept looking at me, intensely. Slowly grinning into that deceiving half welcoming, half bloodthirsty smile, my supposedly assigned torturer waves a hand coaxing me to take a seat in one of the lower chairs...</p>
+      <p>Oh, by the way, you need to understand that these chairs are like torturing devices in themselves. When you sit down in those chairs you have to slouch down so that when you lean on the back of the chair (with no lower back support, might I add), your head ends up hanging in midair, supported only by your neck. But the thing is that the edge under your neck is cold and hard so you can't let your neck rest on it without it getting into your skin and so you have to support all your head's weight yourself. Let's just say it's tricky and tiresomely painful. But that cramped position is only the beginning because then, as you've never been so uncomfortably seated, all stiff and aching, there comes the water. First, it comes out freezing cold but gradually gets warmer so at one point you start having some hope, that maybe you might get to relax into it. But as soon as you start letting your guard down, the water gets so hot you wish it would go back to being cold. But as they say, be careful what you wish for. Because then the water just keeps switching between painfully cold and frighteningly hot over and over again, plus constantly threatening to get into your eyes, your ears, your nose. And as they're trying to either drown you or drive you crazy (who knows?!) with the watery torture, they always add this slimy nauseatingly smelly stuff on your head which scent, added to their usually strong and cheap perfume, becomes pure gaging material. But that's not all, that's just the ambiance being put together for the real torture: the nails, long and sharp, scratching and scraping, trying to scalp you. Because, evidently, what better way to get that oozy stuff to "penetrate" if not with their nails!? And, of course, there's nothing you can do. Try to move and it’ll just get worst anyway. So you suffer in silence hoping it'll be over soon.</p>
+      <p>Although, once it's over, you're still just up for the second part. The only thing is that you need to be in another chair. So they make you walk the walk of cold wet shame all across the place and sit down in front of a big mirror near a table full of sharp and creepy instruments... Clearly, they love to be able to watch you suffer from every angle, otherwise, there wouldn't be that many mirrors. So, as you're seating there, looking at yourself all beaten up and covered in cold sweats, wondering why the hell you opened that door in the first place, they dare ask you with that creepy enthusiasm of theirs:</p>
+      <p>"So, what will it be?"</p>
+      <p>As if there's no way you could just don't want to be there. Is a choice really a choice if all the options are equally painful? But, obviously, if you went through all of that first part, it has to be for a reason, right?! So you have to specify which one it is, but that's the tricky part! Because, you see, if you're not clear enough; if they don't really understand what you want or if you ask for the wrong one... Well, let's just say you'll be facing excruciating regrets. So as you're looking at them in the big mirror in front of you, knowing they're waiting not so patiently for your answer, all you try to do is make sense of the mental picture you've been building up in your mind for the past weeks. But even though you've practiced explaining it, knowing that day would come, with your heart beating too fast, armpits sweating and brain getting mushier by the stress and fear of not being clear enough, all you can do is stupidly repeat the only two words you remember from their language and tumbling on all the other words. Hopefully, at some point, they'll stop your rambling declaring that they'd got it, but then a mix of relief and dread just freezes your mouth midword. Because that's it, once they're started, there's no stopping them, no turning back. What if they got it all wrong?!</p>
+      <p>Then, as if they read your mind, the first thing they want to do is to confirm that, even though they will be doing what they think you asked for, they will still be in charge the whole time. So, putting a gown over your shoulders, they'll simply tie it tight enough around your neck to "gently" choke you, therefore efficiently asserting their dominant position while also making sure no blood would stain your clothes. How convenient. We wouldn't want any visible proof now, would we?</p>
+      <p>And then, they always end up saying the four words that any nearsighted person would fear the most in an unfamiliar situation:</p>
+      <p>"Take off your glasses."</p>
+      <p>Believe me, when you're unable to see anything further than four inches away, you quickly feel defenseless. So helpless, alone in your blurry world. You can't make out what's around you, let alone who's coming at you nor how. But, teeth clenched and hands shaking, you still hand them out your glasses, because you know the alternative would be much worse. You can't just stop now. Not after everything you've already just been through. But once they have your glasses, they always put them on the table, out of your reach, way too far for your comfort or sanity. But by then it's too late to change your mind, they're on a roll. And the real torture can finally start.</p>
+      <p>The first cut is the worst. It's not supposed to hurt that much yet; it's just one little chop. But I swear you can hear it. The ominous sound of the point of no return; a dreadful chomp defining that decisive moment, the beginning of the end. Whether it's the sound or the sensation, your whole being gets that deep down knowledge that THIS IS IT. Like the ominous sound of the locking click of your prison cell door. Doom.</p>
+      <p>Then the show is on and there's nothing you can do about it except suffer in silence. Because no, you're not supposed to scream nor even whine. Grown-ups don't cry. So you let them have their fun with you. Repeatedly and mercilessly rattling your scalp like they'd want to shred your skin off your skull. Pulling at your hair like they're trying to rip your head off and nearly tearing your ears off in the process. Constantly switching through unidentifiable devices and always agitating them way too close to your eyes. The pain gets more excruciating every time they use a new instrument. The panic sips through you for not seeing what they're really doing to you, fearing the unknown results. Your breath gets more and more labored from the choking collar and your whole body shivers from the still-wet hair. And all you can do is stare at your hands resting defeated on your lap. They're the only part of your body that you can still more or less see clearly, bringing you what little comfort it could; confirming you're still you, human and alive, despite the distress, pain, and unknownness of the fuzzy veil surrounding you... But every time your head would slightly bend down for looking too closely at your lap, they'll firmly grab it and put it back up, uttering something like:</p>
+      <p>"Keep your head up straight, or you'll regret it!"</p>
+      <p>So you can't even have that little comfort. Meanwhile, as you're trying to cope with the fear, the tearing pain, and the helplessness of your situation... They talk. Chatting and rambling about meaningless things (probably their own life); talking like they like to hear their own voice way too much; like they don't even need you to listen... Yeah, they keep mindlessly torturing you, not caring at all about your excruciating suffering, focusing on whatever story they're telling you about, and sadistically enjoying themselves. Some people really have no heart. Or maybe they really think you're enjoying yourself and are interested in their life? How can someone be so clueless?!</p>
+      <p>Anyway, that's not the worst. Once in a while, they would pause and look in the mirror. Yeah, that's bad. Because, since their reflection is too blurry for you, you can't tell if they're looking at you, waiting for an answer to some vague question you hadn't heard or if they're just admiring their bloody work from this other perspective. So, every time, you kind of froze, your brain going miles a minute trying to figure out what you're supposed to do. Are you supposed to say something? And if you are, what are you supposed to say? What if you say the wrong thing? Personally, just in case, threading on the safe side, I usually opt for a shy lopsided smile, hoping that could mean anything and thus everything they're hoping for. Dare you offend them! Because only God knows how worse this all could get!</p>
+      <p>After what will have seemed like hours, they'll suddenly stop assailing you and start walking away. A wave of relief will instantly spread through you. Freedom, at last! Your breath will start to slow down and your jaw will try to relax. Your shoulders will most certainly slouch, exhaustion finally taking its toll.</p>
+      <p>But as you stretch your arm towards the table trying to reach for your glasses, they'll be coming back out of nowhere and stop you:</p>
+      <p>"Hold on, I'm not finished yet!"</p>
+      <p>That's when your whole body freezes, petrified, arm still stretched midair, eyes widened in fear, and breath stuck somewhere in your chest. And yet, you know you should have known! Every time, you naively hope that they would skip that last part...</p>
+      <p>After the freezing/burning and drowning, the blinding and choking, the scratching and pulling, comes, of course, the deafening and sickening. As they start blasting you with that hot air-blowing contraption, they even resume the pulling and scratching. As if you hadn't had enough yet. Soon, the blasted warmth, probably helped by your exhausted state, starts making you feel sick and dizzy. Plus, the screeching high-pitched noise coming from the torture device keeps aggressing your ears and slowly driving you insane. But once you’ve realized that all that roaring deafening noise would definitely cover any scream for help; that hope is now both deaf and dead; that's when you usually, finally, reach the breaking point. The point where your body and mind just give up, where you stop hopefully fighting and start defeatedly shutting off. You’ve crossed the line past which nothing matters anymore; you don't feel the pain nor the fear anymore. You don't feel anything. Almost blissful, really.</p>
+      <p>After you'll have no idea how long, they'll finally stop, take a step back, look at their chef-d'oeuvre and, with a radiant satisfied smile on their face, claim their victory:</p>
+      <p>"Done!"</p>
+      <p>Still dazed and numbed, you won't even care what the results are anymore. Part of you won't even realize that the torture is finally over and that you should get the hell out of there. Hopefully, your subconscious will be smarter and take over. So without really knowing it, you'll put your glasses that they've finally given you back on and stumble off of the chair. Then you'll probably smile for their benefits in the big mirror before mindlessly walking to the cash register. Still not registering what they're saying (probably gloating anyway), you'll get your credit card out. Because, yeah, you actually have to pay for that. Then, once the insult has been added to the injury, your body and mind still numbed from the endless torture, you'll finally walk towards the exit, fixing that door, subconsciously seeking freedom.</p>
+      <p><br>
+        The sky is blue, the sun's shining.<br>
+        People walking, yet here I am,<br>
+        Still standing there, on the sidewalk<br>
+        Facing my life, ruling straight out<br>
+        That pain ain't worth beauty nor greed,<br>
+        That no haircut I'll ever need.
+      </p>
+    </div>
+    <!--Destin impitoyable-->
+    <div class="textPage">
+      <h1>Destin impitoyable</h1>
+      <p>Je sens ses doigts monter sur moi<br>
+        Son nez renifler autour de mon trou<br>
+        Ça faisait si longtemps qu'on ne l'avait pas touché<br>
+        J'avais presque oublié</p>
+        
+      <p>Je sens sa langue tout autour<br>
+        Je sens ses dents en tester les rebords<br>
+        Finalement sa tête pénètre à l'intérieur<br>
+        Puis ressort aussitôt</p>
+        
+      <p>Puis encore, sa tête replonge<br>
+        Allant, cette fois, plus profondément<br>
+        À chaque entrée-sortie, pénétrant davantage<br>
+        Puis tout d'un coup, plus rien</p>
+        
+      <p>Dans ma naïveté, j'espère<br>
+        Que déjà l'intrus eut abandonné<br>
+        Un courant d'air frais me confirme son absence<br>
+        Espérons, pour de bon</p>
+        
+      <p>D'un coup, les souvenirs reviennent<br>
+        La dernière fois fut un cauchemar<br>
+        Les cris, les douleurs, les dommages irréparables<br>
+        Par pitié, pas encore!</p>
+        
+      <p>Je sens ses doigts monter sur moi<br>
+        Avec assurance, entre au complet<br>
+        Clairement, mes prières furent ignorées<br>
+        S'en suit le va-et-vient</p>
+        
+      <p>Incapable de me défendre<br>
+        Reste immobile, me laisse envahir<br>
+        Devoir souffrir en silence malgré l'outrage<br>
+        Malgré la peur, la honte</p>
+        
+      <p>Au fil des assauts, le temps passe<br>
+        Abandonnant tout espoir, je m'efface<br>
+        Les sensations s'estompent, mon âme se vide<br>
+        Comme mon trou s'emplit</p>
+        
+      <p>Je reconnais son dévouement<br>
+        Je peux même admirer son endurance<br>
+        Dommage que je doive en être la victime<br>
+        Pourquoi c'est si injuste?</p>
+        
+      <p>Réalisant son objectif<br>
+        Un frisson d'horreur me parcourt le corps<br>
+        Toutes ces semences au fond de mon trou, que faire<br>
+        Si elles y trouvent vie?</p>
+        
+      <p>L'idée qu'à l'intérieur de moi<br>
+        Un autre organisme puisse grandir<br>
+        Inacceptable, je ne pourrais y survivre<br>
+        Le début de ma fin</p>
+        
+      <p>Mes ressources sont limitées<br>
+        Je ne pourrais fournir une autre vie<br>
+        Les difformités, la douleur, l'épuisement<br>
+        Que vais-je devenir?!</p>
+        
+      <p>L'angoisse se mêle à la rage<br>
+        Si seulement je n'avais pas eu ce trou<br>
+        Signe de mon impuissance, honteux passé<br>
+        Destin impitoyable</p>
+        
+      <p>Chaque été, ces bêtes sauvages<br>
+        Cherchent à enfouir leurs graines dans des trous<br>
+        Même les trous des pauvres arbres sans défense<br>
+        Ces p’tits criss d’écureuils</p>
+        
+      <p>Ensemble protégeons les arbres troués des graines d'écureuils!</p>
+    </div>
+    <!--Slave or Toy?-->
+    <div class="textPage">
+      <h1>A slave or a toy? Why not both?!</h1>
+      <p><em>Public Disgrace<br>
+      May 2018</em></p>
+      <p>As I walk through the crowd, followed by my slave (you, at least, need someone to hold your bottle of water!), I found the sweetest little toy! I must say, [@Mz_Claws](https://fetlife.com/Mz_Claws) has an eye for toys! And she shares!! So when I found her new toy alone, I thought I should try it too!</p>
+      <p>It had all those ropes tied all around its chest which made it so tempting to just grab them and pull it closer to me! But it still had its hands free, so I asked my slave to tie its hands behind its back. So, once my new toy was all gift wrapped, I pulled on the ropes and made it follow me and my slave upstairs to play.</p>
+      <p>So as I sit my toy on the couch, I motion my slave to sit by its side. That way I could have easy access to both of them!</p>
+      <p>I love new toys! You get to do whatever you want and discover all their buttons and the sounds they make! Whether you caress, lick, suck, nail, or bite, they always make noises or have nice bodily reactions!</p>
+      <p>When I get excited, I like to have a cock in my hand, you know, just to play with, to feel it getting hard and harder... That's mostly what my slave is for, actually. So as I was playing with my new toy, I started massaging my slave's cock... Oh, so much teasing, so much fun!! I love teasing!</p>
+      <p>At some point, I got really excited but a bit bored with playing with the toy, so I decided I would have them go down on me! So as they were both, of course, eager to please me, I told them they would then have to take turns. So I grabbed my toy's ropes and pulled it down towards my pussy, and it started licking right away (that's a good, well-functioning toy, right there!). Then I stopped it, and motioned my slave to take its place, and of course, it executed itself promptly and oh competently! (good slaves are so efficient!). Then I switched again,.. and again,... until I came intensely and for as long as I let it suck on my clit... God, that was good!</p>
+      <p>And finally, I could slowly recover and enjoy the post-orgasm glow, as both my feet were being massaged by my slave and my toy. What a perfect ending for this memorable night!</p>
+      <p>Alie<br>
+        xox</p>
+      <p>P.S. That's what I call teamwork: a slave AND a toy!</p>
+    </div>
+    <!--I found a dog!-->
+    <div class="textPage">
+      <h1>I found a dog!</h1>
+      <p><em>Public disgrace<br>
+      May 2016</em></p>
+      <p>After this hot girl squirted all over me (which had me come as well), he licked my pussy as any slave should do: like he could do it for hours! But it turned me on so much that I came again pretty fast. Then he started cleaning all that juice off my body... with his tongue, of course! Once I was clean, as a good slave, he cleaned up the scene space, picked up my stuff, and heeled as I went off. Oh, I loved this dog! He was not only pretty but also very obedient and would lick my feet every time I ask him. I loved seeing him licking my feet and enjoying it! I walked him around with his leash as he carried my stuff and showed him off to everyone. I was so proud of my good boy! I played with him, teasing him while he was attached to the pole... and when I had had enough, I made him massage my feet and legs. So relaxing!</p>
+    </div>
+    <!--Alex, 23 et 49-->
+    <div class="textPage">
+      <h1 style="line-height: 1;">Café, DuctTape & Canif Suisse (PNDCO)</h1>
+      <h3 style="margin: -30px 0 30px;">(Alex, 23 & 49)</h3>
+      <p><em>Alex, sans-abri misanthrope, réalise son rêve en torturant des vampires afin d’aider Sam, lycanthrope, à se libérer de l’esclavage... et fini par trouver l’amour.</em></p>
+      <p>Tout est inclus&nbsp;: être humain, vampire et lycanthrope; viol, torture et combat; threesome, BDSM et polyamour; café.<br>Qu'est-ce que tu veux d'plus?!</p>
+      <p>Oh, pis en plus, c'est épicène! Ça veut dire que tu peux choisir toi-même le sexe/genre des personnages!</p>
+      <div style="margin:5% -10% 5% -5%;">
+        <div class="boxStill">
+          <h2>I'm still working on that one.<br>Come back in three years!</h2>
+          <h5>But if you really really want to read what I've written so far, you can <a href="https://jealous-buffer-ab0.notion.site/Caf-DuctTape-Canif-Suisse-PNDCO-a7a75d511eee4fbf8c3176f143bb66dc">click here</a>, but then you won't be able to come back from that... ever again.</h5></div>
+        </div>
+      </div>
+    </div>
+  <!--Shit to feel-->
+  <script>
+ //First found
+ /*
+    firebase.database().ref('/posts').on('value', function(snapshot) {
+    console.log(snapshot.val());
+});
+function snapshotToArray(snapshot) {
+    var returnArr = [];
+
+    snapshot.forEach(function(childSnapshot) {
+        var item = childSnapshot.val();
+        item.key = childSnapshot.key;
+
+        returnArr.push(item);
+    });
+
+    return returnArr;
+};*/
+//second found
+/*database {
+   master {
+      itemarray: ['item1', 'item2', 'item3', 'item4']}}
+
+database.ref("master/itemarray").on('value', showArray);
+
+ function showArray(globalArray){
+    console.log(globalArray.val())
+    var simpleArray = Array.from(globalArray.val());
+    console.log(simpleArray)
+    }*/
+ //third found
+
+  </script>
+  <div class="sectionPage">
+    <h1>Relax, I'm working on it!</h1>
+  </div>
+  <!--Master's Toy's Training--> Mstrplzuseme
+  <div class="sectionPage" id="SectPageToy">
+    <div class="cover" id="coverSureBackHome"></div>
+    <div id="remindRulesBox">
+      <div class="RulesCover"></div>
+      <div class="rulesBox rules">
+        <span onclick="remindRulesClose()" class="typcn typcn-plus rulesBoxClose"></span>
+        <h2>Here are the rules:</h2>
+        <h3>Whenever you want to masturbate...</h3>
+        <ol>
+          <li>You must think only of your Master's body or of your Master being with someone else. So that you'll get turned on just by seeing your Master.</li>
+          <li>You must, at all times, have your Master's cock whether in your hand, jacking it; in your mouth, blowing it; or in your pussy, getting fucked by it. So that you associate pleasure with a real and worthy cock like your Master's and realize that pleasuring your Master is so much better than pleasuring yourself.</li>
+          <li>You must get as close as possible to orgasm, but without orgasming. You can only orgasm if you have your Master's permission and only after saying please three times out loud and hearing (in your head) your Master saying "come". Then, and only then can you come. Otherwise hold it in! So that you realize that your orgasms only belong to your Master and your Master's pleasure is the only happy ending you really need.</li>
+          <li>If you got the chance and honor to come thanks to your Master, then you must say "Thank you Master" out loud. So that you realize how lucky you are and how generous your Master can be when you deserve it. If you came without your Master's permission, you must say "I am sorry, Master, please forgive me" out loud.</li>
+          <li>After you've thanked your Master for these wonderful sensations (or hoped for forgiveness), you get to savour the other gift that your Master procured for you; that's right, all that creamy goodness is your gift from your generous Master, lick it all, savor it and don't you miss a precious drop! I want you to associate the taste of cum with the greatest pleasures and sense of accomplishment so that you'll crave it, whether it's yours or not.</li>
+        </ol>
+      </div>
+    </div>
+    <div>
+      <div class="Mastersheader">
+        <div class="MastersTitle">
+          <h1>Master's toy's training</h1>
+        </div> 
+        <div class="toypointszone">
+          <p>Your Toy Points</p>
+          <p id="toypoints">0</p>
+        </div>
+      </div>
+      <div class="bottomButton remindRules" onclick="remindRules()" title="Forgive me Master for I forgot the rules"><span class="typcn typcn-clipboard"></span></div>
+      <div class="sureBackHome" id="sureBackHome">
+        <p>Are you sure you wanna go back home, before finishing up?<br>If you do, all your answers will be erased...</p>
+        <button class="submit sureBackHomebtn" onclick="noBackHome()">No, Master, I wanna stay!</button>
+        <button class="submit sureBackHomebtn" onclick="refresh()">Yes, Master, I need to go!</button>
+      </div>
+      <!-- First week(s), only the first two rules and the last one: thinking about your Master, using your Master's cock and eating your cum. 
+        Orgasms allowed as much as possible so that the association comes more easily.
+        After weeks add the orgasms control and denial
+        Punition: not yet
+        Recompense: once you've reach xx Toy points, you'll get to come see me (for your test?) and/or move to the second part. -->
+      <div class="totsect" id="totsect0" style="display:block;">
+        <div class="rules">
+          <h2>Here are the goals:</h2>
+          <h3>One day, you'll My perfect toy and...</h3>
+          <ol>
+            <li>You'll get aroused just by thinking about Me, My body, My cock or Me being with someone else...</li>
+            <li>You'll be able to pleasure My cock (or any of the real and worthy cocks that I might present to you) any way possible, whether it is with your hands, your mouth or your pussy.</li>
+            <li>You'll give Me the control over your orgasms because you'll feel deep down that the only pleasure you really need is My pleasure.</li>
+            <li>You'll then be able to come if and only if I've given you permission to. You'll know how to ask for permission to come, meaning saying "Please, Master" at least 3 times and to wait for my command "Come" before orgasming.</li>
+            <li>You'll also remember to thank Me and be immensely grateful for Me letting you come.</li>
+            <li>If you ever come without My permission, you'll know to quickly ask for My forgiveness.</li>
+            <li>You'll crave the taste and the chance to eat cum, whether it's yours or not, knowing it's one the greatest gift I can give you.</li>
+          </ol>
+          <h2>First part of your training</h2>
+          <h3>Whenever you want to masturbate...</h3>
+          <ol>
+            <li>You must think only of your Master's body or of your Master being with someone else. So that you'll get turned on just by seeing your Master.</li>
+            <li>You must, at all times, have your Master's cock whether in your hand, jacking it; in your mouth, blowing it; or in your pussy, getting fucked by it. So that you associate pleasure with a real and worthy cock like your Master's and realize that pleasuring your Master is so much better than pleasuring yourself.</li>
+          </ol>
+          <h2>Second part of your training</h2>
+          <h3>Whenever you want to masturbate...</h3>
+          <ol>
+            <li>You must think only of your Master's body or of your Master being with someone else. So that you'll get turned on just by seeing your Master.</li>
+            <li>You must, at all times, have your Master's cock whether in your hand, jacking it; in your mouth, blowing it; or in your pussy, getting fucked by it. So that you associate pleasure with a real and worthy cock like your Master's and realize that pleasuring your Master is so much better than pleasuring yourself.</li>
+            <li>When you feel you are close to orgasming, you must say "Please Master" out loud, at least three time, then, right before you come, hear (in your head) your Master saying "come". Then, you can come.</li>
+            <li>Once you came, gratefully say "Thank you Master" out loud and realize how lucky you are and how generous your Master can be when you deserve it.</li>
+            <li>After you've thanked your Master for these wonderful sensations, you get to savour the other gift that your Master procured for you; that's right, all that creamy goodness is your gift from your generous Master, lick it all, savor it and don't you miss a precious drop! Remember all the pleasure and the sense of accomplishment that this delicious treat represents.</li>
+          </ol>
+          <h2>Here are the rules:</h2>
+          <h3>Whenever you want to masturbate...</h3>
+          <ol>
+            <li>You must think only of your Master's body or of your Master being with someone else. So that you'll get turned on just by seeing your Master.</li>
+            <li>You must, at all times, have your Master's cock whether in your hand, jacking it; in your mouth, blowing it; or in your pussy, getting fucked by it. So that you associate pleasure with a real and worthy cock like your Master's and realize that pleasuring your Master is so much better than pleasuring yourself.</li>
+            <li>You must get as close as possible to orgasm, but without orgasming. You can only orgasm if you have your Master's permission and only after saying please three times out loud and hearing (in your head) your Master saying "come". Then, and only then can you come. Otherwise hold it in! So that you realize that your orgasms only belong to your Master and your Master's pleasure is the only happy ending you really need.</li>
+            <li>If you got the chance and honor to come thanks to your Master, then you must say "Thank you Master" out loud. So that you realize how lucky you are and how generous your Master can be when you deserve it. If you came without your Master's permission, you must say "I am sorry, Master, please forgive me" out loud.</li>
+            <li>After you've thanked your Master for these wonderful sensations (or hoped for forgiveness), you get to savour the other gift that your Master procured for you; that's right, all that creamy goodness is your gift from your generous Master, lick it all, savor it and don't you miss a precious drop!  I want you to associate the taste of cum with the greatest pleasures and sense of accomplishment so that you'll crave it, whether it's yours or not.</li>
+          </ol>
+        </div>
+        <div class="" id="next0to1">
+          <div>
+            <span class="order">Ready to start?</span>  
+            <button class="submit" onclick="Next('totsect0','totsect1')">Yes, Master!</button>
+          </div>        
+        </div>
+      </div>
+      <!--Faire que le bouton n'apparaisse qu'à la fin, car ça me tente pas de faire que les réponses se mettent à jour chaque fois qu'il recule ou réavance!-->
+      <!-- onclick="rapport()" -->
+      <div class="bottomButton rapBtn" onclick="rapport()"><span class="typcn typcn-mortar-board"></span></div>
+      <div id="rapBox" class="rapportBox">
+        <p>Date: <span id="rapDate"></span></p>
+        <p>Have you played with yourself? <span id="rap1">____</span> (<span id="rap1pnts"> __</span> Toy Points)</p>
+        <p>Have you thought about Me? <span id="rap2">____</span> (<span id="rap2pnts"> __</span> Toy Points)</p>
+        <p>Have you pleasure My cock? <span id="rap3">____</span> (<span id="rap3pnts"> __</span> Toy Points)</p>
+        <p>Have you dealt properly with your orgasm? <span id="rap4">____</span> (<span id="rap4pnts"> __</span> Toy Points)</p>
+        <p id="rapTot"></p>
+        <div onclick="addNewPlayTest(rapport().playDate, rapport().ans1, rapport().ans2, rapport().ans3)">Submit to dbr</div>
+        <!-- Il faut envoyer les résultats à la db. Puis à chaque fois qu'il revient, on ramène les résultats précédents de la db et additionne le nombre total de points accumulés. Quand le pntsTot égal ou dépasse un certain niveau, un message box apparait du genre "Congratulation Honey, you've got XX Toy Points! You now deserve to be used by your Master. OR You can now move on to the next level of your training." -->
+      </div>
+    </div>
+  
+    <div class="totsect" id="totsect1" style="display:none;">
+      <div class="section" id="S1">
+        <div class="cover" id="cover1"></div>
+        <p class="question">So, you've played with yourself?</p>  
+        <div class="choice" onclick="nowSubmit('submitAns1')"> 
+          <input id="Q1Yes" class="cossin" title="Q1" name="Q1" type="radio"> 
+          <label for="Q1Yes">Yes, Master!</label>
+          <input id="Q1No" class="cossin" title="Q1" name="Q1" type="radio"> 
+          <label for="Q1No">No, Master</label>
+        </div>     
+        <div class="submitAns" id="submitAns1">
+          <span class="order">Now, say it out loud and...</span> 
+          <button class="submit" onclick="MsR1()">submit</button>
+        </div> 
+        <div class="bottomButton backBefore" id="backToErase1" onclick="Prev1No('totsect1', 'totsect0','cover1','R1','submitAns1')" title="Forgive me Master for I made a mistake"><span class="typcn typcn-chevron-left"></span></div>
+      </div>
+      <div id="reponse1">
+        <p class="response" id="R1"></p>
+        <div id="nextDate">
+          <label for="todaysDate" class="dateLabel">Now, when was it?</label>
+          <input id="todaysDate" type="date" class="dateInput"/>
+          <p id="afterDate">Oh, horny little you...</p>
+          <div class="bottomButton backBefore" onclick="Prev3suiv1prev('reponse1', 'nextDate', 'cover1', 'backToErase1')" title="Forgive me Master for I made a mistake"><span class="typcn typcn-chevron-left"></span></div>
+        </div>
+      </div>
+      <hr>
+      <div class="next" id="next1to2">
+        <div>
+        <span class="order">Ready for more?</span>  
+        <button class="submit" onclick="Next('totsect1','totsect2')">Yes, Master!</button></div>
+        <div class="bottomButton backBefore" onclick="back1('todaysDate','afterDate','cover1',0, 'R1', 'reponse1','submitAns1','next1to2', 'backToErase1')" title="Forgive me Master for I made a mistake"><span class="typcn typcn-chevron-left"></span></div>
+      </div>
+    </div>
+
+    <div class="totsect" id="totsect2" style="display:none;">
+      <div class="section" id="S2">
+        <div class="cover" id="cover2"></div>
+        <p class="question">Were you thinking about Me the whole time?</p>  
+        <input id="drop2" class="cossin" title="drop2" name="drop2" type="checkbox">
+        <label for="drop2" class="drop">Be honest...<span class="typcn typcn-chevron-right dropchevron"></span></label> 
+        <div class="dropdown" onclick="nowSubmit('submitAns2')">  
+          <input id="Q2Yes" class="cossin Q2ra" title="Q2" name="Q2" type="radio" value="10">
+          <label for="Q2Yes">Yes, Master, the whole time!<br><span>I couldn't keep my eyes off of you!</span></label>
+          <input id="Q2Most" class="cossin Q2ra" title="Q2" name="Q2" type="radio" value="7">
+          <label for="Q2Most">No, Master,<br><span>but I did think about you most of the time!</span></label> 
+          <input id="Q2Some" class="cossin Q2ra" title="Q2" name="Q2" type="radio" value="2"> 
+          <label for="Q2Some">No, Master,<br><span>but I did think about you some of the time...</span></label>
+          <input id="Q2No" class="cossin Q2ra" title="Q2" name="Q2" type="radio" value="-5">
+          <label for="Q2No">No, Master... I forgot...</label> 
+        </div> 
+        <div class="submitAns" id="submitAns2"> 
+          <span class="order">Now, hope you'll get what you deserve...</span> 
+          <button class="submit" onclick="MsR2()">please, Master!</button> 
+        </div>
+        <div class="bottomButton backBefore" onclick="Prev('totsect2', 'totsect1')" title="Forgive me Master for I made a mistake"><span class="typcn typcn-chevron-left"></span></div>
+      </div>
+      <p class="response" id="R2"></p>
+      <hr>
+      <div class="next" id="next2to3">
+        <span class="order">Ready for more?</span> 
+        <button class="submit" onclick="Next('totsect2','totsect3')">Yes, Master!</button>
+        <div class="bottomButton backBefore" onclick="back('cover2',MsR1(),'R2','submitAns2','next2to3')" title="Forgive me Master for I made a mistake"><span class="typcn typcn-chevron-left"></span></div>
+      </div>
+    </div>
+      
+    <div class="totsect" id="totsect3" style="display:none;">  
+      <div class="section" id="S3">
+        <div class="cover" id="cover3"></div>
+        <p class="question">So, how did you pleasure My cock this whole time?</p>
+        <label for="Q3O1" class="checkboxlist" onclick="nowSubmit('submitAns3')">
+          <input id="Q3O1" class="checkbox Q3Cb" title="Q2" name="Q2" type="checkbox" value="2">
+          <span class="option">With my hand, Master</span></label>
+        <label for="Q3O2" class="checkboxlist" onclick="nowSubmit('submitAns3')">
+          <input id="Q3O2" class="checkbox Q3Cb" title="Q2" name="Q2" type="checkbox" value="3">
+          <span class="option">With my mouth, Master</span></label>
+        <label for="Q3O3" class="checkboxlist" onclick="nowSubmit('submitAns3')">
+          <input id="Q3O3" class="checkbox Q3Cb" title="Q2" name="Q2" type="checkbox" value="5">
+          <span class="option">With my pussy, Master</span></label>
+        <label for="Q3O4" class="checkboxlist" onclick="nowSubmit('submitAns3')">
+          <input id="Q3O4" class="checkbox Q3Cb" title="Q2" name="Q2" type="checkbox" value="-5"> 
+          <span class="option">I didn't, Master</span></label> 
+        <div class="submitAns" id="submitAns3">
+          <span class="order">That's it?<br><br>Now, say...</span> 
+          <button class="submit" onclick="MsR3()">please, Master!</button>
+        </div> 
+        <div class="bottomButton backBefore" onclick="Prev('totsect3', 'totsect2')" title="Forgive me Master for I made a mistake"><span class="typcn typcn-chevron-left"></span></div>
+      </div>
+      <p class="response" id="R3"></p>
+      <hr> 
+      <div class="next" id="next3to4">
+        <span class="order">Ready for more?</span> 
+        <button class="submit" onclick="Next('totsect3','totsect4')">Yes, Master!</button>
+        <div class="bottomButton backBefore" onclick="back('cover3',MsR2().tpnts2,'R3','submitAns3','next3to4',)" title="Forgive me Master for I made a mistake"><span class="typcn typcn-chevron-left"></span></div>
+      </div>
+    </div> 
+    
+    <div class="totsect" id="totsect4" style="display:none;">
+      <div class="section" id="S4">
+        <div class="cover" id="cover4"></div>
+        <p class="question">Did you get close to have an orgasm?</p>  
+        <input id="drop4" class="cossin" title="drop4" name="drop4" type="checkbox">
+        <label for="drop4" class="drop">Tell Me...<span class="typcn typcn-chevron-right dropchevron"></span></label> 
+        <div class="dropdown dropdown4" onclick="nowSubmit('submitAns4')">  
+          <input id="Q4No" class="cossin Q4ra" title="Q4" name="Q4" type="radio" value="0">
+          <label for="Q4No">No, I couldn't get close<br><span>Sorry, Master, I'll work on that</span></label>
+          <input id="Q4YesBut" class="cossin Q4ra" title="Q4" name="Q4" type="radio" value="-10">
+          <label for="Q4YesBut">Yes, but I couldn't stop it and came even though you didn't give me permission...<br><span>I am so sorry Master! Please forgive me!</span></label> 
+          <input id="Q4YesNo" class="cossin Q4ra" title="Q4" name="Q4" type="radio" value="10"> 
+          <label for="Q4YesNo">Yes, but since I didn't have your permission, I stopped it and didn't come at all!<br><span>I kept it just for you, Master!</span></label>
+          <input id="Q4YesYes" class="cossin Q4ra" title="Q4" name="Q4" type="radio" value="10">
+          <label for="Q4YesYes">Yes, and I said "please" 3 times and when you said "come", I came all over me!<br><span>Just like you asked me to, Master! Thank you so much, Master!</span></label> 
+        </div> 
+        <div class="submitAns" id="submitAns4"> 
+          <span class="order">Now, what should I do about that...</span> 
+          <button class="submit" onclick="MsR4()">please, Master!</button> 
+        </div>
+        <div class="bottomButton backBefore" onclick="Prev('totsect4', 'totsect3')" title="Forgive me Master for I made a mistake"><span class="typcn typcn-chevron-left"></span></div>
+        <!-- What about if they come (which won't be known from the pnts...) they get to the next question, which is about them savoring their cum -->
+      </div>
+      <p class="response" id="R4"></p>
+      <hr>
+      <div class="next" id="next4to5">
+        <span class="order">Ready for more?</span> 
+        <button class="submit" onclick="Next('totsect4','totsect5')">Yes, Master!</button>
+        <div class="bottomButton backBefore" onclick="back('cover4',MsR3().tpnts3,'R4','submitAns4','next4to5')" title="Forgive me Master for I made a mistake"><span class="typcn typcn-chevron-left"></span></div>
+      </div>
+    </div>
+  </div>
+<style>
+#SectPageToy{
+  background: #000;
+  color: rgba(255,0,0,.8);
+}
+.Mastersheader{
+  display: flex;
+  justify-content: space-between;
+}
+.MastersTitle h1{
+  margin: 0 10px 0 0;
+  line-height: 1.1em;
+}
+.toypointszone{
+  top:20px;
+  right:5px;
+  border:3.5px double rgba(255,0,0,.8);
+  border-radius: 15px;
+  text-align:center;
+  height: fit-content;
+  width: fit-content;
+}
+.toypointszone p{
+  margin:5px;
+}
+.backBefore{
+  right: 66px;
+  border-top: 1px solid rgba(255,0,0,.6);
+  border-left: 1px solid rgba(255,0,0,.6);
+  border-bottom: 4px solid rgba(255,0,0,.6);
+  border-right: 3px solid rgba(255,0,0,.6);
+  color:rgba(255,0,0,.8);
+}
+.remindRules{
+  right: 34px;
+  border-top: 1px solid rgba(255,0,0,.6);
+  border-left: 1px solid rgba(255,0,0,.6);
+  border-bottom: 4px solid rgba(255,0,0,.6);
+  border-right: 3px solid rgba(255,0,0,.6);
+  color:rgba(255,0,0,.8);
+  z-index: 9999;
+}
+#remindRulesBox{
+  display:none;
+}
+#remindRulesBox.visible{
+  display:block;
+}
+.RulesCover{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  opacity:.7;
+  z-index:1;
+}
+.rulesBox{
+  border-top: 1px solid rgba(255,0,0,.6);
+  border-left: 1px solid rgba(255,0,0,.6);
+  border-bottom: 4px solid rgba(255,0,0,.6);
+  border-right: 3px solid rgba(255,0,0,.6);
+  border-radius: 5px;
+  padding: 15px;
+  margin: 0 20px;
+  z-index: 9999;
+  position: fixed;
+  top: 50px;
+  background: #000;
+  opacity: 1;
+}
+.rulesBoxClose{
+  transform: rotate(45deg);
+  font-size: 24px;
+  color:rgba(255,0,0,.8);
+  position:absolute;
+  top: 5px;
+  right: 5px;
+}
+.sureBackHome{
+  display: none;
+  border-top: 1px solid rgba(255,0,0,.6);
+  border-left: 1px solid rgba(255,0,0,.6);
+  border-bottom: 4px solid rgba(255,0,0,.6);
+  border-right: 3px solid rgba(255,0,0,.6);
+  border-radius: 5px;
+  padding: 15px;
+  margin: 0 10px;
+  text-align: center;
+  z-index: 9999;
+  position: fixed;
+  top: calc(50vh - 75px);
+  background: #000;
+}
+@media (min-width: 520px) {
+  .sureBackHome{
+    left: calc(50vw - 240px);
+  }
+}
+.rapBtn{
+  left: 2px;
+  border-top: 1px solid rgba(255,0,0,.6);
+  border-left: 1px solid rgba(255,0,0,.6);
+  border-bottom: 4px solid rgba(255,0,0,.6);
+  border-right: 3px solid rgba(255,0,0,.6);
+  color:rgba(255,0,0,.8);
+  z-index: 9999;
+}
+.rapportBox{
+  display:none;
+  border-top: 1px solid rgba(255,0,0,.6);
+  border-left: 1px solid rgba(255,0,0,.6);
+  border-bottom: 4px solid rgba(255,0,0,.6);
+  border-right: 3px solid rgba(255,0,0,.6);
+  border-radius: 5px;
+  padding: 5px;
+  color:rgba(255,0,0,.8);
+  position: fixed;
+  bottom: 2px;
+  left: 34px;
+  line-height: 1.2;
+}
+.rapportBox.visible{
+  display:block;
+}
+.totsect{
+  display:none;
+}
+#totsect0{
+  display:block;
+}
+.rules{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.rules ol li{
+  margin-bottom: 10px;
+}
+.section{
+  position:relative;
+}
+.cover{
+  display:none;
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  opacity:.5;
+  z-index:1;
+}
+#coverSureBackHome{
+  position: fixed;
+}
+.reponse{
+  z-index:99999;
+}
+hr{
+  border-top: 1.5px solid rgba(255,0,0,.8);
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+  padding:0;
+  margin-top: 50px;
+}
+.next{
+  display: none;
+}
+#back{
+  visibility:hidden;
+}
+.back{
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width:160px;
+  margin-top:5px;
+}
+.back>p{
+  font-size: 14px;
+  text-align:center;
+  margin-bottom: 5px;
+}
+.back div{
+  border: 1px solid rgba(255,0,0,.8);
+  border-radius: 5px;
+  padding:5px;
+  font-size: 14px;
+  text-align:center;
+}
+.back div:hover{
+  cursor: pointer;
+  color: rgba(255,0,0,.5);
+  border: 1px solid rgba(255,0,0,.5);
+}
+.back div:checked{
+  background: rgba(255,0,0,.3);
+}
+#nextDate, #afterDate{
+  display: none;
+}
+.dateInput{
+  background: rgba(255,0,0,.2);
+  border: 2px solid rgba(255,0,0,.7);
+  border-radius: 2px;
+  color: rgba(255,0,0,.8);
+  margin-left: 10px;
+}
+.dateInput:focus{
+  outline: 1px solid rgba(255,255,255,.5);
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(16%) sepia(89%) saturate(7492%) hue-rotate(360deg) brightness(98%) contrast(109%);
+}
+
+select{
+  display: block;
+  margin: 10px 0;
+  border: 1px solid rgba(255,0,0,.8);
+  background: #000;
+  color: rgba(255,0,0,.8);
+  padding: 2px;
+  border-radius: 5px;
+  line-height: 2em;
+  font-size: 20px;
+}
+select:focus-visible {
+    outline: none;
+}
+
+.question{
+  display:block;
+  font-size: 24px;
+}
+
+.cossin{
+  display:none;
+}
+
+.choice label{
+  display: inline-block;
+  margin: 10px;
+  border: 1px solid rgba(255,0,0,.8);
+  background: rgba(255,0,0,0);
+  color: rgba(255,0,0,.8);
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 20px;
+  width: 125px;
+  text-align: center;
+}
+.choice label:hover{
+  cursor: pointer;
+  color: rgba(255,0,0,.5);
+  border: 1px solid rgba(255,0,0,.5);
+}
+
+.choice input[type="radio"]:checked+label{
+  background: rgba(255,0,0,.3);
+} 
+.order{
+  display:inline-block;
+  margin-top: 15px;
+  line-height:1em;
+}
+
+.submit{
+  display: inline-block;
+  margin: 10px;
+  border: 1px solid rgba(255,0,0,.8);
+  background: rgba(255,0,0,0);
+  color: rgba(255,0,0,.8);
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 16px;
+}
+.submit:hover{
+  cursor: pointer;
+  color: rgba(255,0,0,.5);
+  border: 1px solid rgba(255,0,0,.5);
+}
+.submit.sureBackHomebtn:hover{
+  cursor: pointer;
+  color: rgba(255,0,0,.8);
+  border: 1px solid rgba(255,0,0,.8);
+  background: rgba(255,0,0,.3);
+}
+.submit:checked{
+  background: rgba(255,0,0,.3);
+} 
+
+.drop{
+  display: block;
+  margin: 0;
+  border: 1px solid rgba(255,0,0,.8);
+  background: #000;
+  color: rgba(255,0,0,.8);
+  padding: 5px;
+  border-radius: 5px;
+  line-height: 1em;
+  font-size: 20px;
+  width: 140px;
+}
+.dropdown{
+  transition: max-height .3s ease-out;
+  max-height: 0;
+}
+.dropchevron{
+  float: right;
+  transform: rotate(90deg);
+  transition: transform .1s ease-out;
+}
+#drop2:checked + label.drop>span.dropchevron, #drop4:checked + label.drop>span.dropchevron{
+transform: rotate(-90deg);
+transition: transform 0.5s;
+}
+#drop2:checked ~ div.dropdown, #drop4:checked ~ div.dropdown{
+  max-height: 100vh;
+  transition: max-height .5s ease-in;
+}
+#drop2:checked ~ div.dropdown label, #drop4:checked ~ div.dropdown label{
+  visibility: visible;
+  transition: visibility .3s .3s ease-in;
+  position: relative;
+}
+#drop2:checked + label.drop, #drop4:checked + label.drop{
+  width: 100%;
+  max-width: 300px;
+  background: rgba(255,0,0,.2);
+  border-radius: 5px 5px 0 0;
+  transition: width 0s .3s ease-in;
+}
+#drop4:checked + label.drop{
+  max-width: 600px;
+}
+.dropdown label{
+  display:block;
+  visibility: hidden;
+  border: 1px solid rgba(255,0,0,.8);
+  padding: 5px;
+  width: 100%;
+  max-width: 300px;
+}
+.dropdown4 label{
+  max-width: 600px;
+  font-size: calc(13.53px + 0.19vw);
+  line-height: 1.5;
+  padding: 10px 5px;
+}
+.dropdown label span{
+  font-size: 14px;
+}
+.dropdown4 label span{
+  font-size: calc(15.53px + 0.19vw);
+}
+.submitAns{
+  visibility: hidden;
+  margin-top: 15px;
+}
+.dropdown label:hover{
+  opacity:.7;
+}
+.dropdown input[type="radio"]:checked + label{
+  background: rgba(255,0,0,.3);
+}
+
+.checkboxlist{
+  display: block;
+  margin: 10px 0;
+}
+.checkboxlist:hover{
+  opacity:.7;
+}
+
+input[type="checkbox" i]{
+  appearance:none;
+  width: 15px;
+  height: 15px;
+  margin: 6px 5px 0 5px;
+  border-radius: 5px;
+  border: 1px solid rgba(255,0,0,.8);
+  background: rgba(255,0,0,.2); 
+}
+input[type="checkbox" i]:checked{
+  border: none;
+  background: #000;
+  margin: 0 10px 0 0;
+  font-size: 20px;
+}
+#Q3O1:checked::after {
+  content: "👌";
+}
+#Q3O2:checked::after {
+  content: "😘";
+}
+#Q3O3:checked::after {
+  content: "🔥";
+}
+#Q3O4:checked::after {
+  content: "🤬";
+}
+
+</style>
+<script>
+
+function addNewPlay(playId, playDate, ans1, ans2, ans3){
+  set(ref(dbr, 'plays/' + playId),{
+    date: playDate,
+    Question1: ans1,
+    Question2: ans2,
+    Question3: ans3
+  });
+}
+function addNewPlayTest(playDate, ans1, ans2, ans3){
+  set(ref(dbr, 'plays/' + playDate),{
+    date: playDate,
+    Question1: ans1,
+    Question2: ans2,
+    Question3: ans3
+  });
+}
+function addNewTest(testId, ans1, ans2, ans3){
+  set(ref(dbr, 'plays/' + testId),{
+    date: playDate,
+    Question1: ans1,
+    Question2: ans2,
+    Question3: ans3
+  });
+}
+
+var R1Yes = [
+  "Good, now be gratefull I've let you play with yourself, 'cause you're MY toy!",
+  "Good toy, you've got to train to get usefull!",
+  "See how you can be used!? Good toy!"
+];
+var R1No = [
+  "But then what the fuck are you doing here? GO train!",
+  "Then why should I wanna use you if you won't even use you yourself?!",
+  "Then what are you waiting for?! I'm certainly not gonna train for you!"
+];
+var R2Yes = [
+  "I know, you're fucking lucky to be even considered by Me!",
+  "I know, right?! I'm so fucking amazing, aren't you grateful to be mine?",
+  "Imagine, one day you might even get to touch Me for real!"
+];
+var R2Bof = [
+  "Well, will I have to right my name on you so that you remember who you belong to?",
+  "If you're not that into me, then why should I be into you?",
+  "And that's supposed to make me feel better?!",
+  "Not good enough, do better next time or you can forget about Me entirely!"
+];
+var R2No = [
+  "You forgot?! Well, now watch me forgetting about you!",
+  "Well, if you can't think about your Master, why should I think about a useless toy?",
+  "Really?! Then watch me forgetting to give you an orgasm for a while!"
+];
+var R3plus5 = [
+  "Oh, I bet you loved it, didn't you? Little horny thing!",
+  "See, how usefull you can be!? One day, I'll use you so good...",
+  "Oh, I can't wait to see that! I'm so proud of you, little horny thing!"
+];
+var R3moins5 = [
+  "That's a good start, keep training and you'll get there!",
+  "See, there's still hope for you! One day, you'll finally be fully useable!",
+  "That's a start, but don't forget that a good toy must be fully useable!"
+];
+var R3No = [
+  "But then what the fuck were you even doing? How could you have any pleasure without a real cock?!",
+  "Then why should I wanna use you if you won't even use you yourself?!",
+  "Then what are you for?! What else am I supposed to use you for if not for your holes and skills?!",
+  "Better start training properly or you'll end up useless!"
+];
+var Q4No = [
+  "Then what's the point in that? You must be doing something wrong... I want you wriggling in need!",
+  "...",
+  "...",
+];
+var Q4YesBut = [
+  "Oh, well I hope you enjoyed it, because now you better clean it up and feel bad for coming without my permission!",
+  "...",
+  "...",
+];
+var Q4YesNo = [
+  "Oh, so sweet! I'm so proud of you! Here, you deserve your 10 points!",
+  "...",
+  "...",
+];
+var Q4YesYes = [
+  "There you go! See how it feels so much better when you come with my blessing?!",
+  "...",
+  "...",
+];
+
+function remindRules(){
+  document.getElementById('remindRulesBox').classList.toggle('visible');
+}
+function remindRulesClose(){
+  document.getElementById('remindRulesBox').classList.remove('visible');
+}
+
+function nowSubmit(submitAnsX){
+  document.getElementById(submitAnsX).style.visibility = "visible";
+}
+
+function MsR1(){
+  var pnts1 = 0;
+  document.getElementById("reponse1").style.display = "block";
+  if(document.getElementById("Q1Yes").checked == false && document.getElementById("Q1No").checked == false){
+    document.getElementById("R1").innerHTML = "Answer your Master!";
+  } else if(document.getElementById("Q1Yes").checked == true) { 
+    pnts1 += 5;
+    let num = getRndInteger(0,R1Yes.length);
+    document.getElementById("R1").innerHTML = R1Yes[num] + "<br>\n<br>\nHere's " + pnts1 + " Toy Points for you.";
+    document.getElementById("toypoints").innerHTML = pnts1;
+    document.getElementById("backToErase1").style.display = "none";
+    Closure("cover1","nextDate");
+    document.getElementById("rap1").innerHTML = "Yes";
+    document.getElementById("rap1pnts").innerHTML = pnts1;
+    console.log("pnts1 si Yes " + pnts1);
+    return pnts1;
+  } else if(document.getElementById("Q1No").checked == true) {
+    let num = getRndInteger(0,R1No.length);
+    document.getElementById("R1").innerHTML = R1No[num] + "<br>\n<br>\nCome back once you've played with yourself!";
+    document.getElementById("cover1").style.display = "block";
+    document.getElementById("back").style.visibility = "visible";
+    document.getElementById("rap1").innerHTML = "No";
+    document.getElementById("rap1pnts").innerHTML = pnts1;
+    console.log("pnts1 si No " + pnts1);
+    return pnts1;
+  }
+} 
+const todaysDate = document.querySelector('#todaysDate')
+todaysDate.onchange = (e) => {
+  console.log(e.target.value)
+  var playDateRap = e.target.value;
+  Closure("afterDate","next1to2");
+  document.getElementById("rapDate").innerHTML = playDateRap;
+  return playDateRap;
+}
+
+function MsR2(){
+  var tpnts2 = MsR1();
+  console.log("first tpnts2 " + tpnts2);
+  var allRa = document.getElementsByClassName("Q2ra");
+  var t2 = allRa.length;
+  let pnts2 = 0;
+  for(var rep2 = 0; rep2<t2; rep2++){
+    if(allRa[rep2].checked){
+      pnts2 = Number(allRa[rep2].value);
+    }
+  }
+  console.log("pnts2 " + pnts2);
+  if(pnts2 == 0){
+      document.getElementById("R2").innerHTML = "Answer your Master!";
+    } else if(pnts2 >= 7){
+      tpnts2 += pnts2;
+      let num = getRndInteger(0,R2Yes.length);
+      document.getElementById("R2").innerHTML = R2Yes[num] + "<br>\n<br>\nHere you go Honey, " + pnts2 + " Toy Points for you!"; 
+      document.getElementById("toypoints").innerHTML = tpnts2;
+      Closure("cover2","next2to3");
+      document.getElementById("rap2").innerHTML = "Yes";
+      document.getElementById("rap2pnts").innerHTML = pnts2;
+    } else if(pnts2 < 0){
+      tpnts2 += pnts2;
+      let num = getRndInteger(0,R2No.length);
+      document.getElementById("R2").innerHTML = R2No[num] + "<br>\n<br>\nBad toy! You lose " + Math.abs(pnts2) + " Toy Points just for that!";
+      document.getElementById("toypoints").innerHTML = tpnts2;
+      Closure("cover2","next2to3");
+      document.getElementById("rap2").innerHTML = "No";
+      document.getElementById("rap2pnts").innerHTML = pnts2;
+    } else if(pnts2 < 5 && pnts2 > 1){
+      tpnts2 += pnts2;
+      let num = getRndInteger(0,R2Bof.length);
+      document.getElementById("R2").innerHTML = R2Bof[num] + "<br>\n<br>\nHere, you can have " + pnts2 + " Toy Points. Better do better next time!";
+      document.getElementById("toypoints").innerHTML = tpnts2;
+      Closure("cover2","next2to3");
+      document.getElementById("rap2").innerHTML = "Not enough";
+      document.getElementById("rap2pnts").innerHTML = pnts2;
+    }
+  return {'pnts2': pnts2, 'tpnts2': tpnts2};
+}
+
+
+function MsR3(){
+  var tpnts3 = MsR2().tpnts2;
+  console.log("first tpnts3 " + tpnts3);
+  var allCb = document.getElementsByClassName("Q3Cb");
+  var t = allCb.length;
+  let pnts3 = 0;
+  for(var rep = 0; rep<t; rep++){
+    if(allCb[rep].checked){
+      pnts3 += Number(allCb[rep].value);
+    }
+  }
+  console.log("pnts3 " + pnts3);
+    if(pnts3 == 0){
+      document.getElementById("R3").innerHTML = "Answer your Master honestly!";
+    } else if(pnts3 >= 5){
+      tpnts3 += pnts3;
+      let num = getRndInteger(0,R3plus5.length);
+      document.getElementById("R3").innerHTML = R3plus5[num] + "<br>\n<br>\nLittle horny thing deserves its " + pnts3 + " Toy Points!";
+      document.getElementById("toypoints").innerHTML = tpnts3;
+      Closure("cover3","next3to4");
+      document.getElementById("rap3").innerHTML = "Yes";
+      document.getElementById("rap3pnts").innerHTML = pnts3;
+    } else if(pnts3 < 0){
+      tpnts3 += pnts3;
+      let num = getRndInteger(0,R3No.length);
+      document.getElementById("R3").innerHTML = R3No[num] + "<br>\n<br>\nWhat a useless toy! I'm taking " + Math.abs(pnts3) + " Toy Points back!";
+      document.getElementById("toypoints").innerHTML = tpnts3;
+      Closure("cover3","next3to4");
+      document.getElementById("rap3").innerHTML = "No";
+      document.getElementById("rap3pnts").innerHTML = pnts3;
+    } else if(pnts3 < 5 && pnts3 > 1){
+      tpnts3 += pnts3;
+      let num = getRndInteger(0,R3moins5.length);
+      document.getElementById("R3").innerHTML = R3moins5[num] + "<br>\n<br>\nAlright, here are " + pnts3 + " Toy Points for your efforts.";
+      document.getElementById("toypoints").innerHTML = tpnts3;
+      Closure("cover3","next3to4");
+      document.getElementById("rap3").innerHTML = "Not enough";
+      document.getElementById("rap3pnts").innerHTML = pnts3;
+    }
+    return {'pnts3': pnts3, 'tpnts3': tpnts3};
+}
+
+function MsR4(){
+  //var tpnts4 = MsR3().tpnts3;
+  var tpnts4 = 0;
+  var allRa4 = document.getElementsByClassName("Q4ra");
+  var t4 = allRa4.length;
+  let pnts4 = 0;
+  for(var rep4 = 0; rep4<t4; rep4++){
+    if(allRa4[rep4].checked){
+      pnts4 += Number(allRa4[rep4].value);
+      var ans4 = allRa4[rep4].id;
+    } 
+    console.log("4: rep4=" + rep4 + "  pnts4=" + pnts4);
+  }
+ if(ans4 == "Q4No"){
+      tpnts4 += pnts4;
+      let num = getRndInteger(0,Q4No.length);
+      document.getElementById("R4").innerHTML = Q4No[num] + "<br>\n<br>\nOh, Honey, " + pnts4 + " Toy Points for you."; 
+      document.getElementById("toypoints").innerHTML = tpnts4;
+      Closure("cover4","next4to5");
+      document.getElementById("rap4").innerHTML = "Not enough";
+      document.getElementById("rap4pnts").innerHTML = pnts4;
+    } else if(ans4 == "Q4YesBut"){
+      tpnts4 += pnts4;
+      let num = getRndInteger(0,Q4YesBut.length);
+      document.getElementById("R4").innerHTML = Q4YesBut[num] + "<br>\n<br>\nAnd you lose " + Math.abs(pnts4) + " Toy Points!"; 
+      document.getElementById("toypoints").innerHTML = tpnts4;
+      Closure("cover4","next4to5");
+      document.getElementById("rap4").innerHTML = "No";
+      document.getElementById("rap4pnts").innerHTML = pnts4;
+    } else if(ans4 == "Q4YesNo"){
+      tpnts4 += pnts4;
+      let num = getRndInteger(0,Q4YesNo.length);
+      document.getElementById("R4").innerHTML = Q4YesNo[num] + "<br>\n<br>\nHere you go, Honey, you deserve your " + pnts4 + " Toy Points!";
+      document.getElementById("toypoints").innerHTML = tpnts4;
+      Closure("cover4","next4to5");
+      document.getElementById("rap4").innerHTML = "Yes";
+      document.getElementById("rap4pnts").innerHTML = pnts4;
+    } else if(ans4 == "Q4YesYes"){
+      tpnts4 += pnts4;
+      let num = getRndInteger(0,Q4YesYes.length);
+      document.getElementById("R4").innerHTML = Q4YesYes[num] + "<br>\n<br>\nHere, you get your " + pnts4 + " Toy Points too.";
+      document.getElementById("toypoints").innerHTML = tpnts4;
+      Closure("cover4","next4to5");
+      document.getElementById("rap4").innerHTML = "Yes";
+      document.getElementById("rap4pnts").innerHTML = pnts4;
+    } 
+    return {'pnts4': pnts4, 'tpnts4': tpnts4};
+}
+function rapport(){
+  document.getElementById("rapBox").classList.toggle('visible');
+  //document.getElementById("rapDate").innerHTML = "Date: " + e();
+  //document.getElementById("rap1").innerHTML = "Question 1: " + MsR1() + " Toy points";
+  //document.getElementById("rap2").innerHTML = "Question 2: " + MsR2().pnts2 + " Toy points";
+  //document.getElementById("rap3").innerHTML = "Question 3: " + MsR3().pnts3 + " Toy points";
+  //document.getElementById("rap4").innerHTML = "Question 4: " + MsR4().pnts4 + " Toy points";
+  document.getElementById("rapTot").innerHTML = "Total: " + (MsR1() + MsR2().pnts2 + MsR3().pnts3 + MsR4().pnts4) + " Toy points";
+  var playDate = document.getElementById("rapDate").textContent;
+  var ans1 = document.getElementById("rap1").textContent;
+  var ans2 = document.getElementById("rap2").textContent;
+  var ans3 = document.getElementById("rap3").textContent;
+  var ans4 = document.getElementById("rap4").textContent;
+  return {'playDate': playDate, 'ans1': ans1, 'ans2': ans2, 'ans3': ans3, 'ans4': ans4};
+  console.log(playDate + " " + ans1 + " " + ans2 + " " + ans3 + " " + ans4);
+}
+
+//var ans1 = document.getElementById("rap1").value;
+//var ans2 = document.getElementById("rap2").value;
+//var ans3 = document.getElementById("rap3").value;
+//var ans4 = document.getElementById("rap4").value;
+//console.log(ans1 + " " + ans2 + " " + ans3 + " " + ans4);
+
+function getRndInteger(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function Next(prev, suiv){
+  document.getElementById(prev).style.display = "none";
+  document.getElementById(suiv).style.display = "block";
+}
+function Prev(suiv, prev){
+  document.getElementById(suiv).style.display = "none";
+  document.getElementById(prev).style.display = "block";
+}
+function Prev1No(suiv,prev,cover,rep,subplease){
+  document.getElementById(suiv).style.display = "none";
+  document.getElementById(prev).style.display = "block";
+  document.getElementById(cover).style.display = "none";
+  document.getElementById(rep).innerHTML = "";
+  document.getElementById(subplease).style.visibility = "hidden";
+}
+function Prev3suiv1prev(suiv1, suiv2, suiv3, prev){
+  document.getElementById(suiv1).style.display = "none";
+  document.getElementById(suiv2).style.display = "none";
+  document.getElementById(suiv3).style.display = "none";
+  document.getElementById(prev).style.display = "block";
+}
+
+function Closure(now,next){
+    document.getElementById(now).style.display = "block";
+    document.getElementById(next).style.display = "block";
+}
+function back(cover,pnts,rep,subplease,next){
+  /*remove the cover and substract the pnts*/
+  document.getElementById(cover).style.display = "none";
+  document.getElementById("toypoints").innerHTML = pnts;
+  document.getElementById(rep).innerHTML = "";
+  document.getElementById(subplease).style.visibility = "hidden";
+  document.getElementById(next).style.display = "none";
+}
+function back1(date,after,cover,pnts,rep,none,subplease,next,block){
+  /*remove the cover and substract the pnts*/
+  document.getElementById(date).value = "";
+  document.getElementById(after).style.display = "none";
+  document.getElementById(cover).style.display = "none";
+  document.getElementById("toypoints").innerHTML = pnts;
+  document.getElementById(rep).innerHTML = "";
+  document.getElementById(none).style.display = "none";
+  document.getElementById(subplease).style.visibility = "hidden";
+  document.getElementById(next).style.display = "none";
+  document.getElementById(block).style.display = "block";
+}
+
+function refresh(){
+  history.go(0);
+}
+
+
+
+</script>
+  
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
+  import { getFirestore, collection, getDocs, query, where} from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyBHSLxXWZUAOH8bKsRSGMnSzOh6QnyPTWQ",
+    authDomain: "alix-alie-alex.firebaseapp.com",
+    projectId: "alix-alie-alex",
+    storageBucket: "alix-alie-alex.appspot.com",
+    messagingSenderId: "519484588635",
+    appId: "1:519484588635:web:ec162ad407f9b45f60357e",
+    measurementId: "G-NFDD6B1G9R"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getFirestore(app);
+  const querySnapshot = await getDocs(query(collection(db, "person"), where("lastName", "==", "gentile")));
+  querySnapshot.forEach((doc) => {
+    console.log(doc.data());
+  });
+</script>
+</script>
+  </body>
+  <footer>
+    <!--<p style="text-align:center;">Who needs a footer, anyway?</p>-->
+</footer>
+</html>

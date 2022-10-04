@@ -139,29 +139,30 @@
     }
   </script>
   <!--HomePage-->
-    <!--<input type="file" id="photo">
-    <button onclick="uploadImage()">Upload Image</button>-->
-    <div class="home" id="home">
-      <h1>Whatever you think you're doing here,<br>WELCOME!</h1>
-      <h3>That's my space, my mind, my shoes,...<br>Be warned, your insurances don't cover that kind of trauma.</h3>
-      <p>Yeah, that's the only trigger warning you'll get...</p>
-      <div>
-        <h2>Shit of the day</h2>
-        <div class="SotD" id="SotD" onclick="SotD()">
-          <p id="SotDp">Click here to get what you deserve</p>
-        </div>
-      </div>
-      <h2>Your other choices</h2>
-      <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage()" id="Wrote"><label for="Wrote" class="menuSectLabel">I wrote, you read</label></input>
-      <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage()" id="Shit"><label for="Shit" class="menuSectLabel">Quotes, Memes and Shit<br>to make us feel better, or worst</label></input>
-      <input type="radio" name="menuSect" class="menuSect" onclick="showPWfield()" id="Toy"><label for="Toy" class="menuSectLabel" id="ToyLabel">My Toy's training<br><span>(password protected)</span></label></input>
-      <div class="PWfield" id="PWfield">
-        <label class="PWlabel">What's the magid word?</label><div class="inputEye"><input type="password" class="PWinput" id="PWinput" placeholder="The magic word is..."><div class="diveye" onclick="showPW()"><span class="typcn typcn-eye-outline eye"></span><span class="typcn typcn-minus slash" id="slash"></span></div></input></div>
-        <button class="PWbtn" onclick="PWtoPage()"><p>Let's hope you're right!</p></button>
-        <p class="h2like" id="wrong">Wrong!</p>
+    <!--Next step (with Eric): protect my database!-->
+    <!--Next step (by myself): figure out how to use the navigator back buttons and different href-->
+    <!-- Pour mettre en commentaire: Sélectionne et fait Ctrl+É -->
+  <div name="HomePage" class="home" id="home">
+    <h1>Whatever you think you're doing here,<br>WELCOME!</h1>
+    <h3>That's my space, my mind, my shoes,...<br>Be warned, your insurances don't cover that kind of trauma.</h3>
+    <p>Yeah, that's the only trigger warning you'll get...</p>
+    <div>
+      <h2>Shit of the day</h2>
+      <div class="SotD" id="SotD" onclick="SotD()">
+        <p id="SotDp">Click here to get what you deserve</p>
       </div>
     </div>
-    <div class="bottomButton backHome" onclick="backHome()" title="Let's go back home!"><span class="typcn typcn-home"></span></div>
+    <h2>Your other choices</h2>
+    <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage()" id="Wrote"><label for="Wrote" class="menuSectLabel">I wrote, you read</label></input>
+    <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage()" id="Shit"><label for="Shit" class="menuSectLabel">Quotes, Memes and Shit<br>to make us feel better, or worst</label></input>
+    <input type="radio" name="menuSect" class="menuSect" onclick="showPWfield()" id="Toy"><label for="Toy" class="menuSectLabel" id="ToyLabel">My Toy's training<br><span>(password protected)</span></label></input>
+    <div class="PWfield" id="PWfield">
+      <label class="PWlabel">What's the magid word?</label><div class="inputEye"><input type="password" class="PWinput" id="PWinput" placeholder="The magic word is..."><div class="diveye" onclick="showPW()"><span class="typcn typcn-eye-outline eye"></span><span class="typcn typcn-minus slash" id="slash"></span></div></input></div>
+      <button class="PWbtn" onclick="PWtoPage()"><p>Let's hope you're right!</p></button>
+      <p class="h2like" id="wrong">Wrong!</p>
+    </div>
+  </div>
+  <div class="bottomButton backHome" onclick="backHome()" title="Let's go back home!"><span class="typcn typcn-home"></span></div>
   <style name="HomePage">
     .PWfield{
       visibility: hidden;
@@ -469,6 +470,9 @@
       margin: auto;
       box-shadow: 5px 5px 5px rgb(128 0 128 / 60%);
     }
+    .textPage hr{
+      border-color: purple;
+    }
 
   </style>
   <script name="WrotePage">
@@ -487,14 +491,13 @@
       }
     }
   </script>
-  <div class="sectionPage">
+  <div name="WrotePage" class="sectionPage">
     <div class="bottomButton backTop" onclick="backTop()" title="Again! From the top!"><span class="typcn typcn-chevron-right chevronTop"></span></div>
     <div class="menuTextSection">
       <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Table"><label for="Table" class="menuTextLabel">La table est mise</label></input>
       <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Torture"><label for="Torture" class="menuTextLabel">Torture</label></input>
       <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Destin"><label for="Destin" class="menuTextLabel">Destin impitoyable</label></input>
-      <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Slave"><label for="Slave" class="menuTextLabel">Slave or Toy?</label></input>
-      <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Dog"><label for="Dog" class="menuTextLabel">I found a dog!</label></input>
+      <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Kinky"><label for="Kinky" class="menuTextLabel">Kinky Journal</label></input>
       <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Alex"><label for="Alex" class="menuTextLabel">Alex, 23 et 49</label></input>
     </div>
     <!--La table est mise-->
@@ -684,8 +687,15 @@
         
       <p>Ensemble protégeons les arbres troués des graines d'écureuils!</p>
     </div>
-    <!--Slave or Toy?-->
+    <!--Kinky Journal-->
     <div class="textPage">
+      <h1>I found a dog!</h1>
+      <p><em>Public Disgrace<br>
+      May 2016</em></p>
+      <p>After this hot girl squirted all over me (which had me come as well), he licked my pussy as any slave should do: like he could do it for hours! But it turned me on so much that I came again pretty fast. Then he started cleaning all that juice off my body... with his tongue, of course! Once I was clean, as a good slave, he cleaned up the scene space, picked up my stuff, and heeled as I went off.</p> 
+      <p>Oh, I loved this dog! He was not only pretty but also very obedient and would lick my feet every time I ask him. I loved seeing him licking my feet and enjoying it! I walked him around with his leash as he carried my stuff and showed him off to everyone. I was so proud of my good boy! I played with him, teasing him while he was attached to the pole... and when I had had enough, I sat down and made him massage my feet and legs.</p> 
+      <p>So relaxing!</p>
+      <hr/>
       <h1>A slave or a toy? Why not both?!</h1>
       <p><em>Public Disgrace<br>
       May 2018</em></p>
@@ -700,13 +710,6 @@
         xox</p>
       <p>P.S. That's what I call teamwork: a slave AND a toy!</p>
     </div>
-    <!--I found a dog!-->
-    <div class="textPage">
-      <h1>I found a dog!</h1>
-      <p><em>Public disgrace<br>
-      May 2016</em></p>
-      <p>After this hot girl squirted all over me (which had me come as well), he licked my pussy as any slave should do: like he could do it for hours! But it turned me on so much that I came again pretty fast. Then he started cleaning all that juice off my body... with his tongue, of course! Once I was clean, as a good slave, he cleaned up the scene space, picked up my stuff, and heeled as I went off. Oh, I loved this dog! He was not only pretty but also very obedient and would lick my feet every time I ask him. I loved seeing him licking my feet and enjoying it! I walked him around with his leash as he carried my stuff and showed him off to everyone. I was so proud of my good boy! I played with him, teasing him while he was attached to the pole... and when I had had enough, I made him massage my feet and legs. So relaxing!</p>
-    </div>
     <!--Alex, 23 et 49-->
     <div class="textPage">
       <h1 style="line-height: 1;">Café, DuctTape & Canif Suisse (PNDCO)</h1>
@@ -717,49 +720,84 @@
       <div style="margin:5% -10% 5% -5%;">
         <div class="boxStill">
           <h2>I'm still working on that one.<br>Come back in three years!</h2>
-          <h5>But if you really really want to read what I've written so far, you can <a href="https://jealous-buffer-ab0.notion.site/Caf-DuctTape-Canif-Suisse-PNDCO-a7a75d511eee4fbf8c3176f143bb66dc">click here</a>, but then you won't be able to come back from that... ever again.</h5></div>
-        </div>
+          <h5>But if you really really want to read what I've written so far, you can <a href="https://jealous-buffer-ab0.notion.site/Caf-DuctTape-Canif-Suisse-PNDCO-a7a75d511eee4fbf8c3176f143bb66dc">click here</a>, but then you won't be able to come back from that... ever again.</h5>
+          <p>Or just check below for the first chapter.👇</p></div>
+      </div>
+      <div>
+        <h1 style="line-height: 1;">Café, DuctTape & Canif Suisse (PNDCO)</h1>
+        <h3 style="margin: -30px 0 30px;">(Alex, 23 & 49)</h3>
+        <p><em>One of these days my knowledge of myths and fairy tales and tv shows and weird facts is going to come in handy, just you wait.</em></p>
+        <h1>Chapitre 1 - Setup</h1>
+        <h2>PdV d’Alex</h2>
+        <h3><em>I get road rage walking behind people.</em></h3>
+        <p>C’est un magnifique après-midi d’été, chaud et ensoleillé, et déjà je fantasme les yeux ouverts à la douce idée d’insérer à répétition, de façon brusque, mais efficace, toute la longueur de mon outil préféré (y&#x27;é pas ben gros, mais tout l&#x27;monde sait que c&#x27;est pas ça qui compte) dans la chaire chaude et juteuse du bourrelet de l’ostie d’pas-vite qui marche en plein milieu du criss de trottoir!</p>
+        <p>Non mais, ostie, y’a pas yink toé su’a terre criss! Avance plus vite ou tasse-toé d’mon ch’min, câlisse!</p>
+        <p>Quoi?! Ben, non, franchement, j’ai pas dit ça pour vrai! Je l’ai pensé, mais j’l’ai pas dit; mes parents ont fait une ben meilleure job que ça, voyons! Mais surtout, si j’avais dit ça pour vrai, j’aurais rajouté des guillemets autour!</p>
+        <p>Quand même, il faut que j’prenne une grande respiration pour réussir à me calmer. Non, c&#x27;est pas que j’suis en retard pour aller quelqu’part ou qu’y’a quelqu&#x27;un qui m’attends. C&#x27;est juste que j’ai vraiment hâte de prendre ma douche! Tsé, quand t’as l’impression que ton linge te colle à peau; pas parce qu’il est mouillé, mais vraiment juste parce que ta peau est rendue collante tellement que ça fait longtemps que t’as pas pris de douche?</p>
+        <p>Ça va faire 3 nuits que je dors dans la même ruelle, entre les mêmes bennes à ordure et, comme de fait, le jour des poubelles était juste aujourd’hui. Oh, et comme j’l’ai déjà dit: on est en plein été. D’habitude, je choisis ma ruelle justement en fonction du jour des poubelles. Autrement dit, APRÈS le jour des poubelles. Mais apparemment, les autres sans-abris aussi ont fini par catcher l’truc. Bref, j’veux prendre une douche au plus sacrant, mais comme de fait, y’a un ostie d’escargot qui a décidé de prendre toute le trottoir pour se prélasser au soleil.</p>
+        <p>Finalement, j’me tanne et j’me lance à l’attaque pour vrai: </p>
+        <p>“Scusez...” ostie d’voix toute douce et polie. À force d’avoir la colère pognée dans le fond d’la gorge de même, un jour, j’vas finir par m’étouffer avec pour vrai!</p>
+        <p>Mais l’autre s’exclame “Oh, pardon!” pis se tasse aussitôt sur le bord du trottoir, la tête penchée, les épaules courbées et les yeux rivés au sol. Wow. Un peu plus pis ça se mettait à genoux! Ça shake quasiment! J’ai pas vraiment le goût de faire attendre ma douche, alors j’passe devant comme si de rien n’était, mais y’a quelque chose de pas normal avec c’te personne-là. Promis, j’ai utilisé ma voie la plus douce et gentille! À moins que... Nah, même les indignes réagissent pas d’même d’habitude.</p>
+        <p>Ostie d’histoire de caves, anyway, c’t’affaire-là des indignes. Comme si la couleur des yeux pouvait vraiment déterminer la valeur de quelqu&#x27;un. C&#x27;est pas parce que le gène des yeux bleus est un gène récessif que ça veut dire qu&#x27;une personne aux yeux bleus est nécessairement inférieure! Bande d’imbéciles. Anyway, tant qu&#x27;à moi, tout le monde est inférieur, point. Peu importe la couleur d’leurs yeux. Bande de caves.</p>
+        <p>Anyway, 15 minutes plus tard, je suis finalement devant la porte d’entrée du gym le plus cheap du quartier. Y faut dire que l’avantage de l’histoire des dignes pis des indignes, c’est que ça permet d’avoir des places plus cheap. Vu que les indignes sont plus pauvres, les places qui les servent sont moins chères. Remarques, c’est pas qu’il y a une ségrégation comme telle. Genre les gens aux yeux bleus, ont le droit de rentrer dans les places de dignes et vice versa. C’est juste que d’habitude, les indignes ont moins d’argent et se ramassent dans des places plus crasses et les dignes ont plus d’argent et peuvent se permettre de meilleures places... mais c’est pas systémique. De toutes façons, pourquoi payer full cher pour un gym dont t’utilise juste les douches anyway! </p>
+        <p>J&#x27;ouvre la première porte. Nope, moi, j’m’entraîne pas, fuck that! De toutes façons, j’ai déclaré depuis longtemps que j’avais pas de problème de poids! Dans la vie, quand t’as un problème, t’as le choix entre le régler ou l’accepter. Accepter mes problèmes jusqu’à ce que ça soient pus des problèmes; ça demande beaucoup moins d’énergie! Je montre ma carte de membre pour débarrer la deuxième porte. Et voilà pourquoi je m’entraîne pas: dès que j’ouvre la porte, la draft du système de ventilation qui essaie lamentablement de compenser pour l&#x27;accumulation d&#x27;odeurs corporelles m&#x27;arrive en pleine face et mon nez réclame quelques secondes pour s&#x27;y habituer. Eurk, c’est quasiment pire que les poubelles un lundi après-midi. Après le nez, c’est les oreilles qui se sentent harcelées. Au rythme de la musique pop-techno-rap-j&#x27;sais-pas-quoi qui joue dans le tapis, je me dirige vers les vestiaires en essayant de ne pas vomir ni de croiser de regard. C’est sûr qu’avec mes yeux bruns, j’pourrais me pavaner comme une divinité ici, mais franchement, j’veux juste me rendre le plus vite possible à ma douche. Et puis, c’est pas gentil de faire voir aux gens que leur environnement, avec leur musique et leurs odeurs trop fortes te donne mal au coeur; et j&#x27;ai vraiment pas le goût d&#x27;avoir à faker des sourires. J&#x27;sens mon entre-jambes et mes aisselles squicker de sueur accumulée. Eurk. J&#x27;accélère le pas; esquive deux adeptes de poids lourds qui ont pas conscience de la longueur de leurs bras (criss de dangers publiques); enjambe un tapis de yoga laissé sans surveillance (parce que piler dessus aurait pas été gentil); retient ma respiration en passant à côté de quelqu&#x27;un qui a oublié de mettre son déo (pourquoi personne lui a dit d&#x27;en mettre? Odeur naturelle, mon cul. Lave-toé au moins!) et j’arrive finalement près des escaliers qui mènent aux vestiaires.</p>
+        <p>&quot;Hey, salut Alex!&quot; Fuck. Ça c&#x27;est 16 qui est derrière moi et qui veut me raconter ses palpitantes dernières 24h de vie monotone. Évidemment, j&#x27;ai intérêt à avoir l&#x27;air d&#x27;avoir le goût de l&#x27;écouter; 16 fait partie des propriétaires du gym. J’ai beau avoir les yeux bruns, mais ça fait longtemps que j’ai appris que t’attire pas mal plus de mouches avec du miel. Wait? Pourquoi j’voudrais attirer des mouches au juste?! Anyway, de toutes façons, la politesse a été engrainée en moi; c’est un beau réflexe acquis de ma chère enfance bourgeoise de dignes... (Avez-vous senti le sarcasme?) En passant, Alex, c&#x27;est le diminutif d&#x27;un nom vraiment plus atroce que ce que vous pourriez imaginez; disons juste que la bourgeoisie avait légèrement un peu trop monté à la tête de mes parents.</p>
+        <p>“Ça va?” Right, 16 me parle. Faut que j’y réponde. Heureusement, je suis maître dans l&#x27;art de soutenir et encourager des conversations sans les écouter. J&#x27;ai travaillé assez longtemps avec des personnes séniles... Le truc est d&#x27;écouter les intonations et d’étudier le langage non-verbal, les expressions faciales, etc. Et d&#x27;être empathe. Ouin, ça aussi ça aide!</p>
+        <p>Alors j’me retourne, un grand sourire dans face “Ben certain! Pis toi? Quoi d’neuf?!”</p>
+        <p>Et c’est parti.</p>
+        <p>Pendant que je fais semblant de l&#x27;écouter, j&#x27;en profite pour vérifier son numéro. J&#x27;ai aucune idée de son nom, et franchement j&#x27;m&#x27;en fou pas mal. Pas à cause de la couleur de ses yeux; j’remarque jamais la couleur des yeux anyway. Les regards, oui; les couleurs, non. Pour ce qui est des noms, ça veut tellement rien dire, de toutes façons! (Ça pis je les oublies tout l’temps, anyway!). Alors, bref, j’préfère identifier les gens par des numéros; c&#x27;est juste tellement plus logique dans ma tête. Parce que non, c&#x27;est pas des numéros aléatoires, ni séquentiels; &#x27;16&#x27; signifie quelque chose.</p>
+        <p>Après quelques phrases quelconques, je lance un &quot;Non, pour vrai?!&quot;. Demandez-moi pas de quoi on parle, j&#x27;en ai aucune idée, mais à voir la ferveur avec laquelle son discours reprend, c&#x27;était la réplique idéale. Évidemment.</p>
+        <p>Le premier chiffre, c&#x27;est l&#x27;apparence physique. Le 1 représente une personne qui est plutôt maigre, proportionnellement à sa hauteur. Le chiffre 1 est blanc et peut donc aussi représenter une personne à la peau pâle ou blème, mais pas nécessairement; ça peut aussi juste être une question d&#x27;avoir l&#x27;air fragile.</p>
+        <p>D&#x27;autres mots insignifiants. J&#x27;ajoute donc un &quot;Ben, évidemment!&quot;. Même résultat.</p>
+        <p>Le deuxième chiffre, c&#x27;est la personnalité. Le 6, par sa forme et sa couleur (rose), représente généralement les personnes douces, soumises, fiables (mais pas nécessairement faibles). Bref, c&#x27;est pas pour rien que 16 s&#x27;occupe presque tout le temps du comptoir de la réception!</p>
+        <p>Mes numéros, j’avoue, c’est pas une science exacte et c’est sur que quand t’arrives dans un groupe de personnes homogène; ça devient plutôt redondant et inutile, mais comme j’ai tendance à éviter le plus possible les interactions humaines, mon système de numéro fonctionne assez bien pour moi.</p>
+        <p>D&#x27;ailleurs, son monologue continue et s&#x27;éternise. Il va falloir couper ça bientôt parce que j&#x27;t&#x27;a veille de pu être capable de m&#x27;sentir, ni de l’entendre. J’me demande de quoi aurait l’air 16 avec du DuctTape sur la bouche... c’est sûr que ça l’empêcherait de parler, mais est-ce que ça l’empêcherait aussi de faire du bruit tout court? Y’en a qui réussissent à faire presque autant de bruit, même avec un baillon... Et si je l’attachais à sa chaise? Je ne me souviens pas si sa chaise est à roulette ou pliante ou en bois... Quoique de toute façon, j’pourrais pas faire ça à son comptoir de réception, devant tout le monde! Et c’est un gym 24h, alors attendre que tout le monde parte est inutile. Pis anyway, 16 a beau avoir l’air fragile; j’suis pas nécessairement plus capable de me battre avec. J’ai a peu près la coordination d’une marionnette à fils. Pis après il faut que j’m’arrange pour que 16 puisse pas m’identifier ou me dénoncer… Pis les empreintes... Argh, c’est donc ben compliqué faire taire les gens!</p>
+        <p>J’reviens au moment présent juste à temps pour enchaîner avec un &quot;Décidément!&quot;. Aussi bien m’en tenir à ma bonne vieille méthode. Vous allez voir. Ok, attention, notre porte de sortie s&#x27;en vient. Encore quelques phrases...</p>
+        <p>Ok, maintenant! Alors on commence par conclure à sa place avec une vérité vide et absolue &quot;Ha, j&#x27;en reviens pas! Décidément, y&#x27;en a qui ont pas d’allure!&quot;, on rajoute un compliment &quot;Une chance que toi t’as l’tour avec ça, bravo!&quot; et, tout en y tournant le dos, on ferme avec une fausse ouverture &quot;En tout cas, là il faut que j&#x27;y aille, mais tu m&#x27;tiendra au courant sur la suite!&quot;</p>
+        <p>&quot;Ok, certain! À prochaine!&quot;</p>
+        <p><em>Nailed it!</em></p>
+        <h2>PdV de Chose</h2>
+        <p>“Chose! J&#x27;t’attends dans mon bureau, dans une heure. Dépêche!”</p>
+        <p>L’appel de l’Alpha dans ma tête avait brisé ma concentration juste assez longtemps pour que mon adversaire réussisse à m’frapper. Une chance que les êtres humains sont pas si forts que ça. J’aurais pu répliquer, mais la surprise avait figé mon adversaire et ça aurait pas été correct d’en profiter.</p>
+        <p>“Wow, ça va-tu? D&#x27;habitude, j’réussi jamais à t’toucher!”</p>
+        <p>Ce à quoi j&#x27;ai juste grogné avant de me remettre en position de combat. Mon adversaire a compris que j’répondrais pas à sa question et on a repris à faire semblant de se battre jusqu&#x27;à ce que Sensei siffle la fin des combats. C&#x27;était pas des vrais combats, juste des pratiques, des occasions pour pratiquer de nouvelles techniques ou pour améliorer les anciennes. Pas comme les combats du samedi soir à la maison-mère où tu te bats presque pour ta vie. J&#x27;dis presque parce que en général, l&#x27;Alpha met fin aux combats avant que quelqu&#x27;un meurt, mais des fois ça y prend du temps à se décider, et si t&#x27;es pas capable de survivre jusqu&#x27;à là... Bref, disons que j&#x27;ai de bonnes raisons pour vouloir me pratiquer. Le seul problème, quand tu t’entraine avec des humains, c’est que tu peux pas utiliser toute ta force et ta vitesse. Les humains sont pas au courant de l’existence des lycanthropes, des vampires et autres créatures paranormales; et il faut que ça reste de même. L&#x27;avantage par contre, c&#x27;est que, dans ces cours d’arts martiaux, j&#x27;apprends des techniques que la majorité des lycanthropes se donnent pas la peine d’apprendre. Ça me donne un petit avantage. Ou plutôt, ça rééquilibre les avantages, vu que mes adversaires du samedi soir ont droit à des armes en argent et moi, souvent juste un bout de bois. L&#x27;argent est le seul métal qui peut réellement blesser les lycanthropes. Ou plutôt, n&#x27;importe quoi peut nous blesser, mais on guéri assez vite pour que ça change pas grand chose. L&#x27;argent, par contre, on guéri à vitesse humaine... Et ça laisse des cicatrices... Bref, comme j’ai dit, j&#x27;ai des bonnes raisons pour vouloir me pratiquer.</p>
+        <p>Le dojo où je m&#x27;entraînais plusieurs fois par semaine, aussi souvent que mes tâches à la maison-mère me le permettaient, était devenu comme une deuxième maison. Le groupe d&#x27;êtres humains, les élèves, Sensei et ses aides, était devenu comme une deuxième famille. Au début tout le monde avaient un peu peur de moi; probablement à cause de toutes mes cicatrices. L’odeur de la peur est un genre d’aigre-douce; d’un côté ça pu, mais de l’autre, ton côté prédateur aime vraiment ça. Alors au début, c’était plutôt déconcentrant, mais avec le temps, les autres ont réalisé que, moi aussi, j&#x27;étais juste là pour apprendre. Tellement qu’avec le temps, vu que j’arrêtais pas de m’améliorer (j’imagine que pour ça j’devrais remercier les combats du samedi soir. Et mes missions... extracurriculaires), les autres se battaient presque pour pouvoir se pratiquer avec moi. Ce dojo-là, c&#x27;était la seule place où j&#x27;avais vraiment l&#x27;impression qu&#x27;on me respectait. Ouin, maintenant que j&#x27;y pense, c’était probablement pas juste pour me pratiquer que j&#x27;y allais aussi souvent...</p>
+        <p>“Sensei, j’m’excuse, mais j&#x27;ai une urgence... à maison. Il faut que j&#x27;y aille.”</p>
+        <p>Pour essayer d&#x27;adoucir le manque de respecte, j’ai fait un salut de respect, les mains collées sur les côtés de mes cuisses, le corps plié à 90 degré au niveau de la taille, le haut du corps parallèle avec le plancher, les yeux au sol. Mais j&#x27;aurais du m&#x27;en douter; Sensei est sage et comprend c&#x27;est quoi, une urgence familiale. Surtout, Sensei me connaissait assez pour savoir que si ça n’avait pas été réellement important, je n’aurais pas quitté le cours avant la fin. Évidemment, Sensei ne me connaissait pas assez pour savoir quels genre de problèmes que j’aurais eu si j’avais pas réussi à arriver à l’heure au bureau de l’Alpha...</p>
+        <p>La maison-mère, c’est là où la majorité de la meute habite, c’est un vieux couvent qu’on a reconverti. En fait, moi j’habitais dans la shed dans la cour en arrière, mais c’est correct, au moins, là, j’avais la paix. Ouin, vous avez compris que moi j’avais un traitement spécial... Déjà, à cause de mes yeux bleus, je faisais parti des indignes. Et dans la meute, les indignes, étaient les esclaves; c’est aussi simple que ça. D’habitude, la hiérarchies des lycanthropes (Alpha, Béta (bras droit de l’Alpha), les Gammas (bodyguards et polices), les Deltas (commissionnaires), les Omégas (esclaves), etc) est déterminée par un mixte de puissance, de compétences et de sang. Genre, si tes parents étaient Alpha, t’as plus de chance d’être Alpha, parce que t’as génétiquement plus de force, mais il faut quand même que tu te battes contre les autres pour le prouver. Mais depuis le jour de la purification, peu importait ta force ou ta puissance, si t’avais les yeux bleus, tu tombais au même niveau que les omégas; les faibles tout au bas de la hiérarchie; les esclaves. Parce que on disait que si t’avais les yeux bleus, tu valais pas plus que ça, de toutes façons. C’était ça, la purification: l’Alpha qui a “purifié” la meute en rabaissant tous les indignes au bas de l’échelle. Ouin, quand l’Alpha décrête quelque chose avec sa “voix d’Alpha”, ça devient crissement officiel. Mais moi, c’est encore pire, j’suis l’enfant de traîtres. De traîtres qui ont perdu la vie avant de pouvoir payer pour leur trahison; alors comme de faite, c’est à moi à payer pour leurs torts.</p>
+        <p>Après avoir pris une douche rapide au gym et couru (vitesse d’humain, par contre) jusqu’à la maison-mère, il me restait juste assez de temps pour de passer à la cuisine et me prendre quelque chose à grignoter…. Si personne ne venait m’achaler. En général, les indignes ont assez de choses à faire, avec le ménage pis toute, pour pas avoir le temps de me déranger, mais les autres, les dignes, peuvaient m’utiliser comme bon leur semblait. Quand j’étais jeune, je servais surtout de punching bag pour défouler leurs frustrations ou exercer leur vengeance contre mes parents, mais quand j’ai atteint l’âge de maturité, les choses ont un peu changées...</p>
+        <p>De un, Vic s’est joint à moi et j’ai enfin pu me transformer. Vic, c’est ma moitié-bête. Deux esprits dans le même corps qui peut prendre deux formes, l’une humaine, l’autre lupine. Avec l’arrivée de Vic, mes pouvoirs de lycanthropes sont apparus. Non seulement je pouvais maintenant me transformer, mais surtout ma force, ma vitesse, mes senses et ma guérison avait découplées. Sur le coup, j’étais extatique. Enfin, je pourrais me défendre! La première fois qu’on a essayer de m’attaquer après ma transformation, j’ai enfin pu répliquer! En tout cas, j’ai essayé. Mais j’aurais du me douter que j’serais pas à la hauteur. T’as beau avoir plus de puissance, si t’as aucune technique, et que l’autre s’entraîne à tous les jours…, ben t’as pas grand chance. En fait, les dignes contre qui j’avais essayé de me défendre avaient trouvé ça tellement cute que mon nom a aussitôt été mis dans la pige pour les combats du samedi soirs. Ça allait “ajouter au divertissement”. J’allais être le clou du spectacle. La deuxième fois, j’ai réussi à placer un coup de poing. Ça y a surement pas fait ben mal, mais ça y a pas fait plaisir non plus. Alors c’est là que l’Alpha a décidé d’intervenir et m’a fait venir à son bureau. On était juste nous deux dans son bureau et juste sa face me faisait peur; y’avait quelque chose dans ses yeux… Pis finalement Alpha a utilisé sa voix d’Alpha pour m’interdire de me défendre ou de me battre contre qui que ce soit de la meute. À part, bien sur, lors des combats du samedi soir. À ce moment là, j’avais pas encore beaucoup de contrôle sur Vic, alors sa rage a débordée et j’ai commencé à chialer et à me plaindre de l’injustice, etc... bref, l’Alpha a vite ajouté que je ne pourrais plus parler pantoutte en présence d’autres lycanthropes. Et aussitôt, comme par magie, j’ai pu été capable de dire un mot. J’vous l’avais dit que la “voix d’Alpha” est puissante! Depuis ce jour-là, j’peux rien faire d’autre que me laisser faire, peu importe ce que les autres veulent me faire ou me faire faire. Vic a gémit pendant longtemps après ça; des fois par frustration, d’autres par culpabilité, mais avec le temps, on a bien du accepter notre sort. L’autre chose qui est arrivée quand j’ai atteint l’âge de maturité, c’est que je devenait officiellement disponible sexuellement... Alors en plus d’être déjà le punching bag de la meute, j’avais alors obtenu le rôle de jouet sexuel.</p>
+        <p>J’ai regardé l’heure et confirmé qu’il me restait juste assez de temps pour une collation. En approchant de la cuisine, je longais les murs pour m’assurer de ne pas attirer l’attention, mais alors que je passais devant une porte ouverte, une main que j&#x27;avais pas vue m’a aggripé le bras pour m&#x27;attirer dans la pièce sombre. Par réflexe, j’ai essayé de me mettre en boule, histoire de mieux encaisser les coups, quand mon nez a compris à qui appartenait la main, j’ai compris: c&#x27;était pas une attaque, c&#x27;était une demande, un ordre. Quelqu&#x27;un voulait venir. Le fait que la personne voulait faire ça dans le noir, je l’sais, c’était pas par honte ou par gêne (tout le monde savait que j’étais le jouet sexuel de tout le monde), mais vraiment juste parce que voir ma face pleine de cicatrices était apparemment un turn off. J’essayais de pas y penser plus que ça. Après tout, c’est pas comme si j’pouvais y faire grand chose. Dans un mouvement fluide et imposant, sa main a mit la mienne sur son entre-jambe et un grognement de satisfaction s’est échappé de sa bouche. Son autre main a atterrit derrière ma tête et, avec sa force de lycanthrope, m’a fait tomber à genoux pour m’écraser la face dans son entre-jambe. L&#x27;ordre était clair. Aussitôt, mon cerveau s’est mis à off et mon corps est tombé en pilotage automatique. Une chance que je connaissais bien cette personne-là, parce qu&#x27;il fallait que ça soit rapide; l&#x27;Alpha m&#x27;attendait. Pas le temps de niaiser ou de se déshabiller. J’ai détaché ses pantalons et tout de suite j’ai commencé à m’y mettre. Je touchais ici, je mordillais là, léchais un peu ici, caressais un peu là. Ma bouche et mes mains étaient habituées et connaissaient leur job, et comme de fait, en quelques minutes, sa respiration est devenue saccadée et ses hanches ont commencé à onduler comme pour en avoir plus, plus fort, plus vite. Je continuais à me concentrer sur ma technique et continuais à faire les mêmes mouvements, tout en augmentant graduellement l&#x27;intensité au même rythme que ses inspirations. Avec un peu de chance, son orgasme allait arriver avant que je pogne une crampe. Comme prévu, sa respiration s’est arrêtée, une de ses mains est apparue devant sa bouche comme pour étouffer ses propres cris et son corps en entier s’est mis à shaker, à se contracter puis finalement à se relaxer. Un soupir de satisfaction pour remercier mon travail bien fait et une poussée derrière la tête pour me renvoyer sur mon chemin. Ma job ici était faite. Considérant qu’il fallait à tout prix que je passe aux toilettes pour me laver (j&#x27;pouvais quand même pas arriver devant l&#x27;Alpha en sentant le sexe de même), c’était clair que j’aurais pu eu le temps d’arrêter pour manger. Tanpis.</p>
+        <p>En courant un peu j’ai quand même réussi à arriver devant la porte du bureau de l’Alpha à l’heure pile. Mais avant de cogner à la porte, j’ai pris une grande inspiration. À l’odeur je pouvais dire qu’y avait juste deux personnes dans le bureau, Alpha et Gab. J’ai donc compris que ça devait être pour m’envoyer sur une autre mission.</p>
+        <p>J’vous ai déjà dit que mes parents avaient trahi la meute. En gros, un an après le jour de la purification, mes parents ont fait entrer un groupe de vampires dans la maison-mère. Les vampires ont criés MASEVAS! et ont commencé à tuer tout le monde, ou entoutcas presque, parce que veut veut pas, les lycanthropes savent se défendre. Bref, ce fut un carnage. Mes parents n’ont pas survécu, mais moi oui, parce que Beta Sad a enfermé les plus jeunes dans une classe de l’aile scolaire avant que la bataille nous rejoigne. Vu qu’une bonne partie des vampires ont réussi à s’échapper, Gab a commencé à les traquer. Gab est genre l’élite des traquistes de la meute. Les lycanthropes ont un odorat très développé, mais les traquistes se spécialisent dans la traque et Gab peut retrouver n’importe qui, n’importe où, même à partir d’un seul cheveux ou d’un peu de sang, ou d’un bout de peau, ou d’un mini morceau de vêtement… bref, toutes des choses qui se retrouvent sur un champ de bataille. Alors, depuis l’attaque, Gab a passé des années à traquer, identifier et surveiller chaque membre du groupe Masevas. Et moi, pendant ce temps-là, je survivais et m’entraînait à me battre pour continuer de survivre. Pis un jour, Alpha a décidé que j’étais assez solide et habile en combat pour m’envoyer réparer les torts que mes parents avaient causés et venger la meute. Depuis ce jour, Alpha choisi qui des membres de Masevas on doit éliminer; Gab m’en rammène les coordonnées et moi je dois aller l’achever. Simple.</p>
+        <p>J’ai donc cogner à la porte et aussitôt entendit Gab répondre “Envoye, Chose, entre!”. Ouin, tout le monde m’appelle Chose. Non, c’est pas mon vrai nom.</p>
+        <p>Alpha était à son bureau, au fond de la pièce. Gab, debout à mi-chemin entre moi et Alpha, me tendait déjà un sac. Je savais que dans ce sac-là je trouverais un morceau de vêtement fraîchement porté, une adresse et un portrait de ma nouvelle cible. L’adresse devrais m’aider à retrouver ma cible, mais c’est le morceau de vêtement, avec son odeur dessus, et le portrait qui allaient me permettre de confirmer d’avoir la bonne personne.</p>
+        <p>Au moment où j’ai pris le sac, Alpha a commencé à expliquer “C’est la dernière sansgue que l’autre a réussi à trouver, alors il va falloir que t’a fasse parler celle-là, parce que c’est clair qu’on a pas encore éliminer toute la gang.”</p>
+        <p>La surprise m’a fait relever la tête vers l’Alpha. On était-tu réellement entrain de parler de torture?! J’avais jamais fait ça, moi! Avant même que je puisse essayer de répliquer (parce que, je le savais, de toutes façons, j’aurais pas été capable de dire un mot), Alpha a continuer “Je sais que c’est pas ton genre, mais on n’a pu l’choix. Fac pour te motiver, j’vais t’offrir une récompense. T’as d’la chance, aujourd’hui j’suis d’humeur généreuse! Si tu réussi à éliminer la gang de Masevas au complet,… j’vas pardonner tes parents.”</p>
+        <h2>PdV externe de ?</h2>
+        <p>Contrôlant pour ce qui était probablement la millième fois de la soirée son reflet dans le miroir, son anxiété chercha à se calmer une fois de plus lorsqu’il fut évident que son apparence était, comme toujours d’ailleurs, simplement parfaite. Un mélange de nostalgie et de soulagement lui rappela l’époque où les miroirs étaient faits d’argent et que les vampires ne pouvaient s’y regarder. Aujourd’hui, sans l’aide du miroir plein pied, son obsession face à son image ne pourrait être contrôlée; quoique, il faut dire qu’autrefois, avant que les miroirs ne lui fut disponibles, son image l’obsédait beaucoup moins. Depuis lors, chaque trait de sa personne, tant physique que psychologique d’ailleurs, avait été calculé, créé, manipulé, perfectionné. Son apparence, ses vêtements et son charme étaient à couper le souffle; dignes des photos retouchées. Mais au delà de son image, ses talents étaient innombrables; son intelligence considérable; sa richesse incalculable; son succès incroyable et, bien sûr, sa modestie, enviable. Même sa générosité et sa bienveillance étaient reconnues. Son club était d’ailleurs le premier à avoir créé les soirées eyes wide shut où chaque personne devait porter des lunettes de soleil. À l’image des carnavales masqués de la Venezia de son enfance; les soirées eyes wide shut permettaient à quiconque d’avoir une belle soirée, peu importe la couleur de leurs yeux. Après tout, sa mission première était bien de contrer les vagues néfastes de l’Oudé. Au fil des décennies, chaque courant créé par l’Oudé, plus insensé et pourtant plus portant que le précédent, avait porté préjudice à un type de personne en particulier. Ces dernières décennies, la couleur des yeux était tout d’un coup devenue le facteur déterminant dans la valeur d’une personne. Le fait qu’il n’y avait aucune connection biologique n’avait clairement aucune importance. En effet, la seule science pouvant réellement confirmer l’impact de la couleur des yeux sur un individu était la sociologie. Car, en effet, les personnes aux yeux bleus avaient effectivement moins de chance de compléter leur scolarité, de se trouver un emploi plus payant que le salaire minimum; de réussir à éviter la drogue et les gang de rues; etc. Bref, après des siècles à tenter de contrer les courants tous plus insensés les uns des autres de l’Oudé, plus rien ne l’impressionnait; mais, malheureusement, plus grand chose ne lui donnait espoir, non plus.</p>
+        <p>Après ses dernières retouches inutiles, il fut temps de se mettre en scène et d’en mettre, une fois de plus, plein la vue à sa fidèle clientèle. Les gens venaient dans son club pour plusieurs raisons, mais la première était justement ses performances sur scène. Évidemment avec des siècles de pratique, la perfection devient facile. Pourtant, malgré toutes les années de perfectionnement, malgré tous les efforts acharnés; le sentiment, l’inquiétude de ne jamais être “assez” continuait à tenailler ses entrailles. Son cerveau semblait constamment en train d’analyser et de méta-analyser chacun de ses mouvements, de ses vêtements, de ses mots et de ses expressions faciales, de ses pensées, même; toujours dans le but de parfaire son œuvre existentielle.</p>
+        <p>“Tout est prêt, <em>Capo</em>!” lui annonca Bibi, la tête dans l&#x27;entrebâillement de la porte de sa loge. <em>Ci risiamo</em> (C’est reparti). Chaque vendredi soir, le spectacle reprenait. Chaque semaine encore meilleur que le précédent. Ce soir, les souliers étaient nouveaux; leur semelles une fraction plus glissantes, permettant une meilleure fluidité dans ses pas (sans, bien sûr, pour autant être trop glissante et devenir un risque de chute). La semaine prochaine, deux projecteurs supplémentaires dernier cri allaient être installés afin de permettre davantage de jeux de lumière. Et ainsi de suite. Les numéros ne devaient pas seulement être beaux à voir, mais devaient aussi “parler” aux gens, avoir une signification profonde, voir spirituelle. Ou du moins, telle était l’apparence recherchée alors qu’à travers les mots, les pas et les notes du spectacle, un message subliminal créé grâce à ses pouvoirs vampiriques de contrôle mental lui permettait d’atteindre réellement et efficacement son objectif. Celui de convaincre le plus de gens possible d’aimer son prochain, peu importe la couleur de ses yeux.</p>
+        <p>Au beau milieu d’une acrobatie aérienne, une douleur atroce transperça son torse et poussa son corps à se plier en deux. Incapable de regagner une position adéquate à temps, malgré sa vitesse surhumaine, son épaule heurta lourdement les planches de la scène, suivi de sa tête. Un être humain s&#x27;en serait certainement retrouvé avec une épaule, au minimum, disloquée et sa tête aurait probablement eu une commotion. Heureusement, son corps de vampire guérirait en moins de quelques minutes ses possibles dommages. Cependant, la nécessité de ne pas révéler sa vraie nature l’obligea à rester immobile quelques minutes de plus. Fidèle à son poste, Bibi pris rapidement la situation en charge et s’occupa de calmer la foule tout en détournant l’attention. Pendant ce temps, son esprit roula à toute allure tâchant d’identifier la cause d’une telle douleur. Ses mains, déjà instinctivement sur sa poitrine, lui indiquèrent que sa peau était intacte. Cela ne pouvait signifier qu’une seule chose: une de ses créations était en train de mourir. <em>Non ancora!</em> (Pas encore!) Chaque vampire, après avoir atteint un certain niveau de puissance, peut devenir <em>capostipite</em> (ancêtre ou source fondatrice) et transformer d’autres êtres humains en vampire. L’ancêtre reste alors en contact avec ses créations lui permettant de ressentir leurs douleurs ou émotions les plus intenses et, évidemment, de les retrouver. <mark class="highlight-gray" style="display:none;">Au cours des dernières années, plusieures de ses créations et autres membres d’AVELCO, l’Association des Vampires Et Lycanthropes Contre l’Oudè, avait trouvé la mort dans des circonstances jusqu’alors inconnues. Un profond sentiment de désespoir lui obscura la vue le temps de se reprendre en mains s’ordonnant alors d’identifier la nouvelle victime.</mark> À travers la douleur, il ne lui suffit qu’un peu de concentration afin de réaliser de qui il s’agissait... <em>Non importa cosa a fatto. Adesso ha bisogno di me.</em> (Peu importe ce qu’iel a fait. Pour l’instant, iel a besoin de moi.)</p>
       </div>
     </div>
   <!--Shit to feel-->
-  <script>
- //First found
- /*
-    firebase.database().ref('/posts').on('value', function(snapshot) {
-    console.log(snapshot.val());
-});
-function snapshotToArray(snapshot) {
-    var returnArr = [];
-
-    snapshot.forEach(function(childSnapshot) {
-        var item = childSnapshot.val();
-        item.key = childSnapshot.key;
-
-        returnArr.push(item);
-    });
-
-    return returnArr;
-};*/
-//second found
-/*database {
-   master {
-      itemarray: ['item1', 'item2', 'item3', 'item4']}}
-
-database.ref("master/itemarray").on('value', showArray);
-
- function showArray(globalArray){
-    console.log(globalArray.val())
-    var simpleArray = Array.from(globalArray.val());
-    console.log(simpleArray)
-    }*/
- //third found
+  <!-- 1. Trouver de meilleures couleurs et préfaire les mix background/font-color -->
+  <!-- 2. Trouver de meilleures polices -->
+  <!-- Figurer out comment faire intéragir le database et le storage -->
+  <!-- Créer/remplir le database et le storage des quotes -->
+  <!-- Créer le code pour faire venir les quotes et en choisir une au hasard -->
+  <!-- Figurer out how to add data to database and storage -->
+  <!-- Figurer out à partir de où on peut ajouter des quotes (google keep, facebook, etc) -->
+  <style name="ShitPage"></style>
+  <script name="ShitPage">
 
   </script>
-  <div class="sectionPage">
+  <div name="ShitPage" class="sectionPage">
     <h1>Relax, I'm working on it!</h1>
   </div>
   <!--Master's Toy's Training--> Mstrplzuseme
-  <div class="sectionPage" id="SectPageToy">
+  <div name="ToysPage" class="sectionPage" id="SectPageToy">
     <div class="cover" id="coverSureBackHome"></div>
     <div id="remindRulesBox">
       <div class="RulesCover"></div>
@@ -985,7 +1023,7 @@ database.ref("master/itemarray").on('value', showArray);
       </div>
     </div>
   </div>
-<style>
+<style name="ToysPage">
 #SectPageToy{
   background: #000;
   color: rgba(255,0,0,.8);
@@ -1390,7 +1428,7 @@ input[type="checkbox" i]:checked{
 }
 
 </style>
-<script>
+<script name="ToysPage">
 
 function addNewPlay(playId, playDate, ans1, ans2, ans3){
   set(ref(dbr, 'plays/' + playId),{

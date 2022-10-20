@@ -183,6 +183,7 @@
     <h1>Whatever you think you're doing here,<br>WELCOME!</h1>
     <h3 style="margin-bottom:0;">That's my space, my mind, my shoes,...<br>Be warned, your insurances don't cover that kind of trauma.</h3>
     <h5 style="margin:0;">(Yeah, that's the only trigger warning you'll get...)</h5>
+    <p>I love you too!</p>
     <div>
       <h2>Shit of the day</h2>
       <div class="SotD" id="SotD" onclick="SotD()">
@@ -293,6 +294,7 @@
     }
     .SotD p{
       margin: auto;
+      font-weight: 600;
     }
     .sectionPage{display:none;}
     input.menuSect{display:none;}
@@ -370,6 +372,29 @@
     }
     //Shit of the Day
     var QMS_Coffee = [
+      "My code works<br>\n(I have no idea why)",
+      "Client: Please, can you assure me your french fries are vegan?<br>\nWaiter: Totally, I can assure you they've never eaten any meat!",
+      "And by the way if asking for consent \"ruins the mood\", it's because you were the only one in the fucking mood.<br>\nLiterally.",
+      "La règle du 80/20:<br>\nPasser 80% de son temps à analyser ce qui se passe dans sa tête pendant l'autre 20%.",
+      "Whatever you do always give 100%<br>\nUnless you're donating blood.",
+      "J'ai besoin d'un nouvel ami.<br>\nCelui que j'avais s'est échappé de la cave...",
+      "You look like I need a drink.",
+      "The fact that there's a highway to hell and only a stairway to heaven says a lot about anticipated traffic numbers.",
+      "Pro Tip: Save business cards of people you don't like. If you ever hit a parked car accidentally, just write \"Sorry\" on the back and leave it on the windshield.",
+      '"Your call is important to us.<br>\nPlease stay on the line until your call is no longer important to you."',
+      "L'amour c'est comme le bridge, si t'as pas un bon partenaire, espère avoir une bonne main.",
+      "Most orchestras are just 1800's cover bands.",
+      "I feel much better now that I've given up hope.",
+      "Les yeux sont le miroir de l'âme.<br>\nJe l'ai vu dans un film d'horreur avec plein d'enfants qui avaient les cheveux blancs.<br>\nC'était creepy as fuck, mais la moral était belle.",
+      "The thing about torture is that you're afraid it'll kill you<br>\nBut you're also afraid it won't.",
+      "I'm a foster partner.<br>\nI date people until they find their forever home.",
+      "There’s no limit to what you can be if you lie to yourself.",
+      "Happiness is just a lack of information.",
+      "Park bench:<br>\nThe best way to enjoy nature without having to touch it",
+      "I never apologize to my partners,<br>\nI just sleep naked and let them decide if they're still mad or not.",
+      "Quand j'marche en ville, j'ai toujours l'air de faire du lèche-vitrine, mais en vrai, c'est moi que j'lèche.",
+      "Ça va faire 3 mois que j'ai pris un abonnement au gym.<br>\nToujours aucun résultat.<br>\nDemain j'me rends sur place pour voir c'qui s'passe!",
+      "Be decisive. Make a decision. The road of life is paved with flat squirrels who couldn’t make a decision.",
       "There is no use crying over spilled milk...<br>\nSpilled coffee, however, may get you stabbed.",
       "I'm just sayin', everyone that confuses correlation with causation eventually ends up dead.",
       "Doctors are just scamming you if they say you have internal bleeding.<br>\nThat's where blood is supposed to be.",
@@ -441,30 +466,56 @@
       "The more people I meet, the more I love myself.",
       "There's a 99% chance I don't care.",
       "I talk to myself because I hate everyone else.",
+      "I'm the kind of person your parents warned you about.",
       "Why are you still here?"];
     var BgColor = ["red", "blue", "green", "black", "yellow", "purple", "orange", "white"];
     var TextColor = ["red", "blue", "green", "black", "yellow", "purple", "orange", "white"];
     var TextFont = ["'Nunito', sans-serif", "'Chakra Petch', sans-serif", "'Coming Soon', cursive", "'Fuzzy Bubbles', cursive", "'Kalam', cursive", "'Kanit', sans-serif", "'Roboto', sans-serif", "'Special Elite', cursive"]
-
+    window.onload = Myrand;
+    var QMS = 0;
     function SotD(){
       let numBC = getRndInteger(0,BgColor.length);
       let numTC = getRndInteger(0,TextColor.length);
       let numTF = getRndInteger(0,TextFont.length);
-      let numQMS = getRndInteger(0,QMS_Coffee.length);
-      if(numBC == numTC){
-        document.getElementById("SotDp").innerHTML = "Please, try again<br>\nMy brain's just not working yet"
-      } else if(numBC == 4 && numTC == 7 || numBC == 7 && numTC == 4){
-        document.getElementById("SotDp").innerHTML = "Please, try again<br>\nMy brain's just not working yet"
-      } else {
-        document.getElementById("SotDp").style.fontWeight = "600";
-        document.getElementById("SotD").style.background = BgColor[numBC];
-        document.getElementById("SotD").style.color = TextColor[numTC];
-        document.getElementById("SotDp").style.fontFamily = TextFont[numTF];
-        document.getElementById("SotDp").innerHTML = QMS_Coffee[numQMS];
-      } 
+      document.getElementById("SotDp").style.fontFamily = TextFont[numTF];
+      let numQMS = arr[QMS++];
+      if(QMS < 11){
+        if(numBC == numTC){
+          document.getElementById("SotD").style.background = BgColor[numBC++];
+          document.getElementById("SotDp").innerHTML = "Please, try again,<br>\nmy brain's just not working yet.<br>\n<br>\nNeed more coffee.";
+        } else if(numBC == 4 && numTC == 7 || numBC == 7 && numTC == 4){
+          document.getElementById("SotD").style.background = "black";
+          document.getElementById("SotD").style.color = "purple";
+        } else {
+          document.getElementById("SotD").style.background = BgColor[numBC];
+          document.getElementById("SotD").style.color = TextColor[numTC];  
+          document.getElementById("SotDp").innerHTML = QMS_Coffee[numQMS];
+        }} else if (QMS >= 11) { //either put 'arr.length + 1' if you want them to through them all or any number (+1) that you want to limit them to
+        document.getElementById("SotDp").innerHTML = "Now, you've seen enough,<br>\ngo do stuff and come back later.";
+        document.getElementById("SotD").style.background = "black";
+        document.getElementById("SotD").style.color = "purple";
+        document.getElementById("SotDp").style.fontFamily = "'Chakra Petch', sans-serif";
+      }
+      
     };
     function getRndInteger(min, max) {
       return Math.floor(Math.random() * (max - min)) + min;
+    }
+    function Myrand(){
+      let max = QMS_Coffee.length;
+      let min = 0;
+        arr=[];
+        for (i = 0; i < max; i++) {
+            x = Math.floor( Math.random() * max) + min;
+            if(arr.includes(x) == true){
+                i=i-1;
+            }else{
+                if(x>max==false){
+                    arr.push(x);
+                }
+            }
+        }
+        return arr;
     }
   </script>
   <!--I wrote, you read-->
@@ -481,7 +532,7 @@
       border-radius: 5px;
       padding: 3px 5px;
       margin: 2px;
-      background: purple;
+      background: rgba(128,0,128,.8);
       color: #fff;
     }
     .menuTextLabel:hover{
@@ -534,6 +585,7 @@
       <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Coupe"><label for="Coupe" class="menuTextLabel">Une coupe rouge</label></input>
       <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Torture"><label for="Torture" class="menuTextLabel">Torture</label></input>
       <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Destin"><label for="Destin" class="menuTextLabel">Destin impitoyable</label></input>
+      <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Corona"><label for="Corona" class="menuTextLabel">Corona cover song</label></input>
       <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Kinky"><label for="Kinky" class="menuTextLabel">Kinky Journal</label></input>
       <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Alex"><label for="Alex" class="menuTextLabel">Alex, 23 et 49</label></input>
     </div>
@@ -768,6 +820,74 @@
       <p>Ensemble protégeons les arbres troués des graines d'écureuils!</p>
       <p><br/>Juillet 2022</p>
     </div>
+    <!--Corona cover song-->
+    <div class="textPage">
+      <h1>Coronavirus cover song</h1>
+      <h3>"Santa Claus is coming to town"</h3>
+      <p>🎶<br/>
+        You better watch out<br/>
+        You better wash hands<br/>
+        You better wear masks<br/>
+        I'm telling you why<br/>
+        Corona is staying in town!
+      </p>
+
+      <p>
+        They're making a list<br/>
+        Checking it twice<br/>
+        They'll vaccinate us<br/>
+        As fast as they can<br/>
+        Corona is staying in town!
+      </p>
+
+      <p>
+        It knows if you have been too close<br/>
+        Hospitalization<br/>
+        We need you to stay home and safe<br/>
+        Wash your hands for goodness sake! Oh!
+      </p>
+
+      <p>
+        You better watch out<br/>
+        You better wash hands<br/>
+        You better wear masks<br/>
+        I'm telling you why<br/>
+        Corona is staying in town!
+      </p>
+
+      <p>
+        Let’s close everything<br/>
+        Just stay online<br/>
+        Or get your passport<br/>
+        and your rapid tests<br/>
+        Corona is staying in town!
+      </p>
+
+      <p>
+        Hospitals are full<br/>
+        Nurses are dead<br/>
+        Forget your parties<br/>
+        Don’t touch anyone<br/>
+        Corona is staying in town!
+      </p>
+
+      <p>
+        It knows if you have been too close<br/>
+        You’ll need all your doses<br/>
+        It knows if you’re not protected<br/>
+        Fix your mask for goodness sake! Oh!
+      </p>
+
+      <p>
+        You better watch out<br/>
+        You better wash hands<br/>
+        You better wear masks<br/>
+        I'm telling you why<br/>
+        Corona is staying in town!<br/>
+        🎶
+      </p>
+      <p><br/>December 2020 and 2021</p>
+    </div>
     <!--Kinky Journal-->
     <div class="textPage">
       <h1>I found a dog!</h1>
@@ -833,7 +953,7 @@
             <p>Mais l’autre s’exclame “Oh, pardon!” pis se tasse aussitôt sur le bord du trottoir, la tête penchée, les épaules courbées et les yeux rivés au sol. Wow. Un peu plus pis ça se mettait à genoux! Ça shake quasiment! J’ai pas vraiment le goût de faire attendre ma douche, alors j’passe devant comme si de rien n’était, mais y’a quelque chose de pas normal avec c’te personne-là. Promis, j’ai utilisé ma voie la plus douce et gentille! À moins que... Nah, même les indignes réagissent pas d’même d’habitude.</p>
             <p>Ostie d’histoire de caves, anyway, c’t’affaire-là des indignes. Comme si la couleur des yeux pouvait vraiment déterminer la valeur de quelqu&#x27;un. C&#x27;est pas parce que le gène des yeux bleus est un gène récessif que ça veut dire qu&#x27;une personne aux yeux bleus est nécessairement inférieure! Bande d’imbéciles. Anyway, tant qu&#x27;à moi, tout le monde est inférieur, point. Peu importe la couleur d’leurs yeux. Bande de caves.</p>
             <p>Anyway, 15 minutes plus tard, je suis finalement devant la porte d’entrée du gym le plus cheap du quartier. Y faut dire que l’avantage de l’histoire des dignes pis des indignes, c’est que ça permet d’avoir des places plus cheap. Vu que les indignes sont plus pauvres, les places qui les servent sont moins chères. Remarques, c’est pas qu’il y a une ségrégation comme telle. Genre les gens aux yeux bleus, ont le droit de rentrer dans les places de dignes et vice versa. C’est juste que d’habitude, les indignes ont moins d’argent et se ramassent dans des places plus crasses et les dignes ont plus d’argent et peuvent se permettre de meilleures places... mais c’est pas systémique. De toutes façons, pourquoi payer full cher pour un gym dont t’utilise juste les douches anyway! </p>
-            <p>J&#x27;ouvre la première porte. Nope, moi, j’m’entraîne pas, fuck that! De toutes façons, j’ai déclaré depuis longtemps que j’avais pas de problème de poids! Dans la vie, quand t’as un problème, t’as le choix entre le régler ou l’accepter. Accepter mes problèmes jusqu’à ce que ça soient pus des problèmes; ça demande beaucoup moins d’énergie! Je montre ma carte de membre pour débarrer la deuxième porte. Et voilà pourquoi je m’entraîne pas: dès que j’ouvre la porte, la draft du système de ventilation qui essaie lamentablement de compenser pour l&#x27;accumulation d&#x27;odeurs corporelles m&#x27;arrive en pleine face et mon nez réclame quelques secondes pour s&#x27;y habituer. Eurk, c’est quasiment pire que les poubelles un lundi après-midi. Après le nez, c’est les oreilles qui se sentent harcelées. Au rythme de la musique pop-techno-rap-j&#x27;sais-pas-quoi qui joue dans le tapis, je me dirige vers les vestiaires en essayant de ne pas vomir ni de croiser de regard. C’est sûr qu’avec mes yeux bruns, j’pourrais me pavaner comme une divinité ici, mais franchement, j’veux juste me rendre le plus vite possible à ma douche. Et puis, c’est pas gentil de faire voir aux gens que leur environnement, avec leur musique et leurs odeurs trop fortes te donne mal au coeur; et j&#x27;ai vraiment pas le goût d&#x27;avoir à faker des sourires. J&#x27;sens mon entre-jambes et mes aisselles squicker de sueur accumulée. Eurk. J&#x27;accélère le pas; esquive deux adeptes de poids lourds qui ont pas conscience de la longueur de leurs bras (criss de dangers publiques); enjambe un tapis de yoga laissé sans surveillance (parce que piler dessus aurait pas été gentil); retient ma respiration en passant à côté de quelqu&#x27;un qui a oublié de mettre son déo (pourquoi personne lui a dit d&#x27;en mettre? Odeur naturelle, mon cul. Lave-toé au moins!) et j’arrive finalement près des escaliers qui mènent aux vestiaires.</p>
+            <p>J&#x27;ouvre la première porte. Nope, moi, j’m’entraîne pas, fuck that! De toutes façons, j’ai déclaré depuis longtemps que j’avais pas de problème de poids! Dans la vie, quand t’as un problème, t’as le choix entre le régler ou l’accepter. Accepter mes problèmes jusqu’à ce que ça soient pus des problèmes; ça demande beaucoup moins d’énergie! Je montre ma carte de membre pour débarrer la deuxième porte. Et voilà pourquoi je m’entraîne pas: dès que j’ouvre la porte, la draft du système de ventilation qui essaie lamentablement de compenser pour l&#x27;accumulation d&#x27;odeurs corporelles m&#x27;arrive en pleine face et mon nez réclame quelques secondes pour s&#x27;y habituer. Eurk, c’est quasiment pire que les poubelles un lundi après-midi. Après le nez, c’est les oreilles qui se sentent harcelées. Au rythme de la musique pop-techno-rap-j&#x27;sais-pas-quoi qui joue dans le tapis, je me dirige vers les vestiaires en essayant de ne pas vomir ni de croiser de regard. C’est sûr qu’avec mes yeux de digne, j’pourrais me pavaner comme une divinité ici, mais franchement, j’veux juste me rendre le plus vite possible à ma douche. Et puis, c’est pas gentil de faire voir aux gens que leur environnement, avec leur musique et leurs odeurs trop fortes te donne mal au coeur; et j&#x27;ai vraiment pas le goût d&#x27;avoir à faker des sourires. J&#x27;sens mon entre-jambes et mes aisselles squicker de sueur accumulée. Eurk. J&#x27;accélère le pas; esquive deux adeptes de poids lourds qui ont pas conscience de la longueur de leurs bras (criss de dangers publiques); enjambe un tapis de yoga laissé sans surveillance (parce que piler dessus aurait pas été gentil); retient ma respiration en passant à côté de quelqu&#x27;un qui a oublié de mettre son déo (pourquoi personne lui a dit d&#x27;en mettre? Odeur naturelle, mon cul. Lave-toé au moins!); contourne un méga panneau publicitaire vantant les innombrables supers pouvoirs de leur nouveau programme d’exercice spécial qui promet de t’faire perdre 50 livres en 5 semaines avec juste 15 minutes par jour, ou quelque chose du genre (Voir! J'peux pas croire qu’y’en a qui sont assez caves pour croire des conneries d’même!); et j’arrive finalement près des escaliers qui mènent aux vestiaires.</p>
             <p>&quot;Hey, salut Alex!&quot; Fuck. Ça c&#x27;est 16 qui est derrière moi et qui veut me raconter ses palpitantes dernières 24h de vie monotone. Évidemment, j&#x27;ai intérêt à avoir l&#x27;air d&#x27;avoir le goût de l&#x27;écouter; 16 fait partie des propriétaires du gym. J’ai beau avoir les yeux bruns, mais ça fait longtemps que j’ai appris que t’attire pas mal plus de mouches avec du miel. Wait? Pourquoi j’voudrais attirer des mouches au juste?! Anyway, de toutes façons, la politesse a été engrainée en moi; c’est un beau réflexe acquis de ma chère enfance bourgeoise de dignes... (Avez-vous senti le sarcasme?) En passant, Alex, c&#x27;est le diminutif d&#x27;un nom vraiment plus atroce que ce que vous pourriez imaginez; disons juste que la bourgeoisie avait légèrement un peu trop monté à la tête de mes parents.</p>
             <p>“Ça va?” Right, 16 me parle. Faut que j’y réponde. Heureusement, je suis maître dans l&#x27;art de soutenir et encourager des conversations sans les écouter. J&#x27;ai travaillé assez longtemps avec des personnes séniles... Le truc est d&#x27;écouter les intonations et d’étudier le langage non-verbal, les expressions faciales, etc. Et d&#x27;être empathe. Ouin, ça aussi ça aide!</p>
             <p>Alors j’me retourne, un grand sourire dans face “Ben certain! Pis toi? Quoi d’neuf?!”</p>
@@ -855,20 +975,20 @@
             <p>“Chose! J&#x27;t’attends dans mon bureau, dans une heure. Dépêche!”</p>
             <p>L’appel de l’Alpha dans ma tête avait brisé ma concentration juste assez longtemps pour que mon adversaire réussisse à m’frapper. Une chance que les êtres humains sont pas si forts que ça. J’aurais pu répliquer, mais la surprise avait figé mon adversaire et ça aurait pas été correct d’en profiter.</p>
             <p>“Wow, ça va-tu? D&#x27;habitude, j’réussi jamais à t’toucher!”</p>
-            <p>Ce à quoi j&#x27;ai juste grogné avant de me remettre en position de combat. Mon adversaire a compris que j’répondrais pas à sa question et on a repris à faire semblant de se battre jusqu&#x27;à ce que Sensei siffle la fin des combats. C&#x27;était pas des vrais combats, juste des pratiques, des occasions pour pratiquer de nouvelles techniques ou pour améliorer les anciennes. Pas comme les combats du samedi soir à la maison-mère où tu te bats presque pour ta vie. J&#x27;dis presque parce que en général, l&#x27;Alpha met fin aux combats avant que quelqu&#x27;un meurt, mais des fois ça y prend du temps à se décider, et si t&#x27;es pas capable de survivre jusqu&#x27;à là... Bref, disons que j&#x27;ai de bonnes raisons pour vouloir me pratiquer. Le seul problème, quand tu t’entraine avec des humains, c’est que tu peux pas utiliser toute ta force et ta vitesse. Les humains sont pas au courant de l’existence des lycanthropes, des vampires et autres créatures paranormales; et il faut que ça reste de même. L&#x27;avantage par contre, c&#x27;est que, dans ces cours d’arts martiaux, j&#x27;apprends des techniques que la majorité des lycanthropes se donnent pas la peine d’apprendre. Ça me donne un petit avantage. Ou plutôt, ça rééquilibre les avantages, vu que mes adversaires du samedi soir ont droit à des armes en argent et moi, souvent juste un bout de bois. L&#x27;argent est le seul métal qui peut réellement blesser les lycanthropes. Ou plutôt, n&#x27;importe quoi peut nous blesser, mais on guéri assez vite pour que ça change pas grand chose. L&#x27;argent, par contre, on guéri à vitesse humaine... Et ça laisse des cicatrices... Bref, comme j’ai dit, j&#x27;ai des bonnes raisons pour vouloir me pratiquer.</p>
+            <p>Ce à quoi j&#x27;ai juste grogné avant de me remettre en position de combat. Mon adversaire a compris que j’répondrais pas à sa question et on a repris à faire semblant de se battre jusqu&#x27;à ce que Sensei siffle la fin des combats. C&#x27;était pas des vrais combats, juste des pratiques, des occasions pour pratiquer de nouvelles techniques ou pour améliorer les anciennes. Pas comme les combats du samedi soir à la maison-mère où tu te bats presque pour ta vie. J&#x27;dis presque parce que en général, l&#x27;Alpha met fin aux combats avant que quelqu&#x27;un meurt, mais des fois ça y prend du temps à se décider, et si t&#x27;es pas capable de survivre jusqu&#x27;à là... Bref, disons que j&#x27;avais de bonnes raisons pour vouloir me pratiquer. Le seul problème, quand tu t’entraine avec des êtres humains, c’est que tu peux pas utiliser toute ta force et ta vitesse. Les êtres humains sont pas au courant de l’existence des lycanthropes, des vampires et autres créatures paranormales; et il faut que ça reste comme ça. L&#x27;avantage par contre, c&#x27;est que, dans ces cours d’arts martiaux-là, j&#x27;apprends des techniques que la majorité des lycanthropes se donnent pas la peine d’apprendre. Ça me donne un petit avantage. Ou plutôt, ça rééquilibre les avantages, vu que mes adversaires du samedi soir ont droit à des armes en argent et moi, souvent juste un bout d'bois. L&#x27;argent est le seul métal qui peut réellement blesser les lycanthropes. Ou plutôt, n&#x27;importe quoi peut nous blesser, mais on guéri assez vite pour que ça change pas grand chose. L&#x27;argent, par contre, on guéri à vitesse humaine... Et ça laisse des cicatrices... Bref, comme j’ai dit, j&#x27;avais des bonnes raisons pour vouloir me pratiquer.</p>
             <p>Le dojo où je m&#x27;entraînais plusieurs fois par semaine, aussi souvent que mes tâches à la maison-mère me le permettaient, était devenu comme une deuxième maison. Le groupe d&#x27;êtres humains, les élèves, Sensei et ses aides, était devenu comme une deuxième famille. Au début tout le monde avaient un peu peur de moi; probablement à cause de toutes mes cicatrices. L’odeur de la peur est un genre d’aigre-douce; d’un côté ça pu, mais de l’autre, ton côté prédateur aime vraiment ça. Alors au début, c’était plutôt déconcentrant, mais avec le temps, les autres ont réalisé que, moi aussi, j&#x27;étais juste là pour apprendre. Tellement qu’avec le temps, vu que j’arrêtais pas de m’améliorer (j’imagine que pour ça j’devrais remercier les combats du samedi soir. Et mes missions... extracurriculaires), les autres se battaient presque pour pouvoir se pratiquer avec moi. Ce dojo-là, c&#x27;était la seule place où j&#x27;avais vraiment l&#x27;impression qu&#x27;on me respectait. Ouin, maintenant que j&#x27;y pense, c’était probablement pas juste pour me pratiquer que j&#x27;y allais aussi souvent...</p>
-            <p>“Sensei, j’m’excuse, mais j&#x27;ai une urgence... à maison. Il faut que j&#x27;y aille.”</p>
-            <p>Pour essayer d&#x27;adoucir le manque de respecte, j’ai fait un salut de respect, les mains collées sur les côtés de mes cuisses, le corps plié à 90 degré au niveau de la taille, le haut du corps parallèle avec le plancher, les yeux au sol. Mais j&#x27;aurais du m&#x27;en douter; Sensei est sage et comprend c&#x27;est quoi, une urgence familiale. Surtout, Sensei me connaissait assez pour savoir que si ça n’avait pas été réellement important, je n’aurais pas quitté le cours avant la fin. Évidemment, Sensei ne me connaissait pas assez pour savoir quels genre de problèmes que j’aurais eu si j’avais pas réussi à arriver à l’heure au bureau de l’Alpha...</p>
-            <p>La maison-mère, c’est là où la majorité de la meute habite, c’est un vieux couvent qu’on a reconverti. En fait, moi j’habitais dans la shed dans la cour en arrière, mais c’est correct, au moins, là, j’avais la paix. Ouin, vous avez compris que moi j’avais un traitement spécial... Déjà, à cause de mes yeux bleus, je faisais parti des indignes. Et dans la meute, les indignes, étaient les esclaves; c’est aussi simple que ça. D’habitude, la hiérarchies des lycanthropes (Alpha, Béta (bras droit de l’Alpha), les Gammas (bodyguards et polices), les Deltas (commissionnaires), les Omégas (esclaves), etc.) est déterminée par un mixte de puissance, de compétences et de sang. Genre, si tes parents étaient Alpha, t’as plus de chance d’être Alpha, parce que t’as génétiquement plus de force, mais il faut quand même que tu te battes contre les autres pour le prouver. Mais depuis le jour de la purification, peu importait ta force ou ta puissance, si t’avais les yeux bleus, tu tombais au même niveau que les omégas; les faibles tout au bas de la hiérarchie; les esclaves. Parce que on disait que si t’avais les yeux bleus, tu valais pas plus que ça, de toutes façons. C’était ça, la purification: l’Alpha qui a “purifié” la meute en rabaissant tous les indignes au bas de l’échelle. Ouin, quand l’Alpha décrète quelque chose avec sa “voix d’Alpha”, ça devient crissement officiel. Mais moi, c’est encore pire, j’suis l’enfant de traîtres. De traîtres qui ont perdu la vie avant de pouvoir payer pour leur trahison; alors comme de faite, c’est à moi à payer pour leurs torts.</p>
+            <p>“Sensei, j’m’excuse, mais j&#x27;ai une urgence à... maison. Il faut que j&#x27;y aille.”</p>
+            <p>Pour essayer d&#x27;adoucir le manque de respecte, j’ai fait un salut de respect, les mains collées sur les côtés de mes cuisses, le corps plié à 90 degré au niveau de la taille, le haut du corps parallèle avec le plancher, les yeux au sol. Mais j&#x27;aurais du m&#x27;en douter; Sensei est sage et comprend c&#x27;est quoi, une urgence familiale. Surtout, Sensei me connaissait assez pour savoir que si ça avait pas été réellement important, je n’aurais pas quitté le cours avant la fin. Évidemment, Sensei me connaissait pas assez pour savoir quels genre de problèmes que j’aurais eu si j’avais pas réussi à arriver à l’heure au bureau de l’Alpha...</p>
+            <p>La maison-mère, c’est là où la majorité de la meute habite, c’est un vieux couvent qu’on a reconverti. En fait, moi j’habitais dans la shed dans la cour en arrière, mais c’est correct, au moins, là, j’avais la paix. Ouin, vous avez compris que moi j’avais un traitement spécial... Déjà, à cause de mes yeux bleus, je faisais parti des indignes. Et dans la meute, les indignes, étaient les esclaves; c’est aussi simple que ça. D’habitude, la hiérarchies des lycanthropes (Alpha, Béta (bras droit de l’Alpha), les Gammas (bodyguards et polices), les Deltas (commissionnaires), les Omégas (esclaves), etc.) est déterminée par un mixte de puissance, de compétences et de sang. Genre, si tes parents étaient Alpha, t’as plus de chance d’être Alpha, parce que t’as génétiquement plus de force, mais il faut quand même que tu te battes contre les autres pour le prouver. Mais depuis le jour de la purification, peu importait ta force ou ta puissance, si t’avais les yeux bleus, tu tombais au même niveau que les omégas; les faibles tout au bas de la hiérarchie; les esclaves. Parce que on disait que si t’avais les yeux bleus, tu valais pas plus que ça, de toutes façons. C’était ça, la purification: l’Alpha qui a “purifié” la meute en rabaissant tous les indignes au bas de l’échelle. Ouin, quand l’Alpha décrète quelque chose avec sa “voix d’Alpha”, ça devient littéralement officiel. Mais moi, c’est encore pire, j’suis l’enfant de traîtres. De traîtres qui ont perdu la vie avant de pouvoir payer pour leur trahison; alors comme de faite, c’est à moi à payer pour leurs torts.</p>
             <p>Après avoir pris une douche rapide au gym et couru (vitesse d’humain, par contre) jusqu’à la maison-mère, il me restait juste assez de temps pour de passer à la cuisine et me prendre quelque chose à grignoter…. Si personne ne venait m’achaler. En général, les indignes ont assez de choses à faire, avec le ménage pis toute, pour pas avoir le temps de me déranger, mais les autres, les dignes, pouvaient m’utiliser comme bon leur semblait. Quand j’étais jeune, je servais surtout de punching bag pour défouler leurs frustrations ou exercer leur vengeance contre mes parents, mais quand j’ai atteint l’âge de maturité, les choses ont un peu changées...</p>
             <p>De un, Vic s’est joint à moi et j’ai enfin pu me transformer. Vic, c’est ma moitié-bête. Deux esprits dans le même corps qui peut prendre deux formes, l’une humaine, l’autre lupine. Avec l’arrivée de Vic, mes pouvoirs de lycanthropes sont apparus. Non seulement je pouvais maintenant me transformer, mais surtout ma force, ma vitesse, mes sens et ma guérison avait découplées. Sur le coup, j’étais extatique. Enfin, je pourrais me défendre! La première fois qu’on a essayer de m’attaquer après ma transformation, j’ai enfin pu répliquer! En tout cas, j’ai essayé. Mais j’aurais du me douter que j’serais pas à la hauteur. T’as beau avoir plus de puissance, si t’as aucune technique, et que l’autre s’entraîne à tous les jours…, ben t’as pas grand chance. En fait, les dignes contre qui j’avais essayé de me défendre avaient trouvé ça tellement cute que mon nom a aussitôt été mis dans la pige pour les combats du samedi soirs. Ça allait “ajouter au divertissement”. J’allais être le clou du spectacle. La deuxième fois, j’ai réussi à placer un coup de poing. Ça y a surement pas fait ben mal, mais ça y a pas fait plaisir non plus. Alors c’est là que l’Alpha a décidé d’intervenir et m’a fait venir à son bureau. On était juste nous deux dans son bureau et juste sa face me faisait peur; y’avait quelque chose dans ses yeux… Pis finalement Alpha a utilisé sa voix d’Alpha pour m’interdire de me défendre ou de me battre contre qui que ce soit de la meute. À part, bien sur, lors des combats du samedi soir. À ce moment là, j’avais pas encore beaucoup de contrôle sur Vic, alors sa rage a débordée et j’ai commencé à chialer et à me plaindre de l’injustice, etc... bref, l’Alpha a vite ajouté que je ne pourrais plus parler pantoute en présence d’autres lycanthropes. Et aussitôt, comme par magie, j’ai pu été capable de dire un mot. J’vous l’avais dit que la “voix d’Alpha” est puissante! Depuis ce jour-là, j’peux rien faire d’autre que me laisser faire, peu importe ce que les autres veulent me faire ou me faire faire. Vic a gémit pendant longtemps après ça; des fois par frustration, d’autres par culpabilité, mais avec le temps, on a bien du accepter notre sort. L’autre chose qui est arrivée quand j’ai atteint l’âge de maturité, c’est que je devenait officiellement disponible sexuellement... Alors en plus d’être déjà le punching bag de la meute, j’avais alors obtenu le rôle de jouet sexuel.</p>
             <p>J’ai regardé l’heure et confirmé qu’il me restait juste assez de temps pour une collation. En approchant de la cuisine, je longeais les murs pour m’assurer de ne pas attirer l’attention, mais alors que je passais devant une porte ouverte, une main que j&#x27;avais pas vue m’a agrippé le bras pour m&#x27;attirer dans la pièce sombre. Par réflexe, j’ai essayé de me mettre en boule, histoire de mieux encaisser les coups, quand mon nez a compris à qui appartenait la main, j’ai compris: c&#x27;était pas une attaque, c&#x27;était une demande, un ordre. Quelqu&#x27;un voulait venir. Le fait que la personne voulait faire ça dans le noir, je l’sais, c’était pas par honte ou par gêne (tout le monde savait que j’étais le jouet sexuel de tout le monde), mais vraiment juste parce que voir ma face pleine de cicatrices était apparemment un turn off. J’essayais de pas y penser plus que ça. Après tout, c’est pas comme si j’pouvais y faire grand chose. Dans un mouvement fluide et imposant, sa main a mit la mienne sur son entre-jambe et un grognement de satisfaction s’est échappé de sa bouche. Son autre main a atterrit derrière ma tête et, avec sa force de lycanthrope, m’a fait tomber à genoux pour m’écraser la face dans son entre-jambe. L&#x27;ordre était clair. Aussitôt, mon cerveau s’est mis à off et mon corps est tombé en pilotage automatique. Une chance que je connaissais bien cette personne-là, parce qu&#x27;il fallait que ça soit rapide; l&#x27;Alpha m&#x27;attendait. Pas le temps de niaiser ou de se déshabiller. J’ai détaché ses pantalons et tout de suite j’ai commencé à m’y mettre. Je touchais ici, je mordillais là, léchais un peu ici, caressais un peu là. Ma bouche et mes mains étaient habituées et connaissaient leur job, et comme de fait, en quelques minutes, sa respiration est devenue saccadée et ses hanches ont commencé à onduler comme pour en avoir plus, plus fort, plus vite. Je continuais à me concentrer sur ma technique et continuais à faire les mêmes mouvements, tout en augmentant graduellement l&#x27;intensité au même rythme que ses inspirations. Avec un peu de chance, son orgasme allait arriver avant que je pogne une crampe. Comme prévu, sa respiration s’est arrêtée, une de ses mains est apparue devant sa bouche comme pour étouffer ses propres cris et son corps en entier s’est mis à shaker, à se contracter puis finalement à se relaxer. Un soupir de satisfaction pour remercier mon travail bien fait et une poussée derrière la tête pour me renvoyer sur mon chemin. Ma job ici était faite. Considérant qu’il fallait à tout prix que je passe aux toilettes pour me laver (j&#x27;pouvais quand même pas arriver devant l&#x27;Alpha en sentant le sexe de même), c’était clair que j’aurais pu eu le temps d’arrêter pour manger. Tanpis.</p>
-            <p>En courant un peu j’ai quand même réussi à arriver devant la porte du bureau de l’Alpha à l’heure pile. Mais avant de cogner à la porte, j’ai pris une grande inspiration. À l’odeur je pouvais dire qu’y avait juste deux personnes dans le bureau, Alpha et Gab. J’ai donc compris que ça devait être pour m’envoyer sur une autre mission.</p>
-            <p>J’vous ai déjà dit que mes parents avaient trahi la meute. En gros, un an après le jour de la purification, mes parents ont fait entrer un groupe de vampires dans la maison-mère. Les vampires ont criés MASEVAS! et ont commencé à tuer tout le monde, ou entoutcas presque, parce que veut-veut-pas, les lycanthropes savent se défendre. Bref, ce fut un carnage. Mes parents n’ont pas survécu, mais moi oui, parce que Beta Sad a enfermé les plus jeunes dans une classe de l’aile scolaire avant que la bataille nous rejoigne. Vu qu’une bonne partie des vampires ont réussi à s’échapper, Gab a commencé à les traquer. Gab est genre l’élite des traquistes de la meute. Les lycanthropes ont un odorat très développé, mais les traquistes se spécialisent dans la traque et Gab peut retrouver n’importe qui, n’importe où, même à partir d’un seul cheveux ou d’un peu de sang, ou d’un bout de peau, ou d’un mini morceau de vêtement… bref, toutes des choses qui se retrouvent sur un champ de bataille. Alors, depuis l’attaque, Gab a passé des années à traquer, identifier et surveiller chaque membre du groupe Masevas. Et moi, pendant ce temps-là, je survivais et m’entraînait à me battre pour continuer de survivre. Pis un jour, Alpha a décidé que j’étais assez solide et habile en combat pour m’envoyer réparer les torts que mes parents avaient causés et venger la meute. Depuis ce jour, Alpha choisi qui des membres de Masevas on doit éliminer; Gab m’en ramène les coordonnées et moi je dois aller l’achever. Simple.</p>
-            <p>J’ai donc cogner à la porte et aussitôt entendit Gab répondre “Envoye, Chose, entre!”. Ouin, tout le monde m’appelle Chose. Non, c’est pas mon vrai nom.</p>
-            <p>Alpha était à son bureau, au fond de la pièce. Gab, debout à mi-chemin entre moi et Alpha, me tendait déjà un sac. Je savais que dans ce sac-là je trouverais un morceau de vêtement fraîchement porté, une adresse et un portrait de ma nouvelle cible. L’adresse devrais m’aider à retrouver ma cible, mais c’est le morceau de vêtement, avec son odeur dessus, et le portrait qui allaient me permettre de confirmer d’avoir la bonne personne.</p>
-            <p>Au moment où j’ai pris le sac, Alpha a commencé à expliquer “C’est la dernière sangsue que l’autre a réussi à trouver, alors il va falloir que t’a fasse parler celle-là, parce que c’est clair qu’on a pas encore éliminer toute la gang.”</p>
-            <p>La surprise m’a fait relever la tête vers l’Alpha. On était-tu réellement entrain de parler de torture?! J’avais jamais fait ça, moi! Avant même que je puisse essayer de répliquer (parce que, je le savais, de toutes façons, j’aurais pas été capable de dire un mot), Alpha a continuer “Je sais que c’est pas ton genre, mais on n’a pu l’choix. Fac pour te motiver, j’vais t’offrir une récompense. T’as d’la chance, aujourd’hui j’suis d’humeur généreuse! Si tu réussi à éliminer la gang de Masevas au complet,… j’vas pardonner tes parents.”</p>
+            <p>En courant un peu j’ai quand même réussi à arriver devant la porte du bureau de l’Alpha à l’heure pile. Mais avant de cogner à la porte, j’ai pris une grande inspiration. À l’odeur je pouvais dire qu’y avait juste deux personnes dans le bureau, l'Alpha et Gab. J’ai donc compris que ça devait être pour m’envoyer sur une autre mission.</p>
+            <p>J’vous ai déjà dit que mes parents avaient trahi la meute. En gros, un an après le jour de la purification, mes parents ont fait entrer un groupe de vampires dans la maison-mère. Les vampires ont criés MASEVAS! et ont commencé à tuer tout le monde, ou entoutcas presque, parce que veut-veut-pas, les lycanthropes savent se défendre. Bref, ce fut un carnage. Mes parents n’ont pas survécu, mais moi oui, parce que Beta Sad a enfermé les plus jeunes dans une classe de l’aile scolaire avant que la bataille nous rejoigne. Vu qu’une bonne partie des vampires ont réussi à s’échapper, Gab a commencé à les traquer. Gab est genre l’élite des traquistes de la meute. Les lycanthropes ont un odorat très développé, mais les traquistes se spécialisent dans la traque et Gab peut retrouver n’importe qui, n’importe où, même à partir d’un seul cheveux ou d’un peu de sang, ou d’un bout de peau, ou d’un mini morceau de vêtement… bref, toutes des choses qui se retrouvent sur un champ de bataille. Alors, depuis l’attaque, Gab a passé des années à traquer, identifier et surveiller chaque membre du groupe Masevas. Et moi, pendant ce temps-là, je survivais et m’entraînait à me battre pour continuer de survivre. Pis un jour, l'Alpha a décidé que j’étais assez solide et habile en combat pour m’envoyer réparer les torts que mes parents avaient causés et venger la meute. Depuis c'te jour-là, l'Alpha choisi qui des membres de Masevas on doit éliminer; Gab m’en ramène les coordonnées et moi je dois aller l’achever. Simple.</p>
+            <p>J’ai donc cogner à la porte et aussitôt j"ai entendu Gab répondre “Envoye, Chose, entre!”. Ouin, tout le monde m’appelle Chose. Non, c’est pas mon vrai nom.</p>
+            <p>L'Alpha était à son bureau, au fond de la pièce. Gab, debout à mi-chemin entre moi et l'Alpha, me tendait déjà un sac. Je savais que dans c'te sac-là j'allais trouver un morceau de vêtement fraîchement porté, une adresse et un portrait de ma nouvelle cible. L’adresse devrais m’aider à retrouver ma cible, mais c’est le morceau de vêtement, avec son odeur dessus, et le portrait qui allaient me permettre de confirmer d’avoir la bonne personne.</p>
+            <p>Au moment où j’ai pris le sac, l'Alpha a commencé à expliquer “C’est la dernière sangsue que l’autre a réussi à trouver, alors il va falloir que t’a fasse parler celle-là, parce que c’est clair qu’on a pas encore éliminer toute la gang.”</p>
+            <p>La surprise m’a fait relever la tête vers l’Alpha. On était-tu réellement entrain de parler de torture?! J’avais jamais fait ça, moi! Avant même que je puisse essayer de répliquer (parce que, je le savais, de toutes façons, j’aurais pas été capable de dire un mot), l'Alpha a continuer “Je sais que c’est pas ton genre, mais on n’a pu l’choix. Fac pour te motiver, j’vais t’offrir une récompense. T’as d’la chance, aujourd’hui j’suis d’humeur généreuse! Si tu réussi à éliminer la gang de Masevas au complet,… j’vas pardonner tes parents.”</p>
           </div>
           <h2>PdV externe de ?</h2>
           <div>
@@ -922,7 +1042,7 @@
             <p>Mais j’avoue que la curiosité prend le dessus sur mon instinct de survie; pas que j’en ai beaucoup <em>anyway</em>.</p>
             <p>J’vous ai déjà dit que j’ai la coordination d’une marionnette à fils? Ouin, ben imaginez une marionnette à fils qui essaie de sortir de dessous d’une pile de boîte de carton... <em>Elegant fluidity, I am not</em>.</p>
             <p>Mais quand j’fini finalement par pouvoir voir les deux spécimens devant moi, pendant une minute j’oublie complètement de quoi j’ai l’air; les boîtes existent pus; j’existe pu.</p>
-            <p>À quatre patte par terre, à cheval sur Future-Victime-numéro-1 et les mains retenant ses épaules au sol, Arrache-Tête est... à couper l’souffle. Un physique de la mort et clairement fait pour tuer: puissance, muscles et vivacité; 4. Mais les yeux... un mixte de férocité et de gentillesse, décidément un instinct protecteur; 9. 49 est définitivement le genre de personne que tu veux de ton bord, pas juste parce que si tu t&#x27;y oppose, tu meurs, mais aussi parce que si t&#x27;es sous sa protection, personne peut te toucher! Pourtant, même si 49 a l’air d’une machine à tuer, il y a comme une fragilité, qui en émane; une petite victime qui veut juste qu’on l’aime et qu’on l’accepte. Pauvre p’tite chose! D’ailleurs, en regardant plus attentivement, je fini par remarquer que son visage, et tout ce dont je vois de son corps, est couvert de cicatrices. <em>Nice!</em> J’adore les cicatrices, toutes les textures, les sensations... Avant que j’me mette à baver devant 49, Future-Victime-numéro-1 me sort de mes fantasmes “Hey toi, regarder dans mes yeux, <em>please</em>.”</p>
+            <p>À quatre patte par terre, à cheval sur Future-Victime-numéro-1 et les mains retenant ses épaules au sol, Arrache-Tête est... à couper l’souffle. Un physique de la mort et clairement fait pour tuer: puissance, muscles et vivacité; 4. Mais les yeux... un mixte de férocité et de gentillesse, décidément un instinct protecteur, un côté héroïque, genre chevaleresque; 9. 49 est définitivement le genre de personne que tu veux de ton bord, pas juste parce que si tu t&#x27;y oppose, tu meurs, mais aussi parce que si t&#x27;es sous sa protection, personne peut te toucher! Pourtant, même si 49 a l’air d’une machine à tuer, il y a comme une fragilité, qui en émane; une petite victime qui veut juste qu’on l’aime et qu’on l’accepte. Pauvre p’tite chose! D’ailleurs, en regardant plus attentivement, je fini par remarquer que son visage, et tout ce dont je vois de son corps, est couvert de cicatrices. <em>Nice!</em> J’adore les cicatrices, toutes les textures, les sensations... Avant que j’me mette à baver devant 49, Future-Victime-numéro-1 me sort de mes fantasmes “Hey toi, regarder dans mes yeux, <em>please</em>.”</p>
             <p>Et c’est là que je fini par regarder l’autre. Pas dans les yeux, contrairement à sa demande, parce que j’ai franchement horreur des contacts visuels. Sérieusement, comment est-ce que les gens font pour regarder quelqu’un d’autre dans les deux yeux en même temps?! Moi, s’cuse, mais j’suis juste capable d’en regarder un à la fois; pis alterner entre les deux me donne mal à tête, pis en fixer yink un des deux, ça a juste l’air bizarre tant qu’à moi. Enfin bref, j’me concentre plutôt sur l’aspect général de Future-Victime-numéro-1: Son corps, couché sur le dos, est plutôt grand, mince et blême, genre 1, mais son air arrogant et cynique sonne plus comme un 7. Ça serait effectivement intéressant de torturer 77. J’pari que j’pourrais atteindre facilement les os vu qu’il a pas l’air d’avoir ben ben de chair autour. J’ai toujours voulu me mettre à la sculpture d’os, et les os d’écureuil sont juste vraiment trop petits... Après tout, il va bien falloir que 77 paie pour avoir gâché ma nuit de sommeil!</p>
           </div>
           <h2>PdV de Chose/49</h2>
@@ -1201,19 +1321,70 @@
         <div><p>À venir...</p></div>
       </div>
     </div>
+  </div>
   <!--Shit to feel-->
-  <!-- 1. Trouver de meilleures couleurs et préfaire les mix background/font-color -->
   <!-- Figurer out comment faire intéragir le database et le storage -->
   <!-- Créer/remplir le database et le storage des quotes -->
   <!-- Créer le code pour faire venir les quotes et en choisir une au hasard -->
   <!-- Figurer out how to add data to database and storage -->
   <!-- Figurer out à partir de où on peut ajouter des quotes (google keep, facebook, etc) -->
-  <style name="ShitPage"></style>
+  <style name="ShitPage">
+    .shitTypeButton{
+      font-family: 'Rubik Dirt', cursive;
+      font-size: calc(15.53px + 0.19vw);
+      line-height:1.2em;
+      font-weight: 400;
+      width:fit-content;
+      border-top: 1px solid rgba(128,0,128,.8);
+      border-left: 1px solid rgba(128,0,128,.8);
+      border-bottom: 4px solid rgba(128,0,128,.8);
+      border-right: 3px solid rgba(128,0,128,.8);
+      border-radius: 5px;
+      padding: 5px 10px;
+      margin: 15px auto;
+      text-align: center;
+      background: #000;
+      color: rgba(128,0,128,.9);}
+    .shitTypeButton:hover{
+      background: rgba(128,0,128,.4);
+      cursor: pointer;}
+    .yourShit{
+      display: flex;
+      width:200px;
+      min-height: 200px;
+      height: fit-content;
+      border-top: 1px solid rgba(128,0,128,.8);
+      border-left: 1px solid rgba(128,0,128,.8);
+      border-bottom: 4px solid rgba(128,0,128,.8);
+      border-right: 3px solid rgba(128,0,128,.8);
+      border-radius: 5px;
+      margin:auto;
+      padding:5px;
+      font-size: 18px;
+      opacity: 0.8;
+    }
+    .yourShit:hover{
+      cursor: pointer;
+    }
+    .yourShit p{
+      margin: auto;
+      text-align: center;
+    }
+  </style>
   <script name="ShitPage">
 
   </script>
   <div name="ShitPage" class="sectionPage">
-    <h1>Relax, I'm working on it!</h1>
+    <h1>Relax, I'm still working on it!</h1>
+    <div class="shitTypeButton">Coffee</div>
+    <div class="shitTypeButton">Cynical</div>
+    <div class="shitTypeButton">Sex</div>
+    <div class="shitTypeButton">Old age</div>
+    <div class="shitTypeButton">Life hack</div>
+    <div class="shitTypeButton">Other</div>
+    <div class="yourShit" id="yourShit">
+      <p id="ySp">Click on a category and see what happens.<br/><span style="font-size:calc(calc(15.53px + 0.19vw) - 2px);">(Be careful what<br/>you wish for!)</span></p>
+    </div>
   </div>
   <!--Master's Toy's Training--> Mstrplzuseme
   <div name="ToysPage" class="sectionPage" id="SectPageToy">

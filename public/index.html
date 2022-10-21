@@ -183,7 +183,6 @@
     <h1>Whatever you think you're doing here,<br>WELCOME!</h1>
     <h3 style="margin-bottom:0;">That's my space, my mind, my shoes,...<br>Be warned, your insurances don't cover that kind of trauma.</h3>
     <h5 style="margin:0;">(Yeah, that's the only trigger warning you'll get...)</h5>
-    <p>I love you too!</p>
     <div>
       <h2>Shit of the day</h2>
       <div class="SotD" id="SotD" onclick="SotD()">
@@ -1323,9 +1322,10 @@
     </div>
   </div>
   <!--Shit to feel-->
-  <!-- Figurer out comment faire intéragir le database et le storage -->
-  <!-- Créer/remplir le database et le storage des quotes -->
+  <!-- Figurer out comment rappeler des quotes (text) et les afficher malgré les "" et les <br>, etc -->
   <!-- Créer le code pour faire venir les quotes et en choisir une au hasard -->
+  <!-- Figurer out comment faire intéragir le database et le storage -->
+  <!-- Créer/remplir le database (quotes) et le storage (meme) -->
   <!-- Figurer out how to add data to database and storage -->
   <!-- Figurer out à partir de où on peut ajouter des quotes (google keep, facebook, etc) -->
   <style name="ShitPage">
@@ -1370,9 +1370,137 @@
       margin: auto;
       text-align: center;
     }
+    .addYOSwhole{
+      width:fit-content;
+      display: block;
+      margin:auto;
+    }
+    #addYOS{
+      width: fit-content;
+      margin:auto;
+    }
+    #addYOS > div{
+      margin:20px 0;
+    }
+    #addYOS > div > label{
+      margin-right: 10px;
+    }
+    .addYOSquote{
+      display: flex;
+      justify-content: space-between;
+    }
+    .addYOSquote > textarea{
+      border: 1px solid rgba(128,0,128,.8);
+      background: #000;
+      color: rgba(128,0,128,1);
+      padding: 5px;
+      border-radius: 5px;
+      width: 180px;
+      font-family: 'Nunito', sans-serif;
+      font-size: calc(15.06px + 0.38vw);
+      font-weight: 700;
+    }
+    .addYOSquote > textarea:focus{
+      outline: 1px solid rgba(255,255,255,.5);
+    }
+    .addYOStheme{
+      display: flex;
+    }
+    .ddThemeWhole{
+      display: flex;
+      flex-flow: column;
+    }
+    .ddThemeLabel{
+      display: inline-block;
+      margin: 0;
+      border: 1px solid rgba(128,0,128,.8);
+      background: #000;
+      color: rgba(128,0,128,.8);
+      padding: 5px;
+      border-radius: 5px;
+      line-height: 1em;
+      font-size: 20px;
+      width: 180px;
+      font-family: 'Nunito', sans-serif;
+      font-size: calc(15.06px + 0.38vw);
+      font-weight: 700;
+    }
+    .ddThemeLabel:hover{
+      cursor:pointer;
+    }
+    .ddThemeList{
+      max-height: 0;
+      width: 0;
+      overflow: hidden;
+    }
+    .ddThemeList label{
+      visibility: hidden;
+    }
+    
+    #ddThemeInput:checked + label.ddThemeLabel>span.dropchevron{
+      transform: rotate(-90deg);
+      transition: transform 0.5s;
+    }
+    #ddThemeInput:checked ~ div.ddThemeList{
+      max-height: 100vh;
+      width: 100%;
+      transition: max-height .5s ease-in;
+    }
+    #ddThemeInput:checked ~ div.ddThemeList label{
+      display:block;
+      visibility: visible;
+      border: 1px solid rgba(128,0,128,.8);
+      width: 180px;
+      padding: 5px;
+      background: rgba(128,0,128, 0.2);
+      border-radius: 5px 5px 0 0;
+    }
+
+    .ddThemeListLabel:hover{
+      /* color: rgba(128,0,128,1);
+      border: 1px solid rgba(128,0,128,1);
+      background: rgba(128,0,128, 0.4); */
+      opacity:.7;
+      cursor: pointer;
+    }
+    input.ddThemeChoice:checked + label.ddThemeListLabel{
+      background: rgba(128,0,128,.5)!important;
+    }
+    #addYOS > button{
+      float: right;
+      width:fit-content;
+      border-top: 1px solid rgba(128,0,128,.8);
+      border-left: 1px solid rgba(128,0,128,.8);
+      border-bottom: 4px solid rgba(128,0,128,.8);
+      border-right: 3px solid rgba(128,0,128,.8);
+      border-radius: 5px;
+      padding: 3px 5px;
+      margin: 15px auto;
+      text-align: center;
+      background: #000;
+      color: rgba(128,0,128,.9);
+      font-family: 'Nunito', sans-serif;
+      font-size: calc(15.06px + 0.38vw);
+      font-weight: 700;
+    }
+    #addYOS > button:hover{
+      background-color: rgba(128,0,128,.4);
+      cursor: pointer;
+    }
+
   </style>
   <script name="ShitPage">
-
+    function wisely(){
+      let allTheme = document.querySelectorAll(".ddThemeChoice");
+      let al = allTheme.length;
+      for(let sT = 0; sT<al; sT++){
+        if(allTheme[sT].checked){
+          document.querySelector("#wisely").innerHTML = allTheme[sT].value;
+          document.querySelector("#ddThemeInput").checked = false;
+          document.querySelector("#badShit").innerHTML = "";
+        }
+      }
+    }
   </script>
   <div name="ShitPage" class="sectionPage">
     <h1>Relax, I'm still working on it!</h1>
@@ -1384,6 +1512,36 @@
     <div class="shitTypeButton">Other</div>
     <div class="yourShit" id="yourShit">
       <p id="ySp">Click on a category and see what happens.<br/><span style="font-size:calc(calc(15.53px + 0.19vw) - 2px);">(Be careful what<br/>you wish for!)</span></p>
+    </div>
+    <hr style="border-color: #800080; margin-top: 100px;"/>
+    <div class="addYOSwhole">
+      <h2 style="text-align:center;">Add your own shit to the pile</h2>
+      <form id="addYOS">
+        <div class="addYOSquote">
+          <label for="quote">Quote:</label>
+          <textarea name="quote" autocomplete="off"></textarea>
+        </div>
+        <div class="addYOStheme">
+          <label>Theme:</label>
+          <div class="ddThemeWhole">
+            <input id="ddThemeInput" class="cossin" name="ddTheme" type="checkbox"/>
+            <label for="ddThemeInput" class="ddThemeLabel"><span id="wisely">Choose wisely...</span><span class="typcn typcn-chevron-right dropchevron"></span></label>
+            <div class="ddThemeList">
+              <input id="void" class="cossin ddThemeChoice" title="theme" name="theme" type="radio" value="" checked/>
+              <input id="coffee" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="radio" value="Coffee"/>
+              <label for="coffee" class="ddThemeListLabel">Coffee</label>
+              <input id="cynical" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="radio" value="Cynical"/>
+              <label for="cynical" class="ddThemeListLabel">Cynical</label>
+              <input id="sex" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="radio" value="Sex"/>
+              <label for="sex" class="ddThemeListLabel">Sex</label>
+              <input id="old" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="radio" value="Old age"/>
+              <label for="old" class="ddThemeListLabel">Old age</label>
+            </div>
+          </div>
+        </div>
+        <p id="badShit"></p>
+        <button>Come on, add it!</button>
+      </form>
     </div>
   </div>
   <!--Master's Toy's Training--> Mstrplzuseme
@@ -2374,7 +2532,7 @@ function refresh(){
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
-  import { getFirestore, collection, getDocs, query, where} from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+  import { getFirestore, collection, getDocs, query, where, addDoc} from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
   // TODO: Add SDKs for Firebase products that you want to use
   // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -2398,6 +2556,24 @@ function refresh(){
   querySnapshot.forEach((doc) => {
     console.log(doc.data());
   });
+
+  const addYOSForm = document.querySelector('#addYOS')
+  addYOSForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+    if(addYOSForm.quote.value === "" || addYOSForm.theme.value === ""){
+      document.querySelector("#badShit").innerHTML = "You forgot something...";
+    } else{
+    addDoc(collection(db, "shit"), {
+      quote: addYOSForm.quote.value,
+      theme: addYOSForm.theme.value,
+      type: "text"
+    })
+    .then(() => {
+      addYOSForm.reset()
+      document.querySelector("#wisely").innerHTML = "Choose wisely...";
+      document.querySelector("#badShit").innerHTML = "Thank you for your shit!";
+    })
+  }})
 </script>
 </script>
   </body>

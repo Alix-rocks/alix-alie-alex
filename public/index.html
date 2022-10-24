@@ -179,7 +179,6 @@
     <!--Next step (by myself): figure out how to use the navigator back buttons and different href-->
 
   <div name="HomePage" class="home" id="home">
-    <!-- <button id="buttonne">This text will be overwritten</button> -->
     <h1>Whatever you think you're doing here,<br>WELCOME!</h1>
     <h3 style="margin-bottom:0;">That's my space, my mind, my shoes,...<br>Be warned, your insurances don't cover that kind of trauma.</h3>
     <h5 style="margin:0;">(Yeah, that's the only trigger warning you'll get...)</h5>
@@ -193,6 +192,7 @@
     <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage()" id="Wrote"><label for="Wrote" class="menuSectLabel">I wrote, you read</label></input>
     <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage()" id="Shit"><label for="Shit" class="menuSectLabel">Quotes, Memes and Shit<br>to make us feel better, or worst</label></input>
     <input type="radio" name="menuSect" class="menuSect" onclick="showPWfield()" id="Toy"><label for="Toy" class="menuSectLabel" id="ToyLabel">My Toy's training<br><span>(password protected)</span></label></input>
+    <!--Quand tu reclick sur le bouton pour faire disparaître la zone PWfield, y'a le #wrong et la barre sur l'oeil (#slash) qui restent là-->
     <div class="PWfield" id="PWfield">
       <label class="PWlabel">What's the magid word?</label><div class="inputEye"><input type="password" class="PWinput" id="PWinput" placeholder="The magic word is..."><div class="diveye" onclick="showPW()"><span class="typcn typcn-eye-outline eye"></span><span class="typcn typcn-minus slash" id="slash"></span></div></input></div>
       <button class="PWbtn" onclick="PWtoPage()"><p>Let's hope you're right!</p></button>
@@ -207,9 +207,6 @@
   <style name="HomePage">
     .PWfield{
       visibility: hidden;
-    }
-    .PWfield.visible{
-      visibility: visible;
     }
     .inputEye{
       position: relative;
@@ -272,7 +269,9 @@
     #wrong{
       visibility: hidden;
     }
-    
+    .visible{
+      visibility: visible;
+    }
     .SotD{
       display: flex;
       width:200px;
@@ -342,6 +341,12 @@
     function showPWfield(){
       document.getElementById('PWfield').classList.toggle('visible');
       document.getElementById('ToyLabel').classList.toggle('toychecked');
+      document.getElementById('wrong').style.visibility = "hidden";
+      if(document.getElementById('PWfield').classList.contains('visible')){
+        document.getElementById('slash').style.visibility = "visible";
+      } else {
+        document.getElementById('slash').style.visibility = "hidden";
+      }
     }
     function showPW() {
       var PW = document.getElementById("PWinput");
@@ -478,13 +483,22 @@
       let numTF = getRndInteger(0,TextFont.length);
       document.getElementById("SotDp").style.fontFamily = TextFont[numTF];
       let numQMS = arr[QMS++];
+      console.log("firstBC: " + numBC + " firstTC: " + numTC);
       if(QMS < 11){
         if(numBC == numTC){
-          document.getElementById("SotD").style.background = BgColor[numBC++];
+          numBC++
+          if(numBC == BgColor.length){
+            console.log("yes numBC = 8");
+            numBC = 0;
+          }
+          document.getElementById("SotD").style.background = BgColor[numBC];
+          document.getElementById("SotD").style.color = TextColor[numTC]; 
+          console.log("secondBC: " + numBC + " secondTC: " + numTC);
           document.getElementById("SotDp").innerHTML = "Please, try again,<br>\nmy brain's just not working yet.<br>\n<br>\nNeed more coffee.";
         } else if(numBC == 4 && numTC == 7 || numBC == 7 && numTC == 4){
           document.getElementById("SotD").style.background = "black";
           document.getElementById("SotD").style.color = "purple";
+          document.getElementById("SotDp").innerHTML = QMS_Coffee[numQMS];
         } else {
           document.getElementById("SotD").style.background = BgColor[numBC];
           document.getElementById("SotD").style.color = TextColor[numTC];  
@@ -532,7 +546,7 @@
       padding: 3px 5px;
       margin: 2px;
       background: rgba(128,0,128,.8);
-      color: #fff;
+      color: rgba(255,255,255,.8);
     }
     .menuTextLabel:hover{
       cursor: pointer;
@@ -1246,7 +1260,7 @@
           </div>
           <h2>PdV d’Alex</h2>
           <div>
-            <h3><em>Make love, not war,<br>sex protections are cheaper than nuclear bombs.</em></h3>
+            <h3><em>Make love, not war,<br>sex protections are cheaper than weapons.</em></h3>
             <p>Et c’est comme ça que 23 devint mon élève en Masochisme 101.</p>
             <p>Y expliquer comment le système nerveux fonctionne par rapport à la douleur c’était une chose; le problème c’était de l’amener à me faire assez confiance pour <em>actually</em> essayer! Ça pis me faire détacher. Finalement, on a fait un compromis: j’ai juste une main de libre, mais en échange, on a mis fin au plan de torture qui aurait fini par mettre une de mes côtes à l’air. Tu sais que t’as un bon compromis quand tu finis en meilleur état que c’qui était prévu. Surtout qu’à voir la facilité avec laquelle 23 a arraché le DuctTape de mon poignet, c’est probablement mieux pour ma santé de ne pas être à sa merci trop longtemps. Surtout que avec sa crise existentielle pis toute le placotage, ma plaie avait déjà commencé à se refermer et surtout, moi j’avais complètement perdu ma vague d’excitation; alors si la torture avait du recommencer, il aurait fallu que je recommence toute mon <em>brainwash</em> du début…</p>
             <p>“Ok, <em>va bene</em>, que dois-je faire maintenant?” 23 est par terre, à genoux entre mes jambes qui, comme mon poignet gauche, sont encore ductapées à la chaise et le fait que j’suis pour y dire de commencer à s’branler avant d’me lécher l’sang que sa <em>fucking</em> griffe a fait couler sur mon ventre me paraît… intéressant? Et dire qu’à matin, ma plus grande aventure était censée être d’aller prendre ma douche…</p>
@@ -1322,11 +1336,14 @@
     </div>
   </div>
   <!--Shit to feel-->
+  <!-- Voir si on peut mettre plus qu'un theme (checkbox au lieu de radio, mais surtout, plus d'une valeur pour le field Type) -->
   <!-- Figurer out comment rappeler des quotes (text) et les afficher malgré les "" et les <br>, etc -->
   <!-- Créer le code pour faire venir les quotes et en choisir une au hasard -->
+  <!-- Créer/remplir le database des quotes -->
+  <!-- Quand on voudra ajouter des memes-->
   <!-- Figurer out comment faire intéragir le database et le storage -->
-  <!-- Créer/remplir le database (quotes) et le storage (meme) -->
-  <!-- Figurer out how to add data to database and storage -->
+  <!-- Créer/remplir le database et le storage (meme) -->
+  <!-- Adapter le formulaire pour ajouter des memes (image et reconnaissance du type et création dans storage et lien dans database) -->
   <!-- Figurer out à partir de où on peut ajouter des quotes (google keep, facebook, etc) -->
   <style name="ShitPage">
     .shitTypeButton{
@@ -1505,13 +1522,17 @@
   <div name="ShitPage" class="sectionPage">
     <h1>Relax, I'm still working on it!</h1>
     <div class="shitTypeButton">Coffee</div>
-    <div class="shitTypeButton">Cynical</div>
+    <div class="shitTypeButton">Anti-social</div>
     <div class="shitTypeButton">Sex</div>
     <div class="shitTypeButton">Old age</div>
     <div class="shitTypeButton">Life hack</div>
+    <div class="shitTypeButton">Dad's joke</div>
     <div class="shitTypeButton">Other</div>
     <div class="yourShit" id="yourShit">
-      <p id="ySp">Click on a category and see what happens.<br/><span style="font-size:calc(calc(15.53px + 0.19vw) - 2px);">(Be careful what<br/>you wish for!)</span></p>
+      <div id="ySp" style="margin: auto;text-align: center;">
+        <p>Click on a category and see what happens.</p>
+        <h5 style="margin: 0.6em 0 0 0;line-height: 1.2em;">(Be careful what<br/>you wish for!)</h5>
+      </div>
     </div>
     <hr style="border-color: #800080; margin-top: 100px;"/>
     <div class="addYOSwhole">
@@ -1530,12 +1551,18 @@
               <input id="void" class="cossin ddThemeChoice" title="theme" name="theme" type="radio" value="" checked/>
               <input id="coffee" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="radio" value="Coffee"/>
               <label for="coffee" class="ddThemeListLabel">Coffee</label>
-              <input id="cynical" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="radio" value="Cynical"/>
-              <label for="cynical" class="ddThemeListLabel">Cynical</label>
+              <input id="cynical" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="radio" value="Anti-social"/>
+              <label for="cynical" class="ddThemeListLabel">Anti-social</label>
               <input id="sex" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="radio" value="Sex"/>
               <label for="sex" class="ddThemeListLabel">Sex</label>
               <input id="old" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="radio" value="Old age"/>
               <label for="old" class="ddThemeListLabel">Old age</label>
+              <input id="hack" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="radio" value="Life hack"/>
+              <label for="hack" class="ddThemeListLabel">Life hack</label>
+              <input id="dad" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="radio" value="Dad's joke"/>
+              <label for="dad" class="ddThemeListLabel">Dad's joke</label>
+              <input id="other" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="radio" value="Other"/>
+              <label for="other" class="ddThemeListLabel">Other</label>
             </div>
           </div>
         </div>
@@ -2578,6 +2605,6 @@ function refresh(){
 </script>
   </body>
   <footer>
-    <!--<p style="text-align:center;">I don't have a footer, but I've got two feet that you can kiss.<br/>Who needs a footer, anyway?</p>-->
+    <!--<p style="text-align:center;">I night not have a footer, but I've got two feet that you can kiss.<br/>Who needs a footer, anyway?</p>-->
 </footer>
 </html>

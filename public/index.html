@@ -424,7 +424,7 @@
       'How good do you have to be to be considered a "good person"?',
       "My doctor told me to start killing people.<br>\nWell not in those exact words.<br>\nSaid I had to reduce stress in my life.<br>\nSame thing.",
       "Tradition is just peer pressure from dead people.",
-      "Paranormal romance has taught me that you can convince any one to screw up their whole life with the sole promise of being supernaturally screwed their whole life.",
+      "Paranormal romance has taught me that you can convince any one to screw up their whole life with the sole promise of being paranormally screwed their whole life.",
       "Adults are probably spanked more than children nowadays.",
       "Mettez pas d'eau au congélateur.<br>\nElle devient toute dure et imbuvable.",
       "If you think you are smarter than the previous generation...<br>\n50 years ago the owner's manual of a car showed you how to adjust the valves.<br>\nToday it warns you not to drink the contents of the battery.",
@@ -1507,17 +1507,31 @@
 
   </style>
   <script name="ShitPage">
+    // function wisely(){
+    //   let allTheme = document.querySelectorAll(".ddThemeChoice");
+    //   let al = allTheme.length;
+    //   for(let sT = 0; sT<al; sT++){
+    //     if(allTheme[sT].checked){
+    //       document.querySelector("#wisely").innerHTML = allTheme[sT].value;
+    //       document.querySelector("#ddThemeInput").checked = false;
+    //       document.querySelector("#badShit").innerHTML = "";
+    //     }
+    //   }
+    // }
     function wisely(){
-      let allTheme = document.querySelectorAll(".ddThemeChoice");
-      let al = allTheme.length;
-      for(let sT = 0; sT<al; sT++){
-        if(allTheme[sT].checked){
-          document.querySelector("#wisely").innerHTML = allTheme[sT].value;
-          document.querySelector("#ddThemeInput").checked = false;
-          document.querySelector("#badShit").innerHTML = "";
-        }
+      var markedCheckbox = document.getElementsByName('theme');
+      let list = document.querySelector("#wisely");
+      list.innerText = "";
+      for (var checkbox of markedCheckbox){
+        if(checkbox.checked){
+        console.log(checkbox.value + " et ");
+          if(list.innerText == ""){
+            list.innerText = (checkbox.value);
+          } else{
+            list.innerText = list.innerText + ", " + (checkbox.value);
+          }
       }
-    }
+    }}
   </script>
   <div name="ShitPage" class="sectionPage">
     <h1>Relax, I'm still working on it!</h1>
@@ -1548,20 +1562,19 @@
             <input id="ddThemeInput" class="cossin" name="ddTheme" type="checkbox"/>
             <label for="ddThemeInput" class="ddThemeLabel"><span id="wisely">Choose wisely...</span><span class="typcn typcn-chevron-right dropchevron"></span></label>
             <div class="ddThemeList">
-              <input id="void" class="cossin ddThemeChoice" title="theme" name="theme" type="radio" value="" checked/>
-              <input id="coffee" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="radio" value="Coffee"/>
+              <input id="coffee" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Coffee"/>
               <label for="coffee" class="ddThemeListLabel">Coffee</label>
-              <input id="cynical" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="radio" value="Anti-social"/>
+              <input id="cynical" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Anti-social"/>
               <label for="cynical" class="ddThemeListLabel">Anti-social</label>
-              <input id="sex" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="radio" value="Sex"/>
+              <input id="sex" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Sex"/>
               <label for="sex" class="ddThemeListLabel">Sex</label>
-              <input id="old" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="radio" value="Old age"/>
+              <input id="old" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Old age"/>
               <label for="old" class="ddThemeListLabel">Old age</label>
-              <input id="hack" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="radio" value="Life hack"/>
+              <input id="hack" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Life hack"/>
               <label for="hack" class="ddThemeListLabel">Life hack</label>
-              <input id="dad" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="radio" value="Dad's joke"/>
+              <input id="dad" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Dad's joke"/>
               <label for="dad" class="ddThemeListLabel">Dad's joke</label>
-              <input id="other" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="radio" value="Other"/>
+              <input id="other" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Other"/>
               <label for="other" class="ddThemeListLabel">Other</label>
             </div>
           </div>
@@ -2587,12 +2600,22 @@ function refresh(){
   const addYOSForm = document.querySelector('#addYOS')
   addYOSForm.addEventListener('submit', (e) => {
     e.preventDefault()
-    if(addYOSForm.quote.value === "" || addYOSForm.theme.value === ""){
+    let finalList = []
+    var markedCheckbox = document.getElementsByName('theme');
+      for (var checkbox of markedCheckbox){
+        if(checkbox.checked){
+          finalList.push(checkbox.value);
+      }
+    }
+    console.log("finalList = " + finalList  + " addYOSForm.quote.value = " + addYOSForm.quote.value);
+    if(addYOSForm.quote.value === "" || finalList.length === 0){
       document.querySelector("#badShit").innerHTML = "You forgot something...";
+      document.querySelector("#wisely").innerHTML = "Choose wisely...";
     } else{
+      console.log("finalList = " + finalList + " addYOSForm.quote.value = " + addYOSForm.quote.value);
     addDoc(collection(db, "shit"), {
       quote: addYOSForm.quote.value,
-      theme: addYOSForm.theme.value,
+      theme: finalList,
       type: "text"
     })
     .then(() => {
@@ -2600,7 +2623,8 @@ function refresh(){
       document.querySelector("#wisely").innerHTML = "Choose wisely...";
       document.querySelector("#badShit").innerHTML = "Thank you for your shit!";
     })
-  }})
+  }
+})
 </script>
 </script>
   </body>

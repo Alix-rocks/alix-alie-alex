@@ -425,6 +425,9 @@
       "My doctor told me to start killing people.<br>\nWell not in those exact words.<br>\nSaid I had to reduce stress in my life.<br>\nSame thing.",
       "Tradition is just peer pressure from dead people.",
       "Paranormal romance has taught me that you can convince any one to screw up their whole life with the sole promise of being paranormally screwed their whole life.",
+      "La theorie<br>\nC'est quand on comprend tout, mais y'a rien qui marche<br>\nLa pratique<br>\nC'est quand tout marche, mais on sait pas pourquoi<br>\nIci, on a réussi les deux:<br>\nRien qui marche et personne sait pourquoi.",
+      "Sex before marriage is a sin unless you do it doggy style because all dogs go to heaven.<br>\nFollow me for more biblical loopholes.",
+      "It's not premarital sex if you never get married.<br>\nFollow me for more biblical loopholes.",
       "Adults are probably spanked more than children nowadays.",
       "Mettez pas d'eau au congélateur.<br>\nElle devient toute dure et imbuvable.",
       "If you think you are smarter than the previous generation...<br>\n50 years ago the owner's manual of a car showed you how to adjust the valves.<br>\nToday it warns you not to drink the contents of the battery.",
@@ -432,7 +435,9 @@
       "If you can't be a good example, then you'll just have to be a horrible warning.",
       "Proof that 'I'm sorry' and 'I apologize' aren't the same thing:<br>\ntry saying it at a funeral.",
       "The best place to hide a dead body is page 2 of Google.",
+      "At my age I've seen it all, heard it all, done it all,<br>\njust can't remember it all.",
       "Damn near had a threesome last night,<br>\njust needed 2 more people.",
+      "Reached that age where I've lost all perspective on the difference between clothes worn around the house and clothes worn outside of the house.",
       "Even if \"Diarrhea\" isn't your safe word, I guarantee they'll stop whatever they're doing if you scream it during sex.",
       "Le DuctTape c'est comme le sexe, c'est toujours plus efficace sur soi-même.",
       'The phrase "you deserve to be filled the same way you pour" has a totally different meaning in an orgy.',
@@ -1336,9 +1341,8 @@
     </div>
   </div>
   <!--Shit to feel-->
-  <!-- Voir si on peut mettre plus qu'un theme (checkbox au lieu de radio, mais surtout, plus d'une valeur pour le field Type) -->
-  <!-- Figurer out comment rappeler des quotes (text) et les afficher malgré les "" et les <br>, etc -->
-  <!-- Créer le code pour faire venir les quotes et en choisir une au hasard -->
+  <!-- Figurer out comment envoyer et rappeler des quotes (text) et conserver les "" et les <br>, etc -->
+ 
   <!-- Créer/remplir le database des quotes -->
   <!-- Quand on voudra ajouter des memes-->
   <!-- Figurer out comment faire intéragir le database et le storage -->
@@ -1386,6 +1390,8 @@
     .yourShit p{
       margin: auto;
       text-align: center;
+      font-size: calc(15.53px + 0.19vw);
+      font-weight: 900;
     }
     .addYOSwhole{
       width:fit-content;
@@ -1507,17 +1513,7 @@
 
   </style>
   <script name="ShitPage">
-    // function wisely(){
-    //   let allTheme = document.querySelectorAll(".ddThemeChoice");
-    //   let al = allTheme.length;
-    //   for(let sT = 0; sT<al; sT++){
-    //     if(allTheme[sT].checked){
-    //       document.querySelector("#wisely").innerHTML = allTheme[sT].value;
-    //       document.querySelector("#ddThemeInput").checked = false;
-    //       document.querySelector("#badShit").innerHTML = "";
-    //     }
-    //   }
-    // }
+
     function wisely(){
       var markedCheckbox = document.getElementsByName('theme');
       let list = document.querySelector("#wisely");
@@ -1535,15 +1531,15 @@
   </script>
   <div name="ShitPage" class="sectionPage">
     <h1>Relax, I'm still working on it!</h1>
-    <div class="shitTypeButton">Coffee</div>
-    <div class="shitTypeButton">Anti-social</div>
-    <div class="shitTypeButton">Sex</div>
-    <div class="shitTypeButton">Old age</div>
-    <div class="shitTypeButton">Life hack</div>
-    <div class="shitTypeButton">Dad's joke</div>
-    <div class="shitTypeButton">Other</div>
+    <div class="shitTypeButton" id="Coffee">Coffee</div>
+    <div class="shitTypeButton" id="Anti-social">Anti-social</div>
+    <div class="shitTypeButton" id="Sex">Sex</div>
+    <div class="shitTypeButton" id="Old age">Old age</div>
+    <div class="shitTypeButton" id="Life hack">Life hack</div>
+    <div class="shitTypeButton" id="Dad's joke">Dad's joke</div>
+    <div class="shitTypeButton" id="Other">Other</div>
     <div class="yourShit" id="yourShit">
-      <div id="ySp" style="margin: auto;text-align: center;">
+      <div id="ySp" style="margin: auto;text-align: center;font-size: calc(15.53px + 0.19vw);font-weight: 900;">
         <p>Click on a category and see what happens.</p>
         <h5 style="margin: 0.6em 0 0 0;line-height: 1.2em;">(Be careful what<br/>you wish for!)</h5>
       </div>
@@ -1562,20 +1558,20 @@
             <input id="ddThemeInput" class="cossin" name="ddTheme" type="checkbox"/>
             <label for="ddThemeInput" class="ddThemeLabel"><span id="wisely">Choose wisely...</span><span class="typcn typcn-chevron-right dropchevron"></span></label>
             <div class="ddThemeList">
-              <input id="coffee" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Coffee"/>
-              <label for="coffee" class="ddThemeListLabel">Coffee</label>
-              <input id="cynical" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Anti-social"/>
-              <label for="cynical" class="ddThemeListLabel">Anti-social</label>
-              <input id="sex" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Sex"/>
-              <label for="sex" class="ddThemeListLabel">Sex</label>
-              <input id="old" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Old age"/>
-              <label for="old" class="ddThemeListLabel">Old age</label>
-              <input id="hack" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Life hack"/>
-              <label for="hack" class="ddThemeListLabel">Life hack</label>
-              <input id="dad" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Dad's joke"/>
-              <label for="dad" class="ddThemeListLabel">Dad's joke</label>
-              <input id="other" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Other"/>
-              <label for="other" class="ddThemeListLabel">Other</label>
+              <input id="coffeeCh" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Coffee"/>
+              <label for="coffeeCh" class="ddThemeListLabel">Coffee</label>
+              <input id="cynicalCh" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Anti-social"/>
+              <label for="cynicalCh" class="ddThemeListLabel">Anti-social</label>
+              <input id="sexCh" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Sex"/>
+              <label for="sexCh" class="ddThemeListLabel">Sex</label>
+              <input id="oldCh" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Old age"/>
+              <label for="oldCh" class="ddThemeListLabel">Old age</label>
+              <input id="hackCh" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Life hack"/>
+              <label for="hackCh" class="ddThemeListLabel">Life hack</label>
+              <input id="dadCh" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Dad's joke"/>
+              <label for="dadCh" class="ddThemeListLabel">Dad's joke</label>
+              <input id="otherCh" class="cossin ddThemeChoice" onclick="wisely()" title="theme" name="theme" type="checkbox" value="Other"/>
+              <label for="otherCh" class="ddThemeListLabel">Other</label>
             </div>
           </div>
         </div>
@@ -2597,6 +2593,30 @@ function refresh(){
     console.log(doc.data());
   });
 
+  async function getGearData(theme) {
+    const myArray = [];
+    const querySnapshot = await getDocs(query(collection(db, "shit"), where("theme", "array-contains", theme)));
+    querySnapshot.forEach(doc => {
+        const check = doc.data().quote;
+        // console.log("check = " + check);
+        myArray.push(check);
+    });
+    return myArray;
+  };
+
+const shitTypeButton = document.getElementsByClassName('shitTypeButton');
+// console.log("shitTypeButton : " + shitTypeButton);
+for(let i = 0; i < shitTypeButton.length; i++){
+  let theme = shitTypeButton[i].id;
+  // console.log(" theme = " + theme);
+  shitTypeButton[i].addEventListener('click', (e) => {
+getGearData(theme)
+.then(gearData => {
+  let numAS = getRndInteger(0,gearData.length);
+      document.getElementById("ySp").innerHTML = gearData[numAS]; 
+  // console.log("gearData = " + gearData);
+})})};
+
   const addYOSForm = document.querySelector('#addYOS')
   addYOSForm.addEventListener('submit', (e) => {
     e.preventDefault()
@@ -2626,9 +2646,9 @@ function refresh(){
   }
 })
 </script>
-</script>
   </body>
   <footer>
-    <!--<p style="text-align:center;">I night not have a footer, but I've got two feet that you can kiss.<br/>Who needs a footer, anyway?</p>-->
+    <hr style="border-color: #800080;"/>
+    <h5 style="text-align:center;">I might not have a footer, but I've got two feet that you can kiss.</h5>
 </footer>
 </html>

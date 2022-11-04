@@ -35,11 +35,11 @@
         color: #800080;
       }
       /* h1 font-size: 36 - 38*/
-      h1{
+      h1, .h1like{
         font-family: 'Indie Flower', cursive;
         font-size: calc(35.06px + 0.38vw);
       }
-      h1:first-letter {
+      h1:first-letter, .h1like:first-letter {
       font-size: calc(45.06px + 0.38vw);
       }
       /* h2 font-size: 26 - 28*/
@@ -1513,15 +1513,21 @@
       <!-- Adapter le formulaire pour ajouter des memes (image et reconnaissance du type et création dans storage et lien dans database) -->
       <!-- Figurer out à partir de où on peut ajouter des quotes (google keep, facebook, etc) -->
     <div name="ShitPage" class="sectionPage">
+      <div id="coverMyShit"></div>
       <h1>Relax, I'm still working on it!</h1>
       <div style="display:flex;justify-content: space-around;flex-wrap: wrap;">
         <div>
           <h2 style="text-align:center;">Feelings</h2>
           <div>
+            <p>I feel like killing something</p>
             <div class="shitTypeButton" id="Killer mood">Killer mood</div>
+            <p>Let's think positive</p>
             <div class="shitTypeButton" id="Silver lining">Silver lining</div>
+            <p>People, not a fan</p>
             <div class="shitTypeButton" id="Anti-social">Anti-social</div>
+            <p>I just wanna die</p>
             <div class="shitTypeButton" id="Dark thoughts">Dark thoughts</div>
+            <p>Life, whatever</p>
             <div class="shitTypeButton" id="Cynical">Cynical</div>
           </div>
         </div>
@@ -1545,13 +1551,80 @@
           </div>
         </div>
       </div>
-      <div class="shitTypeButton" id="Other">Other</div>
-      <div class="yourShit" id="yourShit">
-        <div id="ySp">
-          <p>Click on a category and see what happens.</p>
-          <h5 style="margin: 0.6em 0 0 0;line-height: 1.2em;">(Be careful what<br/>you wish for!)</h5>
+        <div id="heresYSR">
+          <div class="yourShit" id="yourShit">
+            <div id="ySp">
+              <p>Click on a category and see what happens.</p>
+              <h5 style="margin: 0.6em 0 0 0;line-height: 1.2em;">(Be careful what<br/>you wish for!)</h5>
+            </div>
+          </div>
+          <div id="enough"><button class="shitRecipeButton">Ok, yeah, I've had enough!</button></div>
+        </div>
+      <h2 class="h1like" style="text-align:center;">Wanna cook your own shit recipe?</h2>
+      <p>First, choose your ingredients</p>
+      <div class="recipeSections" style="display:flex;justify-content: space-around;flex-wrap: wrap;">
+        <div>
+          <input id="killerChR" class="cossin shitRChoice" title="recipe" name="recipe" type="checkbox" value="Killer mood"/>
+          <label for="killerChR" class="shitIngredient"><span class="shitIngCheck"></span>Killer mood</label>
+          <input id="silverChR" class="cossin shitRChoice" title="recipe" name="recipe" type="checkbox" value="Silver lining"/>
+          <label for="silverChR" class="shitIngredient"><span class="shitIngCheck"></span>Silver lining</label>
+          <input id="antiChR" class="cossin shitRChoice" title="recipe" name="recipe" type="checkbox" value="Anti-social"/>
+          <label for="antiChR" class="shitIngredient"><span class="shitIngCheck"></span>Anti-social</label>
+          <input id="darkChR" class="cossin shitRChoice" title="recipe" name="recipe" type="checkbox" value="Dark thoughts"/>
+          <label for="darkChR" class="shitIngredient"><span class="shitIngCheck"></span>Dark thoughts</label>
+          <input id="cynicalChR" class="cossin shitRChoice" title="recipe" name="recipe" type="checkbox" value="Cynical"/>
+          <label for="cynicalChR" class="shitIngredient"><span class="shitIngCheck"></span>Cynical</label>
+        </div>
+
+        <div>
+          <input id="coffeeChR" class="cossin shitRChoice" title="recipe" name="recipe" type="checkbox" value="Coffee"/>
+          <label for="coffeeChR" class="shitIngredient"><span class="shitIngCheck"></span>Coffee</label>
+          <input id="sexChR" class="cossin shitRChoice" title="recipe" name="recipe" type="checkbox" value="Sex & Relationship"/>
+          <label for="sexChR" class="shitIngredient"><span class="shitIngCheck"></span>Sex & Relationship</label>
+          <input id="mentalChR" class="cossin shitRChoice" title="recipe" name="recipe" type="checkbox" value="Mental health"/>
+          <label for="mentalChR" class="shitIngredient"><span class="shitIngCheck"></span>Mental health</label>
+          <input id="hackChR" class="cossin shitRChoice" title="recipe" name="recipe" type="checkbox" value="Life hack"/>
+          <label for="hackChR" class="shitIngredient"><span class="shitIngCheck"></span>Life hack</label>
+          <input id="oldChR" class="cossin shitRChoice" title="recipe" name="recipe" type="checkbox" value="Old age"/>
+          <label for="oldChR" class="shitIngredient"><span class="shitIngCheck"></span>Old age</label>
+        </div>
+        
+        <div>
+          <input id="dadChR" class="cossin shitRChoice" title="recipe" name="recipe" type="checkbox" value="Dad's joke"/>
+          <label for="dadChR" class="shitIngredient"><span class="shitIngCheck"></span>Dad's joke</label>
+          <input id="feministChR" class="cossin shitRChoice" title="recipe" name="recipe" type="checkbox" value="Feminist"/>
+          <label for="feministChR" class="shitIngredient"><span class="shitIngCheck"></span>Feminist</label>
+          <input id="weightChR" class="cossin shitRChoice" title="recipe" name="recipe" type="checkbox" value="Weight"/>
+          <label for="weightChR" class="shitIngredient"><span class="shitIngCheck"></span>Weight</label>
+          <input id="geekChR" class="cossin shitRChoice" title="recipe" name="recipe" type="checkbox" value="Science & Geek stuff"/>
+          <label for="geekChR" class="shitIngredient"><span class="shitIngCheck"></span>Science & Geek stuff</label>
+          <input id="covidChR" class="cossin shitRChoice" title="recipe" name="recipe" type="checkbox" value="Covid"/>
+          <label for="covidChR" class="shitIngredient"><span class="shitIngCheck"></span>Covid</label>
+          <input id="otherChR" class="cossin shitRChoice" title="recipe" name="recipe" type="checkbox" value="Other"/>
+          <label for="otherChR" class="shitIngredient"><span class="shitIngCheck"></span>Other</label>
         </div>
       </div>
+      <p>Then, let's start cooking!</p>
+      <button class="shitRecipeButton" id="recipe">Cook it!</button>
+      <div>
+        <div class="shitTypeButton" id="Killer mood">Killer mood</div>
+        <div class="shitTypeButton" id="Silver lining">Silver lining</div>
+        <div class="shitTypeButton" id="Anti-social">Anti-social</div>
+        <div class="shitTypeButton" id="Dark thoughts">Dark thoughts</div>
+        <div class="shitTypeButton" id="Cynical">Cynical</div>
+        <div class="shitTypeButton" id="Coffee">Coffee</div>
+        <div class="shitTypeButton" id="Sex & Relationship">Sex & Relationship</div>
+        <div class="shitTypeButton" id="Mental health">Mental health</div>
+        <div class="shitTypeButton" id="Life hack">Life hack</div>
+        <div class="shitTypeButton" id="Old age">Old age</div>
+        <div class="shitTypeButton" id="Dad's joke">Dad's joke</div>
+        <div class="shitTypeButton" id="Feminist">Feminist</div>
+        <div class="shitTypeButton" id="Weight">Weight</div>
+        <div class="shitTypeButton" id="Science & Geek stuff">Science & Geek stuff</div>
+        <div class="shitTypeButton" id="Covid">Covid</div>
+      </div>
+      <div class="shitTypeButton" id="Other">Other</div>
+      
       <hr style="border-color: #800080; margin-top: 100px;"/>
       <div class="addYOSwhole">
         <h2 style="text-align:center;">Add your own shit to the pile</h2>
@@ -1607,7 +1680,35 @@
       </div>
     </div>    
     <style name="ShitPage">
-      .shitTypeButton{
+      .recipeSections{
+        display:flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+      }
+      .recipeSections > div{
+        width: calc(218.82px + 2.07vw);
+      }
+      .shitIngCheck{
+        width: 15px;
+        height: 15px;
+        border: 1px solid purple;
+        border-radius: 2px;
+        display: inline-block;
+        margin-right: 5px;
+        background: rgba(128,0,128,.3);
+        position: relative;
+      }
+      .shitRChoice:checked + label > span.shitIngCheck::before {
+        font-family: 'typicons';
+        content: "\E11E";
+        position: absolute;
+        top: -4px;
+        left: 1.5px;
+      }
+      .shitIngredient{
+        display: flex;
+      }
+      .shitTypeButton, .shitRecipeButton{
         font-family: 'Rubik Dirt', cursive;
         font-size: calc(15.53px + 0.19vw);
         line-height:1.2em;
@@ -1622,10 +1723,54 @@
         margin: 15px auto;
         text-align: center;
         background: #000;
-        color: rgba(128,0,128,.9);}
+        color: rgba(128,0,128,.9);
+      }
+      .shitRecipeButton{
+        margin:0;
+      }
+      .shitIngredient{
+        font-family: 'Rubik Dirt', cursive;
+        font-size: calc(15.53px + 0.19vw);
+        line-height:1.2em;
+        font-weight: 400;
+        width:fit-content;
+        margin: 15px;
+        text-align: center;
+        color: rgba(128,0,128,.9);
+      }
       .shitTypeButton:hover{
         background: rgba(128,0,128,.4);
-        cursor: pointer;}
+        cursor: pointer;
+      }
+      .shitIngredient:hover{
+        opacity: .8;
+        cursor: pointer;
+      }
+      #coverMyShit{
+        display: none;
+        width: 1000vw;
+        height: 1000vh;
+        position: fixed;
+        top:0;
+        left: 0;
+        background: rgba(0,0,0,.7);
+        z-index: 999;
+      }
+      #enough{
+        display:none;
+        justify-content: center;
+        position: relative;
+        /* top: calc(50vh + 120px);
+        margin: 20px 8px 0 -8px; */
+        margin: 20px auto;
+        width: 100%;
+        z-index: 999999;}
+      #enough > button{
+        /* margin: 0 auto; */
+        font-family: 'Nunito', sans-serif;
+        font-size: calc(15.06px + 0.38vw);
+        font-weight: 700;
+      }
       .yourShit{
         display: flex;
         width:200px;
@@ -1640,6 +1785,8 @@
         padding:5px;
         font-size: 18px;
         opacity: 0.8;
+        z-index: 999999;
+        background: #000;
       }
       .yourShit:hover{
         cursor: pointer;
@@ -1649,6 +1796,20 @@
         text-align: center;
         font-size: calc(15.53px + 0.19vw);
         font-weight: 900;
+      }
+      .fixYourShit{
+        /* position:fixed;
+        top: calc(50vh - 100px);
+        left: calc(50vw - 100px); */
+        position: fixed;
+        display: flex;
+        top: 20vh;
+        margin: 20px 8px 0 -8px;
+        width: 100%;
+        height: 75vh;
+        z-index: 99999;
+        align-content: space-between;
+        flex-wrap: wrap;
       }
       #ySp{
         margin: auto;
@@ -1741,7 +1902,7 @@
         width: 200px;
         padding: 5px;
         background: rgba(128,0,128, 0.2);
-        border-radius: 5px 5px 0 0;
+        border-radius: 5px;
         font-size: calc(15.53px + 0.19vw);
       }
 
@@ -2830,6 +2991,69 @@
             document.getElementById("ySp").innerHTML = gearData[numAS]; 
         // console.log("gearData = " + gearData);
       })})};
+
+      // To get shit recipe 
+      async function getShitRecipe(theme) {
+        const myRecipe = [];
+        const querySnapshotR = await getDocs(query(collection(db, "shit"), where("theme", "array-contains-any", theme)));
+        querySnapshotR.forEach(doc => {
+            const checkR = doc.data().quote;
+            // console.log("checkR = " + checkR);
+            myRecipe.push(checkR);
+        });
+        return myRecipe;
+      };
+      
+      document.getElementById('recipe').addEventListener('click', (e) => {
+        const shitRChoice = document.getElementsByClassName('shitRChoice');
+        let theme = []
+        for(let i = 0; i < shitRChoice.length; i++){
+          if(shitRChoice[i].checked){
+            theme.push(shitRChoice[i].value);
+          }}
+          console.log("theme = " + theme);
+          getShitRecipe(theme)
+          .then(thisRecipe => {
+            let numAS = getRndInteger(0,thisRecipe.length);
+            document.getElementById("ySp").innerHTML = thisRecipe[numAS]; 
+            document.getElementById("coverMyShit").style.display = "block";
+            document.getElementById("enough").style.display = "flex";
+            document.getElementById("heresYSR").classList.add("fixYourShit");
+            console.log("thisRecipe = " + thisRecipe);
+            // then again
+            let max = thisRecipe.length;
+            let min = 0;
+            let arrR=[];
+            for (i = 0; i < max; i++) {
+                x = Math.floor( Math.random() * max) + min;
+                if(arrR.includes(x) == true){
+                    i=i-1;
+                }else{
+                    if(x>max==false){
+                        arrR.push(x);
+                    }
+                }
+            } console.log("arrR = " + arrR);
+            let R = 0;
+            console.log("max = " + max);
+            document.getElementById('yourShit').addEventListener('click', (e) => {
+              let numRS = arrR[R++];
+              console.log("numRS = " + numRS);
+              if(numRS === undefined){
+                document.getElementById("ySp").innerHTML = "You ate it all!<br>\nHope you had enough!";
+                //remove EventListener! (ça ça marche pas encore)
+                document.getElementById('yourShit').removeEventListener('click', (e) => {});
+              } else{
+                document.getElementById("ySp").innerHTML = thisRecipe[numRS];  
+              }
+      })})});
+
+      document.getElementById('enough').addEventListener('click', (e) => {
+        document.getElementById("coverMyShit").style.display = "none";
+        document.getElementById("enough").style.display = "none";
+        document.getElementById("heresYSR").classList.remove("fixYourShit");
+        document.getElementById("ySp").innerHTML = "Wanna try again?";
+      });
 
       // To add your own shit
       const addYOSForm = document.querySelector('#addYOS')

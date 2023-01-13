@@ -131,23 +131,7 @@
       }
     </style>
     <script name="general">
-      //ancienne version
-      /*function backHome(){
-        if(document.getElementById('SectPageToy').style.display == "block"){
-          document.getElementById('sureBackHome').style.display = "block";
-          document.getElementById('coverSureBackHome').style.display = "block";
-        } else{
-          var sectionPageAll = document.querySelectorAll('.sectionPage');
-          for(let i = 0; i < sectionPageAll.length; i++){
-            sectionPageAll[i].style.display = "none";
-          }
-          document.getElementById('home').style.display = "block";
-          var menuSectAll = document.querySelectorAll('.menuSect');
-        for(let i = 0; i < menuSectAll.length; i++){
-            menuSectAll[i].checked = false;
-          }
-        }
-      }*/
+      
       //nouvelle version
       // function backHome(){
       //   if(document.getElementById('SectPageToy').style.display == "block"){
@@ -173,37 +157,11 @@
       function noBackHome(){
         document.getElementById('sureBackHome').style.display = "none";
         document.getElementById('coverSureBackHome').style.display = "none";
-      }
+      };
       function backTop(){
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      };
 
-      // const button = document.getElementById("buttonne");
-      // let state = { 
-      //   buttonText: "Initial text"
-      // };
-      // // Change the look of your app based on state
-      // function render() {
-      //   button.innerText = state.buttonText;
-      // }
-      // // Set initial state and render app for the first time
-      // function initialize() {
-      //   window.history.replaceState(state, null, "");
-      //   render(state);
-      // };
-      // // Update state, history, and user interface
-      // function handleButtonClick() {
-      //   state.buttonText = "I clicked the button!"
-      //   window.history.pushState(state, null, "");
-      //   render(state);
-      // }
-      // // Connect your button to the handler above to trigger on click
-      // button.addEventListener(click, handleButtonClick());
-      // // Tell your browser to give you old state and re-render on back
-      // window.onpopstate = function (event) {
-      //   if (event.state) { state = event.state; }
-      //   render(state);
-      // };
     </script>
     <!--HomePage-->
       <!--Next step (by myself): figure out how to use the navigator back buttons and different href-->
@@ -355,65 +313,10 @@
       }
     </style>
     <script name="HomePage">
-      // let goTo = document.URL;
-      // console.log(goTo);
-      
-        
-        // if(currentState == "home"){
-        //   history.pushState(currentState, currentState, "indexAlixRocks.html/")
-        // } else{
-        // history.pushState(currentState, currentState, currentState);}
-
-
-      //   goTo = document.URL;
-      // console.log(goTo);     
-
-      // window.addEventListener("popstate", navTo);
-
-
-
-
-
-
-
-
-      
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+     
 
         // À remettre dans mon code...
-        // if(document.getElementById(currentPage).classList.contains('footered')){
-        //   document.getElementById('footer').classList.add('footerFixed');
-        //   } else{
-        //   document.getElementById('footer').classList.remove('footerFixed');
-        // };
-        // if(currentPage == "wrotePage"){
-        //   let menuTextAll = document.querySelectorAll('.menuText');
-        //   let menuTextLabelAll = document.querySelectorAll('.menuTextLabel');
-        //   let textPageAll = document.querySelectorAll('.textPage');
-        //   console.log(menuTextAll);
-        //   for(let i = 0; i < menuTextAll.length; i++){
-        //     menuTextAll[i].checked = false;
-        //     menuTextLabelAll[i].classList.remove('menuTextSelected');
-        //     textPageAll[i].classList.remove('textPageSelected');
-        //   };
-        // };
+
 
 
 
@@ -650,19 +553,27 @@
     <!--I wrote, you read-->
       <!-- Faire une table des matières pour Alex! -->
       <!-- Faire le tableau des chiffres pour Alex! -->
-    <div name="WrotePage" class="sectionPage justPage footered" id="wrotePage">
+    <div name="WrotePage" id="wrotePage" class="sectionPage justPage footered">
       <div class="bottomButton backTop" onclick="backTop()" title="Again! From the top!"><span class="typcn typcn-chevron-right chevronTop"></span></div>
       <div class="menuTextSection">
-        <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Table"><label for="Table" class="menuTextLabel">La table est mise</label></input>
-        <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Coupe"><label for="Coupe" class="menuTextLabel">Une coupe rouge</label></input>
-        <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Torture"><label for="Torture" class="menuTextLabel">Torture</label></input>
-        <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Destin"><label for="Destin" class="menuTextLabel">Destin impitoyable</label></input>
-        <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Corona"><label for="Corona" class="menuTextLabel">Corona cover song</label></input>
-        <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Kinky"><label for="Kinky" class="menuTextLabel">Kinky Journal</label></input>
-        <input type="radio" name="menuText" class="menuText" onclick="toPage()" id="Alex"><label for="Alex" class="menuTextLabel">Sang, sexe & café</label></input>
+        <input type="radio" name="menuText" class="menuText" onclick="toPage('Table')" id="inputTable">
+        <label for="inputTable" class="menuTextLabel"  id="labelTable">La table est mise</label>
+        <input type="radio" name="menuText" class="menuText" onclick="toPage('Coupe')" id="inputCoupe">
+        <label for="inputCoupe" class="menuTextLabel" id="labelCoupe">Une coupe rouge</label>
+        <input type="radio" name="menuText" class="menuText" onclick="toPage('Torture')" id="inputTorture">
+        <label for="inputTorture" class="menuTextLabel" id="labelTorture">Torture</label>
+        <input type="radio" name="menuText" class="menuText" onclick="toPage('Destin')" id="inputDestin">
+        <label for="inputDestin" class="menuTextLabel" id="labelDestin">Destin impitoyable</label>
+        <input type="radio" name="menuText" class="menuText" onclick="toPage('Corona')" id="inputCorona">
+        <label for="inputCorona" class="menuTextLabel" id="labelCorona">Corona cover song</label>
+        <input type="radio" name="menuText" class="menuText" onclick="toPage('Kinky')" id="inputKinky">
+        <label for="inputKinky" class="menuTextLabel" id="labelKinky">Kinky Journal</label>
+        <input type="radio" name="menuText" class="menuText" onclick="toPage('Alex')" id="inputAlex">
+        <label for="inputAlex" class="menuTextLabel" id="labelAlex">Sang, sexe & café</label>
       </div>
+      <div class="emptyPage"></div>
       <!--La table est mise-->
-      <div class="textPage">
+      <div class="textPage" id="pageTable">
         <h1>La table est mise</h1>
         <h2>Présentation</h2>
         <p>À quelques mètres de la table où son corps nu est allongé, je reste debout, immobile. Je prends le temps de savourer les ombres que la lumière dessine sensuellement sur chacune de ses formes. La position indécente dans laquelle son corps est exposé. Son air à la fois soumis et provoquant. La mise en place est si alléchante. Un grondement intérieur me rappelle alors que je n'ai rien mangé depuis bien trop longtemps...</p>
@@ -723,7 +634,7 @@
         <p><br/>Janvier 2021</p>
       </div>
       <!--Une coupe rouge-->
-      <div class="textPage">
+      <div class="textPage" id="pageCoupe">
         <h1>Une coupe rouge</h1>
         <p>Elle est là devant moi, dans toute sa splendeur<br/>
           Et mon cœur qui commence, à battre son ardeur<br/>
@@ -776,7 +687,7 @@
         I shout "pineapple" because I was done playing/to put an end to the game
         But then Master kept going saying I deserved it.
       -->
-      <div class="textPage">
+      <div class="textPage" id="pageTorture">
         <h1>Torture</h1>
         <p>
           The sky is blue, the sun's shining.<br>
@@ -827,7 +738,7 @@
         <p><br/>Janvier 2018</p>
       </div>
       <!--Destin impitoyable-->
-      <div class="textPage">
+      <div class="textPage" id="pageDestin">
         <h1>Destin impitoyable</h1>
         <p>Je sens ses doigts monter sur moi<br>
           Son nez renifler autour de mon trou<br>
@@ -903,7 +814,7 @@
         <p><br/>Juillet 2022</p>
       </div>
       <!--Corona cover song-->
-      <div class="textPage">
+      <div class="textPage" id="pageCorona">
         <h1>Coronavirus cover song</h1>
         <h3>"Santa Claus is coming to town"</h3>
         <p>🎶<br/>
@@ -971,7 +882,7 @@
         <p><br/>December 2020 and 2021</p>
       </div>
       <!--Kinky Journal-->
-      <div class="textPage">
+      <div class="textPage" id="pageKinky">
         <h1>I found a dog!</h1>
         <p><em>Public Disgrace<br>
         May 2016</em></p>
@@ -994,7 +905,7 @@
         <p>P.S. That's what I call teamwork: a slave AND a toy!</p>
       </div>
       <!--Sang, sexe & café-->
-      <div class="textPage">
+      <div class="textPage" id="pageAlex">
         <h1 style="line-height: 1;">Sang, sexe & café (PNDCO*)</h1>
         <h3 style="margin: -30px 0 30px;">*Pas Nécessairement Dans Cet Ordre</h3>
         <p><em>Alex, sans-abri misanthrope, réalise son rêve en torturant des vampires afin d’aider 49, lycanthrope aux yeux bleus, à se libérer de l’esclavage... et fini par trouver l’amour.</em></p>
@@ -1508,9 +1419,12 @@
         cursor: pointer;
         opacity: .7;
       }
-      .menuTextSelected{
+      .menuText:checked + .menuTextLabel{
         background: #000;
       }
+      /* .menuTextSelected{
+        background: #000;
+      } */
       .textPageSelected{
         display: block;
       }
@@ -1538,22 +1452,55 @@
 
     </style>
     <script name="WrotePage">
-      function toPage(){
-        var menuTextAll = document.querySelectorAll('.menuText');
-        var menuTextLabelAll = document.querySelectorAll('.menuTextLabel');
-        var textPageAll = document.querySelectorAll('.textPage');
-        for(let i = 0; i < menuTextAll.length; i++){
-          menuTextLabelAll[i].classList.remove('menuTextSelected');
-          textPageAll[i].classList.remove('textPageSelected');
-          // document.getElementById('footer').classList.add('footerFixed')
-          if(menuTextAll[i].checked == true){
-            menuTextLabelAll[i].classList.toggle('menuTextSelected');
-            textPageAll[i].classList.toggle('textPageSelected');
-            document.getElementById('footer').classList.remove('footerFixed');
-            window.scrollTo({ top: 0});
-          }
-        }
-      }
+      function toPage(id){
+        let textPageAll = document.querySelectorAll('.textPage');
+        textPageAll.forEach(page => {
+          page.classList.remove('textPageSelected');
+        });
+        document.getElementById("page" + id).classList.toggle('textPageSelected');
+        document.getElementById('footer').classList.remove('footerFixed');
+        window.scrollTo({ top: 0});
+      };
+
+
+
+
+      // if(document.getElementById('wrotePage').style.display == "block"){
+      //   console.log("yay!");
+      //   let menuTextLabelAll = document.querySelectorAll('.menuTextLabel');
+      //   menuTextLabelAll.forEach(label => {
+      //     label.classList.remove('menuTextSelected');
+      //   });
+      //   let textPageAll = document.querySelectorAll('.textPage');
+      //   textPageAll.forEach(page => {
+      //     page.classList.remove('textPageSelected');
+      //   });
+      //   document.getElementById('footer').classList.add('footerFixed');
+      // };
+
+      // let menuTextAll = document.querySelectorAll('.menuText');
+      // // let menuTextLabelAll = document.querySelectorAll('.menuTextLabel');
+      // // let textPageAll = document.querySelectorAll('.textPage');
+      // for(let i = 0; i < menuTextAll.length; i++){
+      //   if(menuTextAll[i].checked == true){
+
+      //     menuTextLabelAll[i].classList.toggle('menuTextSelected');
+      //     textPageAll[i].classList.toggle('textPageSelected');
+      //     document.getElementById('footer').classList.remove('footerFixed');
+      //     window.scrollTo({ top: 0});
+      //   } else {
+      //     document.getElementById('footer').classList.add('footerFixed');
+      //   }
+  
+
+                  // menuTextLabelAll[i].classList.remove('menuTextSelected');
+          // textPageAll[i].classList.remove('textPageSelected');
+          // // document.getElementById('footer').classList.add('footerFixed')
+          // if(menuTextAll[i].checked == true){
+          //   menuTextLabelAll[i].classList.toggle('menuTextSelected');
+          //   textPageAll[i].classList.toggle('textPageSelected');
+          //   document.getElementById('footer').classList.remove('footerFixed');
+
     </script>
 
     <!--ReadPage-->
@@ -3112,6 +3059,12 @@
         history.go(0);
       }
     </script>
+    <footer id="footer">
+      <hr style="border-color: #800080;margin-bottom: 0;"/>
+      <div>
+        <h5 style="text-align:center;margin: 0;">I might not have a footer, but I've got two feet you can kiss.</h5>
+      </div>
+    </footer>
     <script name="navigation">
       // To get the last part of the url
       var currentState = location.pathname;
@@ -3134,6 +3087,7 @@
       // To show and hide the pages
       function navigate(currentState){
         let currentPage = currentState + "Page";
+        console.log(currentPage);
         let justPageAll = document.querySelectorAll('.justPage');
         // To hide all the pages
         for(let i = 0; i < justPageAll.length; i++){
@@ -3142,10 +3096,26 @@
         // To show the wanted "current" Page
         document.getElementById(currentPage).style.display = "block";
         window.scrollTo({ top: 0});
+        // So that the back home button doesn't show on the home page
         if(currentPage !== "homePage"){
-        document.getElementById('home').style.display = "block";}
-        else{
+          document.getElementById('home').style.display = "block";
+        } else{
           document.getElementById('home').style.display = "none";
+        }
+        if(document.getElementById(currentPage).classList.contains('footered') == true){
+          document.getElementById('footer').classList.add('footerFixed');
+        } else if(document.getElementById(currentPage).classList.contains('footered') == false){
+          document.getElementById('footer').classList.remove('footerFixed');
+        }
+        if(currentPage == "wrotePage"){
+          let textPageAll = document.querySelectorAll('.textPage');
+          textPageAll.forEach(page => {
+          page.classList.remove('textPageSelected');
+          });
+          let menuTextAll = document.querySelectorAll('.menuText');
+          menuTextAll.forEach(menuText => {
+            menuText.checked = false;
+          });
         }
       };
 
@@ -3310,11 +3280,5 @@
 
 
     </script>
-    <footer id="footer">
-      <hr style="border-color: #800080;margin-bottom: 0;"/>
-      <div>
-        <h5 style="text-align:center;margin: 0;">I might not have a footer, but I've got two feet you can kiss.</h5>
-      </div>
-    </footer>
   </body>
 </html>

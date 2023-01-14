@@ -557,7 +557,7 @@
       <div class="bottomButton backTop" onclick="backTop()" title="Again! From the top!"><span class="typcn typcn-chevron-right chevronTop"></span></div>
       <div class="menuTextSection">
         <input type="radio" name="menuText" class="menuText" onclick="toPage('Table')" id="inputTable">
-        <label for="inputTable" class="menuTextLabel"  id="labelTable">La table est mise</label>
+        <a href="#pageTable"><label for="inputTable" class="menuTextLabel"  id="labelTable">La table est mise</label></a>
         <input type="radio" name="menuText" class="menuText" onclick="toPage('Coupe')" id="inputCoupe">
         <label for="inputCoupe" class="menuTextLabel" id="labelCoupe">Une coupe rouge</label>
         <input type="radio" name="menuText" class="menuText" onclick="toPage('Torture')" id="inputTorture">
@@ -1452,15 +1452,17 @@
 
     </style>
     <script name="WrotePage">
-      function toPage(id){
-        let textPageAll = document.querySelectorAll('.textPage');
-        textPageAll.forEach(page => {
-          page.classList.remove('textPageSelected');
-        });
-        document.getElementById("page" + id).classList.toggle('textPageSelected');
-        document.getElementById('footer').classList.remove('footerFixed');
-        window.scrollTo({ top: 0});
-      };
+      // function toPage(id){
+      //   let textPageAll = document.querySelectorAll('.textPage');
+      //   textPageAll.forEach(page => {
+      //     page.classList.remove('textPageSelected');
+      //   });
+      //   document.getElementById("page" + id).classList.toggle('textPageSelected');
+      //   let urlTitle = "wrote/" + id;
+      //   history.pushState(urlTitle, urlTitle, urlTitle);
+      //   document.getElementById('footer').classList.remove('footerFixed');
+      //   window.scrollTo({ top: 0});
+      // };
 
 
 
@@ -3074,8 +3076,19 @@
       currentState = currentState.slice(1);
       // To create an initial state in the history
       history.replaceState(currentState, currentState);
-      // To display the wanted page (currentPage)
-      navigate(currentState);
+      if(currentState.startsWith("wrote") == true){
+        let currentStateBase = "wrote";
+        navigate(currentStateBase);
+        window.onload = (event) => {
+          let id = currentState.slice(9);
+          console.log(id);
+          toPage(id);
+        };
+      } else {
+        // To display the wanted page (currentPage)
+        navigate(currentState);
+      }
+      
       
       // Code called onclick with navigation UI buttons and "links"
       function toSectPage(element){
@@ -3084,12 +3097,24 @@
         navigate(currentState); 
       };
 
+      function toPage(id){
+        let textPageAll = document.querySelectorAll('.textPage');
+        textPageAll.forEach(page => {
+          page.classList.remove('textPageSelected');
+        });
+        document.getElementById("page" + id).classList.toggle('textPageSelected');
+        currentState = ("wrote->" + id);
+        history.pushState(currentState, currentState, currentState);
+        document.getElementById('footer').classList.remove('footerFixed');
+        window.scrollTo({ top: 0});
+      };
+
       // To show and hide the pages
       function navigate(currentState){
         let currentPage = currentState + "Page";
         console.log(currentPage);
-        let justPageAll = document.querySelectorAll('.justPage');
         // To hide all the pages
+        let justPageAll = document.querySelectorAll('.justPage');
         for(let i = 0; i < justPageAll.length; i++){
           justPageAll[i].style.display = "none";
         };

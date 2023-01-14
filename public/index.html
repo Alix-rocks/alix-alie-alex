@@ -557,7 +557,7 @@
       <div class="bottomButton backTop" onclick="backTop()" title="Again! From the top!"><span class="typcn typcn-chevron-right chevronTop"></span></div>
       <div class="menuTextSection">
         <input type="radio" name="menuText" class="menuText" onclick="toPage('Table')" id="inputTable">
-        <a href="#pageTable"><label for="inputTable" class="menuTextLabel"  id="labelTable">La table est mise</label></a>
+        <label for="inputTable" class="menuTextLabel"  id="labelTable">La table est mise</label>
         <input type="radio" name="menuText" class="menuText" onclick="toPage('Coupe')" id="inputCoupe">
         <label for="inputCoupe" class="menuTextLabel" id="labelCoupe">Une coupe rouge</label>
         <input type="radio" name="menuText" class="menuText" onclick="toPage('Torture')" id="inputTorture">
@@ -927,14 +927,58 @@
             <h5>But be warmed: you then won't ever be able to come back from that... ever again.</h5>
           </div>
         </div>
-        <div>
+        <div class="fullBook">
           <h1 style="line-height: 1;">Sang, sexe & café (PNDCO*)</h1>
           <h3 style="margin: -30px 0 30px;">*Pas Nécessairement Dans Cet Ordre</h3>
           <p><em>One of these days my knowledge of myths and fairy tales and tv shows and weird facts is going to come in handy, just you wait.</em></p>
-          <div name="Chapitre 1 - Réalité">
+          <div name="Table des matières">
+            <h3>Table des matières</h3>
+            <ul class="tableMatC">
+              <li><span onclick="toChap('C1')">Chapitre 1 - Réalité</span>
+                <ul class="tableMatP">
+                  <li onclick="toChap('C1P1')">1.1 - PdV d'Alex</li>
+                  <li onclick="toChap('C1P2')">1.2 - PdV de Chose</li>
+                  <li onclick="toChap('C1P3')">1.3 - PdV externe de ?</li>
+                </ul>
+              </li>
+              <li><span onclick="toChap('C2')">Chapitre 2 - Réaliser son rêve</span>
+                <ul class="tableMatP">
+                  <li onclick="toChap('C2P1')">2.1 - PdV d’Alex</li>
+                  <li onclick="toChap('C2P2')">2.2 - PdV de Chose</li>
+                  <li onclick="toChap('C2P3')">2.3 - PdV d’Alex</li>
+                  <li onclick="toChap('C2P4')">2.4 - PdV externe de ?</li>
+                  <li onclick="toChap('C2P5')">2.5 - PdV d’Alex</li>
+                </ul>
+              </li>
+              <li><span onclick="toChap('C3')">Chapitre 3 - Réaliser son erreur</span>
+                <ul class="tableMatP">
+                  <li onclick="toChap('C3P1')">3.1 - PdV de Chose/49/<em>Honey</em></li>
+                  <li onclick="toChap('C3P2')">3.2 - PdV d’Alex</li>
+                  <li onclick="toChap('C3P3')">3.3 - PdV externe de 23/<em>Sweetie</em></li>
+                  <li onclick="toChap('C3P4')">3.4 - PdV d’Alex</li>
+                </ul>
+              </li>
+              <li><span onclick="toChap('C4')">Chapitre 4 - Réaliser qu’y a un problème</span>
+                <ul class="tableMatP">
+                  <li onclick="toChap('C4P1')">4.1 - PdV de Chose/49/<em>Honey</em></li>
+                  <li onclick="toChap('C4P2')">4.2 - PdV d’Alex</li>
+                  <li onclick="toChap('C4P3')">4.3 - PdV externe de 23/<em>Sweetie</em></li>
+                </ul>
+              </li>
+              <li><span onclick="toChap('C5')">Chapitre 5 - Réaliser c’qui vient de s’passer</span>
+                <ul class="tableMatP">
+                  <li onclick="toChap('C5P1')">5.1 - PdV d’Alex</li>
+                  <li onclick="toChap('C5P2')">5.2 - PdV de Chose/49/<em>Honey</em></li>
+                  <li onclick="toChap('C5P3')">5.3 - PdV externe de 23/<em>Sweetie</em></li>
+                  <li onclick="toChap('C5P4')">5.4 - PdV d’Alex</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div name="Chapitre 1 - Réalité" id="C1">
             <h1>Chapitre 1 - Réalité</h1>
-            <div name="PdV d’Alex">
-              <h2>PdV d’Alex</h2>
+            <div name="1.1 - PdV d’Alex" id="C1P1">
+              <h2>1.1 - PdV d’Alex</h2>
               <h3><em>I get road rage walking behind people.</em></h3>
               <p>C’est un magnifique après-midi d’été, chaud et ensoleillé, et déjà je fantasme les yeux ouverts à la douce idée d’enfoncer encore et encore, avec ferveur et passion, toute la longueur de mon outil préféré (y&#x27;é pas ben gros, mais tout l&#x27;monde sait que c&#x27;est pas ça qui compte) dans la chaire chaude et juteuse du bourrelet de l’ostie d’pas-vite qui marche en plein milieu du criss de trottoir!</p>
               <p>Non mais, ostie, y’a pas yink toé su’a terre criss! Avance plus vite ou tasse-toé d’mon ch’min, câlisse!</p>
@@ -965,8 +1009,8 @@
               <p>&quot;Ok, certain! À prochaine!&quot;</p>
               <p><em>Nailed it!</em></p>
             </div>
-            <div name="PdV de Chose">
-              <h2>PdV de Chose</h2>
+            <div name="1.2 - PdV de Chose" id="C1P2">
+              <h2>1.2 - PdV de Chose</h2>
               <p>“Chose! J&#x27;t’attends dans mon bureau, dans une heure. Dépêche!”</p>
               <p>L’appel de l’Alpha dans ma tête avait brisé ma concentration juste assez longtemps pour que mon adversaire réussisse à m’frapper. Une chance que les êtres humains sont pas si forts que ça. J’aurais pu répliquer, mais la surprise avait figé mon adversaire et ça aurait pas été correct d’en profiter.</p>
               <p>“Wow, ça va-tu? D&#x27;habitude, j’réussi jamais à t’toucher!”</p>
@@ -985,18 +1029,18 @@
               <p>Au moment où j’ai pris le sac, l'Alpha a commencé à expliquer “C’est la dernière sangsue que l’autre a réussi à trouver, alors il va falloir que t’a fasse parler celle-là, parce que c’est clair qu’on a pas encore éliminer toute la gang.”</p>
               <p>La surprise m’a fait relever la tête vers l’Alpha. On était-tu réellement entrain de parler de torture?! J’avais jamais fait ça, moi! Avant même que je puisse essayer de répliquer (parce que, je le savais, de toutes façons, j’aurais pas été capable de dire un mot), l'Alpha a continuer “Je sais que c’est pas ton genre, mais on n’a pu l’choix. Fac pour te motiver, j’vais t’offrir une récompense. T’as d’la chance, aujourd’hui j’suis d’humeur généreuse! Si tu réussi à éliminer la gang de Masevas au complet,… j’vas pardonner tes parents.”</p>
             </div>
-            <div name="PdV externe de ?">
-              <h2>PdV externe de ?</h2>
+            <div name="1.3 - PdV externe de ?" id="C1P3">
+              <h2>1.3 - PdV externe de ?</h2>
               <p>Contrôlant pour ce qui était probablement la millième fois de la soirée son reflet dans le miroir, son anxiété chercha à se calmer une fois de plus lorsqu’il fut évident que son apparence était, comme toujours d’ailleurs, simplement parfaite. Un mélange de nostalgie et de soulagement lui rappela l’époque où les miroirs étaient faits d’argent et que les vampires ne pouvaient s’y regarder. Aujourd’hui, sans l’aide du miroir plein pied, son obsession face à son image ne pourrait être contrôlée; quoique, il faut dire qu’autrefois, avant que les miroirs ne lui fut disponibles, son image l’obsédait beaucoup moins. Depuis lors, chaque trait de sa personne, tant physique que psychologique d’ailleurs, avait été calculé, créé, manipulé, perfectionné. Son apparence, ses vêtements et son charme étaient à couper le souffle; dignes des photos truquées. Mais au delà de son image, ses talents étaient innombrables; son intelligence considérable; sa richesse incalculable; son succès incroyable et, bien sûr, sa modestie, enviable. Même sa générosité et sa bienveillance étaient reconnues. Son club était d’ailleurs le premier à avoir créé les soirées <em>Eyes Wide Shut</em> où chaque personne devait porter des lunettes de soleil. À l’image des carnavals masqués de la <em>Venezia</em> de son enfance; les soirées <em>Eyes Wide Shut</em> permettaient à quiconque d’avoir une belle soirée, peu importe la couleur de leurs yeux. Après tout, sa mission première était bien de contrer les vagues néfastes de l’Oudé; d’où la création de l’AVELCO, l’Association des Vampires Et Lycanthropes Contre l’Oudé. Au fil des décennies, chaque courant créé par l’Oudé, plus insensé et pourtant plus portant que le précédent, avait porté préjudice à un type de personne en particulier. Ces dernières années, la couleur des yeux était tout d’un coup devenue le facteur déterminant dans la valeur d’une personne. Le fait qu’il n’y avait aucune connexion biologique n’avait clairement aucune importance. En effet, la seule science pouvant réellement confirmer l’impact de la couleur des yeux sur un individu était la sociologie. Car, en effet, les personnes aux yeux bleus avaient effectivement moins de chance de compléter leur scolarité, de se trouver un emploi plus payant que le salaire minimum; de réussir à éviter la drogue et les gang de rues; etc. Bref, après des siècles à tenter de contrer les courants tous plus insensés les uns des autres de l’Oudé, plus rien ne l’impressionnait; mais, malheureusement, plus grand chose ne lui donnait espoir, non plus.</p>
               <p>Après ses dernières retouches inutiles, il fut temps de se mettre en scène et d’en mettre, une fois de plus, plein la vue à sa fidèle clientèle. Les gens venaient dans son club pour plusieurs raisons, mais la première était justement ses performances sur scène. Évidemment, avec des siècles de pratique, la perfection devient facile. Pourtant, malgré toutes les années de perfectionnement, malgré tous les efforts acharnés; le sentiment, l’inquiétude de ne jamais être 'assez' continuait à tenailler ses entrailles. Son cerveau semblait constamment en train d’analyser et de méta-analyser chacun de ses mouvements, de ses vêtements, de ses mots et de ses expressions faciales, de ses pensées, même; toujours dans le but de parfaire son œuvre existentielle.</p>
               <p>“Tout est prêt, <em>Capo</em>!” lui annonça Bibi, la tête dans l&#x27;entrebâillement de la porte de sa loge. <em>Ci risiamo</em> [C’est reparti]. Chaque vendredi soir, le spectacle reprenait. Chaque semaine encore meilleur que le précédent. Ce soir, les souliers étaient nouveaux; leur semelles une fraction plus glissantes, permettant une meilleure fluidité dans ses pas (sans, bien sûr, pour autant être trop glissante et devenir un risque de chute). La semaine prochaine, deux projecteurs supplémentaires dernier cri allaient être installés afin de permettre davantage de jeux de lumière. Et ainsi de suite. Les numéros ne devaient pas seulement être beaux à voir, mais devaient aussi 'parler' aux gens, avoir une signification profonde, voir spirituelle. Ou du moins, telle était l’apparence recherchée alors qu’à travers les mots, les pas et les notes du spectacle, un message subliminal créé grâce à ses pouvoirs vampiriques de contrôle mental lui permettait d’atteindre réellement et efficacement son objectif. Celui de convaincre le plus de gens possible d’aimer son prochain, peu importe la couleur de ses yeux.</p>
               <p>Au beau milieu d’une acrobatie aérienne, une douleur atroce transperça son torse et poussa son corps à se plier en deux. Incapable de regagner une position adéquate à temps, malgré sa vitesse surhumaine, son épaule heurta lourdement les planches de la scène, suivi de sa tête. Un être humain s&#x27;en serait certainement retrouvé avec une épaule, au minimum, disloquée et sa tête aurait probablement eu une commotion. Heureusement, son corps de vampire guérirait en moins de quelques minutes ses possibles dommages. Cependant, la nécessité de ne pas révéler sa vraie nature l’obligea à rester immobile quelques minutes de plus. Fidèle à son poste, Bibi pris rapidement la situation en charge et s’occupa de calmer la foule tout en détournant l’attention. Pendant ce temps, son esprit roula à toute allure tâchant d’identifier la cause d’une telle douleur. Ses mains, déjà instinctivement sur sa poitrine, lui indiquèrent que sa peau était intacte. Cela ne pouvait signifier qu’une seule chose: une de ses créations était en train de mourir. <em>Non ancora!</em> (Pas encore!) Chaque vampire, après avoir atteint un certain niveau de puissance, peut devenir <em>capostipite</em> [ancêtre ou source fondatrice] et transformer d’autres êtres humains en vampire. L’ancêtre reste alors en contact avec ses créations lui permettant de ressentir leurs douleurs ou émotions les plus intenses et, évidemment, de les retrouver. À travers la douleur, il ne lui suffit qu’un peu de concentration afin de réaliser de qui il s’agissait... <em>Non importa cosa a fatto. Adesso ha bisogno di me.</em> [Peu importe ce qu’iel a fait. Pour l’instant, iel a besoin de moi.]</p>
             </div>
           </div>
-          <div name="Chapitre 2 - Réaliser son rêve">
+          <div name="Chapitre 2 - Réaliser son rêve" id="C2">
             <h1>Chapitre 2 - Réaliser son rêve</h1> 
-            <div name="PdV d’Alex">
-              <h2>PdV d'Alex</h2>
+            <div name="2.1 - PdV d’Alex" id="C2P1">
+              <h2>2.1 - PdV d'Alex</h2>
               <h3><em>Go ahead, mess with my sleep.<br>Then we’ll see how long it’ll take for you to wake up.</em></h3>
               <p>“<em>Bloody hellhound</em>, non seulement tu sauter sur moi, mais tu grogner aussi? Tu vas pisser sur moi maintenant; marquer ta territoire, <em>or what</em>?”</p>
               <p>Mais veux-tu ben m’dire qu’est-ce que ces imbéciles-là sont entrain de faire?! Pis l’autre qui parle de s’faire pisser d’sus!? <em>Darling</em>, t’as beau avoir un accent <em>british</em>, c’est pas plus chic comme discours!</p>
@@ -1041,8 +1085,8 @@
               <p>“Hey toi, regarder dans mes yeux, <em>please</em>.” Heureusement, Future-Victime-numéro-1 me sort de mes fantasmes avant que j’me mette à baver devant 49. Ça aurait pas été ben ben chic.</p>
               <p>Et c’est là que je fini par regarder l’autre. Pas dans les yeux, contrairement à sa demande, parce que j’ai franchement horreur des contacts visuels. Sérieusement, comment est-ce que les gens font pour regarder quelqu’un d’autre dans les deux yeux en même temps?! Moi, s’cuse, mais j’suis juste capable d’en regarder un à la fois; pis alterner entre les deux me donne mal à tête, pis en fixer yink un des deux, ça a juste l’air bizarre tant qu’à moi. Enfin bref, j’me concentre plutôt sur l’aspect général de Future-Victime-numéro-1: Son corps, couché sur le dos, à l’air plutôt grand, mince et blême, mais plus genre imposant (comme le 7) que fragile (comme le 1). Mais son air arrogant et cynique sonne définitivement comme un 7. Autrement dit, 77 est le genre de personne que tu veux torturer juste pour les voir s’écrouler de leur piedestral. En plus, vu qu’il a pas l’air d’avoir ben ben de chair autour, j’pari que j’pourrais atteindre encore facilement les os… J’ai toujours voulu me mettre à la sculpture d’os, et les os d’écureuil sont juste vraiment trop petits... Après tout, 77 avait rien qu'à pas v’nir m’empêcher d’dormir!</p>
             </div>
-            <div name="PdV de Chose/49">
-              <h2>PdV de Chose/49</h2>
+            <div name="2.2 - PdV de Chose/49" id="C2P2">
+              <h2>2.2 - PdV de Chose/49</h2>
               <p>J’pouvais pas croire que j’avais pas réalisé qu’il y avait quelqu’un d’autre dans la ruelle. Il faut dire que mon focus était pas mal plus sur Morgan que sur les odeurs de piss et de vidanges. Les lycanthropes ont beau avoir plus de force que les vampires; les sangsues sont vraiment plus rapides! À voir la face figée de Morgan, on était deux à avoir pensé que la ruelle était vide. J’ai essayer de me souvenir de ce qu'on avait dit; vérifier qu'on n’avait pas dit trop de mot compromettant comme vampire ou lycanthrope, mais quand j’ai pris une grande bouffée d'air en direction d’où la voix provenait pour sentir ce qui était entrain de nous épier, j’ai pu été capable de réfléchir pantoute. Sur le coup, je pouvais pas en croire mon nez. Et pourtant, les lycanthropes ont un super bon odorat.</p>
               <p>Non seulement, c&#x27;était bel et bien un être humain; donc on était dans marde, mais c&#x27;était aussi la plus meilleure chose que j&#x27;avais jamais sentie de toute ma vie! Comme le plus doux des parfums, aphrodisiaque et intoxicant en même temps. Mon corps en entier était chamboulé, moitié excité, moitié apaisé. Vic, dans ma tête, était entrain de se rouler par terre comme pour s&#x27;imbiber de l&#x27;odeur. C&#x27;était l&#x27;odeur de la maison qui t&#x27;accueille, de la chaleur qui te réconforte, mais aussi la douceur des mains qui te caressent, du corps chaud qui te colle puis frémit de plaisir, la sueur de l&#x27;orgasme, le bonheur de l&#x27;amour. Oh oh. Et avant même que je réussisse à mettre le doigt sur le problème, Vic a confirmé mes craintes en s&#x27;écriant dans ma tête &quot;Partenaire!&quot;</p>
               <p>L’idée que Morgan puisse même penser faire quoique ce soit à mon âme-sœur m’a fait reconsidérer l’importance de faire parler la sangsue plutôt que de juste y arracher la tête. Et j’ai failli faire juste ça, mais Morgan a commencé à l’appeler et à l’encourager à sortir de sa cachette, et l’idée que mon âme-sœur puisse me voir en train de décapiter quelqu’un m’a comme fait hésiter un peu. C’est pas vraiment le genre de première impression que tu veux laisser à la personne avec qui tu veut passer le reste de ta vie…</p>
@@ -1086,8 +1130,8 @@
               <p>“Ok, ben ’tend peu, j’vas y donner une autre dose pour l’empêcher de bouger.” De toute façon, ma moitié avait déjà réalisé que la verveine empêchait Morgan de bouger. Tant que la question du pourquoi la verveine n’avait pas le même effet sur son corps versus celui de Morgan n’était soulevée, tout irait bien. Espérant que sa curiosité ne serait pas piquée encore plus, j’ai pris ma dernière fiole de verveine de ma poche et agrippé la mâchoire du moustique. Vu que les vampires ont pas vraiment besoin de respirer; le truc de boucher le nez jusqu’à ce que la bouche s’ouvre marche pas pantoute. Fac il a fallu que j'utilise presque toute ma force pour l’obliger à ouvrir sa bouche, mais j’ai fini par réussir à y vider le contenu de la fiole dans le fond de la gorge.</p>
               <p>Une fois que Morgan avait avalé la verveine, j’ai jeté un coup d’œil vers mon âme-sœur, m’apprêtant à échanger nos positions, quand j’ai remarqué ce qu’il y avait dans sa main. J’ai pas pu m’empêcher de sourire; un mix de fierté et de 't’es tellement adorable!'. Même si le DuctTape pourrait être assez fort pour retenir un être humain; ça a aucune chance contre la force paranormale. Il fallait quand même apprécier son effort de contribution. Sans dire un mot (parce que j’voulais pas ni l’insulter en déclarant son DuctTape inutile, ni avoir à lui expliquer pourquoi), j’ai fait un 180 sur moi-même en décroisant mes bras pour mes mains soient toujours sur les épaules de Morgan, mais que mon corps soit en haut de sa tête; laissant ainsi la place à ma moitié. Avec un signe de tête, j’ai invité mon âme-sœur à s’installer sur Morgan, “C’est bon, tu peux y aller. Amuses-toi.”.</p>
             </div>
-            <div name="PdV d’Alex">
-              <h2>PdV d’Alex</h2>
+            <div name="2.3 - PdV d’Alex" id="C2P3">
+              <h2>2.3 - PdV d’Alex</h2>
               <h3><em>I&#x27;m not the beauty you wanted,<br>I&#x27;m the monster you needed.</em></h3>
               <p>Alors je m’installe à cheval au-dessus du bassin de 77, mon canif dans la main, et prends une belle grande respiration. C’est un grand moment pour moi, la réalisation d’un rêve d’enfance. Il faut le savourer! Évidemment, la nervosité se pointe le nez, mais j’me rattrape vite en m’encourageant: Alex, t’es capable! En fait, t’es clairement l’excellence même, mais restons humble pour commencer, pis vas-y une étape à fois!</p>
               <p>Premièrement, il faudrait que je commence par enlever son chandail. J’devrais juste le couper; ça serait plus facile que d’y enlever. Je cherche la petite paire de ciseaux sur mon canif, la sort puis me met à la tâche en partant au bas du chandail. J’avoue que c’est pas mal plus long que c’que j’pensais. Ces ciseaux-là sont clairement trop petits. Mais j’fini par pogner le tour et atteindre une vitesse respectable et finalement, après avoir forcer un peu plus au niveau des coutures et diverses épaisseurs, je réussi à exposer le torse de 77 dans toute sa splendeur.</p>
@@ -1119,14 +1163,14 @@
               <p>Mais la main de 49 sur la mienne m’empêche de poursuivre mon <em>power trip</em>. D’une main, 49 me fait lâcher mon canif et de l’autre retire mon canif de la côte de 77 comme si de rien n’était. Sûrement, c’est parce que je l’avais loussé moi-même juste avant! Aussitôt que j’me revire vers 49, mon regard reste pogné sur sa face. Tout ce à quoi je réussi à penser c’est à admirer 49. Comme si c’était tout ce qui comptait; être avec 49. J’me rends à peine compte que, ma main toujours dans la sienne, 49 nous met lentement debout, face-à-face. Je suis toujours en trance et enregistre vaguement que 49 a mis sa deuxième main aussi sur moi, quelque part dans mon dos. Puis, 49 se met comme à danser et à me guider jusqu’à ce qu’on ait fait quelques pas sur le côté. Puis finalement, on arrête de bouger et toute mon attention reste sur son visage et je me permet enfin de mettre ma main libre sur sa joue.</p>
               <p>Avec mon pouce je caresse doucement une cicatrice qui semble courir tout le long de sa mâchoire et la douceur soyeuse de la marque me chatouille le bout du doigt et me fait frissonner le corps au complet. Je passe de la cicatrice à sa lèvre inférieure et un gémissement m’échappe à l’idée de l’embrasser. Je sers un peu sa main que je tenais encore avant de la lâcher puis passe ma main autour de sa taille pour l’approcher de moi encore plus. Le contact de nos corps déclenche des feux d’artifices dans mon corps et, pendant une seconde, me coupe la respiration. Les yeux écartillés et la bouche entrouverte de 49 trahissent sa surprise et son excitation. Un mélange d’incrédulité, de désir et d’inquiétude. Apparemment, 49 n’a pas l’habitude d’être l’objet d’autant de désir. Lentement, histoire de lui donner tout le temps du monde de se retirer ou de dire non, je m’approche de ses lèvres, mon intention claire de l’embrasser. Je m’arrête à quelques millimètres de sa bouche. Ma main qui était sur sa joue se faufile derrière sa tête à la base de son crâne où j’aurai une meilleure pogne. Mon autre main, à la base de son dos, exerce un peu plus de pression, juste pour y rappeler que je suis là. <em>I got you, babe.</em> Avec ma langue, je trace sensuellement sa lèvre inférieure et attends de voir sa réaction. Un gémissement presque inaudible sort de sa bouche et son bassin se colle aussitôt sur le mien. Prenant ça comme un accueil enthousiaste, je continue à agacer 49 en frôlant à peine mes lèvres sur les siennes, mais le contact n’affecte pas juste 49 et on se retrouve à haleter ensemble autour du courant électrifiant qui nous lie. <em>Shit</em>, j’aurais jamais pensé pouvoir être autant <em>turned on</em>! <em>Fuck</em> le reste, j’me laisse aller pis j’y saute dessus!</p>
             </div>
-            <div name="PdV externe de ?">
-              <h2>PdV externe de ?</h2>
+            <div name="2.4 - PdV externe de ?" id="C2P4">
+              <h2>2.4 - PdV externe de ?</h2>
               <p>Lorsque ses yeux aperçurent le corps ensanglanté et inconfortablement immobile sur l&#x27;asphalte craquelée et franchement insalubre de la ruelle anonyme, son cœur s&#x27;est arrêté. Ou plutôt, son cœur se serait arrêté s&#x27;il avait été en train de battre. C&#x27;est une chance que les vampires n&#x27;ont pas besoin de respirer ou leur cœur de battre. Bien que l&#x27;identité des deux jeunes adultes insouciamment debout à côté de Morgan lui était inconnue, leur nature était évidente. Même à cette distance, de sa cachette sur le toit de l&#x27;immeuble voisin, sa vue pouvait déchiffrer les signes et même mémoriser les traits. L&#x27;impitoyable lycanthrope, au corps couvert de cicatrices et à l&#x27;allure guerrière, sans doute l&#x27;artiste du crime commis contre sa chère création, se tenait debout, quoique sans aucune animosité, devant l&#x27;insipide être humain à la physionomie négligeable. Curieusement, en effet, l&#x27;énergie de leur moment semblait plus romantique que dangereuse, plus tendre qu&#x27;animale. Une pointe au cœur lui rappela que ses doux moments passés avec Morgan étaient maintenant choses du passé. À moins que... Peut-être qu’en l’aidant... Mais au-delà de l&#x27;espoir, l&#x27;émotion qui lui tordait les entrailles en était une rarement vécue dans sa vie; celle du désir de vengeance. Voir le couple se permettre cette tendresse, se penser digne de ce sentiment magique alors que le sang de sa création coulait toujours, goutte à goutte sur le sol. Comme si l&#x27;horreur commise, de sang froid certainement, méritait célébrations et réjouissements. Comme si le fracas assourdissant causé par le bris de son cœur qui, dans sa tête, résonnait plus fort encore que l&#x27;aurait fait le tonnerre, ne pouvait atteindre l&#x27;oreille de ces tourtereaux ou pire encore, ne pouvait leur en causer le moindre désagrément.</p>
               <p>L&#x27;indignation et la nécessité de se faire justice lui permirent de concevoir un plan de vengeance à l&#x27;exquise simplicité et sadique ingéniosité. Pour une fraction de seconde, ces pensées l&#x27;inquiétèrent légèrement, n&#x27;ayant jamais eu une once de méchanceté en soi; sentir tant d&#x27;engouement à l&#x27;idée de faire souffrir quelqu&#x27;un était, il va sans dire, préoccupant. Mais au combien excitant. Et justifié! Surtout, justifié! Évidemment, sa nature vampirique l&#x27;obligeait à régulièrement s&#x27;abreuver à la veine d&#x27;un être vivant, mais malgré tout, ses intentions étaient chaque fois magnanimes, ne prenant que le nécessaire, et s&#x27;assurant de conclure le tout sans peur ni douleur. Et pourtant, en cette nuit fatidique, une toute nouvelle soif de sang s&#x27;était emparée de son être. Et la peur et la douleur allaient justement s’avérer les épices les plus recherchées dans ce nouveau cocktail du jour.</p>
               <p>Grâce à sa vitesse surhumaine et à la passion aveugle des jeunes en amour, la récupération du corps de Morgan pu passer plus ou moins inaperçue, ou du moins, jusqu&#x27;à alors, personne ne semblait être sur ses traces. Ce ne fut que plusieurs coins de rue plus loin, lors d&#x27;une pause nécessaire à la reconnaissance des lieux et à la confirmation de liberté de la voie, que la faible respiration, mais respiration tout de même, fut finalement perçue. Les vampires n&#x27;ont pas besoin de respirer, autrement que pour parler ou lors d&#x27;efforts notables, qu&#x27;ils soient physiques ou physiologiques, comme la guérison d&#x27;une plaie majeure... Si Morgan était bel et bien en train de respirer, c&#x27;est qu&#x27;il y avait espoir que Morgan s&#x27;en sorte. À cette pensée, une tension jusque-là passée inaperçue se dissipa de sa poitrine lui faisant réaliser son ignorance face à l’étendu des dégâts. En effet, si le coeur de Morgan avait été arraché... Refocusant son esprit sur le fait que Morgan respirait et que sa vie n’était donc pas ultimement en jeu, un regain d&#x27;énergie l&#x27;encouragea à poursuivre sa route à toutes vitesses vers ses appartements. Plus vite Morgan serait en sécurité, plus vite il lui serait possible de recenser les dégâts, planifier la suite et peut-être même convaincre Morgan de lui laisser une seconde chance... Du sang. Morgan aura avant tout besoin de se nourrir. Aussitôt sa sombre et machiavélique fantaisie lui réillumina l&#x27;esprit; celle d&#x27;utiliser le sang de l&#x27;être humain auquel la bête semblait tant tenir. Partenaire pour partenaire. La symétrie lui plu chaudement et un froid sourire lui assombrit le visage alors que ses yeux avaient cette lueur d&#x27;anticipation dont il faut généralement se méfier.</p>
             </div>
-            <div name="PdV d’Alex">
-              <h2>PdV d’Alex</h2>
+            <div name="2.5 - PdV d’Alex" id="C2P5">
+              <h2>2.5 - PdV d’Alex</h2>
               <h3><em>No means no.</em></h3>
               <p>Au moment même où je m’apprêtais à sauter sur 49, une bourrasque de vent s’est insinuée dans la ruelle. Je sais que c’est pas normal; il n’y a pas de vent comme ça d’habitude dans les ruelles, et j’ai définitivement l’intention de m’en crisser et de continuer à embrasser 49, mais dès que je renouvelle le contact entre nos lèvres, je réalise que 49 a figé. Après avoir pris une grande inspiration par le nez, 49 écartille les yeux, mais pas de surprise sensuelle, plutôt de surprise effrayée. <em>Oh shit.</em> Qu’est-ce qui s’est passé. C’était quoi c’te vent-là coudonc? Voyant que 49 a arrêté de me regarder, je suis son regard et remarque que le corps de 77, que j’avais complètement oublié, est disparu. Tout ce qui reste sur l&#x27;asphalte sont quelques flaques de sang et le motton imbibé du chandail de 49. Mon couteau. Où est mon couteau? Je ramène mes mains devant moi, vois qu’elles sont vides, tâte mes poches puis finit par voir du coin de l&#x27;œil, mon couteau dans la main de 49. Je reprends mon souffle que j’avais apparemment arrêté et récupère mon canif de la main de 49 qui n’offre aucune résistance. Je me dépêche à ranger la scie qui est encore sortie du canif, mais au même moment, la main de 49 qui voulait probablement juste retenir mon attention, apparaît entre la scie et le reste du canif. Le mauvais <em>timing</em> fait que la scie qui était déjà sur son air d’aller se referme sur les doigts de 49. Par expérience, je sais que c’est juste assez fort pour percer la peau, mais pas ben ben plus que ça. Même la lame du couteau ne pourrait pas couper des doigts, alors la scie ne peut vraiment faire que quelques petits trous. Quand même, 49 ne réagit même pas. Ou plutôt, n’a pas l’air d’avoir mal. Tout ce que 49 fait est de m’enlever le canif des mains, comme si de rien n’était, retirer ses doigts de leur position compromettante, refermer la scie comme il faut et finalement me tendre mon canif. Comme si de rien n’était! Si l’autre se plaint pas, j’imagine que ça veut dire que j’ai pas besoin de m’sentir mal, <em>right</em>?</p>
               <p>Dès que j’ai repris mon couteau, 49 me prend les épaules pour attirer mon attention et lorsque mon regard retourne finalement sur son visage, m’indique avec urgence “Y faut que j’cours après. J’peux pas laisser Morgan s’en sortir comme ça, mais toi tu peux pas rester ici. Vas-t’en, sauves-toi et trouve une place avec plein de monde. Ta seule chance d’être en sécurité est de t’entourer de gens. Plus y’a de témoins, mieux c’est.” Me donnant une petite poussée, 49 me dirige vers la sortie de la ruelle la plus proche, “Envoye, dépêche! Vas-y!” J’me retourne la tête vers 49 et avant même que je puisse formuler une quelconque question ou objection, 49 continue “Inquiètes-toi pas, j’vas t’r’trouver! Envoie, cours!”</p>
@@ -1149,10 +1193,10 @@
               <p>Et tout devient noir.</p>
             </div>
           </div>
-          <div name="Chapitre 3 - Réaliser son erreur">
+          <div name="Chapitre 3 - Réaliser son erreur" id="C3">
             <h1>Chapitre 3 - Réaliser son erreur</h1>
-            <div name="PdV de Chose/49/Honey">
-              <h2>PdV de Chose/49/Honey</h2>
+            <div name="3.1 - PdV de Chose/49/Honey" id="C3P1">
+              <h2>3.1 - PdV de Chose/49/Honey</h2>
               <p>Plus ta proie court vite, plus elle est difficile à traquer, parce que son odeur n’a pas le temps de s’imprégner dans l’air et sur les surfaces. Alors traquer des vampires qui peuvent aller plus vite qu’un char; c’est vraiment difficile! Mais les lycanthropes ont un bon odorat, alors même si ça allait me prendre plus de temps, je savais que j’aurais quand même réussi à retrouver Morgan et l’autre vampire. Le fait que la piste finissait au Rossi, par contre, était plutôt surprenant.</p>
               <p>Mais pas aussi surprenant que mon premier baiser… Juste d’y penser j’en avais des frissons et le coeur qui s’débattait. Ça a peut-être l’air bizarre, mais même si j’avais déjà baisé avec la majorité d’ma meute, j’avais encore jamais embrasser quelqu’un. J’imagine qu’embrasser c’est trop personnel, trop intime pour faire ça avec un vieux jouet sexuel sur-utilisé. Qu’est-ce que ma moitié penserait si j’y racontais mon rôle dans la meute? Est-ce que mon âme-soeur voudrait quand même m’embrasser ou préfèrerait juste m'oublier, comme la vieille affaire usée que j’étais? “Baiser, encore!” Vic avait raison, moi aussi je voulais avoir une autre de chance d’embrasser notre Partenaire. Le baiser avait été si magique, mais en même temps, si stressant! D’un côté, je trippais ben raide, la tête perdue dans toutes les sensations, mais de l’autre côté, j’avais tellement peur de pas être à la hauteur, de pas faire ça comme du monde! J’espérais tellement avoir une autre chance, une occasion de m’améliorer et de prouver à ma moitié que j’pouvais apprendre et satisfaire ses besoins. C’est en me souvenant de qu’est-ce qui avait interrompu mon premier baiser que mon focus et ma détermination sont revenus. Déjà que laisser mon âme-soeur sans protection avait été la chose la plus dure que j’avais jamais faite, il fallait au moins que ça aille servi à quelque chose! Il fallait que je retrouve Morgan et finisse ma job.</p>
               <p>J’ai donc décidé de rester dans l’ombre, de l’autre côté de la rue, pour analyser la situation. Tout le monde connaissait le Rossi et son artiste activiste qui essayait de créer un monde meilleur où les dignes et les indignes pourraient vivre en harmonie. Les êtres humains croyaient que son club était juste un club, célèbre pour ses spectacles et ses partys, mais nous on savait que c’était aussi la cave d’un clan de vampires. Mais pourquoi un clan de vampires pacifistes aurait voulu protéger quelqu’un comme Morgan qui avait fait parti de Masevas et décimé la moitié d’une meute?</p>
@@ -1177,8 +1221,8 @@
               <p>La surprise et l’incompréhension ont figé Dom pendant quelques secondes; secondes qu’on devait utiliser intelligemment. Suivant le corps de Stef au sol, on a atterrit à quatre pattes, les deux de devant encore sur le torse de Stef. Aussitôt, on a tourné notre attention vers Dom et ont lui a sauté à la gorge. Mais Dom a reprit s’est esprit plus vite que j’aurais voulu et avec sa vitesse de vampire a réussit à se tasser et à lever son bras juste à temps pour que ce soit son avant-bras qui nous arrive dans la gueule tout en s’assurant de ne plus être dans notre trajectoire. On aurait pu lui couper le bras avec notre mâchoire, mais Dom a utilisé notre élan et l’angle de son corps pour nous faire continuer notre mouvement, nous faire lâcher son bras et nous faire revoler dans le mur du club, juste à côté d’la porte. L’impact nous a fait voir noir pendant une seconde, mais le temps que notre cage thoracique recommence à fonctionner et qu’on puisse respirer à nouveau, Dom était déjà sur nous à nous sacrer des coups de griffes. Malheureusement, des années à être le punching bag de ma meute sans jamais pouvoir me défendre m’avaient donné le réflexe de me laisser faire et d’encaisser. Les vampires ont des griffes presque aussi longues que les nôtres; alors ça fait du dommage. Au moins, les griffes de vampires c’est pas comme de l’argent, ça guérit assez vite. N’empêche; la pluie, non le torrent, de coups, de gifles et de graffignes commençait à être déstabilisante. Et veut-veut-pas, on avait notre Partenaire à sauver! Dès que la face de notre âme-sœur nous est revenue en tête, on a réussit à sortir de notre torpeur et, au lieu de nous laisser nous faire déchiqueter par le moustique, on a fini par réussir à riposter. Avec nos deux pattes arrières, vu qu’on était plus ou moins sur le dos, on a réussi à y donner une assez grande poussée pour y faire perdre équilibre. Dom devait avoir cru qu’on n’aurait pas été capable de nous défendre et encore moins d’attaquer, parce que sa surprise était évidente et nous a même permis de nous relever juste assez vite pour y sacrer un coup de patte de devant dans la face. Finalement, on y a mis les deux pattes d’en avant sur la poitrine et on l’a fait tomber sur le dos pour y arracher la gorge. Pas de temps à perdre.</p>
               <p>À ce moment-là, j’pense qu’il y avait juste l’adrénaline qui me tenait encore debout et me permettait de combattre la fatigue et la perte de sang causée par tous les combats de cette nuit qui finissait pu. D’abord Morgan, puis Stef et Dom. Mais vraiment c’était notre instinct de protéger notre Partenaire qui nous donnait la force de continuer. Mais comme de fait, en arrivant devant la porte du club, on a réalisé qu’on aurait besoin de mains pour l’ouvrir. Alors on a repris notre forme humaine. Bon, là, il faut que vous compreniez quelque chose. Dans la vraie vie, c’est pas comme dans les films classés Général. Les lycanthropes peuvent pas se transformer magiquement avec des vêtements sur l’dos… Et comme mes vêtements étaient vraiment trop loin comparé à mon urgence de sauver ma moitié… Bref, j’ai rentrer dans l’arrière du club, à poils. Au moins, la télépathie c’est une affaire de lycanthropes et pas de vampires; alors les deux gardes avaient pas eu le moyen d’avertir qui que ce soit du club. Dès que j’étais à l’intérieur, j’ai tout de suite chercher le coin le plus sombre pour pouvoir m’y cacher. J’ai pris quelques secondes pour inspirer à fond et analyser les odeurs. Retrouver la piste de ma moitié était pas mal plus facile à l’intérieur; moins de courant d’air. M’empêcher de grogner trop fort pour pas me faire entendre en sentant l’odeur de son sang; ça, par contre, c’était pas mal plus difficile. Si l’ostie d’maringouin avait vraiment fait saigner ma moitié; j’allais y arracher la tête!</p>
             </div>
-            <div name="PdV d’Alex">
-              <h2>PdV d’Alex</h2>
+            <div name="3.2 - PdV d’Alex" id="C3P2">
+              <h2>3.2 - PdV d’Alex</h2>
               <h3><em>Your first mistake was thinking I was one of the sheep.</em></h3>
               <p>Ouch. J’suis encore à mi-chemin entre l’endormitoire et l’éveil et déjà je sens que j’veux pas m’réveiller. Ma tête résonne comme si on l’avait vidée à cuillère comme une citrouille pour y mettre un <em>speaker</em> qui joue du <em>death metal</em> dans l’tapis pis qu’après on avait mis l’feu d’dans. Dans l’espoir d’estomper la douleur, j’garde les yeux fermés et j’me mets à focusser sur le reste de mon corps. Je gigotte un peu et réalise que j'suis sur une chaise. Sans coussin. Pas confortable pour deux cennes. Oh, et apparemment, mes poignets et mes chevilles sont attachés. <em>Shit</em>. Où est-ce que j’suis? Qu’est-cé qui s’est passé pour que j’me ramasse de même? Oh. 23! <em>Fuck</em>, si 23 voulait à c’point-là coucher avec moi, un souper au resto aurait fait l’affaire. J’suis plus facile que j’en ai l’air! Ah, non, c’est vrai, j’avais refusé parce que j’avais encore le sang de 77 d’imprégné su’ l’corps. Ah ben, j’imagine que là il est trop tard pour s’inquiéter de t’ça. Clairement, 23 a eu l’temps de s’en rendre compte.</p>
               <p>Bon ben d'abord, revenons à la première question. Où est-ce que j’suis? Je tends l’oreille et réalise que le bourdonnement dans ma tête vient probablement de la <em>base </em>qui résonne dans le plafond. Comme si on était dans la cave et qu’il y a avait un méga party juste au-dessus. Fac j’imagine que crier servirait à rien. Remarque, j’suis pas du genre à crier <em>anyway</em>. Comme mes oreilles me donnent pas plus d’information que ça, j’me décide à m’ouvrir lentement les yeux. Ok, ça ça va, mais c’est quand j’viens pour lever la tête que la douleur me prend d’court et j’abandonne aussitôt l’idée. Fac pour l’instant, j’vas m’contenter de juste regarder vers le bas. J’peux quand même conclure que un, mes poignets sont effectivement attachés à la chaise (<em>fucking</em> belle job de <em>DuctTape</em>, en passant!), deux, j’ai encore mon linge su’l’dos (<em>yay!</em>), mais trois, mes pantalons sont encore bel et bien couverts de sang (ah ben) et finalement, le plancher est vraiment dégueulasse. J’vas assumer que le plancher était en béton gris, mais vu la couche de j’sais-pas-quoi qui le recouvre, j&#x27;parierais pas ma vie (des places, c’est juste des mottons de poussière, mais d’autres spots, ça a juste l’air inidentifiablement gluant). <em>Silver lining</em>: j’suis sur une chaise et pas par terre! Finalement, mon cerveau finit par enregistrer l’odeur et je remercie mes années de travail comme PAB pour ma capacité à ignorer les “parfums organiques&quot;. Ça sent comme si quelqu’un avait vécu ici pendant longtemps, sans toilette ni ventilation... <em>Oh fuck!</em> Dis-moi pas que c’est moi?! Criss, ça fait combien de temps que j’suis là, coudonc? J’bouge les fesses un peu... et un immense soulagement me relaxe quand je confirme que mes pantalons sont vides et secs. Autrement dit, j’me suis pas chié d’sus! Fiou! <em>Thank god for small favors.</em></p>
@@ -1219,8 +1263,8 @@
               <p>Focussant sur ma plaie, 23 en retire doucement sa griffe, pose ses deux mains sur ma cage thoracique et se met à passer ses pouces autour de ma plaie et appuie juste assez pour que le sang qui avait juste commencer à figer se remette à couler encore plus. Ça fait un peu mal, mais pas tant que ça; c&#x27;est pas comme si ses doigts étaient direct dedans! 23 a l’air d’être en transe et après s’être léché les lèvres d’un air affamé, se penche lentement la tête jusqu’à avoir les lèvres à quelques centimètres de ma peau maintenant beurrée de sang puis s’arrête, tremblant presque comme si ça y prenait toute sa force pour se retenir à quelques millimètres.</p>
               <p>J’ai à peine le temps de réaliser que 23 à bel et bien sorti sa langue et lécher mon sang (<em>WTF?</em>) qu’aussitôt sa tête se recule comme si ma peau lui avait donné un choc électrique. 23 se laisse retomber sur ses talons; ses mains atterrissent sur mes cuisses et sa tête pend par en avant comme pour prier. Ou juste reprendre son souffle? Ou pleurer sans que j'm'en rende compte? Ou, à voir comment ses épaules sont tendues, probablement juste pour souffrir en silence.</p>
             </div>
-            <div name="PdV externe de 23/Sweetie">
-              <h2>PdV externe de 23/Sweetie</h2>
+            <div name="3.3 - PdV externe de 23/Sweetie" id="C3P3">
+              <h2>3.3 - PdV externe de 23/Sweetie</h2>
               <p><em>O mio Dio</em>! <em>O cazzo! Ecco perché!</em> Les fesses retombées sur ses talons, le corps tremblant de douleur et la tête penchée par en avant pour cacher ses yeux et ses crocs que la douleur avait transformés; son esprit tenta de faire le point, de comprendre comment un tel détail eût pu lui échapper. Le fait que l&#x27;être humain n’avait pas succombé à son contrôle mental et qu&#x27;il lui avait fallu l&#x27;assommer pour réussir à l&#x27;apporter dans ses appartements aurait dû lui mettre la puce à l&#x27;oreille; mais l&#x27;obsession de la vengeance et l&#x27;inquiétude pour Morgan, jumelées à cette inattendue envie irrésistible de mordre l’être humain, lui avaient fait ignorer le détail alors simplement embêtant. Puis, dans sa course effrénée pour ramener l’être humain à sa cave, ses pensées devaient être constamment retournées vers Morgan, qui jonchait entre la vie et la mort dans sa chambre, plutôt que sur l’odeur alléchante qui émanait de l’être humain blotti dans ses bras. Autrement, la tentation de s’abreuver sur le champ aurait été trop forte, et ce sang, aussi irrésistible fut-il, devait être réservé pour Morgan. L’élan de possessivité qui s’était emparé de son être à l’idée de devoir partager le sang de cet individu au parfum exceptionnellement exquis l’avait aussitôt fait sentir coupable; le bien-être de sa création devait, après tout, passer avant son propre plaisir, n’est-ce pas?</p>
               <p>Se remémorant la scène ensanglantée de la ruelle, son esprit ne réussissait point à en concevoir les fondements. L’idée que Morgan ait pu mériter un tel traitement ne lui avait passée par la tête qu’en un éclair; aussitôt rejetée par un dénie peut-être aveugle ou naïf. Après tout, la bête défigurée de cicatrice qui avait réduit Morgan en sang avait effectivement les yeux bleus. Puisque Morgan faisait également partie d’AVELCO; il était impossible que ce détail génétique ait pu être la cause d’une attaque de la part de Morgan. Tout de même, seuls des centaines d’années à combattre les habitus de l’Oudé lui avaient permis, pendant un instant, de ne pas s’enfoncer dans les préjugés, de ne pas associer la cruauté de la bête à la couleur de ses yeux et succomber à la rage collective contre les indignes. Étant à la tête de l’AVELCO, cela aurait été plus qu’aberrant, voire inadmissible.</p>
               <p>Mais plus encore, son incrédulité et ses questionnements se redirigeaient sans cesse vers les dommages, à la fois déments et méticuleux, qui avaient été infligés à Morgan. Quelle personne, ayant toute sa tête, aurait réellement pu vouloir tenter de scier une côte à quelqu’un d’autre?! Le travail, temps et attention que cela requiert dénotait d’une folie contrôlée, d’un froid sadisme, et non d’une rage animale, aveugle et déchaînée. Une idée alors tout à fait incongrue lui avait traversé l’esprit: et si l’être humain avait été, inconsciemment de toutes évidences, en danger de subir semblable fatalité? Cet être au sang si précieux avait certainement été au programme sanglant de la bête en tant que prochaine victime. À cette optique, une rage protectrice s’était mêlée à un sentiment de vertu chevaleresque et lui avait donné la justification nécessaire à apaiser sa culpabilité face au kidnapping. Car, après tout, c’était pour son bien! Sûrement, le fait de l&#x27;enlever lui aurait sauvé la vie! Son sort en tant qu’outil de vengeance et potion de vie pour Morgan devait certainement être beaucoup moins atroce que ce que la bête lui avait prévu!</p>
@@ -1244,8 +1288,8 @@
               <p>L’être humain haussa une épaule et répondit d’un ton banal “Ben, d’la même façon que moi j’ai aimé que tu m’tranches la peau.”</p>
               <p>Ses yeux s&#x27;écartillèrent à la banale rudesse de ces mots puis descendirent vers le torse encore couvert de sang comme s’il venait d’apparaître de nulle part. Mais qu’est-ce que la vengeance lui avait fait faire?! Ayant toujours prêché la paix et la tolérance; l’idée même de la violence lui avait toujours fait horreur. Alors, la vengeance… Jamais personne ne l’aurait cru capable de se rabaisser aussi bas… Et pourtant, pour Morgan, une exception avait été faite; mais à quel prix? Le choc de la réalisation de ses actes fut suivi de la culpabilité et de la honte. Cette absurde vengeance devait à tout prix être non seulement oubliée, mais surtout réparée. Son sang de vampire aurait guéri les dommages causés chez l’être humain; il suffisait de lui en faire boire quelques gouttes. Pour ce qui était de sauver sa création; certainement Morgan aurait compris l’importance de l’absolution. Et puis, sûrement Morgan pouvait attendre jusqu’à demain soir pour se nourrir; sûrement le simple repos lui serait tout aussi favorable… Il était évident que toutes ces conclusions ne servaient qu’à apaiser sa conscience, car en réalité, en toute honnêteté, la seule chose qui l’importait en ce moment, était de pouvoir savourer le sang qui, malgré toute raison, continuait à l’interpeller. “<em>Insegnami.</em> Enseigne-moi. <em>Per favore.</em>”</p>
             </div>
-            <div name="PdV d’Alex">
-              <h2>PdV d’Alex</h2>
+            <div name="3.4 - PdV d’Alex" id="C3P4">
+              <h2>3.4 - PdV d’Alex</h2>
               <h3><em>Make love, not war,<br>sex protections are cheaper than nuclear.</em></h3>
               <p>Et c’est comme ça que 23 devint mon élève en Masochisme 101.</p>
               <p>Y expliquer comment le système nerveux fonctionne par rapport à la douleur c’était une chose; le problème c’était de l’amener à me faire assez confiance pour <em>actually</em> essayer! Ça pis me faire détacher. Finalement, on a fait un compromis: j’ai juste une main de libre (ma main dominante), quand même, mais en échange, on a mis fin au plan de torture qui aurait fini par mettre une de mes côtes à l’air. Tu sais que t’as un bon compromis quand tu finis en meilleur état que c’qui était prévu. Surtout qu’à voir la facilité avec laquelle 23 a arraché le DuctTape de mon poignet, c’est probablement mieux pour ma santé de ne pas être à sa merci trop longtemps. Surtout que avec sa crise existentielle pis toute le placotage, ma plaie avait déjà commencé à se refermer et surtout, moi j’avais complètement perdu ma vague d’excitation; alors si la torture avait du recommencer, il aurait fallu que je recommence toute mon <em>brainwash</em> du début…</p>
@@ -1265,10 +1309,10 @@
               <p><em>Fuck</em>, il m'reste encore les deux pieds!! J&#x27;veux même pas prendre une seconde pour voir si l&#x27;autre est encore en train de s'tordre de douleur, de partir en fumée ou juste de me r'garder en riant. Toute ma concentration reste sur l&#x27;ostie de <em>DuctTape</em> qui garde mes chevilles prisonnières à c&#x27;te criss de chaise-là!</p>
             </div>
           </div>
-          <div name="Chapitre 4 - Réaliser qu’y a un problème">
+          <div name="Chapitre 4 - Réaliser qu’y a un problème" id="C4">
             <h1>Chapitre 4 - Réaliser qu’y a un problème</h1>
-            <div name="PdV de Chose/49/Honey">
-              <h2>PdV de Chose/49/Honey</h2>
+            <div name="4.1 - PdV de Chose/49/Honey" id="C4P1">
+              <h2>4.1 - PdV de Chose/49/Honey</h2>
               <p>“Promis, c’est pas c’que tu penses!” c’est ce que ma moitié a crié en réalisant que c’était moi qui venait de défoncer la porte, tout de suite avant de se mettre à rigoler comme si c’était la meilleure joke au monde. Sur le coup, j’ai figé ben raide. À part sa réaction bizarre, ce que je voyais et sentait était juste impossible à comprendre. Juste avant d’entrer, j’avais pris une grande inspiration, histoire de sentir à quoi je devais m’attendre. Les odeurs de vieille piss pis d’marde m’avaient confirmé que c’te pièce-là avait souvent été utilisée pour enfermer du monde et, c’est clair, jamais lavée. L’odeur de vampire et celle du sang de mon âme-sœur continuaient à faire bouillir le mien de rage, mais ça j’m’y attendais. C’était l’odeur de sexe par contre que j’réussissait pas à comprendre. Surtout que c’était pas juste l’excitation du moustique que je pouvais sentir… Quand j’ai fini par réussir à défoncer la porte et à entrer dans la pièce, la vue avait été encore plus mêlante. Quand j’ai reconnu ma moitié, sur la chaise, j’ai compris que la chose nue et roulée en boule par terre devait être la sangsue. Pourtant, c’était mon âme-sœur qui était en sang, les chevilles attachées à une chaise; alors pourquoi c’était l’autre qui se tordait de douleur? Et surtout, pourquoi y’avait autant de phéromones dans l’air?!</p>
               <p>Quand Vic a commencé à s’exciter dans ma tête, mais genre, sexuellement s’exciter, j’ai failli être malade. “Comment tu peux trouver ça excitant, ostie d’malade! Notre partenaire vient de se faire torturer à cause de nous, pis toi ça t’excite?!”</p>
               <p>“Partenaire aimer ça!”</p>
@@ -1284,8 +1328,8 @@
               <p>J’pouvais pas l’amener chez moi, dans mon cabanon derrière la maison-mère. Mon excuse était qu’y aurait pas assez de place et/ou que ce serait trop risqué que les autres lycanthropes s’en rende compte et décident de nous chasser. Mais en réalité, la vrai raison était que j’avais honte; je voulais pas que ma moitié voit dans quel état je vivais, ou pire encore, puisse voir comment les autres me traitaient. Mon autre option m’a fait hésiter un peu, mais Vic répétait que le bien-être de notre âme-sœur devait passer avant ce genre de douleur. Mon autre option était l’ancien appart de mes parents qui, sans que je sache comment ni pourquoi, continuait d’être payé à chaque mois, années après années. Après leur mort, c’était trop dure d’y retourner; c’est pourquoi j’avais accepté de rester dans le cabanon que l’Alpha m’avait assigné en tant qu’enfant de traîtres. Des années plus tard, j’avais réussi à y retourner, mais seulement pour le vider du <em>stock</em> de mes parents, de tout ce qui aurait pu me rappeler ce que j’avais perdu. Mais même à ça, j’y allais jamais; la douleur des souvenirs était juste trop pénible. J’y avait quand même laissé le stricte nécessaire parce que je me doutais bien qu’un jour je pourrais en avoir de besoin. Comme c’te soir-là.</p>
               <p>Dès que j’ai atteint l’appartement, j’ai pas perdu de temps. J’ai étendu mon âme-sœur sur le lit et commencé tout de suite à y lécher la plaie. La salive de lycanthrope aide à guérir. Je sais pas trop comment ça marche, mais ça marche. J’étais… frénétique. J’avais eu tellement peur pour ma moitié pis j’me sentais tellement coupable que quelqu’un y ait fait du mal à cause de moi. Tout ce à quoi j’étais capable de penser c’était de réparer les dommages. Et ça voulait dire, avant tout, de guérir ses blessures. J’pouvais pas non plus supporter l’idée que mon âme-sœur finisse comme moi; avec des cicatrices. Bon j’avoue, y’avait aussi le fait que ça me permettait de remplacer l’odeur dégeulasse du moustique par la mienne. Vic était d’accord avec moi; cet être humain-là était à nous!</p>
             </div>
-            <div name="PdV d’Alex">
-              <h2>PdV d’Alex</h2>
+            <div name="4.2 - PdV d’Alex" id="C4P2">
+              <h2>4.2 - PdV d’Alex</h2>
               <h3><em>Torture is one thing, but when if comes to sex, I prefer my victims to be consenting!</em></h3>
               <p>À force de m'faire ballotter d'gauche à droite, j’avais fini par fermer les yeux pour essayer de contrôler la douleur qui irradiait d’un peu partout à tout bout d’champ. C’est franchement plus difficile de gérer la douleur quand tu peux pas la prévoir. Tellement que ça m’a pris du temps avant de réaliser qu’on avait finalement arrêter de bouger. J’ai fini sur le dos, sur quelque chose de mou et doux. Un lit? Ça faisait tellement longtemps que j’avais pas été sur un vrai lit... Puis tout d’un coup, il a eu quelqu’un par dessus moi. J’espérais en ostie que c’était 49 parce que j’franchement, ça commençait à être intense comme soirée. Et <em>out of nowhere</em> (mais probablement plus parce qu’ayant les yeux fermés ben raide, j’avais juste rien vu venir), y’a eu une chaleur humide jumelée à une douleur chatouilleuse qui s’est fait sentir autour de ma plaie... Fac j’ai fini par ouvrir les yeux.</p>
               <p>Et qu’est-ce que j’vois pas?! 49, la face et le corps couverts de sang, qui est entrain d’me lécher l’torse! Décidément, à soir, mon sang est appétissant en ostie! Sur le coup, la surprise puis la curiosité m’aident à oublier la douleur et j'fais juste étudier sa technique. Sa langue commence par de longue lampée en traçant les contours de la plaie. Puis refait la même chose un peu plus près de la plaie, à la frontière là où la peau arrête et la chair commence, puis recommence à lécher, mais un peu plus doucement, à l’intérieur de la plaie, toujours plus près du centre, en essayant de mettre le plus de salive possible.</p>
@@ -1306,8 +1350,8 @@
               <p>J’me doute ben que le sentiment de sécurité que je ressent présentement est juste dans ma tête. Après tout, il y a au moins 77 et 23 qui vont sûrement vouloir me revoir, et sûrement pas juste pour aller prendre un café. L’idée de revoir 23, j’avoue, m’excite un peu, mais l’idée que 77 puisse me retrouver est pas mal moins intéressante. Quelque chose me dit que j’pourrais pas séduire 77 pour me sauver. Mais bon, tout ça c’est <em>Future Alex’s problems</em>. À soir, ou plutôt, à matin, ostie, j’dors! </p>
               <p>Je sais pas si c’est la chaleur de 49 qui est à moitié par dessus moi ou le mou du matelas sous mon dos, ou juste la fatigue de toute la torture et le sexe que j’ai eu en une soirée (quoique ça peut aussi être juste toute le sang qu’j’ai perdu), mais pour une fois j'm’endors assez vite merci.</p>
             </div>
-            <div name="PdV externe de 23/Sweetie">
-              <h2>PdV externe de 23/Sweetie</h2>
+            <div name="4.3 - PdV externe de 23/Sweetie" id="C4P3">
+              <h2>4.3 - PdV externe de 23/Sweetie</h2>
               <p>Ce ne fut que plusieurs minutes après que la bête eut emporté l&#x27;objet de sa nouvelle obsession que son esprit réussi finalement à se reprendre et son corps à se calmer. Les émotions vécues avaient été si intenses et si inattendues. Jamais une telle tournure n&#x27;aurait pu avoir été appréhendée. Pour ce qui semblait être la première fois de sa très longue vie, un être humain avait piqué sa curiosité, éveillé un intérêt et même surpris sa libido. L&#x27;enseignement du masochisme avait été intéressant, voir illuminant. Oh combien son corps voudrait avoir pu continuer leur séance.</p>
               <p>La brûlure trop intense de la verveine jumelée à la douleur de l’égorgement de ses deux créations, Dom et Stef, avait empêcher toute forme de riposte lors que la bête avait fait irruption. N’ayant réussi qu’à se cacher, la honte et la culpabilité l’envahirent. Quelle lâcheté! Maintenant, son être humain était sûrement à la merci de la bête et de sa soif de sang. Si la bête avait pu faire une telle horreur à Morgan, qu’aurait-elle pu faire à son être humain?! La soif et le désir de pouvoir goûter son sang pur et libre de verveine ainsi que le besoin viscéral de protéger ce qui lui appartenait devinrent vite une obsession qui ne put être dominée que par l&#x27;arrivée imminente de l&#x27;aube.</p>
               <p>Puis c’est avec horreur et émerveillement que la réalisation fini par s’insinuer dans son esprit: pendant ces quelques instants, en compagnie de l’être humain, ces quelques instants où soif de sang et de sexe se sont embrouillées et alimentées l’une l’autre, son anxiété s’était évaporée. Pas une seule pensée ni inquiétude sur son apparence, sur le positionnement de ses vêtements, sur l’appropriétée d’une expression faciale plutôt qu’une autre, sur le choix des mots, des sons et intonations; rien. Que les sensations. Que les ressentis, la douleur, les odeurs, la chaleur, l’électricité... et l’être humain. D’aussi longtemps que sa mémoire pouvait reculer, jamais son cerveau n’eut réussi un tel exploit, un tel... laisser-aller. Le vide créé par l’absence des questionnements habituellement incessants aurait du être assourdissant, mais au contraire; le vide avait été, de toutes évidences, aussitôt comblé; la peur et le stress, aussitôt remplacés par le plaisir et la liberté. Quelle euphorique béatitude!</p>
@@ -1319,10 +1363,10 @@
               <p>Pendant un temps, rien d’autre n’importait que de savourer la légèreté de son corps et de son esprit flottant doucement sur les vagues d’endorphines. Même la réalisation que son dos nu était allongé sur le sol répugnant de la salle de torture ne pu convaincre son corps de se relever. Petit à petit, cependant, la réalité revint en premier plan et la signification de ce qui venait tout juste de se passer commença à l’inquiéter. Était-ce la brûlure; du pure masochisme? Ou bien était-ce le sang de cet être humain en particulier? Et surtout, d’où lui venait, tout d’un coup, le désir d’obéir à qui que ce soit? Ayant été <em>Capo</em>, Boss, de sa <em>famiglia</em> depuis tellement longtemps, il semblait absurde qu’un tel désir de se soumettre aurait pu l’habiter. D’autant plus face à un simple être humain.</p>
             </div>
           </div>
-          <div name="Chapitre 5 - Réaliser c’qui vient de s’passer">
+          <div name="Chapitre 5 - Réaliser c’qui vient de s’passer" id="C5">
             <h1>Chapitre 5 - Réaliser c’qui vient de s’passer</h1>
-            <div name="PdV d’Alex">
-              <h2>PdV d’Alex</h2>
+            <div name="5.1 - PdV d’Alex" id="C5P1">
+              <h2>5.1 - PdV d’Alex</h2>
               <h3><em>This coffee better kick in before reality does.</em></h3>
               <p>Avant même que j’me réveille complètement, je sais qu’y a quelque chose qui cloche. Grâce à la fibromyalgie, j’ai l’habitude de m’réveiller le matin et de m’sentir comme si un autobus m’était passé su’l’corps la veille, mais à matin c’est différent. Les pieds gelés m’indiquent que j’ai dormi sans <em>sleeping bag</em> ni couverture (ça, c’est mal parce que le froid fait mal). Le corps engourdi et la chaleur m’indiquent que 49 a effectivement dormi par-dessus moi tout le long et qu’on a n’a bougé pantoute (ça, c’est mal parce qu’à mon âge, tu sais jamais si ton corps va pas juste rester bloqué d’même). Et j’ai envie d’pisser! (ça, c’est pire parce qu’à mon âge… non, c’pas vrai, j’fais pas encore d’incontinence, quand même!) Il faut dire que l’poids de 49 sur ma vessie aide pas pantoute. En parlant de 49; j’prends 30 secondes pour essayer de sentir si 49 dors encore. Vu la lenteur et la profondeur de sa respiration et le léger ronflement, j’en déduis que c’est le cas. Mais bref, il va quand même falloir que j’me sorte d’en dessous de 49 si j’veux pouvoir aller pisser et trouver du café! Mon espresso du matin est la seule chose qui calme les douleurs de la fibro le matin.</p>
               <p>La fibromyalgie, en passant, c'est vraiment <em>cool</em>, c'est comme un <em>coach</em> de vie gratuit, mais sadique : genre, si tu prends pas soin de toi, manges bien, dors assez, exercices régulièrement, gères ton stresse et gardes une mentalité positive,… TU SOUFFRES! Simple! Ou plutôt, tu souffres plusse. Parce que l’arnaque c’est que même si tu fais tout ça, tu souffres quand même; juste moins. Bref, la vie est belle! …Tant que j’ai mon espresso du matin.</p>
@@ -1359,8 +1403,8 @@
               <p>Je marche sur le trottoir. J’me sens dont ben ridicule. Est-ce que quelqu'un me regarde? Est-ce que je marche normalement? Messemble que j'marche bizarre, j'fais des trop petits pas, non? Ou ben trop grands? Est-ce que mes hanches bougent? Trop ou pas assez? J'ai-tu l'air de m'déhancher ou ben d'avoir envie d'chier? Aller Alex, marche NOR-MAL-MENT, sinon, c’est clair, les gens vont se rendre compte que t’as faite de quoi d’pas correct! Oh, est-ce que mes bras bougent? Oui, ben là ils bougent, mais, attend, là ils bougent en même temps. Les bras sont pas supposés balancer en alternance? Ok allez, fais balancer tes bras en alternance. Oui, mais, quand un bras va en avant, il faut que ce soit celui de la jambe d'en avant ou celui de la jambe opposée? <em>Oh shit</em>, j'ai oublié comment balancer les bras, <em>fuck</em>, là c’est clair j'dois avoir l'air d'avoir perdu la tête. Alex, calme-toi! Quoique t’as encore du sang sur tes pantalons, sous tes ongles… bonne idée, mets tes mains dans tes poches! Ostie, c'est clair que quelqu'un me regarde. Si ça s’trouve, j’ai du sang ailleurs que j’ai juste pas encore vue, pis les gens vont le voir, pis ils vont ben s’douter que j’ai torturer quelqu’un hier dans la ruelle! C’est évident! <em>Shit</em>, ok, continue de marcher, ‘comme ça t’vient naturellement’; c'est ce que l'autre aurait dit. Oui, mais ça a l'air de quoi quelqu'un qui marche normalement?! Ostie qu’j'ai horreur de marcher!!</p>
               <p></p>
             </div>
-            <div name="PdV de Chose/49/Honey">
-              <h2>PdV de Chose/49/Honey</h2>
+            <div name="5.2 - PdV de Chose/49/Honey" id="C5P2">
+              <h2>5.2 - PdV de Chose/49/Honey</h2>
               <p></p>
               <p></p>
               <p></p>
@@ -1382,12 +1426,12 @@
               <p></p>
               <p></p>
             </div>
-            <div name="PdV externe de 23/Sweetie">
-              <h2>PdV externe de 23/Sweetie</h2>
+            <div name="5.3 - PdV externe de 23/Sweetie" id="C5P3">
+              <h2>5.3 - PdV externe de 23/Sweetie</h2>
               <p></p>
             </div>
-            <div name="PdV d’Alex">
-              <h2>PdV d’Alex</h2>
+            <div name="5.4 - PdV d’Alex" id="C5P4">
+              <h2>5.4 - PdV d’Alex</h2>
               <h3><em>Rule #1 Never say no to free food.<br/>Rule #2 Always carry a knife in case there are strings attached to it.</em></h3>
               <p></p>
             </div>
@@ -1422,9 +1466,6 @@
       .menuText:checked + .menuTextLabel{
         background: #000;
       }
-      /* .menuTextSelected{
-        background: #000;
-      } */
       .textPageSelected{
         display: block;
       }
@@ -1449,60 +1490,32 @@
       .textPage hr{
         border-color: purple;
       }
+      .fullBook h1, .fullBook h2{
+        padding-top: 5vh;
+      }
+      .tableMatC, .tableMatP{
+        list-style-type: none;
+      }
+      .tableMatP{
+        padding: 5px 0 15px 20px;
+      }
+      .tableMatC li, .tableMatP li{
+        text-decoration: underline;
+      }
+      .tableMatC li span{
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .tableMatC li span:hover, .tableMatP li:hover{
+        cursor: pointer;
+        opacity: .7;
+      }
 
     </style>
     <script name="WrotePage">
-      // function toPage(id){
-      //   let textPageAll = document.querySelectorAll('.textPage');
-      //   textPageAll.forEach(page => {
-      //     page.classList.remove('textPageSelected');
-      //   });
-      //   document.getElementById("page" + id).classList.toggle('textPageSelected');
-      //   let urlTitle = "wrote/" + id;
-      //   history.pushState(urlTitle, urlTitle, urlTitle);
-      //   document.getElementById('footer').classList.remove('footerFixed');
-      //   window.scrollTo({ top: 0});
-      // };
-
-
-
-
-      // if(document.getElementById('wrotePage').style.display == "block"){
-      //   console.log("yay!");
-      //   let menuTextLabelAll = document.querySelectorAll('.menuTextLabel');
-      //   menuTextLabelAll.forEach(label => {
-      //     label.classList.remove('menuTextSelected');
-      //   });
-      //   let textPageAll = document.querySelectorAll('.textPage');
-      //   textPageAll.forEach(page => {
-      //     page.classList.remove('textPageSelected');
-      //   });
-      //   document.getElementById('footer').classList.add('footerFixed');
-      // };
-
-      // let menuTextAll = document.querySelectorAll('.menuText');
-      // // let menuTextLabelAll = document.querySelectorAll('.menuTextLabel');
-      // // let textPageAll = document.querySelectorAll('.textPage');
-      // for(let i = 0; i < menuTextAll.length; i++){
-      //   if(menuTextAll[i].checked == true){
-
-      //     menuTextLabelAll[i].classList.toggle('menuTextSelected');
-      //     textPageAll[i].classList.toggle('textPageSelected');
-      //     document.getElementById('footer').classList.remove('footerFixed');
-      //     window.scrollTo({ top: 0});
-      //   } else {
-      //     document.getElementById('footer').classList.add('footerFixed');
-      //   }
-  
-
-                  // menuTextLabelAll[i].classList.remove('menuTextSelected');
-          // textPageAll[i].classList.remove('textPageSelected');
-          // // document.getElementById('footer').classList.add('footerFixed')
-          // if(menuTextAll[i].checked == true){
-          //   menuTextLabelAll[i].classList.toggle('menuTextSelected');
-          //   textPageAll[i].classList.toggle('textPageSelected');
-          //   document.getElementById('footer').classList.remove('footerFixed');
-
+      function toChap(cp){
+        document.getElementById(cp).scrollIntoView();
+      };
     </script>
 
     <!--ReadPage-->
@@ -3098,13 +3111,17 @@
       };
 
       function toPage(id){
+        currentState = ("wrote->" + id);
+        history.pushState(currentState, currentState, currentState);
+        toPageNav(id);
+      };
+      function toPageNav(id){
         let textPageAll = document.querySelectorAll('.textPage');
         textPageAll.forEach(page => {
           page.classList.remove('textPageSelected');
         });
         document.getElementById("page" + id).classList.toggle('textPageSelected');
-        currentState = ("wrote->" + id);
-        history.pushState(currentState, currentState, currentState);
+        document.getElementById("input" + id).checked = true;
         document.getElementById('footer').classList.remove('footerFixed');
         window.scrollTo({ top: 0});
       };
@@ -3146,7 +3163,15 @@
 
       // To handle the back and forward navigation buttons
       window.onpopstate = function(event){
-        navigate(event.state);
+        console.log(event.state);
+        if(event.state.startsWith("wrote-") == true){
+        let eStateBase = "wrote";
+        console.log(event.state.slice(7));
+        navigate(eStateBase);
+        toPageNav(event.state.slice(7));
+        } else {
+          navigate(event.state);
+        };
       };
     </script>
       

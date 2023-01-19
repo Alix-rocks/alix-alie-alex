@@ -171,7 +171,8 @@
       <h5 style="margin:0;">(Yeah, that's the only trigger warning you'll get...)</h5>
       <div>
         <h2>Shit of the day</h2>
-        <div class="SotD" id="SotD" onclick="SotD()">
+        <div class="SotD" id="SotD">
+          <!-- onclick="SotD()" -->
           <p id="SotDp">Click here to get what you deserve</p>
         </div>
       </div>
@@ -494,6 +495,7 @@
       var TextColor = ["red", "blue", "green", "black", "yellow", "purple", "orange", "white"];
       var TextFont = ["'Nunito', sans-serif", "'Chakra Petch', sans-serif", "'Coming Soon', cursive", "'Fuzzy Bubbles', cursive", "'Kalam', cursive", "'Kanit', sans-serif", "'Roboto', sans-serif", "'Special Elite', cursive"]
       window.onload = Myrand;
+      
       var QMS = 0;
       function SotD(){
         let numBC = getRndInteger(0,BgColor.length);
@@ -548,11 +550,27 @@
           }
           return arr;
       }
+
+      
+
+      // shitTypeButton[i].addEventListener('click', (e) => {
+      // getGearData(theme)
+      // .then(gearData => {
+      //   let numAS = getRndInteger(0,gearData.length);
+      //       document.getElementById("ySp").innerHTML = gearData[numAS];})})
     </script>
-    
+    <div name="TimePage" id="timePage" class="sectionPage justPage footered">
+
+    </div>
+    <style name="TimePage">
+
+    </style>
+    <script name="TimePage">
+
+    </script>
     <!--I wrote, you read-->
-      <!-- Faire une table des matières pour Alex! -->
-      <!-- Faire le tableau des chiffres pour Alex! -->
+      <!-- Mettre la table des matières dans un toggle -->
+      <!-- Faire le tableau des chiffres pour Alex! (et le mettre dans un toggle) -->
     <div name="WrotePage" id="wrotePage" class="sectionPage justPage footered">
       <div class="bottomButton backTop" onclick="backTop()" title="Again! From the top!"><span class="typcn typcn-chevron-right chevronTop"></span></div>
       <div class="menuTextSection">
@@ -911,7 +929,7 @@
         <p><em>Alex, sans-abri misanthrope, réalise son rêve en torturant des vampires afin d’aider 49, lycanthrope aux yeux bleus, à se libérer de l’esclavage... et fini par trouver l’amour.</em></p>
         <p>Tout est inclus&nbsp;: être humain, vampire et lycanthrope; viol, torture et combat; threesome, BDSM et polyamour; et café.<br>Qu'est-ce que tu veux d'plus?!</p>
         <p>Oh, pis en plus, c'est épicène! Ça veut dire que tu peux choisir toi-même le sexe/genre des personnages!<br>Ça te laisse perplexe? Essaie de lire la présentation d'Alex, tu vas comprendre...</p>
-        <div style="margin:2% 10% 2% 10%; border: 1px dotted purple; padding: 0 15px;">
+        <div name="Présentation d'Alex" style="margin:2% 10% 2% 10%; border: 1px dotted purple; padding: 0 15px;">
           <h2 style="margin-top:.4em;">Présentation d'Alex</h2>
           <p>Fac comme ça, l’autre t’a parlé de son fameux roman en français/québécois épicène pis même si t’as compris c’que ça veut dire, tu te demandes quand même de quoi aurait l’air un roman écrit de même? En même temps, ça t’tente probablement pas de lire les premiers chapitres pour après avoir à attendre 2-3 ans pour lire la suite… j’te comprends, ça s’rait pas mal agace!<br>Ok, r’garde ben c’que j’vas faire: j’vas te l’raconter, moi, son roman, ok?</p>
           <p>En passant, moi c’est Alex, j’suis l'personnage principal. Quoique, en vrai, c’est plus l’aventure de 49 que ça raconte. Moi j’fais juste l’aider. Qu’est-ce tu veux, j’suis d’même moi; j’aime aider les autres!</p>
@@ -932,48 +950,54 @@
           <h3 style="margin: -30px 0 30px;">*Pas Nécessairement Dans Cet Ordre</h3>
           <p><em>One of these days my knowledge of myths and fairy tales and tv shows and weird facts is going to come in handy, just you wait.</em></p>
           <div name="Table des matières">
-            <h3>Table des matières</h3>
-            <ul class="tableMatC">
-              <li><span onclick="toChap('C1')">Chapitre 1 - Réalité</span>
-                <ul class="tableMatP">
-                  <li onclick="toChap('C1P1')">1.1 - PdV d'Alex</li>
-                  <li onclick="toChap('C1P2')">1.2 - PdV de Chose</li>
-                  <li onclick="toChap('C1P3')">1.3 - PdV externe de ?</li>
-                </ul>
-              </li>
-              <li><span onclick="toChap('C2')">Chapitre 2 - Réaliser son rêve</span>
-                <ul class="tableMatP">
-                  <li onclick="toChap('C2P1')">2.1 - PdV d’Alex</li>
-                  <li onclick="toChap('C2P2')">2.2 - PdV de Chose</li>
-                  <li onclick="toChap('C2P3')">2.3 - PdV d’Alex</li>
-                  <li onclick="toChap('C2P4')">2.4 - PdV externe de ?</li>
-                  <li onclick="toChap('C2P5')">2.5 - PdV d’Alex</li>
-                </ul>
-              </li>
-              <li><span onclick="toChap('C3')">Chapitre 3 - Réaliser son erreur</span>
-                <ul class="tableMatP">
-                  <li onclick="toChap('C3P1')">3.1 - PdV de Chose/49/<em>Honey</em></li>
-                  <li onclick="toChap('C3P2')">3.2 - PdV d’Alex</li>
-                  <li onclick="toChap('C3P3')">3.3 - PdV externe de 23/<em>Sweetie</em></li>
-                  <li onclick="toChap('C3P4')">3.4 - PdV d’Alex</li>
-                </ul>
-              </li>
-              <li><span onclick="toChap('C4')">Chapitre 4 - Réaliser qu’y a un problème</span>
-                <ul class="tableMatP">
-                  <li onclick="toChap('C4P1')">4.1 - PdV de Chose/49/<em>Honey</em></li>
-                  <li onclick="toChap('C4P2')">4.2 - PdV d’Alex</li>
-                  <li onclick="toChap('C4P3')">4.3 - PdV externe de 23/<em>Sweetie</em></li>
-                </ul>
-              </li>
-              <li><span onclick="toChap('C5')">Chapitre 5 - Réaliser c’qui vient de s’passer</span>
-                <ul class="tableMatP">
-                  <li onclick="toChap('C5P1')">5.1 - PdV d’Alex</li>
-                  <li onclick="toChap('C5P2')">5.2 - PdV de Chose/49/<em>Honey</em></li>
-                  <li onclick="toChap('C5P3')">5.3 - PdV externe de 23/<em>Sweetie</em></li>
-                  <li onclick="toChap('C5P4')">5.4 - PdV d’Alex</li>
-                </ul>
-              </li>
-            </ul>
+            <input type="checkbox" id="tableMatiere" class="cossin"/>
+            <label for="tableMatiere" id="tableMatT">
+              <span class="typcn typcn-media-play toggleTM"></span>
+              <h3>Table des matières</h3>
+            </label>
+            <div id="tableMat">
+              <ul class="tableMatC">
+                <li><span onclick="toChap('C1')">Chapitre 1 - Réalité</span>
+                  <ul class="tableMatP">
+                    <li onclick="toChap('C1P1')">1.1 - PdV d'Alex</li>
+                    <li onclick="toChap('C1P2')">1.2 - PdV de Chose</li>
+                    <li onclick="toChap('C1P3')">1.3 - PdV externe de ?</li>
+                  </ul>
+                </li>
+                <li><span onclick="toChap('C2')">Chapitre 2 - Réaliser son rêve</span>
+                  <ul class="tableMatP">
+                    <li onclick="toChap('C2P1')">2.1 - PdV d’Alex</li>
+                    <li onclick="toChap('C2P2')">2.2 - PdV de Chose</li>
+                    <li onclick="toChap('C2P3')">2.3 - PdV d’Alex</li>
+                    <li onclick="toChap('C2P4')">2.4 - PdV externe de ?</li>
+                    <li onclick="toChap('C2P5')">2.5 - PdV d’Alex</li>
+                  </ul>
+                </li>
+                <li><span onclick="toChap('C3')">Chapitre 3 - Réaliser son erreur</span>
+                  <ul class="tableMatP">
+                    <li onclick="toChap('C3P1')">3.1 - PdV de Chose/49/<em>Honey</em></li>
+                    <li onclick="toChap('C3P2')">3.2 - PdV d’Alex</li>
+                    <li onclick="toChap('C3P3')">3.3 - PdV externe de 23/<em>Sweetie</em></li>
+                    <li onclick="toChap('C3P4')">3.4 - PdV d’Alex</li>
+                  </ul>
+                </li>
+                <li><span onclick="toChap('C4')">Chapitre 4 - Réaliser qu’y a un problème</span>
+                  <ul class="tableMatP">
+                    <li onclick="toChap('C4P1')">4.1 - PdV de Chose/49/<em>Honey</em></li>
+                    <li onclick="toChap('C4P2')">4.2 - PdV d’Alex</li>
+                    <li onclick="toChap('C4P3')">4.3 - PdV externe de 23/<em>Sweetie</em></li>
+                  </ul>
+                </li>
+                <li><span onclick="toChap('C5')">Chapitre 5 - Réaliser c’qui vient de s’passer</span>
+                  <ul class="tableMatP">
+                    <li onclick="toChap('C5P1')">5.1 - PdV d’Alex</li>
+                    <li onclick="toChap('C5P2')">5.2 - PdV de Chose/49/<em>Honey</em></li>
+                    <li onclick="toChap('C5P3')">5.3 - PdV externe de 23/<em>Sweetie</em></li>
+                    <li onclick="toChap('C5P4')">5.4 - PdV d’Alex</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
           </div>
           <div name="Chapitre 1 - Réalité" id="C1">
             <h1>Chapitre 1 - Réalité</h1>
@@ -1020,7 +1044,7 @@
               <p>Sur le coup, j’ai eu peur que Sensei se fâche, fac, pour essayer de me faire pardonner, j’ai aussitôt fait un salut de soumission. Les mains collées sur les côtés de mes cuisses, le corps plié à 90 degré au niveau de la taille, le haut du corps parallèle avec le plancher, les yeux fixés au sol. J’ai pas osé bouger tant que Sensei m’ait pas dit que c’était correct. Mais j'aurais du m'en douter que j’avais pas besoin de m’inquiéter. Sensei était pas du genre à se fâcher pour rien. Pas comme l’Alpha. En plus, Sensei me connaissait assez bien pour savoir que si ça avait pas été important pour vrai, j’aurais pas quitté le cours avant la fin. Bon, on s’entend, Sensei me connaissait pas assez pour savoir quels genre de problèmes que j’aurais eu si j’avais pas réussi à arriver à l’heure au bureau de l’Alpha...</p>
               <p>La maison-mère, c’est là où la majorité de la meute habite, c’est un vieux couvent qu’on a reconverti. En fait, moi j’habitais dans la shed dans la cour en arrière, mais c’est correct, au moins, là, j’avais la paix. Ouin, vous avez compris que moi j’avais un traitement spécial... Déjà, à cause de mes yeux bleus, je faisais parti des indignes. Et dans la meute, les indignes, étaient les esclaves; c’est aussi simple que ça. D’habitude, la hiérarchies des lycanthropes (Alpha, Béta (bras droit de l’Alpha), les Gammas (bodyguards et polices), les Deltas (commissionnaires), les Omégas (esclaves), etc.) est déterminée par un mixte de puissance, de compétences et de sang. Genre, si tes parents étaient Alpha, t’as plus de chance d’être Alpha, parce que t’as génétiquement plus de force, mais il faut quand même que tu te battes contre les autres pour le prouver. Mais depuis le jour de la purification, peu importait ta force ou ta puissance, si t’avais les yeux bleus, tu tombais au même niveau que les omégas; les faibles tout au bas de la hiérarchie; les esclaves. Parce que on disait que si t’avais les yeux bleus, tu valais pas plus que ça, de toutes façons. C’était ça, la purification: l’Alpha qui a 'purifié' la meute en rabaissant tous les indignes au bas de l’échelle. Ouin, quand l’Alpha décrète quelque chose avec sa 'voix d’Alpha', ça devient littéralement officiel. Mais moi, c’est encore pire, j’suis l’enfant de traîtres. De traîtres qui ont perdu la vie avant de pouvoir payer pour leur trahison; alors comme de faite, c’est à moi à payer pour leurs torts.</p>
               <p>Après avoir pris une douche rapide au gym et couru (ben, à vitesse humaine-là) jusqu’à la maison-mère, il me restait juste assez de temps pour de passer à la cuisine et me prendre quelque chose à grignoter…. Si personne ne venait m’achaler. En général, les indignes ont assez de choses à faire, avec le ménage pis toute, pour pas avoir le temps de me déranger, mais les autres, les dignes, pouvaient m’utiliser comme bon leur semblait. Quand j’étais jeune, je servais surtout de punching bag pour défouler leurs frustrations ou exercer leur vengeance contre mes parents, mais quand j’ai atteint l’âge de maturité, les choses ont un peu changées...</p>
-              <p>De un, Vic s’est joint à moi et j’ai enfin pu me transformer. Vic, c’est ma moitié-bête. Deux esprits dans le même corps qui peut prendre deux formes, l’une humaine, l’autre lupine. Avec l’arrivée de Vic, mes pouvoirs de lycanthropes sont apparus. Non seulement je pouvais maintenant me transformer, mais surtout ma force, ma vitesse, mes sens et ma guérison avait découplées. Sur le coup, j’étais extatique. Enfin, je pourrais me défendre! La première fois qu’on a essayer de m’attaquer après ma transformation, j’ai enfin pu répliquer! En tout cas, j’ai essayé. Mais j’aurais du me douter que j’serais pas à la hauteur. T’as beau avoir plus de puissance, si t’as aucune technique, et que l’autre s’entraîne à tous les jours…, ben t’as pas grand chance. En fait, les dignes contre qui j’avais essayé de me défendre avaient trouvé ça tellement cute que mon nom a aussitôt été mis dans la pige pour les combats du samedi soirs. Ça allait “ajouter au divertissement”. J’allais être le clou du spectacle. La deuxième fois, j’ai réussi à placer un coup de poing. Ça y a surement pas fait ben mal, mais ça y a pas fait plaisir non plus. Alors c’est là que l’Alpha a décidé d’intervenir et m’a fait venir à son bureau. On était juste nous deux dans son bureau et juste sa face me faisait peur; y’avait quelque chose dans ses yeux… Pis finalement Alpha a utilisé sa voix d’Alpha pour m’interdire de me défendre ou de me battre contre qui que ce soit de la meute. À part, bien sur, pendant les combats du samedi soir. À ce moment là, j’avais pas encore beaucoup de contrôle sur Vic, alors sa rage a débordée et j’ai commencé à chialer et à me plaindre de l’injustice, etc... bref, l’Alpha a vite ajouté que je pourrais plus parler pantoute en présence d’autres lycanthropes. Et aussitôt, comme par magie, j’ai pu été capable de dire un mot. J’vous l’avais dit que la “voix d’Alpha” est puissante! Fac là, j’étais tellement en colère (et je blâme les hormones de l’adolescence et la rage de Vic) que j’ai commencé à me transformer pour l’envoyer chier par télépathie. Parce que, à part l’Alpha, c’est juste sous forme lupine qu’on peut communiquer par télépathie. Mais avant que j’ai pu transformer grand chose, l’Alpha a compris ce que j’faisais et a crié “NON!” et, comme de fait, ma transformation s’est arrêtée et j’ai repris ma forme humaine. En passant, c’est genre impossible d’arrêter et renverser une transformation en plein milieu… Sauf si l’Alpha te l’ordonne, apparemment. Pour me punir de mon insolence, l’Alpha m’a dit d’me déshabiller et a grogné que maintenant que j’avais l’âge de maturité, j’allais enfin être utile à quelque chose. C’est là que j’ai perdu ma virginité. Depuis ce jour-là, j’peux rien faire d’autre que me laisser faire, peu importe ce que les autres veulent me faire ou me faire faire. Vic a gémit pendant longtemps après ça; des fois par frustration, d’autres par culpabilité, mais avec le temps, on a bien du accepter notre sort.</p>
+              <p>De un, Vic s’est joint à moi et j’ai enfin pu me transformer. Vic, c’est ma moitié-bête. Deux esprits dans le même corps qui peut prendre deux formes, l’une humaine, l’autre lupine. Avec l’arrivée de Vic, mes pouvoirs de lycanthropes sont apparus. Non seulement je pouvais maintenant me transformer, mais surtout ma force, ma vitesse, mes sens et ma guérison avait découplées. Sur le coup, j’étais extatique. Enfin, je pourrais me défendre! La première fois qu’on a essayer de m’attaquer après ma transformation, j’ai enfin pu répliquer! En tout cas, j’ai essayé. Mais j’aurais du me douter que j’serais pas à la hauteur. T’as beau avoir plus de puissance, si t’as aucune technique, et que l’autre s’entraîne à tous les jours…, ben t’as pas grand chance. En fait, les dignes contre qui j’avais essayé de me défendre avaient trouvé ça tellement cute que mon nom a aussitôt été mis dans la pige pour les combats du samedi soirs. Ça allait “ajouter au divertissement”. J’allais être le clou du spectacle. La deuxième fois, j’ai réussi à placer un coup de poing. Ça y a surement pas fait ben mal, mais ça y a pas fait plaisir non plus. Alors c’est là que l’Alpha a décidé d’intervenir et m’a fait venir à son bureau. On était juste nous deux dans son bureau et juste sa face me faisait peur; y’avait quelque chose dans ses yeux… Pis finalement Alpha a utilisé sa voix d’Alpha pour m’interdire de me défendre ou de me battre contre qui que ce soit de la meute. À part, bien sur, pendant les combats du samedi soir. À ce moment là, j’avais pas encore beaucoup de contrôle sur Vic, alors sa rage a débordée et j’ai commencé à chialer et à me plaindre de l’injustice, etc... bref, l’Alpha a vite ajouté que je pourrais plus parler pantoute en présence d’autres lycanthropes. Et aussitôt, comme par magie, j’ai pu été capable de dire un mot. J’vous l’avais dit que la “voix d’Alpha” est puissante! Fac là, j’étais tellement en colère (et je blâme les hormones de l’adolescence et la rage de Vic) que j’ai commencé à me transformer pour l’envoyer chier par télépathie. Parce que, à part l’Alpha, c’est juste sous forme lupine qu’on peut communiquer par télépathie. Mais avant que j’ai pu transformer grand chose, l’Alpha a compris ce que j’faisais et a crié “NON!” et, comme de fait, ma transformation s’est arrêtée et j’ai repris ma forme humaine. En passant, c’est genre impossible d’arrêter et renverser une transformation en plein milieu… Sauf si l’Alpha te l’ordonne, apparemment. Pour me punir de mon insolence, l’Alpha m’a dit d’me déshabiller et a grogné que maintenant que j’avais l’âge de maturité, j’allais enfin être utile à quelque chose. C’est là que j’ai perdu ma virginité. Depuis ce jour-là, j’peux rien faire d’autre que me laisser faire, peu importe ce que les autres veulent me faire ou me faire faire. Vic a gémit pendant longtemps après ça; des fois par frustration, d’autres par culpabilité, mais avec le temps, on a fini par accepter notre sort.</p>
               <p>J’ai regardé l’heure et confirmé qu’il me restait juste assez de temps pour une collation. En approchant de la cuisine, je longeais les murs pour m’assurer de ne pas attirer l’attention, mais alors que je passais devant une porte ouverte, une main que j&#x27;avais pas vue m’a agrippé le bras pour m&#x27;attirer dans la pièce sombre. Par réflexe, j’ai essayé de me mettre en boule, histoire de mieux encaisser les coups, mais quand mon nez a compris à qui appartenait la main, j’ai compris que c&#x27;était pas une attaque; c&#x27;était une demande de service, un ordre. Quelqu&#x27;un voulait venir. Le fait que la personne voulait faire ça dans le noir, je l’sais, c’était pas par honte ou par gêne (tout le monde savait que j’étais le jouet sexuel de tout le monde), mais vraiment juste parce que voir ma face pleine de cicatrices était apparemment un <em>turn off</em>. J’essayais de pas y penser plus que ça. Après tout, c’est pas comme si j’pouvais y faire grand chose. Dans un mouvement fluide et imposant, sa main a mit la mienne sur son entre-jambe et un grognement de satisfaction s’est échappé de sa bouche. Son autre main a atterrit derrière ma tête et, avec sa force de lycanthrope, m’a fait tomber à genoux pour m’écraser la face dans son entre-jambe. L&#x27;ordre était clair. Aussitôt, mon cerveau s’est mis à off et mon corps est tombé en pilotage automatique. Une chance que je connaissais bien cette personne-là, parce qu&#x27;il fallait que ça soit rapide; l&#x27;Alpha m&#x27;attendait. Pas le temps de niaiser ou de se déshabiller. J’ai détaché ses pantalons et tout de suite j’ai commencé à m’y mettre. Je touchais ici, je mordillais là, léchais un peu ici, caressais un peu là. Ma bouche et mes mains étaient habituées et connaissaient leur job, et comme de fait, en quelques minutes, sa respiration est devenue saccadée et ses hanches ont commencé à onduler comme pour en avoir plus, plus fort, plus vite. Je continuais à me concentrer sur ma technique et continuais à faire les mêmes mouvements, tout en augmentant graduellement l&#x27;intensité au même rythme que ses inspirations. Avec un peu de chance, son orgasme allait arriver avant que je pogne une crampe. Comme prévu, sa respiration s’est arrêtée, une de ses mains est apparue devant sa bouche comme pour étouffer ses propres cris et son corps en entier s’est mis à shaker, à se contracter puis finalement à se relaxer. Un soupir de satisfaction pour remercier mon travail bien fait et une poussée derrière la tête pour me renvoyer sur mon chemin. Ma job ici était faite. Considérant qu’il fallait à tout prix que je passe aux toilettes pour me laver (j&#x27;pouvais quand même pas arriver devant l&#x27;Alpha en sentant le sexe de même), c’était clair que j’aurais pu eu le temps d’arrêter pour manger. Tanpis.</p>
               <p>En courant un peu j’ai quand même réussi à arriver devant la porte du bureau de l’Alpha à l’heure pile. Mais avant de cogner à la porte, j’ai pris une grande inspiration. À l’odeur je pouvais dire qu’y avait juste deux personnes dans le bureau, l'Alpha et Gab. J’ai donc compris que ça devait être pour m’envoyer sur une autre mission.</p>
               <p>J’vous ai déjà dit que mes parents avaient trahi la meute. En gros, un an après le jour de la purification, mes parents ont fait entrer un groupe de vampires dans la maison-mère. Les vampires ont criés MASEVAS! et ont commencé à tuer tout le monde, ou entoutcas presque, parce que veut-veut-pas, les lycanthropes savent se défendre. Bref, ce fut un carnage. Mes parents n’ont pas survécu, mais moi oui, parce que Beta Sad a enfermé les plus jeunes dans une classe de l’aile scolaire avant que la bataille nous rejoigne. Vu qu’une bonne partie des vampires ont réussi à s’échapper, Gab a commencé à les traquer. Gab est genre l’élite des traquistes de la meute. Les lycanthropes ont un odorat très développé, mais les traquistes se spécialisent dans la traque et Gab peut retrouver n’importe qui, n’importe où, même à partir d’un seul cheveux ou d’un peu de sang, ou d’un bout de peau, ou d’un mini morceau de vêtement… bref, toutes des choses qui se retrouvent sur un champ de bataille. Alors, depuis l’attaque, Gab a passé des années à traquer, identifier et surveiller chaque membre du groupe Masevas. Et moi, pendant ce temps-là, je survivais et m’entraînait à me battre pour continuer de survivre. Pis un jour, l'Alpha a décidé que j’étais assez solide et habile en combat pour m’envoyer réparer les torts que mes parents avaient causés et venger la meute. Depuis c'te jour-là, l'Alpha choisi qui des membres de Masevas on doit éliminer; Gab m’en ramène les coordonnées et moi je dois aller l’achever. Simple.</p>
@@ -1083,7 +1107,7 @@
               <p>Mais quand j’fini finalement par pouvoir voir les deux spécimens devant moi, pendant une minute j’oublie complètement de quoi j’ai l’air; les boîtes existent pus; j’existe pu.</p>
               <p>À quatre patte par terre, à cheval sur Future-Victime-numéro-1 et les mains retenant ses épaules au sol, Arrache-Tête est... à couper l’souffle. Un physique de la mort et clairement fait pour tuer: puissance, muscles et vivacité; 4. Mais les yeux... un mixte de férocité et de gentillesse, décidément un instinct protecteur, un côté héroïque, genre chevaleresque; 9. 49 est définitivement le genre de personne que tu veux de ton bord, pas juste parce que si tu t&#x27;y oppose, tu meurs, mais aussi parce que si t&#x27;es sous sa protection, personne peut te toucher! Pourtant, même si 49 a l’air d’une machine à tuer, il y a comme une fragilité, qui en émane; une petite victime qui veut juste qu’on l’aime et qu’on l’accepte. Pauvre p’tite chose! D’ailleurs, en regardant plus attentivement, je fini par remarquer que son visage, et tout ce dont je vois de son corps, est couvert de cicatrices. <em>Nice!</em> J’adore les cicatrices, toutes les textures, les sensations...</p>
               <p>“Hey toi, regarder dans mes yeux, <em>please</em>.” Heureusement, Future-Victime-numéro-1 me sort de mes fantasmes avant que j’me mette à baver devant 49. Ça aurait pas été ben ben chic.</p>
-              <p>Et c’est là que je fini par regarder l’autre. Pas dans les yeux, contrairement à sa demande, parce que j’ai franchement horreur des contacts visuels. Sérieusement, comment est-ce que les gens font pour regarder quelqu’un d’autre dans les deux yeux en même temps?! Moi, s’cuse, mais j’suis juste capable d’en regarder un à la fois; pis alterner entre les deux me donne mal à tête, pis en fixer yink un des deux, ça a juste l’air bizarre tant qu’à moi. Enfin bref, j’me concentre plutôt sur l’aspect général de Future-Victime-numéro-1: Son corps, couché sur le dos, à l’air plutôt grand, mince et blême, mais plus genre imposant (comme le 7) que fragile (comme le 1). Mais son air arrogant et cynique sonne définitivement comme un 7. Autrement dit, 77 est le genre de personne que tu veux torturer juste pour les voir s’écrouler de leur piedestral. En plus, vu qu’il a pas l’air d’avoir ben ben de chair autour, j’pari que j’pourrais atteindre encore facilement les os… J’ai toujours voulu me mettre à la sculpture d’os, et les os d’écureuil sont juste vraiment trop petits... Après tout, 77 avait rien qu'à pas v’nir m’empêcher d’dormir!</p>
+              <p>Et c’est là que je fini par regarder Future-Victime-numéro-1. …Pas dans les yeux, non mais, ‘Darling, j’te connais pas assez pour ça!’. Mais bon, j’y regarde quand même l’aspect général&nbsp;: Son corps, couché sur le dos, à l’air plutôt grand, mince et blême, mais plus genre imposant (comme le 7) que fragile (comme le 1). Mais son air arrogant et cynique sonne définitivement comme un 7. Autrement dit, 77 est le genre de personne que tu veux torturer juste pour les voir s’écrouler de leur piedestral. En plus, vu qu’il a pas l’air d’avoir ben ben de chair autour, j’pari que j’pourrais atteindre encore facilement les os… J’ai toujours voulu me mettre à la sculpture d’os, et les os d’écureuil sont juste vraiment trop petits... Après tout, 77 avait rien qu'à pas v’nir m’empêcher d’dormir!</p>
             </div>
             <div name="2.2 - PdV de Chose/49" id="C2P2">
               <h2>2.2 - PdV de Chose/49</h2>
@@ -1182,7 +1206,7 @@
               <p>La voix derrière moi interrompt mes pensées, mais vu à quel point la chaude sensualité de l’accent italien me fait d’l’effet, mettons que j’ai déjà oublié à quoi j’essayais d’penser!</p>
               <p>Je sais que c’est rarement une bonne idée de se laisser approcher comme ça, en pleine nuit, quand y’a personne d’autre autour, mais c’est 49 qui a insisté pour que je m’entoure de gens... Comme ça, au moins, j’pourrai au moins m’entourer des bras qui vont avec la voix <em>sexy</em>...</p>
               <p>Alors j&#x27;me retourne et mon cerveau arrête le temps pendant quelques secondes. Heureusement, parce que mon cœur et ma respiration aussi semblent avoir arrêté. Tsé quand tu fantasme et que tu t&#x27;imagine la personne de tes rêves, mais pas genre ton <em>crush</em> du secondaire là, non, une personne tellement <em>sexy</em>, au corps tellement parfait, que la personne peut pas réellement exister? Ou en tout cas, pas sans truquage. L&#x27;image de ton <em>wet dream</em> suprême. La face, le corps, le look, la voix, criss même ses oreilles sont <em>sexy</em>. Bref, c’est définitivement un 2. Surtout que 2 est bleu pâle, alors ça fitte avec son teint pâle du genre j’vas jamais au soleil parce que j’veux pas risquer d’avoir des <em>tan lines</em>. Mais même si l’ensemble dégouline de sensualité, y’a quelque chose de louche, de <em>fake</em>; alors c’est vraiment plus un 3 qu’un 8. 3, c&#x27;est orange, la couleur du feu; c&#x27;est la personnalité aguicheuse (un côté rond et sensuel qui cache un côté vide et obscure). L&#x27;attitude aussi allumeuse que dangereuse. Wow, quand même : deux <em>wet dreams</em> en une soirée?! C&#x27;est mon jour de chance! Considérant que 49 m&#x27;a offert ma première torture, j&#x27;ai bien hâte de voir ce que 23 va m&#x27;apporter!</p>
-              <p>“<em>Buona sera</em>... bon soir.” <em>Damn.</em> Comment est-ce que quelqu’un peut faire l’équivalent d’une heure de préliminaire avec juste... 4 mots? Si j’me contrôle pas j’vas finir par y sauter dessus. Ou me laisser me faire sauter dessus. “<em>Caspita, quanto hai un buon profumo! </em>[Bon sang, comme tu sens bon!]<em> Guardami</em>. Regardes-moi dans les yeux.” Dans les yeux? J’regarde pas les gens dans les yeux, mais j’avoue que j’devrais au moins regarder sa face plutôt que son corps. Alors j’remonte mes yeux vers sa bouche. Comme ça, en plus, je sais que je vais mieux entendre ses prochaines paroles. “Viens avec moi, chez moi.”. Ah ben, <em>shit</em>. Comment est-ce que j’peux dire non à ça?! Sexe avec une divinité et, avec un peu de chance, un lit pour dormir après, une douche... <em>Oh fuck!</em> J’viens d’me rappeler pourquoi ça m’prend une douche! J’peux pas croire que j’avais oublié tout le sang qui est même pas encore complètement sèche sur moi, mon linge, mes mains. Ostie, si ça s&#x27;trouve j&#x27;en ai même dans face! J’peux pas aller chez 23 comme ça! Dans le noir de la rue, ça peut passer, mais une fois dans son salon, la lumière allumée, ça va être pas mal plus dure à expliquer!</p>
+              <p>“<em>Buona sera</em>... bon soir.” <em>Damn.</em> Comment est-ce que quelqu’un peut faire l’équivalent d’une heure de préliminaire avec juste... 4 mots? Si j’me contrôle pas j’vas finir par y sauter dessus. Ou me laisser me faire sauter dessus. “<em>Caspita, quanto hai un buon profumo! </em>[Bon sang, comme tu sens bon!]<em> Guardami</em>. Regardes-moi dans les yeux.” Dans les yeux? Coudonc, y’a un thème à soir, ou quoi?! Mais, sérieusement, comment est-ce que les gens font pour se regarder dans les yeux, mais genre, les deux yeux en même temps?! Moi, s’cusez, mais j’suis juste capable d’en regarder un à fois; pis alterner entre les deux me donne juste mal à tête; pis en fixer rien qu’un des deux, ben ça a juste l’air bizarre tant qu’à moi. Mais bon, j’avoue que j’devrais au moins regarder sa face plutôt que juste son corps. Alors j’remonte mes yeux vers sa bouche. Comme ça, en plus, je sais que je vais mieux entendre ses prochaines paroles. “Viens avec moi, chez moi.”. Ah ben, <em>shit</em>. Comment est-ce que j’peux dire non à ça?! Sexe avec une divinité et, avec un peu de chance, un lit pour dormir après, une douche... <em>Oh fuck!</em> J’viens d’me rappeler pourquoi ça m’prend une douche! J’peux pas croire que j’avais oublié tout le sang qui est même pas encore complètement sèche sur moi, mon linge, mes mains. Ostie, si ça s&#x27;trouve j&#x27;en ai même dans face! J’peux pas aller chez 23 comme ça! Dans le noir de la rue, ça peut passer, mais une fois dans son salon, la lumière allumée, ça va être pas mal plus dure à expliquer!</p>
               <p>“Euh, écoute <em>Sweetie</em>, c’est pas que j’aimerais pas ça, mais à soir c’est vraiment pas un bon temps pour moi. Alors pourquoi tu vas pas trouver quelqu’un d’autre pour à soir et, toi et moi, on se réessayera une autre fois, ok?”</p>
               <p>Pendant une seconde, 23 a l’air complètement en état de choc, puis ses sourcils se froncent de confusion. “Wow, à t’voir, on dirait que c’est la première fois que quelqu’un t’dit non! Reviens-en <em>Sweetie</em>, c’est pas la fin du monde. Promis, c’est pas parce que tu m’attires pas; c’est juste vraiment pas une bonne soirée pour moi, c’est tout.” Comme 23 a toujours pas l’air de comprendre ce qui se passe, j’décide que j’y ai assez tenu la main comme ça et qu’il est temps que j'reprenne mon chemin, “<em>Anyway</em>, là y faut que j’y aille, fac j’te souhaite une bonne soirée, ok. <em>Bye!</em>” Sur ce, même si ça m’prends tout mon p’tit change (j’espère vraiment avoir une deuxième chance avec 23), j’me retourne vers là où je m’en allais.</p>
               <p>Mais j’ai même pas le temps de faire un 180 au complet qu’une main sur mon épaule me ramène face à face avec 23 et sa main sous mon menton aligne nos regards. Pendant une seconde un peu trop longue à mon goût, nos yeux sont les uns dans les autres et 23, après avoir fermé les yeux une demi-seconde comme pour se retenir de m’sauter dessus, me fait un regard <em>fucking</em> intense en répétant “Viens avec moi.”</p>
@@ -1253,7 +1277,7 @@
               <p>“Oh, ça j’m’en criss; tu peux ben m’découper autant qu’tu veux.” Pour vrai; la douleur me fait pas peur. J’suis pro dans la gestion de la douleur. “Mais dans ma vie à moi, un chandail pas déchiré égale d’la bouffe gratuite! Les gens t&#x27;amènent pas manger au resto si t’as l’air d’être sans-abri pour vrai! Fac là, en déchirant mon chandail, tu viens de me priver de bouffe gratuite…” là, j'suis en criss! <em>Nobody messes with my food!</em>. Alors je prends mon air le plus autoritaire, regrette de ne pas pouvoir croiser les bras (j’aurais eu l’air tellement plus <em>badass</em>!) et déclare “Fac, <em>Sweetie</em>, c’est officiel; tu m’dois au moins un repas au resto par semaine.” (ou un nouveau chandail; mais ça j’pas assez cave pour y dire!)</p>
               <p>“Haha, <em>Certo!</em> Bien sûr, je vais t’amener manger au restaurant une fois par semaine…” puis son air devient lugubre, “... si tu survis à ce qui va suivre.”</p>
               <p>Bah, c’était plus facile que c’que j’pensais! <em>Yay, free food!</em></p>
-              <p>Avec un regard concentré et déterminé, 23 se met à genou devant moi, s’insinue entre mes cuisses et me met une main derrière une épaule comme pour la retenir alors qu’avec l’autre main, accote un doigt dans le creux de mon épaule, juste sous la clavicule. Exactement où j&#x27;avais commencé l&#x27;entaille sur 77… J’me demande si j’devrais y dire que ça prend une lame?</p>
+              <p>Avec un regard concentré et déterminé, 23 se met à genou devant moi, s’insinue entre mes cuisses et glisse sa main entre mon épaule et mon chandail, le faisant descendre un peu, jusqu’à ce que sa main soit derrière mon épaule comme pour la retenir en place. Ensuite, 23 accote un doigt de son autre main directe dans le creux de mon épaule, juste sous la clavicule… Ouaip, exactement là où j&#x27;avais commencé l&#x27;entaille sur 77… J’me demande si j’devrais y dire que ça prend une lame?</p>
               <p>Quand j’me tourne la tête LENTEMENT pour regarder ce que 23 essaie de faire avec son doigt; j'reste bête en ostie. J’ai déjà vu des manucures <em>freak</em>ante, mais ça c’est plus des fausses-griffes que des faux-ongles! Pis comment ça s’fait que j’avais pas remarqué ça avant?! Peut-être que c’est le genre que tu peux enlever pis r'mettre quand tu veux?</p>
               <p>La pression du début ne fait pas trop mal, surtout que lorsque sa - griffe? - finit par ouvrir la peau, la pression disparaît; c&#x27;est comme une libération. À la microseconde que mon cerveau reçoit le message de douleur envoyé par ma peau maintenant déchirée, je lui dit fermement - oui, à mon cerveau - que cette sensation est en réalité quelque chose de merveilleusement agréable, comme si on s&#x27;ouvrait au bonheur et qu&#x27;on libérait tout ce qui était coincé en soi. J&#x27;accompagne cette pensée avec une inspiration rapide et profonde similaire à celle que tu fais quand l&#x27;autre commence à te caresser entre les jambes. Une inspiration d&#x27;excitation, comme si tu voulais inspirer toutes les douces sensations et les enfermer dans tes poumons. Je sonne poétique, mais c&#x27;est ça le truc, c&#x27;est de convaincre ton corps et ton cerveau que ce que tu ressens est agréable, voire excitant. <em>Fake it until you make it.</em></p>
               <p>Alors que 23 continu de sensuellement lacérer mon torse en diagonale, exactement comme j’avais fait à 77, j’observe ma peau se fendre si aisément sous la demande de son ongle incroyablement long et aiguisé. J’admire la fluidité du sang qui s’écoule presque timidement le long de l’entaille. Je m’intrigue sur la profondeur et les différentes couches dermiques visées par l’acte. J&#x27;essaie de ne pas penser au fait que ça va laisser une cicatrice et encore moins à la guérison, car, je vous le dit, le processus de guérison est souvent plus long, chiant et douloureux que la blessure comme telle!</p>
@@ -1305,15 +1329,15 @@
               <p>Je décide de l&#x27;encourager. Tant qu&#x27;à lui avoir tout appris, aussi bien finir l&#x27;entraînement comme du monde. Même si une petite partie de ma tête me dit que c&#x27;était peut-être pas une bonne idée finalement d&#x27;avoir aider mon adversaire à s&#x27;immuniser contre la seule défense que je possédais... Mais bon... Fac, pour l&#x27;encourager, je fais quelques gémissements sexy et me remets à caresser ma peau, jouant avec le sang, juste sous ses yeux.</p>
               <p>Plus ça va, plus 23 a l&#x27;air d&#x27;en vouloir. Tripper autant sur le sang, ça s&#x27;appelle comment au juste? Hémophile? Attend, c&#x27;est pas la maladie ça? Y va falloir que j’me renseigne…</p>
               <p>Tout d&#x27;un coup, 23 jette sa tête par en arrière et, comme un serpent attaquant sa proie, s&#x27;élance, la bouche grande ouverte sur ma plaie. C’est fou comment, avec l’angle, les canines de quelqu’un peuvent avoir l’air tellement plus longues que normal… Mais ça se passe tellement vite que j&#x27;ai à peine le temps de sentir quoique ce soit parce qu’aussitôt sa face est repoussée par en arrière, comme si sa tête avait rebondi sur mon ventre, propulsée par en arrière comme si je lui avait donné un choc électrique de courant alternatif super puissant. (Quand le courant est continu, comme pour une batterie de char, ton corps reste figé là, alors que quand c&#x27;est du courant alternatif, comme à la maison, ton corps est aussitôt repoussé. <em>Now, you know.</em>). Et comme de fait, son corps au complet suit sa tête et 23 se retrouve par terre, sur le dos, le corps nu et tordu de douleur. Apparemment, la quantité de verveine était au-dessus de sa limite et sa vague s&#x27;est effondrée.</p>
-              <p><em>Shit</em>, qu&#x27;est-ce que j&#x27;fais là à l&#x27;observer comme ça, j&#x27;devrais en profiter pour me détacher à place! Avec ma main libre, je commence à chercher le bout du ruban de <em>DuctTape</em>. Croyez-moi, un être humain normal n&#x27;a pas la force de déchirer autant de couche de <em>DuctTape</em> avec une seule main, et moi encore moins! La meilleure façon, c'est de trouver le bout et de dérouler le tout. Vite vite vite, dépêche!! J&#x27;me dépêche le plus possible mais à force de dérouler le <em>tape</em> de mon poignet, j&#x27;me retrouve à l&#x27;enrouler sur mon autre main. Déroule déroule déroule! Heureusement, j&#x27;ai les mains assez moites pour pas qu'ma main libre se r'trouve prisonnière du <em>DuctTape</em> à son tour; ça aurait été <em>fucking</em> ironique! Oui, la sueur empêche le <em>DuctTape</em> de coller. Au cas où vous l'saviez pas déjà. Une main de faite! <em>Yay!!</em> C&#x27;est pour ça qu'tu veux faire le tour de c'que t'as à coller; pour que le <em>DuctTape</em> se retrouve à être collé sur lui-même plutôt que sur quelque chose qui pourrait être mouillé ou en sueur. Leçon du jour : le <em>DuctTape</em> c&#x27;est comme le sexe, c&#x27;est toujours plus efficace sur soi-même.</p>
-              <p><em>Fuck</em>, il m'reste encore les deux pieds!! J&#x27;veux même pas prendre une seconde pour voir si l&#x27;autre est encore en train de s'tordre de douleur, de partir en fumée ou juste de me r'garder en riant. Toute ma concentration reste sur l&#x27;ostie de <em>DuctTape</em> qui garde mes chevilles prisonnières à c&#x27;te criss de chaise-là!</p>
+              <p><em>Shit</em>, qu&#x27;est-ce que j&#x27;fais là à l&#x27;observer comme ça, j&#x27;devrais en profiter pour me détacher à place! Avec ma main libre, je commence à chercher le bout du ruban de <em>DuctTape</em>. Croyez-moi, un être humain normal n&#x27;a pas la force de déchirer autant de couche de <em>DuctTape</em> avec une seule main, et moi encore moins! La meilleure façon, c'est de trouver le bout et de dérouler le tout. Vite vite vite, dépêche!! J&#x27;me dépêche le plus que j’peux, mais à force de dérouler le <em>tape</em> de mon poignet, j&#x27;me retrouve à l&#x27;enrouler sur mon autre main. Déroule déroule déroule! Heureusement, j&#x27;ai les mains assez moites pour pas qu'ma main libre se r'trouve prisonnière du <em>DuctTape</em> à son tour; ça aurait été <em>fucking</em> ironique! Oui, la sueur empêche le <em>DuctTape</em> de coller. Au cas où vous l'saviez pas déjà. Une main de faite! <em>Yay!!</em> C&#x27;est pour ça qu'tu veux faire le tour de c'que t'as à coller; pour que le <em>DuctTape</em> se retrouve à être collé sur lui-même plutôt que sur quelque chose qui pourrait être mouillé ou en sueur. Leçon du jour : le <em>DuctTape</em> c&#x27;est comme le sexe, c&#x27;est toujours plus efficace sur soi-même.</p>
+              <p><em>Fuck</em>, il m'reste encore les deux pieds!! J’me penche vers mes chevilles et fini par grimacer de douleur parce que apparemment ma plaie aime pas trop se faire froisser de même. Mais de toute façon y’a mon chandail qui avait descendu de mes épaules et qui bloque mes bras et m’empêche de m’rendre jusqu’à mes chevilles. Une seconde de panique claustrophobique. ‘Alex, <em>come on</em>, t’as juste à r’monter ton chandail, ostie, calme-toé!’. Fac j’m’écoute, prends une grande respiration, me redresse (ostie qu’ça fait encore plus mal quand j’l’étire!) et remonte mon chandail sur mes épaules. Là j’avoue, j’commence à en avoir plein l’cul pis c’t’aussi ben parce que la colère m’fais oublier la douleur et j’replonge au plus criss vers mes chevilles. J’vous jure, j&#x27;veux même pas prendre une seconde pour voir si l&#x27;autre est encore en train de s'tordre de douleur, de partir en fumée ou juste de me r'garder en riant. Toute ma concentration reste sur l&#x27;ostie de <em>DuctTape</em> qui garde mes chevilles prisonnières à c&#x27;te criss de chaise-là!</p>
             </div>
           </div>
           <div name="Chapitre 4 - Réaliser qu’y a un problème" id="C4">
             <h1>Chapitre 4 - Réaliser qu’y a un problème</h1>
             <div name="4.1 - PdV de Chose/49/Honey" id="C4P1">
               <h2>4.1 - PdV de Chose/49/Honey</h2>
-              <p>“Promis, c’est pas c’que tu penses!” c’est ce que ma moitié a crié en réalisant que c’était moi qui venait de défoncer la porte, tout de suite avant de se mettre à rigoler comme si c’était la meilleure joke au monde. Sur le coup, j’ai figé ben raide. À part sa réaction bizarre, ce que je voyais et sentait était juste impossible à comprendre. Juste avant d’entrer, j’avais pris une grande inspiration, histoire de sentir à quoi je devais m’attendre. Les odeurs de vieille piss pis d’marde m’avaient confirmé que c’te pièce-là avait souvent été utilisée pour enfermer du monde et, c’est clair, jamais lavée. L’odeur de vampire et celle du sang de mon âme-sœur continuaient à faire bouillir le mien de rage, mais ça j’m’y attendais. C’était l’odeur de sexe par contre que j’réussissait pas à comprendre. Surtout que c’était pas juste l’excitation du moustique que je pouvais sentir… Quand j’ai fini par réussir à défoncer la porte et à entrer dans la pièce, la vue avait été encore plus mêlante. Quand j’ai reconnu ma moitié, sur la chaise, j’ai compris que la chose nue et roulée en boule par terre devait être la sangsue. Pourtant, c’était mon âme-sœur qui était en sang, les chevilles attachées à une chaise; alors pourquoi c’était l’autre qui se tordait de douleur? Et surtout, pourquoi y’avait autant de phéromones dans l’air?!</p>
+              <p>“Promis, c’est pas c’que tu penses!” c’est ce que ma moitié a crié en réalisant que c’était moi qui venait de défoncer la porte, tout de suite avant de se mettre à rigoler comme si c’était la meilleure joke au monde. Sur le coup, j’ai figé ben raide. À part sa réaction bizarre, ce que je voyais et sentait était juste impossible à comprendre. Juste avant d’entrer, j’avais pris une grande inspiration, histoire de sentir à quoi je devais m’attendre. Les odeurs de vieille piss pis d’marde m’avaient confirmé que c’te pièce-là avait souvent été utilisée pour enfermer du monde et, c’est clair, jamais lavée. L’odeur de vampire et celle du sang de mon âme-sœur continuaient à faire bouillir le mien de rage, mais ça j’m’y attendais. C’était l’odeur de sexe par contre que j’réussissait pas à comprendre. Surtout que c’était pas juste l’excitation du moustique que je pouvais sentir… Quand j’ai fini par réussir à défoncer la porte et à entrer dans la pièce, la vue avait été encore plus mêlante. Quand j’ai reconnu ma moitié, sur la chaise, j’ai compris que la chose nue et roulée en boule par terre devait être la sangsue. Pourtant, c’était mon âme-sœur qui avait le torse en sang et les chevilles attachées à une chaise; alors pourquoi c’était l’autre qui se tordait de douleur? Et surtout, pourquoi y’avait autant de phéromones dans l’air?!</p>
               <p>Quand Vic a commencé à s’exciter dans ma tête, mais genre, sexuellement s’exciter, j’ai failli être malade. “Comment tu peux trouver ça excitant, ostie d’malade! Notre partenaire vient de se faire torturer à cause de nous, pis toi ça t’excite?!”</p>
               <p>“Partenaire aimer ça!”</p>
               <p>“Toi pis moi, plus que n’importe qui, on devrait savoir que c’est pas parce que le corps est excité que la personne aime ça pour vrai! Penses à Sad!”</p>
@@ -1333,9 +1357,9 @@
               <h3><em>Torture is one thing, but when if comes to sex, I prefer my victims to be consenting!</em></h3>
               <p>À force de m'faire ballotter d'gauche à droite, j’avais fini par fermer les yeux pour essayer de contrôler la douleur qui irradiait d’un peu partout à tout bout d’champ. C’est franchement plus difficile de gérer la douleur quand tu peux pas la prévoir. Tellement que ça m’a pris du temps avant de réaliser qu’on avait finalement arrêter de bouger. J’ai fini sur le dos, sur quelque chose de mou et doux. Un lit? Ça faisait tellement longtemps que j’avais pas été sur un vrai lit... Puis tout d’un coup, il a eu quelqu’un par dessus moi. J’espérais en ostie que c’était 49 parce que j’franchement, ça commençait à être intense comme soirée. Et <em>out of nowhere</em> (mais probablement plus parce qu’ayant les yeux fermés ben raide, j’avais juste rien vu venir), y’a eu une chaleur humide jumelée à une douleur chatouilleuse qui s’est fait sentir autour de ma plaie... Fac j’ai fini par ouvrir les yeux.</p>
               <p>Et qu’est-ce que j’vois pas?! 49, la face et le corps couverts de sang, qui est entrain d’me lécher l’torse! Décidément, à soir, mon sang est appétissant en ostie! Sur le coup, la surprise puis la curiosité m’aident à oublier la douleur et j'fais juste étudier sa technique. Sa langue commence par de longue lampée en traçant les contours de la plaie. Puis refait la même chose un peu plus près de la plaie, à la frontière là où la peau arrête et la chair commence, puis recommence à lécher, mais un peu plus doucement, à l’intérieur de la plaie, toujours plus près du centre, en essayant de mettre le plus de salive possible.</p>
-              <p>Après quelques minutes de léchage, quelque chose change dans l’attitude de 49 et ça m’prends pas d'temps à réaliser que 49 est entrain de s’exciter. Criss que j’pogne à soir! Mais j’avoue que j’pas mieux. Je sais pas si c’est parce que la plaie fait beaucoup moins mal, ou à cause de toute le <em>teas</em>age que j’ai eu à soir, ou juste parce que 49 est <em>fucking hot</em> ET <em>turned on</em>, mais quand son corps bouge légèrement vers le bas et que sa langue commence à laver le sang qui avait coulé sur mon ventre… Toute l’excitation que j’avais ressentie quand j’ai embrassé 49, puis quand j’étais avec 23, pis toute la chaleur sensuelle et puissante que 49 dégage en ce moment, tout ça, se mêle au fait que 49 a vraiment l’air de tripper à lécher mon sang. Mon corps au complet est parcouru d’un frisson, un choc électrique qui réveille ma peau et concentre toutes mes sensations vers mon entre-jambe. J’pu capable. J’devrais peut-être m’inquiéter de tout le sang et les plaies qui recouvrent 49, mais sérieux, là j’ai juste le goût que 49 se mette à lécher d’autres choses, plus bas sur mon corps. Le fait que sa langue reste sur mon ventre fini par me faire perdre patience et le teasage accumulée tout au long de la soirée devient insupportable. Alors je met ma main sur sa tête et pousse doucement mais fermement sa tête vers le bas jusqu’à ce que sa bouche arrive à la hauteur de mon entre-jambe. Quand même, j’tiens pas sa tête assez fort pour l’empêcher de s’tasser si jamais ça y tente pas, mais vu que 49 a pas l’air d’essayer de s’enfuir, j’clarifie ma demande en basculant mon bassin juste assez pour créer un contact avec ses lèvres. Criss, juste ça pis j’ai des chocs partout dans l’corps. Avec ça, 49 a l’air d’avoir compris parce que sa bouche se met aussitôt à embrasser mon sexe à travers le tissus pendant que ses mains s'dépêchent à détacher mes pantalons. Dès que ces derniers sont hors du chemin, sa bouche se lance sur mon sexe et commence à l’embrasser, à lécher, sucer. Sacrifice, j'sais pas c'que 49 est entrain d’faire avec sa langue, mais criss que c'est bon! J'ai l’corps au complet qui s’contracte, le souffle qui coupe à chaque p'tit mouvement. Et chaque fois que sa langue ou ses lèvres ou je sais pas trop fait de quoi d’agréable, y’a un soupir ou un gémissement de contentement ou d’excitation qui s’échappe de ma bouche. Et aussitôt le même mouvement recommence, comme si 49 essayait vraiment d’apprendre c'que j’aime et c'que j’aime pas. Fac c’est pas long que mon orgasme commence à monter. J’peux pas croire que j’ai eu autant de chance de rencontrer quelqu’un avec autant de talent. Clairement, 49 a beaucoup d’expérience!</p>
+              <p>Après quelques minutes de léchage, quelque chose change dans l’attitude de 49 et ça m’prends pas d'temps à réaliser que 49 est entrain de s’exciter. Criss que j’pogne à soir! Mais j’avoue que j’pas mieux. Je sais pas si c’est parce que la plaie fait beaucoup moins mal, ou à cause de toute le <em>teas</em>age que j’ai eu à soir, ou juste parce que 49 est <em>fucking hot</em> ET <em>turned on</em>, mais quand son corps bouge légèrement vers le bas et que sa langue commence à laver le sang qui avait coulé sur mon ventre… Toute l’excitation que j’avais ressentie quand j’ai embrassé 49, puis quand j’étais avec 23, pis toute la chaleur sensuelle et puissante que 49 dégage en ce moment, tout ça, se mêle au fait que 49 a vraiment l’air de tripper à lécher mon sang. Mon corps au complet est parcouru d’un frisson, un choc électrique qui réveille ma peau et concentre toutes mes sensations vers mon entre-jambe. J’pu capable. J’devrais peut-être m’inquiéter de tout le sang et les plaies qui recouvrent 49, mais sérieux, là j’ai juste le goût que 49 se mette à lécher d’autres choses, plus bas sur mon corps. Le fait que sa langue reste sur mon ventre fini par me faire perdre patience et le <em>teas</em>age accumulée tout au long de la soirée devient insupportable. Alors je met ma main sur sa tête et pousse doucement mais fermement sa tête vers le bas jusqu’à ce que sa bouche arrive à la hauteur de mon entre-jambe. Quand même, j’tiens pas sa tête assez fort pour l’empêcher de s’tasser si jamais ça y tente pas, mais vu que 49 a pas l’air d’essayer de s’enfuir, j’clarifie ma demande en basculant mon bassin juste assez pour créer un contact avec ses lèvres. Criss, juste ça pis j’ai des chocs partout dans l’corps. Avec ça, 49 a l’air d’avoir compris parce que sa bouche se met aussitôt à embrasser mon sexe à travers le tissus pendant que ses mains s'dépêchent à détacher mes pantalons. Dès que ces derniers sont hors du chemin, sa bouche se lance sur mon sexe et commence à l’embrasser, à lécher, sucer. Sacrifice, j'sais pas c'que 49 est entrain d’faire avec sa langue, mais criss que c'est bon! J'ai l’corps au complet qui s’contracte, le souffle qui coupe à chaque p'tit mouvement. Et chaque fois que sa langue ou ses lèvres ou je sais pas trop fait de quoi d’agréable, y’a un soupir ou un gémissement de contentement ou d’excitation qui s’échappe de ma bouche. Et aussitôt le même mouvement recommence, comme si 49 essayait vraiment d’apprendre c'que j’aime et c'que j’aime pas. Fac c’est pas long que mon orgasme commence à monter. J’peux pas croire que j’ai eu autant de chance de rencontrer quelqu’un avec autant de talent. Clairement, 49 a beaucoup d’expérience!</p>
               <p>C’est au moment exacte où je pense à 49 plutôt qu’à sa langue que j'réalise qu’y a quelque chose qui cloche. 49 ne sent rien. D’habitude quand quelqu’un est excité, je l'sens, mais l’excitation que j’ai senti chez 49 juste avant, est maintenant complètement disparue. 49 est comme... vide, insensible. <em>Oh fuck!</em> L’horreur de la situation, l’idée que 49 soit entrain d'me faire jouir sans même en avoir le goût, sans que ça l’excite, que 49 puisse ne pas vouloir être entrain de faire ça, me pousse à l’arrêter au plus vite. Mais au même moment où j'm&#x27;apprête à y mettre fin, mon orgasme me prend d'court et ma tête part par en arrière, mon dos s’arche et ma respiration s’arrête le temps que la vague de sensations se déferle en moi. L’orgasme est génial, mais avec un arrière-goût de culpabilité très désagréable. La torture c’est une chose, mais pour le sexe, j’préfère que mes victimes soient consentantes!</p>
-              <p>Quand j’reviens à moi, 49 est entrain d'me laver l’entre-jambe avec sa langue, mais pas comme si le goût l’excitait au point de pas vouloir en perdre une goutte; plus comme si c’était sa job de tout nettoyer ben comme faut. Ayant assez repris mes esprits, j’fini par y mettre une main sur le front pour l’arrêter et y relever la tête. J’me nettoierai moi-même plus tard, c’pas grave. C'qui est grave par contre c’est le regard de 49, ou plutôt l’absence de 49 dans son regard. Ses yeux fixent dans l'vide, sa face est neutre comme si peu importe c'que je décide de faire avec, ça n’a aucune importance. 49 est juste pu là et s’en criss ben raide. Mais qu’est-ce qui est arrivé à 49 pour que la dissociation soit sa première réponse au sexe?! Quelque chose d’horrible, clairement. Et probablement à répétition. <em>Shit.</em> J’avais senti la peur, l’incrédulité, le manque d’estime de soi, mais ça c’est un autre niveau de PTSD; j’parie qu’c’est du CPTSD.</p>
+              <p>Quand j’reviens à moi, 49 est entrain d'me laver l’entre-jambe avec sa langue, mais pas comme si le goût l’excitait au point de pas vouloir en perdre une goutte; plus comme si c’était sa job de tout nettoyer ben comme faut. Ayant assez repris mes esprits, j’fini par y mettre une main sur le front pour l’arrêter et y relever la tête. J’me nettoierai moi-même plus tard, c’pas grave. De toute façon, avec la quantité d’sang pis d’bave que j’ai su’ l’corps… C'qui est grave par contre c’est le regard de 49, ou plutôt l’absence de 49 dans son regard. Ses yeux fixent dans l'vide, sa face est neutre comme si peu importe c'que je décide de faire avec, ça n’a aucune importance. 49 est juste pu là et s’en criss ben raide. Mais qu’est-ce qui est arrivé à 49 pour que la dissociation soit sa première réponse au sexe?! Quelque chose d’horrible, clairement. Et probablement à répétition. <em>Shit.</em> J’avais senti la peur, l’incrédulité, le manque d’estime de soi, mais ça c’est un autre niveau de PTSD; j’parie qu’c’est du CPTSD.</p>
               <p>Bon, première chose, il faut que j'ramène son esprit sur le moment présent. Lentement, je glisse ma main le long de sa joue (la beurrant encore plus de sang, mais bon) et caresse avec mon pouce la longue cicatrice près de son nez. Avec le bout de mes doigts dans sa nuque, je tire un peu pour y ramener la tête à la hauteur de ma poitrine jusqu’à ce que son corps recouvre le mien et qu’on soit face à face. Continuant à caressant son visage et ses cicatrices (mais en essayant quand même d’éviter les nouvelles plaies), je lui murmure des <em>sweet nothings </em>: “<em>Honey</em>, tout va bien, reviens avec moi, c’est fini, ça s’reproduira pu, c&#x27;est fini, t’es <em>safe</em> là, promis, j’le ferai pu, reviens avec moi, t’es chez toi là, avec Alex, l’imbécile qui a laissé l’autre l’assommer et kidnapper et que t’as du venir chercher et secourir. T’as sauvé ton imbécile, maintenant il faut que tu restes avec, ok? Reviens avec moi...” et ainsi de suite jusqu’à ce que son regard se fixe finalement sur moi et qu’une myriade d’émotions explose dans sa face.</p>
               <p>Surprise et incrédulité, puis terreur et culpabilité, puis je vois sa langue se promener dans sa bouche et sa gorge avaler. J’imagine que le goût de sexe lui explique ce qui vient de se passer parce que ses yeux s’arrondissent de compréhension, mais aussitôt se remplissent à nouveau, d’incrédulité, de terreur, de culpabilité, puis de colère, mais cette colère-là n’est pas dirigée vers moi et fini par se transformer en honte juste avant que ses yeux se ferment et sa tête se laisse tomber par en avant. Quand 49 essaie de se relever comme pour s’en aller, je sers ma prise sur sa nuque pour l’empêcher de partir. À la quantité d’émotions que je viens de voir passer dans sa face, je comprends que ça va me prendre tous mes talents de composition faciale pour avoir la bonne expression:</p>
               <p><ul style="list-style-type:disc; font-family:'Nunito', sans-serif; font-size:calc(15.53px + 0.19vw);font-weight: 600;">
@@ -1345,8 +1369,8 @@
                 <li>mais sans attente, pour pas y mettre de pression.</li>
               </ul></p>
               <p>Sa tête fini par se relever et sa bouche s’ouvre comme pour s’excuser, mais aussitôt que ses yeux reviennent vers moi, 49 fige et me regarde sans dire un mot. Peu importe quelle était son intention, c’est clairement vite oublié. 49 me regarde bouche bée comme si c’était la première fois qu’on l’accueillait avec respect. <em>Shit.</em> Je garde ma face pareille et continu à y caresser doucement la joue et sa cicatrice. J’y donne le temps de comprendre que j’suis là pour l’aider. Parce que oui, je vais l’aider, j’ai beau être misanthrope, mon <em>god complex</em> aime beaucoup trop l’idée de sauver et libérer quelqu’un d’aussi <em>scrap </em>pour passer à côté des honneurs. Surtout si ça peut m'permettre de découper encore plus de monde!</p>
-              <p>Quand 49 fini par avoir l’air plus calme et d’avoir accepté, même silencieusement, limite inconsciemment, que j’pourrais l’aider et vouloir rester avec, j’y fait un p’tit sourire affectueux et lui passe la main derrière la tête pour l&#x27;amener doucement dans mon creux d’épaule et l’entourer de mes bras. Le sang mi-séché-mi-gluant de 49, mêlé à sa salive sur mon torse déjà presque séchée, <em>feel</em> un peu comme un lubrifiant passé date, mais au point où on en est, j’décide de pas trop y penser et d'me concentrer sur l’importance de calmer 49.</p> 
-              <p>Une fois que son cœur se remet à battre plus lentement et que sa respiration est plus longue, je prend ma voix la plus douce “Tout va bien, <em>Honey</em>, quand tu t'sentiras capable d’en parler, tu m'raconteras tout ça” comme je sens son corps se raidir un peu, j'me dépêche d’ajouter “ou pas, mais au moins, avant qu’on recouche ensemble, tu m'diras c'que j’ai fait ou dit qui t’a fait cet effet-là. J’veux juste m’assurer de pas l'refaire, ok. Parce que si on couche ensemble, j’veux que tu sois là toi aussi, tsé.” la tension dans son corps se relâche peu à peu, mais j’estime qu’il est temps de conclure sans pression, “En attendant, j’vas juste te serrer dans mes bras et on va dormir, ok? J’pense qu'y est temps que j’dorme un peu là <em>anyway</em>.”</p>
+              <p>Quand 49 fini par avoir l’air plus calme et d’avoir accepté, même silencieusement, limite inconsciemment, que j’pourrais l’aider et vouloir rester avec, j’y fait un p’tit sourire affectueux et lui passe la main derrière la tête pour l&#x27;amener doucement dans mon creux d’épaule et l’entourer de mes bras. Bon j’réussi pas à l’entourer complètement parce que mon chandail a encore redescendu sur mes bras, mais j’ose pas repousser 49 pour replacer mon chandail parce que j’ai comme l’impression que ça se traduirait comme un rejet dans sa tête. Fac à place j’y flatte doucement le dos en l’enserrant le plus possible de mes bras. Entre nos deux corps, le sang mi-séché-mi-gluant de 49, mêlé à sa salive sur mon torse déjà presque séchée, <em>feel</em> un peu comme un lubrifiant passé date, mais au point où on en est, j’décide de pas trop y penser et j'me concentre sur l’importance de calmer 49.</p> 
+              <p>Une fois que son cœur se remet à battre plus lentement et que sa respiration est plus longue, je prend ma voix la plus douce “Tout va bien, <em>Honey</em>, quand tu t'sentiras capable d’en parler, tu m'raconteras tout ça” comme je sens son corps se raidir un peu, j'me dépêche d’ajouter “ou pas, mais au moins, avant qu’on recouche ensemble, tu m'diras c'que j’ai fait ou dit qui t’a fait cet effet-là. J’veux juste m’assurer de pas l'refaire, ok. Parce que si on couche ensemble, j’veux que tu sois là toi aussi, tsé.” la tension dans son corps se relâche peu à peu, mais j’estime qu’il est temps de conclure sans pression, “En attendant, j’vas juste replacer mon chandail pour être plus confortable au niveau des épaules”, j’fais juste tirer un peu sur les épaules du chandail et c’est assez pour me donner le lousse nécessaire pour pouvoir entourer 49 comme il faut, “pis j’vas juste te serrer dans mes bras et on va dormir, ok? J’pense qu'y est temps que j’dorme un peu là <em>anyway</em>.”</p>
               <p>J’me doute ben que le sentiment de sécurité que je ressent présentement est juste dans ma tête. Après tout, il y a au moins 77 et 23 qui vont sûrement vouloir me revoir, et sûrement pas juste pour aller prendre un café. L’idée de revoir 23, j’avoue, m’excite un peu, mais l’idée que 77 puisse me retrouver est pas mal moins intéressante. Quelque chose me dit que j’pourrais pas séduire 77 pour me sauver. Mais bon, tout ça c’est <em>Future Alex’s problems</em>. À soir, ou plutôt, à matin, ostie, j’dors! </p>
               <p>Je sais pas si c’est la chaleur de 49 qui est à moitié par dessus moi ou le mou du matelas sous mon dos, ou juste la fatigue de toute la torture et le sexe que j’ai eu en une soirée (quoique ça peut aussi être juste toute le sang qu’j’ai perdu), mais pour une fois j'm’endors assez vite merci.</p>
             </div>
@@ -1372,10 +1396,10 @@
               <p>La fibromyalgie, en passant, c'est vraiment <em>cool</em>, c'est comme un <em>coach</em> de vie gratuit, mais sadique : genre, si tu prends pas soin de toi, manges bien, dors assez, exercices régulièrement, gères ton stresse et gardes une mentalité positive,… TU SOUFFRES! Simple! Ou plutôt, tu souffres plusse. Parce que l’arnaque c’est que même si tu fais tout ça, tu souffres quand même; juste moins. Bref, la vie est belle! …Tant que j’ai mon espresso du matin.</p>
               <p>Dès que j’commence à bouger pour essayer de me relever, 49 se réveille en sursaut et se met à quatre patte au dessus de moi genre en mode <em>full alert</em>; j’ouvre les yeux juste à temps pour voir sa face paniquée et ses yeux qui regardent partout autour de nous comme pour essayer de voir où est le danger. Sacrifice, j’ai pas de patience pour <em>dealer</em> avec sa paranoïa à matin. De toutes façons, si quelqu’un voulait nous attaquer, ça aurait été fait pendant qu’on dormait!</p>
               <p>Me concentrant sur mon propre corps, vu que clairement l’autre s’occupe de notre sécurité, j’essaie de m’tourner sur le côté sans trop grogner de douleur pour pouvoir sortir du lit. ‘<em>Everything's better after I've had my coffee. That's why the worst part of my day is the getting of said coffee.</em>’ Contrairement aux gens normaux, c’est pas pour adoucir mon attitude ou faire fonctionner mon cerveau que j’ai besoin de caféine le matin, mais vraiment juste pour les douleurs. Quand j’suis finalement sur le côté et que j’réalise que 49 a toujours pas bougé de par-dessus moi, j’perds patience, “Tasse-toé criss, laisse-moé me l’ver!” Bon ok, c’est peut-être aussi pour mon attitude...</p>
-              <p>Au moins, 49 comprend vite et se met aussitôt à côté de moi, à genoux, le front sur l’matelas. Comment est-ce que quelqu’un peut bouger aussi vite le matin en se levant?! Que ce soit sa prière du matin ou sa façon de s’faire pardonner, j’m’en criss ben raide, tant que j’l’ai pas dans les jambes pendant que, lentement, mais surement et surtout douloureusement, j’essaie de sortir du lit et de m’mettre debout. Une fois en position verticale, j’essaie de bloquer les signaux de douleurs m’indiquant que mon sang s’est remis à circuler et à la place me concentre sur c’qui m’entoure. Plus vite je sais où je suis, plus vite je peux trouver un espresso.</p>
+              <p>Au moins, 49 comprend vite et se met aussitôt à côté de moi, à genoux, le front sur l’matelas. Comment est-ce que quelqu’un peut bouger aussi vite le matin en se levant?! Que ce soit sa prière du matin ou sa façon de s’faire pardonner, j’m’en criss ben raide, tant que j’l’ai pas dans les jambes pendant que, lentement, mais surement et surtout douloureusement,  j’essaie de remonter mes pantalons, sortir du lit et me lever debout. Une fois en position verticale, j’essaie de bloquer les signaux de douleurs m’indiquant que mon sang s’est remis à circuler et à la place j’attache mes pantalons pendant que j’me concentre sur c’qui m’entoure. Plus vite j’sais où j’suis, plus vite j’peux trouver un espresso.</p>
               <p>Ça a l’air d’un appart de location; genre y’a les meubles qu’un appart est sensé avoir, mais rien d’autre, rien de personnel. Ça donne l’impression que les tiroirs sont vides. Ça veut-tu dire qu’y a pas d’café ici?! Avec un mélange d’espoir et de peur, mais qui sort juste bête en ostie, parce que ‘pas encore eu mon café’, j’demande dans le vide, “Café?!”. ...Et pour faire des phrases complètes...</p>
               <p>“Café? Tu veux du café?! Oh, scuse, j’en ai pas ici, j’ai pas grand chose ici en fait, c’est pas ici que j’vis d’habitude, mais si tu veux on peut aller en chercher! Ou j’peux aller t’en chercher! Tu peux rester ici et,...” À ce point-là, j’ai déjà arrêté de l’écouter. Tabarnak, messemblait que 49 parlait pas tant qu’ça hier soir?! Comment est-ce que quelqu’un peut parler autant et avec autant d’énergie le matin avant que j’ai eu mon café?! <em>Fuck that</em>, j’vas aller chercher mon café moi-même. De toutes façons, j’serais pas capable de <em>tough</em>er la joie de vivre et la dévotion de 49 dans c’t’état-là. Aussi ben m’en débarrasser, du moins, tant que j’ai pas eu mon espresso.</p>
-              <p>Apparemment, pendant que j’sacrais dans ma tête, j’ai eu le temps de m’rendre jusqu’à la porte de l’appart sans m’en rendre compte. Aussi ben d’même! Alors que j’suis sur le point d’ouvrir la porte pour sortir d’ici, 49 m’arrête “Attend, met au moins ça, stp.” J’ai à peine besoin de me retourner qu’une boule de tissus apparaît aussitôt dans mon champ de vision. J’enregistre à peine le fait que je suis torse nu et au lieu de trop y réfléchir, j’fais juste prendre le gilet et me le mettre avant d’ouvrir la porte. “Attends, j’viens avec toi.” <em>Nope!</em> J’me retourne à moitié avec un puissant “NON,” et, en pointant ses pieds, j’ajoute, comme on dirait à un chien, “RESTE!”, puis me retourne vers la sortie et quitte.</p>
+              <p>Apparemment, pendant que j’sacrais dans ma tête, j’ai eu le temps de m’rendre jusqu’à la porte de l’appart sans m’en rendre compte. Aussi ben d’même! Alors que j’suis sur le point d’ouvrir la porte pour sortir d’ici, 49 m’arrête “Attend, met au moins ça, stp.” J’ai à peine besoin de me retourner qu’une boule de tissus apparaît aussitôt dans mon champ de vision. J’enregistre à peine le fait que j'suis à moitié torse nu et au lieu de trop y réfléchir, j’fais juste enlever mon chandail <em>scrap</em> et mettre celui de 49 avant d’ouvrir la porte. “Attends, j’viens avec toi.” <em>Nope!</em> J’me retourne à moitié avec un puissant “NON,” et, en pointant ses pieds, j’ajoute, comme on dirait à un chien, “RESTE!”, puis me retourne vers la sortie et quitte.</p>
               <p>Consciemment, je mets mon esprit dans un brouillard, histoire de pas trop avoir à sentir les signaux de douleur de mon corps et focus uniquement sur ma destination. Je me traînes les pieds, les épaules courbées, la tête basse et le regard vide. Voir que j’vais gaspiller d’l’énergie à essayer d’marcher la tête haute! Alex - café = zombie. ‘<em>Not all who wander are lost. Most of them are just looking for coffee.</em>’ En plus, j’viens d’réaliser que j’ai oublié d’pisser avant de partir… ostie!</p>
               <p>Accepter et être capable d’endurer quelqu’un d’autre avant d’avoir eu mon café requiert un niveau d’amour que j’ai encore jamais eu. Juste en dessous, il y a le niveau d’amour où je criss mon camps, exprès pour lui sauver l’enfer Alex-pré-café. Si j’me crissais complètement de 49, j’aurais resté et lui aurais fait vivre l’enfer jusqu’à que ce que j’ai eu mon espresso. Fac, apparemment 49 a gagné quelques coches dans mon échelle d’amour. Ben r’garde donc!</p>
               <p>J’fini par trouver un café (c’est l’avantage des grandes villes; y’a du café presqu’à chaque coin de rue!) et réussir à ouvrir la porte d’entrée (oui, dans mon état, ouvrir une porte peut être tout un défi!). J’<em>park</em> mes pieds devant le comptoir et réussi tout juste à grogner un mot “Espresso”. Avec un peu de chance, ma face de zombie va excuser mon manque de courtoisie, mais à voir la face traumatisée d’la personne derrière le comptoir, il y a quelque chose dans ma face qui est plus perturbant que mon air bête. Mais j’ai pas encore assez de jus de cerveau pour réfléchir à ça alors j’fais juste répéter “Espresso”. Puis je fais un effort et ajoute “Stp”. Ça doit avoir été assez pour rallumer son cerveau parce que la personne a l’air de se reprendre et me demande “Simple ou double?” <em>Fuck</em>, pourquoi c’est si compliqué! Une chance que les habitudes fonctionnent mieux que le cerveau. “Simple.” “Court ou allongé?” <em>Shit</em>, ça fini pas hein?! “Court.” Oh, non, c’est vrai, là y va falloir que j’paie. La panique me fait me rappeler que pas plus tard que hier soir, j’me suis fait kidnapper et que j’ai même pas encore vérifier si j’ai encore mon portefeuille... Y’a des moments comme ça dans vie qui t’font sentir comme si tout l’reste existait pus. Ma main s’dirige d’elle-même vers ma poche et un demi-soupir de soulagement me libère d'une partie d’la panique. Maintenant, il faut juste vérifier si le dit-portefeuille est pas vide... Pourquoi est-ce qu’il faut absolument que j’aille payé avant de pouvoir avoir mon espresso? Ça aurait tellement facilité tout l’reste si j'pouvais l'boire AVANT! Comme de fait, quand j’viens pour payer, l’autre enchaîne d’une voix un peu trop enjouée “Est-ce que vous voudriez ajouter un super smoothie au kale désintoxicant, anti-oxydant et rééquilibrateur de pH, avec ça? C’est super bon pour la santé!” Bandes d’imbéciles! Ton foie désintoxie déjà ton corps sans que t’ai rien à faire, ton corps est capable d’équilibrer son pH tout seul, pis mon café est déjà plein d’antioxidants! Évidemment, j’y réponds juste un “Non merci”; quand j’vous disais que la politesse en engrainée en moi… Même sans café, j’réponds poliment! Dès que le paiement a été effectué et que j’ai finalement ma p’tite tasse devant moi, j’y rajoute plein d’sucre (j’sens que j’vas avoir besoin de l’énergie) et prends aussitôt ma première gorgée.</p>
@@ -1440,6 +1464,9 @@
               <p>À venir...</p>
             </div>
           </div>
+          <div name="Chiffres">
+            <!-- Tableau des chiffres -->
+          </div>
         </div>
       </div>
     </div>
@@ -1490,8 +1517,30 @@
       .textPage hr{
         border-color: purple;
       }
+      .fullBook div{
+        margin-bottom: 10vh;
+      }
       .fullBook h1, .fullBook h2{
         padding-top: 5vh;
+        margin-top: 0;
+      }
+      .toggleTM{
+        margin-right: 5px;
+        float: left;
+        transition: transform .1s ease-out;
+      }
+      input#tableMatiere:checked ~ label#tableMatT > span.toggleTM{
+        transform: rotate(90deg);
+      }
+      #tableMat{
+        transition: max-height .3s .3s ease-out, visibility .3s ease-out;
+        max-height: 0;
+        visibility: hidden;
+      }
+      input#tableMatiere:checked ~ div#tableMat{
+        max-height: 100vh;
+        visibility: visible;
+        transition: max-height .5s ease-in, visibility .3s .5s ease-in;
       }
       .tableMatC, .tableMatP{
         list-style-type: none;
@@ -3093,7 +3142,7 @@
         let currentStateBase = "wrote";
         navigate(currentStateBase);
         window.onload = (event) => {
-          let id = currentState.slice(9);
+          let id = currentState.slice(6);
           console.log(id);
           toPage(id);
         };
@@ -3111,7 +3160,7 @@
       };
 
       function toPage(id){
-        currentState = ("wrote->" + id);
+        currentState = ("wrote-" + id);
         history.pushState(currentState, currentState, currentState);
         toPageNav(id);
       };
@@ -3166,9 +3215,9 @@
         console.log(event.state);
         if(event.state.startsWith("wrote-") == true){
         let eStateBase = "wrote";
-        console.log(event.state.slice(7));
+        console.log(event.state.slice(6));
         navigate(eStateBase);
-        toPageNav(event.state.slice(7));
+        toPageNav(event.state.slice(6));
         } else {
           navigate(event.state);
         };
@@ -3203,6 +3252,18 @@
       // querySnapshot.forEach((doc) => {
       //   console.log(doc.data());
       // });
+
+      // To get today'shit 
+      async function getTodaysShit() {
+        const myTSArray = [];
+        const querySnapshotTS = await getDocs(query(collection(db, "shit")));
+        querySnapshotTS.forEach(doc => {
+            const check = doc.data().quote;
+            // console.log("check = " + check);
+            myTSArray.push(check);
+        });
+        return myTSArray;
+      };
 
       // To get themed shit to feel 
       async function getGearData(theme) {
@@ -3329,6 +3390,47 @@
         })}});
 
 
+      // window.onload = MyNewRand;
+      // window.onload = (event) => {
+      // };  
+      let arrTS = MyNewRand();
+        console.log(arrTS);    
+      let TS = 0;
+      document.getElementById("SotD").addEventListener('click', (e) => {
+      getTodaysShit()
+      .then(todaysShit => {
+        let numBC = getRndInteger(0,BgColor.length);
+        let numTC = getRndInteger(0,TextColor.length);
+        let numTF = getRndInteger(0,TextFont.length);
+        document.getElementById("SotDp").style.fontFamily = TextFont[numTF];
+        let numTS = arrTS[TS++];
+        console.log("TS= " + TS + "  numTS= " + numTS);
+        if(TS < 11){
+        document.getElementById("SotDp").innerHTML = todaysShit[numTS];
+        } else if (TS >= 15){
+          document.getElementById("SotDp").innerHTML = "For real,<br>\nit's over now.<br>\nGO get a life!";
+          document.getElementById("SotDp").style.fontFamily = "'Fuzzy Bubbles', cursive";
+        } else if (TS >= 11){
+          document.getElementById("SotDp").innerHTML = "Now, you've seen enough,<br>\ngo do stuff and come back later.";
+          document.getElementById("SotDp").style.fontFamily = "'Chakra Petch', sans-serif";
+        }
+      })})
+      function MyNewRand(){
+        let max = 10;
+        let min = 0;
+        let arrTS=[];
+          for (let i = 0; i < max; i++) {
+              let x = Math.floor( Math.random() * max) + min;
+              if(arrTS.includes(x) == true){
+                  i=i-1;
+              }else{
+                  if(x>max==false){
+                      arrTS.push(x);
+                  }
+              }
+          }
+          return arrTS;
+      }
     </script>
   </body>
 </html>

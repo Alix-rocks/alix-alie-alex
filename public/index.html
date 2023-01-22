@@ -93,7 +93,6 @@
         border-radius: 5px;
         padding: 3px;
         color:rgba(128,0,128,.8);
-        background-color: #000;
         line-height:1;
         text-align: center;
         font-size: calc(15.06px + 0.38vw);
@@ -922,7 +921,17 @@
         <p>P.S. That's what I call teamwork: a slave AND a toy!</p>
       </div>
       <!--Sang, sexe & café-->
-      <div class="textPage" id="pageAlex">
+      <!-- Add a light mode! 
+        Put the icons IN the slider! (lune when dark)-->
+        
+      <div class="textPage" id="pageAlex">          
+          <div onclick="switchMode()" id="switchModeSlider">
+            <div id="switchModeLight" class="typcn typcn-weather-sunny"></div>
+            <div id="switchModeDark" class="typcn typcn-weather-night"></div>
+            <div id="switchModeBall" class="ballDark"></div>
+          </div>
+          <!-- <div id="switchModeLight"><span class="typcn typcn-weather-sunny"></span></div> -->
+        <!-- </div> -->
         <h1 style="line-height: 1; text-align: center;">Sang, sexe & café (PNDCO*)</h1>
         <h3 style="margin: -30px 0 30px; text-align: center;">*Pas Nécessairement Dans Cet Ordre</h3>
         <p style="text-align: center;"><em>Alex, sans-abri misanthrope, réalise son rêve en torturant des vampires afin d’aider 49, lycanthrope aux yeux bleus, à se libérer de l’esclavage... et fini par trouver l’amour.</em></p>
@@ -1470,6 +1479,59 @@
       </div>
     </div>
     <style name="WrotePage">
+      .lightMode{
+        background: #fff;
+        color: #000;
+      }
+      #switchModeTot{
+        display: flex; 
+        flex-direction: row; 
+        flex-wrap: nowrap; 
+        justify-content: space-evenly; 
+        align-items: center; 
+        width: 100px;
+      }
+      #switchModeSlider{
+        width:20px;
+        height: 10.5px;
+        padding: 0.5px;
+        border-radius: 50px; 
+        border:1px solid; 
+        position: absolute;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-items: center;
+      }
+      #switchModeBall{
+        height: 8px; 
+        width: 8px; 
+        margin: 0 0.5px; 
+        position: absolute; 
+        background: #000; 
+        border-radius: 50%; 
+        right: 0;
+      }
+      .ballDark{
+        left: 0;
+        background: #800080!important;
+      }
+      #switchModeDark{
+        opacity: .7;
+        margin: 0;
+        font-size: 10px;
+        line-height: .9;
+      }
+      #switchModeLight{
+        opacity: .7;
+        margin: 0;
+        font-size: 9px;
+        line-height: .9;
+      }
+      .modeSelected{
+        opacity: 6;
+      }
       .textPage{display:none;}
       input.menuText{display:none;}
       .menuTextLabel{
@@ -1564,6 +1626,16 @@
       function toChap(cp){
         document.getElementById(cp).scrollIntoView();
       };
+      function switchMode(){
+        document.getElementById("switchModeBall").classList.toggle("ballDark");
+        if(document.getElementById("switchModeBall").classList.contains("ballDark")){
+          document.body.style.background = "#000";
+          document.body.style.color = "#800080";
+        } else{
+          document.body.style.background = "#fff";
+          document.body.style.color = "#000";
+        }
+      }
     </script>
 
     <!--ReadPage-->

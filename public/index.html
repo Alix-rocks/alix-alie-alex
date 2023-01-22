@@ -569,11 +569,10 @@
 
     </script>
     <!--I wrote, you read-->
-      <!-- Mettre la table des matières dans un toggle -->
       <!-- Faire le tableau des chiffres pour Alex! (et le mettre dans un toggle) -->
     <div name="WrotePage" id="wrotePage" class="sectionPage justPage footered">
-      <div class="bottomButton backTop" onclick="backTop()" title="Again! From the top!"><span class="typcn typcn-chevron-right chevronTop"></span></div>
-      <div class="menuTextSection">
+      <div class="bottomButton backTop" onclick="backTop()" title="Again! From the top!" id="backTopButton"><span class="typcn typcn-chevron-right chevronTop"></span></div>
+      <div class="menuTextSection" id="menuTextSection">
         <input type="radio" name="menuText" class="menuText" onclick="toPage('Table')" id="inputTable">
         <label for="inputTable" class="menuTextLabel"  id="labelTable">La table est mise</label>
         <input type="radio" name="menuText" class="menuText" onclick="toPage('Coupe')" id="inputCoupe">
@@ -924,19 +923,19 @@
       </div>
       <!--Sang, sexe & café-->
       <div class="textPage" id="pageAlex">
-        <h1 style="line-height: 1;">Sang, sexe & café (PNDCO*)</h1>
-        <h3 style="margin: -30px 0 30px;">*Pas Nécessairement Dans Cet Ordre</h3>
-        <p><em>Alex, sans-abri misanthrope, réalise son rêve en torturant des vampires afin d’aider 49, lycanthrope aux yeux bleus, à se libérer de l’esclavage... et fini par trouver l’amour.</em></p>
-        <p>Tout est inclus&nbsp;: être humain, vampire et lycanthrope; viol, torture et combat; threesome, BDSM et polyamour; et café.<br>Qu'est-ce que tu veux d'plus?!</p>
-        <p>Oh, pis en plus, c'est épicène! Ça veut dire que tu peux choisir toi-même le sexe/genre des personnages!<br>Ça te laisse perplexe? Essaie de lire la présentation d'Alex, tu vas comprendre...</p>
+        <h1 style="line-height: 1; text-align: center;">Sang, sexe & café (PNDCO*)</h1>
+        <h3 style="margin: -30px 0 30px; text-align: center;">*Pas Nécessairement Dans Cet Ordre</h3>
+        <p style="text-align: center;"><em>Alex, sans-abri misanthrope, réalise son rêve en torturant des vampires afin d’aider 49, lycanthrope aux yeux bleus, à se libérer de l’esclavage... et fini par trouver l’amour.</em></p>
+        <p style="text-align: center;">Tout est inclus&nbsp;: être humain, vampire et lycanthrope; viol, torture et combat; threesome, BDSM et polyamour; et café.<br>Qu'est-ce que tu veux d'plus?!</p>
+        <p style="text-align: center;">Oh, pis en plus, c'est épicène! Ça veut dire que tu peux choisir toi-même le sexe/genre des personnages!<br>Ça te laisse perplexe? Essaie de lire la présentation d'Alex, tu vas comprendre...</p>
         <div name="Présentation d'Alex" style="margin:2% 10% 2% 10%; border: 1px dotted purple; padding: 0 15px;">
           <h2 style="margin-top:.4em;">Présentation d'Alex</h2>
           <p>Fac comme ça, l’autre t’a parlé de son fameux roman en français/québécois épicène pis même si t’as compris c’que ça veut dire, tu te demandes quand même de quoi aurait l’air un roman écrit de même? En même temps, ça t’tente probablement pas de lire les premiers chapitres pour après avoir à attendre 2-3 ans pour lire la suite… j’te comprends, ça s’rait pas mal agace!<br>Ok, r’garde ben c’que j’vas faire: j’vas te l’raconter, moi, son roman, ok?</p>
           <p>En passant, moi c’est Alex, j’suis l'personnage principal. Quoique, en vrai, c’est plus l’aventure de 49 que ça raconte. Moi j’fais juste l’aider. Qu’est-ce tu veux, j’suis d’même moi; j’aime aider les autres!</p>
-          <p>En gros, 49 doit torturer et tuer des vampires pour pouvoir se libérer de l’esclavage et arrêter de se faire battre et violer à tout bout d’champ par les autres lycanthropes de sa meute. 49 est une machine a tuer (<em>fucking hot</em>, d’ailleurs), mais avec un coeur d’or, fac apparemment la torture c’est comme pas trop son genre. Fac c’est là que j’entre en scène et <em>save the day</em>! Voyez comme on se complète si bien! Mais bon, après qu’on ait torturé 77, y’a 23 qui a voulu venger 77 en me torturant moi. Mais inquiétez-vous pas parce que finalement, 23 (qui est <em>fucking hot</em> aussi en passant) a pas été capable de résister à mon charme (naturellement) et au lieu de me torturer, a fini par me sauter dessus, mais genre, sexuellement (j'le précise parce que j'sais que vous pouvez pas voir ma face pleine de sous-entendus).</p> 
-          <p>En passant, ces personnages-là ont des vrais noms, c’est clair, c’est juste que moi les noms… bref, j’préfère leur donner des numéros, ça fait plus de sens dans ma tête. Si jamais vous lisez le roman, vous allez comprendre c'que mes numéros veulent dire (et avec un peu de chance vous finirez probablement aussi par apprendre leurs vrais noms).</p> 
+          <p>En gros, 49 doit torturer et tuer des vampires pour pouvoir se libérer de l’esclavage et arrêter de se faire battre et violer à tout bout d’champ par les autres lycanthropes de sa meute (avoues qu'c'est touchant comme histoire!). 49 est une machine a tuer (<em>fucking hot</em>, d’ailleurs), mais avec un coeur d’or, fac apparemment la torture c’est comme pas trop son genre. Fac c’est là que j’entre en scène et <em>save the day</em>! Tu vois comme on se complète si bien! Mais bon, après qu’on ait torturé 77, y’a 23 qui a voulu venger 77 en me torturant moi. Mais inquiétes-toi pas parce que finalement, 23 (qui est <em>fucking hot</em> aussi en passant) a pas été capable de résister à mon charme (naturellement) et au lieu de me torturer, a fini par me sauter dessus, mais genre, sexuellement (j'le précise parce que j'sais qu'tu peux pas voir ma face pleine de sous-entendus).</p> 
+          <p>En passant, ces personnages-là ont des vrais noms, c’est clair, c’est juste que moi les noms… bref, j’préfère leur donner des numéros, ça fait plus de sens dans ma tête. Si jamais tu lis le roman, tu vas comprendre c'que mes numéros veulent dire (et avec un peu de chance tu vas probablement aussi finir par apprendre leurs vrais noms).</p> 
           <p><em>Anyway</em>, qui est-ce qu'Alex va choisir: 49, lycanthrope, ou 23, vampire? Est-ce que 49 va réussir à se libérer? De quel côté est 23? Est-ce que 77 va finir par se venger soi-même? Est-ce que 27 est plus sexy à poils ou en sous-vêtements? Nah, la vraie question, c'est est-ce qu'on va finalement finir par m'laisser dormir!?</p>
-          <p><br>P.S. est-ce que dans votre tête on est toutes des filles, tous des gars, ou un mixte des deux (<em>Queer pun intended</em>)? Parce que, sérieux, vous pouvez choisir nos genre vous-même; c'est ça la beauté de l'épicène!</p>
+          <p><br>P.S. est-ce que dans ta tête on est toutes des filles, tous des gars, ou un mixte des deux (<em>Queer pun intended</em>)? Parce que, sérieux, tu peux choisir nos genre toi-même; c'est ça la beauté de l'épicène!</p>
         </div>
         <div style="margin:5% -10% 5% -5%;">
           <div class="boxStill">
@@ -2143,7 +2142,8 @@
       }}
     </script>
 
-    <!--Master's Toy's Training--> Mstrplzuseme
+    <!--Master's Toy's Training--> 
+    <!-- Mstrplzuseme -->
     <div name="ToysPage" class="sectionPage" id="SectPageToy">
       <div class="cover" id="coverSureBackHome"></div>
       <div id="remindRulesBox">
@@ -3146,6 +3146,16 @@
           console.log(id);
           toPage(id);
         };
+      } else if(currentState == "Alex" || "alex") {
+        let justPageAll = document.querySelectorAll('.justPage');
+        for(let i = 0; i < justPageAll.length; i++){
+          justPageAll[i].style.display = "none";
+        };
+        document.getElementById("wrotePage").style.display = "block";
+        document.getElementById("menuTextSection").style.display = "none";
+        document.getElementById("pageAlex").style.display = "block";
+        document.getElementById('footer').classList.remove('footerFixed');
+        window.scrollTo({ top: 0});
       } else {
         // To display the wanted page (currentPage)
         navigate(currentState);

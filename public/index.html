@@ -3146,11 +3146,13 @@
           console.log(id);
           toPage(id);
         };
-      } else if(currentState == "Alex" || "alex") {
+      };
+      if(currentState == "Alex" || currentState == "alex"){
         let justPageAll = document.querySelectorAll('.justPage');
         for(let i = 0; i < justPageAll.length; i++){
           justPageAll[i].style.display = "none";
         };
+        console.log("Alex!");
         document.getElementById("wrotePage").style.display = "block";
         document.getElementById("menuTextSection").style.display = "none";
         document.getElementById("pageAlex").style.display = "block";

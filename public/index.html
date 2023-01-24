@@ -86,16 +86,15 @@
       .bottomButton{
         position:fixed;
         bottom: 2px;
-        border-top: 1px solid rgba(128,0,128,.6);
-        border-left: 1px solid rgba(128,0,128,.6);
-        border-bottom: 4px solid rgba(128,0,128,.6);
-        border-right: 3px solid rgba(128,0,128,.6);
+        border-width: 1px 3px 4px 1px;
+        border-style: solid;
         border-radius: 5px;
         padding: 3px;
-        color:rgba(128,0,128,.8);
+        background: #000;
         line-height:1;
         text-align: center;
         font-size: calc(15.06px + 0.38vw);
+        opacity: .65;
       }
       .bottomButton:hover{
         background-color: rgba(128,0,128,.2);
@@ -167,7 +166,7 @@
     <div name="HomePage" class="home justPage" id="homePage">
       <h1>Whatever you think you're doing here,<br>WELCOME!</h1>
       <h3 style="margin-bottom:0;">That's my space, my mind, my shoes,...<br>Be warned, your insurances don't cover that kind of trauma.</h3>
-      <h5 style="margin:0;">(Yeah, that's the only trigger warning you'll get...)</h5>
+      <!-- <h5 style="margin:0;">(Yeah, that's the only trigger warning you'll get...)</h5> -->
       <div>
         <h2>Shit of the day</h2>
         <div class="SotD" id="SotD">
@@ -921,23 +920,18 @@
         <p>P.S. That's what I call teamwork: a slave AND a toy!</p>
       </div>
       <!--Sang, sexe & café-->
-      <!-- Add a light mode! 
-        Put the icons IN the slider! (lune when dark)-->
-        
       <div class="textPage" id="pageAlex">          
-          <div onclick="switchMode()" id="switchModeSlider">
-            <div id="switchModeLight" class="typcn typcn-weather-sunny"></div>
-            <div id="switchModeDark" class="typcn typcn-weather-night"></div>
-            <div id="switchModeBall" class="ballDark"></div>
-          </div>
-          <!-- <div id="switchModeLight"><span class="typcn typcn-weather-sunny"></span></div> -->
-        <!-- </div> -->
-        <h1 style="line-height: 1; text-align: center;">Sang, sexe & café (PNDCO*)</h1>
+        <div onclick="switchMode()" id="switchModeSlider">
+          <div id="switchModeLight" class="typcn typcn-weather-sunny"></div>
+          <div id="switchModeDark" class="typcn typcn-weather-night"></div>
+          <div id="switchModeBall" class="ballDark"></div>
+        </div>
+        <h1 style="line-height: 1; display: inline-block; width:100%; text-align: center;">Sang, sexe & café (PNDCO*)</h1>
         <h3 style="margin: -30px 0 30px; text-align: center;">*Pas Nécessairement Dans Cet Ordre</h3>
         <p style="text-align: center;"><em>Alex, sans-abri misanthrope, réalise son rêve en torturant des vampires afin d’aider 49, lycanthrope aux yeux bleus, à se libérer de l’esclavage... et fini par trouver l’amour.</em></p>
         <p style="text-align: center;">Tout est inclus&nbsp;: être humain, vampire et lycanthrope; viol, torture et combat; threesome, BDSM et polyamour; et café.<br>Qu'est-ce que tu veux d'plus?!</p>
         <p style="text-align: center;">Oh, pis en plus, c'est épicène! Ça veut dire que tu peux choisir toi-même le sexe/genre des personnages!<br>Ça te laisse perplexe? Essaie de lire la présentation d'Alex, tu vas comprendre...</p>
-        <div name="Présentation d'Alex" style="margin:2% 10% 2% 10%; border: 1px dotted purple; padding: 0 15px;">
+        <div name="Présentation d'Alex" style="margin:2% 10% 2% 10%; border: 1px dotted; padding: 0 15px;">
           <h2 style="margin-top:.4em;">Présentation d'Alex</h2>
           <p>Fac comme ça, l’autre t’a parlé de son fameux roman en français/québécois épicène pis même si t’as compris c’que ça veut dire, tu te demandes quand même de quoi aurait l’air un roman écrit de même? En même temps, ça t’tente probablement pas de lire les premiers chapitres pour après avoir à attendre 2-3 ans pour lire la suite… j’te comprends, ça s’rait pas mal agace!<br>Ok, r’garde ben c’que j’vas faire: j’vas te l’raconter, moi, son roman, ok?</p>
           <p>En passant, moi c’est Alex, j’suis l'personnage principal. Quoique, en vrai, c’est plus l’aventure de 49 que ça raconte. Moi j’fais juste l’aider. Qu’est-ce tu veux, j’suis d’même moi; j’aime aider les autres!</p>
@@ -1479,25 +1473,14 @@
       </div>
     </div>
     <style name="WrotePage">
-      .lightMode{
-        background: #fff;
-        color: #000;
-      }
-      #switchModeTot{
-        display: flex; 
-        flex-direction: row; 
-        flex-wrap: nowrap; 
-        justify-content: space-evenly; 
-        align-items: center; 
-        width: 100px;
-      }
       #switchModeSlider{
-        width:20px;
-        height: 10.5px;
+        width:45px;
+        height: 22px;
         padding: 0.5px;
         border-radius: 50px; 
-        border:1px solid; 
+        border:1.5px solid; 
         position: absolute;
+        right: 10vw;
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
@@ -1505,9 +1488,9 @@
         align-items: center;
       }
       #switchModeBall{
-        height: 8px; 
-        width: 8px; 
-        margin: 0 0.5px; 
+        height: 18px; 
+        width: 18px; 
+        margin: 0 1px 0 .5px; 
         position: absolute; 
         background: #000; 
         border-radius: 50%; 
@@ -1519,18 +1502,15 @@
       }
       #switchModeDark{
         opacity: .7;
-        margin: 0;
-        font-size: 10px;
-        line-height: .9;
+        margin: 0 0 0 4px;
+        font-size: 21px;
+        line-height: .95;
       }
       #switchModeLight{
         opacity: .7;
         margin: 0;
-        font-size: 9px;
-        line-height: .9;
-      }
-      .modeSelected{
-        opacity: 6;
+        font-size: 19px;
+        line-height: 1;
       }
       .textPage{display:none;}
       input.menuText{display:none;}
@@ -1568,7 +1548,7 @@
       }
       .boxStill{
         text-align: center;
-        border: 2px solid purple;
+        border: 2px solid;
         border-radius: 5px;
         padding: 5%;
         width: calc(72.93px + 32.63vw);
@@ -1631,9 +1611,13 @@
         if(document.getElementById("switchModeBall").classList.contains("ballDark")){
           document.body.style.background = "#000";
           document.body.style.color = "#800080";
+          document.getElementById("backTopButton").style.background = "#000";
+          document.getElementById('home').style.background = "#000";
         } else{
-          document.body.style.background = "#fff";
+          document.body.style.background = "#F2F3F4";
           document.body.style.color = "#000";
+          document.getElementById("backTopButton").style.background = "#F2F3F4";
+          document.getElementById('home').style.background = "#F2F3F4";
         }
       }
     </script>
@@ -3205,26 +3189,29 @@
       // To get the last part of the url
       var currentState = location.pathname;
       // To fix the homePage
-      if(currentState == "/"){currentState = "/home"};
+      if(currentState == "/" || currentState == "/home"){
+        currentState = "/home";
+        history.replaceState(currentState, null, " ");
+        currentState = currentState.slice(1);
+      } else{
       // To remove the "/"
       currentState = currentState.slice(1);
       // To create an initial state in the history
       history.replaceState(currentState, currentState);
+      };
       if(currentState.startsWith("wrote") == true){
         let currentStateBase = "wrote";
+        // console.log("3198 = " + currentStateBase)
         navigate(currentStateBase);
-        window.onload = (event) => {
-          let id = currentState.slice(6);
-          console.log(id);
-          toPage(id);
-        };
-      };
-      if(currentState == "Alex" || currentState == "alex"){
+        let id = currentState.slice(6);
+        // console.log("3202 = " + id);
+        toPage(id);
+      } else if(currentState == "Alex" || currentState == "alex"){
         let justPageAll = document.querySelectorAll('.justPage');
         for(let i = 0; i < justPageAll.length; i++){
           justPageAll[i].style.display = "none";
         };
-        console.log("Alex!");
+        // console.log("Alex!");
         document.getElementById("wrotePage").style.display = "block";
         document.getElementById("menuTextSection").style.display = "none";
         document.getElementById("pageAlex").style.display = "block";
@@ -3233,7 +3220,7 @@
       } else {
         // To display the wanted page (currentPage)
         navigate(currentState);
-      }
+      };
       
       
       // Code called onclick with navigation UI buttons and "links"
@@ -3245,6 +3232,7 @@
 
       function toPage(id){
         currentState = ("wrote-" + id);
+        // console.log("3232 = " + currentState)
         history.pushState(currentState, currentState, currentState);
         toPageNav(id);
       };
@@ -3253,8 +3241,11 @@
         textPageAll.forEach(page => {
           page.classList.remove('textPageSelected');
         });
-        document.getElementById("page" + id).classList.toggle('textPageSelected');
-        document.getElementById("input" + id).checked = true;
+        // id with first maj
+        let idGood = id.charAt(0).toUpperCase() + id.slice(1);
+        // console.log("3243 = " + idGood);
+        document.getElementById("page" + idGood).classList.toggle('textPageSelected');
+        document.getElementById("input" + idGood).checked = true;
         document.getElementById('footer').classList.remove('footerFixed');
         window.scrollTo({ top: 0});
       };
@@ -3262,7 +3253,7 @@
       // To show and hide the pages
       function navigate(currentState){
         let currentPage = currentState + "Page";
-        console.log(currentPage);
+        // console.log(currentState + " " + currentPage);
         // To hide all the pages
         let justPageAll = document.querySelectorAll('.justPage');
         for(let i = 0; i < justPageAll.length; i++){
@@ -3296,10 +3287,10 @@
 
       // To handle the back and forward navigation buttons
       window.onpopstate = function(event){
-        console.log(event.state);
+        // console.log(event.state);
         if(event.state.startsWith("wrote-") == true){
         let eStateBase = "wrote";
-        console.log(event.state.slice(6));
+        // console.log(event.state.slice(6));
         navigate(eStateBase);
         toPageNav(event.state.slice(6));
         } else {

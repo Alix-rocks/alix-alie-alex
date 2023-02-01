@@ -630,14 +630,109 @@
       //   let numAS = getRndInteger(0,gearData.length);
       //       document.getElementById("ySp").innerHTML = gearData[numAS];})})
     </script>
-    <div name="TimePage" id="timePage" class="sectionPage justPage footered">
-
+    <div name="TimePage" id="timePage" class="sectionPage justPage">
+      <input id="Cooking" class="cossin timeSettingInput" title="timeSetting" name="timeSetting" type="checkbox" value="0:15"/>
+      <label for="Cooking" class="timeSettingLabel"><span class="timeSettingCheck"></span>Cooking (30 min)</label>
+      <input id="Eating" class="cossin timeSettingInput" title="timeSetting" name="timeSetting" type="checkbox" value="1:00"/>
+      <label for="Eating" class="timeSettingLabel"><span class="timeSettingCheck"></span>Eating (1 hour)</label>
+      <input id="Toilet" class="cossin timeSettingInput" title="timeSetting" name="timeSetting" type="checkbox" value="0:15"/>
+      <label for="Toilet" class="timeSettingLabel"><span class="timeSettingCheck"></span>Toilet (15 min)</label>
+      <input id="Preping" class="cossin timeSettingInput" title="timeSetting" name="timeSetting" type="checkbox" value="0:30"/>
+      <label for="Preping" class="timeSettingLabel"><span class="timeSettingCheck"></span>Preping (30 min)</label>
+      <label for="Travelling" class="timeSettingLabel">Travelling&nbsp;&nbsp;<input id="Travelling" class="timeSettingInput" title="timeSetting" name="timeSetting" type="time"/></label>
+      <label for="Arrival" class="timeSettingLabel">Arrival&nbsp;&nbsp;<input id="Arrival" class="timeSettingInput" title="timeSetting" name="timeSetting" type="time"/></label>
+      <button onclick="showTime()">Calculate!</button>
+      <div class="resultTime">
+        <p>Cooking:&nbsp;<span id="cookingTime"></span></p>
+        <p>Eating:&nbsp;<span id="eatingTime"></span></p>
+        <p>Toilet:&nbsp;<span id="toiletTime"></span></p>
+        <p>Preping:&nbsp;<span id="prepingTime"></span></p>
+        <p>Départ:&nbsp;<span id="departTime"></span></p>
+        <p>Arrivée:&nbsp;<span id="arriveeTime"></span></p>
+      </div>
     </div>
     <style name="TimePage">
-
+      .timeSettingInput:checked + label > span.timeSettingCheck::before {
+        font-family: 'typicons';
+        content: "\E11E";
+        position: absolute;
+        top: -4px;
+        left: 1.5px;
+      }
+      .timeSettingLabel{
+        display: flex;
+        /* font-family: 'Rubik Dirt', cursive; */
+        font-size: calc(15.53px + 0.19vw);
+        line-height:1.2em;
+        font-weight: 400;
+        width:fit-content;
+        margin: 15px;
+        text-align: center;
+        color: inherit;
+      }
+      .timeSettingCheck{
+        width: 15px;
+        height: 15px;
+        border: 1px solid purple;
+        border-radius: 2px;
+        display: inline-block;
+        margin-right: 5px;
+        background: rgba(128,0,128,.3);
+        position: relative;
+      }
+      .resultTime{
+        border: 2px solid;
+        width: 165px;
+        padding: 0 10px;
+        margin: 45px 0 0;
+      }
     </style>
     <script name="TimePage">
+      function showTime(){
+        let cookTime = 0;
+        let eatTime = 0;
+        let toilTime = 0;
+        let prepTime = 0;
+        if(document.getElementById('Cooking').checked == true){
+          cookTime = .5;
+        } else{
+          cookTime = 0;
+        };
+        if(document.getElementById('Eating').checked == true){
+          eatTime = 1;
+        } else{
+          eatTime = 0;
+        };
+        if(document.getElementById('Toilet').checked == true){
+          toilTime = .25;
+        } else{
+          toilTime = 0;
+        };
+        if(document.getElementById('Preping').checked == true){
+          console.log("prepTime");
+          prepTime = .5;
+          console.log(prepTime);
+        } else{
+          prepTime = 0;
+        };
 
+        let travTime = document.getElementById('Travelling').valueAsDate;
+        let arrTime = document.getElementById('Arrival').valueAsDate;
+        arrTime.setTime(arrTime.getTime() + 5 * 60 * 60 * 1000);
+        document.getElementById('arriveeTime').innerText = arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+        arrTime.setTime(arrTime.getTime() - travTime.getTime());
+        document.getElementById('departTime').innerText = arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+        arrTime.setTime(arrTime.getTime() - prepTime * 60 * 60 * 1000);
+        document.getElementById('prepingTime').innerText = arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+        arrTime.setTime(arrTime.getTime() - toilTime * 60 * 60 * 1000);
+        document.getElementById('toiletTime').innerText = arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+        arrTime.setTime(arrTime.getTime() - eatTime * 60 * 60 * 1000);
+        document.getElementById('eatingTime').innerText = arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+        arrTime.setTime(arrTime.getTime() - cookTime * 60 * 60 * 1000);
+        document.getElementById('cookingTime').innerText = arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+        
+        
+      }
     </script>
     <!--I wrote, you read-->
       <!-- Faire le tableau des chiffres pour Alex! (et le mettre dans un toggle) -->

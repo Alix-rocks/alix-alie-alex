@@ -633,6 +633,7 @@
       //       document.getElementById("ySp").innerHTML = gearData[numAS];})})
     </script>
     <div name="TimePage" id="timePage" class="sectionPage justPage footered">
+      <div id="coverMyTime" onclick="closingTime()"></div>
       <div class="timeForm">
         <input id="Cooking" class="cossin timeSettingInput" title="timeSetting" name="timeSetting" type="checkbox" value="0:15"/>
         <label for="Cooking" class="timeSettingLabel">Cooking (30 min)<span class="timeSettingCheck"></span></label>
@@ -648,7 +649,7 @@
         <label for="Arrival" class="timeSettingLabel">Arrival&nbsp;&nbsp;<input id="Arrival" class="timeSettingInput" title="timeSetting" name="timeSetting" type="time"/></label>
         <button class="timeFormButton" onclick="showTime()">Calculate!</button>
       </div>
-      <div class="resultTime">
+      <div id="scheduleTime" class="resultTime">
         <h3 style="margin: 5px 0; text-decoration: underline;">Schedule</h3>
         <p id="cookingTime"></p>
         <p id="eatingTime"></p>
@@ -662,7 +663,7 @@
     <style name="TimePage">
       .timeForm{
         width: 165px;
-        margin: auto;
+        margin: 0 auto 85px;
       }
       .timeSettingInput:checked + label > span.timeSettingCheck::before {
         font-family: 'typicons';
@@ -720,7 +721,27 @@
         border: 2px solid;
         width: 165px;
         padding: 0 10px;
-        margin: 85px auto 0;;
+        margin: auto;
+        position: relative;
+        z-index: 999999;
+      }
+      .coveringResult{
+        position: fixed;
+        top: 50px;
+        left: calc(100vw/2 - 82.5px);
+        z-index: 999999;
+      }
+      #coverMyTime{
+        display: none;
+        width: 1000vw;
+        height: 1000vh;
+        position: fixed;
+        top:0;
+        left: 0;
+        z-index: 999;
+      }
+      #coverMyTime:hover{
+        cursor: pointer;
       }
     </style>
     <script name="TimePage">
@@ -782,6 +803,18 @@
           arrTime.setTime(arrTime.getTime() - cookTime * 60 * 60 * 1000);
           document.getElementById('cookingTime').innerText = "Cooking: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
         };
+        document.getElementById('footer').classList.remove('footerFixed');
+        document.getElementById("scheduleTime").classList.add('coveringResult');
+        document.getElementById("coverMyTime").style.display = "block";
+        if(document.getElementById("switchModeBall").classList.contains("ballDark")){
+          document.getElementById("coverMyTime").style.background = "#000";
+        } else{
+          document.getElementById("coverMyTime").style.background = "#F2F3F4";
+        };
+      }
+      function closingTime(){
+        document.getElementById("scheduleTime").classList.remove('coveringResult');
+        document.getElementById("coverMyTime").style.display = "none";
       }
     </script>
     <!--I wrote, you read-->
@@ -2240,7 +2273,8 @@
         position: fixed;
         top:0;
         left: 0;
-        background: rgba(0,0,0,.7);
+        background: inherit;
+        opacity: .7;
         z-index: 999;
       }
       #enough{
@@ -2273,7 +2307,6 @@
         font-size: 18px;
         opacity: 0.8;
         z-index: 999999;
-        /* background: #000; */
         background: inherit;
         color: inherit;
       }

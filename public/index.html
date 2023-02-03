@@ -640,6 +640,8 @@
         <label for="Eating" class="timeSettingLabel">Eating (1 hour)<span class="timeSettingCheck"></span></label>
         <input id="Toilet" class="cossin timeSettingInput" title="timeSetting" name="timeSetting" type="checkbox" value="0:15"/>
         <label for="Toilet" class="timeSettingLabel">Toilet (15 min)<span class="timeSettingCheck"></span></label>
+        <input id="Shower" class="cossin timeSettingInput" title="timeSetting" name="timeSetting" type="checkbox" value="0:15"/>
+        <label for="Shower" class="timeSettingLabel">Shower (15 min)<span class="timeSettingCheck"></span></label>
         <input id="Preping" class="cossin timeSettingInput" title="timeSetting" name="timeSetting" type="checkbox" value="0:30"/>
         <label for="Preping" class="timeSettingLabel">Preping (30 min)<span class="timeSettingCheck"></span></label>
         <label for="Travelling" class="timeSettingLabel">Travelling&nbsp;&nbsp;<input id="Travelling" class="timeSettingInput" title="timeSetting" name="timeSetting" type="time"/></label>
@@ -647,12 +649,14 @@
         <button class="timeFormButton" onclick="showTime()">Calculate!</button>
       </div>
       <div class="resultTime">
-        <p>Cooking:&nbsp;<span id="cookingTime"></span></p>
-        <p>Eating:&nbsp;<span id="eatingTime"></span></p>
-        <p>Toilet:&nbsp;<span id="toiletTime"></span></p>
-        <p>Preping:&nbsp;<span id="prepingTime"></span></p>
-        <p>Départ:&nbsp;<span id="departTime"></span></p>
-        <p>Arrivée:&nbsp;<span id="arriveeTime"></span></p>
+        <h3 style="margin: 5px 0; text-decoration: underline;">Schedule</h3>
+        <p id="cookingTime"></p>
+        <p id="eatingTime"></p>
+        <p id="toiletTime"></p>
+        <p id="showerTime"></p>
+        <p id="prepingTime"></p>
+        <p id="departTime"></p>
+        <p id="arriveeTime"></p>
       </div>
     </div>
     <style name="TimePage">
@@ -724,6 +728,7 @@
         let cookTime = 0;
         let eatTime = 0;
         let toilTime = 0;
+        let showerTime = 0;
         let prepTime = 0;
         if(document.getElementById('Cooking').checked == true){
           cookTime = .5;
@@ -740,10 +745,13 @@
         } else{
           toilTime = 0;
         };
+        if(document.getElementById('Shower').checked == true){
+          showerTime = .25;
+        } else{
+          showerTime = 0;
+        };
         if(document.getElementById('Preping').checked == true){
-          console.log("prepTime");
           prepTime = .5;
-          console.log(prepTime);
         } else{
           prepTime = 0;
         };
@@ -751,19 +759,29 @@
         let travTime = document.getElementById('Travelling').valueAsDate;
         let arrTime = document.getElementById('Arrival').valueAsDate;
         arrTime.setTime(arrTime.getTime() + 5 * 60 * 60 * 1000);
-        document.getElementById('arriveeTime').innerText = arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+        document.getElementById('arriveeTime').innerText = "Arrivée: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
         arrTime.setTime(arrTime.getTime() - travTime.getTime());
-        document.getElementById('departTime').innerText = arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-        arrTime.setTime(arrTime.getTime() - prepTime * 60 * 60 * 1000);
-        document.getElementById('prepingTime').innerText = arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-        arrTime.setTime(arrTime.getTime() - toilTime * 60 * 60 * 1000);
-        document.getElementById('toiletTime').innerText = arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-        arrTime.setTime(arrTime.getTime() - eatTime * 60 * 60 * 1000);
-        document.getElementById('eatingTime').innerText = arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-        arrTime.setTime(arrTime.getTime() - cookTime * 60 * 60 * 1000);
-        document.getElementById('cookingTime').innerText = arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-        
-        
+        document.getElementById('departTime').innerText = "Départ: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+        if(prepTime !== 0){
+          arrTime.setTime(arrTime.getTime() - prepTime * 60 * 60 * 1000);
+          document.getElementById('prepingTime').innerText = "Preping: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+        };
+        if(showerTime !== 0){
+          arrTime.setTime(arrTime.getTime() - showerTime * 60 * 60 * 1000);
+          document.getElementById('showerTime').innerText = "Shower: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+        };
+        if(toilTime !== 0){
+          arrTime.setTime(arrTime.getTime() - toilTime * 60 * 60 * 1000);
+          document.getElementById('toiletTime').innerText = "Toilet: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+        };
+        if(eatTime !== 0){
+          arrTime.setTime(arrTime.getTime() - eatTime * 60 * 60 * 1000);
+          document.getElementById('eatingTime').innerText = "Eating: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+        };
+        if(cookTime !== 0){
+          arrTime.setTime(arrTime.getTime() - cookTime * 60 * 60 * 1000);
+          document.getElementById('cookingTime').innerText = "Cooking: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+        };
       }
     </script>
     <!--I wrote, you read-->

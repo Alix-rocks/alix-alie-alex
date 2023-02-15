@@ -635,6 +635,8 @@
     <div name="TimePage" id="timePage" class="sectionPage justPage footered">
       <div id="coverMyTime" onclick="closingTime()"></div>
       <div class="timeForm">
+        <label class="timeSettingLabel" style="margin-bottom: 7px;">Destination:</label>
+        <input id="Destination" class="timeDestination" type="text"/>
         <input id="Cooking" class="cossin timeSettingInput" title="timeSetting" name="timeSetting" type="checkbox" value="0:15"/>
         <label for="Cooking" class="timeSettingLabel">Cooking (30 min)<span class="timeSettingCheck"></span></label>
         <input id="Eating" class="cossin timeSettingInput" title="timeSetting" name="timeSetting" type="checkbox" value="1:00"/>
@@ -650,17 +652,34 @@
         <button class="timeFormButton" onclick="showTime()">Calculate!</button>
       </div>
       <div id="scheduleTime" class="resultTime">
-        <h3 style="margin: 5px 0; text-decoration: underline;">Schedule</h3>
-        <p id="cookingTime"></p>
-        <p id="eatingTime"></p>
-        <p id="toiletTime"></p>
-        <p id="showerTime"></p>
-        <p id="prepingTime"></p>
-        <p id="departTime"></p>
-        <p id="arriveeTime"></p>
+        <h2 id="finalDestination" style="text-align: center; margin-bottom: 0.7em;"></h2>
+        <div style="padding: 0 10px; border: 2px solid;">
+          <h3 style="margin: 5px 0; text-decoration: underline;">Schedule</h3>
+          <p id="cookingTime"></p>
+          <p id="eatingTime"></p>
+          <p id="toiletTime"></p>
+          <p id="showerTime"></p>
+          <p id="prepingTime"></p>
+          <p id="departTime"></p>
+          <p id="arriveeTime"></p>
+        </div>
       </div>
     </div>
     <style name="TimePage">
+      .timeDestination{
+        width: 165px;
+        background: rgba(128,0,128,.2);
+        border: 2px solid rgba(128,0,128,.7);
+        border-radius: 2px;
+        color: inherit;
+        appearance: none;
+        font-size: calc(15.53px + 0.19vw);
+        line-height:1.2em;
+        font-weight: 400;
+      }
+      .timeDestination:focus{
+        outline: 1px solid rgba(255,255,255,.5);
+      }
       .timeForm{
         width: 165px;
         margin: 0 auto 85px;
@@ -718,9 +737,8 @@
         cursor: pointer;
       }
       .resultTime{
-        border: 2px solid;
+        display: none;
         width: 165px;
-        padding: 0 10px;
         margin: auto;
         position: relative;
         z-index: 999999;
@@ -746,6 +764,8 @@
     </style>
     <script name="TimePage">
       function showTime(){
+        let destin = document.getElementById('Destination').value;
+        document.getElementById('finalDestination').innerText = destin;
         let cookTime = 0;
         let eatTime = 0;
         let toilTime = 0;
@@ -806,6 +826,7 @@
         document.getElementById('footer').classList.remove('footerFixed');
         document.getElementById("scheduleTime").classList.add('coveringResult');
         document.getElementById("coverMyTime").style.display = "block";
+        document.getElementById("scheduleTime").style.display = "block";
         if(document.getElementById("switchModeBall").classList.contains("ballDark")){
           document.getElementById("coverMyTime").style.background = "#000";
         } else{
@@ -1174,6 +1195,7 @@
       <div class="textPage" id="pageAlex">
         <h1 style="line-height: 1; display: inline-block; width:100%; text-align: center;">Sang, sexe & café (PNDCO*)</h1>
         <h3 style="margin: -30px 0 30px; text-align: center;">*Pas Nécessairement Dans Cet Ordre</h3>
+        <p style="margin-right: 10%; margin-left: 10%; text-align: justify;">Si t'aimes les <em>supernatural romances</em>, mais t'es pu capable des histoires clichés où la petite adolescente vierge et sans défense doit choisir entre le <em>big</em> loup-garous <em>bad boy</em> et le riche vampire controllant et que dès qu'elle a choisit entre les deux jaloux et possessifs mâles, le gagnant l'étampe dans l'mur pour l'embrasser sauvagement pis ils baisent sans en avoir discuté avant et, comme de fait, les deux viennent en même temps et c'est magique et ils vécurent heureux et eurent beaucoup d'enfants...<br/>Ben si tout ça te donne des brûlures d'estomac autant qu'à moi, ben Sang, Sexe & Café va te faire l'effet d'un antiacide au goût de baies sauvages.</p>
         <p style="text-align: center;"><em>Alex, sans-abri misanthrope, réalise son rêve en torturant des vampires afin d’aider 49, lycanthrope aux yeux bleus, à se libérer de l’esclavage... et fini par trouver l’amour.</em></p>
         <p style="text-align: center;">Tout est inclus&nbsp;: être humain, vampire et lycanthrope; viol, torture et racisme; BDSM, polyamour et câlinothérapie... pis du café.<br>Qu'est-ce que tu veux d'plus?!</p>
         <p style="text-align: center;">Oh, pis en plus, c'est épicène! Ça veut dire que tu peux choisir toi-même le sexe/genre des personnages!<br>Ça te laisse perplexe? Essaie de lire la présentation d'Alex, tu vas comprendre...</p>
@@ -1260,7 +1282,7 @@
               <p>Finalement, j’me tanne et j’me lance à l’attaque pour vrai: </p>
               <p>“Scusez...” ostie d’voix toute douce et polie. À force d’avoir la colère pognée dans le fond d’la gorge de même, un jour, j’vas finir par m’étouffer avec pour vrai!</p>
               <p>Mais l’autre s’exclame “Oh, pardon!” pis se tasse aussitôt sur le bord du trottoir, la tête penchée, les épaules courbées et les yeux rivés au sol. <em>Wow.</em> Un peu plus pis ça se mettait à genoux! Ça <em>shake</em> quasiment! J’ai pas vraiment le goût de faire attendre ma douche, alors j’passe devant comme si de rien n’était, mais y’a quelque chose de pas normal avec c’te personne-là. Promis, j’ai utilisé ma voie la plus douce et gentille! À moins que... Nah, même les indignes réagissent pas d’même d’habitude.</p>
-              <p>Anyway, 15 minutes plus tard, je suis finalement devant la porte d’entrée du gym le plus <em>cheap</em> du quartier. Y faut dire que l’avantage de l’histoire des dignes pis des indignes, c’est que ça permet d’avoir des places plus <em>cheap</em>. Vu que les indignes sont plus pauvres, les places qui les servent sont moins chères. Remarques, c’est pas qu’il y a une ségrégation comme telle. Genre les indignes, ont le droit de rentrer dans les places de dignes et vice versa. C’est juste que d’habitude, les indignes ont moins d’argent et se ramassent dans des places plus crasses et les dignes ont plus d’argent et peuvent se permettre de meilleures places... mais c’est pas systémique. De toutes façons, pourquoi payer <em>full</em> cher pour un gym dont t’utilise juste les douches <em>anyway</em>!</p>
+              <p>Anyway, 15 minutes plus tard, je suis finalement devant la porte d’entrée du gym le plus <em>cheap</em> du quartier. Y faut dire que l’avantage de l’histoire des dignes pis des indignes, c’est que ça permet d’avoir des places plus <em>cheap</em>. Vu que les indignes sont plus pauvres, les places qui les servent sont moins chères. Remarques, c’est pas qu’il y a une ségrégation comme telle. Genre les indignes, ont le droit de rentrer dans les places de dignes et vice versa. C’est juste que d’habitude, les indignes ont moins d’argent et se ramassent dans des places plus crasses et les dignes ont plus d’argent et peuvent se permettre de meilleures places... mais c’est pas systémique. De toutes façons, pourquoi payer <em>full</em> cher pour un gym dont t’utilises juste les douches <em>anyway</em>!</p>
               <p>Quoi? Vous étiez pas au courant? Pourtant, messemble que ça fait un bout que c’est d’même? En tout cas, oui, c’est la nouvelle discrimination ces derniers temps: la couleur des yeux. Ostie d’histoire de caves, tant qu’à moi. C'est pas parce que le gène des yeux bleus est un gène récessif que ça veut dire qu'une personne aux yeux bleus est nécessairement inférieure! Franchement, ça sonne comme l’argument de l’imbécile qui vient d’avoir son premier cours de bio pis qui pense avoir finalement tout compris d’la génétique pis d’l’évolution… Ouin, comme vous voyez, on est loin d’avoir atteint notre plein potentiel évolutif… Voyez? C’est pas pour rien que moi j’discrimine pas les gens; tant qu’à moi, tout l’monde est cave. Point.</p>
               <p>J&#x27;ouvre la première porte. <em>Nope</em>, moi, j’m’entraîne pas, <em>fuck that</em>! De toutes façons, j’ai déclaré depuis longtemps que j’avais pas de problème de poids! Dans la vie, quand t’as un problème, t’as le choix entre le régler ou l’accepter. Accepter mes problèmes jusqu’à ce que ça soient pus des problèmes; ça demande beaucoup moins d’énergie!</p>
               <p>Je montre ma carte de membre pour débarrer la deuxième porte. Et voilà pourquoi je m’entraîne pas: dès que j’ouvre la porte, la <em>draft</em> du système de ventilation qui essaie lamentablement de compenser pour l&#x27;accumulation d&#x27;odeurs corporelles m&#x27;arrive en pleine face et mon nez réclame quelques secondes pour s&#x27;y habituer. Eurk, c’est quasiment pire que les poubelles de la 3<sup>e</sup> avenue un lundi après-midi.</p>
@@ -1644,11 +1666,11 @@
               <p>La fibromyalgie, en passant, c'est vraiment <em>cool</em>, c'est comme un <em>coach</em> de vie gratuit, mais sadique : genre, si tu prends pas soin de toi, manges bien, dors assez, exercices régulièrement, gères ton stresse et gardes une mentalité positive,… TU SOUFFRES! Simple! Ou plutôt, tu souffres plusse. Parce que l’arnaque c’est que même si tu fais tout ça, tu souffres quand même; juste moins. Bref, la vie est belle! …Tant que j’ai mon espresso du matin.</p>
               <p>Dès que j’commence à bouger pour essayer de me relever, 49 se réveille en sursaut et se met à quatre patte au dessus de moi genre en mode <em>full alert</em>; j’ouvre les yeux juste à temps pour voir sa face paniquée et ses yeux qui regardent partout autour de nous comme pour essayer de voir où est le danger. Sacrifice, j’ai pas de patience pour <em>dealer</em> avec sa paranoïa à matin. De toutes façons, si quelqu’un voulait nous attaquer, ça aurait été fait pendant qu’on dormait!</p>
               <p>Me concentrant sur mon propre corps, vu que clairement l’autre s’occupe de notre sécurité, j’essaie de m’tourner sur le côté sans trop grogner de douleur pour pouvoir sortir du lit. ‘<em>Everything's better after I've had my coffee. That's why the worst part of my day is the getting of said coffee.</em>’ Contrairement aux gens normaux, c’est pas pour adoucir mon attitude ou faire fonctionner mon cerveau que j’ai besoin de caféine le matin, mais vraiment juste pour les douleurs. Quand j’suis finalement sur le côté et que j’réalise que 49 a toujours pas bougé de par-dessus moi, j’perds patience, “Tasse-toé criss, laisse-moé me l’ver!” Bon ok, c’est peut-être aussi pour mon attitude...</p>
-              <p>Au moins, 49 comprend vite et se met aussitôt à côté de moi, à genoux, le front sur l’matelas. Comment est-ce que quelqu’un peut bouger aussi vite le matin en se levant?! Que ce soit sa prière du matin ou sa façon de s’faire pardonner, j’m’en criss ben raide, tant que j’l’ai pas dans les jambes pendant que, lentement, mais surement et surtout douloureusement,  j’essaie de remonter mes pantalons, sortir du lit et me lever debout. Une fois en position verticale, j’essaie de bloquer les signaux de douleurs m’indiquant que mon sang s’est remis à circuler et à la place j’attache mes pantalons pendant que j’me concentre sur c’qui m’entoure. Plus vite j’sais où j’suis, plus vite j’peux trouver un espresso.</p>
+              <p>Au moins, 49 comprend vite et se met aussitôt à côté de moi, à genoux, le front sur l’matelas. Comment est-ce que quelqu’un peut bouger aussi vite le matin en se levant?! Que ce soit sa prière du matin ou sa façon de s’faire pardonner, j’m’en criss ben raide, tant que j’l’ai pas dans les jambes pendant que, lentement, mais surement et surtout douloureusement, j’essaie de m’asseoir sur le bord du lit. En remontant mes pantalons le plus haut possible malgré ma position assise, j’réalise du coin d’l’esprit que ma peau est toute collante… divers fluides organiques non-identifiés… eurk, moi qui venait tout juste de prendre une douche! Fac en me relevant lentement debout, j’essaie, non seulement de bloquer les signaux de douleurs m’indiquant que mon sang s’est remis à circuler, mais aussi les sensations de ma peau qui tire et colle de partout pendant que je fini de monter mes pantalon. <em>I hate mornings.</em> D’une voix hésitante et inquiète, 49 derrière moi demande, “Ça va?”. <em>I hate morning people.</em> Je l’ignore et à la place attache mes pantalons pendant que je me concentre sur ce qui m’entoure. Plus vite j’sais où j’suis, plus vite j’peux trouver un espresso. </p>
               <p>Ça a l’air d’un appart de location; genre y’a les meubles qu’un appart est sensé avoir, mais rien d’autre, rien de personnel. Ça donne l’impression que les tiroirs sont vides. Ça veut-tu dire qu’y a pas d’café ici?! Avec un mélange d’espoir et de peur, mais qui sort juste bête en ostie, parce que ‘pas encore eu mon café’, j’demande dans le vide, “Café?!”. ...Et pour faire des phrases complètes...</p>
               <p>“Café? Tu veux du café?! Oh, scuse, j’en ai pas ici, j’ai pas grand chose ici en fait, c’est pas ici que j’vis d’habitude, mais si tu veux on peut aller en chercher! Ou j’peux aller t’en chercher! Tu peux rester ici et,...” À ce point-là, j’ai déjà arrêté de l’écouter. Tabarnak, messemblait que 49 parlait pas tant qu’ça hier soir?! Comment est-ce que quelqu’un peut parler autant et avec autant d’énergie le matin avant que j’ai eu mon café?! <em>Fuck that</em>, j’vas aller chercher mon café moi-même. De toutes façons, j’serais pas capable de <em>tough</em>er la joie de vivre et la dévotion de 49 dans c’t’état-là. Aussi ben m’en débarrasser, du moins, tant que j’ai pas eu mon espresso.</p>
               <p>Apparemment, pendant que j’sacrais dans ma tête, j’ai eu le temps de m’rendre jusqu’à la porte de l’appart sans m’en rendre compte. Aussi ben d’même! Alors que j’suis sur le point d’ouvrir la porte pour sortir d’ici, 49 m’arrête “Attend, met au moins ça, stp.” J’ai à peine besoin de me retourner qu’une boule de tissus apparaît aussitôt dans mon champ de vision. J’enregistre à peine le fait que j'suis à moitié torse nu et au lieu de trop y réfléchir, j’fais juste enlever mon chandail <em>scrap</em> et mettre celui de 49 avant d’ouvrir la porte. “Attends, j’viens avec toi.” <em>Nope!</em> J’me retourne à moitié avec un puissant “NON,” et, en pointant ses pieds, j’ajoute, comme on dirait à un chien, “RESTE!”, puis me retourne vers la sortie et quitte.</p>
-              <p>Consciemment, je mets mon esprit dans un brouillard, histoire de pas trop avoir à sentir les signaux de douleur de mon corps et focus uniquement sur ma destination. Je me traînes les pieds, les épaules courbées, la tête basse et le regard vide. Voir que j’vais gaspiller d’l’énergie à essayer d’marcher la tête haute! Alex - café = zombie. ‘<em>Not all who wander are lost. Most of them are just looking for coffee.</em>’ En plus, j’viens d’réaliser que j’ai oublié d’pisser avant de partir… ostie!</p>
+              <p>Consciemment, je mets mon esprit dans un brouillard, histoire de pas trop avoir à sentir les signaux de douleur de mon corps et focus uniquement sur ma destination. Je me traînes les pieds, les épaules courbées, la tête basse et le regard vide. Voir que j’vais gaspiller d’l’énergie à essayer d’marcher la tête haute! Alex - café = zombie. ‘<em>Not all who wander are lost. Most of them are just looking for coffee.</em>’ En plus, j’viens d’réaliser que j’ai oublié d’pisser avant d'partir… ostie!</p>
               <p>Accepter et être capable d’endurer quelqu’un d’autre avant d’avoir eu mon café requiert un niveau d’amour que j’ai encore jamais eu. Juste en dessous, il y a le niveau d’amour où je criss mon camps, exprès pour lui sauver l’enfer Alex-pré-café. Si j’me crissais complètement de 49, j’aurais resté et lui aurais fait vivre l’enfer jusqu’à que ce que j’ai eu mon espresso. Fac, apparemment 49 a gagné quelques coches dans mon échelle d’amour. Ben r’garde donc!</p>
               <p>J’fini par trouver un café (c’est l’avantage des grandes villes; y’a du café presqu’à chaque coin de rue!) et réussir à ouvrir la porte d’entrée (oui, dans mon état, ouvrir une porte peut être tout un défi!). J’<em>park</em> mes pieds devant le comptoir et réussi tout juste à grogner un mot “Espresso”. Avec un peu de chance, ma face de zombie va excuser mon manque de courtoisie, mais à voir la face traumatisée d’la personne derrière le comptoir, il y a quelque chose dans ma face qui est plus perturbant que mon air bête. Mais j’ai pas encore assez de jus de cerveau pour réfléchir à ça alors j’fais juste répéter “Espresso”. Puis je fais un effort et ajoute “Stp”. Ça doit avoir été assez pour rallumer son cerveau parce que la personne a l’air de se reprendre et me demande “Simple ou double?” <em>Fuck</em>, pourquoi c’est si compliqué! Une chance que les habitudes fonctionnent mieux que le cerveau. “Simple.” “Court ou allongé?” <em>Shit</em>, ça fini pas hein?! “Court.” Oh, non, c’est vrai, là y va falloir que j’paie. La panique me fait me rappeler que pas plus tard que hier soir, j’me suis fait kidnapper et que j’ai même pas encore vérifier si j’ai encore mon portefeuille... Y’a des moments comme ça dans vie qui t’font sentir comme si tout l’reste existait pus. Ma main s’dirige d’elle-même vers ma poche et un demi-soupir de soulagement me libère d'une partie d’la panique. Maintenant, il faut juste vérifier si le dit-portefeuille est pas vide... Pourquoi est-ce qu’il faut absolument que j’aille payé avant de pouvoir avoir mon espresso? Ça aurait tellement facilité tout l’reste si j'pouvais l'boire AVANT! Comme de fait, quand j’viens pour payer, l’autre enchaîne d’une voix un peu trop enjouée “Est-ce que vous voudriez ajouter un super smoothie au kale désintoxicant, anti-oxydant et rééquilibrateur de pH, avec ça? C’est super bon pour la santé!” Bandes d’imbéciles! Ton foie désintoxie déjà ton corps sans que t’ai rien à faire, ton corps est capable d’équilibrer son pH tout seul, pis mon café est déjà plein d’antioxidants! Évidemment, j’y réponds juste un “Non merci”; quand j’vous disais que la politesse en engrainée en moi… Même sans café, j’réponds poliment! Dès que le paiement a été effectué et que j’ai finalement ma p’tite tasse devant moi, j’y rajoute plein d’sucre (j’sens que j’vas avoir besoin de l’énergie) et prends aussitôt ma première gorgée.</p>
               <p style="margin-left: 10px; margin-right: 10px;">Si doux et crémeux, si chaud!<br/>

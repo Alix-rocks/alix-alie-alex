@@ -17,7 +17,6 @@
     <title>Alix rocks</title>
   </head>
   <body>
-    <h1 id="nopeHere" style="text-align: center; margin-top: calc(100vh/3);">Nope, there's nothing here...</h1>
     <div id="switchSliderWhole">
       <div onclick="switchMode()" id="switchModeSlider">
         <div id="switchModeLight" class="typcn typcn-weather-sunny"></div>
@@ -3508,7 +3507,6 @@
         document.getElementById('footer').style.display = "none";
         document.getElementById('switchSliderWhole').style.display = "none";
         document.getElementById('casa').style.display = "none";
-        document.getElementById('nopeHere').style.display = "none";
       } else{
       // To remove the "/"
       currentState = currentState.slice(1);
@@ -3522,7 +3520,9 @@
         let id = currentState.slice(6);
         // console.log("3202 = " + id);
         toPage(id);
-      } else if(currentState == "Alex" || currentState == "alex"){
+      } else if(currentState.startsWith("text") == true){
+        let idF = currentState.slice(5);
+        let idFGood = idF.charAt(0).toUpperCase() + idF.slice(1);
         let justPageAll = document.querySelectorAll('.justPage');
         document.getElementById('switchSliderWhole').style.display = "block";
         for(let i = 0; i < justPageAll.length; i++){
@@ -3531,14 +3531,15 @@
         // console.log("Alex!");
         document.getElementById("wrotePage").style.display = "block";
         document.getElementById("menuTextSection").style.display = "none";
-        document.getElementById("pageAlex").style.display = "block";
-        document.getElementById('footer').classList.remove('footerFixed');
-        document.getElementById('nopeHere').style.display = "none";
+        document.getElementById("page" + idFGood).style.display = "block";
+        // document.getElementById('footer').classList.remove('footerFixed');
         window.scrollTo({ top: 0});
       } else {
         // To display the wanted page (currentPage)
         navigate(currentState);
       };
+
+    
       
       
       // Code called onclick with navigation UI buttons and "links"
@@ -3568,7 +3569,6 @@
         document.getElementById('switchSliderWhole').style.display = "block";
         document.getElementById('casa').style.display = "block";
         document.getElementById('footer').classList.remove('footerFixed');
-        document.getElementById('nopeHere').style.display = "none";
         window.scrollTo({ top: 0});
       };
 
@@ -3588,10 +3588,8 @@
         // So that the back home button doesn't show on the home page
         if(currentPage !== "casaPage"){
           document.getElementById('casa').style.display = "block";
-          document.getElementById('nopeHere').style.display = "none";
         } else{
           document.getElementById('casa').style.display = "none";
-          document.getElementById('nopeHere').style.display = "none";
         }
         if(document.getElementById(currentPage).classList.contains('footered') == true){
           document.getElementById('footer').style.display = "block";
@@ -3601,7 +3599,6 @@
           document.getElementById('footer').classList.remove('footerFixed');
         }
         if(currentPage == "wrotePage"){
-          document.getElementById('nopeHere').style.display = "none";
           document.getElementById('footer').style.display = "block";
           document.getElementById('switchSliderWhole').style.display = "block";
           document.getElementById('casa').style.display = "block";
@@ -3616,7 +3613,6 @@
         }
         if(currentPage == "nopePage"){
           document.getElementById('casa').style.display = "none";
-          document.getElementById('nopeHere').style.display = "none";
           document.getElementById('footer').style.display = "none";
           document.getElementById('switchSliderWhole').style.display = "none";
         }

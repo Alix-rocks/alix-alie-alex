@@ -186,6 +186,12 @@
         font-size: 19px;
         line-height: 1;
       }
+      .noCasaFoot{
+        display: none;
+      }
+      .yesCasaFoot{
+        display: block;
+      }
     </style>
     <script name="general">
       
@@ -234,10 +240,10 @@
       }
     </script>
     <!--HomePage-->
-    <div name="NopePage" class="justPage" id="nopePage" style="display:block;">
+    <div name="NopePage" class="justPage noCasaFootPage" id="nopePage" style="display:block;">
       <h1 style="margin-top: calc(100vh/3); text-align: center;">Nope, there's nothing here...</h1>
     </div>
-    <div name="CasaPage" class="home sectionPage justPage" id="casaPage">
+    <div name="CasaPage" class="home sectionPage justPage noCasaPage" id="casaPage">
       <h1>Whatever you think you're doing here,<br>WELCOME!</h1>
       <h3 style="margin-bottom:0;">That's my space, my mind, my shoes,...<br>Be warned, your insurances don't cover that kind of trauma.</h3>
       <!-- <h5 style="margin:0;">(Yeah, that's the only trigger warning you'll get...)</h5> -->
@@ -631,10 +637,11 @@
       //   let numAS = getRndInteger(0,gearData.length);
       //       document.getElementById("ySp").innerHTML = gearData[numAS];})})
     </script>
-    <div name="TimePage" id="timePage" class="sectionPage justPage footered">
-      <div id="coverMyTime" onclick="closingTime()"></div>
-      <div class="timeForm">
-        <label class="timeSettingLabel" style="margin-bottom: 7px;">Destination:</label>
+    <div name="TimePage" id="timePage" class="sectionPage justPage noCasaFootPage">
+      <div id="coverMyTimeX" onclick="closingTime()"></div>
+      <div id="timeFormX" class="timeFormX">
+
+        <!-- <label class="timeSettingLabel" style="margin-bottom: 7px;">Destination:</label>
         <input id="Destination" class="timeDestination" type="text"/>
         <input id="Cooking" class="cossin timeSettingInput" title="timeSetting" name="timeSetting" type="checkbox" value="0:15"/>
         <label for="Cooking" class="timeSettingLabel">Cooking (30 min)<span class="timeSettingCheck"></span></label>
@@ -648,10 +655,11 @@
         <label for="Preping" class="timeSettingLabel">Preping (30 min)<span class="timeSettingCheck"></span></label>
         <label for="Travelling" class="timeSettingLabel">Travelling&nbsp;&nbsp;<input id="Travelling" class="timeSettingInput" title="timeSetting" name="timeSetting" type="time"/></label>
         <label for="Arrival" class="timeSettingLabel">Arrival&nbsp;&nbsp;<input id="Arrival" class="timeSettingInput" title="timeSetting" name="timeSetting" type="time"/></label>
-        <button class="timeFormButton" onclick="showTime()">Calculate!</button>
+        <button class="timeFormButton" onclick="showTime()">Calculate!</button> -->
       </div>
-      <div id="scheduleTime" class="resultTime">
-        <h2 id="finalDestination" style="text-align: center; margin: 0 0 .7em;"></h2>
+
+      <div id="scheduleTimeX" class="resultTimeX">
+        <!-- <h2 id="finalDestination" style="text-align: center; margin: 0 0 .7em;"></h2>
         <div style="padding: 0 10px; border: 2px solid;">
           <h3 style="margin: 5px 0; text-decoration: underline;">Schedule</h3>
           <p id="cookingTime"></p>
@@ -659,14 +667,17 @@
           <p id="toiletTime"></p>
           <p id="showerTime"></p>
           <p id="prepingTime"></p>
-          <p id="departTime"></p>
-          <p id="arriveeTime"></p>
-        </div>
+          <p id="departTimeSec"></p>
+          <p id="arriveeTimeSec"></p>
+        </div> -->
       </div>
     </div>
     <style name="TimePage">
+      /* #casa, #footer{
+        display: none;
+      } */
       .timeDestination{
-        width: 165px;
+        width: 100%;
         background: rgba(128,0,128,.2);
         border: 2px solid rgba(128,0,128,.7);
         border-radius: 2px;
@@ -680,8 +691,14 @@
         outline: 1px solid rgba(255,255,255,.5);
       }
       .timeForm{
-        width: 165px;
+        /* width:165px; */
+        width: 240px;
         margin: 0 auto 85px;
+      }
+      .timeFormIn{
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
       }
       .timeSettingInput:checked + label > span.timeSettingCheck::before {
         font-family: 'typicons';
@@ -691,13 +708,12 @@
         left: 1.5px;
       }
       .timeSettingLabel{
-        display: flex;
+        /* display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
         justify-content: space-between;
         width: 165px;
-        align-items: center;
-        /* font-family: 'Rubik Dirt', cursive; */
+        align-items: center; */
         font-size: calc(15.53px + 0.19vw);
         line-height:1.2em;
         font-weight: 400;
@@ -736,11 +752,11 @@
         cursor: pointer;
       }
       .resultTime{
-        display: none;
+        /* display: none; */
         width: 165px;
-        margin: auto;
-        position: relative;
-        z-index: 999999;
+        margin: calc(100vh/2 - 190px) auto 0;
+        /* position: relative;
+        z-index: 999999; */
       }
       .coveringResult{
         position: fixed;
@@ -760,82 +776,806 @@
       #coverMyTime:hover{
         cursor: pointer;
       }
+
+      .timeSettingCheck2{
+        width: 15px;
+        height: 15px;
+        border: 1px solid purple;
+        border-radius: 2px;
+        margin-right: 5px;
+        background: rgba(128,0,128,.3);
+        display: inline-block;
+      }
+      .timeSettingLabel2{
+        width: 100%;
+        font-size: calc(15.53px + 0.19vw);
+        line-height:1.2em;
+        font-weight: 400;
+        margin: 15px 0;
+        text-align: center;
+        color: inherit;
+      }
+      .timeDestination2{
+        width: 60px;
+        background: rgba(128,0,128,.2);
+        border: 2px solid rgba(128,0,128,.7);
+        border-radius: 2px;
+        color: inherit;
+        /* appearance: none; */
+        font-size: calc(15.53px + 0.19vw);
+        line-height:1.2em;
+        font-weight: 400;
+      }
+      .timeDestination2:focus{
+        outline: 1px solid rgba(255,255,255,.5);
+      }
+      .stepBox{
+        margin: 15px 0;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+      }
     </style>
     <script name="TimePage">
-      function showTime(){
-        let destin = document.getElementById('Destination').value;
-        document.getElementById('finalDestination').innerText = destin;
-        let cookTime = 0;
-        let eatTime = 0;
-        let toilTime = 0;
-        let showerTime = 0;
-        let prepTime = 0;
-        if(document.getElementById('Cooking').checked == true){
-          cookTime = .5;
-        } else{
-          cookTime = 0;
-        };
-        if(document.getElementById('Eating').checked == true){
-          eatTime = 1;
-        } else{
-          eatTime = 0;
-        };
-        if(document.getElementById('Toilet').checked == true){
-          toilTime = .25;
-        } else{
-          toilTime = 0;
-        };
-        if(document.getElementById('Shower').checked == true){
-          showerTime = .25;
-        } else{
-          showerTime = 0;
-        };
-        if(document.getElementById('Preping').checked == true){
-          prepTime = .5;
-        } else{
-          prepTime = 0;
-        };
+      // let steps;
+      // let current = null;
+      // let previousOverIndex = null;
+      // function initializing(){
+      //   // if(localStorage.getItem("steps")){
+      //   //   // steps = JSON.parse(localStorage.getItem("steps"));
+      //   // } else{
+      //     steps = [
+      //       {name:"Cooking", value:30, checked:true, id:crypto.randomUUID()}, 
+      //       {name:"Eating", value:60, checked:true, id:crypto.randomUUID()}, 
+      //       {name:"Toilet", value:15, checked:true, id:crypto.randomUUID()}, 
+      //       {name:"Shower", value:15, checked:true, id:crypto.randomUUID()}, 
+      //       {name:"Preping", value:30, checked:true, id:crypto.randomUUID()},
+      //       {name:"Travelling", value:0, checked:true, id:crypto.randomUUID()}];
+      //   // }
+      // };
+      // function saveSteps(){
+      //   localStorage.setItem("steps", JSON.stringify(steps));
+      // };
+      // function ondragstart(evt){
+      //   //updateSteps();
+      //   current=evt.currentTarget;
+      //   current.style.opacity = "0";
+      //   let divBoxes = document.querySelectorAll(".timeFormIn > .stepBox[draggable]");
+      //   console.log(divBoxes);
+      //   let divOrder = 0;
+      //   for(const divBox of divBoxes){
+      //     divBox.style.order = divOrder++;
+      //   }
+      // }
+      // function ondragover(evt){
+      //   evt.preventDefault();
+      //   let currentOverIndex = evt.currentTarget.style.order;
+      //   if(currentOverIndex != previousOverIndex){
+      //   current.style.order = currentOverIndex;
+      //   previousOverIndex = currentOverIndex;
+      //   console.log(previousOverIndex);
+      //   }
+      // }
+      // function ondragend(evt){
+      //   current.style.opacity = "1";
+      // }
+      // function ondrop(evt){
+      //   console.log(previousOverIndex);
+      //   current.style.order = previousOverIndex;
+      //   // // sauvegarde l'élément qu'on déplace
+      //   let tempo = steps[current.dataset.index];
+      //   // // enlève l'élément qu'on a déplacé
+      //   steps.splice(current.dataset.index, 1);
+      //   // // rajoute l'élément qu'on a déplacé
+      //   steps.splice(evt.currentTarget.dataset.index, 0, tempo);
+      //   saveSteps();
+      //   displaySteps();
+      // }
 
-        let travTime = document.getElementById('Travelling').valueAsDate;
-        let arrTime = document.getElementById('Arrival').valueAsDate;
-        arrTime.setTime(arrTime.getTime() + 5 * 60 * 60 * 1000);
-        document.getElementById('arriveeTime').innerText = "Arrivée: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-        arrTime.setTime(arrTime.getTime() - travTime.getTime());
-        document.getElementById('departTime').innerText = "Départ: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-        if(prepTime !== 0){
-          arrTime.setTime(arrTime.getTime() - prepTime * 60 * 60 * 1000);
-          document.getElementById('prepingTime').innerText = "Preping: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-        };
-        if(showerTime !== 0){
-          arrTime.setTime(arrTime.getTime() - showerTime * 60 * 60 * 1000);
-          document.getElementById('showerTime').innerText = "Shower: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-        };
-        if(toilTime !== 0){
-          arrTime.setTime(arrTime.getTime() - toilTime * 60 * 60 * 1000);
-          document.getElementById('toiletTime').innerText = "Toilet: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-        };
-        if(eatTime !== 0){
-          arrTime.setTime(arrTime.getTime() - eatTime * 60 * 60 * 1000);
-          document.getElementById('eatingTime').innerText = "Eating: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-        };
-        if(cookTime !== 0){
-          arrTime.setTime(arrTime.getTime() - cookTime * 60 * 60 * 1000);
-          document.getElementById('cookingTime').innerText = "Cooking: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-        };
-        document.getElementById('footer').classList.remove('footerFixed');
-        document.getElementById("scheduleTime").classList.add('coveringResult');
-        document.getElementById("coverMyTime").style.display = "block";
-        document.getElementById("scheduleTime").style.display = "block";
-        if(document.getElementById("switchModeBall").classList.contains("ballDark")){
-          document.getElementById("coverMyTime").style.background = "#000";
+      // function displaySteps(){
+      //   let timeForm = document.getElementById("timeForm");
+      //   //add the Destination field
+      //   let stepAll = `
+      //     <div class="stepBox"  style="flex-wrap: wrap;">
+      //       <label class="timeSettingLabel" style="margin-bottom: 7px;">Destination:</label>
+      //       <input id="Destination" class="timeDestination" type="text"/>
+      //     </div>`;
+      //   let stepArray = steps.map((step, index)=>{
+      //     return `
+      //       <div class="stepBox" draggable="true" data-index="${index}" style="${step.style}" id="${step.id}">
+      //         <div><span class="typcn icon typcn-th-small" style="opacity: .8;"></span></div>
+      //         <div>
+      //           <input id="${step.id}Check" class="cossin timeSettingInput" name="${step.id}" type="checkbox" ${step.checked?"checked":""} onchange="updateSteps(event)"/>
+      //           <label for="${step.id}Check" class="timeSettingLabel">
+      //             <span class="timeSettingCheck"></span>
+      //           </label>
+      //           <input id="${step.id}Name" type="text" class="timeDestination2" style="width:80px;" value="${step.name}" onchange="updateSteps(event)"/>
+      //         </div>
+      //         <div>
+      //           <input id="${step.id}Time" class="timeDestination2" type="number" step="5" value="${step.value}" onchange="updateSteps(event)"/>
+      //           <span class="timeSettingLabel">min</span>
+      //         </div>
+      //       </div>`
+      //   })
+      //   stepAll += `<div class="timeFormIn">${stepArray.join("")}</div>`;
+      //   stepAll += `<div class="stepBox"><button class="timeFormButton" style="float:left;" onclick="addStep()">+</button></div>`;
+      //   stepAll += `<div class="stepBox"><div><label for="arriveeTime" class="timeSettingLabel">Arrival time</label></div><div><input id="arriveeTime" type="time"/></div></div>`;
+      //   stepAll += `<div class="stepBox"><button class="timeFormButton" style="float:right;" onclick="calculateTime(event)">Calculate</button></div>`;
+      //   timeForm.innerHTML = stepAll;
+      //   let boxes = document.querySelectorAll(".stepBox");
+      //   for(const box of boxes){
+      //     box.addEventListener('dragover', ondragover);
+      //     box.addEventListener('dragenter', ondragenter);
+      //     box.addEventListener('drop', ondrop);
+      //     box.addEventListener('dragstart', ondragstart);
+      //     box.addEventListener('dragend', ondragend);
+      //   };
+      // };
+      // //ajouter button pour effacer
+      // //ajouter champ text pour note (métro et bus ou liste de chose à apporter) et détection (si vide, ne pas afficher dans les résultats)
+      // function addStep(){
+      //   updateSteps();
+      //   let stepName = prompt("Name your step");
+      //   if(stepName){steps.push({name:stepName, value:30, order:Math.max(...steps.map((step)=>step.order))+1, checked:true, id:crypto.randomUUID()})};
+      //   displaySteps();
+      //   saveSteps();
+      //   document.getElementById('footer').classList.remove('footerFixed');
+      // };
+      // function updateSteps(){
+      //   // let target = e.target;
+      //   console.log("target.id");
+      //   //updater la valeur changée dans le array steps
+      //   steps.forEach(step => {
+      //     let value = Number.parseInt(document.getElementById(`${step.id}Time`).value);
+      //     step.value = value;
+      //     let checked = document.getElementById(`${step.id}Check`).checked;
+      //     step.checked = checked;
+      //     let name = document.getElementById(`${step.id}Name`).value;
+      //     step.name = name;
+      //   });
+      //   saveSteps();
+      // };
+      // initializing();
+      // displaySteps();
+
+      // function calculateTime(e){
+      //   //Trier en fonction de l'ordre
+      //   updateSteps()
+      //   let arriveeTime = document.getElementById('arriveeTime').valueAsDate;
+      //   let stepArray = steps.filter((step)=>{
+      //     return step.checked;
+      //   }).map((step)=>{
+      //     if(step.name == "Travelling"){
+      //       return `<p>Départ: ${sumTimeSub(steps, step.order, arriveeTime)}</p>`;}
+      //     else{
+      //         return `<p>${step.name}: ${sumTimeSub(steps, step.order, arriveeTime)}</p>`;}
+      //   });
+      //   let result = `<h2 id="finalDestination" style="text-align: center; margin: 0 0 .7em;">${document.getElementById("Destination").value}</h2>
+      //   <div style="padding: 0 10px; border: 2px solid;">
+      //     <h3 style="margin: 5px 0; text-decoration: underline;">Schedule</h3>
+      //     ${stepArray.join("")}
+      //     <p>Arrivée: ${arriveeTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" , timeZone: "UTC"})}</p>
+      //   </div>`;
+      //   document.getElementById("scheduleTime").innerHTML = result;
+      //   document.getElementById("scheduleTime").style.display = "block";
+      //   document.getElementById("timeForm").style.display = "none";
+      //   document.getElementById("switchSliderWhole").style.display = "none";
+      //   e.stopPropagation();
+      //   document.querySelector("#timePage").addEventListener("click", clickHandler)      
+      // };
+      // function clickHandler(){
+      //   document.getElementById("scheduleTime").style.display = "none";
+      //   document.getElementById("timeForm").style.display = "block";
+      //   document.getElementById("switchSliderWhole").style.display = "block";
+      //   document.querySelector("#timePage").removeEventListener("click", clickHandler)
+      // };
+      // function sumTimeSub(steps, stepOrder, arriveeTime){
+      //   let totalMin = 0;
+      //   steps.forEach((step)=>{if(step.checked && step.order >= stepOrder){
+      //     totalMin += step.value;
+      //   }});
+      //   let startTime = new Date();
+      //   startTime.setTime(arriveeTime.getTime() - totalMin * 60 * 1000);
+      //   return startTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" , timeZone: "UTC"});
+      // };
+
+      // // Math.max(5,8,3);
+      // // 8
+      // // Math.max([5,8,3]);
+      // // NaN
+      // // Math.max(...[5,8,3]);
+      // // 8
+
+      // //arriveeTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+
+
+      // function showTime(){
+      //   let destin = document.getElementById('Destination').value;
+      //   document.getElementById('finalDestination').innerText = destin;
+      //   let cookTime = 0;
+      //   let eatTime = 0;
+      //   let toilTime = 0;
+      //   let showerTime = 0;
+      //   let prepTime = 0;
+      //   if(document.getElementById('Cooking').checked == true){
+      //     cookTime = .5;
+      //   } else{
+      //     cookTime = 0;
+      //   };
+      //   if(document.getElementById('Eating').checked == true){
+      //     eatTime = 1;
+      //   } else{
+      //     eatTime = 0;
+      //   };
+      //   if(document.getElementById('Toilet').checked == true){
+      //     toilTime = .25;
+      //   } else{
+      //     toilTime = 0;
+      //   };
+      //   if(document.getElementById('Shower').checked == true){
+      //     showerTime = .25;
+      //   } else{
+      //     showerTime = 0;
+      //   };
+      //   if(document.getElementById('Preping').checked == true){
+      //     prepTime = .5;
+      //   } else{
+      //     prepTime = 0;
+      //   };
+
+      //   let travTime = document.getElementById('Travelling').valueAsDate;
+      //   let arrTime = document.getElementById('Arrival').valueAsDate;
+      //   arrTime.setTime(arrTime.getTime() + 5 * 60 * 60 * 1000);
+      //   document.getElementById('arriveeTime').innerText = "Arrivée: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+      //   arrTime.setTime(arrTime.getTime() - travTime.getTime());
+      //   document.getElementById('departTime').innerText = "Départ: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+      //   if(prepTime !== 0){
+      //     arrTime.setTime(arrTime.getTime() - prepTime * 60 * 60 * 1000);
+      //     document.getElementById('prepingTime').innerText = "Preping: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+      //   };
+      //   if(showerTime !== 0){
+      //     arrTime.setTime(arrTime.getTime() - showerTime * 60 * 60 * 1000);
+      //     document.getElementById('showerTime').innerText = "Shower: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+      //   };
+      //   if(toilTime !== 0){
+      //     arrTime.setTime(arrTime.getTime() - toilTime * 60 * 60 * 1000);
+      //     document.getElementById('toiletTime').innerText = "Toilet: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+      //   };
+      //   if(eatTime !== 0){
+      //     arrTime.setTime(arrTime.getTime() - eatTime * 60 * 60 * 1000);
+      //     document.getElementById('eatingTime').innerText = "Eating: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+      //   };
+      //   if(cookTime !== 0){
+      //     arrTime.setTime(arrTime.getTime() - cookTime * 60 * 60 * 1000);
+      //     document.getElementById('cookingTime').innerText = "Cooking: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
+      //   };
+      //   document.getElementById('footer').classList.remove('footerFixed');
+      //   document.getElementById("scheduleTime").classList.add('coveringResult');
+      //   document.getElementById("coverMyTime").style.display = "block";
+      //   document.getElementById("scheduleTime").style.display = "block";
+      //   if(document.getElementById("switchModeBall").classList.contains("ballDark")){
+      //     document.getElementById("coverMyTime").style.background = "#000";
+      //   } else{
+      //     document.getElementById("coverMyTime").style.background = "#F2F3F4";
+      //   };
+      // }
+      // function closingTime(){
+      //   document.getElementById("scheduleTime").classList.remove('coveringResult');
+      //   document.getElementById("coverMyTime").style.display = "none";
+      // }
+    </script>
+    <div name="Time2Page" id="time2Page" class="sectionPage justPage noCasaFootPage">
+      <div id="coverMyTime" onclick="closingTime()"></div>
+      <div id="timeForm" class="timeForm">
+      </div>
+
+      <div id="scheduleTime" class="resultTime">
+      </div>
+    </div>
+    <style name="Time2Page">
+      /* #casa, #footer{
+        display: none;
+      } */
+      .timeDestination{
+        width: 100%;
+        background: rgba(128,0,128,.2);
+        border: 2px solid rgba(128,0,128,.7);
+        border-radius: 2px;
+        color: inherit;
+        appearance: none;
+        font-size: calc(15.53px + 0.19vw);
+        line-height:1.2em;
+        font-weight: 400;
+      }
+      .timeDestination:focus{
+        outline: 1px solid rgba(255,255,255,.5);
+      }
+      .timeForm{
+        /* width:165px; */
+        width: 240px;
+        margin: 0 auto 85px;
+      }
+      .timeFormIn{
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+      }
+      .timeSettingInput:checked + label > span.timeSettingCheck::before {
+        font-family: 'typicons';
+        content: "\E11E";
+        position: absolute;
+        top: -4px;
+        left: 1.5px;
+      }
+      .timeSettingLabel{
+        /* display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        width: 165px;
+        align-items: center; */
+        font-size: calc(15.53px + 0.19vw);
+        line-height:1.2em;
+        font-weight: 400;
+        margin: 15px 0;
+        text-align: center;
+        color: inherit;
+      }
+      .timeSettingCheck{
+        width: 15px;
+        height: 15px;
+        border: 1px solid purple;
+        border-radius: 2px;
+        display: inline-block;
+        margin-right: 5px;
+        background: rgba(128,0,128,.3);
+        position: relative;
+      }
+      .timeFormButton{
+        float: right;
+        border-width: 1px 1px 4px 3px;
+        border-style: solid;
+        border-color: inherit;
+        border-radius: 5px;
+        padding: 5px 10px;
+        color: inherit;
+        background: inherit;
+        text-align: center;
+        width: fit-content;
+        font-family: 'Rubik Dirt', cursive;
+        font-size: calc(15.53px + 0.19vw);
+        line-height: 1.2em;
+        font-weight: 400;
+      }
+      .timeFormButton:hover{
+        background: rgba(128,0,128,.4);
+        cursor: pointer;
+      }
+      .resultTime{
+        /* display: none; */
+        width: 200px;
+        margin: calc(100vh/2 - 190px) auto 0;
+        /* position: relative;
+        z-index: 999999; */
+      }
+      .coveringResult{
+        position: fixed;
+        left: calc(100vw/2 - 82.5px);
+        top: calc(100vh/2 - 190px);
+        z-index: 999999;
+      }
+      #coverMyTime{
+        display: none;
+        width: 1000vw;
+        height: 1000vh;
+        position: fixed;
+        top:0;
+        left: 0;
+        z-index: 999;
+      }
+      #coverMyTime:hover{
+        cursor: pointer;
+      }
+
+      .timeSettingCheck2{
+        width: 15px;
+        height: 15px;
+        border: 1px solid purple;
+        border-radius: 2px;
+        margin-right: 5px;
+        background: rgba(128,0,128,.3);
+        display: inline-block;
+      }
+      .timeSettingLabel2{
+        width: 100%;
+        font-size: calc(15.53px + 0.19vw);
+        line-height:1.2em;
+        font-weight: 400;
+        margin: 15px 0;
+        text-align: center;
+        color: inherit;
+      }
+      .timeDestination2{
+        width: 60px;
+        background: rgba(128,0,128,.2);
+        border: 2px solid rgba(128,0,128,.7);
+        border-radius: 2px;
+        color: inherit;
+        /* appearance: none; */
+        font-size: calc(15.53px + 0.19vw);
+        line-height:1.2em;
+        font-weight: 400;
+      }
+      .timeDestination2:focus{
+        outline: 1px solid rgba(255,255,255,.5);
+      }
+      .stepBox, .iteme{
+        margin: 15px 0;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+      }
+      .dragging{
+        opacity: .5;
+      }
+      .displayNone{
+        display:none;
+      }
+      .trashLine{
+        width: 215px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+      }
+      .trashed div:first-child{
+        opacity: .7;
+      }
+      .trashed div.trashLine{
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 40%, purple 50%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0));
+      }
+      .trashed div.trashLine div{
+        opacity: .7;
+      }
+      .outlined{
+        border: 2px black solid;
+        outline: 4px solid purple;
+        outline-offset: 2px;
+        border-radius: 2%;
+      }
+      .notesBorder{
+        border: 1px dotted purple;
+        margin: 5px auto;
+        width: 176px;
+      }
+      .notesBorder p{
+        margin: 0.3em;
+      }
+    </style>
+    <script name="Time2Page">
+      let steps;
+      let current = null;
+      let overIndex = null;
+      let savedDestination = null;
+      let savedNotes;
+      function initializing(){
+        if(localStorage.getItem("steps")){
+          steps = JSON.parse(localStorage.getItem("steps"));
+          // **add localStorage for Destination, Notes and arrivalTime!
         } else{
-          document.getElementById("coverMyTime").style.background = "#F2F3F4";
+          steps = [
+            {index: 0, name:"Cooking", value:30, checked:true, id:crypto.randomUUID()}, 
+            {index: 1, name:"Eating", value:60, checked:true, id:crypto.randomUUID()}, 
+            {index: 2, name:"Toilet", value:15, checked:true, id:crypto.randomUUID()}, 
+            {index: 3, name:"Shower", value:15, checked:true, id:crypto.randomUUID()}, 
+            {index: 4, name:"Prepping", value:30, checked:true, id:crypto.randomUUID()},
+            {index: 5, name:"Travelling", value:0, checked:true, id:crypto.randomUUID()}];
+        }
+        if(localStorage.getItem("destination")){
+          savedDestination = localStorage.getItem("destination");
+        } else{
+
+        }
+        // if(localStorage.getItem("arriveeTime")){
+        //   document.getElementById("arriveeTime").value = localStorage.getItem("arriveeTime");
+        // };
+        if(localStorage.getItem("notes")){
+          savedNotes = localStorage.getItem("notes");
+        }
+      };
+      function saveSteps(){
+        localStorage.setItem("steps", JSON.stringify(steps));
+        localStorage.setItem("destination", document.getElementById("destination").value);
+        localStorage.setItem("arriveeTime", document.getElementById("arriveeTime").value);
+        localStorage.setItem("notes", document.getElementById("notes").value);
+        // **add localStorage for Destination, Notes and arrivalTime!
+      };
+
+      // add value="${savedDestination()}"
+      function displaySteps(){
+        let timeForm = document.getElementById("timeForm");
+        let stepAll = `
+          <div class="stepBox"  style="flex-wrap: wrap;">
+            <label class="timeSettingLabel" style="margin-bottom: 7px;">Destination:</label>
+            <input id="destination" class="timeDestination" type="text" onchange="saveSteps()"/>
+          </div>`;
+        let stepArray = steps.map((step)=>{
+          return `
+            <li class="iteme" draggable="true" data-index="${step.index}" style="${step.style}" id="${step.id}">
+              <div>
+                <span class="typcn icon typcn-th-small" style="opacity: .8;"></span>
+                <input id="${step.id}trashCan" class="cossin" type="checkbox" onchange="trashOrNot(event)"/>
+                <label for="${step.id}trashCan" class="typcn icon typcn-trash trashLabel displayNone" style="opacity: .8; font-size: 1.5em; line-height: 1em; margin: 0 -5px 0 -2px;" ></label>
+              </div>
+              <div class="trashLine">
+                <div>
+                  <input id="${step.id}Check" class="cossin timeSettingInput" name="${step.id}" type="checkbox" ${step.checked?"checked":""} onchange="updateSteps(event)"/>
+                  <label for="${step.id}Check" class="timeSettingLabel">
+                    <span class="timeSettingCheck"></span>
+                  </label>
+                  <input id="${step.id}Name" type="text" class="timeDestination2" style="width:80px;" value="${step.name}" onchange="updateSteps(event)"/>
+                </div>
+                <div>
+                  <input id="${step.id}Time" class="timeDestination2" type="number" step="5" value="${step.value}" onchange="updateSteps(event)"/>
+                  <span class="timeSettingLabel">min</span>
+                </div>
+              </div>
+            </li>`
+        })
+        stepAll += `<ul class="sortable-List" style="padding:0;">${stepArray.join("")}</ul>`;
+        stepAll += `<div class="stepBox">
+          <button class="timeFormButton" style="float:left; height: 30px; width: 30px; padding: 0;" onclick="addStep()">
+            +
+          </button>
+          <button id="trashMode" class="timeFormButton" style="float:right; height: 30px; width: 30px; padding: 0;" onclick="trashMode()">
+            <span class="typcn icon typcn-trash" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
+          </button>
+          <button id="trashCancel" class="timeFormButton displayNone" style="height: 30px; width: 90px; padding: 0; font-family:'Nunito', sans-serif; font-size:1em;" onclick="trashCancel()">
+            Cancel
+            <span class="typcn icon typcn-cancel" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
+          </button>
+          <button id="trashIt" class="timeFormButton displayNone" style="float:right; height: 30px; width: 90px; padding: 0; font-family:'Nunito', sans-serif; font-size:1em;" onclick="trashIt()">
+            Trash it&hairsp;!
+            <span class="typcn icon typcn-trash" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
+          </button>
+        </div>`;
+        stepAll += `<div class="stepBox">
+          <div>
+            <label for="arriveeTime" class="timeSettingLabel">
+              Arrival time
+            </label>
+          </div>
+          <div id="arriveeTimeDiv">
+            <input id="arriveeTime" type="time" onchange="saveSteps()"/>
+          </div>
+        </div>`;
+        stepAll += `<div class="stepBox"  style="flex-wrap: wrap;">
+          <label class="timeSettingLabel" style="margin:0 0 7px;">
+            Notes:
+          </label>
+          <textarea id="notes" class="timeDestination"value="${savedNotes}" onchange="saveSteps()"></textarea>
+        </div>`
+        stepAll += `<div class="stepBox">
+          <button class="timeFormButton" style="float:right;" onclick="calculateTime(event)">
+            Calculate&hairsp;!
+          </button>
+        </div>`;
+        timeForm.innerHTML = stepAll;
+        let sortableList = document.querySelector(".sortable-List");
+        let itemes = document.querySelectorAll(".sortable-List > .iteme");
+        console.log(itemes);
+        itemes.forEach(iteme => {
+          iteme.addEventListener("dragstart", (evt) => {
+              // Adding dragging class to item
+              console.log("dragstart");
+              current=evt.currentTarget;
+              console.log(current.dataset.index);
+              iteme.classList.add("dragging");
+          });
+          // Removing dragging class from item on dragend event
+          iteme.addEventListener("dragend", () => {
+            iteme.classList.remove("dragging");
+          });
+          iteme.addEventListener("dragover", (evt) => {
+            overIteme = evt.currentTarget;
+          });
+        });
+        sortableList.addEventListener("dragover", initSortableList);
+        sortableList.addEventListener("dragenter", e => e.preventDefault());
+        sortableList.addEventListener("drop", ondrop);
+      };
+
+      const initSortableList = (e) => {
+        let sortableList = document.querySelector(".sortable-List");
+        let itemes = document.querySelectorAll(".sortable-List > .iteme");
+          e.preventDefault();
+          const draggingItem = document.querySelector(".dragging");
+          // Getting all items except currently dragging and making array of them
+          let siblings = [...sortableList.querySelectorAll(".iteme:not(.dragging)")];
+          // Finding the sibling after which the dragging item should be placed
+          let nextSibling = siblings.find(sibling => {
+              return e.clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
+          });
+          // Inserting the dragging item before the found sibling
+          sortableList.insertBefore(draggingItem, nextSibling);
+      }
+      function ondrop(){
+        let itemes = Array.from(document.querySelectorAll(".sortable-List > .iteme"));
+        console.log(itemes);
+        let itemesIndexArr = itemes.map((iteme, dataset) => {
+          return {index: iteme.dataset.index
+          };
+        })
+        let result = itemesIndexArr.map(a => a.index);
+        console.log(result);
+        steps = result.map((a, i) => steps[a]);
+        console.log(steps);
+        updateSteps();
+        console.log(steps);
+        for (let i = 0; i < itemes.length; i++) {
+          itemes[i].dataset.index = steps[i].index;
         };
       }
-      function closingTime(){
-        document.getElementById("scheduleTime").classList.remove('coveringResult');
-        document.getElementById("coverMyTime").style.display = "none";
+
+      function trashMode(){
+        let trashables = document.querySelectorAll(".trashLabel");
+        trashables.forEach((trashable) => {
+          trashable.classList.remove('displayNone');
+        });
+        let moveables = document.querySelectorAll(".typcn-th-small");
+        moveables.forEach((moveable) => {
+          moveable.classList.add("displayNone");
+        });
+        document.getElementById("trashMode").classList.add('displayNone');
+        document.getElementById("trashCancel").classList.remove('displayNone');
+        document.getElementById("trashIt").classList.remove('displayNone');
       }
+      function trashOrNot(event){
+        let trashCan = event.currentTarget;
+        let trashDiv = trashCan.parentElement;
+        let trashStep = trashDiv.parentElement;
+        trashStep.classList.toggle("trashed");
+      }
+      function trashCancel(){
+        let trashables = document.querySelectorAll(".trashLabel");
+        trashables.forEach((trashable) => {
+          trashable.classList.add('displayNone');
+        });
+        let moveables = document.querySelectorAll(".typcn-th-small");
+        moveables.forEach((moveable) => {
+          moveable.classList.remove("displayNone");
+        });
+        document.getElementById("trashMode").classList.remove('displayNone');
+        document.getElementById("trashCancel").classList.add('displayNone');
+        document.getElementById("trashIt").classList.add('displayNone');
+        let trashTrasheds = document.querySelectorAll(".trashed");
+          trashTrasheds.forEach((trashTrashed) => {
+            trashTrashed.classList.remove("trashed");
+          });
+      }
+
+      function trashIt(){
+        updateSteps();
+        if (confirm("Are you sure?!")) {
+          for (let i = steps.length - 1; i >= 0; i--) {
+            let stepDiv = document.getElementById(`${steps[i].id}`);
+            console.log(stepDiv);
+            if(stepDiv.classList.contains("trashed")){
+              steps.splice(stepDiv.dataset.index, 1);
+            };
+          }
+          console.log(steps);
+          document.querySelectorAll(".trashed").forEach(
+          el => el.remove()
+          );
+          trashCancel();
+          updateSteps();
+          updateItemes();
+        } else {
+          trashCancel();
+        };
+        
+      }
+
+      
+
+
+      
+      //ajouter champ text pour note (métro et bus ou liste de chose à apporter) et détection (si vide, ne pas afficher dans les résultats)
+    
+      function addStep(){
+        updateSteps();
+        let stepName = prompt("Name your step");
+        if(stepName){steps.push({index:steps.length, name:stepName, value:30, checked:true, id:crypto.randomUUID()})};
+        displaySteps();
+        saveSteps();
+        document.getElementById('footer').classList.remove('footerFixed');
+      };
+
+      function updateSteps(){
+        steps.forEach(step => {
+          let index = steps.indexOf(step);
+          step.index = index;
+          let value = Number.parseInt(document.getElementById(`${step.id}Time`).value);
+          step.value = value;
+          let checked = document.getElementById(`${step.id}Check`).checked;
+          step.checked = checked;
+          let name = document.getElementById(`${step.id}Name`).value;
+          step.name = name;
+        });
+        saveSteps();
+      };
+      initializing();
+      displaySteps();
+
+      function updateItemes(){
+        let itemes = Array.from(document.querySelectorAll(".sortable-List > .iteme"));
+        for (let i = 0; i < itemes.length; i++) {
+          itemes[i].dataset.index = steps[i].index;
+        };
+      }
+
+      function calculateTime(e){
+        updateSteps()
+        let arriveeTime = document.getElementById('arriveeTime').valueAsDate;
+        if(!arriveeTime){
+          document.getElementById("arriveeTimeDiv").classList.add("outlined");
+          window.requestAnimationFrame(() => 
+        {window.requestAnimationFrame(()=>
+            alert("When are you supposed to be there?"));})
+        } else{
+          document.getElementById("arriveeTimeDiv").classList.remove("outlined");
+        };
+        console.log(arriveeTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" , timeZone: "UTC"}));
+        let stepArray = steps.filter((step)=>{
+          return step.checked;
+        }).map((step)=>{
+          if(step.name == "Travelling"){
+            return `<p>Départ: ${sumTimeSub(steps, step.index, arriveeTime)}</p>`;}
+          else{
+              return `<p>${step.name}: ${sumTimeSub(steps, step.index, arriveeTime)}</p>`;}
+        });
+        let result = `<h2 id="finalDestination" style="text-align: center; margin: 0 0 .7em;">${document.getElementById("destination").value}</h2>
+        <div style="padding: 0 10px; border: 2px solid;">
+          <h3 style="margin: 5px 0; text-decoration: underline;">Schedule</h3>
+          ${stepArray.join("")}
+          <p>Arrivée: ${arriveeTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" , timeZone: "UTC"})}</p>
+          ${ifNotes()}
+        </div>`;
+        document.getElementById("scheduleTime").innerHTML = result;
+        document.getElementById("scheduleTime").style.display = "block";
+        document.getElementById("timeForm").style.display = "none";
+        document.getElementById("switchSliderWhole").style.display = "none";
+        e.stopPropagation();
+        document.querySelector("#time2Page").addEventListener("click", clickHandler)      
+      };
+      function ifNotes(){
+        if(document.getElementById("notes").value){
+          return `<p style="margin-bottom: 5px;">Notes:</p>
+            <div class="notesBorder">
+              <p>${document.getElementById("notes").value.replace(/\n/g, '<br>')}</p>
+            </div>`;
+        } else{
+          return ``;
+        };
+      }
+      function clickHandler(){
+        document.getElementById("scheduleTime").style.display = "none";
+        document.getElementById("timeForm").style.display = "block";
+        document.getElementById("switchSliderWhole").style.display = "block";
+        document.querySelector("#time2Page").removeEventListener("click", clickHandler)
+      };
+      function sumTimeSub(steps, stepIndex, arriveeTime){
+        let totalMin = 0;
+        steps.forEach((step)=>{if(step.checked && step.index >= stepIndex){
+          totalMin += step.value;
+        }});
+        let startTime = new Date();
+        startTime.setTime(arriveeTime.getTime() - totalMin * 60 * 1000);
+        return startTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" , timeZone: "UTC"});
+      };
     </script>
     <!--I wrote, you read-->
       <!-- Faire le tableau des chiffres pour Alex! (et le mettre dans un toggle) -->
@@ -1460,7 +2200,7 @@
               <h2>2.4 - PdV externe de ?</h2>
               <p>Lorsque ses yeux aperçurent le corps ensanglanté et inconfortablement immobile sur l&#x27;asphalte craquelée et franchement insalubre de la ruelle anonyme, son cœur s&#x27;est arrêté. Ou plutôt, son cœur se serait arrêté s&#x27;il avait été en train de battre. C&#x27;est une chance que les vampires n&#x27;ont pas besoin de respirer ou leur cœur de battre. Bien que l&#x27;identité des deux jeunes adultes insouciamment debout à côté de Morgan lui était inconnue, leur nature était évidente. Même à cette distance, de sa cachette sur le toit de l&#x27;immeuble voisin, sa vue pouvait déchiffrer les signes et même mémoriser les traits. L&#x27;impitoyable lycanthrope, au corps couvert de cicatrices et à l&#x27;allure guerrière, sans doute l&#x27;artiste du crime commis contre sa chère création, se tenait debout, quoique sans aucune animosité, devant l&#x27;insipide être humain à la physionomie négligeable. Curieusement, en effet, l&#x27;énergie de leur moment semblait plus romantique que dangereuse, plus tendre qu&#x27;animale. Une pointe au cœur lui rappela que ses doux moments passés avec Morgan étaient maintenant choses du passé. À moins que... Peut-être qu’en l’aidant... Mais au-delà de l&#x27;espoir, l&#x27;émotion qui lui tordait les entrailles en était une rarement vécue dans sa vie; celle du désir de vengeance. Voir le couple se permettre cette tendresse, se penser digne de ce sentiment magique alors que le sang de sa création coulait toujours, goutte à goutte sur le sol. Comme si l&#x27;horreur commise, de sang froid certainement, méritait célébrations et réjouissements. Comme si le fracas assourdissant causé par le bris de son cœur qui, dans sa tête, résonnait plus fort encore que l&#x27;aurait fait le tonnerre, ne pouvait atteindre l&#x27;oreille de ces tourtereaux ou pire encore, ne pouvait leur en causer le moindre désagrément.</p>
               <p>L&#x27;indignation et la nécessité de se faire justice lui permirent de concevoir un plan de vengeance à l&#x27;exquise simplicité et sadique ingéniosité. Pour une fraction de seconde, ces pensées l&#x27;inquiétèrent légèrement, n&#x27;ayant jamais eu une once de méchanceté en soi; sentir tant d&#x27;engouement à l&#x27;idée de faire souffrir quelqu&#x27;un était, il va sans dire, préoccupant. Mais au combien excitant. Et justifié! Surtout, justifié! Évidemment, sa nature vampirique l&#x27;obligeait à régulièrement s&#x27;abreuver à la veine d&#x27;un être vivant, mais malgré tout, ses intentions étaient chaque fois magnanimes, ne prenant que le nécessaire, et s&#x27;assurant de conclure le tout sans peur ni douleur. Et pourtant, en cette nuit fatidique, une toute nouvelle soif de sang s&#x27;était emparée de son être. Et la peur et la douleur allaient justement s’avérer les épices les plus recherchées dans ce nouveau cocktail du jour.</p>
-              <p>Grâce à sa vitesse surhumaine et à la passion aveugle des jeunes en amour, la récupération du corps de Morgan pu passer plus ou moins inaperçue, ou du moins, jusqu&#x27;à alors, personne ne semblait être sur ses traces. Ce ne fut que plusieurs coins de rue plus loin, lors d&#x27;une pause nécessaire à la reconnaissance des lieux et à la confirmation de liberté de la voie, que la faible respiration, mais respiration tout de même, fut finalement perçue. Les vampires n&#x27;ont pas besoin de respirer, autrement que pour parler ou lors d&#x27;efforts notables, qu&#x27;ils soient physiques ou physiologiques, comme la guérison d&#x27;une plaie majeure... Si Morgan était bel et bien en train de respirer, c&#x27;est qu&#x27;il y avait espoir que Morgan s&#x27;en sorte. À cette pensée, une tension jusque-là passée inaperçue se dissipa de sa poitrine lui faisant réaliser son ignorance face à l’étendu des dégâts. En effet, si le coeur de Morgan avait été arraché... Refocusant son esprit sur le fait que Morgan respirait et que sa vie n’était donc pas ultimement en jeu, un regain d&#x27;énergie l&#x27;encouragea à poursuivre sa route à toutes vitesses vers ses appartements. Plus vite Morgan serait en sécurité, plus vite il lui serait possible de recenser les dégâts, planifier la suite et peut-être même convaincre Morgan de lui laisser une seconde chance... Du sang. Morgan aura avant tout besoin de se nourrir. Aussitôt sa sombre et machiavélique fantaisie lui réillumina l&#x27;esprit; celle d&#x27;utiliser le sang de l&#x27;être humain auquel la bête semblait tant tenir. Partenaire pour partenaire. La symétrie lui plu chaudement et un froid sourire lui assombrit le visage alors que ses yeux avaient cette lueur d&#x27;anticipation dont il faut généralement se méfier.</p>
+              <p>Grâce à sa vitesse surhumaine et à la passion aveugle des jeunes en amour, la récupération du corps de Morgan pu passer plus ou moins inaperçue, ou du moins, jusqu&#x27;à alors, personne ne semblait être sur ses traces. Ce ne fut que plusieurs coins de rue plus loin, lors d&#x27;une pause nécessaire à la reconnaissance des lieux et à la confirmation de liberté de la voie, que la faible respiration, mais respiration tout de même, fut finalement perçue. Les vampires n&#x27;ont pas besoin de respirer, autrement que pour parler ou lors d’émotions intenses ou d'efforts notables, qu'ils soient physiques ou physiologiques, comme la copulation ou la guérison d&#x27;une plaie majeure... Si Morgan était bel et bien en train de respirer, c&#x27;est qu&#x27;il y avait espoir que Morgan s&#x27;en sorte. À cette pensée, une tension jusque-là passée inaperçue se dissipa de sa poitrine lui faisant réaliser son ignorance face à l’étendu des dégâts. En effet, si le coeur de Morgan avait été arraché... Refocusant son esprit sur le fait que Morgan respirait et que sa vie n’était donc pas ultimement en jeu, un regain d&#x27;énergie l&#x27;encouragea à poursuivre sa route à toutes vitesses vers ses appartements. Plus vite Morgan serait en sécurité, plus vite il lui serait possible de recenser les dégâts, planifier la suite et peut-être même convaincre Morgan de lui laisser une seconde chance... Du sang. Morgan aura avant tout besoin de se nourrir. Aussitôt sa sombre et machiavélique fantaisie lui réillumina l&#x27;esprit; celle d&#x27;utiliser le sang de l&#x27;être humain auquel la bête semblait tant tenir. Partenaire pour partenaire. La symétrie lui plu chaudement et un froid sourire lui assombrit le visage alors que ses yeux avaient cette lueur d&#x27;anticipation dont il faut généralement se méfier.</p>
             </div>
             <div name="2.5 - PdV d’Alex" id="C2P5">
               <h2>2.5 - PdV d’Alex</h2>
@@ -3574,6 +4314,7 @@
 
       // To show and hide the pages
       function navigate(currentState){
+        console.log(currentState);
         let currentPage = currentState + "Page";
         // console.log(currentState + " " + currentPage);
         // To hide all the pages
@@ -3586,22 +4327,34 @@
         document.getElementById('switchSliderWhole').style.display = "block";
         window.scrollTo({ top: 0});
         // So that the back home button doesn't show on the home page
-        if(currentPage !== "casaPage"){
-          document.getElementById('casa').style.display = "block";
+        // if(currentPage == "casaPage" || document.getElementById(currentPage).classList.contains('noCasaFootPage') == true){
+        //   document.getElementById('casa').style.display = "none";
+        // } else{
+        //   document.getElementById('casa').style.display = "block";
+        // }
+        if(document.getElementById(currentPage).classList.contains('noCasaPage') == true){
+          document.getElementById('casa').classList.remove('yesCasaFoot');
         } else{
-          document.getElementById('casa').style.display = "none";
+          document.getElementById('casa').classList.add('yesCasaFoot');
+        }
+        if(document.getElementById(currentPage).classList.contains('noCasaFootPage') == true){
+          document.getElementById('footer').classList.remove('yesCasaFoot');
+          document.getElementById('casa').classList.remove('yesCasaFoot');
+        } else{
+          document.getElementById('casa').classList.add('yesCasaFoot');
+          document.getElementById('footer').classList.add('yesCasaFoot');
         }
         if(document.getElementById(currentPage).classList.contains('footered') == true){
-          document.getElementById('footer').style.display = "block";
+          document.getElementById('footer').classList.add('yesCasaFoot');
           document.getElementById('footer').classList.add('footerFixed');
         } else if(document.getElementById(currentPage).classList.contains('footered') == false){
-          document.getElementById('footer').style.display = "block";
+          document.getElementById('footer').classList.add('yesCasaFoot');
           document.getElementById('footer').classList.remove('footerFixed');
-        }
+        }        
         if(currentPage == "wrotePage"){
-          document.getElementById('footer').style.display = "block";
-          document.getElementById('switchSliderWhole').style.display = "block";
-          document.getElementById('casa').style.display = "block";
+          // document.getElementById('footer').style.display = "block";
+          // document.getElementById('switchSliderWhole').style.display = "block";
+          // document.getElementById('casa').style.display = "block";
           let textPageAll = document.querySelectorAll('.textPage');
           textPageAll.forEach(page => {
           page.classList.remove('textPageSelected');
@@ -3612,8 +4365,8 @@
           });
         }
         if(currentPage == "nopePage"){
-          document.getElementById('casa').style.display = "none";
-          document.getElementById('footer').style.display = "none";
+          // document.getElementById('casa').style.display = "none";
+          // document.getElementById('footer').style.display = "none";
           document.getElementById('switchSliderWhole').style.display = "none";
         }
       };
@@ -3801,7 +4554,7 @@
       // window.onload = (event) => {
       // };  
       let arrTS = MyNewRand();
-        console.log(arrTS);    
+        // console.log("arrTS =" + arrTS);    
       let TS = 0;
       document.getElementById("SotD").addEventListener('click', (e) => {
       getTodaysShit()

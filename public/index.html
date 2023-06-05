@@ -637,187 +637,7 @@
       //   let numAS = getRndInteger(0,gearData.length);
       //       document.getElementById("ySp").innerHTML = gearData[numAS];})})
     </script>
-    <div name="TimePage" id="timePage" class="sectionPage justPage noCasaFootPage">
-      <div id="coverMyTimeX" onclick="closingTime()"></div>
-      <div id="timeFormX" class="timeFormX">
-
-        <!-- <label class="timeSettingLabel" style="margin-bottom: 7px;">Destination:</label>
-        <input id="Destination" class="timeDestination" type="text"/>
-        <input id="Cooking" class="cossin timeSettingInput" title="timeSetting" name="timeSetting" type="checkbox" value="0:15"/>
-        <label for="Cooking" class="timeSettingLabel">Cooking (30 min)<span class="timeSettingCheck"></span></label>
-        <input id="Eating" class="cossin timeSettingInput" title="timeSetting" name="timeSetting" type="checkbox" value="1:00"/>
-        <label for="Eating" class="timeSettingLabel">Eating (1 hour)<span class="timeSettingCheck"></span></label>
-        <input id="Toilet" class="cossin timeSettingInput" title="timeSetting" name="timeSetting" type="checkbox" value="0:15"/>
-        <label for="Toilet" class="timeSettingLabel">Toilet (15 min)<span class="timeSettingCheck"></span></label>
-        <input id="Shower" class="cossin timeSettingInput" title="timeSetting" name="timeSetting" type="checkbox" value="0:15"/>
-        <label for="Shower" class="timeSettingLabel">Shower (15 min)<span class="timeSettingCheck"></span></label>
-        <input id="Preping" class="cossin timeSettingInput" title="timeSetting" name="timeSetting" type="checkbox" value="0:30"/>
-        <label for="Preping" class="timeSettingLabel">Preping (30 min)<span class="timeSettingCheck"></span></label>
-        <label for="Travelling" class="timeSettingLabel">Travelling&nbsp;&nbsp;<input id="Travelling" class="timeSettingInput" title="timeSetting" name="timeSetting" type="time"/></label>
-        <label for="Arrival" class="timeSettingLabel">Arrival&nbsp;&nbsp;<input id="Arrival" class="timeSettingInput" title="timeSetting" name="timeSetting" type="time"/></label>
-        <button class="timeFormButton" onclick="showTime()">Calculate!</button> -->
-      </div>
-
-      <div id="scheduleTimeX" class="resultTimeX">
-        <!-- <h2 id="finalDestination" style="text-align: center; margin: 0 0 .7em;"></h2>
-        <div style="padding: 0 10px; border: 2px solid;">
-          <h3 style="margin: 5px 0; text-decoration: underline;">Schedule</h3>
-          <p id="cookingTime"></p>
-          <p id="eatingTime"></p>
-          <p id="toiletTime"></p>
-          <p id="showerTime"></p>
-          <p id="prepingTime"></p>
-          <p id="departTimeSec"></p>
-          <p id="arriveeTimeSec"></p>
-        </div> -->
-      </div>
-    </div>
-    <style name="TimePage">
-      /* #casa, #footer{
-        display: none;
-      } */
-      .timeDestination{
-        width: 100%;
-        background: rgba(128,0,128,.2);
-        border: 2px solid rgba(128,0,128,.7);
-        border-radius: 2px;
-        color: inherit;
-        appearance: none;
-        font-size: calc(15.53px + 0.19vw);
-        line-height:1.2em;
-        font-weight: 400;
-      }
-      .timeDestination:focus{
-        outline: 1px solid rgba(255,255,255,.5);
-      }
-      .timeForm{
-        /* width:165px; */
-        width: 240px;
-        margin: 0 auto 85px;
-      }
-      .timeFormIn{
-        display: flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
-      }
-      .timeSettingInput:checked + label > span.timeSettingCheck::before {
-        font-family: 'typicons';
-        content: "\E11E";
-        position: absolute;
-        top: -4px;
-        left: 1.5px;
-      }
-      .timeSettingLabel{
-        /* display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-        width: 165px;
-        align-items: center; */
-        font-size: calc(15.53px + 0.19vw);
-        line-height:1.2em;
-        font-weight: 400;
-        margin: 15px 0;
-        text-align: center;
-        color: inherit;
-      }
-      .timeSettingCheck{
-        width: 15px;
-        height: 15px;
-        border: 1px solid purple;
-        border-radius: 2px;
-        display: inline-block;
-        margin-right: 5px;
-        background: rgba(128,0,128,.3);
-        position: relative;
-      }
-      .timeFormButton{
-        float: right;
-        border-width: 1px 1px 4px 3px;
-        border-style: solid;
-        border-color: inherit;
-        border-radius: 5px;
-        padding: 5px 10px;
-        color: inherit;
-        background: inherit;
-        text-align: center;
-        width: fit-content;
-        font-family: 'Rubik Dirt', cursive;
-        font-size: calc(15.53px + 0.19vw);
-        line-height: 1.2em;
-        font-weight: 400;
-      }
-      .timeFormButton:hover{
-        background: rgba(128,0,128,.4);
-        cursor: pointer;
-      }
-      .resultTime{
-        /* display: none; */
-        width: 165px;
-        margin: calc(100vh/2 - 190px) auto 0;
-        /* position: relative;
-        z-index: 999999; */
-      }
-      .coveringResult{
-        position: fixed;
-        left: calc(100vw/2 - 82.5px);
-        top: calc(100vh/2 - 190px);
-        z-index: 999999;
-      }
-      #coverMyTime{
-        display: none;
-        width: 1000vw;
-        height: 1000vh;
-        position: fixed;
-        top:0;
-        left: 0;
-        z-index: 999;
-      }
-      #coverMyTime:hover{
-        cursor: pointer;
-      }
-
-      .timeSettingCheck2{
-        width: 15px;
-        height: 15px;
-        border: 1px solid purple;
-        border-radius: 2px;
-        margin-right: 5px;
-        background: rgba(128,0,128,.3);
-        display: inline-block;
-      }
-      .timeSettingLabel2{
-        width: 100%;
-        font-size: calc(15.53px + 0.19vw);
-        line-height:1.2em;
-        font-weight: 400;
-        margin: 15px 0;
-        text-align: center;
-        color: inherit;
-      }
-      .timeDestination2{
-        width: 60px;
-        background: rgba(128,0,128,.2);
-        border: 2px solid rgba(128,0,128,.7);
-        border-radius: 2px;
-        color: inherit;
-        /* appearance: none; */
-        font-size: calc(15.53px + 0.19vw);
-        line-height:1.2em;
-        font-weight: 400;
-      }
-      .timeDestination2:focus{
-        outline: 1px solid rgba(255,255,255,.5);
-      }
-      .stepBox{
-        margin: 15px 0;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-      }
-    </style>
-    <script name="TimePage">
+    <script name="TimeXPage">
       // let steps;
       // let current = null;
       // let previousOverIndex = null;
@@ -1066,17 +886,12 @@
       // }
     </script>
     <div name="Time2Page" id="time2Page" class="sectionPage justPage noCasaFootPage">
-      <div id="coverMyTime" onclick="closingTime()"></div>
       <div id="timeForm" class="timeForm">
       </div>
-
       <div id="scheduleTime" class="resultTime">
       </div>
     </div>
     <style name="Time2Page">
-      /* #casa, #footer{
-        display: none;
-      } */
       .timeDestination{
         width: 100%;
         background: rgba(128,0,128,.2);
@@ -1092,7 +907,6 @@
         outline: 1px solid rgba(255,255,255,.5);
       }
       .timeForm{
-        /* width:165px; */
         width: 240px;
         margin: 0 auto 85px;
       }
@@ -1109,12 +923,6 @@
         left: 1.5px;
       }
       .timeSettingLabel{
-        /* display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-        width: 165px;
-        align-items: center; */
         font-size: calc(15.53px + 0.19vw);
         line-height:1.2em;
         font-weight: 400;
@@ -1153,62 +961,11 @@
         cursor: pointer;
       }
       .resultTime{
-        /* display: none; */
         width: 200px;
         margin: calc(100vh/2 - 190px) auto 0;
-        /* position: relative;
-        z-index: 999999; */
-      }
-      .coveringResult{
-        position: fixed;
-        left: calc(100vw/2 - 82.5px);
-        top: calc(100vh/2 - 190px);
-        z-index: 999999;
-      }
-      #coverMyTime{
-        display: none;
-        width: 1000vw;
-        height: 1000vh;
-        position: fixed;
-        top:0;
-        left: 0;
-        z-index: 999;
-      }
-      #coverMyTime:hover{
-        cursor: pointer;
-      }
-
-      .timeSettingCheck2{
-        width: 15px;
-        height: 15px;
-        border: 1px solid purple;
-        border-radius: 2px;
-        margin-right: 5px;
-        background: rgba(128,0,128,.3);
-        display: inline-block;
-      }
-      .timeSettingLabel2{
-        width: 100%;
-        font-size: calc(15.53px + 0.19vw);
-        line-height:1.2em;
-        font-weight: 400;
-        margin: 15px 0;
-        text-align: center;
-        color: inherit;
       }
       .timeDestination2{
         width: 60px;
-        background: rgba(128,0,128,.2);
-        border: 2px solid rgba(128,0,128,.7);
-        border-radius: 2px;
-        color: inherit;
-        /* appearance: none; */
-        font-size: calc(15.53px + 0.19vw);
-        line-height:1.2em;
-        font-weight: 400;
-      }
-      .timeDestination2:focus{
-        outline: 1px solid rgba(255,255,255,.5);
       }
       .stepBox, .iteme{
         margin: 15px 0;
@@ -1258,12 +1015,17 @@
       let steps;
       let current = null;
       let overIndex = null;
-      let savedDestination = null;
-      let savedNotes;
+      //**Change travellingTime in another arriveeTime (but with minutes input (no checkbox, if it's 0, let's not show it at all in the result) comme ça, ça fait plus de sense avec les résultats, et quand tu ajoutes un nouveau step (index:step.length), ça va arriver avant le travelling... Oh! à moins qu'on ait des escales...)
+      //**Make the drag&drop possible on touchscreens too
+      //**(clean css and old times)
+      //**once it's connected to google accounts
+        //**connect to an account and save the whole thing with a name for later
+      //**once it's an app
+        //**add a button to do a printscreen and make it your new background
+        //**add a button to create notification for each steps
       function initializing(){
         if(localStorage.getItem("steps")){
           steps = JSON.parse(localStorage.getItem("steps"));
-          // **add localStorage for Destination, Notes and arrivalTime!
         } else{
           steps = [
             {index: 0, name:"Cooking", value:30, checked:true, id:crypto.randomUUID()}, 
@@ -1273,33 +1035,46 @@
             {index: 4, name:"Prepping", value:30, checked:true, id:crypto.randomUUID()},
             {index: 5, name:"Travelling", value:0, checked:true, id:crypto.randomUUID()}];
         }
-        if(localStorage.getItem("destination")){
-          savedDestination = localStorage.getItem("destination");
-        } else{
-
-        }
-        // if(localStorage.getItem("arriveeTime")){
-        //   document.getElementById("arriveeTime").value = localStorage.getItem("arriveeTime");
-        // };
-        if(localStorage.getItem("notes")){
-          savedNotes = localStorage.getItem("notes");
-        }
       };
+      function savedDestination(){
+        if(localStorage.getItem("destination")){
+          return `${localStorage.getItem("destination")}`;
+        } else{
+          return ``;
+        };
+      }
+      function savedNotes(){
+        if(localStorage.getItem("notes")){
+          return `${localStorage.getItem("notes")}`;
+        } else{
+          return ``;
+        };
+      }
+      function savedArriveeTime(){
+        if(localStorage.getItem("arriveeTime")){
+          return `${localStorage.getItem("arriveeTime")}`;
+        } else{
+          return ``;
+        };
+      }
       function saveSteps(){
         localStorage.setItem("steps", JSON.stringify(steps));
         localStorage.setItem("destination", document.getElementById("destination").value);
         localStorage.setItem("arriveeTime", document.getElementById("arriveeTime").value);
         localStorage.setItem("notes", document.getElementById("notes").value);
-        // **add localStorage for Destination, Notes and arrivalTime!
       };
 
-      // add value="${savedDestination()}"
+      function clearStorage(){
+        localStorage.clear();
+        location.reload();
+      }
+
       function displaySteps(){
         let timeForm = document.getElementById("timeForm");
         let stepAll = `
           <div class="stepBox"  style="flex-wrap: wrap;">
             <label class="timeSettingLabel" style="margin-bottom: 7px;">Destination:</label>
-            <input id="destination" class="timeDestination" type="text" onchange="saveSteps()"/>
+            <input id="destination" class="timeDestination" type="text" value="${savedDestination()}" onchange="saveSteps()"/>
           </div>`;
         let stepArray = steps.map((step)=>{
           return `
@@ -1315,10 +1090,10 @@
                   <label for="${step.id}Check" class="timeSettingLabel">
                     <span class="timeSettingCheck"></span>
                   </label>
-                  <input id="${step.id}Name" type="text" class="timeDestination2" style="width:80px;" value="${step.name}" onchange="updateSteps(event)"/>
+                  <input id="${step.id}Name" type="text" class="timeDestination timeDestination2" style="width:80px;" value="${step.name}" onchange="updateSteps(event)"/>
                 </div>
                 <div>
-                  <input id="${step.id}Time" class="timeDestination2" type="number" step="5" value="${step.value}" onchange="updateSteps(event)"/>
+                  <input id="${step.id}Time" class="timeDestination timeDestination2" type="number" step="5" value="${step.value}" onchange="updateSteps(event)"/>
                   <span class="timeSettingLabel">min</span>
                 </div>
               </div>
@@ -1348,18 +1123,23 @@
             </label>
           </div>
           <div id="arriveeTimeDiv">
-            <input id="arriveeTime" type="time" onchange="saveSteps()"/>
+            <input id="arriveeTime" type="time" value="${savedArriveeTime()}" onchange="saveSteps()"/>
           </div>
         </div>`;
         stepAll += `<div class="stepBox"  style="flex-wrap: wrap;">
           <label class="timeSettingLabel" style="margin:0 0 7px;">
             Notes:
           </label>
-          <textarea id="notes" class="timeDestination"value="${savedNotes}" onchange="saveSteps()"></textarea>
+          <textarea id="notes" class="timeDestination" onchange="saveSteps()">${savedNotes()}</textarea>
         </div>`
         stepAll += `<div class="stepBox">
           <button class="timeFormButton" style="float:right;" onclick="calculateTime(event)">
             Calculate&hairsp;!
+          </button>
+        </div>`;
+        stepAll += `<div class="stepBox">
+          <button class="timeFormButton" style="font-size: .8em; font-family: 'Nunito'; margin: 15px auto; border-width: 0.5px 0.5px 2px 1px;" onclick="clearStorage()">
+            Go back to original
           </button>
         </div>`;
         timeForm.innerHTML = stepAll;
@@ -1403,17 +1183,13 @@
       }
       function ondrop(){
         let itemes = Array.from(document.querySelectorAll(".sortable-List > .iteme"));
-        console.log(itemes);
         let itemesIndexArr = itemes.map((iteme, dataset) => {
           return {index: iteme.dataset.index
           };
         })
         let result = itemesIndexArr.map(a => a.index);
-        console.log(result);
         steps = result.map((a, i) => steps[a]);
-        console.log(steps);
         updateSteps();
-        console.log(steps);
         for (let i = 0; i < itemes.length; i++) {
           itemes[i].dataset.index = steps[i].index;
         };
@@ -1461,12 +1237,10 @@
         if (confirm("Are you sure?!")) {
           for (let i = steps.length - 1; i >= 0; i--) {
             let stepDiv = document.getElementById(`${steps[i].id}`);
-            console.log(stepDiv);
             if(stepDiv.classList.contains("trashed")){
               steps.splice(stepDiv.dataset.index, 1);
             };
           }
-          console.log(steps);
           document.querySelectorAll(".trashed").forEach(
           el => el.remove()
           );
@@ -1476,14 +1250,7 @@
         } else {
           trashCancel();
         };
-        
       }
-
-      
-
-
-      
-      //ajouter champ text pour note (métro et bus ou liste de chose à apporter) et détection (si vide, ne pas afficher dans les résultats)
     
       function addStep(){
         updateSteps();
@@ -1518,7 +1285,7 @@
       }
 
       function calculateTime(e){
-        updateSteps()
+        updateSteps();
         let arriveeTime = document.getElementById('arriveeTime').valueAsDate;
         if(!arriveeTime){
           document.getElementById("arriveeTimeDiv").classList.add("outlined");

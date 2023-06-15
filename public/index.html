@@ -885,13 +885,59 @@
       //   document.getElementById("coverMyTime").style.display = "none";
       // }
     </script>
-    <div name="Time2Page" id="time2Page" class="sectionPage justPage noCasaFootPage">
+    <div name="TimePage" id="timePage" class="sectionPage justPage noCasaFootPage">
+      <div class="togglePlansWhole">
+        <input id="togglePlans" type="checkbox" class="cossin"/>
+        <label for="togglePlans" class="togglePlansLabel"><span id="togglePlansIcon" class="typcn icon typcn-media-play"></span>My schedules</label>
+        <div id="mySchedules" class="togglePlans">
+          <div>
+            <p><span class="typcn icon typcn-th-small planDD"></span>CHSLD<span class="typcn icon typcn-trash planTB"></span></p>
+          </div>
+        </div>
+      </div>
       <div id="timeForm" class="timeForm">
       </div>
       <div id="scheduleTime" class="resultTime">
       </div>
     </div>
-    <style name="Time2Page">
+    <style name="TimePage">
+      .togglePlansWhole{
+        width: 240px;
+        margin: 20px auto;
+      }
+      .togglePlansLabel{
+        text-decoration: underline;
+        text-decoration-thickness: from-font; 
+        font-weight: 400;
+      }
+      #togglePlansIcon{
+        transition: transform .3s ease-out;
+        display: inline-block;
+      }
+      .togglePlans{
+        transition: max-height .3s ease-out;
+        max-height: 0;
+        overflow: hidden;
+      }
+      #togglePlans:checked ~ div#mySchedules{
+        max-height: 100vh;
+        transition: max-height .5s ease-in;
+      }
+      #togglePlans:checked ~ label #togglePlansIcon{
+        transform: rotate(90deg);
+        transition: transform .5s;
+      }
+      .planDD{
+        opacity: .8; 
+        display: inline-block; 
+        margin-right: 5px; 
+        font-size: .9em;
+      }
+      .planTB{
+        opacity: .8; 
+        float: right; 
+        font-size: 1.3em;
+      }
       .timeDestination{
         width: 100%;
         background: rgba(128,0,128,.2);
@@ -1012,7 +1058,7 @@
       }
     </style>
     <!-- Next => GroceryPage! -->
-    <script name="Time2Page">
+    <script name="TimePage">
       let steps;
       let current = null;
       let overIndex = null;
@@ -4215,6 +4261,8 @@
         });
         return myTSArray;
       };
+
+      
 
       // To get themed shit to feel 
       async function getGearData(theme) {

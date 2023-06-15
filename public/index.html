@@ -1011,13 +1011,13 @@
         margin: 0.3em;
       }
     </style>
+    <!-- Next => GroceryPage! -->
     <script name="Time2Page">
       let steps;
       let current = null;
       let overIndex = null;
       //**Change travellingTime in another arriveeTime (but with minutes input (no checkbox, if it's 0, let's not show it at all in the result) comme ça, ça fait plus de sense avec les résultats, et quand tu ajoutes un nouveau step (index:step.length), ça va arriver avant le travelling... Oh! à moins qu'on ait des escales...)
       //**Make the drag&drop possible on touchscreens too
-      //**(clean css and old times)
       //**once it's connected to google accounts
         //**connect to an account and save the whole thing with a name for later
       //**once it's an app
@@ -1065,8 +1065,10 @@
       };
 
       function clearStorage(){
+        if (confirm("Are you sure?!\nBecause you'll loose all your changes!")){
         localStorage.clear();
         location.reload();
+        }
       }
 
       function displaySteps(){
@@ -1104,14 +1106,14 @@
           <button class="timeFormButton" style="float:left; height: 30px; width: 30px; padding: 0;" onclick="addStep()">
             +
           </button>
-          <button id="trashMode" class="timeFormButton" style="float:right; height: 30px; width: 30px; padding: 0;" onclick="trashMode()">
+          <button title="Enter trash mode!" id="trashMode" class="timeFormButton" style="float:right; height: 30px; width: 30px; padding: 0;" onclick="trashMode()">
             <span class="typcn icon typcn-trash" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
           </button>
-          <button id="trashCancel" class="timeFormButton displayNone" style="height: 30px; width: 90px; padding: 0; font-family:'Nunito', sans-serif; font-size:1em;" onclick="trashCancel()">
+          <button title="Get out of trash mode!" id="trashCancel" class="timeFormButton displayNone" style="height: 30px; width: 90px; padding: 0; font-family:'Nunito', sans-serif; font-size:1em;" onclick="trashCancel()">
             Cancel
             <span class="typcn icon typcn-cancel" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
           </button>
-          <button id="trashIt" class="timeFormButton displayNone" style="float:right; height: 30px; width: 90px; padding: 0; font-family:'Nunito', sans-serif; font-size:1em;" onclick="trashIt()">
+          <button title="Get rid of all the checked ones!" id="trashIt" class="timeFormButton displayNone" style="float:right; height: 30px; width: 90px; padding: 0; font-family:'Nunito', sans-serif; font-size:1em;" onclick="trashIt()">
             Trash it&hairsp;!
             <span class="typcn icon typcn-trash" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
           </button>
@@ -1133,12 +1135,16 @@
           <textarea id="notes" class="timeDestination" onchange="saveSteps()">${savedNotes()}</textarea>
         </div>`
         stepAll += `<div class="stepBox">
-          <button class="timeFormButton" style="float:right;" onclick="calculateTime(event)">
+          <button title="Calculate your schedule!" class="timeFormButton" style="float:right;" onclick="calculateTime(event)">
             Calculate&hairsp;!
           </button>
-        </div>`;
+          <button title="Save it in the clouds!" class="timeFormButton" style="float:left;" onclick="savePlan(event)">
+            <span class="typcn icon typcn-cloud-storage-outline" style="font-size: 1.4em; line-height: 1em;"></span>
+          </button>
+        </div>
+        <div id="savePlan" class="stepBox" style="flex-wrap: wrap;"></div>`;
         stepAll += `<div class="stepBox">
-          <button class="timeFormButton" style="font-size: .8em; font-family: 'Nunito'; margin: 15px auto; border-width: 0.5px 0.5px 2px 1px;" onclick="clearStorage()">
+          <button title="Get the original data back!" class="timeFormButton" style="font-size: .8em; font-family: 'Nunito'; margin: 15px auto; border-width: 0.5px 0.5px 2px 1px;" onclick="clearStorage()">
             Go back to original
           </button>
         </div>`;
@@ -1193,6 +1199,24 @@
         for (let i = 0; i < itemes.length; i++) {
           itemes[i].dataset.index = steps[i].index;
         };
+      }
+
+      function savePlan(event){
+        document.getElementById("savePlan").innerHTML = `<p style="font-size:calc(13.53px + 0.19vw); margin: 1em 0 0.2em;">How should we name that one?</p>
+        <input class="timeDestination" type="text" value="${document.getElementById("destination").value}"/>
+        <div class="stepBox" style="width: 100%;">
+          <button title="Nevermind!" id="saveCancel" class="timeFormButton" style="height: 30px; width: 90px; padding: 0; font-family:'Nunito', sans-serif; font-size:1em;" onclick="saveCancel()">
+            Cancel
+            <span class="typcn icon typcn-cancel" style="font-size: 1.2em; line-height: 1em;"></span>
+          </button>
+          <button title="Save it!" id="saveIt" class="timeFormButton" style="float:right; height: 30px; width: 90px; padding: 0; font-family:'Nunito', sans-serif; font-size:1em;" onclick="saveIt()">
+            Save it&hairsp;!
+            <span class="typcn icon typcn-cloud-storage-outline" style="font-size: 1.4em; line-height: 1em;"></span>
+          </button>
+        </div>`
+      }
+      function saveCancel(){
+        document.getElementById("savePlan").innerHTML = ``;
       }
 
       function trashMode(){

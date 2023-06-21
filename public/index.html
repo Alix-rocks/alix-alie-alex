@@ -886,7 +886,7 @@
       // }
     </script>
     <div name="TimePage" id="timePage" class="sectionPage justPage noCasaFootPage">
-      <div class="togglePlansWhole">
+      <div class="togglePlansWhole" id="togglePlansWhole">
         <input id="togglePlans" type="checkbox" class="cossin"/>
         <label for="togglePlans" class="togglePlansLabel"><span id="togglePlansIcon" class="typcn icon typcn-media-play"></span>My schedules</label>
         <div id="mySchedules" class="togglePlans">
@@ -1082,27 +1082,15 @@
             {index: 5, name:"Travelling", value:0, checked:true, id:crypto.randomUUID()}];
         }
       };
-      function savedDestination(){
-        if(localStorage.getItem("destination")){
-          return `${localStorage.getItem("destination")}`;
+
+      function getInfo(info){
+        if(localStorage.getItem(info)){
+          return `${localStorage.getItem(info)}`;
         } else{
           return ``;
         };
       }
-      function savedNotes(){
-        if(localStorage.getItem("notes")){
-          return `${localStorage.getItem("notes")}`;
-        } else{
-          return ``;
-        };
-      }
-      function savedArriveeTime(){
-        if(localStorage.getItem("arriveeTime")){
-          return `${localStorage.getItem("arriveeTime")}`;
-        } else{
-          return ``;
-        };
-      }
+      
       function saveSteps(){
         localStorage.setItem("steps", JSON.stringify(steps));
         localStorage.setItem("destination", document.getElementById("destination").value);
@@ -1122,7 +1110,7 @@
         let stepAll = `
           <div class="stepBox"  style="flex-wrap: wrap;">
             <label class="timeSettingLabel" style="margin-bottom: 7px;">Destination:</label>
-            <input id="destination" class="timeDestination" type="text" value="${savedDestination()}" onchange="saveSteps()"/>
+            <input id="destination" class="timeDestination" type="text" value="${getInfo("destination")}" onchange="saveSteps()"/>
           </div>`;
         let stepArray = steps.map((step)=>{
           return `
@@ -1147,7 +1135,7 @@
               </div>
             </li>`
         })
-        stepAll += `<ul class="sortable-List" style="padding:0;">${stepArray.join("")}</ul>`;
+        stepAll += `<ul id="sortable-List" class="sortable-List" style="padding:0;">${stepArray.join("")}</ul>`;
         stepAll += `<div class="stepBox">
           <button class="timeFormButton" style="float:left; height: 30px; width: 30px; padding: 0;" onclick="addStep()">
             +
@@ -1171,14 +1159,14 @@
             </label>
           </div>
           <div id="arriveeTimeDiv">
-            <input id="arriveeTime" type="time" value="${savedArriveeTime()}" onchange="saveSteps()"/>
+            <input id="arriveeTime" type="time" value="${getInfo("arriveeTime")}" onchange="saveSteps()"/>
           </div>
         </div>`;
         stepAll += `<div class="stepBox"  style="flex-wrap: wrap;">
           <label class="timeSettingLabel" style="margin:0 0 7px;">
             Notes:
           </label>
-          <textarea id="notes" class="timeDestination" onchange="saveSteps()">${savedNotes()}</textarea>
+          <textarea id="notes" class="timeDestination" onchange="saveSteps()">${getInfo("notes")}</textarea>
         </div>`
         stepAll += `<div class="stepBox">
           <button title="Calculate your schedule!" class="timeFormButton" style="float:right;" onclick="calculateTime(event)">
@@ -1197,13 +1185,10 @@
         timeForm.innerHTML = stepAll;
         let sortableList = document.querySelector(".sortable-List");
         let itemes = document.querySelectorAll(".sortable-List > .iteme");
-        console.log(itemes);
         itemes.forEach(iteme => {
           iteme.addEventListener("dragstart", (evt) => {
               // Adding dragging class to item
-              console.log("dragstart");
               current=evt.currentTarget;
-              console.log(current.dataset.index);
               iteme.classList.add("dragging");
           });
           // Removing dragging class from item on dragend event
@@ -1233,18 +1218,28 @@
           // Inserting the dragging item before the found sibling
           sortableList.insertBefore(draggingItem, nextSibling);
       }
+      // function ondrop(){
+      //   let itemes = Array.from(document.querySelectorAll(".sortable-List > .iteme"));
+      //   let itemesIndexArr = itemes.map((iteme, dataset) => {
+      //     return {index: iteme.dataset.index
+      //     };
+      //   })
+      //   console.log(itemesIndexArr);
+      //   let result = itemesIndexArr.map(a => a.index);
+      //   console.log(result);
+      //   steps = result.map((a, i) => steps[a]);
+      //   console.log(steps);
+      //   updateSteps();
+      //   for (let i = 0; i < itemes.length; i++) {
+      //     itemes[i].dataset.index = steps[i].index;
+      //   };
+      // }
+
       function ondrop(){
         let itemes = Array.from(document.querySelectorAll(".sortable-List > .iteme"));
-        let itemesIndexArr = itemes.map((iteme, dataset) => {
-          return {index: iteme.dataset.index
-          };
-        })
-        let result = itemesIndexArr.map(a => a.index);
-        steps = result.map((a, i) => steps[a]);
+        steps = itemes.map((iteme) => steps[iteme.dataset.index]);
+        updateItemesIndex();
         updateSteps();
-        for (let i = 0; i < itemes.length; i++) {
-          itemes[i].dataset.index = steps[i].index;
-        };
       }
 
       function savePlan(event){
@@ -1309,19 +1304,52 @@
             let stepDiv = document.getElementById(`${steps[i].id}`);
             if(stepDiv.classList.contains("trashed")){
               steps.splice(stepDiv.dataset.index, 1);
+              stepDiv.remove();
             };
           }
-          document.querySelectorAll(".trashed").forEach(
-          el => el.remove()
-          );
           trashCancel();
           updateSteps();
-          updateItemes();
+          updateItemesIndex();
         } else {
           trashCancel();
         };
       }
     
+      //**Drag&Drop doesn't work with the added step
+      // function addStep(){
+      //   updateSteps();
+      //   let stepName = prompt("Name your step");
+      //   if(stepName){steps.push({index:steps.length, name:stepName, value:30, checked:true, id:crypto.randomUUID()})};
+      //   let newStep = document.createElement('li');
+      //   newStep.classList.add("iteme");
+      //   newStep.setAttribute("draggable", "true");
+      //   newStep.setAttribute("id", steps[steps.length-1].id);
+      //   newStep.innerHTML = `
+      //     <div>
+      //       <span class="typcn icon typcn-th-small" style="opacity: .8;"></span>
+      //       <input id="${steps[steps.length - 1].id}trashCan" class="cossin" type="checkbox" onchange="trashOrNot(event)"/>
+      //       <label for="${steps[steps.length - 1].id}trashCan" class="typcn icon typcn-trash trashLabel displayNone" style="opacity: .8; font-size: 1.5em; line-height: 1em; margin: 0 -5px 0 -2px;" ></label>
+      //     </div>
+      //     <div class="trashLine">
+      //       <div>
+      //         <input id="${steps[steps.length - 1].id}Check" class="cossin timeSettingInput" name="${steps[steps.length - 1].id}" type="checkbox" ${steps[steps.length - 1].checked?"checked":""} onchange="updateSteps(event)"/>
+      //         <label for="${steps[steps.length - 1].id}Check" class="timeSettingLabel">
+      //           <span class="timeSettingCheck"></span>
+      //         </label>
+      //         <input id="${steps[steps.length - 1].id}Name" type="text" class="timeDestination timeDestination2" style="width:80px;" value="${steps[steps.length - 1].name}" onchange="updateSteps(event)"/>
+      //       </div>
+      //       <div>
+      //         <input id="${steps[steps.length - 1].id}Time" class="timeDestination timeDestination2" type="number" step="5" value="${steps[steps.length - 1].value}" onchange="updateSteps(event)"/>
+      //         <span class="timeSettingLabel">min</span>
+      //       </div>
+      //     </div>`;
+      //   let lastStep = document.getElementById("sortable-List").lastElementChild;
+      //   lastStep.after(newStep);
+      //   updateSteps();
+      //   saveSteps();
+      //   document.getElementById('footer').classList.remove('footerFixed');
+      // };
+
       function addStep(){
         updateSteps();
         let stepName = prompt("Name your step");
@@ -1347,10 +1375,10 @@
       initializing();
       displaySteps();
 
-      function updateItemes(){
+      function updateItemesIndex(){
         let itemes = Array.from(document.querySelectorAll(".sortable-List > .iteme"));
         for (let i = 0; i < itemes.length; i++) {
-          itemes[i].dataset.index = steps[i].index;
+          itemes[i].dataset.index = i;
         };
       }
 
@@ -1384,15 +1412,16 @@
         document.getElementById("scheduleTime").innerHTML = result;
         document.getElementById("scheduleTime").style.display = "block";
         document.getElementById("timeForm").style.display = "none";
+        document.getElementById("togglePlansWhole").style.display = "none";
         document.getElementById("switchSliderWhole").style.display = "none";
         e.stopPropagation();
-        document.querySelector("#time2Page").addEventListener("click", clickHandler)      
+        document.querySelector("#timePage").addEventListener("click", clickHandler)      
       };
       function ifNotes(){
         if(document.getElementById("notes").value){
           return `<p style="margin-bottom: 5px;">Notes:</p>
             <div class="notesBorder">
-              <p>${document.getElementById("notes").value.replace(/\n/g, '<br>')}</p>
+              <p>${document.getElementById("notes").value.replace(/\n/g, '<br/>')}</p>
             </div>`;
         } else{
           return ``;
@@ -1401,8 +1430,9 @@
       function clickHandler(){
         document.getElementById("scheduleTime").style.display = "none";
         document.getElementById("timeForm").style.display = "block";
+        document.getElementById("togglePlansWhole").style.display = "block";
         document.getElementById("switchSliderWhole").style.display = "block";
-        document.querySelector("#time2Page").removeEventListener("click", clickHandler)
+        document.querySelector("#timePage").removeEventListener("click", clickHandler)
       };
       function sumTimeSub(steps, stepIndex, arriveeTime){
         let totalMin = 0;
@@ -1413,6 +1443,90 @@
         startTime.setTime(arriveeTime.getTime() - totalMin * 60 * 1000);
         return startTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" , timeZone: "UTC"});
       };
+    </script>
+    <div name="ListPage" id="listPage"  class="sectionPage justPage noCasaFootPage">
+      <div id="wholeList">
+        <h2 style="text-align:center;">Épicerie</h2>
+        <h3 style="margin-bottom: 0;">Fruits et légumes</h3>
+        <hr class="sectionHR"/>
+        <ul style="margin: 0;padding: 0;">
+          <li class="listItem">
+            <input id="listTickInput" type="checkbox" class="cossin" onchange="listItemTicked()"/>
+            <label for="listTickInput" id="listTickLabel" class="listCircle">
+              <span class="typcn icon typcn-tick listTickBlack invisible" id="listTickTick"></span>
+            </label>
+            <input type="text" class="listItemName" id="listItemName" value="Avocat"/>
+            <div>
+              <span class="typcn icon typcn-image-outline noPicture"></span>
+              <span class="typcn icon typcn-image yesPicture displayNone"></span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <style>
+      #wholeList{
+        width: 240px;
+        margin: 0 auto 85px;
+      }
+      .sectionHR{
+        border-top: 1.5px solid rgba(128,0,128,.8);
+        margin-top: 0;
+      }
+      .listItem{
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .listItemName{
+        background: inherit;
+        border: none;
+        color: purple;
+        font-size: calc(15.53px + 0.19vw);
+        height: 25px;
+        width: 185px;
+      }
+      .listItemNameTicked{
+        text-decoration: line-through;
+        opacity: .5;
+      }
+      .listCircle{
+        border: solid purple;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+      }
+      .listCircleTicked{
+        background-color: rgba(128,0,128,.5);
+        border: rgba(0,0,0,0) solid;
+      }
+      .listTickBlack{
+        position: relative;
+        top: -10px;
+        left: -3px;
+        color: black;
+        font-size: 28px;
+      }
+      .invisible{
+        visibility: hidden;
+      }
+      .noPicture{
+        opacity: .5;
+        font-size: 24px;
+        line-height: 24px;
+      }
+      .yesPicture{
+        font-size: 24px;
+        line-height: 24px;
+      }
+    </style>
+    <script>
+      function listItemTicked(){
+        document.getElementById("listTickLabel").classList.toggle("listCircleTicked");
+        document.getElementById("listTickTick").classList.toggle("invisible");
+        document.getElementById("listItemName").classList.toggle("listItemNameTicked");
+      }
     </script>
     <!--I wrote, you read-->
       <!-- Faire le tableau des chiffres pour Alex! (et le mettre dans un toggle) -->
@@ -3552,7 +3666,12 @@
       }
 
       .cossin{
-        display:none;
+        position: absolute; 
+        overflow: hidden; 
+        clip: rect(0 0 0 0); 
+        height: 1px; width: 1px; 
+        margin: -1px; padding: 0;
+        border: 0;
       }
 
       .choice label{
@@ -4262,7 +4381,7 @@
         return myTSArray;
       };
 
-      
+
 
       // To get themed shit to feel 
       async function getGearData(theme) {

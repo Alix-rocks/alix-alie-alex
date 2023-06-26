@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html style="height:100%;">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,6 +17,8 @@
     <title>Alix rocks</title>
   </head>
   <body>
+    <div id="mainContainer" class="mainContainer">
+      <div style="padding-bottom: 85px;">
     <div id="switchSliderWhole">
       <div onclick="switchMode()" id="switchModeSlider">
         <div id="switchModeLight" class="typcn typcn-weather-sunny"></div>
@@ -24,6 +26,11 @@
         <div id="switchModeBall" class="ballDark"></div>
       </div>
     </div>
+    <div name="NopePage" class="justPage" id="nopePage" style="display:block;">
+      <h1 id="nopeH1" style="margin-top: calc(100vh/3); text-align: center;"></h1>
+    </div>
+    <div class="bottomButton backHome" onclick="toSectPage(this)" id="casa" title="Let's go back home!"><span class="typcn typcn-home"></span></div>
+    <div class="bottomButton backTop" onclick="backTop()" title="Again! From the top!" id="backTopButton"><span class="typcn typcn-chevron-right chevronTop"></span></div>
     <!-- Pour mettre en commentaire: Sélectionne et fait Ctrl+É -->
     <!-- Pour entourer de tag:
             Sélectionner le texte
@@ -39,10 +46,27 @@
     <!-- Section My girlfriend's art -->
     <style name="general">
       *{box-sizing: border-box;}
+      .cossin{
+        position: absolute; 
+        top:0;
+        overflow: hidden; 
+        clip: rect(0 0 0 0); 
+        height: 1px; width: 1px; 
+        margin: -1px; padding: 0;
+        border: 0;
+      }
       body{
         background: #000;
         color: #800080;
         /* transition: background-color .5s ease-in-out, color .5s ease-in-out; */
+      }
+      .mainContainer{
+        min-height: calc(100vh - 16px);
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-items: center;
       }
       /* h1 font-size: 36 - 38*/
       h1, .h1like{
@@ -116,25 +140,25 @@
       }
       .backTop{
         right: 34px;
+        display: none;
       }
       .chevronTop{
         display: inline-block;
         transform: rotate(270deg);
       }
       footer{
-        z-index: -1;
-        margin: 0 -8px -8px;
-      }
-      #footer{
         display: none;
-      }
-      .footerFixed{
-        position: absolute;
-        bottom: 0;
+        z-index: -1;
+        margin: 0 -16px -8px;
         width: 100%;
       }
+      footer > hr{
+        margin: 50px -8px 0;
+      }
       footer > div{
-        background:rgba(128,0,128, 0.2);padding: 10px;
+        background:rgba(128,0,128, .2);
+        padding: 10px;
+        margin: 0 -8px;
       }
       @media (max-width: 495px) {
         footer > div{
@@ -142,7 +166,7 @@
         }
       }
       #switchSliderWhole{
-        display: none;
+        display: block;
         width: 100%; 
         padding: 5px; 
         height: 35px;
@@ -186,9 +210,6 @@
         font-size: 19px;
         line-height: 1;
       }
-      .noCasaFoot{
-        display: none;
-      }
       .yesCasaFoot{
         display: block;
       }
@@ -221,6 +242,15 @@
         document.getElementById('sureBackHome').style.display = "none";
         document.getElementById('coverSureBackHome').style.display = "none";
       };
+
+      window.addEventListener("scroll", (evt) => {
+        if(window.scrollY > window.innerHeight){
+          document.getElementById("backTopButton").classList.add("yesCasaFoot");
+        } else{
+          document.getElementById("backTopButton").classList.remove("yesCasaFoot");
+        }
+      });
+
       function backTop(){
         window.scrollTo({ top: 0, behavior: 'smooth' });
       };
@@ -231,19 +261,19 @@
           document.body.style.color = "#800080";
           document.getElementById("backTopButton").style.background = "#000";
           document.getElementById('home').style.background = "#000";
+          document.getElementById('nopeH1').innerText = "Nope, there's nothing here...";
         } else{
           document.body.style.background = "#F2F3F4";
           document.body.style.color = "#000";
           document.getElementById("backTopButton").style.background = "#F2F3F4";
           document.getElementById('home').style.background = "#F2F3F4";
+          console.log(document.getElementById('nopeH1').value);
+          document.getElementById('nopeH1').innerText = "Nope, still nothing...";
         }
       }
     </script>
-    <!--HomePage-->
-    <div name="NopePage" class="justPage noCasaFootPage" id="nopePage" style="display:block;">
-      <h1 style="margin-top: calc(100vh/3); text-align: center;">Nope, there's nothing here...</h1>
-    </div>
-    <div name="CasaPage" class="home sectionPage justPage noCasaPage" id="casaPage">
+    <!--CasaPage-->
+    <div name="CasaPage" class="home sectionPage justPage yesFootnoCasa" id="casaPage">
       <h1>Whatever you think you're doing here,<br>WELCOME!</h1>
       <h3 style="margin-bottom:0;">That's my space, my mind, my shoes,...<br>Be warned, your insurances don't cover that kind of trauma.</h3>
       <!-- <h5 style="margin:0;">(Yeah, that's the only trigger warning you'll get...)</h5> -->
@@ -272,8 +302,7 @@
         <p>since 1985</p>
       </div>
     </div>
-    <div class="bottomButton backHome" onclick="toSectPage(this)" id="casa" title="Let's go back home!"><span class="typcn typcn-home"></span></div>
-    <style name="HomePage">
+    <style name="CasaPage">
       .PWfield{
         visibility: hidden;
       }
@@ -391,7 +420,7 @@
         font-weight: 400;
       }
     </style>
-    <script name="HomePage">
+    <script name="CasaPage">
      
 
         // À remettre dans mon code...
@@ -885,7 +914,7 @@
       //   document.getElementById("coverMyTime").style.display = "none";
       // }
     </script>
-    <div name="TimePage" id="timePage" class="sectionPage justPage noCasaFootPage">
+    <div name="TimePage" id="timePage" class="sectionPage justPage">
       <div class="togglePlansWhole" id="togglePlansWhole">
         <input id="togglePlans" type="checkbox" class="cossin"/>
         <label for="togglePlans" class="togglePlansLabel"><span id="togglePlansIcon" class="typcn icon typcn-media-play"></span>My schedules</label>
@@ -1048,6 +1077,12 @@
         outline-offset: 2px;
         border-radius: 2%;
       }
+      /* #arriveeTime input[type="time"]::-webkit-calendar-picker-indicator{
+        color: #800080;
+        background-color: black;
+        border-color: purple;
+        filter: invert(13%) sepia(58%) saturate(6184%) hue-rotate(292deg) brightness(78%) contrast(130%);
+      } */
       .notesBorder{
         border: 1px dotted purple;
         margin: 5px auto;
@@ -1057,7 +1092,6 @@
         margin: 0.3em;
       }
     </style>
-    <!-- Next => GroceryPage! -->
     <script name="TimePage">
       let steps;
       let current = null;
@@ -1191,17 +1225,31 @@
               current=evt.currentTarget;
               iteme.classList.add("dragging");
           });
+          iteme.addEventListener("touchstart", (evt) => {
+              // Adding dragging class to item
+              current=evt.currentTarget;
+              iteme.classList.add("dragging");
+          });
           // Removing dragging class from item on dragend event
           iteme.addEventListener("dragend", () => {
             iteme.classList.remove("dragging");
           });
+          iteme.addEventListener("touchend", () => {
+            iteme.classList.remove("dragging");
+          });
           iteme.addEventListener("dragover", (evt) => {
+            overIteme = evt.currentTarget;
+          });
+          iteme.addEventListener("touchmove", (evt) => {
             overIteme = evt.currentTarget;
           });
         });
         sortableList.addEventListener("dragover", initSortableList);
         sortableList.addEventListener("dragenter", e => e.preventDefault());
         sortableList.addEventListener("drop", ondrop);
+        sortableList.addEventListener("touchmove", initSortableList);
+        sortableList.addEventListener("touchstart", e => e.preventDefault());
+        sortableList.addEventListener("touchend", ondrop);
       };
 
       const initSortableList = (e) => {
@@ -1213,7 +1261,13 @@
           let siblings = [...sortableList.querySelectorAll(".iteme:not(.dragging)")];
           // Finding the sibling after which the dragging item should be placed
           let nextSibling = siblings.find(sibling => {
+            if (event.clientX) {
+              //if mouse
               return e.clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
+            } else{
+              //if touch
+              return e.changedTouches[0].clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
+            }
           });
           // Inserting the dragging item before the found sibling
           sortableList.insertBefore(draggingItem, nextSibling);
@@ -1444,7 +1498,8 @@
         return startTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" , timeZone: "UTC"});
       };
     </script>
-    <div name="ListPage" id="listPage"  class="sectionPage justPage noCasaFootPage">
+    <!-- Next => GroceryPage! -->
+    <div name="ListPage" id="listPage"  class="sectionPage justPage">
       <div id="wholeList">
         <h2 style="text-align:center;">Épicerie</h2>
         <h3 style="margin-bottom: 0;">Fruits et légumes</h3>
@@ -1464,7 +1519,7 @@
         </ul>
       </div>
     </div>
-    <style>
+    <style name="ListPage">
       #wholeList{
         width: 240px;
         margin: 0 auto 85px;
@@ -1521,7 +1576,7 @@
         line-height: 24px;
       }
     </style>
-    <script>
+    <script name="ListPage">
       function listItemTicked(){
         document.getElementById("listTickLabel").classList.toggle("listCircleTicked");
         document.getElementById("listTickTick").classList.toggle("invisible");
@@ -1530,8 +1585,7 @@
     </script>
     <!--I wrote, you read-->
       <!-- Faire le tableau des chiffres pour Alex! (et le mettre dans un toggle) -->
-    <div name="WrotePage" id="wrotePage" class="sectionPage justPage footered">
-      <div class="bottomButton backTop" onclick="backTop()" title="Again! From the top!" id="backTopButton"><span class="typcn typcn-chevron-right chevronTop"></span></div>
+    <div name="WrotePage" id="wrotePage" class="sectionPage justPage yesCasaFoot">
       <div class="menuTextSection" id="menuTextSection">
         <input type="radio" name="menuText" class="menuText" onclick="toPage('Table')" id="inputTable">
         <label for="inputTable" class="menuTextLabel"  id="labelTable">La table est mise</label>
@@ -2611,7 +2665,7 @@
     </script>
 
     <!--ReadPage-->
-    <div name="ReadPage" class="sectionPage justPage" id="readPage">
+    <div name="ReadPage" class="sectionPage justPage yesCasaFoot" id="readPage">
       <p>Texts I've read and loved</p>
       <h1>Les Fables de Jean de La Fontaine</h1>
       <div name="CigaleFourmi">
@@ -2731,7 +2785,7 @@
           <!-- Créer/remplir le database et le storage (meme) -->
           <!-- Adapter le formulaire pour ajouter des memes (image et reconnaissance du type et création dans storage et lien dans database) -->
           <!-- Figurer out à partir de où on peut ajouter des quotes (google keep, facebook, etc) -->
-    <div name="ShitPage" class="sectionPage justPage" id="shitPage">
+    <div name="ShitPage" class="sectionPage justPage yesCasaFoot" id="shitPage">
       <div id="coverMyShit"></div>
       <h1>Relax, I'm still working on it!</h1>
       <div style="display:flex;justify-content: space-around;flex-wrap: wrap;">
@@ -2986,7 +3040,7 @@
         top:0;
         left: 0;
         background: inherit;
-        opacity: .7;
+        opacity: .9;
         z-index: 999;
       }
       #enough{
@@ -3202,7 +3256,7 @@
 
     <!--Master's Toy's Training--> 
     <!-- Mstrplzuseme -->
-    <div name="ToysPage" class="sectionPage" id="SectPageToy">
+    <div name="ToysPage" class="sectionPage justPage yesCasaFoot" id="SectPageToy">
       <div class="cover" id="coverSureBackHome"></div>
       <div id="remindRulesBox">
         <div class="RulesCover"></div>
@@ -3664,16 +3718,6 @@
         display:block;
         font-size: 24px;
       }
-
-      .cossin{
-        position: absolute; 
-        overflow: hidden; 
-        clip: rect(0 0 0 0); 
-        height: 1px; width: 1px; 
-        margin: -1px; padding: 0;
-        border: 0;
-      }
-
       .choice label{
         display: inline-block;
         margin: 10px;
@@ -4186,12 +4230,14 @@
         history.go(0);
       }
     </script>
+    </div>
     <footer id="footer">
       <hr style="border-color: #800080;margin-bottom: 0;"/>
       <div>
         <h5 style="text-align:center;margin: 0;">I might not have a footer, but I've got two feet you can kiss.</h5>
       </div>
     </footer>
+  </div>
     <script name="navigation">
       // To get the last part of the url
       var currentState = location.pathname;
@@ -4200,9 +4246,9 @@
         currentState = "/nope";
         history.replaceState(currentState, null, " ");
         currentState = currentState.slice(1);
-        document.getElementById('footer').style.display = "none";
-        document.getElementById('switchSliderWhole').style.display = "none";
-        document.getElementById('casa').style.display = "none";
+        document.getElementById('footer').classList.remove("yesCasaFoot");
+        document.getElementById('casa').classList.remove("yesCasaFoot");
+        document.getElementById("backTopButton").classList.remove("yesCasaFoot");
       } else{
       // To remove the "/"
       currentState = currentState.slice(1);
@@ -4211,24 +4257,23 @@
       };
       if(currentState.startsWith("wrote") == true){
         let currentStateBase = "wrote";
-        // console.log("3198 = " + currentStateBase)
         navigate(currentStateBase);
         let id = currentState.slice(6);
-        // console.log("3202 = " + id);
+        if(id){
         toPage(id);
+        }
       } else if(currentState.startsWith("text") == true){
         let idF = currentState.slice(5);
         let idFGood = idF.charAt(0).toUpperCase() + idF.slice(1);
         let justPageAll = document.querySelectorAll('.justPage');
-        document.getElementById('switchSliderWhole').style.display = "block";
         for(let i = 0; i < justPageAll.length; i++){
           justPageAll[i].style.display = "none";
         };
-        // console.log("Alex!");
         document.getElementById("wrotePage").style.display = "block";
         document.getElementById("menuTextSection").style.display = "none";
         document.getElementById("page" + idFGood).style.display = "block";
-        // document.getElementById('footer').classList.remove('footerFixed');
+        document.getElementById('footer').classList.remove("yesCasaFoot");
+        document.getElementById('casa').classList.remove("yesCasaFoot");
         window.scrollTo({ top: 0});
       } else {
         // To display the wanted page (currentPage)
@@ -4261,10 +4306,8 @@
         // console.log("3243 = " + idGood);
         document.getElementById("page" + idGood).classList.toggle('textPageSelected');
         document.getElementById("input" + idGood).checked = true;
-        document.getElementById('footer').style.display = "block";
-        document.getElementById('switchSliderWhole').style.display = "block";
-        document.getElementById('casa').style.display = "block";
-        document.getElementById('footer').classList.remove('footerFixed');
+        document.getElementById('footer').classList.add("yesCasaFoot");
+        document.getElementById('casa').classList.add("yesCasaFoot");
         window.scrollTo({ top: 0});
       };
 
@@ -4280,37 +4323,19 @@
         };
         // To show the wanted "current" Page
         document.getElementById(currentPage).style.display = "block";
-        document.getElementById('switchSliderWhole').style.display = "block";
         window.scrollTo({ top: 0});
-        // So that the back home button doesn't show on the home page
-        // if(currentPage == "casaPage" || document.getElementById(currentPage).classList.contains('noCasaFootPage') == true){
-        //   document.getElementById('casa').style.display = "none";
-        // } else{
-        //   document.getElementById('casa').style.display = "block";
-        // }
-        if(document.getElementById(currentPage).classList.contains('noCasaPage') == true){
-          document.getElementById('casa').classList.remove('yesCasaFoot');
-        } else{
-          document.getElementById('casa').classList.add('yesCasaFoot');
+        // Do we have a Casa and or a Foot or not?
+        if(document.getElementById(currentPage).classList.contains('yesFootnoCasa') == true){
+          document.getElementById('footer').classList.add("yesCasaFoot");
+          document.getElementById('casa').classList.remove("yesCasaFoot");
+        } else if(document.getElementById(currentPage).classList.contains('yesCasaFoot') == true){
+          document.getElementById('footer').classList.add("yesCasaFoot");
+        document.getElementById('casa').classList.add("yesCasaFoot");
+        } else if(document.getElementById(currentPage).classList.contains('yesCasaFoot') == false){
+          document.getElementById('footer').classList.remove("yesCasaFoot");
+          document.getElementById('casa').classList.remove("yesCasaFoot");
         }
-        if(document.getElementById(currentPage).classList.contains('noCasaFootPage') == true){
-          document.getElementById('footer').classList.remove('yesCasaFoot');
-          document.getElementById('casa').classList.remove('yesCasaFoot');
-        } else{
-          document.getElementById('casa').classList.add('yesCasaFoot');
-          document.getElementById('footer').classList.add('yesCasaFoot');
-        }
-        if(document.getElementById(currentPage).classList.contains('footered') == true){
-          document.getElementById('footer').classList.add('yesCasaFoot');
-          document.getElementById('footer').classList.add('footerFixed');
-        } else if(document.getElementById(currentPage).classList.contains('footered') == false){
-          document.getElementById('footer').classList.add('yesCasaFoot');
-          document.getElementById('footer').classList.remove('footerFixed');
-        }        
         if(currentPage == "wrotePage"){
-          // document.getElementById('footer').style.display = "block";
-          // document.getElementById('switchSliderWhole').style.display = "block";
-          // document.getElementById('casa').style.display = "block";
           let textPageAll = document.querySelectorAll('.textPage');
           textPageAll.forEach(page => {
           page.classList.remove('textPageSelected');
@@ -4321,9 +4346,11 @@
           });
         }
         if(currentPage == "nopePage"){
-          // document.getElementById('casa').style.display = "none";
-          // document.getElementById('footer').style.display = "none";
-          document.getElementById('switchSliderWhole').style.display = "none";
+          if(document.getElementById("switchModeBall").classList.contains("ballDark")){
+          document.getElementById('nopeH1').innerText = "Nope, there's nothing here...";
+          } else{
+            document.getElementById('nopeH1').innerText = "Nope, still nothing...";
+          }
         }
       };
 
@@ -4368,6 +4395,37 @@
       // querySnapshot.forEach((doc) => {
       //   console.log(doc.data());
       // });
+
+      //Save your Time
+      // function saveIt(){
+      //   updateSteps()
+      //   addDoc(collection(db, "Plan"), {
+      //     steps.forEach(step => {
+      //     Step: [step.index, step.name, step.value, step.checked, step.id],})
+          
+      //   })
+      // }
+        let destination = document.getElementById("destination").value
+        let planDoc = doc(db, "Plan", destination);
+        steps.map((step) => {
+          setDoc(planDoc, {
+            step0: [step.index, step.name, step.value, step.checked, step.id]
+        }, {merge: true});})
+
+      // document.querySelector('#addYOS').addEventListener('submit', (e) => {
+        
+        
+      //   addDoc(collection(db, "shit"), {
+      //     quote: quoteHTML,
+      //     theme: finalList,
+      //     type: "text"
+      //   })
+      //   .then(() => {
+      //     addYOSForm.reset()
+      //     document.querySelector("#wisely").innerHTML = "Choose wisely...";
+      //     document.querySelector("#badShit").innerHTML = "Thank you for your shit!";
+      //   })});
+
 
       // To get today'shit 
       async function getTodaysShit() {
@@ -4434,6 +4492,11 @@
             document.getElementById("yourShit").classList.add("yourShitHover");
             document.getElementById("ySp").innerHTML = thisRecipe[numAS]; 
             document.getElementById("coverMyShit").style.display = "block";
+            if(document.getElementById("switchModeBall").classList.contains("ballDark")){
+              document.getElementById("coverMyShit").style.background = "#000";
+            } else{
+              document.getElementById("coverMyShit").style.background = "#F2F3F4";
+            };
             document.getElementById("enough").style.display = "flex";
             document.getElementById("heresYSR").classList.add("fixYourShit");
             document.getElementById("explainShit").style.display = "block";

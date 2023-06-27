@@ -27,7 +27,7 @@
       </div>
     </div>
     <div name="NopePage" class="justPage" id="nopePage" style="display:block;">
-      <h1 id="nopeH1" style="margin-top: calc(100vh/3); text-align: center;"></h1>
+      <h1 id="nopeH1" style="margin-top: calc(100vh/3); text-align: center;">Nope, there's nothing here...</h1>
     </div>
     <div class="bottomButton backHome" onclick="toSectPage(this)" id="casa" title="Let's go back home!"><span class="typcn typcn-home"></span></div>
     <div class="bottomButton backTop" onclick="backTop()" title="Again! From the top!" id="backTopButton"><span class="typcn typcn-chevron-right chevronTop"></span></div>
@@ -259,16 +259,16 @@
         if(document.getElementById("switchModeBall").classList.contains("ballDark")){
           document.body.style.background = "#000";
           document.body.style.color = "#800080";
+          document.getElementById('nopeH1').innerText = "Nope, there's nothing here...";
           document.getElementById("backTopButton").style.background = "#000";
           document.getElementById('home').style.background = "#000";
-          document.getElementById('nopeH1').innerText = "Nope, there's nothing here...";
         } else{
           document.body.style.background = "#F2F3F4";
           document.body.style.color = "#000";
+          document.getElementById('nopeH1').innerText = "Nope, still nothing...";
           document.getElementById("backTopButton").style.background = "#F2F3F4";
           document.getElementById('home').style.background = "#F2F3F4";
           console.log(document.getElementById('nopeH1').value);
-          document.getElementById('nopeH1').innerText = "Nope, still nothing...";
         }
       }
     </script>
@@ -4344,13 +4344,6 @@
           menuTextAll.forEach(menuText => {
             menuText.checked = false;
           });
-        }
-        if(currentPage == "nopePage"){
-          if(document.getElementById("switchModeBall").classList.contains("ballDark")){
-          document.getElementById('nopeH1').innerText = "Nope, there's nothing here...";
-          } else{
-            document.getElementById('nopeH1').innerText = "Nope, still nothing...";
-          }
         }
       };
 

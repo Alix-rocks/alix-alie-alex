@@ -14,9 +14,27 @@
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="manifest" href="site.webmanifest">
+    <link rel="stylesheet" href="time.css">
+    <link rel="stylesheet" href="list.css">
+    <link rel="stylesheet" href="shit.css">
     <title>Alix rocks</title>
   </head>
   <body>
+    <!-- Pour mettre en commentaire: Sélectionne et fait Ctrl+É -->
+    <!-- Pour entourer de tag:
+            Sélectionner le texte
+            Ctrl + Shift + P 
+            Choisir: "Emmet: Wrap with Abbreviation" -> Enter
+            Inscrire le tag que tu veux -> Enter -->
+    <!-- Pour tout aligner comme il faut (avec les tabs): shift + Alt + F -->
+    <!-- Settings: Crtl + , -->
+
+    <!-- SUGGESTIONS -->
+    <!-- Ajouter un breadcrumb ou un menu dans la même bar que le switch mode -->
+    <!-- Section Alie et Alex (Arachnides) -->
+        <!-- Calendrier avec étape et photos
+              Photos organisées par theme (mue, eating, chilling, tank, etc) et/ou par date -->
+    <!-- Section My girlfriend's art -->
     <div id="mainContainer" class="mainContainer">
       <div style="padding-bottom: 85px;">
     <div id="switchSliderWhole">
@@ -31,19 +49,7 @@
     </div>
     <div class="bottomButton backHome" onclick="toSectPage(this)" id="casa" title="Let's go back home!"><span class="typcn typcn-home"></span></div>
     <div class="bottomButton backTop" onclick="backTop()" title="Again! From the top!" id="backTopButton"><span class="typcn typcn-chevron-right chevronTop"></span></div>
-    <!-- Pour mettre en commentaire: Sélectionne et fait Ctrl+É -->
-    <!-- Pour entourer de tag:
-            Sélectionner le texte
-            Ctrl + Shift + P 
-            Choisir: "Emmet: Wrap with Abbreviation" -> Enter
-            Inscrire le tag que tu veux -> Enter -->
 
-    <!-- SUGGESTIONS -->
-    <!-- Ajouter un breadcrumb ou un menu dans la même bar que le switch mode -->
-    <!-- Section Alie et Alex (Arachnides) -->
-        <!-- Calendrier avec étape et photos
-              Photos organisées par theme (mue, eating, chilling, tank, etc) et/ou par date -->
-    <!-- Section My girlfriend's art -->
     <style name="general">
       *{box-sizing: border-box;}
       .cossin{
@@ -261,15 +267,18 @@
           document.body.style.color = "#800080";
           document.getElementById('nopeH1').innerText = "Nope, there's nothing here...";
           document.getElementById("backTopButton").style.background = "#000";
-          document.getElementById('home').style.background = "#000";
+          document.getElementById('casa').style.background = "#000";
         } else{
           document.body.style.background = "#F2F3F4";
           document.body.style.color = "#000";
           document.getElementById('nopeH1').innerText = "Nope, still nothing...";
           document.getElementById("backTopButton").style.background = "#F2F3F4";
-          document.getElementById('home').style.background = "#F2F3F4";
-          console.log(document.getElementById('nopeH1').value);
+          document.getElementById('casa').style.background = "#F2F3F4";
         }
+      }
+
+      function getRndInteger(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
       }
     </script>
     <!--CasaPage-->
@@ -421,44 +430,6 @@
       }
     </style>
     <script name="CasaPage">
-     
-
-        // À remettre dans mon code...
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //     console.log("allo");
-        // var menuSectAll = document.querySelectorAll('.menuSect');
-        // var menuSectLabelAll = document.querySelectorAll('.menuSectLabel');
-        // var sectionPageAll = document.querySelectorAll('.sectionPage');
-        // document.getElementById('home').style.display = "block";
-        // for(let i = 0; i < menuSectAll.length; i++){
-        //   sectionPageAll[i].style.display = "none";
-        //   if(menuSectAll[i].id == currentState){
-        //     sectionPageAll[i].style.display = "block";
-        //     document.getElementById('home').style.display = "none";
-        //     window.scrollTo({ top: 0});
-        //     document.getElementById('backHome').style.display = "block";
-        //     if(menuSectAll[i].classList.contains('footered')){
-        //       document.getElementById('footer').classList.add('footerFixed');
-
       function showPWfield(){
         document.getElementById('PWfield').classList.toggle('visible');
         document.getElementById('ToyLabel').classList.toggle('toychecked');
@@ -496,167 +467,167 @@
         }
       }
       //Shit of the Day
-      var QMS_Coffee = [
-        "X My code works<br>\n(I have no idea why)",
-        "X Client: Please, can you assure me your french fries are vegan?<br>\nWaiter: Totally, I can assure you they've never eaten any meat!",
-        "S And by the way if asking for consent \"ruins the mood\", it's because you were the only one in the fucking mood.<br>\nLiterally.",
-        "M La règle du 80/20:<br>\nPasser 80% de son temps à analyser ce qui se passe dans sa tête pendant l'autre 20%.",
-        "P Whatever you do always give 100%<br>\nUnless you're donating blood.",
-        "K J'ai besoin d'un nouvel ami.<br>\nCelui que j'avais s'est échappé de la cave...",
-        "A You look like I need a drink.",
-        "A The fact that there's a highway to hell and only a stairway to heaven says a lot about anticipated traffic numbers.",
-        "AH Pro Tip: Save business cards of people you don't like. If you ever hit a parked car accidentally, just write \"Sorry\" on the back and leave it on the windshield.",
-        'D "Your call is important to us.<br>\nPlease stay on the line until your call is no longer important to you."',
-        "S L'amour c'est comme le bridge, si t'as pas un bon partenaire, espère avoir une bonne main.",
-        "D Most orchestras are just 1800's cover bands.",
-        "N I feel much better now that I've given up hope.",
-        "K Les yeux sont le miroir de l'âme.<br>\nJe l'ai vu dans un film d'horreur avec plein d'enfants qui avaient les cheveux blancs.<br>\nC'était creepy as fuck, mais la moral était belle.",
-        "K The thing about torture is that you're afraid it'll kill you<br>\nBut you're also afraid it won't.",
-        "S I'm a foster partner.<br>\nI date people until they find their forever home.",
-        "PD There’s no limit to what you can be if you lie to yourself.",
-        "PD Happiness is just a lack of information.",
-        "D Park bench:<br>\nThe best way to enjoy nature without having to touch it",
-        "S I never apologize to my partners,<br>\nI just sleep naked and let them decide if they're still mad or not.",
-        "P Quand j'marche en ville, j'ai toujours l'air de faire du lèche-vitrine, mais en vrai, c'est moi que j'lèche.",
-        "H Ça va faire 3 mois que j'ai pris un abonnement au gym.<br>\nToujours aucun résultat.<br>\nDemain j'me rends sur place pour voir c'qui s'passe!",
-        "PH Be decisive. Make a decision. The road of life is paved with flat squirrels who couldn’t make a decision.",
-        "CK There is no use crying over spilled milk...<br>\nSpilled coffee, however, may get you stabbed.",
-        "A I'm just sayin', everyone that confuses correlation with causation eventually ends up dead.",
-        "HD Doctors are just scamming you if they say you have internal bleeding.<br>\nThat's where blood is supposed to be.",
-        "HC The secret to a happy life is to let me drink my coffee BEFORE you talk to me.",
-        "CH New research suggests drinking coffee in the morning helps others live longer.",
-        "H Si tu mets du poulet et des œufs dans la même recette;<br>\nça fait un plat bi-générationnel.",
-        "CH By replacing your morning coffee with green tea, you can lose up to 87% of what little joy you still have left in your life.",
-        "C Coffee is my love language.<br>\nIf you love me, you get me coffee.<br>\nIf you get me coffee, I love you.",
-        "O I'm at that point in my life where I can tell you what date or day it is,\nbut not both.",
-        "ND Things don't really get better.<br>\nYou just get used to them.",
-        "X I'm writing a novel<br>\nand I just can't wait to read it!",
-        "S What had gotten into you and why wasn't it me?",
-        "O I have learned two very important lessons in my life.<br>\nI don't remember the first one, but the second one is to write everything down.",
-        "P They say you will eat around 23 spiders in your lifetime.<br>\nBut really you can eat as many as you want.<br>\nTreat yourself, you deserve it.",
-        "O I'm at a place in my life where errands count as going out.",
-        "H Surtout n'oubliez pas:<br>\nCette nuit on change de jour.<br>\nÀ minuit, il sera demain.",
-        "O What's the difference between a prison and a CHSLD?<br>\nThey both watch you pee and shit, but only one will wipe you afterward.",
-        "O What's the difference between a prison and a CHSLD?<br>\nThey both make you eat balanced but tasteless food, but only one will spoon-feed it to you.",
-        "O What's the difference between a prison and a CHSLD?<br>\nThey both choose what clothes you wear, but only one will help you put them on.",
-        "O What's the difference between daycare and CHSLD?<br>\nIf you make a sex joke, they actually get it.",
-        "PD Shit makes flowers grow.",
-        "PD You are unique.<br>\nJust like everyone else.",
-        'K How good do you have to be to be considered a "good person"?',
-        "K My doctor told me to start killing people.<br>\nWell not in those exact words.<br>\nSaid I had to reduce stress in my life.<br>\nSame thing.",
-        "PND Tradition is just peer pressure from dead people.",
-        "S Paranormal romance has taught me that you can convince any one to screw up their whole life with the sole promise of being paranormally screwed their whole life.",
-        "PN La theorie<br>\nC'est quand on comprend tout, mais y'a rien qui marche<br>\nLa pratique<br>\nC'est quand tout marche, mais on sait pas pourquoi<br>\nIci, on a réussi les deux:<br>\nRien qui marche et personne sait pourquoi.",
-        "SH Sex before marriage is a sin unless you do it doggy style because all dogs go to heaven.<br>\nFollow me for more biblical loopholes.",
-        "SH It's not premarital sex if you never get married.<br>\nFollow me for more biblical loopholes.",
-        "SD Adults are probably spanked more than children nowadays.",
-        "H Mettez pas d'eau au congélateur.<br>\nElle devient toute dure et imbuvable.",
-        "AD If you think you are smarter than the previous generation...<br>\n50 years ago the owner's manual of a car showed you how to adjust the valves.<br>\nToday it warns you not to drink the contents of the battery.",
-        "HD etc.<br>\nend of thinking capacity.",
-        "D If you can't be a good example, then you'll just have to be a horrible warning.",
-        "KD Proof that \"I'm sorry\" and \"I apologize\" aren't the same thing:<br>\ntry saying it at a funeral.",
-        "K The best place to hide a dead body is page 2 of Google.",
-        "OD At my age I've seen it all, heard it all, done it all,<br>\njust can't remember it all.",
-        "S Damn near had a threesome last night,<br>\njust needed 2 more people.",
-        "O Reached that age where I've lost all perspective on the difference between clothes worn around the house and clothes worn outside of the house.",
-        "SH Even if \"Diarrhea\" isn't your safe word, I guarantee they'll stop whatever they're doing if you scream it during sex.",
-        "SH Le DuctTape c'est comme le sexe, c'est toujours plus efficace sur soi-même.",
-        'S The phrase "you deserve to be filled the same way you pour" has a totally different meaning in an orgy.',
-        "S All sex is a threesome.<br>\nFor those who believe their god is everywhere.",
-        "A I really think it's time to take the warning labels off of everything and let stupidity work itself out of the gene pool.",
-        "SH If you forget your safe word, calling out the wrong name usually works just as well.<br>\nThe more you know.",
-        "S I don't like being told what to do.<br>\nUnless I'm naked.",
-        "K Don't break people's hearts, they only have one.<br>\nBreak their bones, they have plenty of those.",
-        "K Whether I kill you with originality or not, you're still gonna be dead.<br>\nThe only difference is how long they're gonna talk about us on the news.",
-        "K Barbie didn't give me a poor body image.<br>\nBarbie taught me you can't reattach a head once it's been removed from the body.",
-        "SH Assert dominance by moaning your own name during sex.",
-        "A J'devrais partir avant que l'autre dise quelque chose que j'pourrais regretter.",
-        "K As it turns out, pounding a wooden stake thru a vampire's heart works even if the guy's not a vampire.",
-        "S Au pool, c'est comme au sexe:<br>\nPlus t'es saoul; plus tu t'vante; moins t'en rentre!",
-        "S Go down a waterslide without water and you'll understand why foreplay is so important.",
-        "KD When you die, people cry and beg for you to come back,<br>\nbut, when you do, there's the running and the screaming...",
-        "H I don't believe in a lot of things, but I do believe in DuctTape!",
-        "DKA Someone's therapist knows about me.",
-        "OH Adulthood has shown me that you don't need fun to have alcohol.",
-        "S I am NOT embarrassed about the number of people I've slept with.<br>\nI am obviously embarrassed about the quality.",
-        "HK Duct Tape is like violence:<br>\nDoesn't work?<br>\nUse more.",
-        "KDA I'm the reason you need a safe space.",
-        "C I don't have a problem with coffee<br>\nI have a problem without coffee.",
-        "C I don't need an inspirational quote, what I need is a freaking cup of coffee.",
-        "CP I like my coffee like I like myself:<br>\nstrong, sweet, and too hot for you.",
-        "CP I don't need to drink coffee to be awesome.<br>\nI'm already awesome.<br>\nBut it's more fun when I'm awesome and awake.",
-        "CD This coffee better kick in before reality does.",
-        "CH You should know that before 10 am, no matter what the question is, my answer is always coffee.",
-        "C I will start working when my coffee does.",
-        "C I'M NOT AFRAID OF MONSTERS.<br>\nI'm afraid of the coffee maker breaking.",
-        "C Life without coffee is like something without something… sorry, I haven’t had any coffee yet.",
-        "C With enough caffeine, I can <s>\nrule the world.</s>\n dress myself and use my grownup manners.",
-        "CA Decaf coffee only works if you throw it at people.",
-        "A I'm only awkward around people.",
-        "AD The more people I meet, the more I love myself.",
-        "AD There's a 99% chance I don't care.",
-        "AD I talk to myself because I hate everyone else.",
-        "ADK I'm the kind of person your parents warned you about.",
-        "ADKOS Why are you still here?"];
+      // var QMS_Coffee = [
+      //   "X My code works<br>\n(I have no idea why)",
+      //   "X Client: Please, can you assure me your french fries are vegan?<br>\nWaiter: Totally, I can assure you they've never eaten any meat!",
+      //   "S And by the way if asking for consent \"ruins the mood\", it's because you were the only one in the fucking mood.<br>\nLiterally.",
+      //   "M La règle du 80/20:<br>\nPasser 80% de son temps à analyser ce qui se passe dans sa tête pendant l'autre 20%.",
+      //   "P Whatever you do always give 100%<br>\nUnless you're donating blood.",
+      //   "K J'ai besoin d'un nouvel ami.<br>\nCelui que j'avais s'est échappé de la cave...",
+      //   "A You look like I need a drink.",
+      //   "A The fact that there's a highway to hell and only a stairway to heaven says a lot about anticipated traffic numbers.",
+      //   "AH Pro Tip: Save business cards of people you don't like. If you ever hit a parked car accidentally, just write \"Sorry\" on the back and leave it on the windshield.",
+      //   'D "Your call is important to us.<br>\nPlease stay on the line until your call is no longer important to you."',
+      //   "S L'amour c'est comme le bridge, si t'as pas un bon partenaire, espère avoir une bonne main.",
+      //   "D Most orchestras are just 1800's cover bands.",
+      //   "N I feel much better now that I've given up hope.",
+      //   "K Les yeux sont le miroir de l'âme.<br>\nJe l'ai vu dans un film d'horreur avec plein d'enfants qui avaient les cheveux blancs.<br>\nC'était creepy as fuck, mais la moral était belle.",
+      //   "K The thing about torture is that you're afraid it'll kill you<br>\nBut you're also afraid it won't.",
+      //   "S I'm a foster partner.<br>\nI date people until they find their forever home.",
+      //   "PD There’s no limit to what you can be if you lie to yourself.",
+      //   "PD Happiness is just a lack of information.",
+      //   "D Park bench:<br>\nThe best way to enjoy nature without having to touch it",
+      //   "S I never apologize to my partners,<br>\nI just sleep naked and let them decide if they're still mad or not.",
+      //   "P Quand j'marche en ville, j'ai toujours l'air de faire du lèche-vitrine, mais en vrai, c'est moi que j'lèche.",
+      //   "H Ça va faire 3 mois que j'ai pris un abonnement au gym.<br>\nToujours aucun résultat.<br>\nDemain j'me rends sur place pour voir c'qui s'passe!",
+      //   "PH Be decisive. Make a decision. The road of life is paved with flat squirrels who couldn’t make a decision.",
+      //   "CK There is no use crying over spilled milk...<br>\nSpilled coffee, however, may get you stabbed.",
+      //   "A I'm just sayin', everyone that confuses correlation with causation eventually ends up dead.",
+      //   "HD Doctors are just scamming you if they say you have internal bleeding.<br>\nThat's where blood is supposed to be.",
+      //   "HC The secret to a happy life is to let me drink my coffee BEFORE you talk to me.",
+      //   "CH New research suggests drinking coffee in the morning helps others live longer.",
+      //   "H Si tu mets du poulet et des œufs dans la même recette;<br>\nça fait un plat bi-générationnel.",
+      //   "CH By replacing your morning coffee with green tea, you can lose up to 87% of what little joy you still have left in your life.",
+      //   "C Coffee is my love language.<br>\nIf you love me, you get me coffee.<br>\nIf you get me coffee, I love you.",
+      //   "O I'm at that point in my life where I can tell you what date or day it is,\nbut not both.",
+      //   "ND Things don't really get better.<br>\nYou just get used to them.",
+      //   "X I'm writing a novel<br>\nand I just can't wait to read it!",
+      //   "S What had gotten into you and why wasn't it me?",
+      //   "O I have learned two very important lessons in my life.<br>\nI don't remember the first one, but the second one is to write everything down.",
+      //   "P They say you will eat around 23 spiders in your lifetime.<br>\nBut really you can eat as many as you want.<br>\nTreat yourself, you deserve it.",
+      //   "O I'm at a place in my life where errands count as going out.",
+      //   "H Surtout n'oubliez pas:<br>\nCette nuit on change de jour.<br>\nÀ minuit, il sera demain.",
+      //   "O What's the difference between a prison and a CHSLD?<br>\nThey both watch you pee and shit, but only one will wipe you afterward.",
+      //   "O What's the difference between a prison and a CHSLD?<br>\nThey both make you eat balanced but tasteless food, but only one will spoon-feed it to you.",
+      //   "O What's the difference between a prison and a CHSLD?<br>\nThey both choose what clothes you wear, but only one will help you put them on.",
+      //   "O What's the difference between daycare and CHSLD?<br>\nIf you make a sex joke, they actually get it.",
+      //   "PD Shit makes flowers grow.",
+      //   "PD You are unique.<br>\nJust like everyone else.",
+      //   'K How good do you have to be to be considered a "good person"?',
+      //   "K My doctor told me to start killing people.<br>\nWell not in those exact words.<br>\nSaid I had to reduce stress in my life.<br>\nSame thing.",
+      //   "PND Tradition is just peer pressure from dead people.",
+      //   "S Paranormal romance has taught me that you can convince any one to screw up their whole life with the sole promise of being paranormally screwed their whole life.",
+      //   "PN La theorie<br>\nC'est quand on comprend tout, mais y'a rien qui marche<br>\nLa pratique<br>\nC'est quand tout marche, mais on sait pas pourquoi<br>\nIci, on a réussi les deux:<br>\nRien qui marche et personne sait pourquoi.",
+      //   "SH Sex before marriage is a sin unless you do it doggy style because all dogs go to heaven.<br>\nFollow me for more biblical loopholes.",
+      //   "SH It's not premarital sex if you never get married.<br>\nFollow me for more biblical loopholes.",
+      //   "SD Adults are probably spanked more than children nowadays.",
+      //   "H Mettez pas d'eau au congélateur.<br>\nElle devient toute dure et imbuvable.",
+      //   "AD If you think you are smarter than the previous generation...<br>\n50 years ago the owner's manual of a car showed you how to adjust the valves.<br>\nToday it warns you not to drink the contents of the battery.",
+      //   "HD etc.<br>\nend of thinking capacity.",
+      //   "D If you can't be a good example, then you'll just have to be a horrible warning.",
+      //   "KD Proof that \"I'm sorry\" and \"I apologize\" aren't the same thing:<br>\ntry saying it at a funeral.",
+      //   "K The best place to hide a dead body is page 2 of Google.",
+      //   "OD At my age I've seen it all, heard it all, done it all,<br>\njust can't remember it all.",
+      //   "S Damn near had a threesome last night,<br>\njust needed 2 more people.",
+      //   "O Reached that age where I've lost all perspective on the difference between clothes worn around the house and clothes worn outside of the house.",
+      //   "SH Even if \"Diarrhea\" isn't your safe word, I guarantee they'll stop whatever they're doing if you scream it during sex.",
+      //   "SH Le DuctTape c'est comme le sexe, c'est toujours plus efficace sur soi-même.",
+      //   'S The phrase "you deserve to be filled the same way you pour" has a totally different meaning in an orgy.',
+      //   "S All sex is a threesome.<br>\nFor those who believe their god is everywhere.",
+      //   "A I really think it's time to take the warning labels off of everything and let stupidity work itself out of the gene pool.",
+      //   "SH If you forget your safe word, calling out the wrong name usually works just as well.<br>\nThe more you know.",
+      //   "S I don't like being told what to do.<br>\nUnless I'm naked.",
+      //   "K Don't break people's hearts, they only have one.<br>\nBreak their bones, they have plenty of those.",
+      //   "K Whether I kill you with originality or not, you're still gonna be dead.<br>\nThe only difference is how long they're gonna talk about us on the news.",
+      //   "K Barbie didn't give me a poor body image.<br>\nBarbie taught me you can't reattach a head once it's been removed from the body.",
+      //   "SH Assert dominance by moaning your own name during sex.",
+      //   "A J'devrais partir avant que l'autre dise quelque chose que j'pourrais regretter.",
+      //   "K As it turns out, pounding a wooden stake thru a vampire's heart works even if the guy's not a vampire.",
+      //   "S Au pool, c'est comme au sexe:<br>\nPlus t'es saoul; plus tu t'vante; moins t'en rentre!",
+      //   "S Go down a waterslide without water and you'll understand why foreplay is so important.",
+      //   "KD When you die, people cry and beg for you to come back,<br>\nbut, when you do, there's the running and the screaming...",
+      //   "H I don't believe in a lot of things, but I do believe in DuctTape!",
+      //   "DKA Someone's therapist knows about me.",
+      //   "OH Adulthood has shown me that you don't need fun to have alcohol.",
+      //   "S I am NOT embarrassed about the number of people I've slept with.<br>\nI am obviously embarrassed about the quality.",
+      //   "HK Duct Tape is like violence:<br>\nDoesn't work?<br>\nUse more.",
+      //   "KDA I'm the reason you need a safe space.",
+      //   "C I don't have a problem with coffee<br>\nI have a problem without coffee.",
+      //   "C I don't need an inspirational quote, what I need is a freaking cup of coffee.",
+      //   "CP I like my coffee like I like myself:<br>\nstrong, sweet, and too hot for you.",
+      //   "CP I don't need to drink coffee to be awesome.<br>\nI'm already awesome.<br>\nBut it's more fun when I'm awesome and awake.",
+      //   "CD This coffee better kick in before reality does.",
+      //   "CH You should know that before 10 am, no matter what the question is, my answer is always coffee.",
+      //   "C I will start working when my coffee does.",
+      //   "C I'M NOT AFRAID OF MONSTERS.<br>\nI'm afraid of the coffee maker breaking.",
+      //   "C Life without coffee is like something without something… sorry, I haven’t had any coffee yet.",
+      //   "C With enough caffeine, I can <s>\nrule the world.</s>\n dress myself and use my grownup manners.",
+      //   "CA Decaf coffee only works if you throw it at people.",
+      //   "A I'm only awkward around people.",
+      //   "AD The more people I meet, the more I love myself.",
+      //   "AD There's a 99% chance I don't care.",
+      //   "AD I talk to myself because I hate everyone else.",
+      //   "ADK I'm the kind of person your parents warned you about.",
+      //   "ADKOS Why are you still here?"];
       var BgColor = ["red", "blue", "green", "black", "yellow", "purple", "orange", "white"];
       var TextColor = ["red", "blue", "green", "black", "yellow", "purple", "orange", "white"];
       var TextFont = ["'Nunito', sans-serif", "'Chakra Petch', sans-serif", "'Coming Soon', cursive", "'Fuzzy Bubbles', cursive", "'Kalam', cursive", "'Kanit', sans-serif", "'Roboto', sans-serif", "'Special Elite', cursive"]
-      window.onload = Myrand;
+      // window.onload = Myrand;
       
-      var QMS = 0;
-      function SotD(){
-        let numBC = getRndInteger(0,BgColor.length);
-        let numTC = getRndInteger(0,TextColor.length);
-        let numTF = getRndInteger(0,TextFont.length);
-        document.getElementById("SotDp").style.fontFamily = TextFont[numTF];
-        let numQMS = arr[QMS++];
-        console.log("firstBC: " + numBC + " firstTC: " + numTC);
-        if(QMS < 11){
-          if(numBC == numTC){
-            numBC++
-            if(numBC == BgColor.length){
-              console.log("yes numBC = 8");
-              numBC = 0;
-            }
-            document.getElementById("SotD").style.background = BgColor[numBC];
-            document.getElementById("SotD").style.color = TextColor[numTC]; 
-            console.log("secondBC: " + numBC + " secondTC: " + numTC);
-            document.getElementById("SotDp").innerHTML = "Please, try again,<br>\nmy brain's just not working yet.<br>\n<br>\nNeed more coffee.";
-          } else if(numBC == 4 && numTC == 7 || numBC == 7 && numTC == 4){
-            document.getElementById("SotD").style.background = "black";
-            document.getElementById("SotD").style.color = "purple";
-            document.getElementById("SotDp").innerHTML = QMS_Coffee[numQMS];
-          } else {
-            document.getElementById("SotD").style.background = BgColor[numBC];
-            document.getElementById("SotD").style.color = TextColor[numTC];  
-            document.getElementById("SotDp").innerHTML = QMS_Coffee[numQMS];
-          }} else if (QMS >= 11) { //either put 'arr.length + 1' if you want them to through them all or any number (+1) that you want to limit them to
-          document.getElementById("SotDp").innerHTML = "Now, you've seen enough,<br>\ngo do stuff and come back later.";
-          document.getElementById("SotD").style.background = "black";
-          document.getElementById("SotD").style.color = "purple";
-          document.getElementById("SotDp").style.fontFamily = "'Chakra Petch', sans-serif";
-        }
+      // var QMS = 0;
+      // function SotD(){
+      //   let numBC = getRndInteger(0,BgColor.length);
+      //   let numTC = getRndInteger(0,TextColor.length);
+      //   let numTF = getRndInteger(0,TextFont.length);
+      //   document.getElementById("SotDp").style.fontFamily = TextFont[numTF];
+      //   let numQMS = arr[QMS++];
+      //   console.log("firstBC: " + numBC + " firstTC: " + numTC);
+      //   if(QMS < 11){
+      //     if(numBC == numTC){
+      //       numBC++
+      //       if(numBC == BgColor.length){
+      //         console.log("yes numBC = 8");
+      //         numBC = 0;
+      //       }
+      //       document.getElementById("SotD").style.background = BgColor[numBC];
+      //       document.getElementById("SotD").style.color = TextColor[numTC]; 
+      //       console.log("secondBC: " + numBC + " secondTC: " + numTC);
+      //       document.getElementById("SotDp").innerHTML = "Please, try again,<br>\nmy brain's just not working yet.<br>\n<br>\nNeed more coffee.";
+      //     } else if(numBC == 4 && numTC == 7 || numBC == 7 && numTC == 4){
+      //       document.getElementById("SotD").style.background = "black";
+      //       document.getElementById("SotD").style.color = "purple";
+      //       document.getElementById("SotDp").innerHTML = QMS_Coffee[numQMS];
+      //     } else {
+      //       document.getElementById("SotD").style.background = BgColor[numBC];
+      //       document.getElementById("SotD").style.color = TextColor[numTC];  
+      //       document.getElementById("SotDp").innerHTML = QMS_Coffee[numQMS];
+      //     }} else if (QMS >= 11) { //either put 'arr.length + 1' if you want them to through them all or any number (+1) that you want to limit them to
+      //     document.getElementById("SotDp").innerHTML = "Now, you've seen enough,<br>\ngo do stuff and come back later.";
+      //     document.getElementById("SotD").style.background = "black";
+      //     document.getElementById("SotD").style.color = "purple";
+      //     document.getElementById("SotDp").style.fontFamily = "'Chakra Petch', sans-serif";
+      //   }
         
-      };
-      function getRndInteger(min, max) {
-        return Math.floor(Math.random() * (max - min)) + min;
-      }
-      function Myrand(){
-        let max = QMS_Coffee.length;
-        let min = 0;
-          arr=[];
-          for (i = 0; i < max; i++) {
-              x = Math.floor( Math.random() * max) + min;
-              if(arr.includes(x) == true){
-                  i=i-1;
-              }else{
-                  if(x>max==false){
-                      arr.push(x);
-                  }
-              }
-          }
-          return arr;
-      }
+      // };
+      // function getRndInteger(min, max) {
+      //   return Math.floor(Math.random() * (max - min)) + min;
+      // }
+      // function Myrand(){
+      //   let max = QMS_Coffee.length;
+      //   let min = 0;
+      //     arr=[];
+      //     for (i = 0; i < max; i++) {
+      //         x = Math.floor( Math.random() * max) + min;
+      //         if(arr.includes(x) == true){
+      //             i=i-1;
+      //         }else{
+      //             if(x>max==false){
+      //                 arr.push(x);
+      //             }
+      //         }
+      //     }
+      //     return arr;
+      // }
 
       
 
@@ -666,262 +637,12 @@
       //   let numAS = getRndInteger(0,gearData.length);
       //       document.getElementById("ySp").innerHTML = gearData[numAS];})})
     </script>
-    <script name="TimeXPage">
-      // let steps;
-      // let current = null;
-      // let previousOverIndex = null;
-      // function initializing(){
-      //   // if(localStorage.getItem("steps")){
-      //   //   // steps = JSON.parse(localStorage.getItem("steps"));
-      //   // } else{
-      //     steps = [
-      //       {name:"Cooking", value:30, checked:true, id:crypto.randomUUID()}, 
-      //       {name:"Eating", value:60, checked:true, id:crypto.randomUUID()}, 
-      //       {name:"Toilet", value:15, checked:true, id:crypto.randomUUID()}, 
-      //       {name:"Shower", value:15, checked:true, id:crypto.randomUUID()}, 
-      //       {name:"Preping", value:30, checked:true, id:crypto.randomUUID()},
-      //       {name:"Travelling", value:0, checked:true, id:crypto.randomUUID()}];
-      //   // }
-      // };
-      // function saveSteps(){
-      //   localStorage.setItem("steps", JSON.stringify(steps));
-      // };
-      // function ondragstart(evt){
-      //   //updateSteps();
-      //   current=evt.currentTarget;
-      //   current.style.opacity = "0";
-      //   let divBoxes = document.querySelectorAll(".timeFormIn > .stepBox[draggable]");
-      //   console.log(divBoxes);
-      //   let divOrder = 0;
-      //   for(const divBox of divBoxes){
-      //     divBox.style.order = divOrder++;
-      //   }
-      // }
-      // function ondragover(evt){
-      //   evt.preventDefault();
-      //   let currentOverIndex = evt.currentTarget.style.order;
-      //   if(currentOverIndex != previousOverIndex){
-      //   current.style.order = currentOverIndex;
-      //   previousOverIndex = currentOverIndex;
-      //   console.log(previousOverIndex);
-      //   }
-      // }
-      // function ondragend(evt){
-      //   current.style.opacity = "1";
-      // }
-      // function ondrop(evt){
-      //   console.log(previousOverIndex);
-      //   current.style.order = previousOverIndex;
-      //   // // sauvegarde l'élément qu'on déplace
-      //   let tempo = steps[current.dataset.index];
-      //   // // enlève l'élément qu'on a déplacé
-      //   steps.splice(current.dataset.index, 1);
-      //   // // rajoute l'élément qu'on a déplacé
-      //   steps.splice(evt.currentTarget.dataset.index, 0, tempo);
-      //   saveSteps();
-      //   displaySteps();
-      // }
-
-      // function displaySteps(){
-      //   let timeForm = document.getElementById("timeForm");
-      //   //add the Destination field
-      //   let stepAll = `
-      //     <div class="stepBox"  style="flex-wrap: wrap;">
-      //       <label class="timeSettingLabel" style="margin-bottom: 7px;">Destination:</label>
-      //       <input id="Destination" class="timeDestination" type="text"/>
-      //     </div>`;
-      //   let stepArray = steps.map((step, index)=>{
-      //     return `
-      //       <div class="stepBox" draggable="true" data-index="${index}" style="${step.style}" id="${step.id}">
-      //         <div><span class="typcn icon typcn-th-small" style="opacity: .8;"></span></div>
-      //         <div>
-      //           <input id="${step.id}Check" class="cossin timeSettingInput" name="${step.id}" type="checkbox" ${step.checked?"checked":""} onchange="updateSteps(event)"/>
-      //           <label for="${step.id}Check" class="timeSettingLabel">
-      //             <span class="timeSettingCheck"></span>
-      //           </label>
-      //           <input id="${step.id}Name" type="text" class="timeDestination2" style="width:80px;" value="${step.name}" onchange="updateSteps(event)"/>
-      //         </div>
-      //         <div>
-      //           <input id="${step.id}Time" class="timeDestination2" type="number" step="5" value="${step.value}" onchange="updateSteps(event)"/>
-      //           <span class="timeSettingLabel">min</span>
-      //         </div>
-      //       </div>`
-      //   })
-      //   stepAll += `<div class="timeFormIn">${stepArray.join("")}</div>`;
-      //   stepAll += `<div class="stepBox"><button class="timeFormButton" style="float:left;" onclick="addStep()">+</button></div>`;
-      //   stepAll += `<div class="stepBox"><div><label for="arriveeTime" class="timeSettingLabel">Arrival time</label></div><div><input id="arriveeTime" type="time"/></div></div>`;
-      //   stepAll += `<div class="stepBox"><button class="timeFormButton" style="float:right;" onclick="calculateTime(event)">Calculate</button></div>`;
-      //   timeForm.innerHTML = stepAll;
-      //   let boxes = document.querySelectorAll(".stepBox");
-      //   for(const box of boxes){
-      //     box.addEventListener('dragover', ondragover);
-      //     box.addEventListener('dragenter', ondragenter);
-      //     box.addEventListener('drop', ondrop);
-      //     box.addEventListener('dragstart', ondragstart);
-      //     box.addEventListener('dragend', ondragend);
-      //   };
-      // };
-      // //ajouter button pour effacer
-      // //ajouter champ text pour note (métro et bus ou liste de chose à apporter) et détection (si vide, ne pas afficher dans les résultats)
-      // function addStep(){
-      //   updateSteps();
-      //   let stepName = prompt("Name your step");
-      //   if(stepName){steps.push({name:stepName, value:30, order:Math.max(...steps.map((step)=>step.order))+1, checked:true, id:crypto.randomUUID()})};
-      //   displaySteps();
-      //   saveSteps();
-      //   document.getElementById('footer').classList.remove('footerFixed');
-      // };
-      // function updateSteps(){
-      //   // let target = e.target;
-      //   console.log("target.id");
-      //   //updater la valeur changée dans le array steps
-      //   steps.forEach(step => {
-      //     let value = Number.parseInt(document.getElementById(`${step.id}Time`).value);
-      //     step.value = value;
-      //     let checked = document.getElementById(`${step.id}Check`).checked;
-      //     step.checked = checked;
-      //     let name = document.getElementById(`${step.id}Name`).value;
-      //     step.name = name;
-      //   });
-      //   saveSteps();
-      // };
-      // initializing();
-      // displaySteps();
-
-      // function calculateTime(e){
-      //   //Trier en fonction de l'ordre
-      //   updateSteps()
-      //   let arriveeTime = document.getElementById('arriveeTime').valueAsDate;
-      //   let stepArray = steps.filter((step)=>{
-      //     return step.checked;
-      //   }).map((step)=>{
-      //     if(step.name == "Travelling"){
-      //       return `<p>Départ: ${sumTimeSub(steps, step.order, arriveeTime)}</p>`;}
-      //     else{
-      //         return `<p>${step.name}: ${sumTimeSub(steps, step.order, arriveeTime)}</p>`;}
-      //   });
-      //   let result = `<h2 id="finalDestination" style="text-align: center; margin: 0 0 .7em;">${document.getElementById("Destination").value}</h2>
-      //   <div style="padding: 0 10px; border: 2px solid;">
-      //     <h3 style="margin: 5px 0; text-decoration: underline;">Schedule</h3>
-      //     ${stepArray.join("")}
-      //     <p>Arrivée: ${arriveeTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" , timeZone: "UTC"})}</p>
-      //   </div>`;
-      //   document.getElementById("scheduleTime").innerHTML = result;
-      //   document.getElementById("scheduleTime").style.display = "block";
-      //   document.getElementById("timeForm").style.display = "none";
-      //   document.getElementById("switchSliderWhole").style.display = "none";
-      //   e.stopPropagation();
-      //   document.querySelector("#timePage").addEventListener("click", clickHandler)      
-      // };
-      // function clickHandler(){
-      //   document.getElementById("scheduleTime").style.display = "none";
-      //   document.getElementById("timeForm").style.display = "block";
-      //   document.getElementById("switchSliderWhole").style.display = "block";
-      //   document.querySelector("#timePage").removeEventListener("click", clickHandler)
-      // };
-      // function sumTimeSub(steps, stepOrder, arriveeTime){
-      //   let totalMin = 0;
-      //   steps.forEach((step)=>{if(step.checked && step.order >= stepOrder){
-      //     totalMin += step.value;
-      //   }});
-      //   let startTime = new Date();
-      //   startTime.setTime(arriveeTime.getTime() - totalMin * 60 * 1000);
-      //   return startTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" , timeZone: "UTC"});
-      // };
-
-      // // Math.max(5,8,3);
-      // // 8
-      // // Math.max([5,8,3]);
-      // // NaN
-      // // Math.max(...[5,8,3]);
-      // // 8
-
-      // //arriveeTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-
-
-      // function showTime(){
-      //   let destin = document.getElementById('Destination').value;
-      //   document.getElementById('finalDestination').innerText = destin;
-      //   let cookTime = 0;
-      //   let eatTime = 0;
-      //   let toilTime = 0;
-      //   let showerTime = 0;
-      //   let prepTime = 0;
-      //   if(document.getElementById('Cooking').checked == true){
-      //     cookTime = .5;
-      //   } else{
-      //     cookTime = 0;
-      //   };
-      //   if(document.getElementById('Eating').checked == true){
-      //     eatTime = 1;
-      //   } else{
-      //     eatTime = 0;
-      //   };
-      //   if(document.getElementById('Toilet').checked == true){
-      //     toilTime = .25;
-      //   } else{
-      //     toilTime = 0;
-      //   };
-      //   if(document.getElementById('Shower').checked == true){
-      //     showerTime = .25;
-      //   } else{
-      //     showerTime = 0;
-      //   };
-      //   if(document.getElementById('Preping').checked == true){
-      //     prepTime = .5;
-      //   } else{
-      //     prepTime = 0;
-      //   };
-
-      //   let travTime = document.getElementById('Travelling').valueAsDate;
-      //   let arrTime = document.getElementById('Arrival').valueAsDate;
-      //   arrTime.setTime(arrTime.getTime() + 5 * 60 * 60 * 1000);
-      //   document.getElementById('arriveeTime').innerText = "Arrivée: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-      //   arrTime.setTime(arrTime.getTime() - travTime.getTime());
-      //   document.getElementById('departTime').innerText = "Départ: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-      //   if(prepTime !== 0){
-      //     arrTime.setTime(arrTime.getTime() - prepTime * 60 * 60 * 1000);
-      //     document.getElementById('prepingTime').innerText = "Preping: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-      //   };
-      //   if(showerTime !== 0){
-      //     arrTime.setTime(arrTime.getTime() - showerTime * 60 * 60 * 1000);
-      //     document.getElementById('showerTime').innerText = "Shower: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-      //   };
-      //   if(toilTime !== 0){
-      //     arrTime.setTime(arrTime.getTime() - toilTime * 60 * 60 * 1000);
-      //     document.getElementById('toiletTime').innerText = "Toilet: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-      //   };
-      //   if(eatTime !== 0){
-      //     arrTime.setTime(arrTime.getTime() - eatTime * 60 * 60 * 1000);
-      //     document.getElementById('eatingTime').innerText = "Eating: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-      //   };
-      //   if(cookTime !== 0){
-      //     arrTime.setTime(arrTime.getTime() - cookTime * 60 * 60 * 1000);
-      //     document.getElementById('cookingTime').innerText = "Cooking: " + arrTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" });
-      //   };
-      //   document.getElementById('footer').classList.remove('footerFixed');
-      //   document.getElementById("scheduleTime").classList.add('coveringResult');
-      //   document.getElementById("coverMyTime").style.display = "block";
-      //   document.getElementById("scheduleTime").style.display = "block";
-      //   if(document.getElementById("switchModeBall").classList.contains("ballDark")){
-      //     document.getElementById("coverMyTime").style.background = "#000";
-      //   } else{
-      //     document.getElementById("coverMyTime").style.background = "#F2F3F4";
-      //   };
-      // }
-      // function closingTime(){
-      //   document.getElementById("scheduleTime").classList.remove('coveringResult');
-      //   document.getElementById("coverMyTime").style.display = "none";
-      // }
-    </script>
+    <!-- TimePage -->
     <div name="TimePage" id="timePage" class="sectionPage justPage">
       <div class="togglePlansWhole" id="togglePlansWhole">
         <input id="togglePlans" type="checkbox" class="cossin"/>
         <label for="togglePlans" class="togglePlansLabel"><span id="togglePlansIcon" class="typcn icon typcn-media-play"></span>My schedules</label>
         <div id="mySchedules" class="togglePlans">
-          <div>
-            <p><span class="typcn icon typcn-th-small planDD"></span>CHSLD<span class="typcn icon typcn-trash planTB"></span></p>
-          </div>
         </div>
       </div>
       <div id="timeForm" class="timeForm">
@@ -929,576 +650,8 @@
       <div id="scheduleTime" class="resultTime">
       </div>
     </div>
-    <style name="TimePage">
-      .togglePlansWhole{
-        width: 240px;
-        margin: 20px auto;
-      }
-      .togglePlansLabel{
-        text-decoration: underline;
-        text-decoration-thickness: from-font; 
-        font-weight: 400;
-      }
-      #togglePlansIcon{
-        transition: transform .3s ease-out;
-        display: inline-block;
-      }
-      .togglePlans{
-        transition: max-height .3s ease-out;
-        max-height: 0;
-        overflow: hidden;
-      }
-      #togglePlans:checked ~ div#mySchedules{
-        max-height: 100vh;
-        transition: max-height .5s ease-in;
-      }
-      #togglePlans:checked ~ label #togglePlansIcon{
-        transform: rotate(90deg);
-        transition: transform .5s;
-      }
-      .planDD{
-        opacity: .8; 
-        display: inline-block; 
-        margin-right: 5px; 
-        font-size: .9em;
-      }
-      .planTB{
-        opacity: .8; 
-        float: right; 
-        font-size: 1.3em;
-      }
-      .timeDestination{
-        width: 100%;
-        background: rgba(128,0,128,.2);
-        border: 2px solid rgba(128,0,128,.7);
-        border-radius: 2px;
-        color: inherit;
-        appearance: none;
-        font-size: calc(15.53px + 0.19vw);
-        line-height:1.2em;
-        font-weight: 400;
-      }
-      .timeDestination:focus{
-        outline: 1px solid rgba(255,255,255,.5);
-      }
-      .timeForm{
-        width: 240px;
-        margin: 0 auto 85px;
-      }
-      .timeFormIn{
-        display: flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
-      }
-      .timeSettingInput:checked + label > span.timeSettingCheck::before {
-        font-family: 'typicons';
-        content: "\E11E";
-        position: absolute;
-        top: -4px;
-        left: 1.5px;
-      }
-      .timeSettingLabel{
-        font-size: calc(15.53px + 0.19vw);
-        line-height:1.2em;
-        font-weight: 400;
-        margin: 15px 0;
-        text-align: center;
-        color: inherit;
-      }
-      .timeSettingCheck{
-        width: 15px;
-        height: 15px;
-        border: 1px solid purple;
-        border-radius: 2px;
-        display: inline-block;
-        margin-right: 5px;
-        background: rgba(128,0,128,.3);
-        position: relative;
-      }
-      .timeFormButton{
-        float: right;
-        border-width: 1px 1px 4px 3px;
-        border-style: solid;
-        border-color: inherit;
-        border-radius: 5px;
-        padding: 5px 10px;
-        color: inherit;
-        background: inherit;
-        text-align: center;
-        width: fit-content;
-        font-family: 'Rubik Dirt', cursive;
-        font-size: calc(15.53px + 0.19vw);
-        line-height: 1.2em;
-        font-weight: 400;
-      }
-      .timeFormButton:hover{
-        background: rgba(128,0,128,.4);
-        cursor: pointer;
-      }
-      .resultTime{
-        width: 200px;
-        margin: calc(100vh/2 - 190px) auto 0;
-      }
-      .timeDestination2{
-        width: 60px;
-      }
-      .stepBox, .iteme{
-        margin: 15px 0;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-      }
-      .dragging{
-        opacity: .5;
-      }
-      .displayNone{
-        display:none;
-      }
-      .trashLine{
-        width: 215px;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-      }
-      .trashed div:first-child{
-        opacity: .7;
-      }
-      .trashed div.trashLine{
-        background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 40%, purple 50%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0));
-      }
-      .trashed div.trashLine div{
-        opacity: .7;
-      }
-      .outlined{
-        border: 2px black solid;
-        outline: 4px solid purple;
-        outline-offset: 2px;
-        border-radius: 2%;
-      }
-      /* #arriveeTime input[type="time"]::-webkit-calendar-picker-indicator{
-        color: #800080;
-        background-color: black;
-        border-color: purple;
-        filter: invert(13%) sepia(58%) saturate(6184%) hue-rotate(292deg) brightness(78%) contrast(130%);
-      } */
-      .notesBorder{
-        border: 1px dotted purple;
-        margin: 5px auto;
-        width: 176px;
-      }
-      .notesBorder p{
-        margin: 0.3em;
-      }
-    </style>
-    <script name="TimePage">
-      let steps;
-      let current = null;
-      let overIndex = null;
-      //**Change travellingTime in another arriveeTime (but with minutes input (no checkbox, if it's 0, let's not show it at all in the result) comme ça, ça fait plus de sense avec les résultats, et quand tu ajoutes un nouveau step (index:step.length), ça va arriver avant le travelling... Oh! à moins qu'on ait des escales...)
-      //**Make the drag&drop possible on touchscreens too
-      //**once it's connected to google accounts
-        //**connect to an account and save the whole thing with a name for later
-      //**once it's an app
-        //**add a button to do a printscreen and make it your new background
-        //**add a button to create notification for each steps
-      function initializing(){
-        if(localStorage.getItem("steps")){
-          steps = JSON.parse(localStorage.getItem("steps"));
-        } else{
-          steps = [
-            {index: 0, name:"Cooking", value:30, checked:true, id:crypto.randomUUID()}, 
-            {index: 1, name:"Eating", value:60, checked:true, id:crypto.randomUUID()}, 
-            {index: 2, name:"Toilet", value:15, checked:true, id:crypto.randomUUID()}, 
-            {index: 3, name:"Shower", value:15, checked:true, id:crypto.randomUUID()}, 
-            {index: 4, name:"Prepping", value:30, checked:true, id:crypto.randomUUID()},
-            {index: 5, name:"Travelling", value:0, checked:true, id:crypto.randomUUID()}];
-        }
-      };
-
-      function getInfo(info){
-        if(localStorage.getItem(info)){
-          return `${localStorage.getItem(info)}`;
-        } else{
-          return ``;
-        };
-      }
-      
-      function saveSteps(){
-        localStorage.setItem("steps", JSON.stringify(steps));
-        localStorage.setItem("destination", document.getElementById("destination").value);
-        localStorage.setItem("arriveeTime", document.getElementById("arriveeTime").value);
-        localStorage.setItem("notes", document.getElementById("notes").value);
-      };
-
-      function clearStorage(){
-        if (confirm("Are you sure?!\nBecause you'll loose all your changes!")){
-        localStorage.clear();
-        location.reload();
-        }
-      }
-
-      function displaySteps(){
-        let timeForm = document.getElementById("timeForm");
-        let stepAll = `
-          <div class="stepBox"  style="flex-wrap: wrap;">
-            <label class="timeSettingLabel" style="margin-bottom: 7px;">Destination:</label>
-            <input id="destination" class="timeDestination" type="text" value="${getInfo("destination")}" onchange="saveSteps()"/>
-          </div>`;
-        let stepArray = steps.map((step)=>{
-          return `
-            <li class="iteme" draggable="true" data-index="${step.index}" style="${step.style}" id="${step.id}">
-              <div>
-                <span class="typcn icon typcn-th-small" style="opacity: .8;"></span>
-                <input id="${step.id}trashCan" class="cossin" type="checkbox" onchange="trashOrNot(event)"/>
-                <label for="${step.id}trashCan" class="typcn icon typcn-trash trashLabel displayNone" style="opacity: .8; font-size: 1.5em; line-height: 1em; margin: 0 -5px 0 -2px;" ></label>
-              </div>
-              <div class="trashLine">
-                <div>
-                  <input id="${step.id}Check" class="cossin timeSettingInput" name="${step.id}" type="checkbox" ${step.checked?"checked":""} onchange="updateSteps(event)"/>
-                  <label for="${step.id}Check" class="timeSettingLabel">
-                    <span class="timeSettingCheck"></span>
-                  </label>
-                  <input id="${step.id}Name" type="text" class="timeDestination timeDestination2" style="width:80px;" value="${step.name}" onchange="updateSteps(event)"/>
-                </div>
-                <div>
-                  <input id="${step.id}Time" class="timeDestination timeDestination2" type="number" step="5" value="${step.value}" onchange="updateSteps(event)"/>
-                  <span class="timeSettingLabel">min</span>
-                </div>
-              </div>
-            </li>`
-        })
-        stepAll += `<ul id="sortable-List" class="sortable-List" style="padding:0;">${stepArray.join("")}</ul>`;
-        stepAll += `<div class="stepBox">
-          <button class="timeFormButton" style="float:left; height: 30px; width: 30px; padding: 0;" onclick="addStep()">
-            +
-          </button>
-          <button title="Enter trash mode!" id="trashMode" class="timeFormButton" style="float:right; height: 30px; width: 30px; padding: 0;" onclick="trashMode()">
-            <span class="typcn icon typcn-trash" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
-          </button>
-          <button title="Get out of trash mode!" id="trashCancel" class="timeFormButton displayNone" style="height: 30px; width: 90px; padding: 0; font-family:'Nunito', sans-serif; font-size:1em;" onclick="trashCancel()">
-            Cancel
-            <span class="typcn icon typcn-cancel" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
-          </button>
-          <button title="Get rid of all the checked ones!" id="trashIt" class="timeFormButton displayNone" style="float:right; height: 30px; width: 90px; padding: 0; font-family:'Nunito', sans-serif; font-size:1em;" onclick="trashIt()">
-            Trash it&hairsp;!
-            <span class="typcn icon typcn-trash" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
-          </button>
-        </div>`;
-        stepAll += `<div class="stepBox">
-          <div>
-            <label for="arriveeTime" class="timeSettingLabel">
-              Arrival time
-            </label>
-          </div>
-          <div id="arriveeTimeDiv">
-            <input id="arriveeTime" type="time" value="${getInfo("arriveeTime")}" onchange="saveSteps()"/>
-          </div>
-        </div>`;
-        stepAll += `<div class="stepBox"  style="flex-wrap: wrap;">
-          <label class="timeSettingLabel" style="margin:0 0 7px;">
-            Notes:
-          </label>
-          <textarea id="notes" class="timeDestination" onchange="saveSteps()">${getInfo("notes")}</textarea>
-        </div>`
-        stepAll += `<div class="stepBox">
-          <button title="Calculate your schedule!" class="timeFormButton" style="float:right;" onclick="calculateTime(event)">
-            Calculate&hairsp;!
-          </button>
-          <button title="Save it in the clouds!" class="timeFormButton" style="float:left;" onclick="savePlan(event)">
-            <span class="typcn icon typcn-cloud-storage-outline" style="font-size: 1.4em; line-height: 1em;"></span>
-          </button>
-        </div>
-        <div id="savePlan" class="stepBox" style="flex-wrap: wrap;"></div>`;
-        stepAll += `<div class="stepBox">
-          <button title="Get the original data back!" class="timeFormButton" style="font-size: .8em; font-family: 'Nunito'; margin: 15px auto; border-width: 0.5px 0.5px 2px 1px;" onclick="clearStorage()">
-            Go back to original
-          </button>
-        </div>`;
-        timeForm.innerHTML = stepAll;
-        let sortableList = document.querySelector(".sortable-List");
-        let itemes = document.querySelectorAll(".sortable-List > .iteme");
-        itemes.forEach(iteme => {
-          iteme.addEventListener("dragstart", (evt) => {
-              // Adding dragging class to item
-              current=evt.currentTarget;
-              iteme.classList.add("dragging");
-          });
-          iteme.addEventListener("touchstart", (evt) => {
-              // Adding dragging class to item
-              current=evt.currentTarget;
-              iteme.classList.add("dragging");
-          });
-          // Removing dragging class from item on dragend event
-          iteme.addEventListener("dragend", () => {
-            iteme.classList.remove("dragging");
-          });
-          iteme.addEventListener("touchend", () => {
-            iteme.classList.remove("dragging");
-          });
-          iteme.addEventListener("dragover", (evt) => {
-            overIteme = evt.currentTarget;
-          });
-          iteme.addEventListener("touchmove", (evt) => {
-            overIteme = evt.currentTarget;
-          });
-        });
-        sortableList.addEventListener("dragover", initSortableList);
-        sortableList.addEventListener("dragenter", e => e.preventDefault());
-        sortableList.addEventListener("drop", ondrop);
-        sortableList.addEventListener("touchmove", initSortableList);
-        sortableList.addEventListener("touchstart", e => e.preventDefault());
-        sortableList.addEventListener("touchend", ondrop);
-      };
-
-      const initSortableList = (e) => {
-        let sortableList = document.querySelector(".sortable-List");
-        let itemes = document.querySelectorAll(".sortable-List > .iteme");
-          e.preventDefault();
-          const draggingItem = document.querySelector(".dragging");
-          // Getting all items except currently dragging and making array of them
-          let siblings = [...sortableList.querySelectorAll(".iteme:not(.dragging)")];
-          // Finding the sibling after which the dragging item should be placed
-          let nextSibling = siblings.find(sibling => {
-            if (event.clientX) {
-              //if mouse
-              return e.clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
-            } else{
-              //if touch
-              return e.changedTouches[0].clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
-            }
-          });
-          // Inserting the dragging item before the found sibling
-          sortableList.insertBefore(draggingItem, nextSibling);
-      }
-      // function ondrop(){
-      //   let itemes = Array.from(document.querySelectorAll(".sortable-List > .iteme"));
-      //   let itemesIndexArr = itemes.map((iteme, dataset) => {
-      //     return {index: iteme.dataset.index
-      //     };
-      //   })
-      //   console.log(itemesIndexArr);
-      //   let result = itemesIndexArr.map(a => a.index);
-      //   console.log(result);
-      //   steps = result.map((a, i) => steps[a]);
-      //   console.log(steps);
-      //   updateSteps();
-      //   for (let i = 0; i < itemes.length; i++) {
-      //     itemes[i].dataset.index = steps[i].index;
-      //   };
-      // }
-
-      function ondrop(){
-        let itemes = Array.from(document.querySelectorAll(".sortable-List > .iteme"));
-        steps = itemes.map((iteme) => steps[iteme.dataset.index]);
-        updateItemesIndex();
-        updateSteps();
-      }
-
-      function savePlan(event){
-        document.getElementById("savePlan").innerHTML = `<p style="font-size:calc(13.53px + 0.19vw); margin: 1em 0 0.2em;">How should we name that one?</p>
-        <input class="timeDestination" type="text" value="${document.getElementById("destination").value}"/>
-        <div class="stepBox" style="width: 100%;">
-          <button title="Nevermind!" id="saveCancel" class="timeFormButton" style="height: 30px; width: 90px; padding: 0; font-family:'Nunito', sans-serif; font-size:1em;" onclick="saveCancel()">
-            Cancel
-            <span class="typcn icon typcn-cancel" style="font-size: 1.2em; line-height: 1em;"></span>
-          </button>
-          <button title="Save it!" id="saveIt" class="timeFormButton" style="float:right; height: 30px; width: 90px; padding: 0; font-family:'Nunito', sans-serif; font-size:1em;" onclick="saveIt()">
-            Save it&hairsp;!
-            <span class="typcn icon typcn-cloud-storage-outline" style="font-size: 1.4em; line-height: 1em;"></span>
-          </button>
-        </div>`
-      }
-      function saveCancel(){
-        document.getElementById("savePlan").innerHTML = ``;
-      }
-
-      function trashMode(){
-        let trashables = document.querySelectorAll(".trashLabel");
-        trashables.forEach((trashable) => {
-          trashable.classList.remove('displayNone');
-        });
-        let moveables = document.querySelectorAll(".typcn-th-small");
-        moveables.forEach((moveable) => {
-          moveable.classList.add("displayNone");
-        });
-        document.getElementById("trashMode").classList.add('displayNone');
-        document.getElementById("trashCancel").classList.remove('displayNone');
-        document.getElementById("trashIt").classList.remove('displayNone');
-      }
-      function trashOrNot(event){
-        let trashCan = event.currentTarget;
-        let trashDiv = trashCan.parentElement;
-        let trashStep = trashDiv.parentElement;
-        trashStep.classList.toggle("trashed");
-      }
-      function trashCancel(){
-        let trashables = document.querySelectorAll(".trashLabel");
-        trashables.forEach((trashable) => {
-          trashable.classList.add('displayNone');
-        });
-        let moveables = document.querySelectorAll(".typcn-th-small");
-        moveables.forEach((moveable) => {
-          moveable.classList.remove("displayNone");
-        });
-        document.getElementById("trashMode").classList.remove('displayNone');
-        document.getElementById("trashCancel").classList.add('displayNone');
-        document.getElementById("trashIt").classList.add('displayNone');
-        let trashTrasheds = document.querySelectorAll(".trashed");
-          trashTrasheds.forEach((trashTrashed) => {
-            trashTrashed.classList.remove("trashed");
-          });
-      }
-
-      function trashIt(){
-        updateSteps();
-        if (confirm("Are you sure?!")) {
-          for (let i = steps.length - 1; i >= 0; i--) {
-            let stepDiv = document.getElementById(`${steps[i].id}`);
-            if(stepDiv.classList.contains("trashed")){
-              steps.splice(stepDiv.dataset.index, 1);
-              stepDiv.remove();
-            };
-          }
-          trashCancel();
-          updateSteps();
-          updateItemesIndex();
-        } else {
-          trashCancel();
-        };
-      }
-    
-      //**Drag&Drop doesn't work with the added step
-      // function addStep(){
-      //   updateSteps();
-      //   let stepName = prompt("Name your step");
-      //   if(stepName){steps.push({index:steps.length, name:stepName, value:30, checked:true, id:crypto.randomUUID()})};
-      //   let newStep = document.createElement('li');
-      //   newStep.classList.add("iteme");
-      //   newStep.setAttribute("draggable", "true");
-      //   newStep.setAttribute("id", steps[steps.length-1].id);
-      //   newStep.innerHTML = `
-      //     <div>
-      //       <span class="typcn icon typcn-th-small" style="opacity: .8;"></span>
-      //       <input id="${steps[steps.length - 1].id}trashCan" class="cossin" type="checkbox" onchange="trashOrNot(event)"/>
-      //       <label for="${steps[steps.length - 1].id}trashCan" class="typcn icon typcn-trash trashLabel displayNone" style="opacity: .8; font-size: 1.5em; line-height: 1em; margin: 0 -5px 0 -2px;" ></label>
-      //     </div>
-      //     <div class="trashLine">
-      //       <div>
-      //         <input id="${steps[steps.length - 1].id}Check" class="cossin timeSettingInput" name="${steps[steps.length - 1].id}" type="checkbox" ${steps[steps.length - 1].checked?"checked":""} onchange="updateSteps(event)"/>
-      //         <label for="${steps[steps.length - 1].id}Check" class="timeSettingLabel">
-      //           <span class="timeSettingCheck"></span>
-      //         </label>
-      //         <input id="${steps[steps.length - 1].id}Name" type="text" class="timeDestination timeDestination2" style="width:80px;" value="${steps[steps.length - 1].name}" onchange="updateSteps(event)"/>
-      //       </div>
-      //       <div>
-      //         <input id="${steps[steps.length - 1].id}Time" class="timeDestination timeDestination2" type="number" step="5" value="${steps[steps.length - 1].value}" onchange="updateSteps(event)"/>
-      //         <span class="timeSettingLabel">min</span>
-      //       </div>
-      //     </div>`;
-      //   let lastStep = document.getElementById("sortable-List").lastElementChild;
-      //   lastStep.after(newStep);
-      //   updateSteps();
-      //   saveSteps();
-      //   document.getElementById('footer').classList.remove('footerFixed');
-      // };
-
-      function addStep(){
-        updateSteps();
-        let stepName = prompt("Name your step");
-        if(stepName){steps.push({index:steps.length, name:stepName, value:30, checked:true, id:crypto.randomUUID()})};
-        displaySteps();
-        saveSteps();
-        document.getElementById('footer').classList.remove('footerFixed');
-      };
-
-      function updateSteps(){
-        steps.forEach(step => {
-          let index = steps.indexOf(step);
-          step.index = index;
-          let value = Number.parseInt(document.getElementById(`${step.id}Time`).value);
-          step.value = value;
-          let checked = document.getElementById(`${step.id}Check`).checked;
-          step.checked = checked;
-          let name = document.getElementById(`${step.id}Name`).value;
-          step.name = name;
-        });
-        saveSteps();
-      };
-      initializing();
-      displaySteps();
-
-      function updateItemesIndex(){
-        let itemes = Array.from(document.querySelectorAll(".sortable-List > .iteme"));
-        for (let i = 0; i < itemes.length; i++) {
-          itemes[i].dataset.index = i;
-        };
-      }
-
-      function calculateTime(e){
-        updateSteps();
-        let arriveeTime = document.getElementById('arriveeTime').valueAsDate;
-        if(!arriveeTime){
-          document.getElementById("arriveeTimeDiv").classList.add("outlined");
-          window.requestAnimationFrame(() => 
-        {window.requestAnimationFrame(()=>
-            alert("When are you supposed to be there?"));})
-        } else{
-          document.getElementById("arriveeTimeDiv").classList.remove("outlined");
-        };
-        console.log(arriveeTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" , timeZone: "UTC"}));
-        let stepArray = steps.filter((step)=>{
-          return step.checked;
-        }).map((step)=>{
-          if(step.name == "Travelling"){
-            return `<p>Départ: ${sumTimeSub(steps, step.index, arriveeTime)}</p>`;}
-          else{
-              return `<p>${step.name}: ${sumTimeSub(steps, step.index, arriveeTime)}</p>`;}
-        });
-        let result = `<h2 id="finalDestination" style="text-align: center; margin: 0 0 .7em;">${document.getElementById("destination").value}</h2>
-        <div style="padding: 0 10px; border: 2px solid;">
-          <h3 style="margin: 5px 0; text-decoration: underline;">Schedule</h3>
-          ${stepArray.join("")}
-          <p>Arrivée: ${arriveeTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" , timeZone: "UTC"})}</p>
-          ${ifNotes()}
-        </div>`;
-        document.getElementById("scheduleTime").innerHTML = result;
-        document.getElementById("scheduleTime").style.display = "block";
-        document.getElementById("timeForm").style.display = "none";
-        document.getElementById("togglePlansWhole").style.display = "none";
-        document.getElementById("switchSliderWhole").style.display = "none";
-        e.stopPropagation();
-        document.querySelector("#timePage").addEventListener("click", clickHandler)      
-      };
-      function ifNotes(){
-        if(document.getElementById("notes").value){
-          return `<p style="margin-bottom: 5px;">Notes:</p>
-            <div class="notesBorder">
-              <p>${document.getElementById("notes").value.replace(/\n/g, '<br/>')}</p>
-            </div>`;
-        } else{
-          return ``;
-        };
-      }
-      function clickHandler(){
-        document.getElementById("scheduleTime").style.display = "none";
-        document.getElementById("timeForm").style.display = "block";
-        document.getElementById("togglePlansWhole").style.display = "block";
-        document.getElementById("switchSliderWhole").style.display = "block";
-        document.querySelector("#timePage").removeEventListener("click", clickHandler)
-      };
-      function sumTimeSub(steps, stepIndex, arriveeTime){
-        let totalMin = 0;
-        steps.forEach((step)=>{if(step.checked && step.index >= stepIndex){
-          totalMin += step.value;
-        }});
-        let startTime = new Date();
-        startTime.setTime(arriveeTime.getTime() - totalMin * 60 * 1000);
-        return startTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" , timeZone: "UTC"});
-      };
-    </script>
-    <!-- Next => GroceryPage! -->
+    <script name="TimePage" src="time.js"></script>
+    <!-- ListPage -->
     <div name="ListPage" id="listPage"  class="sectionPage justPage">
       <div id="wholeList">
         <h2 style="text-align:center;">Épicerie</h2>
@@ -1519,73 +672,10 @@
         </ul>
       </div>
     </div>
-    <style name="ListPage">
-      #wholeList{
-        width: 240px;
-        margin: 0 auto 85px;
-      }
-      .sectionHR{
-        border-top: 1.5px solid rgba(128,0,128,.8);
-        margin-top: 0;
-      }
-      .listItem{
-        display: flex;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .listItemName{
-        background: inherit;
-        border: none;
-        color: purple;
-        font-size: calc(15.53px + 0.19vw);
-        height: 25px;
-        width: 185px;
-      }
-      .listItemNameTicked{
-        text-decoration: line-through;
-        opacity: .5;
-      }
-      .listCircle{
-        border: solid purple;
-        border-radius: 50%;
-        width: 25px;
-        height: 25px;
-      }
-      .listCircleTicked{
-        background-color: rgba(128,0,128,.5);
-        border: rgba(0,0,0,0) solid;
-      }
-      .listTickBlack{
-        position: relative;
-        top: -10px;
-        left: -3px;
-        color: black;
-        font-size: 28px;
-      }
-      .invisible{
-        visibility: hidden;
-      }
-      .noPicture{
-        opacity: .5;
-        font-size: 24px;
-        line-height: 24px;
-      }
-      .yesPicture{
-        font-size: 24px;
-        line-height: 24px;
-      }
-    </style>
-    <script name="ListPage">
-      function listItemTicked(){
-        document.getElementById("listTickLabel").classList.toggle("listCircleTicked");
-        document.getElementById("listTickTick").classList.toggle("invisible");
-        document.getElementById("listItemName").classList.toggle("listItemNameTicked");
-      }
-    </script>
+    <script name="ListPage" src="list.js"></script>
     <!--I wrote, you read-->
-      <!-- Faire le tableau des chiffres pour Alex! (et le mettre dans un toggle) -->
     <div name="WrotePage" id="wrotePage" class="sectionPage justPage yesCasaFoot">
+        <!-- Faire le tableau des chiffres pour Alex! (et le mettre dans un toggle) -->
       <div class="menuTextSection" id="menuTextSection">
         <input type="radio" name="menuText" class="menuText" onclick="toPage('Table')" id="inputTable">
         <label for="inputTable" class="menuTextLabel"  id="labelTable">La table est mise</label>
@@ -2766,14 +1856,14 @@
       </div>
     </div>    
     <style name="ReadPage">
-
     </style>
     <script name="ReadPage">
 
     </script>
 
     <!--Shit to feel-->
-        <!-- Pour remplir la base de donnée à partir de Google Spreadsheet:
+    <div name="ShitPage" class="sectionPage justPage yesCasaFoot" id="shitPage">
+      <!-- Pour remplir la base de donnée à partir de Google Spreadsheet:
                 Dans les quotes, mettre les <br> (pas <br/>!), mais pas les \n
                 S'assurer que les thèmes soient bien indiqués (avec ou sans virgule)
                 Dans Apps Script, ajuster le numéro de la première row et le nombre de row dans le getRange (comme ça, tu peux y faire prendre juste celles que tu viens d'ajouter)
@@ -2785,7 +1875,6 @@
           <!-- Créer/remplir le database et le storage (meme) -->
           <!-- Adapter le formulaire pour ajouter des memes (image et reconnaissance du type et création dans storage et lien dans database) -->
           <!-- Figurer out à partir de où on peut ajouter des quotes (google keep, facebook, etc) -->
-    <div name="ShitPage" class="sectionPage justPage yesCasaFoot" id="shitPage">
       <div id="coverMyShit"></div>
       <h1>Relax, I'm still working on it!</h1>
       <div style="display:flex;justify-content: space-around;flex-wrap: wrap;">
@@ -2961,302 +2050,12 @@
           <button>Come on, add it!</button>
         </form>
       </div>
-    </div>    
-    <style name="ShitPage">
-      .recipeSections{
-        display:flex;
-        justify-content: space-around;
-        flex-wrap: wrap;
-      }
-      .recipeSections > div{
-        width: calc(218.82px + 2.07vw);
-      }
-      .shitIngCheck{
-        width: 15px;
-        height: 15px;
-        border: 1px solid purple;
-        border-radius: 2px;
-        display: inline-block;
-        margin-right: 5px;
-        background: rgba(128,0,128,.3);
-        position: relative;
-      }
-      .shitRChoice:checked + label > span.shitIngCheck::before {
-        font-family: 'typicons';
-        content: "\E11E";
-        position: absolute;
-        top: -4px;
-        left: 1.5px;
-      }
-      .shitIngredient{
-        display: flex;
-      }
-      .shitTypeButton, .shitRecipeButton{
-        font-family: 'Rubik Dirt', cursive;
-        font-size: calc(15.53px + 0.19vw);
-        line-height:1.2em;
-        font-weight: 400;
-        width:fit-content;
-        border-top: 1px solid rgba(128,0,128,.8);
-        border-left: 1px solid rgba(128,0,128,.8);
-        border-bottom: 4px solid rgba(128,0,128,.8);
-        border-right: 3px solid rgba(128,0,128,.8);
-        border-radius: 5px;
-        padding: 5px 10px;
-        margin: 15px auto;
-        text-align: center;
-        /* background: #000; */
-        /* color: rgba(128,0,128,.9); */
-        background: inherit;
-        color: inherit;
-      }
-      .shitRecipeButton{
-        margin:0;
-      }
-      .shitIngredient{
-        font-family: 'Rubik Dirt', cursive;
-        font-size: calc(15.53px + 0.19vw);
-        line-height:1.2em;
-        font-weight: 400;
-        width:fit-content;
-        margin: 15px;
-        text-align: center;
-        /*color: rgba(128,0,128,.9); */
-        color: inherit;
-      }
-      .shitTypeButton:hover, .shitRecipeButton:hover{
-        background: rgba(128,0,128,.4);
-        cursor: pointer;
-      }
-      .shitIngredient:hover{
-        opacity: .8;
-        cursor: pointer;
-      }
-      #coverMyShit{
-        display: none;
-        width: 1000vw;
-        height: 1000vh;
-        position: fixed;
-        top:0;
-        left: 0;
-        background: inherit;
-        opacity: .9;
-        z-index: 999;
-      }
-      #enough{
-        display:none;
-        justify-content: center;
-        position: relative;
-        /* top: calc(50vh + 120px);
-        margin: 20px 8px 0 -8px; */
-        margin: 20px auto;
-        width: 100%;
-        z-index: 999999;}
-      #enough > button{
-        /* margin: 0 auto; */
-        font-family: 'Nunito', sans-serif;
-        font-size: calc(15.06px + 0.38vw);
-        font-weight: 700;
-      }
-      .yourShit{
-        display: flex;
-        width:200px;
-        min-height: 200px;
-        height: fit-content;
-        border-top: 1px solid rgba(128,0,128,.8);
-        border-left: 1px solid rgba(128,0,128,.8);
-        border-bottom: 4px solid rgba(128,0,128,.8);
-        border-right: 3px solid rgba(128,0,128,.8);
-        border-radius: 5px;
-        margin:auto;
-        padding:5px;
-        font-size: 18px;
-        opacity: 0.8;
-        z-index: 999999;
-        background: inherit;
-        color: inherit;
-      }
-      .yourShitHover:hover{
-        cursor: pointer;
-      }
-      .yourShit p{
-        margin: auto;
-        text-align: center;
-        font-size: calc(15.53px + 0.19vw);
-        font-weight: 900;
-      }
-      .fixYourShit{
-        /* position:fixed;
-        top: calc(50vh - 100px);
-        left: calc(50vw - 100px); */
-        position: fixed;
-        display: flex;
-        top: 20vh;
-        margin: 20px 8px 0 -8px;
-        width: 100%;
-        height: 75vh;
-        z-index: 99999;
-        align-content: space-between;
-        flex-wrap: wrap;
-      }
-      #ySp{
-        margin: auto;
-        text-align: center;
-        font-size: calc(15.53px + 0.19vw);
-        font-weight: 900;
-      }
-      .addYOSwhole{
-        width:fit-content;
-        display: block;
-        margin:auto;
-        position: relative;
-        padding: 25px 0 100px;
-      }
-      #addYOS{
-        width: fit-content;
-        margin:auto;
-      }
-      #addYOS > div{
-        margin:20px 0;
-      }
-      #addYOS > div > label{
-        margin-right: 10px;
-      }
-      .addYOSquote{
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-      }
-      .addYOSquote > textarea{
-        border: 1px solid rgba(128,0,128,.8);
-        /* background: #000; */
-        background: inherit;
-        color: inherit;
-        /* color: rgba(128,0,128,1); */
-        padding: 5px;
-        border-radius: 5px;
-        width: 200px;
-        font-family: 'Nunito', sans-serif;
-        font-size: calc(15.53px + 0.19vw);
-        font-weight: 700;
-      }
-      .addYOSquote > textarea:focus{
-        outline: 1px solid rgba(255,255,255,.5);
-      }
-      .addYOStheme{
-        display: flex;
-        flex-wrap: wrap;
-      }
-      .ddThemeWhole{
-        display: flex;
-        flex-flow: column;
-      }
-      .ddThemeLabel{
-        display: inline-block;
-        margin: 0;
-        border: 1px solid rgba(128,0,128,.8);
-        /* background: #000;
-        color: rgba(128,0,128,.8); */
-        background: inherit;
-        color: inherit;
-        padding: 5px;
-        border-radius: 5px;
-        line-height: 1em;
-        font-size: 16px;
-        width: 200px;
-        font-family: 'Nunito', sans-serif;
-        font-size: calc(15.53px + 0.19vw);
-        font-weight: 700;
-      }
-      .ddThemeLabel:hover{
-        cursor:pointer;
-      }
-      .ddThemeList{
-        max-height: 0;
-        width: 0;
-        overflow: hidden;
-      }
-      .ddThemeList label{
-        visibility: hidden;
-      }
-      
-      #ddThemeInput:checked + label.ddThemeLabel>span.dropchevron{
-        transform: rotate(-90deg);
-        transition: transform 0.5s;
-      }
-      #ddThemeInput:checked ~ div.ddThemeList{
-        max-height: 1000vh;
-        width: 100%;
-        transition: max-height .5s ease-in;
-      }
-      #ddThemeInput:checked ~ div.ddThemeList label.ddThemeListLabel{
-        display:block;
-        visibility: visible;
-        border: 1px solid rgba(128,0,128,.8);
-        width: 200px;
-        padding: 5px;
-        background: rgba(128,0,128, 0.2);
-        border-radius: 5px;
-        font-size: calc(15.53px + 0.19vw);
-      }
-
-      .ddThemeListLabel:hover{
-        /* color: rgba(128,0,128,1);
-        border: 1px solid rgba(128,0,128,1);
-        background: rgba(128,0,128, 0.4); */
-        opacity:.7;
-        cursor: pointer;
-      }
-      input.ddThemeChoice:checked + label.ddThemeListLabel{
-        background: rgba(128,0,128,.5)!important;
-      }
-      #addYOS > button{
-        position: absolute;
-        right: 0;
-        width:fit-content;
-        border-top: 1px solid rgba(128,0,128,.8);
-        border-left: 1px solid rgba(128,0,128,.8);
-        border-bottom: 4px solid rgba(128,0,128,.8);
-        border-right: 3px solid rgba(128,0,128,.8);
-        border-radius: 5px;
-        padding: 3px 5px;
-        margin: 35px auto;
-        text-align: center;
-        /* background: #000;
-        color: rgba(128,0,128,.9); */
-        background: inherit;
-        color: inherit;
-        font-family: 'Nunito', sans-serif;
-        font-size: calc(15.06px + 0.38vw);
-        font-weight: 700;
-      }
-      #addYOS > button:hover{
-        background-color: rgba(128,0,128,.4);
-        cursor: pointer;
-      }
-
-    </style>
-    <script name="ShitPage">
-
-      function wisely(){
-        var markedCheckbox = document.getElementsByName('theme');
-        let list = document.querySelector("#wisely");
-        list.innerText = "";
-        for (var checkbox of markedCheckbox){
-          if(checkbox.checked){
-          console.log(checkbox.value + " et ");
-            if(list.innerText == ""){
-              list.innerText = (checkbox.value);
-            } else{
-              list.innerText = list.innerText + ", " + (checkbox.value);
-            }
-        }
-      }}
-    </script>
+    </div>
+    <script name="ShitPage" src="shit.js"></script>
 
     <!--Master's Toy's Training--> 
-    <!-- Mstrplzuseme -->
     <div name="ToysPage" class="sectionPage justPage yesCasaFoot" id="SectPageToy">
+      <!-- Mstrplzuseme -->
       <div class="cover" id="coverSureBackHome"></div>
       <div id="remindRulesBox">
         <div class="RulesCover"></div>
@@ -4175,10 +2974,6 @@
       //var ans4 = document.getElementById("rap4").value;
       //console.log(ans1 + " " + ans2 + " " + ans3 + " " + ans4);
 
-      function getRndInteger(min, max) {
-        return Math.floor(Math.random() * (max - min)) + min;
-      }
-
       function Next(prev, suiv){
         document.getElementById(prev).style.display = "none";
         document.getElementById(suiv).style.display = "block";
@@ -4280,9 +3075,6 @@
         navigate(currentState);
       };
 
-    
-      
-      
       // Code called onclick with navigation UI buttons and "links"
       function toSectPage(element){
         currentState = element.id;
@@ -4360,251 +3152,7 @@
         };
       };
     </script>
-    <script type="module">
-      // Import the functions you need from the SDKs you need
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
-      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
-      import { getFirestore, collection, getDocs, query, where, addDoc, deleteDoc, doc} from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
-      // TODO: Add SDKs for Firebase products that you want to use
-      // https://firebase.google.com/docs/web/setup#available-libraries
-
-      // Your web app's Firebase configuration
-      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-      const firebaseConfig = {
-        apiKey: "AIzaSyBHSLxXWZUAOH8bKsRSGMnSzOh6QnyPTWQ",
-        authDomain: "alix-alie-alex.firebaseapp.com",
-        projectId: "alix-alie-alex",
-        storageBucket: "alix-alie-alex.appspot.com",
-        messagingSenderId: "519484588635",
-        appId: "1:519484588635:web:ec162ad407f9b45f60357e",
-        measurementId: "G-NFDD6B1G9R"
-      };
-
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const analytics = getAnalytics(app);
-      const db = getFirestore(app);
-      // const querySnapshot = await getDocs(query(collection(db, "person"), where("lastName", "==", "gentile")));
-      // querySnapshot.forEach((doc) => {
-      //   console.log(doc.data());
-      // });
-
-      //Save your Time
-      // function saveIt(){
-      //   updateSteps()
-      //   addDoc(collection(db, "Plan"), {
-      //     steps.forEach(step => {
-      //     Step: [step.index, step.name, step.value, step.checked, step.id],})
-          
-      //   })
-      // }
-        let destination = document.getElementById("destination").value
-        let planDoc = doc(db, "Plan", destination);
-        steps.map((step) => {
-          setDoc(planDoc, {
-            step0: [step.index, step.name, step.value, step.checked, step.id]
-        }, {merge: true});})
-
-      // document.querySelector('#addYOS').addEventListener('submit', (e) => {
-        
-        
-      //   addDoc(collection(db, "shit"), {
-      //     quote: quoteHTML,
-      //     theme: finalList,
-      //     type: "text"
-      //   })
-      //   .then(() => {
-      //     addYOSForm.reset()
-      //     document.querySelector("#wisely").innerHTML = "Choose wisely...";
-      //     document.querySelector("#badShit").innerHTML = "Thank you for your shit!";
-      //   })});
-
-
-      // To get today'shit 
-      async function getTodaysShit() {
-        const myTSArray = [];
-        const querySnapshotTS = await getDocs(query(collection(db, "shit")));
-        querySnapshotTS.forEach(doc => {
-            const check = doc.data().quote;
-            // console.log("check = " + check);
-            myTSArray.push(check);
-        });
-        return myTSArray;
-      };
-
-
-
-      // To get themed shit to feel 
-      async function getGearData(theme) {
-        const myArray = [];
-        const querySnapshot = await getDocs(query(collection(db, "shit"), where("theme", "array-contains", theme)));
-        querySnapshot.forEach(doc => {
-            const check = doc.data().quote;
-            // console.log("check = " + check);
-            myArray.push(check);
-        });
-        return myArray;
-      };
-
-      const shitTypeButton = document.getElementsByClassName('shitTypeButton');
-      // console.log("shitTypeButton : " + shitTypeButton);
-      for(let i = 0; i < shitTypeButton.length; i++){
-        let theme = shitTypeButton[i].id;
-        // console.log(" theme = " + theme);
-        shitTypeButton[i].addEventListener('click', (e) => {
-      getGearData(theme)
-      .then(gearData => {
-        let numAS = getRndInteger(0,gearData.length);
-            document.getElementById("ySp").innerHTML = gearData[numAS]; 
-        // console.log("gearData = " + gearData);
-      })})};
-
-      // To get shit recipe 
-      async function getShitRecipe(theme) {
-        const myRecipe = [];
-        const querySnapshotR = await getDocs(query(collection(db, "shit"), where("theme", "array-contains-any", theme)));
-        querySnapshotR.forEach(doc => {
-            const checkR = doc.data().quote;
-            // console.log("checkR = " + checkR);
-            myRecipe.push(checkR);
-        });
-        return myRecipe;
-      };
-      
-      document.getElementById('recipe').addEventListener('click', (e) => {
-        const shitRChoice = document.getElementsByClassName('shitRChoice');
-        let theme = []
-        for(let i = 0; i < shitRChoice.length; i++){
-          if(shitRChoice[i].checked){
-            theme.push(shitRChoice[i].value);
-          }}
-          console.log("theme = " + theme);
-          getShitRecipe(theme)
-          .then(thisRecipe => {
-            let numAS = getRndInteger(0,thisRecipe.length);
-            document.getElementById("yourShit").classList.add("yourShitHover");
-            document.getElementById("ySp").innerHTML = thisRecipe[numAS]; 
-            document.getElementById("coverMyShit").style.display = "block";
-            if(document.getElementById("switchModeBall").classList.contains("ballDark")){
-              document.getElementById("coverMyShit").style.background = "#000";
-            } else{
-              document.getElementById("coverMyShit").style.background = "#F2F3F4";
-            };
-            document.getElementById("enough").style.display = "flex";
-            document.getElementById("heresYSR").classList.add("fixYourShit");
-            document.getElementById("explainShit").style.display = "block";
-            console.log("thisRecipe = " + thisRecipe);
-            // then again
-            let max = thisRecipe.length;
-            let min = 0;
-            let arrR=[];
-            for (i = 0; i < max; i++) {
-                x = Math.floor( Math.random() * max) + min;
-                if(arrR.includes(x) == true){
-                    i=i-1;
-                }else{
-                    if(x>max==false){
-                        arrR.push(x);
-                    }
-                }
-            } console.log("arrR = " + arrR);
-            let R = 0;
-            console.log("max = " + max);
-            const controller = new AbortController();
-            document.getElementById('yourShit').addEventListener('click', (e) => {
-              let numRS = arrR[R++];
-              console.log("numRS = " + numRS);
-              if(numRS === undefined){
-                document.getElementById("ySp").innerHTML = "That's it!<br>\nYou ate it all!<br>\nHope you had enough!";
-                document.getElementById("explainShit").style.display = "none";
-                document.getElementById("yourShit").classList.remove("yourShitHover");
-                //remove EventListener! (ça ça marche pas encore)
-                // document.getElementById('yourShit').removeEventListener('click', e);
-                controller.abort()
-              } else{
-                document.getElementById("ySp").innerHTML = thisRecipe[numRS];  
-              }
-      }, { signal: controller.signal })})});
-
-      document.getElementById('enough').addEventListener('click', (e) => {
-        document.getElementById("coverMyShit").style.display = "none";
-        document.getElementById("enough").style.display = "none";
-        document.getElementById("heresYSR").classList.remove("fixYourShit");
-        document.getElementById("ySp").innerHTML = "Wanna try again?";
-        document.getElementById("yourShit").classList.remove("yourShitHover");
-      });
-
-      // To add your own shit
-      const addYOSForm = document.querySelector('#addYOS')
-      addYOSForm.addEventListener('submit', (e) => {
-        e.preventDefault()
-        let finalList = []
-        var markedCheckbox = document.getElementsByName('theme');
-          for (var checkbox of markedCheckbox){
-            if(checkbox.checked){
-              finalList.push(checkbox.value);
-          }
-        }
-        console.log("finalList = " + finalList  + " addYOSForm.quote.value = " + addYOSForm.quote.value);
-        if(addYOSForm.quote.value === "" || finalList.length === 0){
-          document.querySelector("#badShit").innerHTML = "You forgot something...";
-          document.querySelector("#wisely").innerHTML = "Choose wisely...";
-        } else{
-          let quoteHTML = addYOSForm.quote.value.replace(/\n/g, '<br>');
-          console.log("finalList = " + finalList + " addYOSForm.quote.value = " + addYOSForm.quote.value + "quoteHTML = " + quoteHTML);
-        addDoc(collection(db, "shit"), {
-          quote: quoteHTML,
-          theme: finalList,
-          type: "text"
-        })
-        .then(() => {
-          addYOSForm.reset()
-          document.querySelector("#wisely").innerHTML = "Choose wisely...";
-          document.querySelector("#badShit").innerHTML = "Thank you for your shit!";
-        })}});
-
-
-      // window.onload = MyNewRand;
-      // window.onload = (event) => {
-      // };  
-      let arrTS = MyNewRand();
-        // console.log("arrTS =" + arrTS);    
-      let TS = 0;
-      document.getElementById("SotD").addEventListener('click', (e) => {
-      getTodaysShit()
-      .then(todaysShit => {
-        let numBC = getRndInteger(0,BgColor.length);
-        let numTC = getRndInteger(0,TextColor.length);
-        let numTF = getRndInteger(0,TextFont.length);
-        document.getElementById("SotDp").style.fontFamily = TextFont[numTF];
-        let numTS = arrTS[TS++];
-        console.log("TS= " + TS + "  numTS= " + numTS);
-        if(TS < 11){
-        document.getElementById("SotDp").innerHTML = todaysShit[numTS];
-        } else if (TS >= 15){
-          document.getElementById("SotDp").innerHTML = "For real,<br>\nit's over now.<br>\nGO get a life!";
-          document.getElementById("SotDp").style.fontFamily = "'Fuzzy Bubbles', cursive";
-        } else if (TS >= 11){
-          document.getElementById("SotDp").innerHTML = "Now, you've seen enough,<br>\ngo do stuff and come back later.";
-          document.getElementById("SotDp").style.fontFamily = "'Chakra Petch', sans-serif";
-        }
-      })})
-      function MyNewRand(){
-        let max = 10;
-        let min = 0;
-        let arrTS=[];
-          for (let i = 0; i < max; i++) {
-              let x = Math.floor( Math.random() * max) + min;
-              if(arrTS.includes(x) == true){
-                  i=i-1;
-              }else{
-                  if(x>max==false){
-                      arrTS.push(x);
-                  }
-              }
-          }
-          return arrTS;
-      }
+    <script type="module" src="module.js">
     </script>
   </body>
 </html>

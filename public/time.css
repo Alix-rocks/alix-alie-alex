@@ -1,0 +1,190 @@
+.togglePlansWhole {
+  width: 240px;
+  margin: 20px auto;
+}
+
+.togglePlansLabel {
+  text-decoration: underline;
+  text-decoration-thickness: from-font;
+  font-weight: 400;
+}
+
+#togglePlansIcon {
+  transition: transform .3s ease-out;
+  display: inline-block;
+}
+
+.togglePlans {
+  transition: max-height .3s ease-out;
+  max-height: 0;
+  overflow: hidden;
+}
+
+#togglePlans:checked~div#mySchedules {
+  max-height: 100vh;
+  transition: max-height .5s ease-in;
+}
+
+#togglePlans:checked~label #togglePlansIcon {
+  transform: rotate(90deg);
+  transition: transform .5s;
+}
+
+.planDD {
+  opacity: .8;
+  display: inline-block;
+  margin-right: 5px;
+  font-size: .9em;
+}
+
+.planTB {
+  opacity: .8;
+  float: right;
+  font-size: 1.3em;
+}
+
+.timeDestination {
+  width: 100%;
+  background: rgba(128, 0, 128, .2);
+  border: 2px solid rgba(128, 0, 128, .7);
+  border-radius: 2px;
+  color: inherit;
+  appearance: none;
+  font-size: calc(15.53px + 0.19vw);
+  line-height: 1.2em;
+  font-weight: 400;
+}
+
+.timeDestination:focus {
+  outline: 1px solid rgba(255, 255, 255, .5);
+}
+
+.timeForm {
+  width: 240px;
+  margin: 0 auto 85px;
+}
+
+.timeFormIn {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.timeSettingInput:checked+label>span.timeSettingCheck::before {
+  font-family: 'typicons';
+  content: "\E11E";
+  position: absolute;
+  top: -4px;
+  left: 1.5px;
+}
+
+.timeSettingLabel {
+  font-size: calc(15.53px + 0.19vw);
+  line-height: 1.2em;
+  font-weight: 400;
+  margin: 15px 0;
+  text-align: center;
+  color: inherit;
+}
+
+.timeSettingCheck {
+  width: 15px;
+  height: 15px;
+  border: 1px solid purple;
+  border-radius: 2px;
+  display: inline-block;
+  margin-right: 5px;
+  background: rgba(128, 0, 128, .3);
+  position: relative;
+}
+
+.timeFormButton {
+  float: right;
+  border-width: 1px 1px 4px 3px;
+  border-style: solid;
+  border-color: inherit;
+  border-radius: 5px;
+  padding: 5px 10px;
+  color: inherit;
+  background: inherit;
+  text-align: center;
+  width: fit-content;
+  font-family: 'Rubik Dirt', cursive;
+  font-size: calc(15.53px + 0.19vw);
+  line-height: 1.2em;
+  font-weight: 400;
+}
+
+.timeFormButton:hover {
+  background: rgba(128, 0, 128, .4);
+  cursor: pointer;
+}
+
+.resultTime {
+  width: 200px;
+  margin: calc(100vh/2 - 190px) auto 0;
+}
+
+.timeDestination2 {
+  width: 60px;
+}
+
+.stepBox,
+.iteme {
+  margin: 15px 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.dragging {
+  opacity: .5;
+}
+
+.displayNone {
+  display: none;
+}
+
+.trashLine {
+  width: 215px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.trashed div:first-child {
+  opacity: .7;
+}
+
+.trashed div.trashLine {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 40%, purple 50%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0));
+}
+
+.trashed div.trashLine div {
+  opacity: .7;
+}
+
+.outlined {
+  border: 2px black solid;
+  outline: 4px solid purple;
+  outline-offset: 2px;
+  border-radius: 2%;
+}
+
+/* #arriveeTime input[type="time"]::-webkit-calendar-picker-indicator{
+    color: #800080;
+    background-color: black;
+    border-color: purple;
+    filter: invert(13%) sepia(58%) saturate(6184%) hue-rotate(292deg) brightness(78%) contrast(130%);
+} */
+.notesBorder {
+  border: 1px dotted purple;
+  margin: 5px auto;
+  width: 176px;
+}
+
+.notesBorder p {
+  margin: 0.3em;
+}

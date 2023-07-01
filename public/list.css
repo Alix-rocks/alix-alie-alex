@@ -2,15 +2,49 @@
   width: 240px;
   margin: 0 auto 85px;
 }
-.sectionHR{
+.listDragableAll{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+input:focus, textarea:focus, select:focus{
+  outline: none;
+}
+.erasingZone{
+  transition: width .3s ease-out;
+  width: 0;
+  height: 25px;
+  overflow: hidden;
+  background-color: rgba(128,0,128,.5);
+}
+.erasing .erasingZone{
+  width: 200px;
+  transition: width .1s ease-in;
+}
+.listSection h3{
+  margin:0;
+}
+.listSection hr{
   border-top: 1.5px solid rgba(128,0,128,.8);
   margin-top: 0;
+}
+.listSectionName{
+  background: inherit;
+  border: none;
+  color: purple;
+  height: 25px;
+  width: 100%;
+  font-family: 'Nunito', sans-serif;
+  font-size: calc(19.53px + 0.19vw);
+  font-weight: 800;
+  line-height:1.4em;
 }
 .listItem{
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
+  margin: 10px 0;
 }
 .listItemName{
   background: inherit;
@@ -18,7 +52,8 @@
   color: purple;
   font-size: calc(15.53px + 0.19vw);
   height: 25px;
-  width: 185px;
+  width: 100%;
+  margin-left: 3px;
 }
 .listItemNameTicked{
   text-decoration: line-through;

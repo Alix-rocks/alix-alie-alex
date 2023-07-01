@@ -91,7 +91,7 @@
         font-weight: 400;
       }
       /* h3 font-size: 20 - 22*/
-      h3{
+      h3, .h3like{
         font-family: 'Nunito', sans-serif;
         font-size: calc(19.53px + 0.19vw);
         font-weight: 800;
@@ -647,7 +647,9 @@
       </div>
       <div id="timeForm" class="timeForm">
       </div>
-      <div id="scheduleTime" class="resultTime">
+      <div id="scheduleTimeWhole" style="width: 100vw; height: 100vh; display:flex;">
+        <div id="scheduleTime" class="resultTime">
+        </div>
       </div>
     </div>
     <script name="TimePage" src="time.js"></script>
@@ -655,15 +657,31 @@
     <div name="ListPage" id="listPage"  class="sectionPage justPage">
       <div id="wholeList">
         <h2 style="text-align:center;">Épicerie</h2>
-        <h3 style="margin-bottom: 0;">Fruits et légumes</h3>
-        <hr class="sectionHR"/>
-        <ul style="margin: 0;padding: 0;">
-          <li class="listItem">
-            <input id="listTickInput" type="checkbox" class="cossin" onchange="listItemTicked()"/>
-            <label for="listTickInput" id="listTickLabel" class="listCircle">
-              <span class="typcn icon typcn-tick listTickBlack invisible" id="listTickTick"></span>
+        <ul class="listDragableAll">
+          <li class="listSection listDragable" draggable="true">
+            <div class="erasingZone"></div>
+            <input type="text" class="listSectionName listDragableName" id="listSectionName" value="Fruits et légumes"/>
+            <hr class="sectionHR"/>
+          </li>
+          <li class="listItem listDragable" draggable="true">
+            <div class="erasingZone"></div>
+            <input id="listTickInput1" type="checkbox" class="cossin" onchange="listItemTicked(this)"/>
+            <label for="listTickInput1" id="listTickLabel1" class="listCircle">
+              <span class="typcn icon typcn-tick listTickBlack invisible" id="listTickTick1"></span>
             </label>
-            <input type="text" class="listItemName" id="listItemName" value="Avocat"/>
+            <input type="text" class="listItemName listDragableName" id="listItemName1" value="Avocat"/>
+            <div>
+              <span class="typcn icon typcn-image-outline noPicture"></span>
+              <span class="typcn icon typcn-image yesPicture displayNone"></span>
+            </div>
+          </li>
+          <li class="listItem listDragable" draggable="true">
+            <div class="erasingZone"></div>
+            <input id="listTickInput2" type="checkbox" class="cossin" onchange="listItemTicked(this)"/>
+            <label for="listTickInput2" id="listTickLabel2" class="listCircle">
+              <span class="typcn icon typcn-tick listTickBlack invisible" id="listTickTick2"></span>
+            </label>
+            <input type="text" class="listItemName listDragableName" id="listItemName2" value="Beurre"/>
             <div>
               <span class="typcn icon typcn-image-outline noPicture"></span>
               <span class="typcn icon typcn-image yesPicture displayNone"></span>

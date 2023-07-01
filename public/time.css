@@ -122,7 +122,7 @@
 
 .resultTime {
   width: 200px;
-  margin: calc(100vh/2 - 190px) auto 0;
+  margin:auto;
 }
 
 .timeDestination2 {

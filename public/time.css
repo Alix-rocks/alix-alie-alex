@@ -48,7 +48,7 @@
   background: rgba(128, 0, 128, .2);
   border: 2px solid rgba(128, 0, 128, .7);
   border-radius: 2px;
-  color: inherit;
+  color: var(--tx-color);
   appearance: none;
   font-size: calc(15.53px + 0.19vw);
   line-height: 1.2em;
@@ -84,7 +84,7 @@
   font-weight: 400;
   margin: 15px 0;
   text-align: center;
-  color: inherit;
+  color: var(--tx-color);
 }
 
 .timeSettingCheck {
@@ -102,11 +102,11 @@
   float: right;
   border-width: 1px 1px 4px 3px;
   border-style: solid;
-  border-color: inherit;
+  border-color: var(--tx-color);
   border-radius: 5px;
   padding: 5px 10px;
-  color: inherit;
-  background: inherit;
+  color: var(--tx-color);
+  background: var(--bg-color);
   text-align: center;
   width: fit-content;
   font-family: 'Rubik Dirt', cursive;
@@ -180,7 +180,7 @@
     filter: invert(13%) sepia(58%) saturate(6184%) hue-rotate(292deg) brightness(78%) contrast(130%);
 } */
 .notesBorder {
-  border: 1px dotted purple;
+  border: 1px dotted var(--tx-color);
   margin: 5px auto;
   width: 176px;
 }

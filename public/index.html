@@ -36,7 +36,7 @@
               Photos organisées par theme (mue, eating, chilling, tank, etc) et/ou par date -->
     <!-- Section My girlfriend's art -->
     <div id="mainContainer" class="mainContainer">
-      <div style="padding-bottom: 85px;">
+      <div style="height: 100%; width: 100%;">
     <div id="switchSliderWhole">
       <div onclick="switchMode()" id="switchModeSlider">
         <div id="switchModeLight" class="typcn typcn-weather-sunny"></div>
@@ -51,7 +51,16 @@
     <div class="bottomButton backTop" onclick="backTop()" title="Again! From the top!" id="backTopButton"><span class="typcn typcn-chevron-right chevronTop"></span></div>
 
     <style name="general">
-      *{box-sizing: border-box;}
+      :root{
+        --bg-color: black;
+        --tx-color: rgb(128, 0, 128);
+      }
+      *{
+        box-sizing: border-box;
+      }
+      input:focus, textarea:focus, select:focus{
+        outline: 1px solid rgba(255, 255, 255, .5);
+      }
       .cossin{
         position: absolute; 
         top:0;
@@ -62,12 +71,13 @@
         border: 0;
       }
       body{
-        background: #000;
-        color: #800080;
+        background: var(--bg-color);
+        color: var(--tx-color);
         /* transition: background-color .5s ease-in-out, color .5s ease-in-out; */
       }
       .mainContainer{
-        min-height: calc(100vh - 16px);
+        height: calc(100vh - 16px);
+        width: calc(100vw - 16px);
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
@@ -130,8 +140,8 @@
         border-color: inherit;
         border-radius: 5px;
         padding: 3px;
-        background: inherit;
-        color: inherit;
+        background: var(--bg-color);
+        color: var(--tx-color);
         line-height:1;
         text-align: center;
         font-size: calc(15.06px + 0.38vw);
@@ -263,19 +273,16 @@
       function switchMode(){
         document.getElementById("switchModeBall").classList.toggle("ballDark");
         if(document.getElementById("switchModeBall").classList.contains("ballDark")){
-          document.body.style.background = "#000";
-          document.body.style.color = "#800080";
           document.getElementById('nopeH1').innerText = "Nope, there's nothing here...";
-          document.getElementById("backTopButton").style.background = "#000";
-          document.getElementById('casa').style.background = "#000";
+          document.querySelector(':root').style.setProperty('--bg-color', 'black');
+          document.querySelector(':root').style.setProperty('--tx-color', 'purple');
         } else{
-          document.body.style.background = "#F2F3F4";
-          document.body.style.color = "#000";
           document.getElementById('nopeH1').innerText = "Nope, still nothing...";
-          document.getElementById("backTopButton").style.background = "#F2F3F4";
-          document.getElementById('casa').style.background = "#F2F3F4";
-        }
+          document.querySelector(':root').style.setProperty('--bg-color', '#F2F3F4');
+          document.querySelector(':root').style.setProperty('--tx-color', 'black');
+        };
       }
+
 
       function getRndInteger(min, max) {
         return Math.floor(Math.random() * (max - min)) + min;
@@ -647,7 +654,7 @@
       </div>
       <div id="timeForm" class="timeForm">
       </div>
-      <div id="scheduleTimeWhole" style="width: 100vw; height: 100vh; display:flex;">
+      <div id="scheduleTimeWhole" style="width: calc(100vw - 16px); height: calc(100vh - 16px); display:none;">
         <div id="scheduleTime" class="resultTime">
         </div>
       </div>

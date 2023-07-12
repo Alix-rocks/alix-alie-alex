@@ -387,7 +387,7 @@ function calculateTime(e) {
     ${ifNotes()}
 </div>`;
   document.getElementById("scheduleTime").innerHTML = result;
-  document.getElementById("scheduleTime").style.display = "block";
+  document.getElementById("scheduleTimeWhole").style.display = "flex";
   document.getElementById("timeForm").style.display = "none";
   document.getElementById("togglePlansWhole").style.display = "none";
   document.getElementById("switchSliderWhole").style.display = "none";
@@ -405,7 +405,7 @@ function ifNotes() {
   };
 }
 function clickHandler() {
-  document.getElementById("scheduleTime").style.display = "none";
+  document.getElementById("scheduleTimeWhole").style.display = "none";
   document.getElementById("timeForm").style.display = "block";
   document.getElementById("togglePlansWhole").style.display = "block";
   document.getElementById("switchSliderWhole").style.display = "block";

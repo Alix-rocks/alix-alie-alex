@@ -30,10 +30,18 @@
   transition: transform .5s;
 }
 
+.listPlans{
+  list-style: none;
+  padding: 0;
+}
+.listPlan span{
+  cursor: pointer;
+}
 .planDD {
   opacity: .8;
   display: inline-block;
-  margin-right: 5px;
+  padding-right: 8px;
+  padding-left: 20px;
   font-size: .9em;
 }
 
@@ -41,6 +49,11 @@
   opacity: .8;
   float: right;
   font-size: 1.3em;
+}
+.savePlanH3{
+  text-align:center;
+  width: 100%;
+  margin-bottom: 0;
 }
 
 .timeDestination {

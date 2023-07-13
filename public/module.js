@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
-import { getFirestore, collection, getDocs, query, where, addDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -37,17 +37,23 @@ function getMaxPlans() {
 }
 
 async function saveIt() {
+  updateSteps();
   let destination = document.getElementById("nameToSave").value;
   await setDoc(doc(db, "plan", destination), {
     ordre: getMaxPlans() + 1,
-    destination: document.getElementById("destination").value,
-    steps: steps,
-    arriveeTime: document.getElementById("arriveeTime").value,
-    notes: document.getElementById("notes").value
+    ...steps
   });
   getPlans();
+  document.getElementById("savePlan").innerHTML = `
+  <h3 class="savePlanH3">You saved it!</h3>
+  <p style="text-align:center;">Now, go see it in your schedules!</p>`;
+  document.querySelector("#timePage").addEventListener("click", clickHandlerSaved);
 }
 window.saveIt = saveIt;
+function clickHandlerSaved(){
+  document.getElementById("savePlan").innerHTML = ``;
+  document.querySelector("#timePage").removeEventListener("click", clickHandlerSaved);
+}
 
 async function getPlans() {
   const getPlans = await getDocs(collection(db, "plan"));
@@ -57,11 +63,22 @@ async function getPlans() {
     const ordrePlan = doc.data().ordre;
     myScheduleList.push({id:namePlan, ordre:ordrePlan});
   });
-  console.log(myScheduleList);
   displayPlans();
 }
 getPlans();
 
+async function getSchedule(id){
+  const schedule = await getDoc(doc(db, "plan", id));
+  steps = schedule.data();
+  displaySteps();
+}
+window.getSchedule = getSchedule;
+
+async function trashSchedule(id){
+  await deleteDoc(doc(db, "plan", id));
+  await getPlans();
+}
+window.trashSchedule = trashSchedule;
 
 // To get today'shit 
 async function getTodaysShit() {

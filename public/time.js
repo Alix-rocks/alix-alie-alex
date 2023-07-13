@@ -1,8 +1,6 @@
 let steps;
 let myScheduleList = [];
 
-//**Change travellingTime in another arriveeTime (but with minutes input (no checkbox, if it's 0, let's not show it at all in the result) comme ça, ça fait plus de sense avec les résultats, et quand tu ajoutes un nouveau step (index:step.length), ça va arriver avant le travelling... Oh! à moins qu'on ait des escales...)
-//**Make the drag&drop possible on touchscreens too
 //**once it's connected to google accounts
 //**connect to an account and save the whole thing with a name for later
 //**once it's an app
@@ -12,29 +10,33 @@ function initializing() {
   if (localStorage.getItem("steps")) {
     steps = JSON.parse(localStorage.getItem("steps"));
   } else {
-    steps = [
-      { index: 0, name: "Cooking", value: 30, checked: true, id: crypto.randomUUID() },
-      { index: 1, name: "Eating", value: 60, checked: true, id: crypto.randomUUID() },
-      { index: 2, name: "Toilet", value: 15, checked: true, id: crypto.randomUUID() },
-      { index: 3, name: "Shower", value: 15, checked: true, id: crypto.randomUUID() },
-      { index: 4, name: "Prepping", value: 30, checked: true, id: crypto.randomUUID() },
-      { index: 5, name: "Travelling", value: 0, checked: true, id: crypto.randomUUID() }];
+    steps = {
+      destination:"",
+      steps:[
+        { name: "Cooking", value: 30, checked: true, id: crypto.randomUUID() },
+        { name: "Eating", value: 60, checked: true, id: crypto.randomUUID() },
+        { name: "Toilet", value: 15, checked: true, id: crypto.randomUUID() },
+        { name: "Shower", value: 15, checked: true, id: crypto.randomUUID() },
+        { name: "Prepping", value: 30, checked: true, id: crypto.randomUUID() },
+        { name: "Travelling", value: 0, checked: true, id: crypto.randomUUID() }],
+      arriveeTime:"",
+      notes:""};
   }
 };
 
-function getInfo(info) {
-  if (localStorage.getItem(info)) {
-    return `${localStorage.getItem(info)}`;
-  } else {
-    return ``;
-  };
-}
+// function getInfo(info) {
+//   if (localStorage.getItem(info)) {
+//     return `${localStorage.getItem(info)}`;
+//   } else {
+//     return ``;
+//   };
+// }
 
 function saveSteps() {
   localStorage.setItem("steps", JSON.stringify(steps));
-  localStorage.setItem("destination", document.getElementById("destination").value);
-  localStorage.setItem("arriveeTime", document.getElementById("arriveeTime").value);
-  localStorage.setItem("notes", document.getElementById("notes").value);
+  // localStorage.setItem("destination", document.getElementById("destination").value);
+  // localStorage.setItem("arriveeTime", document.getElementById("arriveeTime").value);
+  // localStorage.setItem("notes", document.getElementById("notes").value);
 };
 
 function clearStorage() {
@@ -55,14 +57,63 @@ function displayPlans() {
     // }
     return a.ordre < b.ordre ? -1 : a.ordre > b.ordre ? 1 : 0
   });
-  document.getElementById("mySchedules").innerHTML = myScheduleList.map((schedule) => {
+  let listLi = myScheduleList.map((schedule) => {
     return `
-        <div>
-            <p><span class="typcn icon typcn-th-small planDD"></span>${schedule.id}<span class="typcn icon typcn-trash planTB"></span></p>
-        </div>`
+        <li class="listPlan" draggable="true">
+            <p><span class="typcn icon typcn-th-small planDD" title="Drag & Drop"></span><span onclick="getSchedule('${schedule.id}')" title="Show that one">${schedule.id}</span><span class="typcn icon typcn-trash planTB" onclick="trashSchedule('${schedule.id}')" title="Trash it!"></span></p>
+        </li>`
   }).join("");
+  document.getElementById("mySchedules").innerHTML = `<ul class="listPlans">${listLi}</ul>`;
+  let listPlans = document.querySelector(".listPlans");
+  let plans = document.querySelectorAll(".listPlans > .listPlan");
+  let icons = document.querySelectorAll(".listPlans > .listPlan .planDD");
+  plans.forEach(plan => {
+    plan.addEventListener("dragstart", (evt) => {
+      // Adding dragging class to item
+      plan.classList.add("dragging");
+    });
+    // Removing dragging class from item on dragend event
+    plan.addEventListener("dragend", () => {
+      plan.classList.remove("dragging");
+    });
+  });
+  icons.forEach(icon => {
+    // Adding dragging class to item
+    icon.addEventListener("touchstart", (evt) => {
+      evt.currentTarget.parentElement.parentElement.classList.add("dragging");
+    });
+    // Removing dragging class from item on dragend event
+    icon.addEventListener("touchend", (evt) => {
+      evt.currentTarget.parentElement.parentElement.classList.remove("dragging");
+    });
+  });
+  listPlans.addEventListener("dragover", listPlansDD);
+  listPlans.addEventListener("drop", listPlansOD);
+  listPlans.addEventListener("touchmove", listPlansDD);
+  listPlans.addEventListener("touchend", listPlansOD);
 }
+const listPlansDD = (e) => {
+  let listPlans = document.querySelector(".listPlans");
+  e.preventDefault();
+  const draggingPlan = document.querySelector(".dragging");
+  // Getting all items except currently dragging and making array of them
+  let siblings = [...listPlans.querySelectorAll(".listPlan:not(.dragging)")];
+  // Finding the sibling after which the dragging item should be placed
+  let nextSibling = siblings.find(sibling => {
+    if (e.clientX) {
+      //if mouse
+      return e.clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
+    } else {
+      //if touch
+      return e.changedTouches[0].clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
+    }
+  });
+  // Inserting the dragging item before the found sibling
+  listPlans.insertBefore(draggingPlan, nextSibling);
+}
+function listPlansOD(){
 
+}
 
 
 function displaySteps() {
@@ -70,11 +121,11 @@ function displaySteps() {
   let stepAll = `
     <div class="stepBox"  style="flex-wrap: wrap;">
     <label class="timeSettingLabel" style="margin-bottom: 7px;">Destination:</label>
-    <input id="destination" class="timeDestination" type="text" value="${getInfo("destination")}" onchange="saveSteps()"/>
+    <input id="destination" class="timeDestination" type="text" value="${steps.destination}" onchange="updateSteps()"/>
     </div>`;
-  let stepArray = steps.map((step) => {
+  let stepArray = steps.steps.map((step, idx) => {
     return `
-    <li class="iteme" draggable="true" data-index="${step.index}" style="${step.style}" id="${step.id}">
+    <li class="iteme" draggable="true" data-index="${idx}" style="${step.style}" id="${step.id}">
         <div class="changeIcon">
         <span class="typcn icon typcn-th-small" style="opacity: .8;"></span>
         <input id="${step.id}trashCan" class="cossin" type="checkbox" onchange="trashOrNot(event)"/>
@@ -119,14 +170,14 @@ function displaySteps() {
     </label>
     </div>
     <div id="arriveeTimeDiv">
-    <input id="arriveeTime" type="time" value="${getInfo("arriveeTime")}" onchange="saveSteps()"/>
+    <input id="arriveeTime" type="time" value="${steps.arriveeTime}" onchange="updateSteps()"/>
     </div>
 </div>`;
   stepAll += `<div class="stepBox"  style="flex-wrap: wrap;">
     <label class="timeSettingLabel" style="margin:0 0 7px;">
     Notes:
     </label>
-    <textarea id="notes" class="timeDestination" onchange="saveSteps()">${getInfo("notes")}</textarea>
+    <textarea id="notes" class="timeDestination" onchange="updateSteps()">${steps.notes}</textarea>
 </div>`
   stepAll += `<div class="stepBox">
     <button title="Calculate your schedule!" class="timeFormButton" style="float:right;" onclick="calculateTime(event)">
@@ -174,7 +225,6 @@ function displaySteps() {
 
 const initSortableList = (e) => {
   let sortableList = document.querySelector(".sortable-List");
-  let itemes = document.querySelectorAll(".sortable-List > .iteme");
   e.preventDefault();
   const draggingItem = document.querySelector(".dragging");
   // Getting all items except currently dragging and making array of them
@@ -211,7 +261,7 @@ const initSortableList = (e) => {
 
 function ondrop() {
   let itemes = Array.from(document.querySelectorAll(".sortable-List > .iteme"));
-  steps = itemes.map((iteme) => steps[iteme.dataset.index]);
+  steps.steps = itemes.map((iteme) => steps.steps[iteme.dataset.index]);
   updateItemesIndex();
   updateSteps();
 }
@@ -274,10 +324,10 @@ function trashCancel() {
 function trashIt() {
   updateSteps();
   if (confirm("Are you sure?!")) {
-    for (let i = steps.length - 1; i >= 0; i--) {
-      let stepDiv = document.getElementById(`${steps[i].id}`);
+    for (let i = steps.steps.length - 1; i >= 0; i--) {
+      let stepDiv = document.getElementById(`${steps.steps[i].id}`);
       if (stepDiv.classList.contains("trashed")) {
-        steps.splice(stepDiv.dataset.index, 1);
+        steps.steps.splice(stepDiv.dataset.index, 1);
         stepDiv.remove();
       };
     }
@@ -327,16 +377,14 @@ function trashIt() {
 function addStep() {
   updateSteps();
   let stepName = prompt("Name your step");
-  if (stepName) { steps.push({ index: steps.length, name: stepName, value: 30, checked: true, id: crypto.randomUUID() }) };
+  if (stepName) { steps.steps.push({ name: stepName, value: 30, checked: true, id: crypto.randomUUID() }) };
   displaySteps();
   saveSteps();
-  document.getElementById('footer').classList.remove('footerFixed');
 };
 
 function updateSteps() {
-  steps.forEach(step => {
-    let index = steps.indexOf(step);
-    step.index = index;
+  steps.destination = document.getElementById("destination").value;
+  steps.steps.forEach(step => {
     let value = Number.parseInt(document.getElementById(`${step.id}Time`).value);
     step.value = value;
     let checked = document.getElementById(`${step.id}Check`).checked;
@@ -344,8 +392,11 @@ function updateSteps() {
     let name = document.getElementById(`${step.id}Name`).value;
     step.name = name;
   });
+  steps.arriveeTime = document.getElementById("arriveeTime").value;
+  steps.notes = document.getElementById("notes").value;
   saveSteps();
 };
+window.updateSteps = updateSteps;
 initializing();
 displaySteps();
 
@@ -369,14 +420,14 @@ function calculateTime(e) {
     document.getElementById("arriveeTimeDiv").classList.remove("outlined");
   };
   console.log(arriveeTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" }));
-  let stepArray = steps.filter((step) => {
+  let stepArray = steps.steps.filter((step) => {
     return step.checked;
-  }).map((step) => {
+  }).map((step, idx) => {
     if (step.name == "Travelling") {
-      return `<p>Départ: ${sumTimeSub(steps, step.index, arriveeTime)}</p>`;
+      return `<p>Départ: ${sumTimeSub(steps.steps, idx, arriveeTime)}</p>`;
     }
     else {
-      return `<p>${step.name}: ${sumTimeSub(steps, step.index, arriveeTime)}</p>`;
+      return `<p>${step.name}: ${sumTimeSub(steps.steps, idx, arriveeTime)}</p>`;
     }
   });
   let result = `<h2 id="finalDestination" style="text-align: center; margin: 0 0 .7em;">${document.getElementById("destination").value}</h2>
@@ -413,8 +464,8 @@ function clickHandler() {
 };
 function sumTimeSub(steps, stepIndex, arriveeTime) {
   let totalMin = 0;
-  steps.forEach((step) => {
-    if (step.checked && step.index >= stepIndex) {
+  steps.forEach((step, idx) => {
+    if (step.checked && idx >= stepIndex) {
       totalMin += step.value;
     }
   });

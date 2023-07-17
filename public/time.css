@@ -37,18 +37,45 @@
 .listPlan span{
   cursor: pointer;
 }
-.planDD {
-  opacity: .8;
-  display: inline-block;
-  padding-right: 8px;
-  padding-left: 20px;
-  font-size: .9em;
+.planStar{
+  display: none;
+  color:goldenrod;
+  opacity: .6;
 }
 
+.planDD {
+  display: inline-block;
+  opacity: .8;
+  visibility: hidden;
+  font-size: .9em;
+  padding-right: 0;
+  padding-left: 8px;
+}
+.starDefault .planStar{
+  display: inline;
+}
+.starDefault .planDD{
+  margin-left: -10px;
+  padding-left: 0;
+}
 .planTB {
+  visibility: hidden;
   opacity: .8;
   float: right;
   font-size: 1.3em;
+}
+.managePlans .starDefault .planDD{
+  margin-left: 0;
+  padding-left: 2px;
+}
+.managePlans .planDD{
+  visibility: visible;
+  font-size: .9em;
+  padding-right: 8px;
+  padding-left: 20px;
+}
+.managePlans .planTB{
+  visibility: visible;
 }
 .savePlanH3{
   text-align:center;
@@ -133,11 +160,75 @@
   cursor: pointer;
 }
 
+.timeFormButtonSmall {
+  float: right;
+  border-width: 1px 1px 4px 3px;
+  border-style: solid;
+  border-color: var(--tx-color);
+  border-radius: 5px;
+  padding: 0;
+  color: var(--tx-color);
+  background: var(--bg-color);
+  text-align: center;
+  width: fit-content;
+  height: 30px;
+  font-family: 'Nunito', sans-serif;
+  font-size: calc(15.53px + 0.19vw);
+  font-size:1em;
+  line-height: 1.2em;
+  font-weight: 400;
+}
+
+.timeFormButtonSmall:hover {
+  background: rgba(128, 0, 128, .4);
+  cursor: pointer;
+}
+
+.scheduleTimeWhole{
+  width: calc(100vw - 16px); 
+  height: calc(100vh - 16px); 
+  display:none;
+}
+
 .resultTime {
   width: 200px;
   margin:auto;
 }
 
+.popupBackDG{
+  display: flex;
+  background-color: var(--bg-color);
+  position: absolute;
+  top: 0;
+}
+.popupBackDG .resultTime{
+  background-color: var(--bg-color);
+  width: 32%;
+  min-width: 200px;
+  border: 2px solid;
+  padding: 20px;
+}
+.popupBackDG .resultTime h3{
+  margin:0 0 1em;
+  text-align: center;
+}
+.popupBackDG .resultTime p{
+  margin:0;
+}
+.saveOption{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: flex-end;
+  margin: 0 0 15px;
+}
+.saveOption .timeFormButtonSmall{
+  padding: 2px 5px;
+  min-width: 75px;
+  height: 30px;
+  margin: 0 0 0 15px;
+}
 .timeDestination2 {
   width: 60px;
 }
@@ -167,17 +258,14 @@
   justify-content: space-between;
 }
 
-.trashed div:first-child {
+.trashed div:first-child, .trashed div.trashLine div, .trashedPlan span.underTrashLine {
   opacity: .7;
 }
 
-.trashed div.trashLine {
+.trashed div.trashLine, .trashedPlan span.trashLinePlan {
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 40%, purple 50%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0));
 }
 
-.trashed div.trashLine div {
-  opacity: .7;
-}
 
 .outlined {
   border: 2px black solid;

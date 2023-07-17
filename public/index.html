@@ -654,8 +654,26 @@
       </div>
       <div id="timeForm" class="timeForm">
       </div>
-      <div id="scheduleTimeWhole" style="width: calc(100vw - 16px); height: calc(100vh - 16px); display:none;">
+      <div id="scheduleTimeWhole" class="scheduleTimeWhole">
         <div id="scheduleTime" class="resultTime">
+          <h3>That one has a doppelganger, what should we do?!</h3>
+          <p>No, we can't keep both, otherwise that'll create chaos!</p>
+          <div class="saveOption">
+            <p>Keep the old one, forget the new one.</p>
+            <button title="Cancel" id="saveOptCancel" class="timeFormButtonSmall" onclick="saveOptCancel()">Cancel</button>
+          </div>
+          <!-- <div class="saveOption">
+            <p>Keep both and create chaos!</p>
+            <button title="Save" id="saveOptSave" class="timeFormButtonSmall" onclick="saveOptSave()">Save</button>
+          </div> -->
+          <div class="saveOption">
+            <p>Keep both but let’s rebaptized the new one...</p>
+            <button title="SaveAs" id="saveOptSaveAs" class="timeFormButtonSmall" onclick="saveOptSaveAs()">Save as</button>
+          </div>
+          <div class="saveOption">
+            <p>Out with the old, in with the new!</p>
+            <button title="Replace" id="saveOptReplace" class="timeFormButtonSmall" onclick="saveOptReplace()">Replace</button>
+          </div>
         </div>
       </div>
     </div>

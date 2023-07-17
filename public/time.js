@@ -1,27 +1,40 @@
 let steps;
 let myScheduleList = [];
 
+//*** TO FIX ***/
+//local OR getDefaultSchedule(); OR steps orignial
+//when savePlan: 1. check if id exists already (we can't have 2 id identic!) 2. create the 3 options
+//getMaxPlans marche pas (donne des ordres pas rapport)
+
 //**once it's connected to google accounts
 //**connect to an account and save the whole thing with a name for later
 //**once it's an app
 //**add a button to do a printscreen and make it your new background
 //**add a button to create notification for each steps
+
 function initializing() {
   if (localStorage.getItem("steps")) {
     steps = JSON.parse(localStorage.getItem("steps"));
-  } else {
-    steps = {
-      destination:"",
-      steps:[
-        { name: "Cooking", value: 30, checked: true, id: crypto.randomUUID() },
-        { name: "Eating", value: 60, checked: true, id: crypto.randomUUID() },
-        { name: "Toilet", value: 15, checked: true, id: crypto.randomUUID() },
-        { name: "Shower", value: 15, checked: true, id: crypto.randomUUID() },
-        { name: "Prepping", value: 30, checked: true, id: crypto.randomUUID() },
-        { name: "Travelling", value: 0, checked: true, id: crypto.randomUUID() }],
-      arriveeTime:"",
-      notes:""};
-  }
+  // } else {
+  //   getDefaultSchedule();
+  };
+  // } else{
+  //   //check if there are schedules already saved in the cloud, if yes
+  //   //steps here should be the default one, the one with the star! classList.contains("starDefault")
+  //   //if not, put that one, the original one
+  //   steps = {
+  //     ordre:1,
+  //     destination:"",
+  //     steps:[
+  //       { name: "Cooking", value: 30, checked: true, id: crypto.randomUUID() },
+  //       { name: "Eating", value: 60, checked: true, id: crypto.randomUUID() },
+  //       { name: "Toilet", value: 15, checked: true, id: crypto.randomUUID() },
+  //       { name: "Shower", value: 15, checked: true, id: crypto.randomUUID() },
+  //       { name: "Prepping", value: 30, checked: true, id: crypto.randomUUID() },
+  //       { name: "Travelling", value: 0, checked: true, id: crypto.randomUUID() }],
+  //     arriveeTime:"",
+  //     notes:""};
+  // }
 };
 
 // function getInfo(info) {
@@ -57,30 +70,53 @@ function displayPlans() {
     // }
     return a.ordre < b.ordre ? -1 : a.ordre > b.ordre ? 1 : 0
   });
+  console.log(myScheduleList);
   let listLi = myScheduleList.map((schedule) => {
-    return `
-        <li class="listPlan" draggable="true">
-            <p><span class="typcn icon typcn-th-small planDD" title="Drag & Drop"></span><span onclick="getSchedule('${schedule.id}')" title="Show that one">${schedule.id}</span><span class="typcn icon typcn-trash planTB" onclick="trashSchedule('${schedule.id}')" title="Trash it!"></span></p>
+      return `
+        <li class="listPlan"  id="${schedule.id}">
+            <p><span class="typcn icon typcn-star planStar" title="Default!"></span><span class="typcn icon typcn-th-small planDD" title="Drag & Drop"></span><span class="trashLinePlan"><span class="underTrashLine" onclick="getSchedule('${schedule.id}')" title="Show that one">${schedule.id}</span></span><span class="typcn icon typcn-trash planTB" onclick="trashPlan(event)" title="Trash it!"></span></p>
         </li>`
   }).join("");
-  document.getElementById("mySchedules").innerHTML = `<ul class="listPlans">${listLi}</ul>`;
+  document.getElementById("mySchedules").innerHTML = `
+    <ul class="listPlans">${listLi}</ul>
+    <button title="Fix that mess!" id="manageMode" class="timeFormButtonSmall" style="height: 30px; width: 90px;" onclick="manageMode()">Manage</button>
+    <button title="Get out of manage mode!" id="manageCancel" class="timeFormButtonSmall displayNone" style="float:left; width: 90px;" onclick="manageCancel()">
+    Cancel
+    <span class="typcn icon typcn-cancel" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
+    </button>
+    <button title="That's the way I like it!" id="managedPlans" class="timeFormButtonSmall displayNone" style="float:right; width: 100px;" onclick="managedPlans()">
+    Save this&hairsp;!
+    <span class="typcn icon typcn-cloud-storage-outline" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
+    </button>`;
+    let plans = document.querySelectorAll(".listPlans > .listPlan");
+    plans[0].classList.add("starDefault");
+}
+function manageMode(){
+  //trash can doesn't trashSchedule right away! add trashline, then after confirmation trashSchedule (and reorder) all at once
+  document.getElementById("manageMode").classList.add('displayNone');
+  document.getElementById("manageCancel").classList.remove('displayNone');
+  document.getElementById("managedPlans").classList.remove('displayNone');
   let listPlans = document.querySelector(".listPlans");
+  listPlans.classList.add("managePlans");
   let plans = document.querySelectorAll(".listPlans > .listPlan");
-  let icons = document.querySelectorAll(".listPlans > .listPlan .planDD");
   plans.forEach(plan => {
-    plan.addEventListener("dragstart", (evt) => {
+    plan.setAttribute('draggable', true)
+    plan.addEventListener("dragstart", () => {
       // Adding dragging class to item
       plan.classList.add("dragging");
+      plan.classList.remove("starDefault");
     });
-    // Removing dragging class from item on dragend event
     plan.addEventListener("dragend", () => {
+      // Adding dragging class to item
       plan.classList.remove("dragging");
     });
-  });
-  icons.forEach(icon => {
+  })
+    let icons = document.querySelectorAll(".listPlans > .listPlan .planDD");
+    icons.forEach(icon =>{
     // Adding dragging class to item
     icon.addEventListener("touchstart", (evt) => {
       evt.currentTarget.parentElement.parentElement.classList.add("dragging");
+      evt.currentTarget.parentElement.parentElement.classList.remove("starDefault");
     });
     // Removing dragging class from item on dragend event
     icon.addEventListener("touchend", (evt) => {
@@ -112,8 +148,45 @@ const listPlansDD = (e) => {
   listPlans.insertBefore(draggingPlan, nextSibling);
 }
 function listPlansOD(){
-
+  let plans = document.querySelectorAll(".listPlans > .listPlan");
+  console.log(plans);
+  plans[0].classList.add("starDefault");
+  for(i = 1; i < plans.length; i++){
+    plans[i].classList.remove("starDefault");
+  };
 }
+function trashPlan(event){
+  event.currentTarget.parentElement.parentElement.classList.toggle("trashedPlan");
+}
+function manageCancel(){
+  displayPlans();
+}
+let trashedSchedules = [];
+function managedPlans(){
+  console.log(myScheduleList);
+  if (confirm("Are you sure?!\n'Cause you don't come back from that!")) {
+    for (let i = myScheduleList.length - 1; i >= 0; i--) {
+      let planTrash = document.getElementById(`${myScheduleList[i].id}`);
+      if (planTrash.classList.contains("trashedPlan")) { 
+        trashedSchedules.push(myScheduleList[i]);
+        myScheduleList.splice(i, 1);
+        planTrash.remove();
+      };
+    };
+    trashSchedules();
+    
+    let plans = Array.from(document.querySelectorAll(".listPlans > .listPlan"));
+    for (let a = 0; a < plans.length; a++) {
+      let name = plans[a].id;
+      let plan = myScheduleList.find((x) => x.id == name)
+      plan.ordre = a;
+      console.log(plan);
+    };
+    orderSchedules();
+    displayPlans();
+  }
+  console.log(myScheduleList);
+} 
 
 
 function displaySteps() {
@@ -127,7 +200,7 @@ function displaySteps() {
     return `
     <li class="iteme" draggable="true" data-index="${idx}" style="${step.style}" id="${step.id}">
         <div class="changeIcon">
-        <span class="typcn icon typcn-th-small" style="opacity: .8;"></span>
+        <span class="typcn icon typcn-th-small itemeDD" style="opacity: .8;"></span>
         <input id="${step.id}trashCan" class="cossin" type="checkbox" onchange="trashOrNot(event)"/>
         <label for="${step.id}trashCan" class="typcn icon typcn-trash trashLabel displayNone" style="opacity: .8; font-size: 1.5em; line-height: 1em; margin: 0 -5px 0 -2px;" ></label>
         </div>
@@ -154,11 +227,11 @@ function displaySteps() {
     <button title="Enter trash mode!" id="trashMode" class="timeFormButton" style="float:right; height: 30px; width: 30px; padding: 0;" onclick="trashMode()">
     <span class="typcn icon typcn-trash" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
     </button>
-    <button title="Get out of trash mode!" id="trashCancel" class="timeFormButton displayNone" style="height: 30px; width: 90px; padding: 0; font-family:'Nunito', sans-serif; font-size:1em;" onclick="trashCancel()">
+    <button title="Get out of trash mode!" id="trashCancel" class="timeFormButtonSmall displayNone" style="width: 90px;" onclick="trashCancel()">
     Cancel
     <span class="typcn icon typcn-cancel" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
     </button>
-    <button title="Get rid of all the checked ones!" id="trashIt" class="timeFormButton displayNone" style="float:right; height: 30px; width: 90px; padding: 0; font-family:'Nunito', sans-serif; font-size:1em;" onclick="trashIt()">
+    <button title="Get rid of all the checked ones!" id="trashIt" class="timeFormButtonSmall displayNone" style="float:right; width: 90px;" onclick="trashIt()">
     Trash it&hairsp;!
     <span class="typcn icon typcn-trash" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
     </button>
@@ -270,11 +343,11 @@ function savePlan(event) {
   document.getElementById("savePlan").innerHTML = `<p style="font-size:calc(13.53px + 0.19vw); margin: 1em 0 0.2em;">How should we name that one?</p>
 <input id="nameToSave" class="timeDestination" type="text" value="${document.getElementById("destination").value}"/>
 <div class="stepBox" style="width: 100%;">
-    <button title="Nevermind!" id="saveCancel" class="timeFormButton" style="height: 30px; width: 90px; padding: 0; font-family:'Nunito', sans-serif; font-size:1em;" onclick="saveCancel()">
+    <button title="Nevermind!" id="saveCancel" class="timeFormButtonSmall" style="height: 30px; width: 90px;" onclick="saveCancel()">
     Cancel
     <span class="typcn icon typcn-cancel" style="font-size: 1.2em; line-height: 1em;"></span>
     </button>
-    <button title="Save it!" id="saveIt" class="timeFormButton" style="float:right; height: 30px; width: 90px; padding: 0; font-family:'Nunito', sans-serif; font-size:1em;" onclick="window.saveIt()">
+    <button title="Save it!" id="saveIt" class="timeFormButtonSmall" style="height: 30px; width: 90px;" onclick="window.saveIt()">
     Save it&hairsp;!
     <span class="typcn icon typcn-cloud-storage-outline" style="font-size: 1.4em; line-height: 1em;"></span>
     </button>
@@ -289,7 +362,7 @@ function trashMode() {
   trashables.forEach((trashable) => {
     trashable.classList.remove('displayNone');
   });
-  let moveables = document.querySelectorAll(".typcn-th-small");
+  let moveables = document.querySelectorAll(".itemeDD");
   moveables.forEach((moveable) => {
     moveable.classList.add("displayNone");
   });
@@ -308,7 +381,7 @@ function trashCancel() {
   trashables.forEach((trashable) => {
     trashable.classList.add('displayNone');
   });
-  let moveables = document.querySelectorAll(".typcn-th-small");
+  let moveables = document.querySelectorAll(".itemeDD");
   moveables.forEach((moveable) => {
     moveable.classList.remove("displayNone");
   });
@@ -383,6 +456,7 @@ function addStep() {
 };
 
 function updateSteps() {
+  //steps.order = ??!?!
   steps.destination = document.getElementById("destination").value;
   steps.steps.forEach(step => {
     let value = Number.parseInt(document.getElementById(`${step.id}Time`).value);
@@ -409,6 +483,7 @@ function updateItemesIndex() {
 
 function calculateTime(e) {
   updateSteps();
+  console.log(steps.steps);
   let arriveeTime = document.getElementById('arriveeTime').valueAsDate;
   if (!arriveeTime) {
     document.getElementById("arriveeTimeDiv").classList.add("outlined");
@@ -423,13 +498,14 @@ function calculateTime(e) {
   let stepArray = steps.steps.filter((step) => {
     return step.checked;
   }).map((step, idx) => {
-    if (step.name == "Travelling") {
+    if (step.name == "Travelling" || step.name == "Traveling") {
       return `<p>Départ: ${sumTimeSub(steps.steps, idx, arriveeTime)}</p>`;
     }
     else {
       return `<p>${step.name}: ${sumTimeSub(steps.steps, idx, arriveeTime)}</p>`;
     }
   });
+  console.log(stepArray);
   let result = `<h2 id="finalDestination" style="text-align: center; margin: 0 0 .7em;">${document.getElementById("destination").value}</h2>
 <div style="padding: 0 10px; border: 2px solid;">
     <h3 style="margin: 5px 0; text-decoration: underline;">Schedule</h3>
@@ -464,9 +540,12 @@ function clickHandler() {
 };
 function sumTimeSub(steps, stepIndex, arriveeTime) {
   let totalMin = 0;
-  steps.forEach((step, idx) => {
-    if (step.checked && idx >= stepIndex) {
+  steps.filter((step) => {
+    return step.checked;
+  }).forEach((step, idx) => {
+    if (idx >= stepIndex) {
       totalMin += step.value;
+      console.log(idx + " " + stepIndex + " " + totalMin + " " + step.value);
     }
   });
   let startTime = new Date();

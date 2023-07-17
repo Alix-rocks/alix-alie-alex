@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
-import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -27,6 +27,7 @@ const db = getFirestore(app);
 // });
 
 // TimePage
+
 function getMaxPlans() {
   let max = 0;
   myScheduleList.forEach(plan => {
@@ -39,6 +40,13 @@ function getMaxPlans() {
 async function saveIt() {
   updateSteps();
   let destination = document.getElementById("nameToSave").value;
+  // check if there is already a plan with that name!       .exists()
+  // if yes
+  // document.getElementById("scheduleTimeWhole").classList.add("popupBackDG");
+  // saveOptCancel() = current saveCancel() + document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
+  // saveOptSave() = current saveIt() + document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
+  // saveOptSaveAs() = document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG"); (then, they'll click current saveIt)
+  // saveOptReplace() = ...updateDoc...
   await setDoc(doc(db, "plan", destination), {
     ordre: getMaxPlans() + 1,
     ...steps
@@ -74,11 +82,33 @@ async function getSchedule(id){
 }
 window.getSchedule = getSchedule;
 
-async function trashSchedule(id){
-  await deleteDoc(doc(db, "plan", id));
-  await getPlans();
+async function getDefaultSchedule(){
+  const defaultSchedule = await getDocs(query(collection(db, "plan"), where("ordre", "==", 0)));
+  defaultSchedule.forEach((doc) => {
+    steps = doc.data();
+  })
+  displaySteps();
 }
-window.trashSchedule = trashSchedule;
+getDefaultSchedule();
+window.getDefaultSchedule = getDefaultSchedule;
+
+async function trashSchedules(){
+  console.log(trashedSchedules);
+  for (const trashedSchedule of trashedSchedules) {
+    await deleteDoc(doc(db, "plan", trashedSchedule.id));
+  };
+}
+window.trashSchedules = trashSchedules;
+
+async function orderSchedules(){
+  for (const list of myScheduleList){
+    await updateDoc(doc(db, "plan", list.id), {
+      ordre: list.ordre
+    });
+  }
+}
+window.orderSchedules = orderSchedules;
+
 
 // To get today'shit 
 async function getTodaysShit() {

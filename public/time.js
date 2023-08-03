@@ -11,30 +11,30 @@ let myScheduleList = [];
 //**add a button to do a printscreen and make it your new background
 //**add a button to create notification for each steps
 
-function initializing() {
-  if (localStorage.getItem("steps")) {
-    steps = JSON.parse(localStorage.getItem("steps"));
-  // } else {
-  //   getDefaultSchedule();
-  };
-  // } else{
-  //   //check if there are schedules already saved in the cloud, if yes
-  //   //steps here should be the default one, the one with the star! classList.contains("starDefault")
-  //   //if not, put that one, the original one
-  //   steps = {
-  //     ordre:1,
-  //     destination:"",
-  //     steps:[
-  //       { name: "Cooking", value: 30, checked: true, id: crypto.randomUUID() },
-  //       { name: "Eating", value: 60, checked: true, id: crypto.randomUUID() },
-  //       { name: "Toilet", value: 15, checked: true, id: crypto.randomUUID() },
-  //       { name: "Shower", value: 15, checked: true, id: crypto.randomUUID() },
-  //       { name: "Prepping", value: 30, checked: true, id: crypto.randomUUID() },
-  //       { name: "Travelling", value: 0, checked: true, id: crypto.randomUUID() }],
-  //     arriveeTime:"",
-  //     notes:""};
-  // }
-};
+// function initializing() {
+//   if (localStorage.getItem("steps")) {
+//     steps = JSON.parse(localStorage.getItem("steps"));
+//   // } else {
+//   //   getDefaultSchedule();
+//   };
+//   // } else{
+//   //   //check if there are schedules already saved in the cloud, if yes
+//   //   //steps here should be the default one, the one with the star! classList.contains("starDefault")
+//   //   //if not, put that one, the original one
+//   //   steps = {
+//   //     ordre:1,
+//   //     destination:"",
+//   //     steps:[
+//   //       { name: "Cooking", value: 30, checked: true, id: crypto.randomUUID() },
+//   //       { name: "Eating", value: 60, checked: true, id: crypto.randomUUID() },
+//   //       { name: "Toilet", value: 15, checked: true, id: crypto.randomUUID() },
+//   //       { name: "Shower", value: 15, checked: true, id: crypto.randomUUID() },
+//   //       { name: "Prepping", value: 30, checked: true, id: crypto.randomUUID() },
+//   //       { name: "Travelling", value: 0, checked: true, id: crypto.randomUUID() }],
+//   //     arriveeTime:"",
+//   //     notes:""};
+//   // }
+// };
 
 // function getInfo(info) {
 //   if (localStorage.getItem(info)) {
@@ -59,6 +59,7 @@ function clearStorage() {
 }
 
 function displayPlans() {
+  console.log(myScheduleList);
   myScheduleList = myScheduleList.toSorted((a, b) => {
     // if(a.ordre < b.ordre){
     //     return -1
@@ -485,8 +486,8 @@ function updateSteps() {
   saveSteps();
 };
 window.updateSteps = updateSteps;
-initializing();
-displaySteps();
+// initializing();
+// displaySteps();
 
 function updateItemesIndex() {
   let itemes = Array.from(document.querySelectorAll(".sortable-List > .iteme"));
@@ -530,7 +531,7 @@ function calculateTime(e) {
   document.getElementById("scheduleTime").innerHTML = result;
   document.getElementById("scheduleTimeWhole").style.display = "flex";
   document.getElementById("timeForm").style.display = "none";
-  document.getElementById("togglePlansWhole").style.display = "none";
+  document.getElementById("togglePlansWhole").classList.add("displayNone");
   document.getElementById("switchSliderWhole").style.display = "none";
   e.stopPropagation();
   document.querySelector("#timePage").addEventListener("click", clickHandler)
@@ -548,7 +549,6 @@ function ifNotes() {
 function clickHandler() {
   document.getElementById("scheduleTimeWhole").style.display = "none";
   document.getElementById("timeForm").style.display = "block";
-  document.getElementById("togglePlansWhole").style.display = "block";
   document.getElementById("switchSliderWhole").style.display = "block";
   document.querySelector("#timePage").removeEventListener("click", clickHandler)
 };

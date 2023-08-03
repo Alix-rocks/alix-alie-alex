@@ -61,15 +61,14 @@ getRedirectResult(auth)
 
   onAuthStateChanged(auth,(user) => {
     if(user){
-      alert('wow!');
       console.log(user);
       document.getElementById("displayName").innerText = " " + user.displayName + ",";
       document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
       document.getElementById("scheduleTime").innerHTML = ``;
       getPlans();
-      getDefaultSchedule();
     }
   })
+
 
 // const querySnapshot = await getDocs(query(collection(db, "person"), where("lastName", "==", "gentile")));
 // querySnapshot.forEach((doc) => {
@@ -81,11 +80,11 @@ getRedirectResult(auth)
 // TimePage
 
 function getMaxPlans() {
-  let max = 0;
+  let max = -1;
   myScheduleList.forEach(plan => {
     max = max > plan.ordre ? max : plan.ordre
   });
-  console.log(max);
+  console.log("max= " + max);
   return max;
 }
 
@@ -116,9 +115,10 @@ async function saveIt() {
         <button title="Replace" id="saveOptReplace" class="timeFormButtonSmall" onclick="window.saveOptReplace()">Replace</button>
       </div>`
   } else{
+
   await setDoc(doc(db, "plan", auth.currentUser.email, "myPlans", destination), {
-    ordre: getMaxPlans() + 1,
-    ...steps
+    ...steps,
+    ordre: (getMaxPlans() + 1)
   })  ;
   getPlans();
   document.getElementById("savePlan").innerHTML = `
@@ -159,9 +159,31 @@ async function getPlans() {
     const ordrePlan = doc.data().ordre;
     myScheduleList.push({id:namePlan, ordre:ordrePlan});
   });
-  displayPlans();
+  if(myScheduleList.length >= 1){
+    console.log(myScheduleList);
+    displayPlans();
+    getDefaultSchedule();
+  } else if(localStorage.getItem("steps")) {
+    steps = JSON.parse(localStorage.getItem("steps"));
+    displaySteps();
+  } else{
+    steps = {
+          ordre:"",
+          destination:"",
+          steps:[
+            { name: "Cooking", value: 30, checked: true, id: crypto.randomUUID() },
+            { name: "Eating", value: 60, checked: true, id: crypto.randomUUID() },
+            { name: "Toilet", value: 15, checked: true, id: crypto.randomUUID() },
+            { name: "Shower", value: 15, checked: true, id: crypto.randomUUID() },
+            { name: "Prepping", value: 30, checked: true, id: crypto.randomUUID() },
+            { name: "Travelling", value: 0, checked: true, id: crypto.randomUUID() }],
+          arriveeTime:"",
+          notes:""};
+    displaySteps();
+  }
+  
 }
-getPlans();
+// getPlans();
 
 async function getSchedule(id){
   // const schedules = await getDocs(query(collection(db, "plan", auth.currentUser.email, id)));
@@ -186,7 +208,7 @@ async function getDefaultSchedule(){
   })
   displaySteps();
 }
-getDefaultSchedule();
+// getDefaultSchedule();
 window.getDefaultSchedule = getDefaultSchedule;
 
 async function trashSchedules(){

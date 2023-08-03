@@ -3,11 +3,10 @@ let myScheduleList = [];
 
 //*** TO FIX ***/
 //local OR getDefaultSchedule(); OR steps orignial
-//when savePlan: 1. check if id exists already (we can't have 2 id identic!) 2. create the 3 options
 //getMaxPlans marche pas (donne des ordres pas rapport)
 
 //**once it's connected to google accounts
-//**connect to an account and save the whole thing with a name for later
+//**connect to an account and save the whole thing with a name for later [one collection "plan" for everyone, but owner value = email or user.id]
 //**once it's an app
 //**add a button to do a printscreen and make it your new background
 //**add a button to create notification for each steps
@@ -71,6 +70,7 @@ function displayPlans() {
     return a.ordre < b.ordre ? -1 : a.ordre > b.ordre ? 1 : 0
   });
   console.log(myScheduleList);
+  document.getElementById("togglePlansWhole").classList.remove("displayNone");
   let listLi = myScheduleList.map((schedule) => {
       return `
         <li class="listPlan"  id="${schedule.id}">
@@ -355,6 +355,20 @@ function savePlan(event) {
 }
 function saveCancel() {
   document.getElementById("savePlan").innerHTML = ``;
+}
+
+function saveOptCancel(){
+  saveCancel();
+  document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
+  document.getElementById("scheduleTime").innerHTML = ``;
+  document.getElementById("togglePlansWhole").classList.remove("displayNone");
+  document.getElementById("timeForm").classList.remove("displayNone");
+};
+function saveOptSaveAs(){
+  document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
+  document.getElementById("scheduleTime").innerHTML = ``;
+  document.getElementById("togglePlansWhole").classList.remove("displayNone");
+  document.getElementById("timeForm").classList.remove("displayNone");
 }
 
 function trashMode() {

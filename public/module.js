@@ -2,6 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
 import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -21,10 +22,60 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getFirestore(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+// provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+auth.languageCode = 'fr';
+
+getRedirectResult(auth)
+  .then((result) => {
+    // This gives you a Google Access Token. You can use it to access Google APIs.
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    console.log("alloooo");
+    const token = credential.accessToken;
+
+    // The signed-in user info.
+    const user = result.user;
+    // console.log(auth.currentUser.displayName);
+    
+    
+    // IdP data available using getAdditionalUserInfo(result)
+    // ...
+  }).catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    // const email = error.customData.email;
+    // The AuthCredential type that was used.
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    // ...
+  });
+  // console.log(auth);
+  function logIn(){
+      signInWithRedirect(auth, provider);
+      document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
+      document.getElementById("scheduleTime").innerHTML = ``;
+  }
+  window.logIn = logIn;
+
+  onAuthStateChanged(auth,(user) => {
+    if(user){
+      console.log(user);
+      document.getElementById("displayName").innerText = " " + user.displayName + ",";
+      document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
+      document.getElementById("scheduleTime").innerHTML = ``;
+      getPlans();
+      getDefaultSchedule();
+    }
+  })
+
 // const querySnapshot = await getDocs(query(collection(db, "person"), where("lastName", "==", "gentile")));
 // querySnapshot.forEach((doc) => {
 //   console.log(doc.data());
 // });
+
+
 
 // TimePage
 
@@ -40,22 +91,40 @@ function getMaxPlans() {
 async function saveIt() {
   updateSteps();
   let destination = document.getElementById("nameToSave").value;
-  // check if there is already a plan with that name!       .exists()
-  // if yes
-  // document.getElementById("scheduleTimeWhole").classList.add("popupBackDG");
-  // saveOptCancel() = current saveCancel() + document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
-  // saveOptSave() = current saveIt() + document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
-  // saveOptSaveAs() = document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG"); (then, they'll click current saveIt)
-  // saveOptReplace() = ...updateDoc...
-  await setDoc(doc(db, "plan", destination), {
+  const docRef = doc(db, "plan", auth.currentUser.email, "myPlans", destination);
+  const docSnap = await getDoc(docRef);
+  // We need to look into only the owner's plans!
+  if (docSnap.exists()) {
+  // if(await getDoc(doc(db, "plan", destination)).exists()){
+    document.getElementById("togglePlansWhole").classList.add("displayNone");
+    document.getElementById("timeForm").classList.add("displayNone");
+    document.getElementById("scheduleTimeWhole").classList.add("popupBackDG");
+    document.getElementById("scheduleTime").innerHTML = `
+      <h3>That one has a doppelganger, what should we do?!</h3>
+      <h4><em>No, we can't keep them both, otherwise that'll create chaos!</em></h4>
+      <div class="saveOption">
+        <p>Keep the old one, forget the new one.</p>
+        <button title="Cancel" id="saveOptCancel" class="timeFormButtonSmall" onclick="saveOptCancel()">Cancel</button>
+      </div>
+      <div class="saveOption">
+        <p>Keep both but let’s rebaptized the new one...</p>
+        <button title="Save as" id="saveOptSaveAs" class="timeFormButtonSmall" onclick="saveOptSaveAs()">Save as</button>
+      </div>
+      <div class="saveOption">
+        <p>Out with the old, in with the new!</p>
+        <button title="Replace" id="saveOptReplace" class="timeFormButtonSmall" onclick="window.saveOptReplace()">Replace</button>
+      </div>`
+  } else{
+  await setDoc(doc(db, "plan", auth.currentUser.email, "myPlans", destination), {
     ordre: getMaxPlans() + 1,
     ...steps
-  });
+  })  ;
   getPlans();
   document.getElementById("savePlan").innerHTML = `
   <h3 class="savePlanH3">You saved it!</h3>
   <p style="text-align:center;">Now, go see it in your schedules!</p>`;
   document.querySelector("#timePage").addEventListener("click", clickHandlerSaved);
+  }
 }
 window.saveIt = saveIt;
 function clickHandlerSaved(){
@@ -63,8 +132,26 @@ function clickHandlerSaved(){
   document.querySelector("#timePage").removeEventListener("click", clickHandlerSaved);
 }
 
+async function saveOptReplace(){
+  let destination = document.getElementById("nameToSave").value;
+  await updateDoc(doc(db, "plan", auth.currentUser.email, "myPlans", destination), {
+    ...steps
+  });
+  document.getElementById("togglePlansWhole").classList.remove("displayNone");
+  document.getElementById("timeForm").classList.remove("displayNone");
+  document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
+  document.getElementById("scheduleTime").innerHTML = ``;
+  getPlans();
+  document.getElementById("savePlan").innerHTML = `
+  <h3 class="savePlanH3">You replaced it!</h3>
+  <p style="text-align:center;">Now, go see it in your schedules!</p>`;
+  document.querySelector("#timePage").addEventListener("click", clickHandlerSaved);
+}
+window.saveOptReplace = saveOptReplace;
+
 async function getPlans() {
-  const getPlans = await getDocs(collection(db, "plan"));
+  const getPlans = await getDocs(collection(db, "plan", auth.currentUser.email, "myPlans"));
+  // const getPlans = await getDocs(query(collection(db, "plan", auth.currentUser.email), where("owner", "==", auth.currentUser.email)));
   myScheduleList = [];
   getPlans.forEach(doc => {
     const namePlan = doc.id;
@@ -76,14 +163,23 @@ async function getPlans() {
 getPlans();
 
 async function getSchedule(id){
-  const schedule = await getDoc(doc(db, "plan", id));
+  // const schedules = await getDocs(query(collection(db, "plan", auth.currentUser.email, id)));
+  // schedules.forEach((schedule) => {
+  //   steps = schedule.data();
+  //   displaySteps();
+  // })
+  const schedule = await getDoc(doc(db, "plan", auth.currentUser.email, "myPlans", id));
   steps = schedule.data();
   displaySteps();
 }
 window.getSchedule = getSchedule;
 
 async function getDefaultSchedule(){
-  const defaultSchedule = await getDocs(query(collection(db, "plan"), where("ordre", "==", 0)));
+  // const defaultSchedule = await getDocs(query(collection(db, "plan"), where("owner", "==", auth.currentUser.email), where("ordre", "==", 0)));
+  // defaultSchedule.forEach((doc) => {
+  //   steps = doc.data();
+  // })
+  const defaultSchedule = await getDocs(query(collection(db, "plan", auth.currentUser.email, "myPlans"), where("ordre", "==", 0)));
   defaultSchedule.forEach((doc) => {
     steps = doc.data();
   })
@@ -95,14 +191,14 @@ window.getDefaultSchedule = getDefaultSchedule;
 async function trashSchedules(){
   console.log(trashedSchedules);
   for (const trashedSchedule of trashedSchedules) {
-    await deleteDoc(doc(db, "plan", trashedSchedule.id));
+    await deleteDoc(doc(db, "plan", auth.currentUser.email, "myPlans", trashedSchedule.id));
   };
 }
 window.trashSchedules = trashSchedules;
 
 async function orderSchedules(){
   for (const list of myScheduleList){
-    await updateDoc(doc(db, "plan", list.id), {
+    await updateDoc(doc(db, "plan", auth.currentUser.email, "myPlans", list.id), {
       ordre: list.ordre
     });
   }

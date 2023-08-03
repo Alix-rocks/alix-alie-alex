@@ -212,8 +212,15 @@
   margin:0 0 1em;
   text-align: center;
 }
+.popupBackDG .resultTime h4{
+  font-weight: normal;
+  text-align: center;
+}
 .popupBackDG .resultTime p{
   margin:0;
+}
+.popupBackDG .resultTime .timeFormButton{
+  margin: 0 auto;
 }
 .saveOption{
   display: flex;

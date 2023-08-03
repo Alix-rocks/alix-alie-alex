@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html style="height:100%;">
   <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--Google Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,7 +36,8 @@
               Photos organisées par theme (mue, eating, chilling, tank, etc) et/ou par date -->
     <!-- Section My girlfriend's art -->
     <div id="mainContainer" class="mainContainer">
-      <div style="height: 100%; width: 100%;">
+      <!-- this div needs to be "height:100%;" for webapp (no footer) like time and list pages, but "height:fit-content;" for pages with footer -->
+      <div style="height: fit-content; width: 100%;">
     <div id="switchSliderWhole">
       <div onclick="switchMode()" id="switchModeSlider">
         <div id="switchModeLight" class="typcn typcn-weather-sunny"></div>
@@ -45,7 +46,7 @@
       </div>
     </div>
     <div name="NopePage" class="justPage" id="nopePage" style="display:block;">
-      <h1 id="nopeH1" style="margin-top: calc(100vh/3); text-align: center;">Nope, there's nothing here...</h1>
+      <h1 id="nopeH1" style="margin-top: calc(100vh/3); text-align: center;">Nope,<output class="h1like" id="displayName"></output> there's nothing here...</h1>
     </div>
     <div class="bottomButton backHome" onclick="toSectPage(this)" id="casa" title="Let's go back home!"><span class="typcn typcn-home"></span></div>
     <div class="bottomButton backTop" onclick="backTop()" title="Again! From the top!" id="backTopButton"><span class="typcn typcn-chevron-right chevronTop"></span></div>
@@ -109,7 +110,7 @@
         margin: 1.6em 0 .9em;
       }
       /* p font-size: 16 - 18*/
-      p{
+      p, .plike{
         font-family: 'Nunito', sans-serif;
         font-size: calc(15.53px + 0.19vw);
         font-weight: 600;
@@ -133,7 +134,7 @@
       }
       .home{text-align: center;}
       .bottomButton{
-        position:fixed;
+        position: fixed;
         bottom: 2px;
         border-width: 1px 3px 4px 1px;
         border-style: solid;
@@ -646,7 +647,7 @@
     </script>
     <!-- TimePage -->
     <div name="TimePage" id="timePage" class="sectionPage justPage">
-      <div class="togglePlansWhole" id="togglePlansWhole">
+      <div class="togglePlansWhole displayNone" id="togglePlansWhole">
         <input id="togglePlans" type="checkbox" class="cossin"/>
         <label for="togglePlans" class="togglePlansLabel"><span id="togglePlansIcon" class="typcn icon typcn-media-play"></span>My schedules</label>
         <div id="mySchedules" class="togglePlans">
@@ -654,25 +655,11 @@
       </div>
       <div id="timeForm" class="timeForm">
       </div>
-      <div id="scheduleTimeWhole" class="scheduleTimeWhole">
+      <div id="scheduleTimeWhole" class="scheduleTimeWhole popupBackDG">
         <div id="scheduleTime" class="resultTime">
-          <h3>That one has a doppelganger, what should we do?!</h3>
-          <p>No, we can't keep both, otherwise that'll create chaos!</p>
-          <div class="saveOption">
-            <p>Keep the old one, forget the new one.</p>
-            <button title="Cancel" id="saveOptCancel" class="timeFormButtonSmall" onclick="saveOptCancel()">Cancel</button>
-          </div>
-          <!-- <div class="saveOption">
-            <p>Keep both and create chaos!</p>
-            <button title="Save" id="saveOptSave" class="timeFormButtonSmall" onclick="saveOptSave()">Save</button>
-          </div> -->
-          <div class="saveOption">
-            <p>Keep both but let’s rebaptized the new one...</p>
-            <button title="SaveAs" id="saveOptSaveAs" class="timeFormButtonSmall" onclick="saveOptSaveAs()">Save as</button>
-          </div>
-          <div class="saveOption">
-            <p>Out with the old, in with the new!</p>
-            <button title="Replace" id="saveOptReplace" class="timeFormButtonSmall" onclick="saveOptReplace()">Replace</button>
+          <h4><span class="h3like">First thing's first...</span><br/><span class="h1like" style="font-size: calc(19.53px + 0.19vw); font-weight: 900;">Who do you think you are?!</span></h4>
+          <div class="stepBox">
+            <button class="timeFormButton" onclick="window.logIn()">Log in</button>
           </div>
         </div>
       </div>
@@ -681,7 +668,15 @@
     <!-- ListPage -->
     <div name="ListPage" id="listPage"  class="sectionPage justPage">
       <div id="wholeList">
-        <h2 style="text-align:center;">Épicerie</h2>
+
+        <input id="listToggler1" class="listToggler" type="checkbox" class="cossin"/>
+        <div>
+          <label for="listToggler1" class="listToggleLabel" style="display: inline-block;"><span class="typcn icon typcn-media-play" id="listToggleIcon"></span></label>
+          <h2 style="display: inline-block; margin: 0;">Épicerie</h2>
+        </div>
+              
+
+        
         <ul class="listDragableAll">
           <li class="listSection listDragable" draggable="true">
             <div class="erasingZone"></div>
@@ -716,6 +711,637 @@
       </div>
     </div>
     <script name="ListPage" src="list.js"></script>
+    <div name="MetroPage" id="metroPage" class="sectionPage justPage">
+      
+    </div>
+    <style>
+      .exitLabel{
+        border: dashed 1.5px;
+        width: calc(214.78px + 6.09vw);
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+      }
+      .exitLabel h3{
+        margin: 0.7em 0 0;
+      }
+      .exitLabel p{
+        margin: 0.3em 0 1em;
+      }
+      .exitRadio{
+        margin: 0 8% 0 7%;
+        width: 12px;
+        height: 12px;
+        border: 1.5px solid;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .exitRadioChecked{
+        background-color: var(--tx-color);
+        outline: 1px solid var(--bg-color);
+        outline-offset: -1.5px;
+      }
+      .metroDetA{
+        text-decoration: underline;
+      }
+      .metroToggleWhole{
+        width: 90vw;
+        margin:auto;
+        display: flex;
+        flex-flow: column wrap;
+        justify-content: flex-start;
+      }
+      .cossin{
+        display:none;
+      }
+      .choosingEither{
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+      }
+      .choosingEither h3{
+        margin: 5px 0 0 0;
+        width: 85px;
+      }
+      .choosingLine{
+        flex-flow: row nowrap;
+      }
+      .choosingStation{
+        flex-direction: column;
+      }
+      .metroToggleLabel{
+        display: block;
+        border:1px solid;
+        margin: 0;
+        width: calc(95.65px + 1.74vw);
+        padding: 5px;
+      }
+      .metroToggleLabelText{
+        margin-left: 5px;
+        opacity: .6;
+      }
+      .metroChosen{
+        opacity: 1;
+        font-weight: 700;
+      }
+      #metroToggleIconDL, #metroToggleIconDLS, #metroToggleIconAL, #metroToggleIconALS{
+        transition: transform .3s ease-out;
+        display: inline-block;
+      }
+      .metroToggleList{
+        transition: max-height .3s ease-out;
+        max-height: 0;
+        overflow: hidden;
+      }
+      /* JAVASCRIPT?! */
+      #metroTogglerDL:checked~div#metroToggleListDL, 
+      #metroTogglerDLS:checked~div#metroToggleListDLS, 
+      #metroTogglerAL:checked~div#metroToggleListAL, 
+      #metroTogglerALS:checked~div#metroToggleListALS{
+        max-height: 200px;
+        transition: max-height .5s ease-in;
+        overflow: visible;
+      }
+      #metroTogglerDL:checked~label>span#metroToggleIconDL, 
+      #metroTogglerDLS:checked~label>span#metroToggleIconDLS, 
+      #metroTogglerAL:checked~label>span#metroToggleIconAL, 
+      #metroTogglerALS:checked~label>span#metroToggleIconALS{
+        transform: rotate(90deg);
+        transition: transform .5s;
+      }
+      .metroChoices{
+        display: block;
+        border: 1px solid;
+        margin: 0;
+        padding: 5px 5px 5px 25px;
+      }
+      .mCLines{
+        width: calc(95.65px + 1.74vw);
+      }
+      .mCStations{
+        width: calc(214.78px + 6.09vw);
+        font-size: calc(13.13px + 0.35vw);
+      }
+      .stationWide{
+        width: calc(214.78px + 6.09vw);
+      }
+      .metroButton{
+        margin-top: 50px;
+        font-size: calc(15.53px + 0.19vw);
+        padding: 2px 5px;
+      }
+      .sign{
+        text-align: center;
+        font-weight: 400;
+      }
+      .sign span{
+        font-weight: 900;
+      }
+      .stationSign{
+        line-height: 1.1em;
+      }
+      .stationSign span{
+        font-size: 1.3em;
+      }
+      .directionSign{
+        border: 2px solid;
+        width: fit-content;
+        margin: 1.6em auto calc(0.9em + 20px);
+        padding: 0 5px;
+        color: black;
+      }
+      .Orange{
+        background-color: rgba(242, 133, 45, .7);
+      }
+      .Bleue{
+        background-color: rgba(4, 113, 184, .7);
+      }
+      .Verte{
+        background-color: rgba(43, 163, 88, .7);
+      }
+      .Jaune{
+        background-color: rgba(255, 220, 60, .7);
+      }
+      .train{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-evenly;
+      }
+      .wagonNum{
+        position: absolute;
+        top: -20px;
+      }
+      .wagonTD{
+        border: 2px solid;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-evenly;
+        position: relative;
+      }
+      .head.headLeft{
+        border-top-left-radius: calc(7.83px + 0.87vw);
+      }
+      .head.headRight{
+        border-top-right-radius: calc(7.83px + 0.87vw);
+      }
+      .door{
+        border: 1px solid;
+        border-bottom: none;
+        width: 10px;
+        height: 20px;
+        margin: 5px 5% 0;
+      }
+      .door.opti{
+        background-color: rgba(218,165,32,.7);
+      }
+      .quai{
+        margin: 1px -8px;
+        height: 5px;
+        border: 5px solid rgba(218,165,32,.5);
+      }
+      .starsTransfer{
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-around;
+        align-items: center;
+        margin: 15vh 0;
+      }
+      .allStars{
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-around;
+        width: 100%;
+      }
+      .allStars div{
+        font-family: 'Rubik Dirt', cursive;
+        font-size: calc(25.53px + 0.19vw);
+        line-height: 1.2em;
+        font-weight: 400;
+      }
+      .sTransfer{
+        padding: 0 5%;
+        text-align: center;
+        margin: 0;
+      }
+    </style>
+    <script>
+
+      //** get the checked animation through javascript instead (less id and css to write)
+
+      let lines = ["Orange", "Bleue", "Verte", "Jaune"];
+
+      let allStations, lineDep, statDep, lineArr, statArr, dirX;
+
+      function choosingLine(whichL){
+        let linesList = ``;
+        lines.forEach((line) => {
+          linesList += `
+            <input type="radio" class="cossin" name="lines" id="${line + whichL}" value="${line}" onchange="lineChosen(event,'${whichL}')">
+            <label for="${line + whichL}" class="metroChoices mCLines">${line}</label>`;
+        });
+        let title = "";
+        whichL == "DL" ? title = "Départ" : whichL == "AL" ? title = "Arrivée" : title = "We're lost...";
+        let addChoices = `
+          <h3 class="metroDetA" style="margin: 1.6em 0 0.9em;">${title}</h3>
+          <div class="metroToggleWhole">
+            <div class="choosingEither choosingLine">
+              <h3>Ligne:</h3>
+              <div>
+                <input id="metroToggler${whichL}" type="checkbox" class="cossin"/>
+                <label for="metroToggler${whichL}" class="metroToggleLabel"><span class="typcn icon typcn-media-play" id="metroToggleIcon${whichL}"></span><span id="metroToggleLabelText${whichL}" class="metroToggleLabelText">Ligne</span></label>
+                <div id="metroToggleList${whichL}" class="metroToggleList">${linesList}</div>
+              </div>
+            </div>
+            <div class="choosingEither choosingStation" id="choosingStation${whichL}"></div>`;
+      
+        whichL == "DL" ? document.getElementById("metroPage").innerHTML = addChoices : whichL == "AL" ? document.getElementById("afterDLS").innerHTML = addChoices : document.getElementById("metroPage").innerHTML = "We're lost...";
+      };
+
+      function lineChosen(event, whichL){
+        whichL == "DL" ? lineDep = event.currentTarget.value : whichL == "AL" ? lineArr = event.currentTarget.value : console.log("We're lost...");
+        let chosenLine = event.currentTarget.value;
+        document.getElementById("metroToggleLabelText" + whichL).innerText = chosenLine;
+        document.getElementById("metroToggleLabelText" + whichL).classList.add("metroChosen");
+        document.getElementById("metroToggler" + whichL).checked = false;
+        let whichS = whichL + "S";
+        choosingStation(chosenLine, whichL, whichS);
+      };
+      
+      function choosingStation(line, whichL, whichS){
+        let stationsList = ``;
+        window.getLinesStations(line).then(allStations => {
+          allStations.list.forEach((station) => {
+            stationsList += `<input type="radio" class="cossin" name="lines" id="${station + whichS}" value="${station}" onchange="stationChosen(event,'${whichS}')"><label for="${station + whichS}" class="metroChoices mCStations">${station}</label>`;
+          });
+        document.getElementById("choosingStation" + whichL).innerHTML = `
+          <h3>Station:</h3>
+          <div>
+            <input id="metroToggler${whichS}" type="checkbox" class="cossin"/>
+            <label for="metroToggler${whichS}" class="metroToggleLabel stationWide"><span class="typcn icon typcn-media-play" id="metroToggleIcon${whichS}"></span><span id="metroToggleLabelText${whichS}" class="metroToggleLabelText">Station</span></label>
+            <div id="metroToggleList${whichS}" class="metroToggleList">${stationsList}</div>
+          </div>
+          <div id="after${whichS}"></div>`;
+        document.getElementById("metroToggler" + whichL).addEventListener("click", event => {
+          if(event.target.checked){
+            document.getElementById("choosingStation" + whichL).innerHTML = ``;
+          }
+        })
+      });
+      };
+
+      function stationChosen(event, whichS){
+        whichS == "DLS" ? statDep = event.currentTarget.value : whichS == "ALS" ? statArr = event.currentTarget.value : console.log("We're lost...");
+        document.getElementById("metroToggleLabelText" + whichS).innerText = event.currentTarget.value;
+        document.getElementById("metroToggleLabelText" + whichS).classList.add("metroChosen");
+        document.getElementById("metroToggler" + whichS).checked = false;
+        document.getElementById("metroToggler" + whichS).addEventListener("click", event => {
+          if(event.target.checked){
+            document.getElementById("after" + whichS).innerHTML = ``;
+          }
+        })
+        whichS == "DLS" ? choosingLine("AL") : whichS == "ALS" ? nextButton() : console.log("We're lost...");
+      };
+// Si applicable, choix de sortie!
+      function nextButton(){
+        document.getElementById("afterALS").innerHTML = `
+        <button class="timeFormButtonSmall metroButton" onclick="window.checkExit()">Sortie(s)?</button>`;
+      }
+
+    function exitRadioChange(element){
+      console.log(element);
+      document.getElementById(element.id + "Label").classList.toggle("exitRadioChecked");
+    }
+
+      function calcButtonFinal(whichS){
+        document.getElementById("after" + whichS).innerHTML = `
+        <button class="timeFormButton metroButton" onclick="calcTrajet()">Let's GO!</button>`;
+      }
+      choosingLine("DL");
+
+      function calcTrajet(){
+        window.getStatTrajet(lineDep, statDep, lineArr, statArr);
+      }
+// ***ON A OUBLIÉ DE CONSIDÉRER LES DIFFÉRENTES SORTIES!!
+      let tX = 0;
+      function depart(station, direction, color){
+        console.log(station, direction, color);
+        document.getElementById("metroPage").innerHTML = `
+          <h3 class="sign stationSign">STATION<br/><span>${station}</span></h3>
+          <h3 class="sign directionSign ${color}">DIRECTION <span>${direction}</span></h3>
+          <div class="train" id="train${tX}"></div>
+          <hr class="quai"/>`;
+      };
+
+      function trainLeft(w, d, t){
+        let wagonsLeft = ``;
+        for (let i = 1; i < w + 1; i++){
+          let doorsLeft = ``;
+          for (let a = 1; a < d + 1; a++){
+            doorsLeft += `<div class="door" id="t${t}w${i}d${a}"></div>`;
+          }
+          wagonsLeft += `
+            <div class="wagonTD${i == 1 ? ` headLeft head` : i == w ? ` headRight` : ``}" style="width: calc(90vw / ${w});">
+              <span class="wagonNum">${i}</span>
+              ${doorsLeft}
+            </div>`  
+        }
+        document.getElementById("train"+t).innerHTML = wagonsLeft;
+      };
+          
+      function trainRight(w, d, t){
+        let wagonsRight = ``;
+        for (let i = w; i > 0; i--){
+          let doorsRight = ``;
+          for (let a = d; a > 0; a--){
+            doorsRight += `<div class="door" id="t${t}w${i}d${a}"></div>`;
+          }
+          wagonsRight += `
+            <div class="wagonTD${i == w ? ` headLeft` : i == 1 ? ` headRight head` : ``}" style="width: calc(90vw / ${w});">
+              <span class="wagonNum">${i}</span>
+              ${doorsRight}
+            </div>`  
+        }
+        document.getElementById("train"+t).innerHTML = wagonsRight;
+      };
+
+      function addTransfer(station, direction, color){
+        tX += 1; 
+        let addTransfer = document.createElement("div");
+        addTransfer.innerHTML = `
+          <div class="starsTransfer">
+            <div class="allStars"></div>
+            <h2 class="sTransfer">TRANSFER</h2>
+            <div class="allStars"></div>
+          </div>
+          <h3 class="sign stationSign">STATION<br/><span id="station${tX}">${station}</span></h3>
+          <h3 class="sign directionSign ${color}">DIRECTION <span id="direction${tX}">${direction}</span></h3>
+          <div class="train" id="train${tX}"></div>
+          <hr class="quai"/>`
+        document.getElementById("metroPage").appendChild(addTransfer);
+        tStars();
+      };
+
+      function tStars(){
+        let tStarsNum = Math.round(((window.innerWidth - ((window.innerWidth/100) * 0.87 + 147.83))/2)/35);
+        console.log(tStarsNum);
+        document.querySelectorAll(".allStars").forEach(stars => {
+          for (let i = 1; i < tStarsNum + 1; i++){
+            let newStar = document.createElement("div");
+            newStar.innerHTML = "&nbsp;&nbsp;¤&nbsp;&nbsp;";
+            stars.appendChild(newStar);
+          }
+        })
+      };
+      
+      function optionsGold(){
+        let exits = ["w4d1", "w4d2", "w4d3"];
+        exits.map((exit) => {
+          document.getElementById("t" + tX + exit).classList.add("opti");
+        });
+        //blue for elevator exits
+      };
+     
+      
+      // //Adding the color through the variable
+      // depart("JEAN&#8209TALON", "CÔTE&#8209VERTU", orangeColor);
+      // trainRight(9, 3, tX);
+      // optionsGold();
+      // //adding the color through the class
+      // addTransfer("CRÉMAZIE", "MONTMORENCY", "verte");
+      // trainLeft(6, 4, tX);
+      // optionsGold();
+    </script>
+    <div name="CalcPage" id="calcPage" class="sectionPage justPage">
+      <div class="tourStart" onclick="tourStart('tourFirst')">Tour?</div>
+      <!-- see tooltips https://www.w3schools.com/css/css_tooltip.asp -->
+      <div id="tourFirst" class="tourBase tourCenter displayNone">
+        <span onclick="tourOff()">x</span>
+        <p>Hi, have you ever had a "thing" that needed to be "this big" on a cellphone but only "this big" on a computer, but you realized that no percentage could get it right...?</p>
+        <button onclick="tourNext('tourNope')">Nope</button><button onclick="tourNext('tourYeah')">Oh, yeah, that's the worst!</button>
+      </div>
+      <div id="tourNope" class="tourBase tourCenter displayNone">
+        <span onclick="tourOff()">x</span>
+        <p>Well, if that've never happened to you, then come back when you'll know what I mean!</p>
+        <p>You'll see, that'll happen soon enough!</p>
+      </div>
+      <div id="tourView" class="tourBase displayNone">
+        <span onclick="tourOff()">x</span>
+        <p>Now, tell me what size of screens you usually use, or at least on what size screens you know "how big" your "thing" should be. Nowadays, most cellphone are larger than 360px, but I do like to go down to 250px just to be sure everybody will be happy. As for the computer, well mine only goes up to 1400px, so... Anyway, just add your numbers in the little boxes under the screens!</p>
+        <button onclick="tourNext('tourThing')">Next -></button>
+      </div>
+      <div id="tourThing" class="tourBase displayNone">
+        <span onclick="tourOff()">x</span>
+        <p>Now, all you have to do is tell me (no, don't just say it out loud, you also have to write it down... yes, in the other little boxes) what size your "thing" is on a cellphone versus on a computer...</p>
+        <button onclick="tourNext('tourCalc')">Next -></button>
+      </div>
+      <div id="tourCalc" class="tourBase displayNone">
+        <span onclick="tourOff()">x</span>
+        <p>Then you can click "calculate" and, because I'm a cool human being, I'll give you the magic formula!</p>
+        <button onclick="tourNext('tourCopy')">Next -></button>
+      </div>
+      <div id="tourCopy" class="tourBase displayNone">
+        <span onclick="tourOff()">x</span>
+        <p>Seriously, I'm so cool, you can even click on another button and it'll be automatically copied in your device so that you can go and paste it wherever you want (well, technically, you should paste it in your code... but hey, you do you!)!</p>
+        <p>Now, go have fun!</p>
+        <button onclick="tourOff()">Bye!</button>
+      </div>
+      <div class="inputUnit">
+        <p class="inputP">Unit: </p>
+        <input class="input input3" style="font-size: 1em;" type="text" placeholder="px"/>
+        <div id="tourYeah" class="tourBase tourYeah displayNone">
+          <span onclick="tourOff()">x</span>
+          <p>Yeah, you know what I mean! Then you're at the right place. 'Cause I got you!</p>
+          <p>First things first: what unit are you using?<br/>(and just so you know, here you can't use any kind of percentage (%, vw, vh), believe me, that won't work!)</p>
+          <button onclick="tourNext('tourView')">Next -></button>
+        </div>
+      </div>
+      <div class="vp vpC">
+        <div class="ob obC"></div>
+        <div class="ow owC"></div>
+        <div class="inputDiv">
+          <input class="input input3" type="number" placeholder="250"></input>
+          <p class="inputP">px</p>
+        </div>
+      </div>
+      <div class="vw vwC"></div>
+      <div class="inputDiv"><input class="input input3" type="number" placeholder="250"></input>
+        <p class="inputP">px</p>
+      </div>
+      <div class="vp vpL"></div>
+      <div class="vw vwL"></div>
+      <div class="inputDiv"><input class="input input4" type="number" placeholder="1400"></input>
+        <p class="inputP">px</p>
+      </div>
+    </div>
+  <style>
+    .tourStart{
+      position: fixed;
+      right: 2px;
+      bottom: 2px;
+      background-color: var(--tx-color);
+      color: var(--bg-color);
+      border-radius: 50%;
+      font-family: 'Nunito', sans-serif;
+      font-size: calc(15.53px + 0.19vw);
+      font-weight: 900;
+      text-align: center;
+      width: 50px;
+      height: 50px;
+      line-height: 50px;
+      z-index: 99999;
+    }
+    .tourBase{
+      background-color: var(--tx-color);
+      color: var(--bg-color);
+      text-align: left;
+      padding: 5px 20px 15px 15px;
+      width: calc(178.26px + 8.7vw);
+      font-family: 'Nunito', sans-serif;
+      font-size: calc(13.57px + 0.17vw);
+      font-weight: 400;
+      z-index: 99999;
+    }
+    .tourYeah{
+      width: 150px;
+      position: absolute;
+      top: 0;
+      left: 90px;
+    }
+    .tourYeah::after {
+      content: " ";
+      position: absolute;
+      top: 0;
+      right: 100%;
+      border-width: 10px;
+      border-style: solid;
+      border-color: transparent var(--tx-color) transparent transparent;
+    }
+    .tourCenter{
+      position: fixed;
+      top: 50px;
+      left: calc((100vw - 200px)/2);
+    }
+    .tourBase span{
+      cursor: pointer;
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      line-height: 1em;
+      font-size: calc(19.53px + 0.19vw);
+    }
+    .tourBase button{
+      background-color: var(--tx-color);
+      color: var(--bg-color);
+      border: none;
+      text-align: left;
+      margin: 20px 0 0;
+      padding: 0;
+      text-decoration: underline;
+      font-family: 'Nunito', sans-serif;
+      font-size: calc(15.53px + 0.19vw);
+      font-weight: 600;
+    }
+    #calcPage{
+      --wL: 80vw;
+      --hL: calc(var(--wL) * 1080 / 1920);
+      --wC: calc(var(--wL) * 61 / 192);
+      --hC: calc(var(--wC) * 800 / 360);
+    }
+    .vp{
+      border: 2px solid;
+      border-radius: 5px;
+      margin: 5% auto 1%;
+    }
+    .vpC{
+      width: var(--wC);
+      height: var(--hC);
+    }
+    .vpL{
+      width: var(--wL);
+      height: var(--hL);
+    }
+    .vw{
+      border-left: 2px solid;
+      border-right: 2px solid;
+      height: 10px;
+      outline: 1px solid;
+      outline-offset: -5px;
+      margin: 0 auto;
+    }
+    .vwC{
+      width: 70px;
+    }
+    .vwL{
+      width: 200px;
+    }
+    .ob{
+      border: 1px solid;
+      margin: 20% auto 1%;
+      display: absolute;
+    }
+    .obC{
+      width: 50%;
+      height: 10%;
+    }
+    .ow{
+      border-left: 1px solid;
+      border-right: 1px solid;
+      height: 8px;
+      outline: .5px solid;
+      outline-offset: -4px;
+      margin: 0 auto;
+    }
+    .inputUnit{
+      display: flex;
+      justify-content: center;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      float: left;
+      position: relative;
+    }
+    .inputDiv{
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+    }
+    .input{
+      text-align: center;
+      margin: 0 5px;
+      background-color: rgba(128,0,128, .2);
+      border-width: 3px 2px 2px 3px;
+      border-color: #800080;
+      border-style: ridge;
+    }
+    .input4{
+      width: 50px;
+    }
+    .input3{
+      width: 37px;
+    }
+    .inputP{
+      margin: 0;
+      width: fit-content;
+    }
+  </style>
+  <script>
+    function tourStart(start){
+      document.getElementById(start).classList.remove("displayNone");
+    }
+    function tourOff(){
+      event.currentTarget.parentElement.classList.add("displayNone");
+    }
+    function tourNext(next){
+      event.currentTarget.parentElement.classList.add("displayNone");
+      document.getElementById(next).classList.remove("displayNone");
+    }
+  </script>
     <!--I wrote, you read-->
     <div name="WrotePage" id="wrotePage" class="sectionPage justPage yesCasaFoot">
         <!-- Faire le tableau des chiffres pour Alex! (et le mettre dans un toggle) -->
@@ -1067,6 +1693,22 @@
         <p>Alie<br>
           xox</p>
         <p>P.S. That's what I call teamwork: a slave AND a toy!</p>
+        <hr/>
+        <h1>(H)appiness</h1>
+        <p><em>Opalace - Chill & Play<br>
+        July 2023</em></p>
+        <p>When I saw it laying there, faking innocence but subtly tempting me, challenging me… I couldn’t help myself. I needed to teach it who’s the Master! Show it how much weight I can throw around!</p>
+        <p>Now, blindly stomping your feet won’t get you far, everyone knows that. You need to be smart about your footing and heavily think about your steps before putting your foot down.</p>
+        <p>First, I started by complacently swiping it this way and that with my foot as if it were just a weird squishy toy stuck in the ground, unable to escape… I waited to see how it’ll react, but it kept coming back into place, waiting expectantly, obviously anticipating my next move.</p>
+        <p>Then I went about massaging it, rhythmically penetrating its flesh with my skillful toes, sensually luring it into submission while I was actually deciphering all its weakest spots.</p>
+        <p>So as I was pressing here and there, from this and that way, I could feel under my foot the different parts inside trying to relocate themselves around each other, desperately trying to maintain some sense of wholeness while still shamelessly relishing the intense pressure I was putting it under.</p>
+        <p>Still, you need to be careful when trying to fully stand on it; after all, that thing ain’t flat! There are some curves to it that you need to take into account, otherwise, a bit too much this way or not enough that way and you could easily fall off of it! You wouldn’t want to hurt yourself, now would you?!</p>
+        <p>Although, I must admit I loved, when I stepped on it wrong, to feel it trying to worm its way out from under my feet; poor little thing, it’s like it doesn’t know what’s good for it! Constantly trying to pin it down for good as it kept wriggling around. A sensual cat-and-mouse kinda chase; except you know and you can actually feel that the mouse really is hoping for you to finally squish it under your heel!</p>
+        <p>Finally, if you position yourself properly, and apply the right pressure, keeping the angle steady, you can feel and see how happy it gets! Finally kept in its rightful place: squashed under its Master’s feet. That’s when I started dancing and grinding a bit in order to really imprint my victory into it.</p>
+        <p>Seriously, it’s so much prettier when it’s all flattened, devoided of all its useless brawniness, crushed by the superiority of my boot! Especially since, afterward, you get to see the lines of my sole imprinted on it! Like my signature; it's Master’s autograph. However, the next days do hold a whole new delight as it gets to show off all the nice little blue and purple spots that you’ve so generously bestowed upon all over it! Proudly sharing these pictures is really how (h)appiness thanks you!</p>
+        <p>You’re welcome.</p>
+        <p>Alie<br>
+          xox</p>
       </div>
       <!--Sang, sexe & café-->
       <div class="textPage" id="pageAlex">

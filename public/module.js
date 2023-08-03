@@ -84,7 +84,6 @@ function getMaxPlans() {
   myScheduleList.forEach(plan => {
     max = max > plan.ordre ? max : plan.ordre
   });
-  console.log("max= " + max);
   return max;
 }
 
@@ -160,7 +159,6 @@ async function getPlans() {
     myScheduleList.push({id:namePlan, ordre:ordrePlan});
   });
   if(myScheduleList.length >= 1){
-    console.log(myScheduleList);
     displayPlans();
     getDefaultSchedule();
   } else if(localStorage.getItem("steps")) {

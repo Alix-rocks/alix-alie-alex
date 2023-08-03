@@ -59,7 +59,6 @@ function clearStorage() {
 }
 
 function displayPlans() {
-  console.log(myScheduleList);
   myScheduleList = myScheduleList.toSorted((a, b) => {
     // if(a.ordre < b.ordre){
     //     return -1
@@ -70,7 +69,6 @@ function displayPlans() {
     // }
     return a.ordre < b.ordre ? -1 : a.ordre > b.ordre ? 1 : 0
   });
-  console.log(myScheduleList);
   document.getElementById("togglePlansWhole").classList.remove("displayNone");
   let listLi = myScheduleList.map((schedule) => {
       return `
@@ -150,7 +148,6 @@ const listPlansDD = (e) => {
 }
 function listPlansOD(){
   let plans = document.querySelectorAll(".listPlans > .listPlan");
-  console.log(plans);
   plans[0].classList.add("starDefault");
   for(i = 1; i < plans.length; i++){
     plans[i].classList.remove("starDefault");
@@ -164,7 +161,6 @@ function manageCancel(){
 }
 let trashedSchedules = [];
 function managedPlans(){
-  console.log(myScheduleList);
   if (confirm("Are you sure?!\n'Cause you don't come back from that!")) {
     for (let i = myScheduleList.length - 1; i >= 0; i--) {
       let planTrash = document.getElementById(`${myScheduleList[i].id}`);
@@ -181,12 +177,10 @@ function managedPlans(){
       let name = plans[a].id;
       let plan = myScheduleList.find((x) => x.id == name)
       plan.ordre = a;
-      console.log(plan);
     };
     orderSchedules();
     displayPlans();
   }
-  console.log(myScheduleList);
 } 
 
 
@@ -274,11 +268,11 @@ function displaySteps() {
   itemes.forEach(iteme => {
     iteme.addEventListener("dragstart", (evt) => {
       // Adding dragging class to item
-      iteme.classList.add("dragging");
+      evt.currentTarget.classList.add("dragging");
     });
     // Removing dragging class from item on dragend event
-    iteme.addEventListener("dragend", () => {
-      iteme.classList.remove("dragging");
+    iteme.addEventListener("dragend", (evt) => {
+      evt.currentTarget.classList.remove("dragging");
     });
   });
   icons.forEach(icon => {
@@ -498,7 +492,6 @@ function updateItemesIndex() {
 
 function calculateTime(e) {
   updateSteps();
-  console.log(steps.steps);
   let arriveeTime = document.getElementById('arriveeTime').valueAsDate;
   if (!arriveeTime) {
     document.getElementById("arriveeTimeDiv").classList.add("outlined");
@@ -509,7 +502,7 @@ function calculateTime(e) {
   } else {
     document.getElementById("arriveeTimeDiv").classList.remove("outlined");
   };
-  console.log(arriveeTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" }));
+  // console.log(arriveeTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" }));
   let stepArray = steps.steps.filter((step) => {
     return step.checked;
   }).map((step, idx) => {
@@ -520,7 +513,7 @@ function calculateTime(e) {
       return `<p>${step.name}: ${sumTimeSub(steps.steps, idx, arriveeTime)}</p>`;
     }
   });
-  console.log(stepArray);
+  // console.log(stepArray);
   let result = `<h2 id="finalDestination" style="text-align: center; margin: 0 0 .7em;">${document.getElementById("destination").value}</h2>
 <div style="padding: 0 10px; border: 2px solid;">
     <h3 style="margin: 5px 0; text-decoration: underline;">Schedule</h3>
@@ -559,7 +552,7 @@ function sumTimeSub(steps, stepIndex, arriveeTime) {
   }).forEach((step, idx) => {
     if (idx >= stepIndex) {
       totalMin += step.value;
-      console.log(idx + " " + stepIndex + " " + totalMin + " " + step.value);
+      // console.log(idx + " " + stepIndex + " " + totalMin + " " + step.value);
     }
   });
   let startTime = new Date();

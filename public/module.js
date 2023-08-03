@@ -61,6 +61,7 @@ getRedirectResult(auth)
 
   onAuthStateChanged(auth,(user) => {
     if(user){
+      alert('wow!');
       console.log(user);
       document.getElementById("displayName").innerText = " " + user.displayName + ",";
       document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
@@ -205,6 +206,74 @@ async function orderSchedules(){
 }
 window.orderSchedules = orderSchedules;
 
+// METRO
+
+async function getLinesStations(chosenLine){
+  const getLinesStations = await getDoc(doc(db, "metro", chosenLine));
+  allStations = getLinesStations.data();
+  return allStations;
+}
+window.getLinesStations = getLinesStations;
+
+// ***ON A OUBLIÉ DE CONSIDÉRER LES DIFFÉRENTES SORTIES!!
+async function checkExit(){
+  console.log(statArr);
+  const getStatArr = await getDoc(doc(db, "metro", lineArr, "station", statArr));
+  statArr = getStatArr.data();
+  console.log(statArr);
+  // let exitList = ``;
+  // statArr.exit.forEach((exit) => {
+  //   exitList += `<input type="radio" name="exitInput" class="cossin exitInput" id="exit${exit.index}" onchange="exitRadioChange(event)"/>
+  //   <label for="exit${exit.index}" class="exitLabel" id="exit${exit.index}Label">
+  //     <span class="exitRadio"></span>
+  //     <div>
+  //       <h3>${exit.name}</h3>
+  //       <p>${exit.options}</p>
+  //     </div>
+  //   </label>`;
+  // });
+  let exitList = statArr.exit.map((exit, idx) => {
+    return `<input type="radio" name="exitInput" class="cossin exitInput" id="exit${idx}" onchange="exitRadioChange(this)"/>
+    <label for="exit${idx}" class="exitLabel" id="exit${idx}Label">
+      <span class="exitRadio"></span>
+      <div>
+        <h3>${exit.name}</h3>
+        <p>${exit.options}</p>
+      </div>
+    </label>`;
+  });
+  if(statArr.exit.length == 1){
+    document.getElementById("afterALS").innerHTML = `<p>Il n'y a qu'une seule sortie à cette station-là:</p>
+    <div>${exitList.join("")}</div>`;
+  } else if(statArr.exit.length > 1){
+    document.getElementById("afterALS").innerHTML = `<p>Choisi la sortie que tu veux:</p>
+    <div>${exitList.join("")}</div>`;
+  } else if(statArr.exit.length < 1){
+    document.getElementById("afterALS").innerHTML = `<h6>Oups... y'a comme un problème, là... soit la station a explosé et on peut juste pu en sortir, soit Alex a juste pas encore eu le temps de répertorier les sorties de cette station-là, soit, vu qu'on est à Montréal, la station est fermée pour cause de construction et/ou festival! Moi, j'parie sur la 3<sup>e</sup>!</h6>`;
+  };
+  // document.getElementById("exit0").checked = true;
+  // let radio = document.querySelectorAll(".cossin.exitInput");
+  // radio[0].checked = true;
+  // let radioBtn = document.querySelectorAll('')
+}
+window.checkExit = checkExit;
+
+
+async function getStatTrajet(lineDep, statDep, lineArr, statArr){
+  console.log(lineDep, statDep, lineArr, statArr);
+  const getStatDep = await getDoc(doc(db, "metro", lineDep, "station", statDep));
+  statDep = getStatDep.data();
+  const getStatArr = await getDoc(doc(db, "metro", lineArr, "station", statArr));
+  statArr = getStatArr.data();
+  console.log(statDep, statArr);
+  let direction = statArr.ordre - statDep.ordre > 0 ? statDep.dirA : statDep.dirB;
+  depart(statDep.name, direction.name, statDep.line);
+  let w = statDep.wagon;
+  let d = statDep.door;
+  direction.head == "right" ? trainRight(w, d, tX) : direction.head == "left" ? trainLeft(w, d, tX) : console.log("We're lost...");
+
+}
+window.getStatTrajet = getStatTrajet;
 
 // To get today'shit 
 async function getTodaysShit() {

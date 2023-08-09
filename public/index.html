@@ -16,6 +16,7 @@
     <link rel="manifest" href="site.webmanifest">
     <link rel="stylesheet" href="general.css">
     <link rel="stylesheet" href="time.css">
+    <link rel="stylesheet" href="metro.css">
     <link rel="stylesheet" href="list.css">
     <link rel="stylesheet" href="shit.css">
     <title>Alix rocks</title>
@@ -465,12 +466,12 @@
     <script name="TimePage" src="time.js"></script>
     <!-- ListPage -->
     <div name="ListPage" id="listPage"  class="sectionPage justPage">
-      <div id="wholeList">
+      <div class="wholeList" id="wholeList">
 
-        <input id="listToggler1" class="listToggler" type="checkbox" class="cossin"/>
-        <div>
+        <input id="listToggler1" class="listToggler cossin" type="checkbox"/>
+        <div class="listToggleDiv">
           <label for="listToggler1" class="listToggleLabel" style="display: inline-block;"><span class="typcn icon typcn-media-play" id="listToggleIcon"></span></label>
-          <h2 style="display: inline-block; margin: 0;">Épicerie</h2>
+          <h2 class="listToggleTitle">Épicerie<span class="notiSpan displayNone"></span></h2>
         </div>
               
 
@@ -483,7 +484,7 @@
           </li>
           <li class="listItem listDragable" draggable="true">
             <div class="erasingZone"></div>
-            <input id="listTickInput1" type="checkbox" class="cossin" onchange="listItemTicked(this)"/>
+            <input id="listTickInput1" type="checkbox" class="listCheck cossin" onchange="listItemTicked(this)"/>
             <label for="listTickInput1" id="listTickLabel1" class="listCircle">
               <span class="typcn icon typcn-tick listTickBlack invisible" id="listTickTick1"></span>
             </label>
@@ -495,7 +496,7 @@
           </li>
           <li class="listItem listDragable" draggable="true">
             <div class="erasingZone"></div>
-            <input id="listTickInput2" type="checkbox" class="cossin" onchange="listItemTicked(this)"/>
+            <input id="listTickInput2" type="checkbox" class="listCheck cossin" onchange="listItemTicked(this)"/>
             <label for="listTickInput2" id="listTickLabel2" class="listCircle">
               <span class="typcn icon typcn-tick listTickBlack invisible" id="listTickTick2"></span>
             </label>
@@ -509,412 +510,12 @@
       </div>
     </div>
     <script name="ListPage" src="list.js"></script>
-    <div name="MetroPage" id="metroPage" class="sectionPage justPage">
-      
-    </div>
-    <style>
-      .exitLabel{
-        border: dashed 1.5px;
-        width: calc(214.78px + 6.09vw);
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        align-items: center;
-      }
-      .exitLabel h3{
-        margin: 0.7em 0 0;
-      }
-      .exitLabel p{
-        margin: 0.3em 0 1em;
-      }
-      .exitRadio{
-        margin: 0 8% 0 7%;
-        width: 12px;
-        height: 12px;
-        border: 1.5px solid;
-        border-radius: 50%;
-        display: inline-block;
-      }
-      .exitRadioChecked{
-        background-color: var(--tx-color);
-        outline: 1px solid var(--bg-color);
-        outline-offset: -1.5px;
-      }
-      .metroDetA{
-        text-decoration: underline;
-      }
-      .metroToggleWhole{
-        width: 90vw;
-        margin:auto;
-        display: flex;
-        flex-flow: column wrap;
-        justify-content: flex-start;
-      }
-      .cossin{
-        display:none;
-      }
-      .choosingEither{
-        display: flex;
-        justify-content: flex-start;
-        align-items: flex-start;
-      }
-      .choosingEither h3{
-        margin: 5px 0 0 0;
-        width: 85px;
-      }
-      .choosingLine{
-        flex-flow: row nowrap;
-      }
-      .choosingStation{
-        flex-direction: column;
-      }
-      .metroToggleLabel{
-        display: block;
-        border:1px solid;
-        margin: 0;
-        width: calc(95.65px + 1.74vw);
-        padding: 5px;
-      }
-      .metroToggleLabelText{
-        margin-left: 5px;
-        opacity: .6;
-      }
-      .metroChosen{
-        opacity: 1;
-        font-weight: 700;
-      }
-      #metroToggleIconDL, #metroToggleIconDLS, #metroToggleIconAL, #metroToggleIconALS{
-        transition: transform .3s ease-out;
-        display: inline-block;
-      }
-      .metroToggleList{
-        transition: max-height .3s ease-out;
-        max-height: 0;
-        overflow: hidden;
-      }
-      /* JAVASCRIPT?! */
-      #metroTogglerDL:checked~div#metroToggleListDL, 
-      #metroTogglerDLS:checked~div#metroToggleListDLS, 
-      #metroTogglerAL:checked~div#metroToggleListAL, 
-      #metroTogglerALS:checked~div#metroToggleListALS{
-        max-height: 200px;
-        transition: max-height .5s ease-in;
-        overflow: visible;
-      }
-      #metroTogglerDL:checked~label>span#metroToggleIconDL, 
-      #metroTogglerDLS:checked~label>span#metroToggleIconDLS, 
-      #metroTogglerAL:checked~label>span#metroToggleIconAL, 
-      #metroTogglerALS:checked~label>span#metroToggleIconALS{
-        transform: rotate(90deg);
-        transition: transform .5s;
-      }
-      .metroChoices{
-        display: block;
-        border: 1px solid;
-        margin: 0;
-        padding: 5px 5px 5px 25px;
-      }
-      .mCLines{
-        width: calc(95.65px + 1.74vw);
-      }
-      .mCStations{
-        width: calc(214.78px + 6.09vw);
-        font-size: calc(13.13px + 0.35vw);
-      }
-      .stationWide{
-        width: calc(214.78px + 6.09vw);
-      }
-      .metroButton{
-        margin-top: 50px;
-        font-size: calc(15.53px + 0.19vw);
-        padding: 2px 5px;
-      }
-      .sign{
-        text-align: center;
-        font-weight: 400;
-      }
-      .sign span{
-        font-weight: 900;
-      }
-      .stationSign{
-        line-height: 1.1em;
-      }
-      .stationSign span{
-        font-size: 1.3em;
-      }
-      .directionSign{
-        border: 2px solid;
-        width: fit-content;
-        margin: 1.6em auto calc(0.9em + 20px);
-        padding: 0 5px;
-        color: black;
-      }
-      .Orange{
-        background-color: rgba(242, 133, 45, .7);
-      }
-      .Bleue{
-        background-color: rgba(4, 113, 184, .7);
-      }
-      .Verte{
-        background-color: rgba(43, 163, 88, .7);
-      }
-      .Jaune{
-        background-color: rgba(255, 220, 60, .7);
-      }
-      .train{
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: space-evenly;
-      }
-      .wagonNum{
-        position: absolute;
-        top: -20px;
-      }
-      .wagonTD{
-        border: 2px solid;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: space-evenly;
-        position: relative;
-      }
-      .head.headLeft{
-        border-top-left-radius: calc(7.83px + 0.87vw);
-      }
-      .head.headRight{
-        border-top-right-radius: calc(7.83px + 0.87vw);
-      }
-      .door{
-        border: 1px solid;
-        border-bottom: none;
-        width: 10px;
-        height: 20px;
-        margin: 5px 5% 0;
-      }
-      .door.opti{
-        background-color: rgba(218,165,32,.7);
-      }
-      .quai{
-        margin: 1px -8px;
-        height: 5px;
-        border: 5px solid rgba(218,165,32,.5);
-      }
-      .starsTransfer{
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: space-around;
-        align-items: center;
-        margin: 15vh 0;
-      }
-      .allStars{
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: space-around;
-        width: 100%;
-      }
-      .allStars div{
-        font-family: 'Rubik Dirt', cursive;
-        font-size: calc(25.53px + 0.19vw);
-        line-height: 1.2em;
-        font-weight: 400;
-      }
-      .sTransfer{
-        padding: 0 5%;
-        text-align: center;
-        margin: 0;
-      }
-    </style>
-    <script>
-
-      //** get the checked animation through javascript instead (less id and css to write)
-
-      let lines = ["Orange", "Bleue", "Verte", "Jaune"];
-
-      let allStations, lineDep, statDep, lineArr, statArr, dirX;
-
-      function choosingLine(whichL){
-        let linesList = ``;
-        lines.forEach((line) => {
-          linesList += `
-            <input type="radio" class="cossin" name="lines" id="${line + whichL}" value="${line}" onchange="lineChosen(event,'${whichL}')">
-            <label for="${line + whichL}" class="metroChoices mCLines">${line}</label>`;
-        });
-        let title = "";
-        whichL == "DL" ? title = "Départ" : whichL == "AL" ? title = "Arrivée" : title = "We're lost...";
-        let addChoices = `
-          <h3 class="metroDetA" style="margin: 1.6em 0 0.9em;">${title}</h3>
-          <div class="metroToggleWhole">
-            <div class="choosingEither choosingLine">
-              <h3>Ligne:</h3>
-              <div>
-                <input id="metroToggler${whichL}" type="checkbox" class="cossin"/>
-                <label for="metroToggler${whichL}" class="metroToggleLabel"><span class="typcn icon typcn-media-play" id="metroToggleIcon${whichL}"></span><span id="metroToggleLabelText${whichL}" class="metroToggleLabelText">Ligne</span></label>
-                <div id="metroToggleList${whichL}" class="metroToggleList">${linesList}</div>
-              </div>
-            </div>
-            <div class="choosingEither choosingStation" id="choosingStation${whichL}"></div>`;
-      
-        whichL == "DL" ? document.getElementById("metroPage").innerHTML = addChoices : whichL == "AL" ? document.getElementById("afterDLS").innerHTML = addChoices : document.getElementById("metroPage").innerHTML = "We're lost...";
-      };
-
-      function lineChosen(event, whichL){
-        whichL == "DL" ? lineDep = event.currentTarget.value : whichL == "AL" ? lineArr = event.currentTarget.value : console.log("We're lost...");
-        let chosenLine = event.currentTarget.value;
-        document.getElementById("metroToggleLabelText" + whichL).innerText = chosenLine;
-        document.getElementById("metroToggleLabelText" + whichL).classList.add("metroChosen");
-        document.getElementById("metroToggler" + whichL).checked = false;
-        let whichS = whichL + "S";
-        choosingStation(chosenLine, whichL, whichS);
-      };
-      
-      function choosingStation(line, whichL, whichS){
-        let stationsList = ``;
-        window.getLinesStations(line).then(allStations => {
-          allStations.list.forEach((station) => {
-            stationsList += `<input type="radio" class="cossin" name="lines" id="${station + whichS}" value="${station}" onchange="stationChosen(event,'${whichS}')"><label for="${station + whichS}" class="metroChoices mCStations">${station}</label>`;
-          });
-        document.getElementById("choosingStation" + whichL).innerHTML = `
-          <h3>Station:</h3>
-          <div>
-            <input id="metroToggler${whichS}" type="checkbox" class="cossin"/>
-            <label for="metroToggler${whichS}" class="metroToggleLabel stationWide"><span class="typcn icon typcn-media-play" id="metroToggleIcon${whichS}"></span><span id="metroToggleLabelText${whichS}" class="metroToggleLabelText">Station</span></label>
-            <div id="metroToggleList${whichS}" class="metroToggleList">${stationsList}</div>
-          </div>
-          <div id="after${whichS}"></div>`;
-        document.getElementById("metroToggler" + whichL).addEventListener("click", event => {
-          if(event.target.checked){
-            document.getElementById("choosingStation" + whichL).innerHTML = ``;
-          }
-        })
-      });
-      };
-
-      function stationChosen(event, whichS){
-        whichS == "DLS" ? statDep = event.currentTarget.value : whichS == "ALS" ? statArr = event.currentTarget.value : console.log("We're lost...");
-        document.getElementById("metroToggleLabelText" + whichS).innerText = event.currentTarget.value;
-        document.getElementById("metroToggleLabelText" + whichS).classList.add("metroChosen");
-        document.getElementById("metroToggler" + whichS).checked = false;
-        document.getElementById("metroToggler" + whichS).addEventListener("click", event => {
-          if(event.target.checked){
-            document.getElementById("after" + whichS).innerHTML = ``;
-          }
-        })
-        whichS == "DLS" ? choosingLine("AL") : whichS == "ALS" ? nextButton() : console.log("We're lost...");
-      };
-// Si applicable, choix de sortie!
-      function nextButton(){
-        document.getElementById("afterALS").innerHTML = `
-        <button class="timeFormButtonSmall metroButton" onclick="window.checkExit()">Sortie(s)?</button>`;
-      }
-
-    function exitRadioChange(element){
-      console.log(element);
-      document.getElementById(element.id + "Label").classList.toggle("exitRadioChecked");
-    }
-
-      function calcButtonFinal(whichS){
-        document.getElementById("after" + whichS).innerHTML = `
-        <button class="timeFormButton metroButton" onclick="calcTrajet()">Let's GO!</button>`;
-      }
-      choosingLine("DL");
-
-      function calcTrajet(){
-        window.getStatTrajet(lineDep, statDep, lineArr, statArr);
-      }
-// ***ON A OUBLIÉ DE CONSIDÉRER LES DIFFÉRENTES SORTIES!!
-      let tX = 0;
-      function depart(station, direction, color){
-        console.log(station, direction, color);
-        document.getElementById("metroPage").innerHTML = `
-          <h3 class="sign stationSign">STATION<br/><span>${station}</span></h3>
-          <h3 class="sign directionSign ${color}">DIRECTION <span>${direction}</span></h3>
-          <div class="train" id="train${tX}"></div>
-          <hr class="quai"/>`;
-      };
-
-      function trainLeft(w, d, t){
-        let wagonsLeft = ``;
-        for (let i = 1; i < w + 1; i++){
-          let doorsLeft = ``;
-          for (let a = 1; a < d + 1; a++){
-            doorsLeft += `<div class="door" id="t${t}w${i}d${a}"></div>`;
-          }
-          wagonsLeft += `
-            <div class="wagonTD${i == 1 ? ` headLeft head` : i == w ? ` headRight` : ``}" style="width: calc(90vw / ${w});">
-              <span class="wagonNum">${i}</span>
-              ${doorsLeft}
-            </div>`  
-        }
-        document.getElementById("train"+t).innerHTML = wagonsLeft;
-      };
-          
-      function trainRight(w, d, t){
-        let wagonsRight = ``;
-        for (let i = w; i > 0; i--){
-          let doorsRight = ``;
-          for (let a = d; a > 0; a--){
-            doorsRight += `<div class="door" id="t${t}w${i}d${a}"></div>`;
-          }
-          wagonsRight += `
-            <div class="wagonTD${i == w ? ` headLeft` : i == 1 ? ` headRight head` : ``}" style="width: calc(90vw / ${w});">
-              <span class="wagonNum">${i}</span>
-              ${doorsRight}
-            </div>`  
-        }
-        document.getElementById("train"+t).innerHTML = wagonsRight;
-      };
-
-      function addTransfer(station, direction, color){
-        tX += 1; 
-        let addTransfer = document.createElement("div");
-        addTransfer.innerHTML = `
-          <div class="starsTransfer">
-            <div class="allStars"></div>
-            <h2 class="sTransfer">TRANSFER</h2>
-            <div class="allStars"></div>
-          </div>
-          <h3 class="sign stationSign">STATION<br/><span id="station${tX}">${station}</span></h3>
-          <h3 class="sign directionSign ${color}">DIRECTION <span id="direction${tX}">${direction}</span></h3>
-          <div class="train" id="train${tX}"></div>
-          <hr class="quai"/>`
-        document.getElementById("metroPage").appendChild(addTransfer);
-        tStars();
-      };
-
-      function tStars(){
-        let tStarsNum = Math.round(((window.innerWidth - ((window.innerWidth/100) * 0.87 + 147.83))/2)/35);
-        console.log(tStarsNum);
-        document.querySelectorAll(".allStars").forEach(stars => {
-          for (let i = 1; i < tStarsNum + 1; i++){
-            let newStar = document.createElement("div");
-            newStar.innerHTML = "&nbsp;&nbsp;¤&nbsp;&nbsp;";
-            stars.appendChild(newStar);
-          }
-        })
-      };
-      
-      function optionsGold(){
-        let exits = ["w4d1", "w4d2", "w4d3"];
-        exits.map((exit) => {
-          document.getElementById("t" + tX + exit).classList.add("opti");
-        });
-        //blue for elevator exits
-      };
-     
-      
-      // //Adding the color through the variable
-      // depart("JEAN&#8209TALON", "CÔTE&#8209VERTU", orangeColor);
-      // trainRight(9, 3, tX);
-      // optionsGold();
-      // //adding the color through the class
-      // addTransfer("CRÉMAZIE", "MONTMORENCY", "verte");
-      // trainLeft(6, 4, tX);
-      // optionsGold();
-    </script>
+    <div name="MetroPage" id="metroPage" class="sectionPage justPage"></div>
+    <script name="MetroPage" src="metro.js"></script>
     <div name="CalcPage" id="calcPage" class="sectionPage justPage">
       <div class="tourStart" onclick="tourStart('tourFirst')">Tour?</div>
       <!-- see tooltips https://www.w3schools.com/css/css_tooltip.asp -->
+      <!-- Add des petits points dans le bas à gauche (autant de points qu'il y a de tooltip) et chacun est illuminé au et fur et à mesure; comme ça on sait combien il en reste à voir! (pas besoin de pouvoir cliquer dessus) -->
       <div id="tourFirst" class="tourBase tourCenter displayNone">
         <span onclick="tourOff()">x</span>
         <p>Hi, have you ever had a "thing" that needed to be "this big" on a cellphone but only "this big" on a computer, but you realized that no percentage could get it right...?</p>
@@ -974,172 +575,172 @@
         <p class="inputP">px</p>
       </div>
     </div>
-  <style>
-    .tourStart{
-      position: fixed;
-      right: 2px;
-      bottom: 2px;
-      background-color: var(--tx-color);
-      color: var(--bg-color);
-      border-radius: 50%;
-      font-family: 'Nunito', sans-serif;
-      font-size: calc(15.53px + 0.19vw);
-      font-weight: 900;
-      text-align: center;
-      width: 50px;
-      height: 50px;
-      line-height: 50px;
-      z-index: 99999;
-    }
-    .tourBase{
-      background-color: var(--tx-color);
-      color: var(--bg-color);
-      text-align: left;
-      padding: 5px 20px 15px 15px;
-      width: calc(178.26px + 8.7vw);
-      font-family: 'Nunito', sans-serif;
-      font-size: calc(13.57px + 0.17vw);
-      font-weight: 400;
-      z-index: 99999;
-    }
-    .tourYeah{
-      width: 150px;
-      position: absolute;
-      top: 0;
-      left: 90px;
-    }
-    .tourYeah::after {
-      content: " ";
-      position: absolute;
-      top: 0;
-      right: 100%;
-      border-width: 10px;
-      border-style: solid;
-      border-color: transparent var(--tx-color) transparent transparent;
-    }
-    .tourCenter{
-      position: fixed;
-      top: 50px;
-      left: calc((100vw - 200px)/2);
-    }
-    .tourBase span{
-      cursor: pointer;
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      line-height: 1em;
-      font-size: calc(19.53px + 0.19vw);
-    }
-    .tourBase button{
-      background-color: var(--tx-color);
-      color: var(--bg-color);
-      border: none;
-      text-align: left;
-      margin: 20px 0 0;
-      padding: 0;
-      text-decoration: underline;
-      font-family: 'Nunito', sans-serif;
-      font-size: calc(15.53px + 0.19vw);
-      font-weight: 600;
-    }
-    #calcPage{
-      --wL: 80vw;
-      --hL: calc(var(--wL) * 1080 / 1920);
-      --wC: calc(var(--wL) * 61 / 192);
-      --hC: calc(var(--wC) * 800 / 360);
-    }
-    .vp{
-      border: 2px solid;
-      border-radius: 5px;
-      margin: 5% auto 1%;
-    }
-    .vpC{
-      width: var(--wC);
-      height: var(--hC);
-    }
-    .vpL{
-      width: var(--wL);
-      height: var(--hL);
-    }
-    .vw{
-      border-left: 2px solid;
-      border-right: 2px solid;
-      height: 10px;
-      outline: 1px solid;
-      outline-offset: -5px;
-      margin: 0 auto;
-    }
-    .vwC{
-      width: 70px;
-    }
-    .vwL{
-      width: 200px;
-    }
-    .ob{
-      border: 1px solid;
-      margin: 20% auto 1%;
-      display: absolute;
-    }
-    .obC{
-      width: 50%;
-      height: 10%;
-    }
-    .ow{
-      border-left: 1px solid;
-      border-right: 1px solid;
-      height: 8px;
-      outline: .5px solid;
-      outline-offset: -4px;
-      margin: 0 auto;
-    }
-    .inputUnit{
-      display: flex;
-      justify-content: center;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      align-items: center;
-      float: left;
-      position: relative;
-    }
-    .inputDiv{
-      margin: 0 auto;
-      display: flex;
-      justify-content: center;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      align-items: center;
-    }
-    .input{
-      text-align: center;
-      margin: 0 5px;
-      background-color: rgba(128,0,128, .2);
-      border-width: 3px 2px 2px 3px;
-      border-color: #800080;
-      border-style: ridge;
-    }
-    .input4{
-      width: 50px;
-    }
-    .input3{
-      width: 37px;
-    }
-    .inputP{
-      margin: 0;
-      width: fit-content;
-    }
-  </style>
-  <script>
-    function tourStart(start){
-      document.getElementById(start).classList.remove("displayNone");
-    }
-    function tourOff(){
-      event.currentTarget.parentElement.classList.add("displayNone");
-    }
-    function tourNext(next){
-      event.currentTarget.parentElement.classList.add("displayNone");
-      document.getElementById(next).classList.remove("displayNone");
-    }
-  </script>
+    <style name="CalcPage">
+      .tourStart{
+        position: fixed;
+        right: 2px;
+        bottom: 2px;
+        background-color: var(--tx-color);
+        color: var(--bg-color);
+        border-radius: 50%;
+        font-family: 'Nunito', sans-serif;
+        font-size: calc(15.53px + 0.19vw);
+        font-weight: 900;
+        text-align: center;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        z-index: 99999;
+      }
+      .tourBase{
+        background-color: var(--tx-color);
+        color: var(--bg-color);
+        text-align: left;
+        padding: 5px 20px 15px 15px;
+        width: calc(178.26px + 8.7vw);
+        font-family: 'Nunito', sans-serif;
+        font-size: calc(13.57px + 0.17vw);
+        font-weight: 400;
+        z-index: 99999;
+      }
+      .tourYeah{
+        width: 150px;
+        position: absolute;
+        top: 0;
+        left: 90px;
+      }
+      .tourYeah::after {
+        content: " ";
+        position: absolute;
+        top: 0;
+        right: 100%;
+        border-width: 10px;
+        border-style: solid;
+        border-color: transparent var(--tx-color) transparent transparent;
+      }
+      .tourCenter{
+        position: fixed;
+        top: 50px;
+        left: calc((100vw - 200px)/2);
+      }
+      .tourBase span{
+        cursor: pointer;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        line-height: 1em;
+        font-size: calc(19.53px + 0.19vw);
+      }
+      .tourBase button{
+        background-color: var(--tx-color);
+        color: var(--bg-color);
+        border: none;
+        text-align: left;
+        margin: 20px 0 0;
+        padding: 0;
+        text-decoration: underline;
+        font-family: 'Nunito', sans-serif;
+        font-size: calc(15.53px + 0.19vw);
+        font-weight: 600;
+      }
+      #calcPage{
+        --wL: 80vw;
+        --hL: calc(var(--wL) * 1080 / 1920);
+        --wC: calc(var(--wL) * 61 / 192);
+        --hC: calc(var(--wC) * 800 / 360);
+      }
+      .vp{
+        border: 2px solid;
+        border-radius: 5px;
+        margin: 5% auto 1%;
+      }
+      .vpC{
+        width: var(--wC);
+        height: var(--hC);
+      }
+      .vpL{
+        width: var(--wL);
+        height: var(--hL);
+      }
+      .vw{
+        border-left: 2px solid;
+        border-right: 2px solid;
+        height: 10px;
+        outline: 1px solid;
+        outline-offset: -5px;
+        margin: 0 auto;
+      }
+      .vwC{
+        width: 70px;
+      }
+      .vwL{
+        width: 200px;
+      }
+      .ob{
+        border: 1px solid;
+        margin: 20% auto 1%;
+        display: absolute;
+      }
+      .obC{
+        width: 50%;
+        height: 10%;
+      }
+      .ow{
+        border-left: 1px solid;
+        border-right: 1px solid;
+        height: 8px;
+        outline: .5px solid;
+        outline-offset: -4px;
+        margin: 0 auto;
+      }
+      .inputUnit{
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        float: left;
+        position: relative;
+      }
+      .inputDiv{
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+      }
+      .input{
+        text-align: center;
+        margin: 0 5px;
+        background-color: rgba(128,0,128, .2);
+        border-width: 3px 2px 2px 3px;
+        border-color: #800080;
+        border-style: ridge;
+      }
+      .input4{
+        width: 50px;
+      }
+      .input3{
+        width: 37px;
+      }
+      .inputP{
+        margin: 0;
+        width: fit-content;
+      }
+    </style>
+    <script name="CalcPage">
+      function tourStart(start){
+        document.getElementById(start).classList.remove("displayNone");
+      }
+      function tourOff(){
+        event.currentTarget.parentElement.classList.add("displayNone");
+      }
+      function tourNext(next){
+        event.currentTarget.parentElement.classList.add("displayNone");
+        document.getElementById(next).classList.remove("displayNone");
+      }
+    </script>
     <!--I wrote, you read-->
     <div name="WrotePage" id="wrotePage" class="sectionPage justPage yesCasaFoot">
         <!-- Faire le tableau des chiffres pour Alex! (et le mettre dans un toggle) -->
@@ -1264,7 +865,7 @@
           Cet être sensuel; Beauté ensorcelante.</p>
           <p><br/>Novembre 2000</p>
       </div>
-      <!--Torture-->
+      
       <!-- Two sentences horror stories
         Every day, my parents shower me with love and attention
         Every night, before going to bed, I be a good child and make sure to clean all the blood.
@@ -1275,6 +876,8 @@
         I shout "pineapple" because I was done playing/to put an end to the game
         But then Master kept going saying I deserved it.
       -->
+
+      <!--Torture-->
       <div class="textPage" id="pageTorture">
         <h1>Torture</h1>
         <p>
@@ -1571,6 +1174,9 @@
       .textPage{
         margin:0 10% 5% 5%;
       }
+      .textPage hr{
+        border-color: purple;
+      }
       .boxStill{
         text-align: center;
         border: 2px solid;
@@ -1580,58 +1186,7 @@
         margin: auto;
         box-shadow: 5px 5px 5px rgb(128 0 128 / 60%);
       }
-      .textPage hr{
-        border-color: purple;
-      }
-      .fullBook div{
-        margin-bottom: 10vh;
-      }
-      .fullBook h1, .fullBook h2{
-        padding-top: 5vh;
-        margin-top: 0;
-      }
-      .toggleTM{
-        margin-right: 5px;
-        float: left;
-        transition: transform .1s ease-out;
-      }
-      input#tableMatiere:checked ~ label#tableMatT > span.toggleTM{
-        transform: rotate(90deg);
-      }
-      #tableMat{
-        transition: max-height .3s .3s ease-out, visibility .3s ease-out;
-        max-height: 0;
-        visibility: hidden;
-      }
-      input#tableMatiere:checked ~ div#tableMat{
-        max-height: 100vh;
-        visibility: visible;
-        transition: max-height .5s ease-in, visibility .3s .5s ease-in;
-      }
-      .tableMatC, .tableMatP{
-        list-style-type: none;
-      }
-      .tableMatP{
-        padding: 5px 0 15px 20px;
-      }
-      .tableMatC li, .tableMatP li{
-        text-decoration: underline;
-      }
-      .tableMatC li span{
-        font-size: 18px;
-        font-weight: 700;
-      }
-      .tableMatC li span:hover, .tableMatP li:hover{
-        cursor: pointer;
-        opacity: .7;
-      }
-
     </style>
-    <script name="WrotePage">
-      function toChap(cp){
-        document.getElementById(cp).scrollIntoView();
-      };
-    </script>
 
     <!--ReadPage-->
     <div name="ReadPage" class="sectionPage justPage yesCasaFoot" id="readPage">
@@ -1734,11 +1289,8 @@
         </p>
       </div>
     </div>    
-    <style name="ReadPage">
-    </style>
-    <script name="ReadPage">
-
-    </script>
+    <style name="ReadPage"></style>
+    <script name="ReadPage"></script>
 
     <!--Shit to feel-->
     <div name="ShitPage" class="sectionPage justPage yesCasaFoot" id="shitPage">

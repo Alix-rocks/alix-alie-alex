@@ -1,8 +1,45 @@
+// collection "list"
+// document "Épicerie"
+// collection "section"
+// document "Fruits & légumes"
+// collection "Item"
+// document "Avocat"
+
+
+
+
+
+
+
+
 function listItemTicked(element){
   element.parentElement.querySelector("label").classList.toggle("listCircleTicked");
   element.parentElement.querySelector("label > span").classList.toggle("invisible");
   element.parentElement.querySelector(".listItemName").classList.toggle("listItemNameTicked");
+  let wholeList = element.parentElement.parentElement.parentElement;
+  let notiNum = 0
+  wholeList.querySelectorAll(".listCheck").forEach(check => {
+    check.checked ? notiNum : notiNum += 1;
+  });
+  console.log(notiNum);
+  let notiSpan = wholeList.querySelector(".notiSpan");
+  notiNum > 0 ? notiSpan.classList.remove("displayNone") : notiSpan.classList.add("displayNone");
+  notiNum > 9 ? notiSpan.innerText = "!" : notiSpan.innerText = notiNum;
 }
+
+function notiChecked(){
+  document.querySelectorAll(".wholeList").forEach(list => {
+    let notiNum = 0;
+    list.querySelectorAll(".listCheck").forEach(check => {
+      check.checked ? notiNum : notiNum += 1;
+    });
+    let notiSpan = document.querySelector(".notiSpan");
+    notiNum > 0 ? notiSpan.classList.remove("displayNone") : notiSpan.classList.add("displayNone");
+    notiNum > 9 ? notiSpan.innerText = "!" : notiSpan.innerText = notiNum;
+  });  
+}
+
+notiChecked();
 
 const wavyList = (e) => {
   // let listDragableAll = document.querySelector(".listDragableAll");

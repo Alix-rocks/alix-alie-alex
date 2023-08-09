@@ -1,0 +1,226 @@
+.exitLabel{
+  border: dashed 1.5px;
+  width: calc(214.78px + 6.09vw);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+.exitLabel>div>h3{
+  margin: 0.7em 0 0;
+  width: fit-content;
+}
+.exitLabel p{
+  margin: 0.3em 0 1em;
+}
+.exitRadio{
+  margin: 0 8% 0 7%;
+  width: 15px;
+  height: 15px;
+  border: 1.5px solid;
+  border-radius: 50%;
+  display: inline-block;
+}
+.exitRadio>span{
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: block;
+  margin: 1px;
+}
+.exitRadioChecked{
+  background-color: var(--tx-color);
+  color: var(--bg-color);
+}
+.exitRadioChecked>span{
+  background-color: var(--bg-color);
+  border-color: var(--bg-color);
+}
+.exitRadioChecked>span>span{
+  background-color: var(--tx-color);
+}
+.metroDetA{
+  text-decoration: underline;
+}
+.metroToggleWhole{
+  width: 90vw;
+  margin:auto;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: flex-start;
+}
+.cossin{
+  display:none;
+}
+.choosingEither{
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.choosingEither h3{
+  margin: 5px 0 0 0;
+  width: 85px;
+}
+.choosingLine{
+  flex-flow: row nowrap;
+}
+.choosingStation{
+  flex-direction: column;
+}
+.metroToggleLabel{
+  display: block;
+  border:1px solid;
+  margin: 0;
+  width: calc(95.65px + 1.74vw);
+  padding: 5px;
+}
+.metroToggleLabelText{
+  margin-left: 5px;
+  opacity: .6;
+}
+.metroChosen{
+  opacity: 1;
+  font-weight: 700;
+}
+#metroToggleIconDL, #metroToggleIconDLS, #metroToggleIconAL, #metroToggleIconALS{
+  transition: transform .3s ease-out;
+  display: inline-block;
+}
+.metroToggleList{
+  transition: max-height .3s ease-out;
+  max-height: 0;
+  overflow: hidden;
+}
+/* JAVASCRIPT?! */
+#metroTogglerDL:checked~div#metroToggleListDL, 
+#metroTogglerDLS:checked~div#metroToggleListDLS, 
+#metroTogglerAL:checked~div#metroToggleListAL, 
+#metroTogglerALS:checked~div#metroToggleListALS{
+  max-height: 2000px;
+  transition: max-height .5s ease-in;
+  overflow: visible;
+  margin-bottom: 15vh;
+}
+#metroTogglerDL:checked~label>span#metroToggleIconDL, 
+#metroTogglerDLS:checked~label>span#metroToggleIconDLS, 
+#metroTogglerAL:checked~label>span#metroToggleIconAL, 
+#metroTogglerALS:checked~label>span#metroToggleIconALS{
+  transform: rotate(90deg);
+  transition: transform .5s;
+}
+.metroChoices{
+  display: block;
+  border: 1px solid;
+  margin: 0;
+  padding: 5px 5px 5px 25px;
+}
+.mCLines{
+  width: calc(95.65px + 1.74vw);
+}
+.mCStations{
+  width: calc(214.78px + 6.09vw);
+  font-size: calc(13.13px + 0.35vw);
+}
+.stationWide{
+  width: calc(214.78px + 6.09vw);
+}
+.metroButton{
+  margin-top: 50px;
+  font-size: calc(15.53px + 0.19vw);
+  padding: 2px 5px;
+}
+.sign{
+  text-align: center;
+  font-weight: 400;
+}
+.sign span{
+  font-weight: 900;
+}
+.stationSign{
+  line-height: 1.1em;
+}
+.stationSign span{
+  font-size: 1.3em;
+}
+.directionSign{
+  border: 2px solid;
+  width: fit-content;
+  margin: 1.6em auto calc(0.9em + 20px);
+  padding: 0 5px;
+  color: black;
+}
+.Orange{
+  background-color: rgba(242, 133, 45, .7);
+}
+.Bleue{
+  background-color: rgba(4, 113, 184, .7);
+}
+.Verte{
+  background-color: rgba(43, 163, 88, .7);
+}
+.Jaune{
+  background-color: rgba(255, 220, 60, .7);
+}
+.train{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+}
+.wagonNum{
+  position: absolute;
+  top: -20px;
+}
+.wagonTD{
+  border: 2px solid;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+  position: relative;
+}
+.head.headLeft{
+  border-top-left-radius: calc(7.83px + 0.87vw);
+}
+.head.headRight{
+  border-top-right-radius: calc(7.83px + 0.87vw);
+}
+.door{
+  border: 1px solid;
+  border-bottom: none;
+  width: 10px;
+  height: 20px;
+  margin: 5px 5% 0;
+}
+.door.opti{
+  background-color: rgba(218,165,32,.7);
+}
+.quai{
+  margin: 1px -8px;
+  height: 5px;
+  border: 5px solid rgba(218,165,32,.5);
+}
+.starsTransfer{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  align-items: center;
+  margin: 15vh 0;
+}
+.allStars{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  width: 100%;
+}
+.allStars div{
+  font-family: 'Rubik Dirt', cursive;
+  font-size: calc(25.53px + 0.19vw);
+  line-height: 1.2em;
+  font-weight: 400;
+}
+.sTransfer{
+  padding: 0 5%;
+  text-align: center;
+  margin: 0;
+}

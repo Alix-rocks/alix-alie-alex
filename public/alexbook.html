@@ -19,6 +19,55 @@
   </head>
   <body>
     <script name="General" src="general.js"></script>
+    <style name="fullBook">
+      .fullBook div{
+        margin-bottom: 10vh;
+      }
+      .fullBook h1, .fullBook h2{
+        padding-top: 5vh;
+        margin-top: 0;
+      }
+      .toggleTM{
+        margin-right: 5px;
+        float: left;
+        transition: transform .1s ease-out;
+      }
+      input#tableMatiere:checked ~ label#tableMatT > span.toggleTM{
+        transform: rotate(90deg);
+      }
+      #tableMat{
+        transition: max-height .3s .3s ease-out, visibility .3s ease-out;
+        max-height: 0;
+        visibility: hidden;
+      }
+      input#tableMatiere:checked ~ div#tableMat{
+        max-height: 100vh;
+        visibility: visible;
+        transition: max-height .5s ease-in, visibility .3s .5s ease-in;
+      }
+      .tableMatC, .tableMatP{
+        list-style-type: none;
+      }
+      .tableMatP{
+        padding: 5px 0 15px 20px;
+      }
+      .tableMatC li, .tableMatP li{
+        text-decoration: underline;
+      }
+      .tableMatC li span{
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .tableMatC li span:hover, .tableMatP li:hover{
+        cursor: pointer;
+        opacity: .7;
+      }
+    </style>
+    <script name="fullBook">
+      function toChap(cp){
+        document.getElementById(cp).scrollIntoView();
+      };
+    </script>
     <div class="fullBook">
       <h1 style="line-height: 1;">Sang, sexe & café (PNDCO*)</h1>
       <h3 style="margin: -30px 0 30px;">*Pas Nécessairement Dans Cet Ordre</h3>

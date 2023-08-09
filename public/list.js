@@ -33,7 +33,7 @@ function notiChecked(){
     list.querySelectorAll(".listCheck").forEach(check => {
       check.checked ? notiNum : notiNum += 1;
     });
-    let notiSpan = document.querySelector(".notiSpan");
+    let notiSpan = list.querySelector(".notiSpan");
     notiNum > 0 ? notiSpan.classList.remove("displayNone") : notiSpan.classList.add("displayNone");
     notiNum > 9 ? notiSpan.innerText = "!" : notiSpan.innerText = notiNum;
   });  

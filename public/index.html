@@ -466,29 +466,25 @@
     <script name="TimePage" src="time.js"></script>
     <!-- ListPage -->
     <div name="ListPage" id="listPage"  class="sectionPage justPage">
-      <div class="wholeList" id="wholeList">
-
+      <div class="wholeList">
         <input id="listToggler1" class="listToggler cossin" type="checkbox"/>
         <div class="listToggleDiv">
-          <label for="listToggler1" class="listToggleLabel" style="display: inline-block;"><span class="typcn icon typcn-media-play" id="listToggleIcon"></span></label>
+          <label for="listToggler1" class="listToggleLabel"><span class="typcn icon typcn-media-play"></span></label>
           <h2 class="listToggleTitle">Épicerie<span class="notiSpan displayNone"></span></h2>
         </div>
-              
-
-        
         <ul class="listDragableAll">
           <li class="listSection listDragable" draggable="true">
             <div class="erasingZone"></div>
-            <input type="text" class="listSectionName listDragableName" id="listSectionName" value="Fruits et légumes"/>
+            <input type="text" class="listSectionName listDragableName" value="Fruits et légumes"/>
             <hr class="sectionHR"/>
           </li>
           <li class="listItem listDragable" draggable="true">
             <div class="erasingZone"></div>
-            <input id="listTickInput1" type="checkbox" class="listCheck cossin" onchange="listItemTicked(this)"/>
-            <label for="listTickInput1" id="listTickLabel1" class="listCircle">
-              <span class="typcn icon typcn-tick listTickBlack invisible" id="listTickTick1"></span>
+            <input id="listTickInput11" type="checkbox" class="listCheck cossin" onchange="listItemTicked(this)"/>
+            <label for="listTickInput11" class="listCircle">
+              <span class="typcn icon typcn-tick listTickBlack invisible"></span>
             </label>
-            <input type="text" class="listItemName listDragableName" id="listItemName1" value="Avocat"/>
+            <input type="text" class="listItemName listDragableName" value="Avocat"/>
             <div>
               <span class="typcn icon typcn-image-outline noPicture"></span>
               <span class="typcn icon typcn-image yesPicture displayNone"></span>
@@ -496,11 +492,49 @@
           </li>
           <li class="listItem listDragable" draggable="true">
             <div class="erasingZone"></div>
-            <input id="listTickInput2" type="checkbox" class="listCheck cossin" onchange="listItemTicked(this)"/>
-            <label for="listTickInput2" id="listTickLabel2" class="listCircle">
-              <span class="typcn icon typcn-tick listTickBlack invisible" id="listTickTick2"></span>
+            <input id="listTickInput12" type="checkbox" class="listCheck cossin" onchange="listItemTicked(this)"/>
+            <label for="listTickInput12" class="listCircle">
+              <span class="typcn icon typcn-tick listTickBlack invisible"></span>
             </label>
-            <input type="text" class="listItemName listDragableName" id="listItemName2" value="Beurre"/>
+            <input type="text" class="listItemName listDragableName" value="Beurre"/>
+            <div>
+              <span class="typcn icon typcn-image-outline noPicture"></span>
+              <span class="typcn icon typcn-image yesPicture displayNone"></span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="wholeList">
+        <input id="listToggler2" class="listToggler cossin" type="checkbox"/>
+        <div class="listToggleDiv">
+          <label for="listToggler2" class="listToggleLabel"><span class="typcn icon typcn-media-play"></span></label>
+          <h2 class="listToggleTitle">Pharmacie<span class="notiSpan displayNone"></span></h2>
+        </div>
+        <ul class="listDragableAll">
+          <li class="listSection listDragable" draggable="true">
+            <div class="erasingZone"></div>
+            <input type="text" class="listSectionName listDragableName" value="Rayons"/>
+            <hr class="sectionHR"/>
+          </li>
+          <li class="listItem listDragable" draggable="true">
+            <div class="erasingZone"></div>
+            <input id="listTickInput21" type="checkbox" class="listCheck cossin" onchange="listItemTicked(this)"/>
+            <label for="listTickInput21" class="listCircle">
+              <span class="typcn icon typcn-tick listTickBlack invisible"></span>
+            </label>
+            <input type="text" class="listItemName listDragableName" value="Antisudorifique"/>
+            <div>
+              <span class="typcn icon typcn-image-outline noPicture"></span>
+              <span class="typcn icon typcn-image yesPicture displayNone"></span>
+            </div>
+          </li>
+          <li class="listItem listDragable" draggable="true">
+            <div class="erasingZone"></div>
+            <input id="listTickInput22" type="checkbox" class="listCheck cossin" onchange="listItemTicked(this)"/>
+            <label for="listTickInput22" class="listCircle">
+              <span class="typcn icon typcn-tick listTickBlack invisible"></span>
+            </label>
+            <input type="text" class="listItemName listDragableName" value="Shampooing"/>
             <div>
               <span class="typcn icon typcn-image-outline noPicture"></span>
               <span class="typcn icon typcn-image yesPicture displayNone"></span>

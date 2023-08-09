@@ -265,6 +265,9 @@
   justify-content: space-between;
 }
 
+.underTrashLine{
+  user-select: none;
+}
 .trashed div:first-child, .trashed div.trashLine div, .trashedPlan span.underTrashLine {
   opacity: .7;
 }

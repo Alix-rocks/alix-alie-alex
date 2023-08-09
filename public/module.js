@@ -161,6 +161,9 @@ async function getPlans() {
   if(localStorage.getItem("steps")) {
     steps = JSON.parse(localStorage.getItem("steps"));
     displaySteps();
+    if(myScheduleList.length >= 1){
+      displayPlans();
+    }
   } else if(myScheduleList.length >= 1){
     displayPlans();
     getDefaultSchedule();

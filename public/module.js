@@ -3,6 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebas
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
 import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+import transCode from "./transCode.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -66,6 +67,13 @@ getRedirectResult(auth)
       document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
       document.getElementById("scheduleTime").innerHTML = ``;
       getPlans();
+    } else{
+      document.getElementById("displayName").innerText = "";
+      document.getElementById("scheduleTimeWhole").classList.add("popupBackDG");
+      document.getElementById("scheduleTime").innerHTML = `<h4><span class="h3like">First thing's first...</span><br/><span class="h1like" style="font-size: calc(19.53px + 0.19vw); font-weight: 900;">Who do you think you are?!</span></h4>
+      <div class="stepBox">
+        <button class="timeFormButton" onclick="window.logIn()">Log in</button>
+      </div>`;
     }
   })
 
@@ -172,6 +180,7 @@ async function getPlans() {
           ordre:"",
           destination:"",
           steps:[
+            // { name: t("Cooking"), value: 30, checked: true, id: crypto.randomUUID() },
             { name: "Cooking", value: 30, checked: true, id: crypto.randomUUID() },
             { name: "Eating", value: 60, checked: true, id: crypto.randomUUID() },
             { name: "Toilet", value: 15, checked: true, id: crypto.randomUUID() },
@@ -238,10 +247,8 @@ async function getLinesStations(chosenLine){
 }
 window.getLinesStations = getLinesStations;
 
-// ***ON A OUBLIÉ DE CONSIDÉRER LES DIFFÉRENTES SORTIES!!
 async function checkExit(){
-  console.log(statArr);
-  const getStatArr = await getDoc(doc(db, "metro", lineArr, "station", statArr));
+  const getStatArr = await getDoc(doc(db, "metro", lineArr, "station", statArrName));
   statArr = getStatArr.data();
   console.log(statArr);
   if(statArr.exit.length == 1 && statArr.exit.name != undefined){
@@ -256,6 +263,9 @@ async function checkExit(){
           <h3>${statArr.exit.name}</h3>
           <p>${statArr.exit.options}</p>
         </div>
+        ${exit.asc ? `<span class="material-symbols-outlined exitAsc">
+        elevator
+        </span>` : ``}  
       </label>
     </div>
     <button id="goBtn" class="timeFormButton metroButton" onclick="calcTrajet()">Let's GO!</button>`;
@@ -270,6 +280,9 @@ async function checkExit(){
           <h3>${exit.name}</h3>
           <p>${exit.options}</p>
         </div>
+        ${exit.asc ? `<span class="material-symbols-outlined exitAsc">
+        elevator
+        </span>` : ``}        
       </label>`;
     });
     document.getElementById("afterALS").innerHTML = `<p style="margin: 1em 0 .6em;">Choisi la sortie que tu veux:</p>
@@ -283,16 +296,15 @@ window.checkExit = checkExit;
 
 //listDep, lineDep, statDep, listArr, lineArr, statArr, exitN
 async function getStatTrajet(){
-  console.log(lineDep, statDep, lineArr, statArr);
-  const getStatDep = await getDoc(doc(db, "metro", lineDep, "station", statDep));
+  // console.log(lineDep, statDepName, lineArr, statArrName);
+  const getStatDep = await getDoc(doc(db, "metro", lineDep, "station", statDepName));
   statDep = getStatDep.data();
-  //Technically we already have statArr...
-  // const getStatArr = await getDoc(doc(db, "metro", lineArr, "station", statArr));
+  // const getStatArr = await getDoc(doc(db, "metro", lineArr, "station", statArrName));
   // statArr = getStatArr.data();
   console.log(statDep, statArr);
   if(lineDep == lineArr){
     let direction = statArr.ordre - statDep.ordre > 0 ? statDep.dirA : statDep.dirB;
-    depart(statDep.name, direction.name, statDep.line);
+    depart(statDep.name, direction.name, statDep.line, statArr.name);
     exits = statArr.exit[exitN].doors;
     let w = statDep.wagon;
     let d = statDep.door;

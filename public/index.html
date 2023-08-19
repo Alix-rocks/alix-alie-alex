@@ -6,7 +6,9 @@
     <!--Google Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Coming+Soon&family=Fuzzy+Bubbles:wght@400;700&family=Indie+Flower&family=Kalam:wght@300;400;700&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Rubik+Dirt&family=Special+Elite&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Coming+Soon&family=Fuzzy+Bubbles:wght@400;700&family=Indie+Flower&family=Kalam:wght@300;400;700&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Rubik+Dirt&family=Special+Elite&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" /> 
+    https://fonts.google.com/icons?selected=Material+Symbols+Outlined:elevator:FILL@0;wght@400;GRAD@0;opsz@48&icon.query=elevat-->
     <!--Typicons-->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/typicons/2.0.9/typicons.css" rel="stylesheet">
     <!--Flavicon-->
@@ -22,6 +24,8 @@
     <title>Alix rocks</title>
   </head>
   <body>
+    <!-- <script name="Trans" src="trans.js"></script>
+    <script type="module" name="TransCode" src="transCode.js"></script> -->
     <script name="General" src="general.js"></script>
     <!-- Pour mettre en commentaire: Sélectionne et fait Ctrl+É -->
     <!-- Pour entourer de tag:
@@ -40,7 +44,7 @@
     <!-- Section My girlfriend's art -->
     <div id="mainContainer" class="mainContainer">
       <!-- this div needs to be "height:100%;" for webapp (no footer) like time and list pages, but "height:fit-content;" for pages with footer -->
-      <div style="height: fit-content; width: 100%;">
+      <div id="undermainContainer" style="height: fit-content; width: 100%;">
     <div id="switchSliderWhole">
       <div onclick="switchMode()" id="switchModeSlider">
         <div id="switchModeLight" class="typcn typcn-weather-sunny"></div>
@@ -100,14 +104,21 @@
           <p id="SotDp">Click here to get what you deserve</p>
         </div>
       </div>
+      <h2>My best apps</h2>
+      <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage(this)" id="time"><label for="time" class="menuSectLabel" style="background-color: rgba(218, 165, 32, .1); position: relative;"><span class="typcn icon typcn-star btnStar"></span>Plan your time</label></input>
+      <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage(this)" id="list"><label for="list" class="menuSectLabel" style="margin-bottom: 0;">All the lists</label></input>
+      <h6 class="warningH6"><span class="typcn typcn-warning-outline warning-icon"></span>&nbsp;That one's still under construction<br/>(so don't look at the mess!)</h6>
+      <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage(this)" id="metro"><label for="metro" class="menuSectLabel" style="margin-bottom: 0;">How to rock the metro</label></input>
+      <h6 class="warningH6"><span class="typcn typcn-warning-outline warning-icon"></span>&nbsp;That one's still under construction<br/>(so don't look at the mess!)</h6>
+      <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage(this)" id="calc"><label for="calc" class="menuSectLabel" style="margin-bottom: 0;">For a responsive css</label></input>
+      <h6 class="warningH6"><span class="typcn typcn-warning-outline warning-icon"></span>&nbsp;That one's still under construction<br/>(so don't look at the mess!)</h6>
       <h2>Your other choices</h2>
-      <input type="radio" name="menuSect" class="menuSect footered" onclick="toSectPage(this)" id="wrote"><label for="wrote" class="menuSectLabel">I wrote, you read</label></input>
+      <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage(this)" id="wrote"><label for="wrote" class="menuSectLabel">I wrote, you read</label></input>
       <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage(this)" id="read"><label for="read" class="menuSectLabel">They wrote, I read</label></input>
       <!--Quotes, Memes and Shit<br>to make us feel better, or worst-->
-      <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage(this)" id="shit"><label for="shit" class="menuSectLabel">Quotes, Memes and Shit<br>that'll probably just make you feel worst</label></input>
-
-
-      <input type="radio" name="menuSect" class="menuSect" onclick="showPWfield()" id="Toy"><label for="Toy" class="menuSectLabel" id="ToyLabel">My Toy's training<br><span>(password protected)</span></label></input>
+      <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage(this)" id="shit"><label for="shit" class="menuSectLabel" style="margin-bottom: 0;">Quotes, Memes and Shit<br>that'll probably just make you feel worst</label></input>
+      <h6 class="warningH6"><span class="typcn typcn-warning-outline warning-icon"></span>&nbsp;That one's still under construction<br/>(so don't look at the mess!)</h6>
+      <input type="radio" name="menuSect" class="menuSect" onclick="showPWfield()" id="Toy"><label for="Toy" class="menuSectLabel" id="ToyLabel">My Toy's training<br><span class="smallMenuSectLabel">(password protected)</span></label></input>
       <div class="PWfield" id="PWfield">
         <label class="PWlabel">What's the magid word?</label><div class="inputEye"><input type="password" class="PWinput" id="PWinput" placeholder="The magic word is..."><div class="diveye" onclick="showPW()"><span class="typcn typcn-eye-outline eye"></span><span class="typcn typcn-minus slash" id="slash"></span></div></input></div>
         <button class="PWbtn" onclick="PWtoPage()"><p>Let's hope you're right!</p></button>
@@ -119,6 +130,19 @@
       </div>
     </div>
     <style name="CasaPage">
+      .btnStar{
+        color: rgba(218, 165, 32, .6);
+        position: absolute;
+        top: 3px;
+        left: -23px;
+        font-size: 18px;
+      }
+      .warningH6{
+        margin:0;
+      }
+      .warning-icon{
+        font-size: calc(1em + 2px);
+      }
       .PWfield{
         visibility: hidden;
       }
@@ -231,7 +255,7 @@
       .menuSectLabel.toychecked{
         background-color: rgba(128,0,128,.5);
       }
-      .menuSectLabel span{
+      .smallMenuSectLabel{
         font-size: calc(1em - 2px);
         font-weight: 400;
       }
@@ -449,100 +473,108 @@
       <div class="togglePlansWhole displayNone" id="togglePlansWhole">
         <input id="togglePlans" type="checkbox" class="cossin"/>
         <label for="togglePlans" class="togglePlansLabel"><span id="togglePlansIcon" class="typcn icon typcn-media-play"></span>My schedules</label>
-        <div id="mySchedules" class="togglePlans"></div>
+        <div  data-trans="MySchedules" id="mySchedules" class="togglePlans"></div>
       </div>
       <div id="timeForm" class="timeForm"></div>
-      <div id="scheduleTimeWhole" class="scheduleTimeWhole popupBackDG">
-        <div id="scheduleTime" class="resultTime">
-          <h4><span class="h3like">First thing's first...</span><br/><span class="h1like" style="font-size: calc(19.53px + 0.19vw); font-weight: 900;">Who do you think you are?!</span></h4>
-          <div class="stepBox">
-            <button class="timeFormButton" onclick="window.logIn()">Log in</button>
-          </div>
-        </div>
+      <div id="scheduleTimeWhole" class="scheduleTimeWhole">
+        <div id="scheduleTime" class="resultTime"></div>
       </div>
     </div>
     <script name="TimePage" src="time.js"></script>
     <!-- ListPage -->
     <div name="ListPage" id="listPage"  class="sectionPage justPage">
-      <div class="wholeList">
-        <input id="listToggler1" class="listToggler cossin" type="checkbox"/>
-        <div class="listToggleDiv">
-          <label for="listToggler1" class="listToggleLabel"><span class="typcn icon typcn-media-play"></span></label>
-          <h2 class="listToggleTitle">Épicerie<span class="notiSpan displayNone"></span></h2>
-        </div>
-        <ul class="listDragableAll">
-          <li class="listSection listDragable" draggable="true">
-            <div class="erasingZone"></div>
-            <input type="text" class="listSectionName listDragableName" value="Fruits et légumes"/>
-            <hr class="sectionHR"/>
-          </li>
-          <li class="listItem listDragable" draggable="true">
-            <div class="erasingZone"></div>
-            <input id="listTickInput11" type="checkbox" class="listCheck cossin" onchange="listItemTicked(this)"/>
-            <label for="listTickInput11" class="listCircle">
-              <span class="typcn icon typcn-tick listTickBlack invisible"></span>
-            </label>
-            <input type="text" class="listItemName listDragableName" value="Avocat"/>
-            <div>
-              <span class="typcn icon typcn-image-outline noPicture"></span>
-              <span class="typcn icon typcn-image yesPicture displayNone"></span>
-            </div>
-          </li>
-          <li class="listItem listDragable" draggable="true">
-            <div class="erasingZone"></div>
-            <input id="listTickInput12" type="checkbox" class="listCheck cossin" onchange="listItemTicked(this)"/>
-            <label for="listTickInput12" class="listCircle">
-              <span class="typcn icon typcn-tick listTickBlack invisible"></span>
-            </label>
-            <input type="text" class="listItemName listDragableName" value="Beurre"/>
-            <div>
-              <span class="typcn icon typcn-image-outline noPicture"></span>
-              <span class="typcn icon typcn-image yesPicture displayNone"></span>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div class="wholeList">
-        <input id="listToggler2" class="listToggler cossin" type="checkbox"/>
-        <div class="listToggleDiv">
-          <label for="listToggler2" class="listToggleLabel"><span class="typcn icon typcn-media-play"></span></label>
-          <h2 class="listToggleTitle">Pharmacie<span class="notiSpan displayNone"></span></h2>
-        </div>
-        <ul class="listDragableAll">
-          <li class="listSection listDragable" draggable="true">
-            <div class="erasingZone"></div>
-            <input type="text" class="listSectionName listDragableName" value="Rayons"/>
-            <hr class="sectionHR"/>
-          </li>
-          <li class="listItem listDragable" draggable="true">
-            <div class="erasingZone"></div>
-            <input id="listTickInput21" type="checkbox" class="listCheck cossin" onchange="listItemTicked(this)"/>
-            <label for="listTickInput21" class="listCircle">
-              <span class="typcn icon typcn-tick listTickBlack invisible"></span>
-            </label>
-            <input type="text" class="listItemName listDragableName" value="Antisudorifique"/>
-            <div>
-              <span class="typcn icon typcn-image-outline noPicture"></span>
-              <span class="typcn icon typcn-image yesPicture displayNone"></span>
-            </div>
-          </li>
-          <li class="listItem listDragable" draggable="true">
-            <div class="erasingZone"></div>
-            <input id="listTickInput22" type="checkbox" class="listCheck cossin" onchange="listItemTicked(this)"/>
-            <label for="listTickInput22" class="listCircle">
-              <span class="typcn icon typcn-tick listTickBlack invisible"></span>
-            </label>
-            <input type="text" class="listItemName listDragableName" value="Shampooing"/>
-            <div>
-              <span class="typcn icon typcn-image-outline noPicture"></span>
-              <span class="typcn icon typcn-image yesPicture displayNone"></span>
-            </div>
-          </li>
-        </ul>
-      </div>
+      <!-- Figure out a way to limit the dragging at one list at a time, because now you can drag&drop Épicerie inside Pharmacie!! -->
+      <ul class="allWholeList" id="allWholeList">
+        <li class="wholeList" draggable="true">
+          <input id="listToggler1" class="listToggler cossin" type="checkbox"/>
+          <div class="listToggleDiv">
+              <label for="listToggler1" class="listToggleLabel"><span class="typcn icon typcn-media-play" style="display: inline-block;"></span></label>
+            <h2 class="listToggleTitle">Épicerie<span class="notiSpan displayNone"></span></h2>
+          </div>
+          <!-- <div class="listToggleTitle">
+            <label for="listToggler1" class="listToggleLabel"><span class="typcn icon typcn-media-play"></span></label>
+            <input type="text" class="h2like listToggleName" value="Épicerie"/>
+            <span class="notiSpan displayNone"></span>
+          </div> -->
+          <ul class="oneList listDragableAll">
+            <li class="listSection listDragable" draggable="true">
+              <div class="erasingZone"></div>
+              <input type="text" class="listSectionName listDragableName" value="Fruits et légumes"/>
+              <hr class="sectionHR"/>
+            </li>
+            <li class="listItem listDragable" draggable="true">
+              <div class="erasingZone"></div>
+              <input id="listTickInput11" type="checkbox" class="listCheck cossin" onchange="listItemTicked(this)"/>
+              <label for="listTickInput11" class="listCircle">
+                <span class="typcn icon typcn-tick listTickBlack invisible"></span>
+              </label>
+              <input type="text" class="listItemName listDragableName" value="Avocat"/>
+              <div>
+                <span class="typcn icon typcn-image-outline noPicture"></span>
+                <span class="typcn icon typcn-image yesPicture displayNone"></span>
+              </div>
+            </li>
+            <li class="listItem listDragable" draggable="true">
+              <div class="erasingZone"></div>
+              <input id="listTickInput12" type="checkbox" class="listCheck cossin" onchange="listItemTicked(this)"/>
+              <label for="listTickInput12" class="listCircle">
+                <span class="typcn icon typcn-tick listTickBlack invisible"></span>
+              </label>
+              <input type="text" class="listItemName listDragableName" value="Beurre"/>
+              <div>
+                <span class="typcn icon typcn-image-outline noPicture"></span>
+                <span class="typcn icon typcn-image yesPicture displayNone"></span>
+              </div>
+            </li>
+          </ul>
+        </li>
+        <li class="wholeList" draggable="true">
+          <input id="listToggler2" class="listToggler cossin" type="checkbox"/>
+          <div class="listToggleDiv">
+            <label for="listToggler2" class="listToggleLabel"><span class="typcn icon typcn-media-play" style="display: inline-block;"></span></label>
+            <h2 class="listToggleTitle">Pharmacie<span class="notiSpan displayNone"></span></h2>
+          </div>
+          <ul class="oneList listDragableAll">
+            <li class="listSection listDragable" draggable="true">
+              <div class="erasingZone"></div>
+              <input type="text" class="listSectionName listDragableName" value="Rayons"/>
+              <hr class="sectionHR"/>
+            </li>
+            <li class="listItem listDragable" draggable="true">
+              <div class="erasingZone"></div>
+              <input id="listTickInput21" type="checkbox" class="listCheck cossin" onchange="listItemTicked(this)"/>
+              <label for="listTickInput21" class="listCircle">
+                <span class="typcn icon typcn-tick listTickBlack invisible"></span>
+              </label>
+              <input type="text" class="listItemName listDragableName" value="Antisudorifique"/>
+              <div>
+                <span class="typcn icon typcn-image-outline noPicture"></span>
+                <span class="typcn icon typcn-image yesPicture displayNone"></span>
+              </div>
+            </li>
+            <li class="listItem listDragable" draggable="true">
+              <div class="erasingZone"></div>
+              <input id="listTickInput22" type="checkbox" class="listCheck cossin" onchange="listItemTicked(this)"/>
+              <label for="listTickInput22" class="listCircle">
+                <span class="typcn icon typcn-tick listTickBlack invisible"></span>
+              </label>
+              <input type="text" class="listItemName listDragableName" value="Shampooing"/>
+              <div>
+                <span class="typcn icon typcn-image-outline noPicture"></span>
+                <span class="typcn icon typcn-image yesPicture displayNone"></span>
+              </div>
+            </li>
+          </ul>
+        </li>
+      </ul>
     </div>
     <script name="ListPage" src="list.js"></script>
-    <div name="MetroPage" id="metroPage" class="sectionPage justPage"></div>
+    <div name="MetroPage" id="metroPage" class="sectionPage justPage">
+      <div id="metroForm"></div>
+      <div id="metroWhole" class="displayNone">
+        <div id="metroResult"></div>
+      </div>
+    </div>
     <script name="MetroPage" src="metro.js"></script>
     <div name="CalcPage" id="calcPage" class="sectionPage justPage">
       <div class="tourStart" onclick="tourStart('tourFirst')">Tour?</div>
@@ -552,6 +584,7 @@
         <span onclick="tourOff()">x</span>
         <p>Hi, have you ever had a "thing" that needed to be "this big" on a cellphone but only "this big" on a computer, but you realized that no percentage could get it right...?</p>
         <button onclick="tourNext('tourNope')">Nope</button><button onclick="tourNext('tourYeah')">Oh, yeah, that's the worst!</button>
+        <span class="pointsSteps"></span>
       </div>
       <div id="tourNope" class="tourBase tourCenter displayNone">
         <span onclick="tourOff()">x</span>
@@ -2505,6 +2538,8 @@
         history.replaceState(currentState, null, " ");
         currentState = currentState.slice(1);
         document.getElementById('footer').classList.remove("yesCasaFoot");
+        document.getElementById("undermainContainer").style.height = "100%";
+        // this div needs to be "height:100%;" for webapp (no footer) like time and list pages, but "height:fit-content;" for pages with footer
         document.getElementById('casa').classList.remove("yesCasaFoot");
         document.getElementById("backTopButton").classList.remove("yesCasaFoot");
       } else{
@@ -2531,6 +2566,8 @@
         document.getElementById("menuTextSection").style.display = "none";
         document.getElementById("page" + idFGood).style.display = "block";
         document.getElementById('footer').classList.remove("yesCasaFoot");
+        document.getElementById("undermainContainer").style.height = "100%";
+        // this div needs to be "height:100%;" for webapp (no footer) like time and list pages, but "height:fit-content;" for pages with footer
         document.getElementById('casa').classList.remove("yesCasaFoot");
         window.scrollTo({ top: 0});
       // } else if(currentState == "alexbook"){
@@ -2564,6 +2601,8 @@
         document.getElementById("page" + idGood).classList.toggle('textPageSelected');
         document.getElementById("input" + idGood).checked = true;
         document.getElementById('footer').classList.add("yesCasaFoot");
+        document.getElementById("undermainContainer").style.height = "fit-content";
+        // this div needs to be "height:100%;" for webapp (no footer) like time and list pages, but "height:fit-content;" for pages with footer
         document.getElementById('casa').classList.add("yesCasaFoot");
         window.scrollTo({ top: 0});
       };
@@ -2584,12 +2623,18 @@
         // Do we have a Casa and or a Foot or not?
         if(document.getElementById(currentPage).classList.contains('yesFootnoCasa') == true){
           document.getElementById('footer').classList.add("yesCasaFoot");
+          document.getElementById("undermainContainer").style.height = "fit-content";
+        // this div needs to be "height:100%;" for webapp (no footer) like time and list pages, but "height:fit-content;" for pages with footer
           document.getElementById('casa').classList.remove("yesCasaFoot");
         } else if(document.getElementById(currentPage).classList.contains('yesCasaFoot') == true){
           document.getElementById('footer').classList.add("yesCasaFoot");
+          document.getElementById("undermainContainer").style.height = "fit-content";
+        // this div needs to be "height:100%;" for webapp (no footer) like time and list pages, but "height:fit-content;" for pages with footer
         document.getElementById('casa').classList.add("yesCasaFoot");
         } else if(document.getElementById(currentPage).classList.contains('yesCasaFoot') == false){
           document.getElementById('footer').classList.remove("yesCasaFoot");
+          document.getElementById("undermainContainer").style.height = "100%";
+        // this div needs to be "height:100%;" for webapp (no footer) like time and list pages, but "height:fit-content;" for pages with footer
           document.getElementById('casa').classList.remove("yesCasaFoot");
         }
         if(currentPage == "wrotePage"){

@@ -1,11 +1,22 @@
-.wholeList{
+.allWholeList{
+  list-style: none;
   width: 240px;
   margin: 0 auto 85px;
+  padding: 0;
+}
+.wholeList{
+  /* width: 240px;
+  margin: 0 auto 85px; */
 }
 .listToggleTitle{
   position: relative;
   display: inline-block;
   margin: 0;
+}
+.listToggleName{
+  background: var(--bg-color);
+  border: none;
+  color: var(--tx-color);
 }
 span.notiSpan{
   position: absolute;
@@ -25,7 +36,7 @@ span.notiSpan{
 .listToggleLabel{
   display: inline-block;
 }
-.listDragableAll{
+.oneList{
   margin: 0;
   padding: 0;
   list-style: none;
@@ -33,12 +44,12 @@ span.notiSpan{
   overflow: hidden;
   transition: max-height .3s ease-out;
 }
-.listToggler:checked~.listDragableAll{
+.listToggler:checked~.oneList{
   max-height: 200px;
   transition: max-height .5s ease-in;
   overflow: visible;
 }
-.listToggler:checked~div>label>span{
+.listToggler:checked~div.listToggleDiv>label>span{
   transform: rotate(90deg);
   transition: transform .5s;
 }

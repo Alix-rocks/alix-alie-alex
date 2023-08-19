@@ -1,5 +1,8 @@
 
 //***
+// - Comment sauver dans le localstorage que pour telle station, on choisi telle sortie...
+// - Arranger la ligne qui dit à quelle station descendre
+// - Afficher (sous le quai?) différentes options ou légende des portes (ascenceur, plus rapide, moins rapide, autre sortie (ça ça pourrait juste faire un "back" et ramener à l'étape où tu choisi la sortie... si c'est pas trop de jus que de recréer le train au complet), etc)
 // - En cas de transfer, exits va être l'accès le plus direct à l'autre ligne en fonction de la direction à prendre
 //    - 1. Vérifier si les deux stations sont sur la même ligne (lineDep == lineArr)
 //    - 2. Sinon, établir quel station de transfer est la plus appropriée... ?!
@@ -12,7 +15,7 @@
 
 let lines = ["Orange", "Bleue", "Verte", "Jaune"];
 
-let allStations, listDep, listArr, lineDep, statDep, lineArr, statArr, dirX, exitN, exits;
+let allStations, listDep, listArr, lineDep, statDepName, statDep, lineArr, statArrName, statArr, dirX, exitN, exits;
 
 function choosingLine(whichL){
   let linesList = ``;
@@ -36,7 +39,7 @@ function choosingLine(whichL){
       </div>
       <div class="choosingEither choosingStation" id="choosingStation${whichL}"></div>`;
 
-  whichL == "DL" ? document.getElementById("metroPage").innerHTML = addChoices : whichL == "AL" ? document.getElementById("afterDLS").innerHTML = addChoices : document.getElementById("metroPage").innerHTML = "We're lost...";
+  whichL == "DL" ? document.getElementById("metroForm").innerHTML = addChoices : whichL == "AL" ? document.getElementById("afterDLS").innerHTML = addChoices : document.getElementById("metroForm").innerHTML = "We're lost...";
 };
 
 function lineChosen(event, whichL){
@@ -55,7 +58,16 @@ function choosingStation(line, whichL, whichS){
     // console.log(allStations.stationsList);
     whichS == "DLS" ? listDep = allStations.stationsList : whichS == "ALS" ? listArr = allStations.stationsList : console.log("We're lost...");
     allStations.stationsList.forEach((station) => {
-      stationsList += `<input type="radio" class="cossin" name="lines" id="${station + whichS}" value="${station}" onchange="stationChosen(event,'${whichS}')"><label for="${station + whichS}" class="metroChoices mCStations">${station}</label>`;
+      let stationName, classe;
+      if(station.startsWith("*", 0)){
+        console.log("asc!!");
+        stationName = station.slice(1, station.length);
+        classe = "stationAsc";
+      } else{
+        stationName = station;
+        classe = "displayNone";
+      }
+      stationsList += `<input type="radio" class="cossin" name="lines" id="${stationName + whichS}" value="${stationName}" onchange="stationChosen(event,'${whichS}')"><label for="${stationName + whichS}" class="metroChoices mCStations">${stationName}<span class="material-symbols-outlined ${classe}">elevator</span></label>`;
     });
   document.getElementById("choosingStation" + whichL).innerHTML = `
     <h3>Station:</h3>
@@ -75,7 +87,7 @@ function choosingStation(line, whichL, whichS){
 
 function stationChosen(event, whichS){
   console.log(listDep, listArr);
-  whichS == "DLS" ? statDep = event.currentTarget.value : whichS == "ALS" ? statArr = event.currentTarget.value : console.log("We're lost...");
+  whichS == "DLS" ? statDepName = event.currentTarget.value : whichS == "ALS" ? statArrName = event.currentTarget.value : console.log("We're lost...");
   document.getElementById("metroToggleLabelText" + whichS).innerText = event.currentTarget.value;
   document.getElementById("metroToggleLabelText" + whichS).classList.add("metroChosen");
   document.getElementById("metroToggler" + whichS).checked = false;
@@ -113,14 +125,28 @@ function calcTrajet(){
 }
 
 let tX = 0;
-function depart(station, direction, color){
+function depart(station, direction, color, descente){
   console.log(station, direction, color);
-  document.getElementById("metroPage").innerHTML = `
+  document.getElementById("metroForm").classList.add("displayNone");
+  document.getElementById("metroWhole").classList.remove("displayNone");
+  document.getElementById("metroResult").innerHTML = `
+    <button class="metroBack" onclick="metroBack()" title="Back"><span class="typcn typcn-chevron-right chevronBack"></span></button>
     <h3 class="sign stationSign">STATION<br/><span>${station}</span></h3>
     <h3 class="sign directionSign ${color}">DIRECTION <span>${direction}</span></h3>
     <div class="train" id="train${tX}"></div>
-    <hr class="quai"/>`;
+    <hr class="quai"/>
+    <div class="descends">
+      <div class="descendsLeft"></div>
+      <h3 class="sign stationSign">DESCENDS À <span>${descente}</span></h3>
+      <div class="descendsRight"></div>
+    </div>`;
+    descends();
 };
+
+function metroBack(){
+  document.getElementById("metroForm").classList.remove("displayNone");
+  document.getElementById("metroWhole").classList.add("displayNone");
+}
 
 function trainLeft(w, d, t){
   let wagonsLeft = ``;
@@ -183,10 +209,56 @@ function tStars(){
   })
 };
 
+function descends(){
+  let flecheNum = Math.round(((window.innerWidth - ((window.innerWidth/100) * 0.87 + 147.83))/2)/35);
+  console.log(flecheNum);
+  for (let i = 1; i < flecheNum + 1; i++){
+    let newflecheLeft = document.createElement("div");
+    newflecheLeft.innerHTML = `<span class="typcn icon typcn-chevron-right" style="padding: 0 10%;"></span>`;
+    document.querySelector(".descendsLeft").appendChild(newflecheLeft);
+  }
+  for (let i = 1; i < flecheNum + 1; i++){
+    let newflecheRight = document.createElement("div");
+    newflecheRight.innerHTML = `<span class="typcn icon typcn-chevron-left" style="padding: 0 10%;"></span>`;
+    document.querySelector(".descendsRight").appendChild(newflecheRight);
+  }
+};
+
 function optionsGold(){
   // let exits = ["w4d1", "w4d2", "w4d3"];
+  let door, classe;
   exits.map((exit) => {
-    document.getElementById("t" + tX + exit).classList.add("opti");
+    if(exit.endsWith("A")){
+      door = exit.slice(0, -1);
+      classe = "asc";
+      let ascLogo = document.createElement("span");
+      ascLogo.classList.add("material-symbols-outlined", "ascLogo");
+      ascLogo.innerText = "elevator";
+      document.getElementById("t" + tX + door).appendChild(ascLogo);
+    } else if(exit.endsWith("V")){
+      door = exit.slice(0, -1);
+      classe = "vite";
+      let viteLogo = document.createElement("span");
+      viteLogo.classList.add("viteLogo");
+      viteLogo.innerText = "V";
+      document.getElementById("t" + tX + door).appendChild(viteLogo);
+    } else if(exit.endsWith("B")){
+      door = exit.slice(0, -1);
+      classe = "both";
+      let ascLogo = document.createElement("span");
+      ascLogo.classList.add("material-symbols-outlined", "ascLogo");
+      ascLogo.innerText = "elevator";
+      document.getElementById("t" + tX + door).appendChild(ascLogo);
+      let viteLogo = document.createElement("span");
+      viteLogo.classList.add("viteLogo");
+      viteLogo.innerText = "V";
+      document.getElementById("t" + tX + door).appendChild(viteLogo);
+    } else{
+      door = exit;
+      classe = "opti";
+    }
+    document.getElementById("t" + tX + door).classList.add(classe);
+    
   });
   //blue for elevator exits
 };

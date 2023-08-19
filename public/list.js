@@ -42,7 +42,7 @@ function notiChecked(){
 notiChecked();
 
 const wavyList = (e) => {
-  // let listDragableAll = document.querySelector(".listDragableAll");
+  let listDragableAll = document.querySelector(".listDragableAll");
   e.preventDefault();
   let draggingItem = document.querySelector(".dragging");
   // Getting all items except currently dragging and making array of them
@@ -64,26 +64,27 @@ const wavyList = (e) => {
     evt.currentTarget.classList.remove("dragging");
   });
 }
-let timer;
-let listDragableAll = document.querySelector(".listDragableAll");
-listDragableAll.addEventListener("dragover", wavyList);
-listDragableAll.addEventListener("touchmove", wavyList);
-let listDragables = document.querySelectorAll(".listDragableAll > .listDragable");
-let listDragableNames = document.querySelectorAll(".listDragableAll > .listDragable > .listDragableName");
+function draggabled(){
+  let listDragableAll = document.querySelector(".listDragableAll");
+  listDragableAll.addEventListener("dragover", wavyList);
+  listDragableAll.addEventListener("touchmove", wavyList);
+  let listDragables = document.querySelectorAll(".listDragableAll > .listDragable");
+  listDragables.forEach(listDragable => {
+    listDragable.addEventListener("dragstart", (evt) => {
+      evt.currentTarget.classList.add("dragging");
+    });
+    listDragable.addEventListener("dragend", (evt) => {
+      evt.currentTarget.classList.remove("dragging");
+    });
+  })
+  let timer;
 let clickTime;
 let startX;
 let startY;
 let unclickTime;
 let stopX;
 let stopY;
-listDragables.forEach(listDragable => {
-  listDragable.addEventListener("dragstart", (evt) => {
-    evt.currentTarget.classList.add("dragging");
-  });
-  listDragable.addEventListener("dragend", (evt) => {
-    evt.currentTarget.classList.remove("dragging");
-  });
-})
+let listDragableNames = document.querySelectorAll(".listDragableAll > .listDragable > .listDragableName");
 listDragableNames.forEach(listDragableName => {
   listDragableName.addEventListener("touchstart", (evt) => {
     // evt.currentTarget.classList.add("dragging");
@@ -120,6 +121,11 @@ listDragableNames.forEach(listDragableName => {
       listDragableName.removeAttribute('readonly');
       evt.currentTarget.parentElement.classList.remove("dragging");
     }
+  });
+})
+}
+draggabled();
+
   //   let lastTap = 0;
   //   let timeout;
   //   return function detectDoubleTap(event) {
@@ -136,14 +142,11 @@ listDragableNames.forEach(listDragableName => {
   //     lastTap = curTime;
   //   };
   // }, { passive: false 
-});
-  
   
   // listDragableName.addEventListener("touchend", (evt) => {
   //   clearTimeout(timer);
   //   evt.currentTarget.parentElement.classList.remove("dragging");
   // });
-})
 
 // function detectDoubleTapClosure() {
 //   let lastTap = 0;
@@ -167,3 +170,38 @@ listDragableNames.forEach(listDragableName => {
 // if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
 //     document.body.addEventListener('touchend', detectDoubleTapClosure(), { passive: false });
 // }
+document.querySelectorAll(".listToggler").forEach(toggle => {
+  toggle.addEventListener("click", wholeDD);
+})
+function wholeDD(){
+  if(document.querySelectorAll(".listToggler:checked").length == 0){
+    console.log("yay");
+    document.getElementById("allWholeList").classList.add("listDragableAll");
+    document.querySelectorAll(".wholeList").forEach(list => {
+      list.classList.add("listDragable");
+      list.setAttribute('draggable', true);
+    });
+    document.querySelectorAll(".oneList").forEach(list => {
+      list.classList.remove("listDragableAll");
+    });
+    document.querySelectorAll(".listItem").forEach(list => {
+      list.classList.remove("listDragable");
+    });
+    draggabled();
+  } else{
+    console.log("nope");
+    document.getElementById("allWholeList").classList.remove("listDragableAll");
+    document.querySelectorAll(".wholeList").forEach(list => {
+      list.classList.remove("listDragable");
+      list.setAttribute('draggable', false);
+    });
+    document.querySelectorAll(".oneList").forEach(list => {
+      list.classList.add("listDragableAll");
+    });
+    document.querySelectorAll(".listItem").forEach(list => {
+      list.classList.add("listDragable");
+    });
+    draggabled();
+  }
+}
+wholeDD();

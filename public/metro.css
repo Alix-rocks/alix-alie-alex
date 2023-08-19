@@ -1,3 +1,26 @@
+.metroBack{
+  position: fixed;
+  top: 13px;
+  left: 13px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--tx-color);
+  border-radius: 5px;
+  padding: 2px 5px;
+  background: var(--bg-color);
+  color: var(--tx-color);
+  line-height: 1;
+  text-align: center;
+  font-size: calc(15.06px + 0.38vw);
+  opacity: .65;
+}
+.metroBack:hover{
+  background-color: rgba(128,0,128,.2);
+}
+.chevronBack{
+  display: inline-block;
+  transform: rotate(180deg);
+}
 .exitLabel{
   border: dashed 1.5px;
   width: calc(214.78px + 6.09vw);
@@ -5,6 +28,7 @@
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
+  position: relative;
 }
 .exitLabel>div>h3{
   margin: 0.7em 0 0;
@@ -12,6 +36,11 @@
 }
 .exitLabel p{
   margin: 0.3em 0 1em;
+}
+.exitAsc{
+  position: absolute;
+  right: calc((29.93px + 0.83vw)*-.5);
+  font-size: 2em;
 }
 .exitRadio{
   margin: 0 8% 0 7%;
@@ -32,11 +61,11 @@
   background-color: var(--tx-color);
   color: var(--bg-color);
 }
-.exitRadioChecked>span{
+.exitRadioChecked>span.exitRadio{
   background-color: var(--bg-color);
   border-color: var(--bg-color);
 }
-.exitRadioChecked>span>span{
+.exitRadioChecked>span.exitRadio>span{
   background-color: var(--tx-color);
 }
 .metroDetA{
@@ -48,9 +77,6 @@
   display: flex;
   flex-flow: column wrap;
   justify-content: flex-start;
-}
-.cossin{
-  display:none;
 }
 .choosingEither{
   display: flex;
@@ -121,6 +147,13 @@
   width: calc(214.78px + 6.09vw);
   font-size: calc(13.13px + 0.35vw);
 }
+/* .mCStations:has(.stationAsc){
+  position: relative;
+} */
+.stationAsc{
+  float: right;
+
+}
 .stationWide{
   width: calc(214.78px + 6.09vw);
 }
@@ -169,7 +202,7 @@
 }
 .wagonNum{
   position: absolute;
-  top: -20px;
+  top: -25px;
 }
 .wagonTD{
   border: 2px solid;
@@ -194,20 +227,68 @@
 }
 .door.opti{
   background-color: rgba(218,165,32,.7);
+  border-color: rgba(218,165,32,0);
+}
+.door.both, .door.vite, .door.asc{
+  position: relative;
+}
+.door.both{
+  background-color: #2e953c;
+  border-color: #2e953c;
+}
+.door.vite{
+  background-color: #daa520;
+  border-color: #daa520;
+}
+.door.asc{
+  background-color: #009EE0;
+  border-color: #009EE0;
+}
+.door.asc>span, .door.both>span.ascLogo{
+  font-size: 20px;
+}
+.door.asc>span, .door.vite>span, .door.both>span.viteLogo{
+  position: absolute;
+  top: -22px;
+  left: -6px;
+}
+.door.both>span.ascLogo{
+  position: absolute;
+  top: -43px;
+  left: -6px;
+}
+@media (max-width: 443px) {
+  .door.asc>span, .door.vite>span, .door.both>span.ascLogo, .door.both>span.viteLogo{
+    left: calc((9.08px + -0.21vw) * -1);
+  }
+}
+.viteLogo{
+  outline-offset: -3.5px;
+  outline-color: white;
+  outline-style: solid;
+  outline-width: 1.5px;
+  border-radius: 5px;
+  font-size: 15px!important;
+  font-weight: 900;
+  line-height: 11px;
+  padding: 3px;
+  color: white;
+  background-color: #daa520;
+  border: solid 1.5px #daa520;
 }
 .quai{
   margin: 1px -8px;
   height: 5px;
   border: 5px solid rgba(218,165,32,.5);
 }
-.starsTransfer{
+.starsTransfer, .descends{
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-around;
   align-items: center;
   margin: 15vh 0;
 }
-.allStars{
+.allStars, .descendsRight, .descendsLeft{
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-around;
@@ -224,3 +305,15 @@
   text-align: center;
   margin: 0;
 }
+
+.material-symbols-outlined {
+  color: white;
+  background-color: #009EE0;
+  border-radius: 5px;
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
+}
+/* https://fonts.google.com/icons?selected=Material+Symbols+Outlined:elevator:FILL@0;wght@400;GRAD@0;opsz@48&icon.query=elevat */

@@ -263,7 +263,7 @@ async function checkExit(){
           <h3>${statArr.exit.name}</h3>
           <p>${statArr.exit.options}</p>
         </div>
-        ${exit.asc ? `<span class="material-symbols-outlined exitAsc">
+        ${exit.asc ? `<span class="material-symbols-outlined elevatorIcon exitAsc">
         elevator
         </span>` : ``}  
       </label>
@@ -280,7 +280,7 @@ async function checkExit(){
           <h3>${exit.name}</h3>
           <p>${exit.options}</p>
         </div>
-        ${exit.asc ? `<span class="material-symbols-outlined exitAsc">
+        ${exit.asc ? `<span class="material-symbols-outlined elevatorIcon exitAsc">
         elevator
         </span>` : ``}        
       </label>`;
@@ -304,33 +304,37 @@ async function getStatTrajet(){
   console.log(statDep, statArr);
   if(lineDep == lineArr){
     let direction = statArr.ordre - statDep.ordre > 0 ? statDep.dirA : statDep.dirB;
-    depart(statDep.name, direction.name, statDep.line, statArr.name);
+    // depart(statDep.name, direction.name, statDep.line, statArr.name);
+    depart(statDepName, direction.name, lineDep, statArrName);
+    // statDep.line devrait être lineDep (comme ça, si il y a plus d'une line, t'es safe!)
     exits = statArr.exit[exitN].doors;
     let w = statDep.wagon;
     let d = statDep.door;
     direction.head == "right" ? trainRight(w, d, tX) : direction.head == "left" ? trainLeft(w, d, tX) : console.log("We're lost...");
     optionsGold();
-  } else if(listDep.includes(statArr) || listArr.includes(statDep)){
-    if(listDep.includes(statArr)){
+    // C'EST CORRECT, LISTDEP ET LISTARR SONT DES ARRAY AVEC JUSTE LES NOMS SANS *!! {Tu peux peut-être pas utiliser listDep (stationsList) parce qu'il y a des * devant les noms des stations avec ascenseur, alors tu pourras pas retrouver les index à partir des noms de station... statDep.line.includes(lineArr)}
+  } else if(listDep.includes(statArrName) || listArr.includes(statDepName)){ //CELUI-LÀ DEVRAIT ALLER AU DÉBUT AVANT LE lineDep == lineArr
+    // ça veut dire qu'une ou les deux stations sont des stations de transfer
+    if(listDep.includes(statArrName)){
       //distance entre statDep et statArr sur lineDep => Choix 1
-      let dist = distance(listDep, statDep, statArr);
-      console.log("Choix 1: " + dist + "stations, sans transfer, sur la ligne " + lineDep);
+      let distA = distance(listDep, statDepName, statArrName);
+      console.log("Choix 1: " + distA + "stations, sans transfer, sur la ligne " + lineDep);
       // Autre choix: faire un transfer!!
     }
-    if(listArr.includes(statDep)){
+    if(listArr.includes(statDepName)){
       //distance entre statDep et statArr sur lineArr => Choix 2
-      let dist = distance(listArr, statDep, statArr);
-      console.log("Choix 2: " + dist + "stations, sans transfer, sur la ligne " + lineArr);
+      let distB = distance(listArr, statDepName, statArrName);
+      console.log("Choix 2: " + distB + "stations, sans transfer, sur la ligne " + lineArr);
       // Autre choix: faire un transfer!!
     }
   } else{
-    //transfer!
+    //On a déjà établi qu'aucune des stations (dep et arr) n'est une des stations de transfert
     if([lineDep, lineArr].includes("Orange")){
       if([lineDep, lineArr].includes("Bleue")){
         let transA = "JEAN-TALON";
-        let distA = distance(listDep, statDep, transA) + distance(listArr, statArr, transA);
+        let distA = distance(listDep, statDepName, transA) + distance(listArr, statArrName, transA);
         let transB = "SNOWDON";
-        let distB = distance(listDep, statDep, transB) + distance(listArr, statArr, transB);
+        let distB = distance(listDep, statDepName, transB) + distance(listArr, statArrName, transB);
       } else if([lineDep, lineArr].includes("Verte")){
         let transA = "BERRI-UQAM";
         let transB = "LIONEL-GROULX";
@@ -341,9 +345,13 @@ async function getStatTrajet(){
     } else if([lineDep, lineArr].includes("Bleue")){
       if([lineDep, lineArr].includes("Verte")){
         let transA = "JEAN-TALON";
+        let distA = distance(listDep, statDepName, transA) + distance(listArr, statArrName, transA);
         let transB = "SNOWDON";
+        let distB = distance(listDep, statDepName, transB) + distance(listArr, statArrName, transB);
         let transC = "BERRI-UQAM";
+        let distC = distance(listDep, statDepName, transC) + distance(listArr, statArrName, transC);
         let transD = "LIONEL-GROULX";
+        let distD = distance(listDep, statDepName, transD) + distance(listArr, statArrName, transD);
       } else{
         // Jaune
         let transA = "JEAN-TALON";

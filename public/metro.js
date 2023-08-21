@@ -53,22 +53,25 @@ function lineChosen(event, whichL){
 };
 
 function choosingStation(line, whichL, whichS){
-  let stationsList = ``;
   window.getLinesStations(line).then(allStations => {
     // console.log(allStations.stationsList);
-    whichS == "DLS" ? listDep = allStations.stationsList : whichS == "ALS" ? listArr = allStations.stationsList : console.log("We're lost...");
-    allStations.stationsList.forEach((station) => {
-      let stationName, classe;
+    let list = [];
+    // et si, on utilisait le forEach pour enlever les * de listDep (pour pouvoir s'en servir pour le trajet?), est-ce que la deuxième fois qu'on fait apparaître la liste, on perd les ascenseurs? est-ce que forEach peut créer un nouvel array? Sinon, utiliser map!
+    let stationsList = allStations.stationsList.map((station) => {
+      let classe;
       if(station.startsWith("*", 0)){
         console.log("asc!!");
-        stationName = station.slice(1, station.length);
+        station = station.slice(1, station.length);
+        list.push(station);
         classe = "stationAsc";
       } else{
-        stationName = station;
         classe = "displayNone";
+        list.push(station);
       }
-      stationsList += `<input type="radio" class="cossin" name="lines" id="${stationName + whichS}" value="${stationName}" onchange="stationChosen(event,'${whichS}')"><label for="${stationName + whichS}" class="metroChoices mCStations">${stationName}<span class="material-symbols-outlined ${classe}">elevator</span></label>`;
-    });
+      return `<input type="radio" class="cossin" name="lines" id="${station + whichS}" value="${station}" onchange="stationChosen(event,'${whichS}')"><label for="${station + whichS}" class="metroChoices mCStations">${station}<span class="material-symbols-outlined elevatorIcon ${classe}">elevator</span></label>`;
+    }).join("");
+    whichS == "DLS" ? listDep = list : whichS == "ALS" ? listArr = list : console.log("We're lost...");
+    console.log(list);
   document.getElementById("choosingStation" + whichL).innerHTML = `
     <h3>Station:</h3>
     <div>
@@ -84,6 +87,41 @@ function choosingStation(line, whichL, whichS){
   })
 });
 };
+
+// function choosingStation(line, whichL, whichS){
+//   let stationsList = ``;
+//   window.getLinesStations(line).then(allStations => {
+//     // console.log(allStations.stationsList);
+//     whichS == "DLS" ? listDep = allStations.stationsList : whichS == "ALS" ? listArr = allStations.stationsList : console.log("We're lost...");
+//     // et si, on utilisait le forEach pour enlever les * de listDep (pour pouvoir s'en servir pour le trajet?), est-ce que la deuxième fois qu'on fait apparaître la liste, on perd les ascenseurs? est-ce que forEach peut créer un nouvel array? Sinon, utiliser map!
+//     allStations.stationsList.forEach((station) => {
+//       let stationName, classe;
+//       if(station.startsWith("*", 0)){
+//         console.log("asc!!");
+//         stationName = station.slice(1, station.length);
+//         classe = "stationAsc";
+//       } else{
+//         stationName = station;
+//         classe = "displayNone";
+//       }
+//       stationsList += `<input type="radio" class="cossin" name="lines" id="${stationName + whichS}" value="${stationName}" onchange="stationChosen(event,'${whichS}')"><label for="${stationName + whichS}" class="metroChoices mCStations">${stationName}<span class="material-symbols-outlined elevatorIcon ${classe}">elevator</span></label>`;
+//     });
+//     console.log(allStations.stationsList);
+//   document.getElementById("choosingStation" + whichL).innerHTML = `
+//     <h3>Station:</h3>
+//     <div>
+//       <input id="metroToggler${whichS}" type="checkbox" class="cossin"/>
+//       <label for="metroToggler${whichS}" class="metroToggleLabel stationWide"><span class="typcn icon typcn-media-play" id="metroToggleIcon${whichS}"></span><span id="metroToggleLabelText${whichS}" class="metroToggleLabelText">Station</span></label>
+//       <div id="metroToggleList${whichS}" class="metroToggleList">${stationsList}</div>
+//     </div>
+//     <div id="after${whichS}" style="margin-bottom: 15vh;"></div>`;
+//   document.getElementById("metroToggler" + whichL).addEventListener("click", event => {
+//     if(event.target.checked){
+//       document.getElementById("choosingStation" + whichL).innerHTML = ``;
+//     }
+//   })
+// });
+// };
 
 function stationChosen(event, whichS){
   console.log(listDep, listArr);
@@ -232,7 +270,7 @@ function optionsGold(){
       door = exit.slice(0, -1);
       classe = "asc";
       let ascLogo = document.createElement("span");
-      ascLogo.classList.add("material-symbols-outlined", "ascLogo");
+      ascLogo.classList.add("material-symbols-outlined", "elevatorIcon", "ascLogo");
       ascLogo.innerText = "elevator";
       document.getElementById("t" + tX + door).appendChild(ascLogo);
     } else if(exit.endsWith("V")){
@@ -246,7 +284,7 @@ function optionsGold(){
       door = exit.slice(0, -1);
       classe = "both";
       let ascLogo = document.createElement("span");
-      ascLogo.classList.add("material-symbols-outlined", "ascLogo");
+      ascLogo.classList.add("material-symbols-outlined", "elevatorIcon", "ascLogo");
       ascLogo.innerText = "elevator";
       document.getElementById("t" + tX + door).appendChild(ascLogo);
       let viteLogo = document.createElement("span");

@@ -1,48 +1,11 @@
 let steps;
 let myScheduleList = [];
 
-//*** TO FIX ***/
-//local OR getDefaultSchedule(); OR steps orignial
-//getMaxPlans marche pas (donne des ordres pas rapport)
-
 //**once it's connected to google accounts
 //**connect to an account and save the whole thing with a name for later [one collection "plan" for everyone, but owner value = email or user.id]
 //**once it's an app
 //**add a button to do a printscreen and make it your new background
 //**add a button to create notification for each steps
-
-// function initializing() {
-//   if (localStorage.getItem("steps")) {
-//     steps = JSON.parse(localStorage.getItem("steps"));
-//   // } else {
-//   //   getDefaultSchedule();
-//   };
-//   // } else{
-//   //   //check if there are schedules already saved in the cloud, if yes
-//   //   //steps here should be the default one, the one with the star! classList.contains("starDefault")
-//   //   //if not, put that one, the original one
-//   //   steps = {
-//   //     ordre:1,
-//   //     destination:"",
-//   //     steps:[
-//   //       { name: "Cooking", value: 30, checked: true, id: crypto.randomUUID() },
-//   //       { name: "Eating", value: 60, checked: true, id: crypto.randomUUID() },
-//   //       { name: "Toilet", value: 15, checked: true, id: crypto.randomUUID() },
-//   //       { name: "Shower", value: 15, checked: true, id: crypto.randomUUID() },
-//   //       { name: "Prepping", value: 30, checked: true, id: crypto.randomUUID() },
-//   //       { name: "Travelling", value: 0, checked: true, id: crypto.randomUUID() }],
-//   //     arriveeTime:"",
-//   //     notes:""};
-//   // }
-// };
-
-// function getInfo(info) {
-//   if (localStorage.getItem(info)) {
-//     return `${localStorage.getItem(info)}`;
-//   } else {
-//     return ``;
-//   };
-// }
 
 function saveSteps() {
   localStorage.setItem("steps", JSON.stringify(steps));
@@ -310,22 +273,6 @@ const initSortableList = (e) => {
   // Inserting the dragging item before the found sibling
   sortableList.insertBefore(draggingItem, nextSibling);
 }
-// function ondrop(){
-//   let itemes = Array.from(document.querySelectorAll(".sortable-List > .iteme"));
-//   let itemesIndexArr = itemes.map((iteme, dataset) => {
-//     return {index: iteme.dataset.index
-//     };
-//   })
-//   console.log(itemesIndexArr);
-//   let result = itemesIndexArr.map(a => a.index);
-//   console.log(result);
-//   steps = result.map((a, i) => steps[a]);
-//   console.log(steps);
-//   updateSteps();
-//   for (let i = 0; i < itemes.length; i++) {
-//     itemes[i].dataset.index = steps[i].index;
-//   };
-// }
 
 function ondrop() {
   let itemes = Array.from(document.querySelectorAll(".sortable-List > .iteme"));
@@ -421,41 +368,6 @@ function trashIt() {
   };
 }
 
-//**Drag&Drop doesn't work with the added step
-// function addStep(){
-//   updateSteps();
-//   let stepName = prompt("Name your step");
-//   if(stepName){steps.push({index:steps.length, name:stepName, value:30, checked:true, id:crypto.randomUUID()})};
-//   let newStep = document.createElement('li');
-//   newStep.classList.add("iteme");
-//   newStep.setAttribute("draggable", "true");
-//   newStep.setAttribute("id", steps[steps.length-1].id);
-//   newStep.innerHTML = `
-//     <div>
-//       <span class="typcn icon typcn-th-small" style="opacity: .8;"></span>
-//       <input id="${steps[steps.length - 1].id}trashCan" class="cossin" type="checkbox" onchange="trashOrNot(event)"/>
-//       <label for="${steps[steps.length - 1].id}trashCan" class="typcn icon typcn-trash trashLabel displayNone" style="opacity: .8; font-size: 1.5em; line-height: 1em; margin: 0 -5px 0 -2px;" ></label>
-//     </div>
-//     <div class="trashLine">
-//       <div>
-//         <input id="${steps[steps.length - 1].id}Check" class="cossin timeSettingInput" name="${steps[steps.length - 1].id}" type="checkbox" ${steps[steps.length - 1].checked?"checked":""} onchange="updateSteps(event)"/>
-//         <label for="${steps[steps.length - 1].id}Check" class="timeSettingLabel">
-//           <span class="timeSettingCheck"></span>
-//         </label>
-//         <input id="${steps[steps.length - 1].id}Name" type="text" class="timeDestination timeDestination2" style="width:80px;" value="${steps[steps.length - 1].name}" onchange="updateSteps(event)"/>
-//       </div>
-//       <div>
-//         <input id="${steps[steps.length - 1].id}Time" class="timeDestination timeDestination2" type="number" step="5" value="${steps[steps.length - 1].value}" onchange="updateSteps(event)"/>
-//         <span class="timeSettingLabel">min</span>
-//       </div>
-//     </div>`;
-//   let lastStep = document.getElementById("sortable-List").lastElementChild;
-//   lastStep.after(newStep);
-//   updateSteps();
-//   saveSteps();
-//   document.getElementById('footer').classList.remove('footerFixed');
-// };
-
 function addStep() {
   updateSteps();
   let stepName = prompt("Name your step");
@@ -514,13 +426,17 @@ function calculateTime(e) {
     }
   });
   // console.log(stepArray);
-  let result = `<h2 id="finalDestination" style="text-align: center; margin: 0 0 .7em;">${document.getElementById("destination").value}</h2>
-<div style="padding: 0 10px; border: 2px solid;">
-    <h3 style="margin: 5px 0; text-decoration: underline;">Schedule</h3>
-    ${stepArray.join("")}
-    <p>Arrivée: ${arriveeTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" })}</p>
-    ${ifNotes()}
-</div>`;
+  let result = `<button id="capture-screenshot"
+  onclick="takeScreenshot();"><span class="material-symbols-outlined screenshotIcon">
+  screenshot_region
+  </span></button>
+    <h2 id="finalDestination" style="text-align: center; margin: 0 0 .7em;">${document.getElementById("destination").value}</h2>
+    <div style="padding: 0 10px; border: 2px solid;">
+        <h3 style="margin: 5px 0; text-decoration: underline;">Schedule</h3>
+        ${stepArray.join("")}
+        <p>Arrivée: ${arriveeTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" })}</p>
+        ${ifNotes()}
+    </div>`;
   document.getElementById("scheduleTime").innerHTML = result;
   document.getElementById("scheduleTimeWhole").style.display = "flex";
   document.getElementById("timeForm").style.display = "none";
@@ -576,3 +492,27 @@ const captureScreenshot = async () => {
       console.error("Error: " + err);
   }
 };
+function takeScreenshot() {
+  console.log("lala");
+	var screenshot = document.documentElement
+		.cloneNode(true);
+	screenshot.style.pointerEvents = 'none';
+	screenshot.style.overflow = 'hidden';
+	screenshot.style.webkitUserSelect = 'none';
+	screenshot.style.mozUserSelect = 'none';
+	screenshot.style.msUserSelect = 'none';
+	screenshot.style.oUserSelect = 'none';
+	screenshot.style.userSelect = 'none';
+	screenshot.dataset.scrollX = window.scrollX;
+	screenshot.dataset.scrollY = window.scrollY;
+	var blob = new Blob([screenshot.outerHTML], {
+		type: 'text/html'
+	});
+	return blob;
+}
+
+function generate() {
+	window.URL = window.URL || window.webkitURL;
+	window.open(window.URL
+		.createObjectURL(takeScreenshot()));
+}

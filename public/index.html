@@ -485,6 +485,7 @@
     <script name="TimePage" src="time.js"></script>
     <!-- ListPage -->
     <div name="ListPage" id="listPage"  class="sectionPage justPage">
+      <!-- The HTML should be almost empty and all the lists created by the database through javascript -->
       <!-- Figure out a way to limit the dragging at one list at a time, because now you can drag&drop Épicerie inside Pharmacie!! -->
       <ul class="allWholeList" id="allWholeList">
         <li class="wholeList" draggable="true">
@@ -1239,8 +1240,9 @@
         border-radius: 5px;
         padding: 3px 5px;
         margin: 2px;
-        background: rgba(128,0,128,.8);
-        color: rgba(255,255,255,.8);
+        opacity: .8;
+        background: rgb(128,0,128);
+        color: #F2F3F4;
       }
       .menuTextLabel:hover{
         cursor: pointer;
@@ -1303,7 +1305,7 @@
         width: 200px;
         font-family: 'Nunito', sans-serif;
         font-size: calc(15.53px + 0.19vw);
-        font-weight: 700;
+        font-weight: 300;
       }
       .coteWhole > textarea:focus{
         outline: 1px solid rgba(255,255,255,.5);

@@ -79,9 +79,14 @@ label, .label{
 *{font-family: 'Nunito', sans-serif;
 }
 .home{text-align: center;}
-.bottomButton{
+.bottomButtons{
   position: fixed;
   bottom: 2px;
+  right: 2px;
+  display: flex;
+  flex-direction: row-reverse;
+}
+.bottomButton{
   border-width: 1px 3px 4px 1px;
   border-style: solid;
   border-color: inherit;
@@ -97,13 +102,11 @@ label, .label{
 .bottomButton:hover{
   background-color: rgba(128,0,128,.2);
 }
-.backHome{
-  right: 2px;
+.backHome, .backTop{
   display: none;
 }
-.backTop{
-  right: 34px;
-  display: none;
+.backHome{
+  margin-left: 4px;
 }
 .chevronTop{
   display: inline-block;
@@ -143,7 +146,7 @@ footer > div{
   position: absolute;
   right: 5vw;
   display: flex;
-  flex-direction: row;
+  flex-direction: row-reverse;
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
@@ -163,13 +166,14 @@ footer > div{
 }
 #switchModeDark{
   opacity: .7;
-  margin: 0 0 0 4px;
+  margin: 0 4px 0 0;
   font-size: 21px;
   line-height: .95;
+  transform: rotate(180deg);
 }
 #switchModeLight{
   opacity: .7;
-  margin: 0;
+  margin: 0 0 1px;
   font-size: 19px;
   line-height: 1;
 }

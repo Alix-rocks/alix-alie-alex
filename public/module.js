@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
-import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, Timestamp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
 // import transCode from "./transCode.js";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -566,3 +566,28 @@ function MyNewRand() {
   }
   return arrTS;
 }
+
+// WROTE love
+
+const coteForm = document.querySelector('#coteForm');
+coteForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  let timeNow = Timestamp.fromDate(new Date());
+  console.log(timeNow);
+  let coteText = document.querySelector('input[name=menuText]:checked').value;
+  if(cote > 0){
+    let comment = coteForm.comment.value.replace(/\n/g, '<br>');
+    addDoc(collection(db, "love"), {
+      text: coteText,
+      love: cote,
+      comment: comment,
+      time: timeNow
+    })
+      .then(() => {
+        coteForm.reset();
+        coteFormReset();
+        document.querySelector("#coteThanks").innerHTML = "Good dog!";
+      })
+  }
+});
+window.coteFormReset = coteFormReset;

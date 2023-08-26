@@ -426,10 +426,11 @@ function calculateTime(e) {
     }
   });
   // console.log(stepArray);
-  let result = `<button id="capture-screenshot"
-  onclick="takeScreenshot();"><span class="material-symbols-outlined screenshotIcon">
-  screenshot_region
-  </span></button>
+  // <button id="capture-screenshot"
+  // onclick="takeScreenshot();"><span class="material-symbols-outlined screenshotIcon">
+  // screenshot_region
+  // </span></button>
+  let result = `
     <h2 id="finalDestination" style="text-align: center; margin: 0 0 .7em;">${document.getElementById("destination").value}</h2>
     <div style="padding: 0 10px; border: 2px solid;">
         <h3 style="margin: 5px 0; text-decoration: underline;">Schedule</h3>

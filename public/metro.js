@@ -54,7 +54,8 @@ function lineChosen(event, whichL){
 
 function choosingStation(line, whichL, whichS){
   window.getLinesStations(line).then(allStations => {
-    // console.log(allStations.stationsList);
+    console.log(allStations);
+    console.log(allStations.stationsList);
     let list = [];
     // et si, on utilisait le forEach pour enlever les * de listDep (pour pouvoir s'en servir pour le trajet?), est-ce que la deuxième fois qu'on fait apparaître la liste, on perd les ascenseurs? est-ce que forEach peut créer un nouvel array? Sinon, utiliser map!
     let stationsList = allStations.stationsList.map((station) => {
@@ -171,7 +172,9 @@ function depart(station, direction, color, descente){
     <button class="metroBack" onclick="metroBack()" title="Back"><span class="typcn typcn-chevron-right chevronBack"></span></button>
     <h3 class="sign stationSign">STATION<br/><span>${station}</span></h3>
     <h3 class="sign directionSign ${color}">DIRECTION <span>${direction}</span></h3>
-    <div class="train" id="train${tX}"></div>
+      <div class="allTrain">
+        <div class="train" id="train${tX}"></div>
+      </div>
     <hr class="quai"/>
     <div class="descends">
       <div class="descendsLeft"></div>
@@ -200,6 +203,7 @@ function trainLeft(w, d, t){
       </div>`  
   }
   document.getElementById("train"+t).innerHTML = wagonsLeft;
+  document.querySelector(".train").style.animation = "wroom-left 2s";
 };
     
 function trainRight(w, d, t){
@@ -216,6 +220,7 @@ function trainRight(w, d, t){
       </div>`  
   }
   document.getElementById("train"+t).innerHTML = wagonsRight;
+  document.querySelector(".train").style.animation = "wroom-right 2s";
 };
 
 function addTransfer(station, direction, color){
@@ -296,9 +301,19 @@ function optionsGold(){
       classe = "opti";
     }
     document.getElementById("t" + tX + door).classList.add(classe);
-    
   });
-  //blue for elevator exits
+  document.querySelector(".train").addEventListener("animationend", () => {
+    document.querySelectorAll(".door>span").forEach(sign => {
+      sign.style.opacity = "1";
+    });
+  });
+  // let doorSign = document.querySelectorAll(".door>span");
+  // document.querySelector(".train").addEventListener("animationend", () => {
+  //   doorSign.forEach(sign => {
+  //     sign.style.opacity = "1";
+  //   });
+  // });
+  
 };
 
 

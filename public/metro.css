@@ -1,6 +1,6 @@
 .metroBack{
   position: fixed;
-  top: 13px;
+  top: 40px;
   left: 13px;
   border-width: 1px;
   border-style: solid;
@@ -12,10 +12,9 @@
   line-height: 1;
   text-align: center;
   font-size: calc(15.06px + 0.38vw);
-  opacity: .65;
 }
 .metroBack:hover{
-  background-color: rgba(128,0,128,.2);
+  background-color: var(--color-2);
 }
 .chevronBack{
   display: inline-block;
@@ -147,9 +146,7 @@
   width: calc(214.78px + 6.09vw);
   font-size: calc(13.13px + 0.35vw);
 }
-/* .mCStations:has(.stationAsc){
-  position: relative;
-} */
+
 .stationAsc{
   float: right;
 
@@ -194,11 +191,25 @@
 .Jaune{
   background-color: rgba(255, 220, 60, .7);
 }
+.allTrain{
+  position: relative;
+  height: 30px;
+}
 .train{
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-evenly;
+  position: absolute;
+  width: calc(100vw - 16px);
+}
+@keyframes wroom-right {
+  from{left: -100vw;}
+  to{left: 0;}
+}
+@keyframes wroom-left {
+  from{right: -100vw;}
+  to{right: 0;}
 }
 .wagonNum{
   position: absolute;
@@ -224,6 +235,9 @@
   width: 10px;
   height: 20px;
   margin: 5px 5% 0;
+}
+.door>span{
+  opacity: 0;
 }
 .door.opti{
   background-color: rgba(218,165,32,.7);
@@ -286,7 +300,7 @@
   flex-flow: row nowrap;
   justify-content: space-around;
   align-items: center;
-  margin: 15vh 0;
+  margin: 5vh 0;
 }
 .allStars, .descendsRight, .descendsLeft{
   display: flex;

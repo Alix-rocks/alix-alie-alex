@@ -241,15 +241,27 @@ window.orderSchedules = orderSchedules;
 // METRO
 
 async function getLinesStations(chosenLine){
-  const getLinesStations = await getDoc(doc(db, "metro", chosenLine));
-  allStations = getLinesStations.data();
+  if(localStorage.getItem("allStations-" + chosenLine)){
+    allStations = JSON.parse(localStorage.getItem("allStations-" + chosenLine));
+  } else{
+    const getLinesStations = await getDoc(doc(db, "metro", chosenLine));
+    allStations = getLinesStations.data();
+    localStorage.setItem("allStations-" + chosenLine, JSON.stringify(allStations));
+    console.log("digged");
+  }
   return allStations;
 }
 window.getLinesStations = getLinesStations;
 
 async function checkExit(){
-  const getStatArr = await getDoc(doc(db, "metro", lineArr, "station", statArrName));
-  statArr = getStatArr.data();
+  if(localStorage.getItem("statArr-" + statArrName)){
+    statArr = JSON.parse(localStorage.getItem("statArr-" + statArrName));
+  } else{
+    const getStatArr = await getDoc(doc(db, "metro", lineArr, "station", statArrName));
+    statArr = getStatArr.data();
+    localStorage.setItem("statArr-" + statArrName, JSON.stringify(statArr));
+    console.log("digged");
+  }
   console.log(statArr);
   if(statArr.exit.length == 1 && statArr.exit.name != undefined){
     document.getElementById("afterALS").innerHTML = `<p style="margin: 1em 0 .6em;">Il n'y a qu'une seule sortie à cette station-là:</p>
@@ -289,7 +301,7 @@ async function checkExit(){
     <div>${exitList.join("")}</div>
     <button id="goBtn" class="timeFormButton metroButton displayNone" onclick="calcTrajet()">Let's GO!</button>`;
   } else if(statArr.exit.length == 1 && statArr.exit.name == undefined){
-    document.getElementById("afterALS").innerHTML = `<h6>Oups... y'a comme un problème, là...<br/>Soit la station a explosé et on peut juste pu en sortir,<br/>soit Alex a juste pas encore eu le temps de répertorier les sorties de cette station-là...<br/>À moins que...<br/>Ouin, vu qu'on est à Montréal, la station est probablement juste fermée pour cause de construction et/ou festival!<br/>Fac on va dire que c'est la 3<sup>e</sup>, ok?!</h6>`;
+    document.getElementById("afterALS").innerHTML = `<h6>Oups... y'a comme un problème, là...<br/>Soit la station a explosé et on peut juste pu en sortir,<br/>soit Alex a juste pas encore eu le temps de répertorier les sorties de cette station-là...<br/>À moins que...<br/>Ouin, vu qu'on est à Montréal, la station est probablement juste fermée pour cause de construction et/ou festival!<br/>Fac on va dire que c'est ça, ok?!</h6>`;
   };
 }
 window.checkExit = checkExit;
@@ -297,10 +309,14 @@ window.checkExit = checkExit;
 //listDep, lineDep, statDep, listArr, lineArr, statArr, exitN
 async function getStatTrajet(){
   // console.log(lineDep, statDepName, lineArr, statArrName);
-  const getStatDep = await getDoc(doc(db, "metro", lineDep, "station", statDepName));
-  statDep = getStatDep.data();
-  // const getStatArr = await getDoc(doc(db, "metro", lineArr, "station", statArrName));
-  // statArr = getStatArr.data();
+  if(localStorage.getItem("statDep-" + statDepName)){
+    statDep = JSON.parse(localStorage.getItem("statDep-" + statDepName));
+  } else{
+    const getStatDep = await getDoc(doc(db, "metro", lineDep, "station", statDepName));
+    statDep = getStatDep.data();
+    localStorage.setItem("statDep-" + statDepName, JSON.stringify(statDep));
+    console.log("digged");
+  }
   console.log(statDep, statArr);
   if(lineDep == lineArr){
     let direction = statArr.ordre - statDep.ordre > 0 ? statDep.dirA : statDep.dirB;

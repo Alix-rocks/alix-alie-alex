@@ -1,31 +1,33 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
+  // import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+  // import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
 import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, Timestamp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
-
+import { app, analytics, db, auth, provider } from "./myFirebase.js";
+import { choosingLine } from "./metro.js";
+choosingLine("DL");
 // import transCode from "./transCode.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBHSLxXWZUAOH8bKsRSGMnSzOh6QnyPTWQ",
-  authDomain: "alix-alie-alex.firebaseapp.com",
-  projectId: "alix-alie-alex",
-  storageBucket: "alix-alie-alex.appspot.com",
-  messagingSenderId: "519484588635",
-  appId: "1:519484588635:web:ec162ad407f9b45f60357e",
-  measurementId: "G-NFDD6B1G9R"
-};
+  // const firebaseConfig = {
+  //   apiKey: "AIzaSyBHSLxXWZUAOH8bKsRSGMnSzOh6QnyPTWQ",
+  //   authDomain: "alix-alie-alex.firebaseapp.com",
+  //   projectId: "alix-alie-alex",
+  //   storageBucket: "alix-alie-alex.appspot.com",
+  //   messagingSenderId: "519484588635",
+  //   appId: "1:519484588635:web:ec162ad407f9b45f60357e",
+  //   measurementId: "G-NFDD6B1G9R"
+  // };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const db = getFirestore(app);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
+  // const app = initializeApp(firebaseConfig);
+  // const analytics = getAnalytics(app);
+  // const db = getFirestore(app);
+  // const auth = getAuth(app);
+  // const provider = new GoogleAuthProvider();
 // provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
 auth.languageCode = 'fr';
 
@@ -122,8 +124,7 @@ async function saveIt() {
         <button title="Replace" id="saveOptReplace" class="timeFormButtonSmall" onclick="window.saveOptReplace()">Replace</button>
       </div>`
   } else{
-
-  await setDoc(doc(db, "plan", auth.currentUser.email, "myPlans", destination), {
+   await setDoc(doc(db, "plan", auth.currentUser.email, "myPlans", destination), {
     ...steps,
     ordre: (getMaxPlans() + 1)
   })  ;
@@ -238,156 +239,7 @@ async function orderSchedules(){
 }
 window.orderSchedules = orderSchedules;
 
-// METRO
 
-async function getLinesStations(chosenLine){
-  if(localStorage.getItem("allStations-" + chosenLine)){
-    allStations = JSON.parse(localStorage.getItem("allStations-" + chosenLine));
-  } else{
-    const getLinesStations = await getDoc(doc(db, "metro", chosenLine));
-    allStations = getLinesStations.data();
-    localStorage.setItem("allStations-" + chosenLine, JSON.stringify(allStations));
-    console.log("digged");
-  }
-  return allStations;
-}
-window.getLinesStations = getLinesStations;
-
-async function checkExit(){
-  if(localStorage.getItem("statArr-" + statArrName)){
-    statArr = JSON.parse(localStorage.getItem("statArr-" + statArrName));
-  } else{
-    const getStatArr = await getDoc(doc(db, "metro", lineArr, "station", statArrName));
-    statArr = getStatArr.data();
-    localStorage.setItem("statArr-" + statArrName, JSON.stringify(statArr));
-    console.log("digged");
-  }
-  console.log(statArr);
-  if(statArr.exit.length == 1 && statArr.exit.name != undefined){
-    document.getElementById("afterALS").innerHTML = `<p style="margin: 1em 0 .6em;">Il n'y a qu'une seule sortie à cette station-là:</p>
-    <div>
-      <input type="radio" name="exitInput" class="cossin exitInput" id="exit${statArr.exit.index}" onchange="exitRadioChange()"/>
-      <label for="exit${statArr.exit.index}" class="exitLabel" id="exit${statArr.exit.index}Label">
-        <span class="exitRadio">
-          <span></span>
-        </span>
-        <div>
-          <h3>${statArr.exit.name}</h3>
-          <p>${statArr.exit.options}</p>
-        </div>
-        ${exit.asc ? `<span class="material-symbols-outlined elevatorIcon exitAsc">
-        elevator
-        </span>` : ``}  
-      </label>
-    </div>
-    <button id="goBtn" class="timeFormButton metroButton" onclick="calcTrajet()">Let's GO!</button>`;
-  } else if(statArr.exit.length > 1){
-    let exitList = statArr.exit.map((exit, idx) => {
-      return `<input type="radio" name="exitInput" class="cossin exitInput" id="exit${idx}" onchange="exitRadioChange()"/>
-      <label for="exit${idx}" class="exitLabel" id="exit${idx}Label">
-        <span class="exitRadio">
-          <span></span>
-        </span>
-        <div>
-          <h3>${exit.name}</h3>
-          <p>${exit.options}</p>
-        </div>
-        ${exit.asc ? `<span class="material-symbols-outlined elevatorIcon exitAsc">
-        elevator
-        </span>` : ``}        
-      </label>`;
-    });
-    document.getElementById("afterALS").innerHTML = `<p style="margin: 1em 0 .6em;">Choisi la sortie que tu veux:</p>
-    <div>${exitList.join("")}</div>
-    <button id="goBtn" class="timeFormButton metroButton displayNone" onclick="calcTrajet()">Let's GO!</button>`;
-  } else if(statArr.exit.length == 1 && statArr.exit.name == undefined){
-    document.getElementById("afterALS").innerHTML = `<h6>Oups... y'a comme un problème, là...<br/>Soit la station a explosé et on peut juste pu en sortir,<br/>soit Alex a juste pas encore eu le temps de répertorier les sorties de cette station-là...<br/>À moins que...<br/>Ouin, vu qu'on est à Montréal, la station est probablement juste fermée pour cause de construction et/ou festival!<br/>Fac on va dire que c'est ça, ok?!</h6>`;
-  };
-}
-window.checkExit = checkExit;
-
-//listDep, lineDep, statDep, listArr, lineArr, statArr, exitN
-async function getStatTrajet(){
-  // console.log(lineDep, statDepName, lineArr, statArrName);
-  if(localStorage.getItem("statDep-" + statDepName)){
-    statDep = JSON.parse(localStorage.getItem("statDep-" + statDepName));
-  } else{
-    const getStatDep = await getDoc(doc(db, "metro", lineDep, "station", statDepName));
-    statDep = getStatDep.data();
-    localStorage.setItem("statDep-" + statDepName, JSON.stringify(statDep));
-    console.log("digged");
-  }
-  console.log(statDep, statArr);
-  if(lineDep == lineArr){
-    let direction = statArr.ordre - statDep.ordre > 0 ? statDep.dirA : statDep.dirB;
-    // depart(statDep.name, direction.name, statDep.line, statArr.name);
-    depart(statDepName, direction.name, lineDep, statArrName);
-    // statDep.line devrait être lineDep (comme ça, si il y a plus d'une line, t'es safe!)
-    exits = statArr.exit[exitN].doors;
-    let w = statDep.wagon;
-    let d = statDep.door;
-    direction.head == "right" ? trainRight(w, d, tX) : direction.head == "left" ? trainLeft(w, d, tX) : console.log("We're lost...");
-    optionsGold();
-    // C'EST CORRECT, LISTDEP ET LISTARR SONT DES ARRAY AVEC JUSTE LES NOMS SANS *!! {Tu peux peut-être pas utiliser listDep (stationsList) parce qu'il y a des * devant les noms des stations avec ascenseur, alors tu pourras pas retrouver les index à partir des noms de station... statDep.line.includes(lineArr)}
-  } else if(listDep.includes(statArrName) || listArr.includes(statDepName)){ //CELUI-LÀ DEVRAIT ALLER AU DÉBUT AVANT LE lineDep == lineArr
-    // ça veut dire qu'une ou les deux stations sont des stations de transfer
-    if(listDep.includes(statArrName)){
-      //distance entre statDep et statArr sur lineDep => Choix 1
-      let distA = distance(listDep, statDepName, statArrName);
-      console.log("Choix 1: " + distA + "stations, sans transfer, sur la ligne " + lineDep);
-      // Autre choix: faire un transfer!!
-    }
-    if(listArr.includes(statDepName)){
-      //distance entre statDep et statArr sur lineArr => Choix 2
-      let distB = distance(listArr, statDepName, statArrName);
-      console.log("Choix 2: " + distB + "stations, sans transfer, sur la ligne " + lineArr);
-      // Autre choix: faire un transfer!!
-    }
-  } else{
-    //On a déjà établi qu'aucune des stations (dep et arr) n'est une des stations de transfert
-    if([lineDep, lineArr].includes("Orange")){
-      if([lineDep, lineArr].includes("Bleue")){
-        let transA = "JEAN-TALON";
-        let distA = distance(listDep, statDepName, transA) + distance(listArr, statArrName, transA);
-        let transB = "SNOWDON";
-        let distB = distance(listDep, statDepName, transB) + distance(listArr, statArrName, transB);
-      } else if([lineDep, lineArr].includes("Verte")){
-        let transA = "BERRI-UQAM";
-        let transB = "LIONEL-GROULX";
-      } else{
-        // Jaune
-        let trans = "BERRI-UQAM";
-      }
-    } else if([lineDep, lineArr].includes("Bleue")){
-      if([lineDep, lineArr].includes("Verte")){
-        let transA = "JEAN-TALON";
-        let distA = distance(listDep, statDepName, transA) + distance(listArr, statArrName, transA);
-        let transB = "SNOWDON";
-        let distB = distance(listDep, statDepName, transB) + distance(listArr, statArrName, transB);
-        let transC = "BERRI-UQAM";
-        let distC = distance(listDep, statDepName, transC) + distance(listArr, statArrName, transC);
-        let transD = "LIONEL-GROULX";
-        let distD = distance(listDep, statDepName, transD) + distance(listArr, statArrName, transD);
-      } else{
-        // Jaune
-        let transA = "JEAN-TALON";
-        let transB = "SNOWDON";
-        let trans = "BERRI-UQAM";
-      }
-    } else if([lineDep, lineArr].includes("Verte")){
-      // Jaune
-      let trans = "BERRI-UQAM";
-    }
-  } 
-}
-window.getStatTrajet = getStatTrajet;
-
-function distance(list, dep, arr){
-  let depIdx = list.indexOf(dep);
-  let arrIdx = list.indexOf(arr);
-  let dist = Math.abs(depIdx - arrIdx);
-  return dist;
-}
 
 // To get today'shit 
 async function getTodaysShit() {

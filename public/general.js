@@ -36,11 +36,7 @@ function switchMode(){
 
 function setColors(A, B, C, a, b, c, d, e, f, g, h, i, j){
   let root = document.documentElement;
-  if(a == 10){
-    root.style.setProperty('--tx-color', 'rgba(' + A + ', ' + B + ', ' + C + ', 1)');
-  } else{
-    root.style.setProperty('--tx-color', 'rgba(' + A + ', ' + B + ', ' + C + ', .' + a + ')');
-  };
+  root.style.setProperty('--tx-color', 'rgba(' + A + ', ' + B + ', ' + C + ', ' + formatColor(a) + ')');
   let array = [a, b, c, d, e, f, g, h, i, j];
   let num = 9;
   for(i = 0; i < array.length; i++){
@@ -49,7 +45,11 @@ function setColors(A, B, C, a, b, c, d, e, f, g, h, i, j){
   };
 }
 
-
+function formatColor(a){
+  // if(a == 10) return "1"
+  // else return "." + a
+  return a == 10 ? "1" : "." + a
+}
 
 function colorSlider() {
   let colorPicker = document.querySelector("#color-picker");
@@ -102,3 +102,5 @@ function colorSlider() {
       break;
   }
 }
+
+//Un jour on peut mettre tout ça dans un fichier jason au lieu que tout soit dans le javascript

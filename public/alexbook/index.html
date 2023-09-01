@@ -114,6 +114,58 @@
       cursor: pointer;
       opacity: .7;
     }
+    table{
+      table-layout: fixed;
+      width: 100%;
+      max-width: 400px;
+      border-collapse: collapse;
+      border: 3px solid var(--tx-color);
+      --chiffre: 30px;
+      margin: auto;
+    }
+    caption{
+      line-height: 1em;
+    }
+    thead th{
+      border: 3px solid var(--tx-color);
+    }
+    thead th:nth-child(1){
+      width: 25%;
+    }
+    thead th:nth-child(2){
+      width: 75%;
+      text-align: left;
+      padding-left: 15px;
+    }
+    th, td{
+      padding: 5px;
+    }
+    td{
+      border: 1.5px solid var(--tx-color);
+    }
+    tr td:nth-child(1){
+      text-align: center;
+    }
+    tr td:nth-child(1)>span:nth-child(1){
+      font-family: 'Rubik Dirt', cursive;
+      font-size: var(--chiffre);
+      font-weight: 900;
+      line-height: 1em;
+      margin: 0;
+    }
+    .chifUnder{
+      font-family: 'Nunito', sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1em;
+    }
+    tr{
+      height: fit-content;
+      min-height: 45px;
+    }
+    tr td:nth-child(2){
+      padding-left: 15px;
+    }
   </style>
   <script name="fullBook">
     function toChap(cp) {
@@ -221,6 +273,65 @@
             <h3>Table des matières</h3>
           </label>
           <div id="tableMat"></div>
+        </div>
+        <div name="Tableau des chiffres">
+          <input type="checkbox" id="tableChiffres" class="cossin"/>
+          <label for="tableChiffres" id="tableChiT">
+            <span class="typcn typcn-media-play toggleTM"></span>
+            <h3>Tableau des chiffres</h3>
+          </label>
+          <table class="chifTable">
+            <caption class="h1like">Apparence physique<br/>(1<sup>er</sup> chiffre)</caption>
+            <thead>
+              <tr>
+                <th scope="col" class="h3like">Chiffres</th>
+                <th scope="col" class="h3like">Physique</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="color: gray;">
+                <td><span>0</span><br/><span class="chifUnder">Transparent</span></td>
+                <td>Normal, n’a l’air de rien</td>
+              </tr>
+              <tr style="color: rgba(245, 245, 245, .9);">
+                <td><span>1</span><br/><span class="chifUnder">Blanc</span></td>
+                <td>Petit et maigre, rachitique, la peau sur les os</td>
+              </tr>
+              <tr style="color: rgb(92, 160, 255);">
+                <td><span>2</span><br/><span class="chifUnder">Ciel</span></td>
+                <td>Physique de top-model</td>
+              </tr>
+              <tr style="color: rgba(255, 165, 0, .8);">
+                <td><span>3</span><br/><span class="chifUnder">Orange</span></td>
+                <td>Théoriquement obèse, mais quand même sexy et qui a l'air en santé</td>
+              </tr>
+              <tr style="color: rgba(255, 0, 0, .8);">
+                <td><span>4</span><br/><span class="chifUnder">Rouge</span></td>
+                <td>Muscles sans graisse et bien définis, bodybuilder</td>
+              </tr>
+              <tr style="color: blue;">
+                <td><span>5</span><br/><span class="chifUnder">Bleu</span></td>
+                <td>Physique de ninja, mince et musclé, en forme, sneaky, puissance compacte</td>
+              </tr>
+              <tr style="color: rgba(255, 105, 180, .9);">
+                <td><span>6</span><br/><span class="chifUnder">Rose</span></td>
+                <td>Couch potato. Gras, pas sexy, pas healthy, mais pas encore obèse morbide</td>
+              </tr>
+              <tr style="color: green;">
+                <td><span>7</span><br/><span class="chifUnder">Vert</span></td>
+                <td>Grand mince, avec ou sans muscle, imposant surtout par sa hauteur</td>
+              </tr>
+              <tr style="color: rgba(255, 255, 0, .7);">
+                <td><span>8</span><br/><span class="chifUnder">Jaune</span></td>
+                <td>Obèse morbide</td>
+              </tr>
+              <tr style="color: rgb(99, 3, 27);">
+                <td><span>9</span><br/><span class="chifUnder">Pourpre</span></td>
+                <td>Grand et musclé avec graisse, armoire à glace</td>
+              </tr>
+            </tbody>
+            
+          </table>
         </div>
         <h1><strong>Chapitre 1 - Réalité</strong></h1>
         <h2>1.1 - <strong>PdV d’Alex</strong></h2>

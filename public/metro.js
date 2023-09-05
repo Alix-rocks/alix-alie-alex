@@ -120,28 +120,13 @@ function nextButton(){
 }
 
 function exitRadioChange(event){
-  event.currentTarget.classList.toggle("exitRadioChecked");
   exitN = event.currentTarget.dataset.idx;
-
-// let exitInputs = document.querySelectorAll(".exitInput");
-// for(i = 0; i < exitInputs.length; i++){
-//   if(exitInputs[i].checked){
-//     document.getElementById("exit" + i + "Label").classList.add("exitRadioChecked");
-//     //register which exit has been chosen (exitN)
-//     exitN = i;
-//     console.log("exit= " + i);
-//   } else{
-//     document.getElementById("exit" + i + "Label").classList.remove("exitRadioChecked");}
-// };
-document.getElementById("goBtn").classList.remove("displayNone");
-//Remembers what exit you took for this statArr! but in localhost (no google account)
+  document.getElementById("goBtn").classList.remove("displayNone");
+//Remembers what exit you took for this statArr! but in localstorage (no google account)
 }
 // choosingLine("DL");
 export { choosingLine };
 
-// function calcTrajet(){
-//   getStatTrajet();
-// }
 
 let tX = 0;
 function depart(station, direction, color, descente){

@@ -56,7 +56,18 @@
   display: block;
   margin: 1px;
 }
-.exitRadioChecked{
+.exitInput:checked+.exitLabel{
+  background-color: var(--tx-color);
+  color: var(--bg-color);
+}
+.exitInput:checked+.exitLabel>span.exitRadio{
+  background-color: var(--bg-color);
+  border-color: var(--bg-color);
+}
+.exitInput:checked+.exitLabel>span.exitRadio>span{
+  background-color: var(--tx-color);
+}
+/* .exitRadioChecked{
   background-color: var(--tx-color);
   color: var(--bg-color);
 }
@@ -66,7 +77,7 @@
 }
 .exitRadioChecked>span.exitRadio>span{
   background-color: var(--tx-color);
-}
+} */
 .metroDetA{
   text-decoration: underline;
 }

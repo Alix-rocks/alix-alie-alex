@@ -20,7 +20,7 @@ input:focus, textarea:focus, select:focus{
 }
 .cossin{
   position: absolute; 
-  top:0;
+  /* top:0; */
   overflow: hidden; 
   clip: rect(0 0 0 0); 
   height: 1px; width: 1px; 

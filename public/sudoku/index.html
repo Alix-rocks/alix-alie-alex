@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/typicons/2.0.9/typicons.css"/>
+  
+  <title>SUDOKU</title>
+</head>
+
+<body>
+
+  <style>
+    *{
+      font-family: 'Nunito', sans-serif;
+    }
+    :root{
+      --thumbColor: dodgerblue;
+      --contentTypcn: '\E142';
+    }
+    .total {
+      /*display: block;*/
+      width: 90vw;
+      height: 90vh;
+      margin: auto;
+      display: flex;
+      /*align-items: center;*/
+      justify-content: center;
+      /*background-color: white;*/
+    }
+    button, label {
+      border-top: 2px solid darkslategrey;
+      border-left: 2px solid darkslategrey;
+      border-right: 4px solid darkslategrey;
+      border-bottom: 4px solid darkslategrey;
+      border-radius: 10px;
+      width: fit-content;
+      color: darkslategrey;
+      text-align: center;
+      background-color: lightgrey;
+    }
+    #startDiv button {
+      padding: 5px 10px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    button#startFirst{
+      font-size: 30px;
+      padding: 0px 10px;
+    }
+    button#starBut{
+      background-color: white;
+    }
+    .typcn-star{
+      color: gold;
+      font-size: 30px;
+      padding: 0px 5px;
+    }
+    #modeDiv, #indDiv, #startDiv, #levelDiv, #levelDivWhole, #starDiv{
+      width: fit-content;
+      margin: 10px auto;
+    }
+    #startDiv, #startDivIn, #levelDiv, #levelDivWhole{
+      display: flex;
+    }
+    #startDiv{
+      flex-flow: row nowrap;
+      align-items: center;
+    }
+    #startDivIn, #levelDiv{
+      flex-flow: column nowrap;
+      justify-content: center;
+    }
+
+    .modeBut{
+      padding: 5px 10px;
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 20px;
+      margin: 0 5px;
+    }
+    input[name="mode"]:checked + label.modeBut{
+      background-color: limegreen;
+    }
+    input[name="mode"]:checked + label.modeBut>span.typcn-pencil{
+      color: white!important;
+    }
+    input{
+      display: none;
+    }
+    h1 {
+      text-align: center;
+      font-size: 34px;
+      margin: 5px auto 10px;
+    }
+    #backBut{
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      opacity: .5;
+    }
+    #levelSign{
+      position: absolute;
+      top: 3px;
+      right: 3px;
+    }
+    .info {
+      font-size: 14px;
+      background-color: lightgray;
+      border-radius: 25px;
+      padding: 5px;
+      width: fit-content;
+      height: 16px;
+      line-height: 16px;
+      font-weight: 500;
+      margin: auto auto 5px;
+      text-align: center;
+    }
+    #timerDiv {
+      color: blue;
+    }
+    .typcn-stopwatch{
+      display: inline-block;
+      font-size: 1.1em;
+      translate: 0 -1.5px;
+      color: blue;
+    }
+    div.slider .typcn-stopwatch{
+      translate: 0 -3px;
+    }
+    #timerNum{
+      padding-left: 3px;
+    }
+    #errorsDiv{
+      color: red;
+      padding: 0 8px 5px 5px;
+    }
+    .typcn-times{
+      display: inline-block;
+      font-size: 1.3em;
+      line-height: 1em;
+      font-weight: 100;
+      color: red;
+    }
+    table#table {
+      margin: auto;
+    }
+
+    table#table,
+    #table .case {
+      border: 2px solid darkslategrey;
+      padding: 2px;
+      width: fit-content;
+      color: darkslategrey;
+      border-collapse: collapse;
+    }
+
+    #table colgroup,
+    #table tbody.bloc {
+      border: solid medium darkslategrey;
+    }
+
+    #table tbody.bloc:nth-of-type(2n + 1) td.case:nth-of-type(n + 4):nth-of-type(-n + 6),
+    #table tbody.bloc:nth-of-type(2) td.case:nth-of-type(-n + 3),
+    #table tbody.bloc:nth-of-type(2) td.case:nth-of-type(n + 7):nth-of-type(-n + 9) {
+      background-color: lightgray;
+    }
+
+    .case {
+      position: relative;
+    }
+
+    .highlight {
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      width: 28px;
+      height: 28px;
+      border-radius: 25px;
+      z-index: 10;
+      border: 2px solid rgba(255, 255, 255, 0);
+      background: rgba(255, 255, 255, 0);
+    }
+
+    .highlighted {
+      border-color: limegreen;
+    }
+
+    #circles div,
+    #table td.case {
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 26px;
+      margin: auto;
+      border: solid thin darkslategrey;
+    }
+
+    #circles {
+      display: flex;
+      flex-wrap: row nowrap;
+      width: fit-content;
+      margin: 15px auto;
+      background-color: darkslategrey;
+      border: solid 1px darkslategrey;
+    }
+
+    #circles div {
+      width: 28px;
+      height: 28px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 28px;
+      margin: 1px;
+      border-radius: 25px;
+      color: darkslategrey;
+      padding: 2px;
+      background-color: white;
+    }
+
+    .selected {
+      background-color: limegreen!important;
+      /*opacity: .5;*/
+    }
+    #circles div.littler{
+      color: white;
+      text-shadow: 
+        1px 0 darkslategrey,
+        0 1px darkslategrey,
+        -1px 0 darkslategrey,
+        0 -1px darkslategrey;
+    }
+
+    .error:after {
+      content: '';
+      height: 30px;
+      border-left: 4px solid red;
+      border-radius: 5px;
+      position: absolute;
+      transform: rotate(45deg);
+      left: 15px;
+      top: 2.5px;
+    }
+
+    .error:before {
+      content: '';
+      height: 30px;
+      border-left: 4px solid red;
+      border-radius: 5px;
+      position: absolute;
+      transform: rotate(-45deg);
+      left: 15px;
+      top: 2.5px;
+    }
+    table.littleTable{
+      margin: auto;
+    }
+    table.littleTable, .littleTable tr, .littleTable td{
+      border: none;
+    }
+    .littleTd{
+      font-size: 9px;
+      font-weight: 100;
+      line-height: 5px;
+      height: 3px;
+      width: 3px;
+      text-align: center;
+      visibility: hidden;
+    }
+    .showIt{
+      visibility: visible;
+    }
+    .slideZone{
+      position: relative;
+      width: 50px;
+      height: 25px;
+      border-radius: 25px;
+      border: solid thin darkslategrey;
+      background-color: lightgrey;
+      margin: 10px auto;
+    }
+    .slider{
+      float: left;
+      width: 24px;
+      height: 24px;
+      border-radius: 25px;
+      border: solid thin darkslategrey;
+      background-color: white;
+      text-align: center;
+    }
+    .slided{
+      background-color: rgba(50,205,50,.6);
+    }
+    .slided .slider{
+      float: right;
+    }
+    .levelCircle{
+      width: 30px;
+      height: 30px;
+      border-radius: 25px;
+      font-size: 20px;
+      line-height: 25px;
+      text-align: center;
+      color: white;
+      margin: 1px 5px;
+      border: none;
+    }
+    .lightblue{
+      background-color: dodgerblue;
+    }
+    .lightblue:before {
+      font-family: typicons;
+      content: '\E142';
+    }
+    .green{
+      background-color: forestgreen;
+    }
+    .green:before {
+      font-family: typicons;
+      content: '\E13E';
+    }
+    .yellow{
+      background-color: orange;
+    }
+    .yellow:before {
+      font-family: typicons;
+      content: '\E13F';
+    }
+    .red{
+      background-color: red;
+    }
+    .red:before {
+      font-family: typicons;
+      content: '\E13C';
+    }
+    .purple{
+      background-color: rebeccapurple;
+    }
+    .purple:before {
+      font-family: typicons;
+      content: '\E141';
+    }
+    input[name="level"]:checked + label.levelCircle{
+      border: 5px solid white;
+      outline: solid 1px darkslategrey;
+      outline-offset: 0px;
+      margin: 1px 0;
+    }
+    .typcn-heart{
+      display: inline-block;
+      color: limegreen;
+    }
+    #indDiv .typcn-heart{
+      font-size: 30px;
+    }
+    .used{
+      color: darkslategrey;
+    }
+    .newInd{
+      color: limegreen!important;
+    }
+    .filled{
+      color: purple!important;
+    }
+    .filled div.highlight{
+      border-color: purple!important;
+    }
+    .filledCircle{
+      opacity: .4;
+    }
+    .popup{
+      border: solid medium darkslategrey;
+      border-radius: 15px;
+      width: fit-content;
+      padding: 0 10px 20px;
+    }
+    .popup h2{
+      color: darkslategrey;
+    }
+    #popup{
+      margin: auto;
+    }
+    #popup tr:nth-of-type(1){
+      color: blue;
+    }
+    #popup tr:nth-of-type(2){
+      color: red;
+    }
+    #popup tr:nth-of-type(3) {
+      color: limegreen;
+    }
+    #popup tr td:nth-of-type(1){
+      text-align: center;
+    }
+    #popup tr td:nth-of-type(2){
+      text-align: left;
+    }
+    #threeStars{
+      width: 100%;
+      height: 65px; 
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    #threeStars span:nth-of-type(1){
+      align-self: center;
+    }
+    #threeStars span:nth-of-type(2){
+      align-self: start;
+    }
+    #threeStars span:nth-of-type(3) {
+      align-self: center;
+    }
+    .levelStar{
+      display: flex;
+      flex-flow: row nowrap;
+    }
+    .levelStarHr{
+      border-bottom: 2px solid lightslategrey;
+      margin-bottom: 5px;
+    }
+    .displayNone{
+      display: none!important;
+    }
+  </style>
+  <div class="total">
+    <div id="pause" class="panel displayNone"></div>
+    <div id="starsScreen" class="panel displayNone"></div>
+    <div id="sudoku" class="panel displayNone"></div>
+  </div>
+</body>
+<script>
+  let sudokuQuestion = [
+    [0, 7, 0, 4, 8, 9, 2, 0, 0],
+    [2, 6, 8, 3, 0, 0, 5, 4, 9],
+    [9, 4, 0, 2, 0, 0, 7, 8, 1],
+    [0, 0, 6, 9, 2, 5, 4, 7, 8],
+    [4, 2, 9, 7, 0, 8, 3, 1, 5],
+    [7, 8, 5, 1, 4, 3, 9, 0, 0],
+    [6, 9, 2, 0, 0, 1, 0, 3, 4],
+    [1, 3, 7, 0, 0, 4, 6, 5, 2],
+    [0, 0, 4, 6, 3, 2, 0, 9, 0]
+  ];
+  let sudokuSolution = [
+    [5, 7, 1, 4, 8, 9, 2, 6, 3],
+    [2, 6, 8, 3, 1, 7, 5, 4, 9],
+    [9, 4, 3, 2, 5, 6, 7, 8, 1],
+    [3, 1, 6, 9, 2, 5, 4, 7, 8],
+    [4, 2, 9, 7, 6, 8, 3, 1, 5],
+    [7, 8, 5, 1, 4, 3, 9, 2, 6],
+    [6, 9, 2, 5, 7, 1, 8, 3, 4],
+    [1, 3, 7, 8, 9, 4, 6, 5, 2],
+    [8, 5, 4, 6, 3, 2, 1, 9, 7]
+  ];
+  //let sudokuSoFar = sudokuQuestion;
+  let sudokuSoFar = [
+    [0, 7, 0, 4, 8, 9, 2, 0, 0],
+    [2, 6, 8, 3, 0, 0, 5, 4, 9],
+    [9, 4, 0, 2, 0, 0, 7, 8, 1],
+    [0, 0, 6, 9, 2, 5, 4, 7, 8],
+    [4, 2, 9, 7, 0, 8, 3, 1, 5],
+    [7, 8, 5, 1, 4, 3, 9, 0, 0],
+    [6, 9, 2, 0, 0, 1, 0, 3, 4],
+    [1, 3, 7, 0, 0, 4, 6, 5, 2],
+    [0, 0, 4, 6, 3, 2, 0, 9, 0]
+  ]; 
+  const levelArray = ["lightblue", "green", "yellow", "red", "purple"];
+  let niveau = 1,
+      levelColor = "lightblue",
+      chiffre = 0,
+      errorsCount = 0,
+      indiceCount = 0,
+      tryMode = false,
+      slideTimer = false,
+      slideError = false,
+      hr = min = sec = "0" + 0,
+      startTimer;
+
+  function startIt(){
+    pause.classList.remove("displayNone");
+    pause.innerHTML = `<div id="startDiv">
+        <button id="startFirst">
+          <span class="typcn typcn-power"></span>
+        </button>
+        <div id="startDivIn">
+          <button id="startOld" class="displayNone">
+            <span class="typcn typcn-media-play-reverse"></span>
+            <span class="typcn typcn-document-text"></span>
+          </button>
+          <button id="startAgain" class="displayNone">
+            <span class="typcn typcn-media-play-reverse"></span>
+            <span class="typcn typcn-document"></span>
+          </button>
+        </div>
+        <button id="startNew" class="displayNone" style="opacity: .4;">
+          <span class="typcn typcn-document-add"></span>
+          <span class="typcn typcn-media-play"></span>
+        </button>
+      </div>
+      <div class="slideZone" id="sliderTimer">
+        <div class="slider">
+          <span class="typcn typcn-stopwatch"></span>
+        </div>
+      </div>
+      <div class="slideZone" id="sliderError">
+        <div class="slider">
+          <span class="typcn typcn-times"></span>
+        </div>
+      </div>
+    <div id="levelDiv">
+      <input id="level1" type="radio" name="level" value="1" checked/>
+      <label for="level1" class="levelCircle lightblue"></label>
+      <input id="level2" type="radio" name="level" value="2"/>
+      <label for="level2" class="levelCircle green"></label>
+      <input id="level3" type="radio" name="level" value="3" />
+      <label for="level3" class="levelCircle yellow"></label>
+      <input id="level4" type="radio" name="level" value="4" />
+      <label for="level4" class="levelCircle red"></label>
+      <input id="level5" type="radio" name="level" value="5" />
+      <label for="level5" class="levelCircle purple"></label>
+    </div>
+    <button id="starBut"><span class="typcn typcn-star"></span></button>
+    `;
+    
+    sliderTimer.addEventListener("click", (evt) => {
+      let slider = evt.currentTarget;
+      if (slider.classList.contains("slided")) {
+          slider.classList.remove("slided");
+          slideTimer = false;
+        } else {
+          slider.classList.add("slided");
+          slideTimer = true;
+        };
+    });
+    sliderError.addEventListener("click", (evt) => {
+      let slider = evt.currentTarget;
+      if (slider.classList.contains("slided")) {
+          slider.classList.remove("slided");
+          slideError = false;
+        } else {
+          slider.classList.add("slided");
+          slideError = true;
+        };
+    });
+    startOld.addEventListener("click", () => {
+      pause.classList.add("displayNone");
+      sudoku.classList.remove("displayNone");
+      sliderCheck();
+      startTimerFx();
+    });
+    startAgain.addEventListener("click", () => {
+      pause.classList.add("displayNone");
+      sudoku.classList.remove("displayNone");
+      tableFillation(sudokuQuestion);
+      //Fill with sudokuQuestion and put everything back to zero
+    });
+    startNew.addEventListener("click", () => {
+      pause.classList.add("displayNone");
+      sudoku.classList.remove("displayNone");
+      tableFillation(newSudoku);
+      //Fill with a NEW sudokuQuestion and put everything back to zero
+      //NO! you need to ask the level!!
+    });
+    startFirst.addEventListener("click", () => { pause.classList.add("displayNone");
+      sudoku.classList.remove("displayNone");
+      tableCreation();
+    });
+    document.querySelectorAll("input[name=level]").forEach((radio) => {
+      radio.addEventListener("click", (evt) => {
+        niveau = evt.currentTarget.value;
+        console.log(niveau);
+        levelColor = levelArray[niveau - 1];
+        console.log(levelColor);
+      });
+    });
+    starBut.addEventListener("click", starsShow);
+  };
+  startIt();
+  
+  function starsShow(){
+    console.log("stars!");
+    let levelStars = [];
+    for(let l = 0; l < 5; l++){
+      levelStar = `<div class="levelStar ${l < 4 ? "levelStarHr" : ""}">
+          <div class="levelCircle ${levelArray[l]}"></div>
+          <table id="popup">
+              <tr>
+                <td><span class="typcn typcn-stopwatch"></span></td>
+                <td>00:00</td>
+              </tr>
+              <tr>
+                <td><span class="typcn typcn-times"></span></td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td><span class="typcn typcn-heart"></span></td>
+                <td>0</td>
+              </tr>
+            </table>
+          </div>`
+      levelStars.push(levelStar);
+    };
+    let levelStarsF = levelStars.join("");
+    pause.classList.add("displayNone");
+    starsScreen.classList.remove("displayNone");
+    starsScreen.innerHTML = `<div class="popup">
+        <div id="threeStars">
+          <span class="typcn typcn-star"></span>
+          <span class="typcn typcn-star"></span>
+          <span class="typcn typcn-star"></span>
+        </div>
+        ${levelStarsF}
+      </div>`;
+    document.querySelector("#starsScreen:not(.levelStar)").addEventListener("click", () => {
+      starsScreen.classList.add("displayNone");
+      pause.classList.remove("displayNone");
+    });
+  };
+  
+  
+  //JSON.stringify(sudokuSoFar) == JSON.stringify(sudokuQuestion)
+  
+  function back(){
+    pauseTimerFx();
+    sudoku.classList.add("displayNone");
+    startOld.classList.remove("displayNone");
+    startNew.classList.remove("displayNone");
+    startAgain.classList.remove("displayNone");
+    startFirst.classList.add("displayNone");
+    levelDiv.classList.add("displayNone");
+    pause.classList.remove("displayNone");
+  };
+  
+  //ERIC
+    //sudokuSoFar = sudokuQuestion
+    //addevent just for the first one, then something else 
+  //Cercle dans coin droit avec couleur du niveau de difficulté et numéro de la grille
+  //Make it responsive!!! {That would need to be done on computer}
+  //localStorage : time & errors & indices (& niveau difficulté)
+  //Celebration popup
+  //Tableau des scores 3 typcn-star
+  
+  
+  
+  function startTimerFx() {
+    startTimer = setInterval(()=>{
+      sec++
+      sec = sec < 10 ? "0" + sec : sec;
+      if(sec == 60){
+        min++;
+        min = min < 10 ? "0" + min : min;
+        sec = "0" + 0;
+      }
+      if(min == 60){
+        hr++;
+        hr = hr < 10 ? "0" + hr : hr;
+        min = "0" + 0;
+      }
+      if(hr > 0){
+        timerNum.innerHTML = hr + ":" + min + ":" + sec;
+      } else{
+      timerNum.innerHTML = min + ":" + sec;
+      };
+    },1000); //1000ms = 1s
+  }
+  function pauseTimerFx() {
+    clearInterval(startTimer);
+  }
+  function resetTimerFx() {
+    clearInterval(startTimer);
+    hr = min = sec = "0" + 0;
+    timerNum.innerHTML = min + ":" + sec;
+  }
+  
+  function erase() {
+    console.log("erase");
+    chiffre = 0;
+    document.querySelectorAll(".circle").forEach(circle => {
+      circle.classList.remove("selected");
+    });
+    document.querySelectorAll(".case").forEach(kase => {
+      kase.classList.remove("newInd", "error", "filled");
+      kase.querySelector(".highlight").classList.remove("highlighted");
+    });
+  };
+  
+  function tableFillation(sudokuArray){
+    erase();
+    chiffre = 0;
+    document.querySelectorAll(".circle").forEach(circle => {
+      circle.classList.remove("filledCircle");
+    });
+    errorsCount = 0;
+    indiceCount = 0;
+    document.querySelectorAll(".typcn-heart").forEach((heart) => {
+      heart.classList.remove("used");
+    });
+    resetTimerFx();
+    sudokuSoFar = sudokuArray; //Reset SoFar
+    let cases = document.querySelectorAll(".case");
+    cases.forEach((kase) => {
+      //re-establish the font-weight
+      //remove the 0
+      let i = kase.dataset.row;
+      let j = kase.dataset.col;
+      let num = sudokuArray[i][j];
+      num == 0 ? num = "" : num;
+      let inside = kase.querySelector(".highlight");
+      inside.style.fontWeight = "700";
+      inside.innerHTML = num;
+    });
+    for (let n = 1; n < 10; n++) {
+      checkFilled(n);
+    };
+    sliderCheck();
+    startTimerFx();
+  };
+  
+  function sliderCheck(){
+    if(slideTimer){
+      timerDiv.classList.remove("displayNone");
+    } else{
+      timerDiv.classList.add("displayNone");
+    };
+    if(slideError){
+      errorsDiv.classList.remove("displayNone");
+    } else{
+      errorsDiv.classList.add("displayNone");
+    };
+  };
+
+  function tableCreation() {
+    let allCells = [];
+    let lines = [];
+    let circles = [];
+    for (let i = 0; i < 9; i++) {
+      let circle = `<div class="circle" id="opt${i + 1}">${i + 1}</div>`;
+      circles.push(circle);
+      let cols = [];
+      let cells = [];
+      for (let j = 0; j < 9; j++) {
+        let num = sudokuQuestion[i][j];
+        num == 0 ? num = "" : num;
+        let bloc = 0;
+        if(i < 3){
+          if(j < 3){
+            bloc = 1;
+          } else if(j > 5){
+            bloc = 3;
+          } else{
+            bloc = 2;
+          };
+        } else if(i > 5){
+          if(j < 3){
+            bloc = 7;
+          } else if(j > 5){
+            bloc = 9;
+          } else{
+            bloc = 8;
+          };
+        } else{
+          if(j < 3){
+            bloc = 4;
+          } else if(j > 5){
+            bloc = 6;
+          } else{
+            bloc = 5;
+          };
+        }
+        let col = `<td class="case" id="r${i}c${j}" data-row="${i}" data-col="${j}" data-bloc="${bloc}"><div class="highlight">${num}</div></td>`;
+        cols.push(col);
+        cells.push("r" + i + "c" + j)
+      };
+      let colsF = cols.join("");
+      let line = `<tr class="line" id="r${i}">${colsF}</tr>`;
+      lines.push(line);
+      allCells.push(cells);
+    };
+    let circlesF = circles.join("");
+    let tbody = `<tbody class="bloc">`;
+    lines.splice(3, 0, tbody);
+    lines.splice(7, 0, tbody);
+    let linesF = lines.join("");
+    pause.classList.add("displayNone");
+    sudoku.classList.remove("displayNone");
+    sudoku.innerHTML = `<h1>SUDOKU</h1>
+      <button id="backBut">
+        <span class="typcn typcn-media-play-reverse"></span>
+        <span class="typcn typcn-media-pause"></span>
+      </button>
+      <div id="levelSign" class="levelCircle ${levelColor}"></div>
+      <div id="timerDiv" class="info displayNone"><span class="typcn typcn-stopwatch"></span><span id="timerNum">00:00</span></div>
+      <div id="errorsDiv" class="info displayNone"><span class="typcn typcn-times"></span><span id="errorsCountNum">${errorsCount}</span></div>
+      <table id="table">
+      <colgroup><col><col><col>
+      <colgroup><col><col><col>
+      <colgroup><col><col><col>
+      <tbody class="bloc">
+      ${linesF}
+      </table>
+      <div id="circles"></div>
+      <div id="modeDiv">
+        <input type="radio" name="mode" id="repBut" checked/>
+        <label for="repBut" class="modeBut"><span class="typcn typcn-pen"></span></label>
+        <input type="radio" name="mode" id="tryBut"/>
+        <label for="tryBut" class="modeBut"><span class="typcn typcn-pencil"></span></label>
+      </div>
+      <div id="indDiv">
+        <span class="typcn typcn-heart"></span>
+        <span class="typcn typcn-heart"></span>
+        <span class="typcn typcn-heart"></span>
+      </div>`;
+    sliderCheck();
+    backBut.addEventListener("click", back);
+    repBut.addEventListener("click", () => {
+      tryMode = false;
+      document.querySelectorAll(".circle").forEach(cercle => {
+      cercle.classList.remove("littler");
+      });
+    });
+    tryBut.addEventListener("click", littleOnes);
+    document.querySelectorAll(".typcn-heart").forEach((heart) => {
+      heart.addEventListener("click", (evt) => {
+        indice(evt);
+      });
+    });
+    
+    document.getElementById("circles").innerHTML = circlesF;
+    for (let n = 1; n < 10; n++) {
+      checkFilled(n);
+    };
+    document.querySelectorAll(".circle").forEach(circle => {
+      circle.addEventListener("click", (evt) => {
+        let cercle = evt.currentTarget;
+        if (cercle.classList.contains("selected")) {
+          erase();
+        } else {
+          erase();
+          console.log("selected!");
+          cercle.classList.add("selected");
+        let id = cercle.id;
+        chiffre = id[3];
+        
+        };
+        document.querySelectorAll(".highlight").forEach(inside => { 
+          if (!inside.innerHTML.includes("table") && inside.textContent.includes(chiffre)) {
+            console.log(inside);
+            inside.classList.add("highlighted");
+          };
+        });
+      });
+    });
+    //document.querySelector("div.total:not(div#sudoku)").addEventListener("click", erase);
+    document.querySelectorAll(".case").forEach(carre => {
+      carre.addEventListener("click", (evt) => {
+        let kase = evt.currentTarget;
+        let b = kase.dataset.bloc;
+        let i = kase.dataset.row;
+        let j = kase.dataset.col;
+        let inside = kase.querySelector(".highlight");
+          if(tryMode == false){
+            if ((inside.innerText == "" || inside.innerHTML.includes("table")) && chiffre > 0) {
+              if (sudokuSolution[i][j] == chiffre) {
+                inside.innerText = chiffre;
+                inside.style.fontWeight = "400";
+                inside.classList.add("highlighted");
+                sudokuSoFar[i].splice(j, 1, chiffre);
+                checkFilled(chiffre);
+                removeOthers(chiffre, i, j, b);
+              } else {
+                if(kase.classList.contains("error")){
+                  kase.classList.remove("error")
+                } else{
+                  kase.classList.add("error");
+                  errorsCount++;
+                  if(slideError){
+                  errorsCountNum.innerHTML = errorsCount;
+                  };
+                };
+              };
+            };
+          } else if(tryMode){
+            let little = inside.querySelector("#lt" + chiffre);
+            little.classList.toggle("showIt");
+          };
+      });
+    });
+    startTimerFx();
+  };
+
+  function checkFilled(chiffre) {
+    let soFar = sudokuSoFar.flat();
+    let countTot = soFar.filter((num) => num == 0).length;
+    if (countTot == 0) {
+      erase();
+      pauseTimerFx();
+      //stoptimer
+      //localStorage : time & errors & indices (& niveau difficulté)
+      //Celebration popup
+      //Tableau des scores 
+      sudoku.innerHTML = `<div class="popup">
+          <h2>C'est fiiiniiiii!!!</h2>
+          <table id="popup">
+            <tr>
+              <td><span class="typcn typcn-stopwatch"></span></td>
+              <td>${hr = hr > 0 ? hr + ":" : ""}${min}:${sec}</td>
+            </tr>
+            <tr>
+              <td><span class="typcn typcn-times"></span></td>
+              <td>${errorsCount}</td>
+            </tr>
+            <tr>
+              <td><span class="typcn typcn-heart"></span></td>
+              <td>${indiceCount}</td>
+            </tr>
+          </table>
+          <div id="levelSign" class="levelCircle ${levelColor}"></div>
+        </div>`;
+    };
+    let count = soFar.filter((num) => num == chiffre).length;
+    if (count == 9) {
+      document.getElementById("opt" + chiffre).classList.add("filledCircle");
+      document.querySelectorAll(".case").forEach((kase) => {
+        if(!kase.innerHTML.includes("table") && kase.textContent.includes(chiffre)){
+          kase.classList.add("filled");
+        };
+      });
+    };
+  };
+  
+  function littleOnes() {
+    tryMode = true;
+    document.querySelectorAll(".circle").forEach(cercle => {
+      cercle.classList.add("littler");
+    });
+    document.querySelectorAll(".highlight").forEach(inside => {
+      inside.parentElement.classList.remove("error");
+    });
+    let littlesTr = [];
+    for (let i = 1; i < 4; i++) {
+      let littlesTd = [];
+      for (let j = (1 + (i - 1) * 3); j < (4 + (i - 1) * 3); j++) {
+        let littleTd = `<td class="littleTd" id="lt${j}">${j}</td>`;
+        littlesTd.push(littleTd);
+      };
+      let littlesTdF = littlesTd.join("");
+      let littleTr = `<tr>${littlesTdF}</tr>`;
+      littlesTr.push(littleTr);
+    };
+    let littlesTrF = littlesTr.join("");
+    let littleTable = `<table class="littleTable">${littlesTrF}</table>`;
+    document.querySelectorAll(".case").forEach((kase) => {
+      let inside = kase.querySelector(".highlight");
+      if (inside.innerText == "") {
+        inside.innerHTML = littleTable;
+      };
+    });
+  };
+  
+  function removeOthers(chiffre, i, j, b) {
+    document.querySelectorAll('.case[data-row="' + i + '"]').forEach((kaseI) => {
+      if (kaseI.innerHTML.includes("table")) {
+        kaseI.querySelector("#lt" + chiffre).classList.remove("showIt");
+      };
+    });
+    document.querySelectorAll('.case[data-col="' + j + '"]').forEach((kaseJ) => {
+      if (kaseJ.innerHTML.includes("table")) {
+        kaseJ.querySelector("#lt" + chiffre).classList.remove("showIt");
+      };
+    });
+    document.querySelectorAll('.case[data-bloc="' + b + '"]').forEach((kaseB) => {
+      if (kaseB.innerHTML.includes("table")) {
+        kaseB.querySelector("#lt" + chiffre).classList.remove("showIt");
+      };
+    });
+  };
+  
+  function indice(evt) {
+    if(!evt.currentTarget.classList.contains("used")){
+      evt.currentTarget.classList.add("used");
+      indiceCount++;
+      let vides = [];
+      document.querySelectorAll(".highlight").forEach((inside) => {
+        if (inside.innerText == "" || inside.innerHTML.includes("table")) {
+          let id = inside.parentElement.id;
+          vides.push(id);
+        };
+      });
+      let randomIndex = Math.floor(Math.random() * vides.length);
+      let kase = vides[randomIndex];
+      console.log(kase);
+      let kaseCase = document.getElementById(kase);
+      let i = kaseCase.dataset.row;
+      let j = kaseCase.dataset.col;
+      let num = sudokuSolution[i][j];
+      kaseCase.classList.add("newInd");
+      kaseCase.querySelector(".highlight").innerHTML = num;
+      sudokuSoFar[i].splice(j, 1, num);
+      checkFilled(num);
+    };
+  };
+</script>
+
+</html>
+

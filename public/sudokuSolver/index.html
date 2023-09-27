@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/typicons/2.0.9/typicons.css"/>
+  
+  <title>SUDOKU</title>
+</head>
+
+<body>
+
+  <style>
+    *{
+      font-family: 'Nunito', sans-serif;
+    }
+    :root{
+      --thumbColor: dodgerblue;
+      --contentTypcn: '\E142';
+    }
+    .total {
+      width: 90vw;
+      height: 90vh;
+      margin: auto;
+      display: flex;
+      justify-content: center;
+      background-color: white;
+    }
+    button, label {
+      border-top: 2px solid darkslategrey;
+      border-left: 2px solid darkslategrey;
+      border-right: 4px solid darkslategrey;
+      border-bottom: 4px solid darkslategrey;
+      border-radius: 10px;
+      width: fit-content;
+      color: darkslategrey;
+      text-align: center;
+      background-color: lightgrey;
+    }
+    #solver, #next{
+      margin: 15px auto;
+      font-size: 25px;
+      font-weight: 700;
+    }
+    #modeDiv{
+      margin: 10px auto;
+      width: 320px;
+      text-align: center;
+      position: relative;
+    }
+    #solutionDiv{
+      width: fit-content;
+      margin: 10px auto;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+    }
+
+    #kaseModeLabel{
+      position: absolute;
+      top: -10px;
+      right: 0;
+      padding: 0 1px 0 4px;
+      display: flex;
+      flex-flow: row nowrap;
+      width: 45px;
+    }
+    #kaseModeLabel span:nth-of-type(2){
+      width: 12px;
+    }
+    #kaseModeLabel span:nth-of-type(3){
+      width: 3px;
+    }
+    #kaseModeCheck:checked + #kaseModeLabel{
+      background-color: red;
+    }
+    #eraseModeLabel{
+      padding: 5px 15px;
+      height: fit-content;
+      text-align: center;
+    }
+    #eraseModeLabel span.typcn-tag{
+      display: inline-block;
+      transform: rotate(270deg);
+      font-size: 20px;
+      line-height: .8em;
+    }
+    #eraseModeCheck:checked + #eraseModeLabel{
+      background-color: darkslategrey;
+      color: lightgrey;
+    }
+    input[type="checkbox"], input[type="radio"]{
+      display: none;
+    }
+    h1 {
+      text-align: center;
+      font-size: 34px;
+      margin: 5px auto 10px;
+    }
+    h3{
+      text-align: center;
+      margin: 15px auto 0;
+      line-height: 1em;
+      color: darkred;
+    }
+
+    table#table {
+      margin: auto;
+    }
+    table#table,
+    #table .case {
+      border: 2px solid darkslategrey;
+      padding: 2px;
+      width: fit-content;
+      color: darkslategrey;
+      border-collapse: collapse;
+    }
+
+    #table colgroup,
+    #table tbody.bloc {
+      border: solid medium darkslategrey;
+    }
+
+    #table tbody.bloc:nth-of-type(2n + 1) td.case:nth-of-type(n + 4):nth-of-type(-n + 6),
+    #table tbody.bloc:nth-of-type(2) td.case:nth-of-type(-n + 3),
+    #table tbody.bloc:nth-of-type(2) td.case:nth-of-type(n + 7):nth-of-type(-n + 9) {
+      background-color: lightgray;
+    }
+
+    .case {
+      position: relative;
+    }
+    
+    #circles div,
+    #table td.case {
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 26px;
+      margin: auto;
+      border: solid thin darkslategrey;
+    }
+
+    #circles {
+      display: flex;
+      flex-wrap: row nowrap;
+      width: fit-content;
+      margin: 15px auto;
+      background-color: darkslategrey;
+      border: solid 1px darkslategrey;
+    }
+
+    #circles div {
+      width: 28px;
+      height: 28px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 28px;
+      margin: 1px;
+      border-radius: 25px;
+      color: darkslategrey;
+      padding: 2px;
+      background-color: white;
+    }
+
+    .selected {
+      background-color: limegreen!important;
+    }
+
+    .popup{
+      border: solid medium darkslategrey;
+      border-radius: 15px;
+      width: fit-content;
+      padding: 0 10px 20px;
+      margin: auto;
+    }
+    .popup h2{
+      color: darkslategrey;
+    }
+
+    .displayNone{
+      display: none!important;
+    }
+    .surring{
+      font-weight: 700;
+    }
+    .trying{
+      font-weight: 100!important;
+    }
+    .purpleAnswer{
+      color: purple!important;
+    }
+    .levelInputDiv{
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      align-items: center;
+      width: 320px;
+      margin: 0 auto 5px;
+    }
+    .levelInputLabel{
+      font-size: 20px;
+      line-height: 1em;
+      margin: 0 5px 0 0;
+      color: darkslategrey;
+    }
+    .levelInput {
+      height: 25px;
+      font-size: 20px;
+      line-height: 20px;
+      font-weight: 500;
+      padding: 2px 7px;
+      border: 2px solid slategrey;
+      border-radius: 5px;
+      width: 70%;
+      color: darkslategrey;
+      text-align: left;
+      background-color: rgba(66, 68, 90,0.1);
+    }
+    levelInput:focus{
+      outline: none!important;
+      border-color: limegreen;
+    }
+  </style>
+  <div class="total">
+    <div id="sudoku"></div>
+  </div>
+</body>
+<script>
+//Conected to firebass and save all sudoku solved as a question, solution, theoretical difficulty level AND how many coups it took
+  let sudokuNew = [
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0]
+  ];
+  let sudokuSoFar;
+  function copySudoku(sudokuArray){
+    return [
+      [...sudokuArray[0]],
+      [...sudokuArray[1]],
+      [...sudokuArray[2]],
+      [...sudokuArray[3]],
+      [...sudokuArray[4]],
+      [...sudokuArray[5]],
+      [...sudokuArray[6]],
+      [...sudokuArray[7]],
+      [...sudokuArray[8]],
+    ];
+  };
+
+  function tableCreation() {
+    kaseMode = false;
+    eraseMode = false;
+    let allCells = [];
+    let lines = [];
+    let circles = [];
+    for (let i = 0; i < 9; i++) {
+      let circle = `<div class="circle" id="opt${i + 1}">${i + 1}</div>`;
+      circles.push(circle);
+      let cols = [];
+      let cells = [];
+      for (let j = 0; j < 9; j++) {
+        let bloc = 0;
+        if(i < 3){
+          if(j < 3){
+            bloc = 1;
+          } else if(j > 5){
+            bloc = 3;
+          } else{
+            bloc = 2;
+          };
+        } else if(i > 5){
+          if(j < 3){
+            bloc = 7;
+          } else if(j > 5){
+            bloc = 9;
+          } else{
+            bloc = 8;
+          };
+        } else{
+          if(j < 3){
+            bloc = 4;
+          } else if(j > 5){
+            bloc = 6;
+          } else{
+            bloc = 5;
+          };
+        };
+        let col = `<td class="case" id="r${i}c${j}" data-row="${i}" data-col="${j}" data-bloc="${bloc}"></td>`;
+        cols.push(col);
+        cells.push("r" + i + "c" + j)
+      };
+      let colsF = cols.join("");
+      let line = `<tr class="line" id="r${i}">${colsF}</tr>`;
+      lines.push(line);
+      allCells.push(cells);
+    };
+    let circlesF = circles.join("");
+    let tbody = `<tbody class="bloc">`;
+    lines.splice(3, 0, tbody);
+    lines.splice(7, 0, tbody);
+    let linesF = lines.join("");
+    sudoku.innerHTML = `<h1>SUDOKU</h1>
+      <div class="levelInputDiv">
+        <h3 class="levelInputLabel">Niveau&nbsp:</h3>
+        <input type="text" class="levelInput" id="levelValue" placeholder="put circles instead!"/>
+      </div>
+      <!-- Make them figure out the difficulty level themselves and make them choose the circle!-->
+      <table id="table">
+        <colgroup><col><col><col>
+        <colgroup><col><col><col>
+        <colgroup><col><col><col>
+        <tbody class="bloc">
+        ${linesF}
+      </table>
+      <div id="circles">${circlesF}</div>
+      <div id="modeDiv">
+        <input type="checkbox" id="eraseModeCheck"/>
+        <label for="eraseModeCheck" id="eraseModeLabel">
+          <span class="typcn typcn-tag"></span>
+        </label>
+        <input type="checkbox" id="kaseModeCheck"/>
+        <label for="kaseModeCheck" id="kaseModeLabel">
+          <span class="typcn typcn-th-small-outline"></span>
+          <span class="typcn typcn-chevron-right-outline"></span>
+          <span class="typcn typcn-media-record-outline"></span>
+        </label>
+      </div>
+      <div id="solutionDiv">
+        <button id="solver">Solution</button>
+        <h3 id="oups"></h3>
+        <button id="next" class="displayNone">Next</button>
+      </div>
+      <p id="questionInitiale"></p>
+      <p id="solutionFinale"></p>`;
+    levelValue.addEventListener("input", () => {
+      oups.classList.add("purpleAnswer");
+      oups.innerText = "";
+    });
+    kaseModeCheck.addEventListener("click", () => {
+      kaseMode = kaseMode ? false : true;
+    });
+    eraseModeCheck.addEventListener("click", () => {
+      eraseMode = eraseMode ? false : true;
+    });
+    document.querySelectorAll(".circle").forEach(circle => {
+      circle.addEventListener("click", (evt) => {
+        oups.innerText = "";
+        let cercle = evt.currentTarget;
+        if (cercle.classList.contains("selected")) {
+          erase();
+        } else {
+          erase();
+          cercle.classList.add("selected");
+          let id = cercle.id;
+          chiffre = id[3];
+        };
+      });
+    });
+    document.querySelectorAll(".case").forEach(kase => {
+      kase.addEventListener("click", (evt) => {
+        kaseEvent(kase, sudokuNew);
+      });
+    });
+    solver.addEventListener("click", () => {
+      let soNew = sudokuNew.flat();
+      let countTot = soNew.filter((num) => num == 0).length;
+      if(countTot == 81){
+        oups.classList.remove("purpleAnswer");
+        oups.innerText = "Add numbers first!";
+      } else if(!levelValue.value){
+        oups.classList.remove("purpleAnswer");
+        oups.innerText = "Add a difficulty level, please!";
+      } else{
+        erase();
+        kaseModeCheck.checked = false;
+        eraseModeCheck.checked = false;
+        sudokuCompleteSolver(sudokuNew);
+        solver.classList.add("displayNone");
+        next.classList.remove("displayNone");
+      };
+    });
+    next.addEventListener("click", tableCreation);
+  };
+  
+  function kaseEvent(kase, sudokuNew){
+    let i = kase.dataset.row;
+    let j = kase.dataset.col;
+    if(!eraseMode){
+      if(kaseMode && !kase.innerText == "") {
+        erase();
+        chiffre = kase.innerText;
+        document.getElementById("opt" + chiffre).classList.add("selected");
+      } else if(chiffre > 0){
+          kase.innerText = chiffre;
+          kase.classList.add("firstClass");
+          sudokuNew[i].splice(j, 1, chiffre);
+      };
+    } else{
+      kase.innerText = "";
+      kase.classList.remove("firstClass");
+      sudokuNew[i].splice(j, 1, "0");
+    };
+  };
+function erase() {
+    chiffre = 0;
+    document.querySelectorAll(".circle").forEach(circle => {
+      circle.classList.remove("selected");
+    });
+  };
+  
+  
+  
+  let answers;
+  let options = [];
+  let tryingMode = false;
+  let fucked = false;
+  let tries = [];
+  let lastFinal = "";
+  function caseRunner(sudokuQuestion, classe, cClasse){
+    answers = 0;
+    options = [];
+    for(let i = 0; i < 9; i++){
+      for(let j = 0; j < 9; j++){
+        let kase = document.getElementById("r" + i + "c" + j);
+        if(!kase.textContent){
+          let b = kase.dataset.bloc;
+          sudokuSolver(i, j, b, sudokuQuestion, classe, cClasse);
+        };
+      };
+    };
+  };
+  function sudokuSolver(i, j, b, sudokuQuestion, classe, cClasse){
+    let values = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    document.querySelectorAll('.case[data-row="' + i + '"]').forEach((kaseI) => {
+      let chiffre = kaseI.textContent;
+      values = values.filter(num => num !== chiffre);
+    });
+    document.querySelectorAll('.case[data-col="' + j + '"]').forEach((kaseJ) => {
+      let chiffre = kaseJ.textContent;
+      values = values.filter(num => num !== chiffre);
+    });
+    document.querySelectorAll('.case[data-bloc="' + b + '"]').forEach((kaseB) => {
+      let chiffre = kaseB.textContent;
+      values = values.filter(num => num !== chiffre);
+    });
+    if(values.length == 0){
+      fucked = true;
+    } else if (values.length == 1) {
+      answers++;
+      let rep = values[0];
+      let kase = document.getElementById("r" + i + "c" + j);
+      kase.innerText = rep;
+      kase.classList.add(classe, cClasse);
+      sudokuSoFar[i].splice(j, 1, rep);
+    } else if(values.length == 2){
+      let option = {
+        kaseId: "r" + i + "c" + j,
+        values: values
+      };
+      if(!options.find(item => item.kaseId === "r" + i + "c" + j)){
+        options.push(option);
+      };
+    };
+  };
+  
+  function sudokuCompleteSolver(sudokuQuestion) {
+    sudokuSoFar = copySudoku(sudokuQuestion);
+    let f = 200;
+    for(let c = 0; c < f; c++){
+      let soFar = sudokuSoFar.flat();
+      let countTot = soFar.filter((num) => num == 0).length;
+      if (countTot == 0) {
+        oups.classList.add("purpleAnswer");
+        oups.innerText = "Solved in " + c + "!";
+        showSudokuArray(sudokuQuestion, questionInitiale);
+        showSudokuArray(sudokuSoFar, solutionFinale);
+        document.querySelectorAll(".trying").forEach((kase) => {
+          kase.classList.remove("trying", "littler");
+        });
+        document.querySelectorAll(".case:not(.firstClass)").forEach((kase) => {
+          kase.classList.add("purpleAnswer");
+        });
+        console.log(soFar.toString());
+        //sudokuSaver(c);
+        break
+      } else if(fucked && tries.length !== 0){
+        if(c == (f - 1)){
+          oups.innerText = "Unsolvable for now...";
+          showSudokuArray(sudokuQuestion, questionInitiale);
+        };
+        if(lastFinal !== ""){
+          document.getElementById(lastFinal).innerText = ""; 
+          lastFinal = "";
+        };
+        let trie = tries[tries.length - 1];
+        lastFinal = trie.kaseId;
+        let kase = document.getElementById(lastFinal);
+        let rep = trie.val1;
+        kase.innerText = rep;
+        kase.classList.remove("littler");
+        let i = kase.dataset.row;
+        let j = kase.dataset.col;
+        sudokuSoFar[i].splice(j, 1, rep);
+        let lastC = trie.cNum;
+        for(let z = lastC; z < c; z++){
+          document.querySelectorAll(".trying.c" + z).forEach((kase) => {
+            kase.innerText = "";
+            kase.classList.remove("trying", "c" + z);
+          });
+        };
+        let x = tries.pop();
+        fucked = false;
+        let classe = "trying";
+        let cClasse = "c" + c;
+        caseRunner(sudokuQuestion, classe, cClasse);
+      } else if((answers == 0 && !fucked) || (fucked && tries.length == 0)){
+        if(c == (f - 1)){
+          oups.innerText = "Unsolvable for now...";
+          showSudokuArray(sudokuQuestion, questionInitiale);
+        };
+        tryingMode = true;
+        if(lastFinal !== ""){
+          document.getElementById(lastFinal).innerText = ""; 
+          lastFinal = "";
+        };
+        let trie = {
+          cNum : c,
+          kaseId : options[0].kaseId,
+          val0 : options[0].values[0],
+          val1 : options[0].values[1]
+        };
+        let x = options.splice(0, 1);
+        tries.push(trie);
+        let kase = document.getElementById(trie.kaseId);
+        let rep = trie.val0;
+        kase.innerText = rep;
+        kase.classList.add("littler", "trying");
+        let i = kase.dataset.row;
+        let j = kase.dataset.col;
+        sudokuSoFar[i].splice(j, 1, rep);
+        let classe = "trying";
+        let cClasse = "c" + c;
+        caseRunner(sudokuQuestion, classe, cClasse);
+      } else{
+        if (c == (f - 1)) {
+          oups.innerText = "Unsolvable for now...";
+          showSudokuArray(sudokuQuestion, questionInitiale);
+        };
+        if(tryingMode){
+          let classe = "trying";
+          let cClasse = "c" + c;
+          caseRunner(sudokuQuestion, classe, cClasse);
+        } else{
+          let classe = "surring";
+          let cClasse = "c" + c;
+          caseRunner(sudokuQuestion, classe, cClasse);
+        };
+      };
+    };
+  };
+  
+  function showSudokuArray(sudokuSoFar, destination) {
+    let rows = [];
+    for (let i = 0; i < 9; i++) {
+      let cols = [];
+      for (let j = 0; j < 9; j++) {
+        let col = `${sudokuSoFar[i][j]}`;
+        cols.push(col);
+      };
+      let colsF = cols.join(",");
+      let row = `&nbsp;&nbsp;[${colsF}]`;
+      rows.push(row);
+    };
+    let rowsF = rows.join(",<br/>");
+    let showArray = `[<br/>
+    ${rowsF}<br/>
+    ]`;
+    destination.innerHTML = showArray;
+  };
+  
+  function sudokuSaver(c){
+    //Conected to firebass and save all sudoku solved as a question, solution, theoretical difficulty level AND how many coups it took
+    //check if sudokuNew.flat()? already exists 
+    let newSudoku = {
+      question : sudokuNew,
+      solution : sudokuSoFar,
+      niveau : levelValue.value,
+      coups : c
+    };
+  };
+  
+  tableCreation();
+
+
+</script>
+
+</html>
+

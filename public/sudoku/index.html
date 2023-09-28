@@ -183,6 +183,10 @@
       color: darkslategrey;
       border-collapse: collapse;
     }
+    #table .case:focus-visible {
+      outline: 2px solid limegreen;
+      z-index: 10;
+    }
 
     #table colgroup,
     #table tbody.bloc {
@@ -721,7 +725,7 @@
   
   const levelArray = ["dodgerblue", "forestgreen", "orange", "red", "rebeccapurple"];
   let niveau = 1,
-      n = -1,
+      n = 0,
       levelColor = "dodgerblue",
       chiffre = 0,
       errorsCount = 0,
@@ -740,7 +744,7 @@
       indicePoints = 0,
       timePoints = 0,
       totalPoints = 0;
-   var sudokuQuestion,
+   let sudokuQuestion,
       sudokuSoFar,
       sudokuSolution;
    //var sudokuSoFar = [...Array(9)].map(e => Array(9)),
@@ -849,10 +853,14 @@
       sudoku.classList.remove("displayNone");
       //Find what was the last n they did for that level then do: n++;
       let l = niveau - 1;
-      n++;
       sudokuQuestion = sudoki[l][n].question;
       sudokuSolution = sudoki[l][n].solution;
-      tableCreation(sudokuQuestion, sudokuSolution);
+      if(firstStart){
+        tableCreation();
+        firstStart = false;
+      } else{
+        tableFillation();
+      }
     });
     document.querySelectorAll("input[name=level]").forEach((radio) => {
       radio.addEventListener("click", (evt) => {
@@ -981,7 +989,7 @@
     });
   };
   
-  function tableFillation(sudokuQuestion, sudokuSolution){
+  function tableFillation(){
     sudokuSoFar = copySudoku(sudokuQuestion);
     //sudokuSolution = JSON.parse(JSON.stringify(sudokuSolution));
     console.log(sudokuSolution);
@@ -1002,9 +1010,6 @@
     });
     resetTimerFx();
     document.querySelectorAll(".case").forEach((kase) => {
-      kase.addEventListener("click", (evt) => {
-      kaseEvent(kase, sudokuSolution);
-      });
       let i = kase.dataset.row;
       let j = kase.dataset.col;
       let num = sudokuQuestion[i][j];
@@ -1013,7 +1018,6 @@
       inside.style.fontWeight = "700";
       inside.innerHTML = "";
       inside.innerHTML = num;
-      kaseEvent(kase, sudokuSolution);
     });
     levelSign.classList.remove(...levelArray);
     levelSign.classList.add(levelColor);
@@ -1037,7 +1041,7 @@
     };
   };
 
-  function tableCreation(sudokuQuestion, sudokuSolution) {
+  function tableCreation() {
     sudokuSoFar = copySudoku(sudokuQuestion);
     errorsCount = 0;
     indiceCount = 0;
@@ -1086,7 +1090,8 @@
             bloc = 5;
           };
         };
-        let col = `<td class="case" id="r${i}c${j}" data-row="${i}" data-col="${j}" data-bloc="${bloc}"><div class="highlight">${num}</div></td>`;
+//Enleve data-row and data-col (redondant) => ajuster ailleurs
+        let col = `<td class="case" id="r${i}c${j}" data-row="${i}" data-col="${j}" data-bloc="${bloc}" tabindex="${(i * 9) + j + 1}"><div class="highlight">${num}</div></td>`;
         cols.push(col);
         cells.push("r" + i + "c" + j)
       };
@@ -1191,15 +1196,64 @@
     });
     //document.querySelector("div.total:not(div#sudoku)").addEventListener("click", erase);
     document.querySelectorAll(".case").forEach(kase => {
-      kase.addEventListener("click", (evt) => {
-      kaseEvent(kase, sudokuSolution);
-      });
+      kase.addEventListener("click", kaseEvent);
+    });
+    document.addEventListener("keydown", (evt) => {
+      let key = evt.key;
+      
+      if(Number.parseInt(key)){
+        let opt = document.querySelector("#opt" + key);
+        if(opt.classList.contains("selected")){
+          erase();
+        } else {
+          erase();
+          opt.classList.add("selected");
+          chiffre = key;
+          document.querySelectorAll(".highlight").forEach(inside => { 
+            if (!inside.innerHTML.includes("table") && inside.textContent.includes(chiffre)) {
+              inside.classList.add("highlighted");
+            };
+          });
+        };
+      } else{
+        switch(evt.code){
+          case "Enter":
+            console.log("enter");
+            break;
+          case "Space":
+            console.log("space");
+            break;
+          case "ArrowLeft":
+            console.log("left arrow");
+            break;
+          case "ArrowUp":
+            console.log("up arrow");
+            break;
+          case "ArrowRight":
+            console.log("right arrow");
+            break;
+          case "ArrowDown":
+            console.log("down arrow");
+            break;
+          default:
+            console.log(evt.code);
+            break;
+        }
+      }
+    });
+    //Ajoute (?) pour montrer un popup avec les keyboard shortcut
+    r0c0.focus();
+    document.addEventListener("keydown", (evt) => {
+      //enter (13) ou space (32) pour inside.innerText = chiffre;
+      //left arrow key (37) j - 1, up arrow key (38) i - 1, right key (39) j + 1, and down arrow key (40) i + 1
+      //  
     });
     resetTimerFx();
     startTimerFx();
   };
-  
-  function kaseEvent(kase, sudokuSolution){
+
+  function kaseEvent(evt){
+      let kase = evt.currentTarget;
       let b = kase.dataset.bloc;
       let i = kase.dataset.row;
       let j = kase.dataset.col;
@@ -1246,7 +1300,7 @@
         };
       };
   };
-
+    
   function checkFilled(why, chiffre) {
     let soFar = sudokuSoFar.flat();
     if(why == "start"){

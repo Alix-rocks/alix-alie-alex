@@ -236,13 +236,14 @@
       flex-wrap: row nowrap;
       width: fit-content;
       margin: 15px auto;
-      background-color: darkslategrey;
+      background-color: rgb(40, 70, 70);
       border: solid 1px darkslategrey;
     }
 
-    #circles div {
-      width: 28px;
-      height: 28px;
+    #circles div.circle {
+      box-sizing: border-box;
+      width: 34px;
+      height: 34px;
       text-align: center;
       font-size: 24px;
       font-weight: 700;
@@ -251,12 +252,31 @@
       border-radius: 25px;
       color: darkslategrey;
       padding: 2px;
-      background-color: white;
     }
-
-    .selected {
-      background-color: limegreen!important;
-      /*opacity: .5;*/
+    .notFilling{
+      background-position: 0 0;
+      background-position-y: 0;
+      transition: background-position .5s;
+      background: white!important;
+    }
+    .notFilling.selected {
+      background: limegreen!important;
+    }
+    .filling.selected {
+      box-sizing: border-box;
+      border: 2px solid limegreen!important;
+    }
+    #circles div.filling {
+      box-sizing: border-box;
+      background-image: linear-gradient(0deg, rgb(147.5, 162.5, 162.5) 0 50%, white 50% 100%);
+      background-size: 100% 200%;
+      background-position: 0 0;
+      transition: background-position-y .5s;
+    }
+    
+    .filledCircle{
+      background: white!important;
+      opacity: .4;
     }
     #circles div.littler{
       color: white;
@@ -266,7 +286,30 @@
         -1px 0 darkslategrey,
         0 -1px darkslategrey;
     }
+    .slideZoneV{
+      position: relative;
+      width: 10px;
+      height: 34px;
+      border-radius: 5px;
+      border: solid thin darkslategrey;
+      background-color: rgb(147.5, 162.5, 162.5);
+    }
+    .sliderV{
+      position: absolute;
+      top: 0;
+      left: -50%;
+      width: 20px;
+      height: 10px;
+      border-radius: 25px;
+      border: solid thin darkslategrey;
+      background-color: white;
+      transition: .5s;
+    }
 
+    .slidedV .sliderV{
+      top: 22px;
+      transition: .5s;
+    }
     .error:after {
       content: '';
       height: 30px;
@@ -330,6 +373,7 @@
     .slided .slider{
       float: right;
     }
+    
     .levelCircle{
       width: 30px;
       height: 30px;
@@ -424,9 +468,7 @@
     .filled div.highlight{
       border-color: purple!important;
     }
-    .filledCircle{
-      opacity: .4;
-    }
+    
     .popup{
       border: solid medium darkslategrey;
       border-radius: 15px;
@@ -582,6 +624,9 @@
 //S'ils sont créés au fur et à mesure, on va... l
 //Une liste générale pour tout le monde de tous les sudoku pour que tlm ait les mêmes numéros.
 //Puis chacun a sa liste de scores qui sont référencés aux sudoku 
+//Ajoute (?) pour montrer un popup avec les keyboard shortcut
+//filled circle to %
+//sudokuSolver: look in i row for each empty 
   const sudoki = [
     [{code : "SQL1N1",
       question : [
@@ -733,6 +778,7 @@
       tryMode = false,
       littleTableIn = false,
       kaseMode = false,
+      fillingMode = true,
       slideTimer = false,
       slideError = false,
       hr = min = sec = "0" + 0,
@@ -1057,7 +1103,7 @@
     let lines = [];
     let circles = [];
     for (let i = 0; i < 9; i++) {
-      let circle = `<div class="circle" id="opt${i + 1}">${i + 1}</div>`;
+      let circle = `<div class="circle filling" id="opt${i + 1}">${i + 1}</div>`;
       circles.push(circle);
       let cols = [];
       let cells = [];
@@ -1128,7 +1174,15 @@
         <tbody class="bloc">
         ${linesF}
       </table>
-      <div id="circles">${circlesF}</div>
+      <div style="width:90vw; position: relative;">
+        <div id="circles">${circlesF}</div>
+        <div style="position: absolute; top: 1px; right: 0;">
+          <div class="slideZoneV" id="sliderFill">
+            <div class="sliderV">
+            </div>
+          </div>
+        </div>
+      </div>
       <div id="modeDiv">
         <input type="radio" name="mode" id="repBut" checked/>
         <label for="repBut" class="modeBut">
@@ -1157,6 +1211,22 @@
       <div>totalPoints: <span id="totalPointsShow">${totalPoints}</span></div>
       `;
     sliderCheck();
+    sliderFill.addEventListener("click", (evt) => {
+      let slider = evt.currentTarget;
+      if (slider.classList.contains("slidedV")) {
+        slider.classList.remove("slidedV");
+        fillingMode = true;
+        document.querySelectorAll(".circle").forEach(circle => {
+          circle.classList.replace("notFilling", "filling");
+        });
+      } else {
+        slider.classList.add("slidedV");
+        fillingMode = false;
+        document.querySelectorAll(".circle").forEach(circle => {
+          circle.classList.replace("filling", "notFilling");
+        });
+      };
+    });
     backBut.addEventListener("click", back);
     repBut.addEventListener("click", () => {
       tryMode = false;
@@ -1173,9 +1243,7 @@
         indice(evt, sudokuSolution);
       });
     });
-    for (let n = 1; n < 10; n++) {
-      checkFilled("start", n);
-    };
+    
     document.querySelectorAll(".circle").forEach(circle => {
       circle.addEventListener("click", (evt) => {
         let cercle = evt.currentTarget;
@@ -1241,13 +1309,13 @@
         }
       }
     });
-    //Ajoute (?) pour montrer un popup avec les keyboard shortcut
     r0c0.focus();
     document.addEventListener("keydown", (evt) => {
-      //enter (13) ou space (32) pour inside.innerText = chiffre;
-      //left arrow key (37) j - 1, up arrow key (38) i - 1, right key (39) j + 1, and down arrow key (40) i + 1
-      //  
+
     });
+    for (let n = 1; n < 10; n++) {
+      checkFilled("start", n);
+    };
     resetTimerFx();
     startTimerFx();
   };
@@ -1300,13 +1368,22 @@
         };
       };
   };
-    
+
+console.log("(" + (40 * 0.4 + 255 * 0.6) + ", " + (70 * 0.4 + 255 * 0.6) + ", " + (70 * 0.4 + 255 * 0.6) + ")");
+console.log("(" + (40 * 0.6 + 255 * 0.4) + ", " + (70 * 0.6 + 255 * 0.4) + ", " + (70 * 0.6 + 255 * 0.4) + ")");
+console.log("(" + (40 * 0.5 + 255 * 0.5) + ", " + (70 * 0.5 + 255 * 0.5) + ", " + (70 * 0.5 + 255 * 0.5) + ")");
+  
   function checkFilled(why, chiffre) {
     let soFar = sudokuSoFar.flat();
     if(why == "start"){
       let count = soFar.filter((num) => num == chiffre).length;
       if (count == 9) {
+        //document.getElementById("opt" + chiffre).style.backgroundPositionY = "100%";
         document.getElementById("opt" + chiffre).classList.add("filledCircle");
+      } else {
+        document.getElementById("opt" + chiffre).style.backgroundPositionY = "0%";
+        let perc = count.toString() + count.toString();
+        document.getElementById("opt" + chiffre).style.backgroundPositionY = perc + "%";
       };
     } else{
       let countTot = soFar.filter((num) => num == 0).length;
@@ -1382,12 +1459,17 @@
       } else{
         let count = soFar.filter((num) => num == chiffre).length;
         if (count == 9) {
+          let perc = count.toString() + count.toString();
+          document.getElementById("opt" + chiffre).style.backgroundPositionY = perc + "%";
           document.getElementById("opt" + chiffre).classList.add("filledCircle");
           document.querySelectorAll(".case").forEach((kase) => {
             if(!kase.innerHTML.includes("table") && kase.textContent.includes(chiffre)){
                 kase.classList.add("filled");
             };
           });
+        } else {
+          let perc = count.toString() + count.toString();
+          document.getElementById("opt" + chiffre).style.backgroundPositionY = perc + "%";
         };
       };
     };

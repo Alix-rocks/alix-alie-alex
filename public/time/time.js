@@ -159,10 +159,9 @@ async function getPlans() {
           arriveeTime:"",
           notes:""};
     displaySteps();
-  }
-  
-}
-// getPlans();
+  };
+};
+getPlans();
 
 async function getSchedule(id){
   // const schedules = await getDocs(query(collection(db, "plan", auth.currentUser.email, id)));

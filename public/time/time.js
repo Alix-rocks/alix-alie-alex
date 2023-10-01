@@ -103,7 +103,7 @@ async function saveIt() {
   document.querySelector("#timePage").addEventListener("click", clickHandlerSaved);
   }
 }
-window.saveIt = saveIt;
+//window.saveIt = saveIt;
 function clickHandlerSaved(){
   document.getElementById("savePlan").innerHTML = ``;
   document.querySelector("#timePage").removeEventListener("click", clickHandlerSaved);
@@ -124,7 +124,7 @@ async function saveOptReplace(){
   <p style="text-align:center;">Now, go see it in your schedules!</p>`;
   document.querySelector("#timePage").addEventListener("click", clickHandlerSaved);
 }
-window.saveOptReplace = saveOptReplace;
+//window.saveOptReplace = saveOptReplace;
 
 async function getPlans() {
   const getPlans = await getDocs(collection(db, "plan", auth.currentUser.email, "myPlans"));
@@ -173,7 +173,7 @@ async function getSchedule(id){
   steps = schedule.data();
   displaySteps();
 }
-window.getSchedule = getSchedule;
+//window.getSchedule = getSchedule;
 
 async function getDefaultSchedule(){
   // const defaultSchedule = await getDocs(query(collection(db, "plan"), where("owner", "==", auth.currentUser.email), where("ordre", "==", 0)));
@@ -187,7 +187,7 @@ async function getDefaultSchedule(){
   displaySteps();
 }
 // getDefaultSchedule();
-window.getDefaultSchedule = getDefaultSchedule;
+//window.getDefaultSchedule = getDefaultSchedule;
 
 async function trashSchedules(){
   console.log(trashedSchedules);
@@ -195,7 +195,7 @@ async function trashSchedules(){
     await deleteDoc(doc(db, "plan", auth.currentUser.email, "myPlans", trashedSchedule.id));
   };
 }
-window.trashSchedules = trashSchedules;
+//window.trashSchedules = trashSchedules;
 
 async function orderSchedules(){
   for (const list of myScheduleList){
@@ -204,7 +204,7 @@ async function orderSchedules(){
     });
   }
 }
-window.orderSchedules = orderSchedules;
+//window.orderSchedules = orderSchedules;
 
 
 
@@ -598,7 +598,7 @@ function updateSteps() {
   steps.notes = document.getElementById("notes").value;
   saveSteps();
 };
-window.updateSteps = updateSteps;
+//window.updateSteps = updateSteps;
 // initializing();
 // displaySteps();
 

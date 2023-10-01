@@ -15,6 +15,7 @@
   <style>
     *{
       font-family: 'Nunito', sans-serif;
+      box-sizing: content-box;
       /*font-size: 16px;
       font-weight: 700;*/
     }
@@ -23,11 +24,20 @@
       --contentTypcn: '\E142';*/
     }
     .total {
-      width: 90vw;
-      height: 90vh;
+      width: 100%;
+      height: 100%;
       margin: auto;
+      padding: 10px 5px;
       display: flex;
       justify-content: center;
+      align-content: start;
+      background-color: white;
+    }
+    #sudoku{
+      width: 100%;
+      max-width: 395px;
+      position: relative;
+      margin: auto;
       background-color: white;
     }
     button, label {
@@ -113,6 +123,28 @@
     #kaseModeCheck:checked + #kaseModeLabel{
       background-color: red;
     }
+    #noBorderLabel{
+      position: absolute;
+      top: 175px;
+      right: 0;
+      color: darkslategrey;
+      background-color: lightgrey; 
+      padding: 5px 6px;
+      font-size: 20px;
+      line-height: 20px;
+    }
+    #noBorderCheck:checked + #noBorderLabel{
+      color: darkslategrey;
+      background-color: white;
+    }
+    #noBorderLabel:after{
+      font-family: typicons;
+      content: '\E111';
+    }
+    #noBorderCheck:checked + #noBorderLabel:after{
+      font-family: typicons;
+      content: '\E112';
+    }
     input{
       display: none;
     }
@@ -123,15 +155,15 @@
     }
     #backBut{
       position: absolute;
-      top: 3px;
-      left: 3px;
+      top: 0;
+      left: 0;
       opacity: .7;
       border-width: 1px 2px 2px 1px;
     }
     #levelSign{
       position: absolute;
-      top: 3px;
-      right: 3px;
+      top: 0;
+      right: 0;
     }
     .info {
       font-size: 14px;
@@ -192,11 +224,20 @@
     #table tbody.bloc {
       border: solid medium darkslategrey;
     }
+    #table.noBorder colgroup,
+    #table.noBorder tbody.bloc {
+      border: solid medium white;
+    }
 
     #table tbody.bloc:nth-of-type(2n + 1) td.case:nth-of-type(n + 4):nth-of-type(-n + 6),
     #table tbody.bloc:nth-of-type(2) td.case:nth-of-type(-n + 3),
     #table tbody.bloc:nth-of-type(2) td.case:nth-of-type(n + 7):nth-of-type(-n + 9) {
-      background-color: lightgray;
+      background-color: lightgrey;
+    }
+    #table.noBorder tbody.bloc:nth-of-type(2n + 1) td.case:nth-of-type(n + 4):nth-of-type(-n + 6),
+    #table.noBorder tbody.bloc:nth-of-type(2) td.case:nth-of-type(-n + 3),
+    #table.noBorder tbody.bloc:nth-of-type(2) td.case:nth-of-type(n + 7):nth-of-type(-n + 9) {
+      background-color: white;
     }
 
     .case {
@@ -213,24 +254,30 @@
       z-index: 10;
       border: 2px solid rgba(255, 255, 255, 0);
       background: rgba(255, 255, 255, 0);
+      font-size: 30px;
+      font-weight: 700;
+      line-height: 30px;
+      text-align: center;
     }
 
     .highlighted {
       border-color: limegreen;
     }
 
-    #circles div,
+
     #table td.case {
       width: 30px;
       height: 30px;
-      text-align: center;
-      font-size: 26px;
+      /*text-align: center;
+      /*font-size: 26px;
       font-weight: 700;
       line-height: 26px;
-      margin: auto;
+      margin: auto;*/
       border: solid thin darkslategrey;
     }
-
+    #table.noBorder td.case {
+      border: solid thin white;
+    }
     #circles {
       display: flex;
       flex-wrap: row nowrap;
@@ -245,9 +292,9 @@
       width: 34px;
       height: 34px;
       text-align: center;
-      font-size: 24px;
+      font-size: 28px;
       font-weight: 700;
-      line-height: 28px;
+      line-height: 32px;
       margin: 1px;
       border-radius: 25px;
       color: darkslategrey;
@@ -255,7 +302,6 @@
     }
     .notFilling{
       background-position: 0 0;
-      background-position-y: 0;
       transition: background-position .5s;
       background: white!important;
     }
@@ -378,7 +424,7 @@
       width: 30px;
       height: 30px;
       border-radius: 25px;
-      line-height: 25px;
+      line-height: 28px;
       text-align: center;
       color: white;
       margin: 1px 5px;
@@ -387,24 +433,30 @@
     .levelCircleNum{
       width: fit-content;
       padding: 4px 10px 1px;
-      font-size: 16px;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 28px;
     }
     .dodgerblue{
       background-color: dodgerblue;
     }
     .dodgerblue:after {
       font-family: typicons;
-      font-size: 20px;
+      font-size: 22px;
+      font-weight: 500;
       content: '\E142';
       display: inline-block;
       translate: 0 2px;
+    }
+    #levelSign.dodgerblue:after{
+      translate: 0 0px;
     }
     .forestgreen{
       background-color: forestgreen;
     }
     .forestgreen:after {
       font-family: typicons;
-      font-size: 20px;
+      font-size: 22px;
       content: '\E13E';
     }
     .orange{
@@ -412,7 +464,7 @@
     }
     .orange:after {
       font-family: typicons;
-      font-size: 20px;
+      font-size: 22px;
       content: '\E13F';
     }
     .red{
@@ -420,7 +472,7 @@
     }
     .red:after {
       font-family: typicons;
-      font-size: 20px;
+      font-size: 22px;
       content: '\E13C';
     }
     .rebeccapurple{
@@ -428,7 +480,7 @@
     }
     .rebeccapurple:after {
       font-family: typicons;
-      font-size: 20px;
+      font-size: 22px;
       content: '\E141';
     }
     input[name="level"]:checked + label.levelCircle{
@@ -617,7 +669,7 @@
     [6, 8, 3, 5, 1, 4, 7, 2, 9]
   ];
   //sudokuId: sudokuQuestion.index (?) (ou j de sudoki[i][j]),
-          //level : niveau (ou i de sudoki[i]),
+          //level : niveau (ou i de sudoki[i]), NE DOUBLE PAS LES DONNÉES 
           //time: timer,
           //errors: errorsCount,
           //indices: indiceCount
@@ -625,8 +677,18 @@
 //Une liste générale pour tout le monde de tous les sudoku pour que tlm ait les mêmes numéros.
 //Puis chacun a sa liste de scores qui sont référencés aux sudoku 
 //Ajoute (?) pour montrer un popup avec les keyboard shortcut
-//filled circle to %
 //sudokuSolver: look in i row for each empty 
+//Back button or way to come back from the stars board 
+//Back button or way to come back from the celebration popup at the end
+//Fix font-size on ChromeCell...
+//Make it responsive
+//add animation on the level circles
+//localStorage : time & errors & indices (& niveau difficulté)
+//Tableau des scores 3 typcn-star (just doesn't look good yet)
+//Celebration popup: find the best score for that level and show it underneath. compare to current ones and they're better, add a star between the thumbs up (remove displayNone)
+//Trouver quel numéro de sudoku c'était la dernière fois et faire plus un (Button Start)
+//Add noBorderMode points in countKasePoints function
+//ModeSelection: select circle then case OR case than circle
   const sudoki = [
     [{code : "SQL1N1",
       question : [
@@ -763,10 +825,6 @@
       ],
       solution : sudokuSolutionB}
     ]];
-    
-    
-
-
   
   const levelArray = ["dodgerblue", "forestgreen", "orange", "red", "rebeccapurple"];
   let niveau = 1,
@@ -778,7 +836,7 @@
       tryMode = false,
       littleTableIn = false,
       kaseMode = false,
-      fillingMode = true,
+      noBorderMode = false,
       slideTimer = false,
       slideError = false,
       hr = min = sec = "0" + 0,
@@ -789,13 +847,11 @@
       errorPoints = 0,
       indicePoints = 0,
       timePoints = 0,
-      totalPoints = 0;
-   let sudokuQuestion,
+      totalPoints = 0,
+      sudokuQuestion,
       sudokuSoFar,
       sudokuSolution;
-   //var sudokuSoFar = [...Array(9)].map(e => Array(9)),
-      //sudokuSolution = [...Array(9)].map(e => Array(9));
-  console.log(sudoki[0][0].name);    
+
   function copySudoku(sudokuArray) {
     return [
         [...sudokuArray[0]],
@@ -811,7 +867,6 @@
   };
 
   function startIt(){
-    console.log(sudokuSolution);
     let levels = [];
     for (let i = 0; i < levelArray.length; i++) {
       let level = `<input id="level${i + 1}" type="radio" name="level" value="${i + 1}" ${i == 0 ? "checked" : ""} /><label for="level${i + 1}" class="levelCircle ${levelArray[i]}"></label>`;
@@ -883,9 +938,7 @@
     startAgain.addEventListener("click", () => {
       pause.classList.add("displayNone");
       sudoku.classList.remove("displayNone");
-      tableCreation(sudokuQuestion, sudokuSolution);
-      //tableFillation(sudokuQuestionA, sudokuSolutionA);
-      //Fill with sudokuQuestion and put everything back to zero
+      tableFillation();
     });
     startNew.addEventListener("click", () => {
       levelDiv.classList.remove("displayNone");
@@ -975,14 +1028,6 @@
     pause.classList.remove("displayNone");
   };
   
-  //Cercle dans coin droit avec couleur du niveau de difficulté et numéro de la grille
-  //Make it responsive!!! {That would need to be done on computer}
-  //localStorage : time & errors & indices (& niveau difficulté)
-  //Celebration popup
-  //Tableau des scores 3 typcn-star
-  
-  
-  
   function startTimerFx() {
     let multiple = 6 - niveau;
     startTimer = setInterval(()=>{
@@ -1038,7 +1083,6 @@
   function tableFillation(){
     sudokuSoFar = copySudoku(sudokuQuestion);
     //sudokuSolution = JSON.parse(JSON.stringify(sudokuSolution));
-    console.log(sudokuSolution);
     erase();
     errorsCount = 0;
     errorsCountNum.innerHTML = errorsCount;
@@ -1159,6 +1203,8 @@
         <span class="typcn typcn-media-pause"></span>
       </button>
       <div id="levelSign" class="levelCircle levelCircleNum ${levelColor}">${(n + 1) + "  "}</div>
+      <input type="checkbox" id="noBorderCheck" />
+      <label for="noBorderCheck" id="noBorderLabel"></label>
       <div id="timerDiv" class="info displayNone">
         <span class="typcn typcn-stopwatch"></span>
         <span id="timerNum">00:00</span>
@@ -1174,7 +1220,7 @@
         <tbody class="bloc">
         ${linesF}
       </table>
-      <div style="width:90vw; position: relative;">
+      <div style="width:100%; max-width: 375px; position: relative;">
         <div id="circles">${circlesF}</div>
         <div style="position: absolute; top: 1px; right: 0;">
           <div class="slideZoneV" id="sliderFill">
@@ -1215,13 +1261,11 @@
       let slider = evt.currentTarget;
       if (slider.classList.contains("slidedV")) {
         slider.classList.remove("slidedV");
-        fillingMode = true;
         document.querySelectorAll(".circle").forEach(circle => {
           circle.classList.replace("notFilling", "filling");
         });
       } else {
         slider.classList.add("slidedV");
-        fillingMode = false;
         document.querySelectorAll(".circle").forEach(circle => {
           circle.classList.replace("filling", "notFilling");
         });
@@ -1243,7 +1287,10 @@
         indice(evt, sudokuSolution);
       });
     });
-    
+    noBorderCheck.addEventListener("click", () => {
+      table.classList.toggle("noBorder");
+      noBorderMode = noBorderMode ? false : true;
+    });
     document.querySelectorAll(".circle").forEach(circle => {
       circle.addEventListener("click", (evt) => {
         let cercle = evt.currentTarget;
@@ -1323,8 +1370,8 @@
   function kaseEvent(evt){
       let kase = evt.currentTarget;
       let b = kase.dataset.bloc;
-      let i = kase.dataset.row;
-      let j = kase.dataset.col;
+      let i = kase.id[1];
+      let j = kase.id[3];
       let inside = kase.querySelector(".highlight");
       if (!inside.innerHTML.includes("table") && !inside.innerText == "") {
         if (kaseMode) {
@@ -1589,6 +1636,7 @@ console.log("(" + (40 * 0.5 + 255 * 0.5) + ", " + (70 * 0.5 + 255 * 0.5) + ", " 
     } else if(!littleTableIn){
       multiple = niveau * 4;
     };
+    //add noBorderMode points
     if (valuesTot.length == 0) {
       return 0;
     } else if(valuesTot.length == 1){

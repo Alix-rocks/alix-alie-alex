@@ -200,6 +200,7 @@
   background-color: var(--bg-color);
   position: absolute;
   top: 0;
+  z-index: 20;
 }
 .popupBackDG .resultTime{
   background-color: var(--bg-color);

@@ -445,6 +445,7 @@ function erase() {
     let values = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
     document.querySelectorAll('.case[data-row="' + i + '"]').forEach((kaseI) => {
       let chiffre = kaseI.textContent;
+      //if(chiffre)...
       values = values.filter(num => num !== chiffre);
     });
     document.querySelectorAll('.case[data-col="' + j + '"]').forEach((kaseJ) => {
@@ -455,6 +456,10 @@ function erase() {
       let chiffre = kaseB.textContent;
       values = values.filter(num => num !== chiffre);
     });
+    //return values (then analyze it in caseRunner?)
+    //let kaseId = "r" + i + "c" + j;
+    //let justValues.push(values)
+    //allValues.push([kaseId, values]) ([] or () or {}??)(map or obj??)
     if(values.length == 0){
       fucked = true;
     } else if (values.length == 1) {

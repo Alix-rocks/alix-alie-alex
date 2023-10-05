@@ -40,12 +40,12 @@ getRedirectResult(auth)
   onAuthStateChanged(auth,(user) => {
     if(user){
       console.log(user);
-      //document.getElementById("displayName").innerText = " " + user.displayName + ",";
+      document.getElementById("displayName").innerText = " " + user.displayName + ",";
       document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
       document.getElementById("scheduleTime").innerHTML = ``;
       getPlans();
     } else{
-      //document.getElementById("displayName").innerText = "";
+      document.getElementById("displayName").innerText = "";
       document.getElementById("scheduleTimeWhole").classList.add("popupBackDG");
       document.getElementById("scheduleTime").innerHTML = `<h4><span class="h3like">First thing's first...</span><br/><span class="h1like" style="font-size: calc(19.53px + 0.19vw); font-weight: 900;">Who do you think you are?!</span></h4>
       <div class="stepBox">

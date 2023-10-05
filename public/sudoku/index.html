@@ -166,14 +166,14 @@
       right: 0;
     }
     .info {
-      font-size: 14px;
+      font-size: 18px;
+      font-weight: 600;
       background-color: lightgray;
       border-radius: 25px;
       padding: 5px;
       width: fit-content;
       height: 16px;
       line-height: 16px;
-      font-weight: 500;
       margin: auto auto 5px;
       text-align: center;
     }
@@ -182,7 +182,7 @@
     }
     .typcn-stopwatch{
       display: inline-block;
-      font-size: 1.1em;
+      font-size: 18px;
       translate: 0 -1.5px;
       color: blue;
     }
@@ -194,12 +194,12 @@
     }
     #errorsDiv{
       color: red;
-      padding: 0 8px 5px 5px;
+      padding: 0 8px 5px 3px;
     }
     .typcn-times{
       display: inline-block;
-      font-size: 1.3em;
-      line-height: 1em;
+      font-size: 22px;
+      line-height: 24px;
       font-weight: 100;
       color: red;
     }
@@ -259,11 +259,23 @@
       line-height: 30px;
       text-align: center;
     }
+    .highlightRond {
+      border-radius: 25px;
+    }
+    .highlightSquare {
+      border-radius: 0px;
+    }
 
     .highlighted {
       border-color: limegreen;
     }
-
+    .superHighlighted{
+      border-color: limegreen;
+      outline-color: rgba(50,205,50,.4);
+      outline-width: 4px;
+      outline-offset: -6px;
+      outline-style: solid;
+    }
 
     #table td.case {
       width: 30px;
@@ -385,7 +397,7 @@
     }
     .littleTd{
       font-size: 9px;
-      font-weight: 100;
+      font-weight: 500;
       line-height: 5px;
       height: 3px;
       width: 3px;
@@ -414,12 +426,14 @@
       text-align: center;
     }
     .slided{
-      background-color: rgba(50,205,50,.9);
+      background-color: rgba(50,205,50,.9);/*limegreen*/
     }
     .slided .slider{
       float: right;
     }
-    
+    .slidedS .slider{
+      float: right;
+    }
     .levelCircle{
       width: 30px;
       height: 30px;
@@ -839,6 +853,8 @@
       noBorderMode = false,
       slideTimer = false,
       slideError = false,
+      slideSetting = true,
+      selectedKase = "",
       hr = min = sec = "0" + 0,
       secPts = 0,
       startTimer,
@@ -904,6 +920,15 @@
           <span class="typcn typcn-times"></span>
         </div>
       </div>
+      <div style="display:flex; flex-flow: row nowrap; width: fit-content; align-items: center;">
+        <span id="firstCircles" class="typcn typcn-media-record-outline newInd" style="font-size:30px; color: darkslategrey; margin-left: -7px;"></span>
+        <div class="slideZone" id="sliderSetting">
+          <div class="slider" style="font-size: 20px; line-height: 24px; font-weight: 900; color: rebeccapurple;">
+            1
+          </div>
+        </div>
+        <span id="firstCases" class="typcn typcn-th-small-outline" style="padding-left: 7px;" color: darkslategrey;></span>
+      </div>
     <div id="levelDiv">${levelsF}</div>
     <div id="starButDiv">
       <button id="starBut"><span class="typcn typcn-star"></span></button>
@@ -928,6 +953,38 @@
           slider.classList.add("slided");
           slideError = true;
         };
+    });
+    sliderSetting.addEventListener("click", (evt) => {
+      let slider = evt.currentTarget;
+      slider.classList.toggle("slidedS");
+      firstCircles.classList.toggle("newInd");
+      firstCases.classList.toggle("newInd");
+      slideSetting = slideSetting ? false : true;
+      kaseMode = slideSetting ? false : true;
+      if(!firstStart){
+        if (slider.classList.contains("slidedS")) {
+          document.querySelectorAll(".highlight").forEach(inside => {
+            inside.classList.replace("highlightRond", "highlightSquare");
+          });
+          document.querySelectorAll(".circle").forEach(circle => {
+            circle.classList.remove("selected");
+          });
+          if(kaseModeLabel){
+            kaseModeLabel.classList.add("displayNone");
+          };
+        } else {
+          document.querySelectorAll(".highlight").forEach(inside => {
+            inside.classList.replace("highlightSquare", "highlightRond");
+          });
+          if (document.querySelector(".highlighted").innerText){
+            chiffre = document.querySelector(".highlighted").innerText;
+            document.getElementById("opt" + chiffre).classList.add("selected");
+          };
+          if(kaseModeLabel){
+            kaseModeLabel.classList.remove("displayNone");
+          };
+        };
+      };
     });
     startOld.addEventListener("click", () => {
       pause.classList.add("displayNone");
@@ -1076,7 +1133,7 @@
     });
     document.querySelectorAll(".case").forEach(kase => {
       kase.classList.remove("newInd", "error", "filled");
-      kase.querySelector(".highlight").classList.remove("highlighted");
+      kase.querySelector(".highlight").classList.remove("highlighted", "superHighlighted");
     });
   };
   
@@ -1092,8 +1149,8 @@
     document.querySelectorAll(".circle").forEach(cercle => {
       cercle.classList.remove("filledCircle", "littler");
     });
-    kaseMode = false;
-    kaseModeCheck.checked = false;
+    //kaseMode = false;
+    //kaseModeCheck.checked = false;
     indiceCount = 0;
     document.querySelectorAll(".typcn-heart").forEach((heart) => {
       heart.classList.remove("used");
@@ -1142,7 +1199,6 @@
     totalPoints = 0;
     tryMode = false;
     littleTableIn = false;
-    kaseMode = false;
     let allCells = [];
     let lines = [];
     let circles = [];
@@ -1180,8 +1236,7 @@
             bloc = 5;
           };
         };
-//Enleve data-row and data-col (redondant) => ajuster ailleurs
-        let col = `<td class="case" id="r${i}c${j}" data-row="${i}" data-col="${j}" data-bloc="${bloc}" tabindex="${(i * 9) + j + 1}"><div class="highlight">${num}</div></td>`;
+        let col = `<td class="case" id="r${i}c${j}" data-row="${i}" data-col="${j}" data-bloc="${bloc}" tabindex="${(i * 9) + j + 1}"><div class="highlight ${slideSetting ? "highlightRond" : "highlightSquare"}">${num}</div></td>`;
         cols.push(col);
         cells.push("r" + i + "c" + j)
       };
@@ -1239,7 +1294,7 @@
           <span class="typcn typcn-pencil"></span>
         </label>
         <input type="checkbox" id="kaseModeCheck"/>
-        <label for="kaseModeCheck" id="kaseModeLabel">
+        <label for="kaseModeCheck" id="kaseModeLabel" class="${slideSetting ? "" : "displayNone"}">
           <span class="typcn typcn-th-small-outline"></span>
           <span class="typcn typcn-chevron-right-outline"></span>
           <span class="typcn typcn-media-record-outline"></span>
@@ -1293,19 +1348,63 @@
     });
     document.querySelectorAll(".circle").forEach(circle => {
       circle.addEventListener("click", (evt) => {
+        //add make it so it can't be selected as text
         let cercle = evt.currentTarget;
-        if (cercle.classList.contains("selected")) {
-          erase();
-        } else {
-          erase();
-          cercle.classList.add("selected");
-          let id = cercle.id;
-          chiffre = id[3];
-          document.querySelectorAll(".highlight").forEach(inside => { 
-            if (!inside.innerHTML.includes("table") && inside.textContent.includes(chiffre)) {
-              inside.classList.add("highlighted");
+        if(slideSetting){
+          if (cercle.classList.contains("selected")) {
+            erase();
+          } else {
+            erase();
+            cercle.classList.add("selected");
+            chiffre = cercle.id[3];
+            document.querySelectorAll(".highlight").forEach(inside => { 
+              if (!inside.innerHTML.includes("table") && inside.textContent.includes(chiffre)) {
+                inside.classList.add("highlighted");
+              };
+            });
+          };
+        } else if(!slideSetting && document.querySelector(".superHighlighted")){
+          chiffre = cercle.id[3];
+          let inside = document.querySelector(".superHighlighted");
+          let kase = inside.parentElement;
+          let b = kase.dataset.bloc;
+          let i = kase.dataset.row;
+          let j = kase.dataset.col;
+          if(!tryMode){
+            if (sudokuSolution[i][j] == chiffre) {
+              kasePoints += countKasePoints(i, j, b);
+              kasePointsShow.innerText = kasePoints;
+              inside.innerText = chiffre;
+              inside.style.fontWeight = "400";
+              inside.classList.remove("superHighlighted");
+              kase.classList.remove("error");
+              document.querySelectorAll(".highlight").forEach(inside => {
+                if(!inside.innerHTML.includes("table") && inside.textContent.includes(chiffre)){
+                  inside.classList.add("highlighted");
+                } else{
+                  inside.classList.remove("highlighted");
+                };
+              });
+              sudokuSoFar[i].splice(j, 1, chiffre);
+              checkFilled("one", chiffre);
+              removeOthers(chiffre, i, j, b);
+            } else {
+              if (kase.classList.contains("error")) {
+                kase.classList.remove("error");
+              } else {
+                kase.classList.add("error");
+                errorsCount++;
+                errorsCountNum.innerHTML = errorsCount;
+                errorPoints += errorsCount * 5;
+                errorPointsShow.innerText = errorPoints;
+              };
             };
-          });
+          } else if(tryMode){
+            if (inside.innerHTML.includes("table")) {
+              let little = inside.querySelector("#lt" + chiffre);
+              little.classList.toggle("showIt");
+            };
+          };
         };
       });
     });
@@ -1373,19 +1472,21 @@
       let i = kase.id[1];
       let j = kase.id[3];
       let inside = kase.querySelector(".highlight");
+      
+    if(slideSetting){
       if (!inside.innerHTML.includes("table") && !inside.innerText == "") {
         if (kaseMode) {
           erase();
           chiffre = inside.innerText;
+          document.getElementById("opt" + chiffre).classList.add("selected");
           document.querySelectorAll(".highlight").forEach(inside => {
-            if (!inside.innerHTML.includes("table") && inside.textContent.includes(chiffre)) {
+            if (!inside.innerHTML.includes("table") && inside.textContent.includes(number)) {
               inside.classList.add("highlighted");
             };
           });
-          document.getElementById("opt" + chiffre).classList.add("selected");
         };
       };
-      if (tryMode == false) {
+      if (!tryMode) {
         if ((inside.innerText == "" || inside.innerHTML.includes("table")) && chiffre > 0) {
           if (sudokuSolution[i][j] == chiffre) {
             kasePoints += countKasePoints(i, j, b);
@@ -1414,6 +1515,26 @@
           little.classList.toggle("showIt");
         };
       };
+    } else if(!slideSetting){
+      erase();
+      if (!inside.innerHTML.includes("table") && !inside.innerText == "") {
+        let number = inside.innerText;
+        document.querySelectorAll(".highlight").forEach(inside => {
+          if (!inside.innerHTML.includes("table") && inside.textContent.includes(number)) {
+            inside.classList.add("highlighted");
+          };
+        });
+      };
+      if (inside.innerText == "" || inside.innerHTML.includes("table")){
+        inside.classList.add("superHighlighted");
+        document.querySelectorAll('.case[data-row="' + i + '"] > .highlight').forEach((insideI) => {
+          insideI.classList.add("highlighted");
+        });
+        document.querySelectorAll('.case[data-col="' + j + '"] > .highlight').forEach((insideI) => {
+          insideI.classList.add("highlighted");
+        });
+      };
+    };
   };
 
 console.log("(" + (40 * 0.4 + 255 * 0.6) + ", " + (70 * 0.4 + 255 * 0.6) + ", " + (70 * 0.4 + 255 * 0.6) + ")");
@@ -1425,7 +1546,6 @@ console.log("(" + (40 * 0.5 + 255 * 0.5) + ", " + (70 * 0.5 + 255 * 0.5) + ", " 
     if(why == "start"){
       let count = soFar.filter((num) => num == chiffre).length;
       if (count == 9) {
-        //document.getElementById("opt" + chiffre).style.backgroundPositionY = "100%";
         document.getElementById("opt" + chiffre).classList.add("filledCircle");
       } else {
         document.getElementById("opt" + chiffre).style.backgroundPositionY = "0%";

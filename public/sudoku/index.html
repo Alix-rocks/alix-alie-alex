@@ -344,6 +344,9 @@
         -1px 0 darkslategrey,
         0 -1px darkslategrey;
     }
+    .circlesUp{
+      translate: 0 -4px;
+    }
     .slideZoneV{
       position: relative;
       width: 10px;
@@ -497,24 +500,13 @@
       font-size: 22px;
       content: '\E141';
     }
-    input[name="level"]:checked + label.levelCircle{
+    input[name="level"]:checked + label.levelCircle, .levelChecked{
       border: 5px solid white;
       outline: solid 1px darkslategrey;
       outline-offset: 0px;
       margin: 1px 0;
     }
-    .nextStepLevel:before{
-      content: '';
-      height: 175px;
-      width: 50px;
-      border: 2px solid limegreen;
-      border-radius: 25px;
-      position: absolute;
-      top: -5px;
-      left: -7px;
-      z-index: -10;
-      margin: auto;
-    }
+
     .typcn-heart{
       display: inline-block;
       color: limegreen;
@@ -618,6 +610,11 @@
       color: white;
       border: none;
       font-size: 16px;
+    }
+    .bigger{
+      width: 35px;
+      height: 35px;
+      transition: .5s;
     }
     .displayNone{
       display: none!important;
@@ -885,7 +882,7 @@
   function startIt(){
     let levels = [];
     for (let i = 0; i < levelArray.length; i++) {
-      let level = `<input id="level${i + 1}" type="radio" name="level" value="${i + 1}" ${i == 0 ? "checked" : ""} /><label for="level${i + 1}" class="levelCircle ${levelArray[i]}"></label>`;
+      let level = `<input id="level${i + 1}" type="radio" name="level" value="${i + 1}" ${i == 0 ? "checked" : ""} /><label id="levelLabel${i + 1}" for="level${i + 1}" class="levelCircle ${levelArray[i]}"></label>`;
       levels.push(level);
     };
     let levelsF = levels.join("");
@@ -920,7 +917,7 @@
           <span class="typcn typcn-times"></span>
         </div>
       </div>
-      <div style="display:flex; flex-flow: row nowrap; width: fit-content; align-items: center;">
+      <div style="display:flex; flex-flow: row nowrap; width: fit-content; align-items: center; margin: auto;">
         <span id="firstCircles" class="typcn typcn-media-record-outline newInd" style="font-size:30px; color: darkslategrey; margin-left: -7px;"></span>
         <div class="slideZone" id="sliderSetting">
           <div class="slider" style="font-size: 20px; line-height: 24px; font-weight: 900; color: rebeccapurple;">
@@ -933,7 +930,7 @@
     <div id="starButDiv">
       <button id="starBut"><span class="typcn typcn-star"></span></button>
     </div>`;
-        
+    animation("levelLabel", "levelChecked", 6, 2, 200);    
     sliderTimer.addEventListener("click", (evt) => {
       let slider = evt.currentTarget;
       if (slider.classList.contains("slided")) {
@@ -999,10 +996,9 @@
     });
     startNew.addEventListener("click", () => {
       levelDiv.classList.remove("displayNone");
-      //levelDiv.classList.add("nextStepLevel");
-      //add animation instead 
       startFirst.classList.remove("displayNone");
       startNew.classList.add("displayNone");
+      animation("levelLabel", "levelChecked", 6, 2, 200);
     });
     startFirst.addEventListener("click", () => { 
       pause.classList.add("displayNone");
@@ -1025,8 +1021,38 @@
       });
     });
     starBut.addEventListener("click", starsShow);
+    //starBut.addEventListener("click", animation);
   };
   startIt();
+  
+  function animation(type, classe, num, delai, speed) {
+    let k = 0;
+    let o = 0;
+    animate = setInterval(()=>{
+      k++;
+      if(k > delai){
+        if(type == "levelLabel"){
+          document.getElementById("level1").checked = false;
+        };
+        o++;
+        if (o < num) {
+          //document.getElementById(type + o).checked = true;
+          document.getElementById(type + o).classList.add(classe);
+        };
+        if (o > 1) {
+          //document.getElementById(type + (o - 1)).checked = false;
+          document.getElementById(type + (o - 1)).classList.remove(classe);
+        };
+        if (o == num) {
+          clearInterval(animate);
+          if(type == "levelLabel"){
+            document.getElementById("level1").checked = true;
+          };
+        };
+      };
+    },speed); //1000ms = 1s
+    o = k = 0;
+  };
   
   function starsShow(){
     let levelStars = [];
@@ -1389,15 +1415,11 @@
               checkFilled("one", chiffre);
               removeOthers(chiffre, i, j, b);
             } else {
-              if (kase.classList.contains("error")) {
-                kase.classList.remove("error");
-              } else {
                 kase.classList.add("error");
                 errorsCount++;
                 errorsCountNum.innerHTML = errorsCount;
                 errorPoints += errorsCount * 5;
                 errorPointsShow.innerText = errorPoints;
-              };
             };
           } else if(tryMode){
             if (inside.innerHTML.includes("table")) {
@@ -1462,6 +1484,7 @@
     for (let n = 1; n < 10; n++) {
       checkFilled("start", n);
     };
+    animation("opt", "circlesUp", 10, 2, 75);
     resetTimerFx();
     startTimerFx();
   };

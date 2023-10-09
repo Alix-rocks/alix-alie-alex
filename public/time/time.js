@@ -11,12 +11,8 @@ getRedirectResult(auth)
     const credential = GoogleAuthProvider.credentialFromResult(result);
     console.log("alloooo");
     const token = credential.accessToken;
-
     // The signed-in user info.
     const user = result.user;
-    // console.log(auth.currentUser.displayName);
-    
-    
     // IdP data available using getAdditionalUserInfo(result)
     // ...
   }).catch((error) => {
@@ -40,7 +36,7 @@ getRedirectResult(auth)
   onAuthStateChanged(auth,(user) => {
     if(user){
       console.log(user);
-      document.getElementById("displayName").innerText = " " + user.displayName + ",";
+      //document.getElementById("displayName").innerText = " " + user.displayName + ",";
       document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
       document.getElementById("scheduleTime").innerHTML = ``;
       getPlans();
@@ -57,76 +53,8 @@ getRedirectResult(auth)
 let steps;
 let myScheduleList = [];
 
-function getMaxPlans() {
-  let max = -1;
-  myScheduleList.forEach(plan => {
-    max = max > plan.ordre ? max : plan.ordre
-  });
-  return max;
-}
-
-async function saveIt() {
-  updateSteps();
-  let destination = document.getElementById("nameToSave").value;
-  const docRef = doc(db, "plan", auth.currentUser.email, "myPlans", destination);
-  const docSnap = await getDoc(docRef);
-  // We need to look into only the owner's plans!
-  if (docSnap.exists()) {
-  // if(await getDoc(doc(db, "plan", destination)).exists()){
-    document.getElementById("togglePlansWhole").classList.add("displayNone");
-    document.getElementById("timeForm").classList.add("displayNone");
-    document.getElementById("scheduleTimeWhole").classList.add("popupBackDG");
-    document.getElementById("scheduleTime").innerHTML = `
-      <h3>That one has a doppelganger, what should we do?!</h3>
-      <h4><em>No, we can't keep them both, otherwise that'll create chaos!</em></h4>
-      <div class="saveOption">
-        <p>Keep the old one, forget the new one.</p>
-        <button title="Cancel" id="saveOptCancel" class="timeFormButtonSmall" onclick="saveOptCancel()">Cancel</button>
-      </div>
-      <div class="saveOption">
-        <p>Keep both but let’s rebaptized the new one...</p>
-        <button title="Save as" id="saveOptSaveAs" class="timeFormButtonSmall" onclick="saveOptSaveAs()">Save as</button>
-      </div>
-      <div class="saveOption">
-        <p>Out with the old, in with the new!</p>
-        <button title="Replace" id="saveOptReplace" class="timeFormButtonSmall" onclick="window.saveOptReplace()">Replace</button>
-      </div>`
-  } else{
-   await setDoc(doc(db, "plan", auth.currentUser.email, "myPlans", destination), {
-    ...steps,
-    ordre: (getMaxPlans() + 1)
-  })  ;
-  getPlans();
-  document.getElementById("savePlan").innerHTML = `
-  <h3 class="savePlanH3">You saved it!</h3>
-  <p style="text-align:center;">Now, go see it in your schedules!</p>`;
-  document.querySelector("#timePage").addEventListener("click", clickHandlerSaved);
-  }
-}
-//window.saveIt = saveIt;
-function clickHandlerSaved(){
-  document.getElementById("savePlan").innerHTML = ``;
-  document.querySelector("#timePage").removeEventListener("click", clickHandlerSaved);
-}
-
-async function saveOptReplace(){
-  let destination = document.getElementById("nameToSave").value;
-  await updateDoc(doc(db, "plan", auth.currentUser.email, "myPlans", destination), {
-    ...steps
-  });
-  document.getElementById("togglePlansWhole").classList.remove("displayNone");
-  document.getElementById("timeForm").classList.remove("displayNone");
-  document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
-  document.getElementById("scheduleTime").innerHTML = ``;
-  getPlans();
-  document.getElementById("savePlan").innerHTML = `
-  <h3 class="savePlanH3">You replaced it!</h3>
-  <p style="text-align:center;">Now, go see it in your schedules!</p>`;
-  document.querySelector("#timePage").addEventListener("click", clickHandlerSaved);
-}
-//window.saveOptReplace = saveOptReplace;
-
 async function getPlans() {
+  //console.log(auth.currentUser.email);
   const getPlans = await getDocs(collection(db, "plan", auth.currentUser.email, "myPlans"));
   // const getPlans = await getDocs(query(collection(db, "plan", auth.currentUser.email), where("owner", "==", auth.currentUser.email)));
   myScheduleList = [];
@@ -163,18 +91,6 @@ async function getPlans() {
 };
 getPlans();
 
-async function getSchedule(id){
-  // const schedules = await getDocs(query(collection(db, "plan", auth.currentUser.email, id)));
-  // schedules.forEach((schedule) => {
-  //   steps = schedule.data();
-  //   displaySteps();
-  // })
-  const schedule = await getDoc(doc(db, "plan", auth.currentUser.email, "myPlans", id));
-  steps = schedule.data();
-  displaySteps();
-}
-//window.getSchedule = getSchedule;
-
 async function getDefaultSchedule(){
   // const defaultSchedule = await getDocs(query(collection(db, "plan"), where("owner", "==", auth.currentUser.email), where("ordre", "==", 0)));
   // defaultSchedule.forEach((doc) => {
@@ -189,12 +105,126 @@ async function getDefaultSchedule(){
 // getDefaultSchedule();
 //window.getDefaultSchedule = getDefaultSchedule;
 
+function displayPlans() {
+  myScheduleList = myScheduleList.toSorted((a, b) => {
+    // if(a.ordre < b.ordre){
+    //     return -1
+    // } else if(a.ordre > b.ordre){
+    //     return 1
+    // } else if(a.ordre === b.ordre){
+    //     return 0
+    // }
+    return a.ordre < b.ordre ? -1 : a.ordre > b.ordre ? 1 : 0
+  });
+  document.getElementById("togglePlansWhole").classList.remove("displayNone");
+  let listLi = myScheduleList.map((schedule) => {
+      return `
+        <li class="listPlan"  id="${schedule.id}">
+            <p>
+              <span class="typcn icon typcn-star planStar" title="Default!"></span>
+              <span class="typcn icon typcn-th-small planDD" title="Drag & Drop"></span>
+              <span class="trashLinePlan">
+                <span class="underTrashLine scheduleName" title="Show that one">${schedule.id}</span>
+              </span>
+              <span class="typcn icon typcn-trash planTB" title="Trash it!"></span>
+            </p>
+        </li>`
+  }).join("");
+  document.getElementById("mySchedules").innerHTML = `
+    <ul class="listPlans">${listLi}</ul>
+    <button title="Fix that mess!" id="manageModeBtn" class="timeFormButtonSmall" style="height: 30px; width: 90px;">Manage</button>
+    <button title="Get out of manage mode!" id="manageCancelBtn" class="timeFormButtonSmall displayNone" style="float:left; width: 90px;">
+    Cancel
+    <span class="typcn icon typcn-cancel" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
+    </button>
+    <button title="That's the way I like it!" id="managedPlansBtn" class="timeFormButtonSmall displayNone" style="float:right; width: 100px;">
+    Save this&hairsp;!
+    <span class="typcn icon typcn-cloud-storage-outline" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
+    </button>`;
+    let plans = document.querySelectorAll(".listPlans > .listPlan");
+    plans[0].classList.add("starDefault");
+    document.querySelectorAll(".planTB").forEach(trashCanPlan => {
+      trashCanPlan.addEventListener("click", trashPlan);
+    });
+    manageModeBtn.addEventListener("click", manageMode);
+    manageCancelBtn.addEventListener("click", manageCancel);
+    managedPlansBtn.addEventListener("click", managedPlans);
+    document.querySelectorAll(".scheduleName").forEach(scheduleName => {
+      let id = scheduleName.parentElement.parentElement.parentElement.id;
+      scheduleName.addEventListener("click", () => {
+        getSchedule(id);
+      });
+    });
+}
+
+async function getSchedule(id){
+  console.log(id);
+  const schedule = await getDoc(doc(db, "plan", auth.currentUser.email, "myPlans", id));
+  steps = schedule.data();
+  displaySteps();
+};
+window.getSchedule = getSchedule;
+
+
+
+function getMaxPlans() {
+  let max = -1;
+  myScheduleList.forEach(plan => {
+    max = max > plan.ordre ? max : plan.ordre
+  });
+  return max;
+}
+
+async function saveIt() {
+  updateSteps();
+  let destination = document.getElementById("nameToSave").value;
+  const docRef = doc(db, "plan", auth.currentUser.email, "myPlans", destination);
+  const docSnap = await getDoc(docRef);
+  // We need to look into only the owner's plans!
+  if (docSnap.exists()) {
+  // if(await getDoc(doc(db, "plan", destination)).exists()){
+    document.getElementById("togglePlansWhole").classList.add("displayNone");
+    document.getElementById("timeForm").classList.add("displayNone");
+    document.getElementById("scheduleTimeWhole").classList.add("popupBackDG");
+    document.getElementById("scheduleTime").innerHTML = `
+      <h3>That one has a doppelganger, what should we do?!</h3>
+      <h4><em>No, we can't keep them both, otherwise that'll create chaos!</em></h4>
+      <div class="saveOption">
+        <p>Keep the old one, forget the new one.</p>
+        <button title="Cancel" id="saveOptCancelBtn" class="timeFormButtonSmall">Cancel</button>
+      </div>
+      <div class="saveOption">
+        <p>Keep both but let’s rebaptized the new one...</p>
+        <button title="Save as" id="saveOptSaveAsBtn" class="timeFormButtonSmall">Save as</button>
+      </div>
+      <div class="saveOption">
+        <p>Out with the old, in with the new!</p>
+        <button title="Replace" id="saveOptReplaceBtn" class="timeFormButtonSmall">Replace</button>
+      </div>`;
+      saveOptCancelBtn.addEventListener("click", saveOptCancel);
+      saveOptSaveAsBtn.addEventListener("click", saveOptSaveAs);
+      saveOptReplaceBtn.addEventListener("click", saveOptReplace);
+  } else{
+   await setDoc(doc(db, "plan", auth.currentUser.email, "myPlans", destination), {
+    ...steps,
+    ordre: (getMaxPlans() + 1)
+  })  ;
+  getPlans();
+  document.getElementById("savePlanDiv").innerHTML = `
+  <h3 class="savePlanH3">You saved it!</h3>
+  <p style="text-align:center;">Now, go see it in your schedules!</p>`;
+  document.querySelector("#timePage").addEventListener("click", clickHandlerSaved);
+  }
+}
+//window.saveIt = saveIt;
+
+
 async function trashSchedules(){
   console.log(trashedSchedules);
   for (const trashedSchedule of trashedSchedules) {
     await deleteDoc(doc(db, "plan", auth.currentUser.email, "myPlans", trashedSchedule.id));
   };
-}
+};
 //window.trashSchedules = trashSchedules;
 
 async function orderSchedules(){
@@ -202,8 +232,8 @@ async function orderSchedules(){
     await updateDoc(doc(db, "plan", auth.currentUser.email, "myPlans", list.id), {
       ordre: list.ordre
     });
-  }
-}
+  };
+};
 //window.orderSchedules = orderSchedules;
 
 
@@ -228,43 +258,12 @@ function clearStorage() {
   }
 }
 
-function displayPlans() {
-  myScheduleList = myScheduleList.toSorted((a, b) => {
-    // if(a.ordre < b.ordre){
-    //     return -1
-    // } else if(a.ordre > b.ordre){
-    //     return 1
-    // } else if(a.ordre === b.ordre){
-    //     return 0
-    // }
-    return a.ordre < b.ordre ? -1 : a.ordre > b.ordre ? 1 : 0
-  });
-  document.getElementById("togglePlansWhole").classList.remove("displayNone");
-  let listLi = myScheduleList.map((schedule) => {
-      return `
-        <li class="listPlan"  id="${schedule.id}">
-            <p><span class="typcn icon typcn-star planStar" title="Default!"></span><span class="typcn icon typcn-th-small planDD" title="Drag & Drop"></span><span class="trashLinePlan"><span class="underTrashLine" onclick="getSchedule('${schedule.id}')" title="Show that one">${schedule.id}</span></span><span class="typcn icon typcn-trash planTB" onclick="trashPlan(event)" title="Trash it!"></span></p>
-        </li>`
-  }).join("");
-  document.getElementById("mySchedules").innerHTML = `
-    <ul class="listPlans">${listLi}</ul>
-    <button title="Fix that mess!" id="manageMode" class="timeFormButtonSmall" style="height: 30px; width: 90px;" onclick="manageMode()">Manage</button>
-    <button title="Get out of manage mode!" id="manageCancel" class="timeFormButtonSmall displayNone" style="float:left; width: 90px;" onclick="manageCancel()">
-    Cancel
-    <span class="typcn icon typcn-cancel" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
-    </button>
-    <button title="That's the way I like it!" id="managedPlans" class="timeFormButtonSmall displayNone" style="float:right; width: 100px;" onclick="managedPlans()">
-    Save this&hairsp;!
-    <span class="typcn icon typcn-cloud-storage-outline" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
-    </button>`;
-    let plans = document.querySelectorAll(".listPlans > .listPlan");
-    plans[0].classList.add("starDefault");
-}
+
 function manageMode(){
   //trash can doesn't trashSchedule right away! add trashline, then after confirmation trashSchedule (and reorder) all at once
-  document.getElementById("manageMode").classList.add('displayNone');
-  document.getElementById("manageCancel").classList.remove('displayNone');
-  document.getElementById("managedPlans").classList.remove('displayNone');
+  document.getElementById("manageModeBtn").classList.add('displayNone');
+  document.getElementById("manageCancelBtn").classList.remove('displayNone');
+  document.getElementById("managedPlansBtn").classList.remove('displayNone');
   let listPlans = document.querySelector(".listPlans");
   listPlans.classList.add("managePlans");
   let plans = document.querySelectorAll(".listPlans > .listPlan");
@@ -279,7 +278,7 @@ function manageMode(){
       // Adding dragging class to item
       plan.classList.remove("dragging");
     });
-  })
+  });
     let icons = document.querySelectorAll(".listPlans > .listPlan .planDD");
     icons.forEach(icon =>{
     // Adding dragging class to item
@@ -296,7 +295,8 @@ function manageMode(){
   listPlans.addEventListener("drop", listPlansOD);
   listPlans.addEventListener("touchmove", listPlansDD);
   listPlans.addEventListener("touchend", listPlansOD);
-}
+};
+window.manageMode = manageMode;
 const listPlansDD = (e) => {
   let listPlans = document.querySelector(".listPlans");
   e.preventDefault();
@@ -311,24 +311,24 @@ const listPlansDD = (e) => {
     } else {
       //if touch
       return e.changedTouches[0].clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
-    }
+    };
   });
   // Inserting the dragging item before the found sibling
   listPlans.insertBefore(draggingPlan, nextSibling);
-}
+};
 function listPlansOD(){
   let plans = document.querySelectorAll(".listPlans > .listPlan");
+  plans.forEach(plan => {
+    plan.classList.remove("starDefault");
+  });
   plans[0].classList.add("starDefault");
-  for(i = 1; i < plans.length; i++){
-    plans[i].classList.remove("starDefault");
-  };
-}
+};
 function trashPlan(event){
   event.currentTarget.parentElement.parentElement.classList.toggle("trashedPlan");
-}
+};
 function manageCancel(){
   displayPlans();
-}
+};
 let trashedSchedules = [];
 function managedPlans(){
   if (confirm("Are you sure?!\n'Cause you don't come back from that!")) {
@@ -350,8 +350,8 @@ function managedPlans(){
     };
     orderSchedules();
     displayPlans();
-  }
-} 
+  };
+};
 
 
 function displaySteps() {
@@ -366,7 +366,7 @@ function displaySteps() {
     <li class="iteme" draggable="true" data-index="${idx}" style="${step.style}" id="${step.id}">
         <div class="changeIcon">
         <span class="typcn icon typcn-th-small itemeDD" style="opacity: .8;"></span>
-        <input id="${step.id}trashCan" class="cossin" type="checkbox" onchange="trashOrNot(event)"/>
+        <input id="${step.id}trashCan" class="cossin trashCanCheck" type="checkbox"/>
         <label for="${step.id}trashCan" class="typcn icon typcn-trash trashLabel displayNone" style="opacity: .8; font-size: 1.5em; line-height: 1em; margin: 0 -5px 0 -2px;" ></label>
         </div>
         <div class="trashLine">
@@ -386,52 +386,62 @@ function displaySteps() {
   })
   stepAll += `<ul id="sortable-List" class="sortable-List" style="padding:0;">${stepArray.join("")}</ul>`;
   stepAll += `<div class="stepBox">
-    <button class="timeFormButton" style="float:left; height: 30px; width: 30px; padding: 0;" onclick="addStep()">
-    +
-    </button>
-    <button title="Enter trash mode!" id="trashMode" class="timeFormButton" style="float:right; height: 30px; width: 30px; padding: 0;" onclick="trashMode()">
-    <span class="typcn icon typcn-trash" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
-    </button>
-    <button title="Get out of trash mode!" id="trashCancel" class="timeFormButtonSmall displayNone" style="width: 90px;" onclick="trashCancel()">
-    Cancel
-    <span class="typcn icon typcn-cancel" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
-    </button>
-    <button title="Get rid of all the checked ones!" id="trashIt" class="timeFormButtonSmall displayNone" style="float:right; width: 90px;" onclick="trashIt()">
-    Trash it&hairsp;!
-    <span class="typcn icon typcn-trash" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
-    </button>
-</div>`;
+      <button id="addStepBtn" class="timeFormButton" style="float:left; height: 30px; width: 30px; padding: 0;">
+      +
+      </button>
+      <button title="Enter trash mode!" id="trashModeBtn" class="timeFormButton" style="float:right; height: 30px; width: 30px; padding: 0;">
+      <span class="typcn icon typcn-trash" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
+      </button>
+      <button title="Get out of trash mode!" id="trashCancelBtn" class="timeFormButtonSmall displayNone" style="width: 90px;">
+      Cancel
+      <span class="typcn icon typcn-cancel" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
+      </button>
+      <button title="Get rid of all the checked ones!" id="trashItBtn" class="timeFormButtonSmall displayNone" style="float:right; width: 90px;">
+      Trash it&hairsp;!
+      <span class="typcn icon typcn-trash" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
+      </button>
+    </div>`;
   stepAll += `<div class="stepBox">
-    <div>
-    <label for="arriveeTime" class="timeSettingLabel">
-        Arrival time
-    </label>
-    </div>
-    <div id="arriveeTimeDiv">
-    <input id="arriveeTime" type="time" value="${steps.arriveeTime}" onchange="updateSteps()"/>
-    </div>
-</div>`;
+      <div>
+      <label for="arriveeTime" class="timeSettingLabel">
+          Arrival time
+      </label>
+      </div>
+      <div id="arriveeTimeDiv">
+      <input id="arriveeTime" type="time" value="${steps.arriveeTime}" onchange="updateSteps()"/>
+      </div>
+    </div>`;
   stepAll += `<div class="stepBox"  style="flex-wrap: wrap;">
-    <label class="timeSettingLabel" style="margin:0 0 7px;">
-    Notes:
-    </label>
-    <textarea id="notes" class="timeDestination" onchange="updateSteps()">${steps.notes}</textarea>
-</div>`
+      <label class="timeSettingLabel" style="margin:0 0 7px;">
+      Notes:
+      </label>
+      <textarea id="notes" class="timeDestination" onchange="updateSteps()">${steps.notes}</textarea>
+    </div>`;
   stepAll += `<div class="stepBox">
-    <button title="Calculate your schedule!" class="timeFormButton" style="float:right;" onclick="calculateTime(event)">
-    Calculate&hairsp;!
-    </button>
-    <button id="saveItAll" title="Save it in the clouds!" class="timeFormButton" style="float:left;" onclick="savePlan(event)">
-    <span class="typcn icon typcn-cloud-storage-outline" style="font-size: 1.4em; line-height: 1em;"></span>
-    </button>
-</div>
-<div id="savePlan" class="stepBox" style="flex-wrap: wrap;"></div>`;
+      <button id="calculateTimeBtn" title="Calculate your schedule!" class="timeFormButton" style="float:right;">
+      Calculate&hairsp;!
+      </button>
+      <button id="savePlanBtn" title="Save it in the clouds!" class="timeFormButton" style="float:left;">
+      <span class="typcn icon typcn-cloud-storage-outline" style="font-size: 1.4em; line-height: 1em;"></span>
+      </button>
+    </div>
+    <div id="savePlanDiv" class="stepBox" style="flex-wrap: wrap;"></div>`;
   stepAll += `<div class="stepBox">
-    <button title="Get the original data back!" class="timeFormButton" style="font-size: .8em; font-family: 'Nunito'; margin: 15px auto; border-width: 0.5px 0.5px 2px 1px;" onclick="clearStorage()">
-    Go back to original
-    </button>
-</div>`;
+      <button id="clearStorageBtn" title="Get the original data back!" class="timeFormButton" style="font-size: .8em; font-family: 'Nunito'; margin: 15px auto; border-width: 0.5px 0.5px 2px 1px;">
+      Go back to original
+      </button>
+    </div>`;
   timeForm.innerHTML = stepAll;
+  savePlanBtn.addEventListener("click", savePlan);
+  trashModeBtn.addEventListener("click", trashMode);
+  trashCancelBtn.addEventListener("click", trashCancel);
+  trashItBtn.addEventListener("click", trashIt);
+  document.querySelectorAll(".trashCanCheck").forEach(trashCan =>{
+    trashCan.addEventListener("click", trashOrNot);
+  });
+  clearStorageBtn.addEventListener("click", clearStorage);
+  addStepBtn.addEventListener("click", addStep);
+  calculateTimeBtn.addEventListener("click", calculateTime);
   let sortableList = document.querySelector(".sortable-List");
   let itemes = document.querySelectorAll(".sortable-List > .iteme");
   let icons = document.querySelectorAll(".sortable-List > .iteme > .changeIcon");
@@ -488,22 +498,24 @@ function ondrop() {
   updateSteps();
 }
 
-function savePlan(event) {
-  document.getElementById("savePlan").innerHTML = `<p style="font-size:calc(13.53px + 0.19vw); margin: 1em 0 0.2em;">How should we name that one?</p>
-<input id="nameToSave" class="timeDestination" type="text" value="${document.getElementById("destination").value}"/>
-<div class="stepBox" style="width: 100%;">
-    <button title="Nevermind!" id="saveCancel" class="timeFormButtonSmall" style="height: 30px; width: 90px;" onclick="saveCancel()">
-    Cancel
-    <span class="typcn icon typcn-cancel" style="font-size: 1.2em; line-height: 1em;"></span>
-    </button>
-    <button title="Save it!" id="saveIt" class="timeFormButtonSmall" style="height: 30px; width: 90px;" onclick="window.saveIt()">
-    Save it&hairsp;!
-    <span class="typcn icon typcn-cloud-storage-outline" style="font-size: 1.4em; line-height: 1em;"></span>
-    </button>
-</div>`
+function savePlan() {
+  document.getElementById("savePlanDiv").innerHTML = `<p style="font-size:calc(13.53px + 0.19vw); margin: 1em 0 0.2em;">How should we name that one?</p>
+    <input id="nameToSave" class="timeDestination" type="text" value="${document.getElementById("destination").value}"/>
+    <div class="stepBox" style="width: 100%;">
+        <button title="Nevermind!" id="saveCancelBtn" class="timeFormButtonSmall" style="height: 30px; width: 90px;">
+        Cancel
+        <span class="typcn icon typcn-cancel" style="font-size: 1.2em; line-height: 1em;"></span>
+        </button>
+        <button title="Save it!" id="saveItBtn" class="timeFormButtonSmall" style="height: 30px; width: 90px;">
+        Save it&hairsp;!
+        <span class="typcn icon typcn-cloud-storage-outline" style="font-size: 1.4em; line-height: 1em;"></span>
+        </button>
+    </div>`;
+  saveItBtn.addEventListener("click", saveIt);
+  saveCancelBtn.addEventListener("click", saveCancel);
 }
 function saveCancel() {
-  document.getElementById("savePlan").innerHTML = ``;
+  document.getElementById("savePlanDiv").innerHTML = ``;
 }
 
 function saveOptCancel(){
@@ -518,7 +530,29 @@ function saveOptSaveAs(){
   document.getElementById("scheduleTime").innerHTML = ``;
   document.getElementById("togglePlansWhole").classList.remove("displayNone");
   document.getElementById("timeForm").classList.remove("displayNone");
+};
+
+async function saveOptReplace(){
+  let destination = document.getElementById("nameToSave").value;
+  await updateDoc(doc(db, "plan", auth.currentUser.email, "myPlans", destination), {
+    ...steps
+  });
+  document.getElementById("togglePlansWhole").classList.remove("displayNone");
+  document.getElementById("timeForm").classList.remove("displayNone");
+  document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
+  document.getElementById("scheduleTime").innerHTML = ``;
+  getPlans();
+  savePlanDiv.innerHTML = `<h3 class="savePlanH3">You replaced it!</h3>
+  <p style="text-align:center;">Now, go see it in your schedules!</p>`;
+  console.log("saveOptReplace");
+  //document.querySelector("#timePage").addEventListener("click", clickHandlerSaved);
 }
+//window.saveOptReplace = saveOptReplace;
+
+function clickHandlerSaved(){
+  document.getElementById("savePlanDiv").innerHTML = ``;
+  document.querySelector("#timePage").removeEventListener("click", clickHandlerSaved);
+};
 
 function trashMode() {
   let trashables = document.querySelectorAll(".trashLabel");
@@ -529,9 +563,9 @@ function trashMode() {
   moveables.forEach((moveable) => {
     moveable.classList.add("displayNone");
   });
-  document.getElementById("trashMode").classList.add('displayNone');
-  document.getElementById("trashCancel").classList.remove('displayNone');
-  document.getElementById("trashIt").classList.remove('displayNone');
+  document.getElementById("trashModeBtn").classList.add('displayNone');
+  document.getElementById("trashCancelBtn").classList.remove('displayNone');
+  document.getElementById("trashItBtn").classList.remove('displayNone');
 }
 function trashOrNot(event) {
   let trashCan = event.currentTarget;
@@ -548,9 +582,9 @@ function trashCancel() {
   moveables.forEach((moveable) => {
     moveable.classList.remove("displayNone");
   });
-  document.getElementById("trashMode").classList.remove('displayNone');
-  document.getElementById("trashCancel").classList.add('displayNone');
-  document.getElementById("trashIt").classList.add('displayNone');
+  document.getElementById("trashModeBtn").classList.remove('displayNone');
+  document.getElementById("trashCancelBtn").classList.add('displayNone');
+  document.getElementById("trashItBtn").classList.add('displayNone');
   let trashTrasheds = document.querySelectorAll(".trashed");
   trashTrasheds.forEach((trashTrashed) => {
     trashTrashed.classList.remove("trashed");
@@ -598,7 +632,7 @@ function updateSteps() {
   steps.notes = document.getElementById("notes").value;
   saveSteps();
 };
-//window.updateSteps = updateSteps;
+window.updateSteps = updateSteps;
 // initializing();
 // displaySteps();
 
@@ -666,6 +700,7 @@ function ifNotes() {
 function clickHandler() {
   document.getElementById("scheduleTimeWhole").style.display = "none";
   document.getElementById("timeForm").style.display = "block";
+  document.getElementById("togglePlansWhole").classList.remove("displayNone");
   document.getElementById("switchSliderWhole").style.display = "block";
   document.querySelector("#timePage").removeEventListener("click", clickHandler)
 };

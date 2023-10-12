@@ -85,31 +85,6 @@
     padding-left: 10px;
     
   }
-  /*.doned{
-    text-decoration: line-through;
-  }
-  li span:nth-of-type(1) {
-    display: inline-block;
-  }
-  li span:nth-of-type(2){
-    display: none;
-  }
-  li.doned span:nth-of-type(1){
-    display: none;
-  }
-  li.doned span:nth-of-type(2){
-    display: inline-block;
-  }
-  li:before{
-    font-family: typicons;
-    content: '\E01B';
-    padding-right: 5px;
-  }
-  li.doned:before{
-    font-family: typicons;
-    content: '\E11E';
-    padding-right: 5px;
-  }*/
   hr{
     margin: 30px 0 0;
   }
@@ -155,31 +130,28 @@
       li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck"></span>${task}`;
       list.appendChild(li);
     });
-    document.querySelectorAll(".emptyCheck").forEach(emptyCheck => {
-      emptyCheck.addEventListener("click", () => {
-        emptyCheck.parentElement.classList.add("displayNone");
-        let task = emptyCheck.parentElement.textContent;
-        let donedId = listTasks.indexOf(task);
-        let doned = listTasks.splice(donedId, 1);
-        localStorage.listTasks = JSON.stringify(listTasks);
-        listDones.push(doned);
-        localStorage.listDones = JSON.stringify(listDones);
-        let donedLi = document.createElement("li");
-        donedLi.innerHTML = `<span class="typcn typcn-tick"></span>${doned}<span class="typcn typcn-trash trashCan"></span>`;
-        doneZone.appendChild(donedLi);
-      });
-    });
-    trashCanEvent();
+    checkEvent();
   };
   
   if(localStorage.getItem("listDones")){
     listDones = JSON.parse(localStorage.listDones);
     listDones.forEach(doned => {
       let donedLi = document.createElement("li");
-      donedLi.innerHTML = `<span class="typcn typcn-tick"></span>${doned}<span class="typcn typcn-trash trashCan"></span>`;
+      donedLi.innerHTML = `${doned.date}<span class="typcn typcn-tick"></span>${doned.task}<span class="typcn typcn-trash trashCan"></span>`;
       doneZone.appendChild(donedLi);
     });
     trashCanEvent();
+  };
+  
+  function checkEvent(){
+    document.querySelectorAll(".emptyCheck").forEach(emptyCheck => {
+      emptyCheck.addEventListener("click", () => {
+        emptyCheck.parentElement.classList.add("displayNone");
+        let task = emptyCheck.parentElement.textContent;
+        let donedId = listTasks.indexOf(task);
+        gotItDone(donedId);
+      });
+    });
   };
   
   function trashCanEvent(){
@@ -195,14 +167,31 @@
     });
   };
   
+  function gotItDone(nb){
+    let donedTask = listTasks.splice(nb, 1).toString();
+    localStorage.listTasks = JSON.stringify(listTasks);
+    let donedDate = getTodayDate(); //return
+    let doned = {
+      task: donedTask,
+      date: donedDate
+    };
+    listDones.push(doned);
+    localStorage.listDones = JSON.stringify(listDones);
+    let donedLi = document.createElement("li");
+    donedLi.innerHTML = `${doned.date}<span class="typcn typcn-tick"></span>${doned.task}<span class="typcn typcn-trash trashCan"></span>`;
+    doneZone.appendChild(donedLi);
+    trashCanEvent();
+  };
+  
   addForm.addEventListener("submit", (e) => {
     e.preventDefault();
     let newTask = addInput.value;
     listTasks.push(newTask);
     let li = document.createElement("li");
-    li.innerHTML = `<span class="typcn typcn-arrow-right"></span>${newTask}`;
+    li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck"></span>${newTask}`;
     localStorage.listTasks = JSON.stringify(listTasks);
     list.appendChild(li);
+    checkEvent();
     addForm.reset();
   });
   
@@ -221,14 +210,7 @@
         li.classList.add("displayNone");
       };
     });
-    let doned = listTasks.splice(num, 1);
-    localStorage.listTasks = JSON.stringify(listTasks);
-    listDones.push(doned);
-    localStorage.listDones = JSON.stringify(listDones);
-    let donedLi = document.createElement("li");
-    donedLi.innerHTML = `<span class="typcn typcn-tick"></span>${doned}<span class="typcn typcn-trash trashcan"></span>`;
-    doneZone.appendChild(donedLi);
-    trashCanEvent();
+    gotItDone(num);
     if(listTasks.length == 0){
       taskToDo.innerText = "aller t'reposer!";
     } else{
@@ -251,7 +233,7 @@
     list.innerHTML = ``;
     listTasks.forEach(task => {
       let li = document.createElement("li");
-      li.innerHTML = `<span class="typcn typcn-arrow-right"></span>${task}`;
+      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck"></span>${task}`;
       list.appendChild(li);
     });
     //list.classList.add("first");
@@ -260,6 +242,17 @@
     num = 0;
     taskToDo.innerText = listTasks[num];
   });
+  
+  function getTodayDate(){
+    let date = new Date();
+    let currentDay= String(date.getDate()).padStart(2, '0');
+    let currentMonth = String(date.getMonth()+1).padStart(2,"0");
+    let currentYear = date.getFullYear();
+    let currentDate = `${currentDay}-${currentMonth}-${currentYear}`;
+    //let currentDate = currentYear + "-" + currentMonth + "-" + currentDay;
+    return currentDate;
+  };
+  
 </script>
 </body>
 

@@ -4,11 +4,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/typicons/2.0.9/typicons.css"/>
+  <title>Random Task</title>
 </head>
 
 <body>
 <style>
+  *{
+    font-family: 'Nunito', sans-serif;
+  }
+  button {
+    border-top: 2px solid darkslategrey;
+    border-left: 2px solid darkslategrey;
+    border-right: 4px solid darkslategrey;
+    border-bottom: 4px solid darkslategrey;
+    border-radius: 5px;
+    padding: 5px 10px;
+    width: fit-content;
+    color: darkslategrey;
+    text-align: center;
+    font-size: 1em;
+    font-weight: 600;
+    background-color: lightgrey;
+  }
+  button span:nth-of-type(1){
+    padding-right: 5px;
+  }
+  button span:nth-of-type(2){
+    padding-left: 5px;
+  }
+  input[type="text"]{
+    border-top: 2px solid darkslategrey;
+    border-left: 2px solid darkslategrey;
+    border-right: 4px solid darkslategrey;
+    border-bottom: 4px solid darkslategrey;
+    border-radius: 5px;
+    padding: 5px 10px;
+    width: fit-content;
+    color: darkslategrey;
+    font-size: 1em;
+    font-weight: 600;
+  }
   #listSection{
     text-align: left;
   }
@@ -21,7 +58,50 @@
     width: fit-content;
     margin: 10px auto;
   }
-  .doned{
+  #taskToDo{
+    color: darkmagenta;
+    font-size: 1.5em;
+    font-weight: 700;
+  }
+  ul{
+    list-style: none;
+    padding: 0;
+  }
+  li span{
+    padding-right: 3px;
+  }
+  /*.doned{
+    text-decoration: line-through;
+  }
+  li span:nth-of-type(1) {
+    display: inline-block;
+  }
+  li span:nth-of-type(2){
+    display: none;
+  }
+  li.doned span:nth-of-type(1){
+    display: none;
+  }
+  li.doned span:nth-of-type(2){
+    display: inline-block;
+  }
+  li:before{
+    font-family: typicons;
+    content: '\E01B';
+    padding-right: 5px;
+  }
+  li.doned:before{
+    font-family: typicons;
+    content: '\E11E';
+    padding-right: 5px;
+  }*/
+  hr{
+    margin: 30px 0 0;
+  }
+  #doneZone{
+    margin-top: 8px;
+  }
+  #doneZone li:not(span){
     text-decoration: line-through;
   }
   .displayNone{
@@ -34,16 +114,18 @@
       <button id="addBtn" type="submit">add</button>
     </form>
     
-    <ul id="list">
-    </ul>
+    <ul id="list"></ul>
     <button id="shuffleBtn">Shuffle it!</button>
+    <hr />
+    <h3>Done Zone</h3>
+    <ul id="doneZone"></ul>
   </div>
   <div id="toDoSection" class="displayNone">
-    <h3>Fac là, tu vas...</h3>
+    <h3>Fac là,<br />pour les 30 prochaines minutes,<br />tu vas...</h3>
     <p id="taskToDo"></p>
-    <button id="nopeNextBtn">Nope, next!</button>
-    <button id="doneNextBtn">Done, next!!</button>
-    <button id="backBtn">Back</button>
+    <button id="nopeNextBtn"><span class="typcn typcn-arrow-sync"></span>Nope, next!<span class="typcn typcn-arrow-sync"></span></button>
+    <button id="doneNextBtn"><span class="typcn typcn-thumbs-up"></span>Done, next!!<span class="typcn typcn-arrow-right-outline"></span></button>
+    <button id="backBtn"><span class="typcn typcn-arrow-left-outline"></span>Back</button>
   </div>
 <script>
   let listTasks = [];
@@ -54,7 +136,7 @@
     //console.log(listTasks);
     listTasks.forEach(task => {
       let li = document.createElement("li");
-      li.innerHTML = task;
+      li.innerHTML = `<span class="typcn typcn-arrow-right"></span>${task}`;
       list.appendChild(li);
     });
   };
@@ -64,7 +146,7 @@
     listTasks.push(newTask);
     //console.log(listTasks);
     let li = document.createElement("li");
-    li.innerHTML = newTask;
+    li.innerHTML = `<span class="typcn typcn-arrow-right"></span>${newTask}`;
     //localStorage.setItem("listTasks", listTasks);
     localStorage.listTasks = JSON.stringify(listTasks);
     //let li = `<li>${newTask}</li>`;
@@ -84,12 +166,15 @@
     doneNextBtn.addEventListener("click", () => {
       document.querySelectorAll("li").forEach(li => {
         if(li.innerText.includes(listTasks[num])){
-          li.classList.add("doned");
+          li.classList.add("displayNone");
         };
       });
-      listTasks.splice(num, 1);
+      let doned = listTasks.splice(num, 1);
+      let donedLi = document.createElement("li");
+      donedLi.innerHTML = `<span class="typcn typcn-tick"></span>${doned}`;
+      doneZone.appendChild(donedLi);
       if(listTasks.length == 0){
-        taskToDo.innerText = "aller t'r'poser!";
+        taskToDo.innerText = "aller t'reposer!";
       } else{
         num = num < listTasks.length ? num : 0;
         taskToDo.innerText = listTasks[num];
@@ -109,7 +194,7 @@
     list.innerHTML = ``;
     listTasks.forEach(task => {
       let li = document.createElement("li");
-      li.innerHTML = task;
+      li.innerHTML = `<span class="typcn typcn-arrow-right"></span>${task}`;
       list.appendChild(li);
     });
     //list.classList.add("first");

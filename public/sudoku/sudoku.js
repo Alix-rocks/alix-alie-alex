@@ -345,7 +345,7 @@ function startIt(){
         document.querySelectorAll(".highlight").forEach(inside => {
           inside.classList.replace("highlightSquare", "highlightRond");
         });
-        if (document.querySelector(".highlighted").innerText){
+        if (document.querySelector(".highlighted")){
           chiffre = document.querySelector(".highlighted").innerText;
           document.getElementById("opt" + chiffre).classList.add("selected");
         };

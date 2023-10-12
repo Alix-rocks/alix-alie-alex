@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+<style>
+  #listSection{
+    text-align: left;
+  }
+  #toDoSection{
+    display: flex;
+    flex-flow: column nowrap;
+    text-align: center;
+  }
+  #toDoSection button{
+    width: fit-content;
+    margin: 10px auto;
+  }
+  .doned{
+    text-decoration: line-through;
+  }
+  .displayNone{
+    display: none!important;
+  }
+</style>
+  <div id="listSection">
+    <form id="addForm">
+      <input id="addInput" type="text" />
+      <button id="addBtn" type="submit">add</button>
+    </form>
+    
+    <ul id="list">
+    </ul>
+    <button id="shuffleBtn">Shuffle it!</button>
+  </div>
+  <div id="toDoSection" class="displayNone">
+    <h3>Fac là, tu vas...</h3>
+    <p id="taskToDo"></p>
+    <button id="nopeNextBtn">Nope, next!</button>
+    <button id="doneNextBtn">Done, next!!</button>
+    <button id="backBtn">Back</button>
+  </div>
+<script>
+  let listTasks = [];
+  let num = 0;
+  if(localStorage.getItem("listTasks")){
+    listTasks = JSON.parse(localStorage.listTasks);
+    //listTasks = localStorage.getItem("listTasks");
+    //console.log(listTasks);
+    listTasks.forEach(task => {
+      let li = document.createElement("li");
+      li.innerHTML = task;
+      list.appendChild(li);
+    });
+  };
+  addForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    let newTask = addInput.value;
+    listTasks.push(newTask);
+    //console.log(listTasks);
+    let li = document.createElement("li");
+    li.innerHTML = newTask;
+    //localStorage.setItem("listTasks", listTasks);
+    localStorage.listTasks = JSON.stringify(listTasks);
+    //let li = `<li>${newTask}</li>`;
+    list.appendChild(li);
+    addForm.reset();
+  });
+  
+  nopeNextBtn.addEventListener("click", () => {
+      if(listTasks.length == 0){
+        taskToDo.innerText = "aller t'r'poser!";
+      } else{
+        num = num < (listTasks.length - 1) ? num + 1 : 0;
+        console.log(num);
+        taskToDo.innerText = listTasks[num];
+      };
+    });
+    doneNextBtn.addEventListener("click", () => {
+      document.querySelectorAll("li").forEach(li => {
+        if(li.innerText.includes(listTasks[num])){
+          li.classList.add("doned");
+        };
+      });
+      listTasks.splice(num, 1);
+      if(listTasks.length == 0){
+        taskToDo.innerText = "aller t'r'poser!";
+      } else{
+        num = num < listTasks.length ? num : 0;
+        taskToDo.innerText = listTasks[num];
+      };
+    });
+    backBtn.addEventListener("click", () => {
+      listSection.classList.toggle("displayNone");
+      toDoSection.classList.toggle("displayNone");
+    });
+  
+  shuffleBtn.addEventListener("click", () => {
+    for (let i = listTasks.length - 1; i > 0; i--) { 
+      const j = Math.floor(Math.random() * (i + 1)); 
+      [listTasks[i], listTasks[j]] = [listTasks[j], listTasks[i]]; 
+    };
+    //console.log(listTasks);
+    list.innerHTML = ``;
+    listTasks.forEach(task => {
+      let li = document.createElement("li");
+      li.innerHTML = task;
+      list.appendChild(li);
+    });
+    //list.classList.add("first");
+    listSection.classList.toggle("displayNone");
+    toDoSection.classList.toggle("displayNone");
+    num = 0;
+    taskToDo.innerText = listTasks[num];
+  });
+</script>
+</body>
+
+</html>

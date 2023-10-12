@@ -434,6 +434,8 @@ function erase() {
     for(let i = 0; i < 9; i++){
       for(let j = 0; j < 9; j++){
         let kase = document.getElementById("r" + i + "c" + j);
+        //regarde dans i=0 les chiffres qui manquent
+        //ensuite...
         if(!kase.textContent){
           let b = kase.dataset.bloc;
           sudokuSolver(i, j, b, sudokuQuestion, classe, cClasse);

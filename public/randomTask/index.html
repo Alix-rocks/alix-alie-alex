@@ -129,6 +129,7 @@
   </div>
 <script>
   let listTasks = [];
+  let listDones = [];
   let num = 0;
   if(localStorage.getItem("listTasks")){
     listTasks = JSON.parse(localStorage.listTasks);
@@ -140,50 +141,61 @@
       list.appendChild(li);
     });
   };
+  
+  if(localStorage.getItem("listDones")){
+    listDones = JSON.parse(localStorage.listDones);
+    listDones.forEach(doned => {
+      let donedLi = document.createElement("li");
+      donedLi.innerHTML = `<span class="typcn typcn-tick"></span>${doned}`;
+      doneZone.appendChild(donedLi);
+    });
+  };
+  
   addForm.addEventListener("submit", (e) => {
     e.preventDefault();
     let newTask = addInput.value;
     listTasks.push(newTask);
-    //console.log(listTasks);
     let li = document.createElement("li");
     li.innerHTML = `<span class="typcn typcn-arrow-right"></span>${newTask}`;
-    //localStorage.setItem("listTasks", listTasks);
     localStorage.listTasks = JSON.stringify(listTasks);
-    //let li = `<li>${newTask}</li>`;
     list.appendChild(li);
     addForm.reset();
   });
   
   nopeNextBtn.addEventListener("click", () => {
-      if(listTasks.length == 0){
-        taskToDo.innerText = "aller t'r'poser!";
-      } else{
-        num = num < (listTasks.length - 1) ? num + 1 : 0;
-        console.log(num);
-        taskToDo.innerText = listTasks[num];
+    if(listTasks.length == 0){
+      taskToDo.innerText = "aller t'r'poser!";
+    } else{
+      num = num < (listTasks.length - 1) ? num + 1 : 0;
+      taskToDo.innerText = listTasks[num];
+    };
+  });
+  
+  doneNextBtn.addEventListener("click", () => {
+    document.querySelectorAll("li").forEach(li => {
+      if(li.innerText.includes(listTasks[num])){
+        li.classList.add("displayNone");
       };
     });
-    doneNextBtn.addEventListener("click", () => {
-      document.querySelectorAll("li").forEach(li => {
-        if(li.innerText.includes(listTasks[num])){
-          li.classList.add("displayNone");
-        };
-      });
-      let doned = listTasks.splice(num, 1);
-      let donedLi = document.createElement("li");
-      donedLi.innerHTML = `<span class="typcn typcn-tick"></span>${doned}`;
-      doneZone.appendChild(donedLi);
-      if(listTasks.length == 0){
-        taskToDo.innerText = "aller t'reposer!";
-      } else{
-        num = num < listTasks.length ? num : 0;
-        taskToDo.innerText = listTasks[num];
-      };
-    });
-    backBtn.addEventListener("click", () => {
-      listSection.classList.toggle("displayNone");
-      toDoSection.classList.toggle("displayNone");
-    });
+    let doned = listTasks.splice(num, 1);
+    localStorage.listTasks = JSON.stringify(listTasks);
+    listDones.push(doned);
+    localStorage.listDones = JSON.stringify(listDones);
+    let donedLi = document.createElement("li");
+    donedLi.innerHTML = `<span class="typcn typcn-tick"></span>${doned}`;
+    doneZone.appendChild(donedLi);
+    if(listTasks.length == 0){
+      taskToDo.innerText = "aller t'reposer!";
+    } else{
+      num = num < listTasks.length ? num : 0;
+      taskToDo.innerText = listTasks[num];
+    };
+  });
+    
+  backBtn.addEventListener("click", () => {
+    listSection.classList.toggle("displayNone");
+    toDoSection.classList.toggle("displayNone");
+  });
   
   shuffleBtn.addEventListener("click", () => {
     for (let i = listTasks.length - 1; i > 0; i--) { 

@@ -52,6 +52,9 @@
     font-size: 1em;
     font-weight: 600;
   }
+  h5{
+    margin-top: 0;
+  }
   #listSection{
     text-align: left;
   }
@@ -109,7 +112,7 @@
     </form>
     
     <ul id="list"></ul>
-    <button id="shuffleBtn">Shuffle it!</button>
+    <button id="shuffleBtn">Shuffle it!</button><h5>Tell me what to do</h5>
     <hr />
     <h3>Done Zone</h3>
     <ul id="doneZone"></ul>
@@ -151,6 +154,7 @@
     donedDates.forEach(donedDate => {
       if(!document.getElementById(donedDate)){
         let donedUlP = document.createElement("p");
+        donedUlP.setAttribute("id", donedDate + "p");
         donedUlP.innerText = donedDate;
         doneZone.appendChild(donedUlP);
         let donedUl = document.createElement("ul");
@@ -181,7 +185,12 @@
     trashedLi.classList.add("displayNone");
     let trashedTask = trashedLi.textContent;
     let trashedTaskId = listDones.indexOf(trashedTask);
-    listDones.splice(trashedTaskId, 1);
+    let trashedObject = listDones.splice(trashedTaskId, 1);
+    let trashedPDate = trashedObject[0].date;
+    let dateCount = listDones.filter((td) => td.date == trashedPDate).length;
+    if(dateCount == 0){
+      document.getElementById(trashedPDate + "p").classList.add("displayNone");
+    };
     localStorage.listDones = JSON.stringify(listDones);
   };
   
@@ -197,9 +206,18 @@
     };
     listDones.push(doned);
     localStorage.listDones = JSON.stringify(listDones);
+    if(!document.getElementById(donedDate)){
+        let donedUlP = document.createElement("p");
+        donedUlP.setAttribute("id", donedDate + "p");
+        donedUlP.innerText = donedDate;
+        doneZone.appendChild(donedUlP);
+        let donedUl = document.createElement("ul");
+        donedUl.setAttribute("id", donedDate);
+        donedUlP.insertAdjacentElement("afterend", donedUl);
+      };
     let donedLi = document.createElement("li");
-    donedLi.innerHTML = `${doned.date}<span class="typcn typcn-tick"></span>${doned.task}<span class="typcn typcn-trash trashCan" onclick="trashCanEvent(this)"></span>`;
-    doneZone.appendChild(donedLi);
+    donedLi.innerHTML = `<span class="typcn typcn-tick"></span>${doned.task}<span class="typcn typcn-trash trashCan" onclick="trashCanEvent(this)"></span>`;
+    document.getElementById(donedDate).appendChild(donedLi);
   };
   
   addForm.addEventListener("submit", (e) => {

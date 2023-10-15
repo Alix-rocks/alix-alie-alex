@@ -17,8 +17,6 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="manifest" href="site.webmanifest">
     <link rel="stylesheet" href="general.css">
-    <link rel="stylesheet" href="time.css">
-    <link rel="stylesheet" href="metro.css">
     <link rel="stylesheet" href="list.css">
     <link rel="stylesheet" href="shit.css">
     <title>Alix rocks</title>
@@ -112,10 +110,15 @@
         </div>
       </div>
       <h2>My best apps</h2>
-      <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage(this)" id="time"><label for="time" class="menuSectLabel" style="background-color: rgba(218, 165, 32, .1); position: relative;"><span class="typcn icon typcn-star btnStar"></span>Plan your time</label></input>
-      <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage(this)" id="list"><label for="list" class="menuSectLabel" style="margin-bottom: 0;">All the lists</label></input>
+      <a href="https://alix.rocks/time/" class="menuSectLabel" style="margin-bottom: 0; background-color: rgba(218, 165, 32, .1); position: relative;"><span class="typcn icon typcn-star btnStar"></span>Plan your time</a>
+      <h6 class="warningH6">So that not only you'll be on time<br/>but also mostly stressfree!</h6>
+      <a href="https://alix.rocks/randomTask/" class="menuSectLabel" style="margin-bottom: 0; background-color: rgba(218, 165, 32, .1); position: relative;"><span class="typcn icon typcn-star btnStar"></span>Random Task</a>
+      <h6 class="warningH6">Give me your to-do list<br/>and I'll tell you what to do!</h6>
+      <a href="https://alix.rocks/sudoku/" class="menuSectLabel" style="margin-bottom: 0; background-color: rgba(218, 165, 32, .1); position: relative;"><span class="typcn icon typcn-star btnStar"></span>SUDOKU</a>
+      <h6 class="warningH6">You can play!<br/>(but there's only like 3 different games...)</h6>
+      <a href="https://alix.rocks/metro/" class="menuSectLabel" style="margin-bottom: 0;">How to rock the metro</a>
       <h6 class="warningH6"><span class="typcn typcn-warning-outline warning-icon"></span>&nbsp;That one's still under construction<br/>(so don't look at the mess!)</h6>
-      <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage(this)" id="metro"><label for="metro" class="menuSectLabel" style="margin-bottom: 0;">How to rock the metro</label></input>
+      <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage(this)" id="list"><label for="list" class="menuSectLabel" style="margin-bottom: 0;">All the lists</label></input>
       <h6 class="warningH6"><span class="typcn typcn-warning-outline warning-icon"></span>&nbsp;That one's still under construction<br/>(so don't look at the mess!)</h6>
       <input type="radio" name="menuSect" class="menuSect" onclick="toSectPage(this)" id="calc"><label for="calc" class="menuSectLabel" style="margin-bottom: 0;">For a responsive css</label></input>
       <h6 class="warningH6"><span class="typcn typcn-warning-outline warning-icon"></span>&nbsp;That one's still under construction<br/>(so don't look at the mess!)</h6>
@@ -252,6 +255,11 @@
         padding: 3px 5px;
         margin: 15px auto;
         text-align: center;
+        font-family: 'Nunito', sans-serif;
+        font-size: calc(15.06px + 0.38vw);
+        font-weight: 700;
+        color: var(--tx-color);
+        text-decoration: none;
       }
       .menuSectLabel:hover{
         background-color: var(--color-4);
@@ -563,13 +571,6 @@
       </ul>
     </div>
     <script name="ListPage" src="list.js"></script>
-    <div name="MetroPage" id="metroPage" class="sectionPage justPage">
-      <div id="metroForm"></div>
-      <div id="metroWhole" class="displayNone">
-        <div id="metroResult"></div>
-      </div>
-    </div>
-    <!-- <script name="MetroPage" src="metro.js"></script> -->
     <div name="CalcPage" id="calcPage" class="sectionPage justPage">
       <div class="tourStart" onclick="tourStart('tourFirst')">Tour?</div>
       <!-- see tooltips https://www.w3schools.com/css/css_tooltip.asp -->

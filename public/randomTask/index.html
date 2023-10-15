@@ -134,9 +134,6 @@
     top: 2px;
     right: 2.5px;
   }
-  colorTr{
-    
-  }
   .colorTd{
     width: fit-content;
     height: 25px;
@@ -163,7 +160,7 @@
     line-height: 14px;
     text-align: center;
     font-size: 14px;
-    padding: 1px 7px 5px;
+    padding: 3px 7px 4px;
   }
   .orange{
     background-color: orange;
@@ -345,9 +342,10 @@
     listTasks = JSON.parse(localStorage.listTasks);
     //listTasks = localStorage.getItem("listTasks");
     //console.log(listTasks);
-    listTasks.forEach(task => {
+    listTasks.forEach(todo => {
       let li = document.createElement("li");
-      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span>${task}<span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
+      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span>${todo.task}<span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
+      li.style.color = todo.color;
       list.appendChild(li);
     });
   };
@@ -386,6 +384,7 @@
   
   function checkEvent(emptyCheck){
     console.log("checkEvent");
+    console.log(listTasks);
     emptyCheck.parentElement.classList.add("displayNone");
     let color = emptyCheck.parentElement.style.color;
     let task = emptyCheck.parentElement.textContent;
@@ -394,18 +393,19 @@
     gotItDone(donedId, color);
   };
   //const colorList = ["orange", "red", "darkmagenta", "dodgerblue", "forestgreen", "darkslategrey"];
-  function colorChoice(colorTag, e){
+  let colorTag;
+  function colorChoice(thisOne){
+    colorTag = thisOne;
     colorTag.insertAdjacentElement("afterend", colorPalet);
     colorPalet.classList.remove("displayNone");
     clickScreen.classList.remove("displayNone");
-    let li = colorTag.parentElement;
-    //document.querySelector("#listSection:not(#colorPalet)").style.background = "red";
-    //document.querySelector("#listSection").classList.add("darkslategrey");
     document.querySelectorAll("input[name='colorRadio']").forEach(radio => {
       radio.addEventListener("click", () => {
         let color = radio.value;
+        let li = colorTag.parentElement;
         //li.classList.remove(...colorList);
         li.style.color = color;
+//update the todo in listTasks
       });
     });
     document.querySelector("#clickScreen").addEventListener("click", clickHandlerColor);
@@ -415,7 +415,7 @@
     colorPalet.classList.add("displayNone");
     clickScreen.classList.add("displayNone");
     document.querySelector("#clickScreen").removeEventListener("click", clickHandlerColor);
-  }
+  };
   
   function trashCanEvent(trashCan){
     console.log("trashCanEvent");
@@ -434,6 +434,7 @@
   
   function gotItDone(nb, color){
     console.log("gotItDone");
+    console.log(nb);
     let donedTask = listTasks.splice(nb, 1).toString();
     console.log(donedTask);
     localStorage.listTasks = JSON.stringify(listTasks);
@@ -463,13 +464,19 @@
   addForm.addEventListener("submit", (e) => {
     e.preventDefault();
     let newTask = addInput.value;
+    let color = "darkslategrey";
     if(!newTask == ""){
+      let todo = {
+        task: newTask,
+        color: color
+      }
       listTasks.push(newTask);
       let li = document.createElement("li");
       li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span>${newTask}<span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
       localStorage.listTasks = JSON.stringify(listTasks);
       list.appendChild(li);
       addForm.reset();
+      console.log(listTasks);
     };
   });
   
@@ -511,9 +518,10 @@
     };
     //console.log(listTasks);
     list.innerHTML = ``;
-    listTasks.forEach(task => {
+    listTasks.forEach(todo => {
       let li = document.createElement("li");
-      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span>${task}<span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
+      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span>${todo.task}<span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
+      li.style.color = todo.color;
       list.appendChild(li);
     });
     //list.classList.add("first");

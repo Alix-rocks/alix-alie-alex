@@ -19,6 +19,20 @@
 <style>
   *{
     font-family: 'Nunito', sans-serif;
+    color: darkslategrey;
+    box-sizing: border-box;
+  }
+  #listSection{
+    position: relative;
+  }
+  #clickScreen{
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 500;
+    background-color: rgba(255, 255, 255, 0);
   }
   button {
     border-top: 2px solid darkslategrey;
@@ -52,7 +66,13 @@
     font-size: 1em;
     font-weight: 600;
   }
-  h5{
+  input[type="radio"]{
+    display: none;
+  }
+  .topList{
+    margin-bottom: 0;
+  }
+  .sousBtn{
     margin-top: 0;
   }
   #listSection{
@@ -76,18 +96,97 @@
     list-style: none;
     padding: 0;
   }
+  #list{
+    margin-top: 0;
+    width: 100%;
+  }
+  #list li{
+    width: 100%;
+    position: relative;
+    font-weight: 600;
+  }
+  .colorSpan{
+    position: absolute;
+    top: -4px;
+    right: 0;
+  }
   li span{
     padding-right: 3px;
+    font-size: 1.3em;
   }
   .emptyCheck{
     display: inline-block;
-    font-size: 1.6em;
-    translate: 0 3px;
+    font-size: 2em;
+    translate: 0 3.5px;
+    line-height: 15px;
   }
   .trashCan{
     padding-left: 10px;
+    font-size: 1.5em;
+  }
+  
+  #colorPalet{
+    background-color: white;
+    border: 2px solid darkslategrey;
+    border-radius: 5px;
+    position: absolute;
+    z-index: 1000;
+    top: 2px;
+    right: 2.5px;
+  }
+  colorTr{
     
   }
+  .colorTd{
+    width: fit-content;
+    height: 25px;
+    border: none;
+  }
+  input[name="colorRadio"] + label > div{
+    width: 70px;
+    height: 25px;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    border-radius: 2.5px;
+  }
+  input[name="colorRadio"]:checked + label > div{
+    background-color: rgba(40, 70, 70, .3);
+ 
+  }
+  .colorDiv{
+    width: 65px;
+    height: 20px;
+    border-radius: 25px;
+    border: none;
+    margin: auto;
+    line-height: 14px;
+    text-align: center;
+    font-size: 14px;
+    padding: 1px 7px 5px;
+  }
+  .orange{
+    background-color: orange;
+  }
+  .red{
+    background-color: red;
+  }
+  .darkmagenta{
+    background-color: darkmagenta;
+    color: white;
+  }
+  .dodgerblue {
+    background-color: dodgerblue;
+  }
+  .forestgreen{
+    background-color: forestgreen;
+    color: white;
+  }
+  .darkslategrey{
+    background-color: darkslategrey;
+    color: white;
+  }
+  
   hr{
     margin: 30px 0 0;
   }
@@ -106,13 +205,126 @@
   }
 </style>
   <div id="listSection">
+    <div id="clickScreen" class="displayNone"></div>
     <form id="addForm">
       <input id="addInput" type="text" />
       <button id="addBtn" type="submit">add</button>
     </form>
-    
+    <h5 class="topList">The never ending list...</h5>
     <ul id="list"></ul>
-    <button id="shuffleBtn">Shuffle it!</button><h5>Tell me what to do</h5>
+    <!-- errands, housework, computer, cellphone, people -->
+      <!-- <table id="colorPalet" class="displayNone">
+        <tr class="colorTr">
+          <td class="colorTd">
+            <input type="radio" id="orangeRadio" name="colorRadio" value="orange" />
+            <label for="orangeRadio">
+              <div>
+                <div class="colorDiv orange"></div>
+              </div>
+            </label>
+          </td>
+          <td class="colorTd">
+            <input type="radio" id="redRadio" name="colorRadio" value="red" />
+            <label for="redRadio">
+              <div>
+                <div class="colorDiv red"></div>
+              </div>
+            </label>
+          </td>
+          <td class="colorTd">
+            <input type="radio" id="darkmagentaRadio" name="colorRadio" value="darkmagenta" />
+            <label for="darkmagentaRadio">
+              <div>
+                <div class="colorDiv darkmagenta"></div>
+              </div>
+            </label>
+          </td>
+        </tr>
+        <tr class="colorTr">
+          <td class="colorTd">
+            <input type="radio" id="dodgerblueRadio" name="colorRadio" value="dodgerblue" />
+            <label for="dodgerblueRadio">
+              <div>
+                <div class="colorDiv dodgerblue"></div>
+              </div>
+            </label>
+          </td>
+          <td class="colorTd">
+            <input type="radio" id="forestgreenRadio" name="colorRadio" value="forestgreen" />
+            <label for="forestgreenRadio">
+              <div>
+                  <div class="colorDiv forestgreen"></div>
+              </div>
+            </label>
+          </td>
+          <td class="colorTd">
+            <input type="radio" id="darkslategreyRadio" name="colorRadio" value="darkslategrey" checked/>
+            <label for="darkslategreyRadio">
+              <div>
+                <div class="colorDiv darkslategrey"></div>
+              </div>
+            </label>
+          </td>
+        </tr>
+      </table>-->
+      <table id="colorPalet" class="displayNone">
+        <tr class="colorTr">
+          <td class="colorTd">
+            <input type="radio" id="orangeRadio" name="colorRadio" value="orange" />
+            <label for="orangeRadio">
+              <div>
+                <div class="colorDiv orange">people</div>
+              </div>
+            </label>
+          </td>
+          <td class="colorTd">
+            <input type="radio" id="redRadio" name="colorRadio" value="red" />
+            <label for="redRadio">
+              <div>
+                <div class="colorDiv red">urgent</div>
+              </div>
+            </label>
+          </td>
+        </tr>
+        <tr class="colorTr">
+          <td class="colorTd">
+            <input type="radio" id="darkmagentaRadio" name="colorRadio" value="darkmagenta" />
+            <label for="darkmagentaRadio">
+              <div>
+                <div class="colorDiv darkmagenta">errand</div>
+              </div>
+            </label>
+          </td>
+          <td class="colorTd">
+            <input type="radio" id="dodgerblueRadio" name="colorRadio" value="dodgerblue" />
+            <label for="dodgerblueRadio">
+              <div>
+                <div class="colorDiv dodgerblue">screen</div>
+              </div>
+            </label>
+          </td>
+        </tr>
+        <tr class="colorTr">
+          <td class="colorTd">
+            <input type="radio" id="forestgreenRadio" name="colorRadio" value="forestgreen" />
+            <label for="forestgreenRadio">
+              <div>
+                  <div class="colorDiv forestgreen">physic</div>
+              </div>
+            </label>
+          </td>
+          <td class="colorTd">
+            <input type="radio" id="darkslategreyRadio" name="colorRadio" value="darkslategrey" checked/>
+            <label for="darkslategreyRadio">
+              <div>
+                <div class="colorDiv darkslategrey">else</div>
+              </div>
+            </label>
+          </td>
+        </tr>
+      </table>
+    <button id="shuffleBtn">Shuffle it!</button>
+    <h5 class="sousBtn">Tell me what to do!</h5>
     <hr />
     <h3>Done Zone</h3>
     <ul id="doneZone"></ul>
@@ -122,19 +334,20 @@
     <p id="taskToDo"></p>
     <button id="nopeNextBtn"><span class="typcn typcn-arrow-sync"></span>Nope, next!<span class="typcn typcn-arrow-sync"></span></button>
     <button id="doneNextBtn"><span class="typcn typcn-thumbs-up"></span>Done, next!!<span class="typcn typcn-arrow-right-outline"></span></button>
-    <button id="backBtn"><span class="typcn typcn-arrow-left-outline"></span>Back</button>
+    <button id="backBtn"><span class="typcn typcn-arrow-left-outline"></span>Back!</button>
   </div>
 <script>
   let listTasks = [];
   let listDones = [];
   let num = 0;
+  
   if(localStorage.getItem("listTasks")){
     listTasks = JSON.parse(localStorage.listTasks);
     //listTasks = localStorage.getItem("listTasks");
     //console.log(listTasks);
     listTasks.forEach(task => {
       let li = document.createElement("li");
-      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span>${task}`;
+      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span>${task}<span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
       list.appendChild(li);
     });
   };
@@ -166,6 +379,7 @@
       let donedDate = doned.date;
       let donedLi = document.createElement("li");
       donedLi.innerHTML = `<span class="typcn typcn-tick"></span>${doned.task}<span class="typcn typcn-trash trashCan" onclick="trashCanEvent(this)"></span>`;
+      donedLi.style.color = doned.color;
       document.getElementById(donedDate).appendChild(donedLi);
     });
   };
@@ -173,11 +387,35 @@
   function checkEvent(emptyCheck){
     console.log("checkEvent");
     emptyCheck.parentElement.classList.add("displayNone");
+    let color = emptyCheck.parentElement.style.color;
     let task = emptyCheck.parentElement.textContent;
     let donedId = listTasks.indexOf(task);
-    console.log(donedId);
-    gotItDone(donedId);
+    console.log(color);
+    gotItDone(donedId, color);
   };
+  //const colorList = ["orange", "red", "darkmagenta", "dodgerblue", "forestgreen", "darkslategrey"];
+  function colorChoice(colorTag, e){
+    colorTag.insertAdjacentElement("afterend", colorPalet);
+    colorPalet.classList.remove("displayNone");
+    clickScreen.classList.remove("displayNone");
+    let li = colorTag.parentElement;
+    //document.querySelector("#listSection:not(#colorPalet)").style.background = "red";
+    //document.querySelector("#listSection").classList.add("darkslategrey");
+    document.querySelectorAll("input[name='colorRadio']").forEach(radio => {
+      radio.addEventListener("click", () => {
+        let color = radio.value;
+        //li.classList.remove(...colorList);
+        li.style.color = color;
+      });
+    });
+    document.querySelector("#clickScreen").addEventListener("click", clickHandlerColor);
+  };
+  
+  function clickHandlerColor(){
+    colorPalet.classList.add("displayNone");
+    clickScreen.classList.add("displayNone");
+    document.querySelector("#clickScreen").removeEventListener("click", clickHandlerColor);
+  }
   
   function trashCanEvent(trashCan){
     console.log("trashCanEvent");
@@ -194,7 +432,7 @@
     localStorage.listDones = JSON.stringify(listDones);
   };
   
-  function gotItDone(nb){
+  function gotItDone(nb, color){
     console.log("gotItDone");
     let donedTask = listTasks.splice(nb, 1).toString();
     console.log(donedTask);
@@ -202,6 +440,7 @@
     let donedDate = getTodayDate(); //return
     let doned = {
       task: donedTask,
+      color: color,
       date: donedDate
     };
     listDones.push(doned);
@@ -217,6 +456,7 @@
       };
     let donedLi = document.createElement("li");
     donedLi.innerHTML = `<span class="typcn typcn-tick"></span>${doned.task}<span class="typcn typcn-trash trashCan" onclick="trashCanEvent(this)"></span>`;
+    donedLi.style.color = color;
     document.getElementById(donedDate).appendChild(donedLi);
   };
   
@@ -226,7 +466,7 @@
     if(!newTask == ""){
       listTasks.push(newTask);
       let li = document.createElement("li");
-      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span>${newTask}`;
+      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span>${newTask}<span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
       localStorage.listTasks = JSON.stringify(listTasks);
       list.appendChild(li);
       addForm.reset();
@@ -243,12 +483,14 @@
   });
   
   doneNextBtn.addEventListener("click", () => {
+    let color;
     document.querySelectorAll("li").forEach(li => {
       if(li.innerText.includes(listTasks[num])){
+        color = li.style.color;
         li.classList.add("displayNone");
       };
     });
-    gotItDone(num);
+    gotItDone(num, color);
     if(listTasks.length == 0){
       taskToDo.innerText = "aller t'reposer!";
     } else{
@@ -271,7 +513,7 @@
     list.innerHTML = ``;
     listTasks.forEach(task => {
       let li = document.createElement("li");
-      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span>${task}`;
+      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span>${task}<span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
       list.appendChild(li);
     });
     //list.classList.add("first");

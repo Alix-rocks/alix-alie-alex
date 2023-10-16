@@ -105,14 +105,15 @@
     position: relative;
     font-weight: 600;
   }
-  .colorSpan{
-    position: absolute;
-    top: -4px;
-    right: 0;
-  }
   li span{
     padding-right: 3px;
     font-size: 1.3em;
+  }
+  .colorSpan{
+    padding-left: 10px;
+    /* position: absolute;
+    top: -4px;
+    right: 0; */
   }
   .emptyCheck{
     display: inline-block;
@@ -120,7 +121,7 @@
     translate: 0 3.5px;
     line-height: 15px;
   }
-  .trashCan{
+  .trashCan, .recycle{
     padding-left: 10px;
     font-size: 1.5em;
   }
@@ -190,7 +191,8 @@
   #doneZone{
     margin-top: 8px;
   }
-  #doneZone li:not(span){
+  #doneZone li span.text{
+    font-size: 18px;
     text-decoration: line-through;
   }
   #doneZone p{
@@ -209,117 +211,62 @@
     </form>
     <h5 class="topList">The never ending list...</h5>
     <ul id="list"></ul>
-    <!-- errands, housework, computer, cellphone, people -->
-      <!-- <table id="colorPalet" class="displayNone">
-        <tr class="colorTr">
-          <td class="colorTd">
-            <input type="radio" id="orangeRadio" name="colorRadio" value="orange" />
-            <label for="orangeRadio">
-              <div>
-                <div class="colorDiv orange"></div>
-              </div>
-            </label>
-          </td>
-          <td class="colorTd">
-            <input type="radio" id="redRadio" name="colorRadio" value="red" />
-            <label for="redRadio">
-              <div>
-                <div class="colorDiv red"></div>
-              </div>
-            </label>
-          </td>
-          <td class="colorTd">
-            <input type="radio" id="darkmagentaRadio" name="colorRadio" value="darkmagenta" />
-            <label for="darkmagentaRadio">
-              <div>
-                <div class="colorDiv darkmagenta"></div>
-              </div>
-            </label>
-          </td>
-        </tr>
-        <tr class="colorTr">
-          <td class="colorTd">
-            <input type="radio" id="dodgerblueRadio" name="colorRadio" value="dodgerblue" />
-            <label for="dodgerblueRadio">
-              <div>
-                <div class="colorDiv dodgerblue"></div>
-              </div>
-            </label>
-          </td>
-          <td class="colorTd">
-            <input type="radio" id="forestgreenRadio" name="colorRadio" value="forestgreen" />
-            <label for="forestgreenRadio">
-              <div>
-                  <div class="colorDiv forestgreen"></div>
-              </div>
-            </label>
-          </td>
-          <td class="colorTd">
-            <input type="radio" id="darkslategreyRadio" name="colorRadio" value="darkslategrey" checked/>
-            <label for="darkslategreyRadio">
-              <div>
-                <div class="colorDiv darkslategrey"></div>
-              </div>
-            </label>
-          </td>
-        </tr>
-      </table>-->
-      <table id="colorPalet" class="displayNone">
-        <tr class="colorTr">
-          <td class="colorTd">
-            <input type="radio" id="orangeRadio" name="colorRadio" value="orange" />
-            <label for="orangeRadio">
-              <div>
-                <div class="colorDiv orange">people</div>
-              </div>
-            </label>
-          </td>
-          <td class="colorTd">
-            <input type="radio" id="redRadio" name="colorRadio" value="red" />
-            <label for="redRadio">
-              <div>
-                <div class="colorDiv red">urgent</div>
-              </div>
-            </label>
-          </td>
-        </tr>
-        <tr class="colorTr">
-          <td class="colorTd">
-            <input type="radio" id="darkmagentaRadio" name="colorRadio" value="darkmagenta" />
-            <label for="darkmagentaRadio">
-              <div>
-                <div class="colorDiv darkmagenta">errand</div>
-              </div>
-            </label>
-          </td>
-          <td class="colorTd">
-            <input type="radio" id="dodgerblueRadio" name="colorRadio" value="dodgerblue" />
-            <label for="dodgerblueRadio">
-              <div>
-                <div class="colorDiv dodgerblue">screen</div>
-              </div>
-            </label>
-          </td>
-        </tr>
-        <tr class="colorTr">
-          <td class="colorTd">
-            <input type="radio" id="forestgreenRadio" name="colorRadio" value="forestgreen" />
-            <label for="forestgreenRadio">
-              <div>
-                  <div class="colorDiv forestgreen">physic</div>
-              </div>
-            </label>
-          </td>
-          <td class="colorTd">
-            <input type="radio" id="darkslategreyRadio" name="colorRadio" value="darkslategrey" checked/>
-            <label for="darkslategreyRadio">
-              <div>
-                <div class="colorDiv darkslategrey">else</div>
-              </div>
-            </label>
-          </td>
-        </tr>
-      </table>
+    <table id="colorPalet" class="displayNone">
+      <tr class="colorTr">
+        <td class="colorTd">
+          <input type="radio" id="orangeRadio" name="colorRadio" value="orange" />
+          <label for="orangeRadio">
+            <div>
+              <div class="colorDiv orange">people</div>
+            </div>
+          </label>
+        </td>
+        <td class="colorTd">
+          <input type="radio" id="redRadio" name="colorRadio" value="red" />
+          <label for="redRadio">
+            <div>
+              <div class="colorDiv red">urgent</div>
+            </div>
+          </label>
+        </td>
+      </tr>
+      <tr class="colorTr">
+        <td class="colorTd">
+          <input type="radio" id="darkmagentaRadio" name="colorRadio" value="darkmagenta" />
+          <label for="darkmagentaRadio">
+            <div>
+              <div class="colorDiv darkmagenta">errand</div>
+            </div>
+          </label>
+        </td>
+        <td class="colorTd">
+          <input type="radio" id="dodgerblueRadio" name="colorRadio" value="dodgerblue" />
+          <label for="dodgerblueRadio">
+            <div>
+              <div class="colorDiv dodgerblue">screen</div>
+            </div>
+          </label>
+        </td>
+      </tr>
+      <tr class="colorTr">
+        <td class="colorTd">
+          <input type="radio" id="forestgreenRadio" name="colorRadio" value="forestgreen" />
+          <label for="forestgreenRadio">
+            <div>
+                <div class="colorDiv forestgreen">physic</div>
+            </div>
+          </label>
+        </td>
+        <td class="colorTd">
+          <input type="radio" id="darkslategreyRadio" name="colorRadio" value="darkslategrey" checked/>
+          <label for="darkslategreyRadio">
+            <div>
+              <div class="colorDiv darkslategrey">else</div>
+            </div>
+          </label>
+        </td>
+      </tr>
+    </table>
     <button id="shuffleBtn">Shuffle it!</button>
     <h5 class="sousBtn">Tell me what to do!</h5>
     <hr />
@@ -333,20 +280,73 @@
     <button id="doneNextBtn"><span class="typcn typcn-thumbs-up"></span>Done, next!!<span class="typcn typcn-arrow-right-outline"></span></button>
     <button id="backBtn"><span class="typcn typcn-arrow-left-outline"></span>Back!</button>
   </div>
+  <!-- errands, housework, computer, cellphone, people -->
+  <!-- <table id="colorPalet" class="displayNone">
+    <tr class="colorTr">
+      <td class="colorTd">
+        <input type="radio" id="orangeRadio" name="colorRadio" value="orange" />
+        <label for="orangeRadio">
+          <div>
+            <div class="colorDiv orange"></div>
+          </div>
+        </label>
+      </td>
+      <td class="colorTd">
+        <input type="radio" id="redRadio" name="colorRadio" value="red" />
+        <label for="redRadio">
+          <div>
+            <div class="colorDiv red"></div>
+          </div>
+        </label>
+      </td>
+      <td class="colorTd">
+        <input type="radio" id="darkmagentaRadio" name="colorRadio" value="darkmagenta" />
+        <label for="darkmagentaRadio">
+          <div>
+            <div class="colorDiv darkmagenta"></div>
+          </div>
+        </label>
+      </td>
+    </tr>
+    <tr class="colorTr">
+      <td class="colorTd">
+        <input type="radio" id="dodgerblueRadio" name="colorRadio" value="dodgerblue" />
+        <label for="dodgerblueRadio">
+          <div>
+            <div class="colorDiv dodgerblue"></div>
+          </div>
+        </label>
+      </td>
+      <td class="colorTd">
+        <input type="radio" id="forestgreenRadio" name="colorRadio" value="forestgreen" />
+        <label for="forestgreenRadio">
+          <div>
+              <div class="colorDiv forestgreen"></div>
+          </div>
+        </label>
+      </td>
+      <td class="colorTd">
+        <input type="radio" id="darkslategreyRadio" name="colorRadio" value="darkslategrey" checked/>
+        <label for="darkslategreyRadio">
+          <div>
+            <div class="colorDiv darkslategrey"></div>
+          </div>
+        </label>
+      </td>
+    </tr>
+  </table>-->
 <script>
   let listTasks = [];
   let listDones = [];
   let num = 0;
   
+// *** START
   if(localStorage.getItem("listTasks")){
     listTasks = JSON.parse(localStorage.listTasks);
-    //listTasks = localStorage.getItem("listTasks");
-    //console.log(listTasks);
+    let idx = 0;
     listTasks.forEach(todo => {
-      let li = document.createElement("li");
-      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><span class="text">${todo.task}</span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
-      li.querySelector(".text").style.color = todo.color;
-      list.appendChild(li);
+      todoCreation(todo, idx);
+      idx++;
     });
   };
   
@@ -363,81 +363,104 @@
       };
     });
     donedDates.forEach(donedDate => {
-      if(!document.getElementById(donedDate)){
-        let donedUlP = document.createElement("p");
-        donedUlP.setAttribute("id", donedDate + "p");
-        donedUlP.innerText = donedDate;
-        doneZone.appendChild(donedUlP);
-        let donedUl = document.createElement("ul");
-        donedUl.setAttribute("id", donedDate);
-        donedUlP.insertAdjacentElement("afterend", donedUl);
-      };
+      donedDateCreation(donedDate);
     });
+    let idx = 0;
     listDones.forEach(doned => {
-      let donedDate = doned.date;
-      let donedLi = document.createElement("li");
-      donedLi.innerHTML = `<span class="typcn typcn-tick"></span>${doned.task}<span class="typcn typcn-trash trashCan" onclick="trashCanEvent(this)"></span>`;
-      donedLi.style.color = doned.color;
-      document.getElementById(donedDate).appendChild(donedLi);
+      donedCreation(doned, idx);
+      idx++;
     });
   };
   
+// *** CREATION
+  function todoCreation(todo, idx){
+    let li = document.createElement("li");
+    li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><span class="text">${todo.task}</span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
+    li.setAttribute("id", "todo" + idx);
+    li.querySelector(".text").style.color = todo.color;
+    list.appendChild(li);
+  };
+
+  function donedCreation(doned, idx){
+    let donedLi = document.createElement("li");
+    donedLi.innerHTML = `<span class="typcn typcn-tick"></span><span class="text">${doned.task}</span><span class="typcn typcn-trash trashCan" onclick="trashCanEvent(this)"></span><span class="typcn typcn-arrow-sync recycle" onclick="recycleEvent(this)"></span>`;
+    donedLi.setAttribute("id", "doned" + idx);
+    donedLi.querySelector(".text").style.color = doned.color;
+    document.getElementById(doned.date).appendChild(donedLi);
+  };
+
+  function donedDateCreation(donedDate){
+    if(!document.getElementById(donedDate)){
+      let donedUlP = document.createElement("p");
+      donedUlP.setAttribute("id", donedDate + "p");
+      donedUlP.innerText = donedDate;
+      doneZone.appendChild(donedUlP);
+      let donedUl = document.createElement("ul");
+      donedUl.setAttribute("id", donedDate);
+      donedUlP.insertAdjacentElement("afterend", donedUl);
+    };
+  };
+
+  function recycleEvent(recycle){
+    let li = recycle.parentElement;
+    let color = li.querySelector(".text").style.color;
+    let task = li.querySelector(".text").textContent;
+    let todo = {
+      task: task,
+      color: color
+    };
+    let idx = listTasks.length;
+    listTasks.push(todo);
+    localStorage.listTasks = JSON.stringify(listTasks);
+    todoCreation(todo, idx);
+  };
+
+// *** ADD
+addForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    let newTask = addInput.value;
+    let color = "darkslategrey";
+    if(!newTask == ""){
+      let todo = {
+        task: newTask,
+        color: color
+      };
+      let idx = listTasks.length;
+      listTasks.push(todo);
+      localStorage.listTasks = JSON.stringify(listTasks);
+      todoCreation(todo, idx);
+      addForm.reset();
+      console.log(listTasks);
+    };
+  });
+
+// *** DONE/ERASE
+  doneNextBtn.addEventListener("click", () => {
+    let doneLi = document.querySelector("#todo" + num);
+    console.log(doneLi);
+    let color = doneLi.querySelector(".text").style.color;
+    doneLi.remove();
+    refreshId("list", "todo");
+    gotItDone(num, color);
+    if(listTasks.length == 0){
+      taskToDo.innerText = "aller t'reposer!";
+    } else{
+      num = num < listTasks.length ? num : 0;
+      taskToDo.innerText = listTasks[num].task;
+      taskToDo.style.color = listTasks[num].color;
+    };
+  });
+
   function checkEvent(emptyCheck){
     console.log("checkEvent");
     console.log(listTasks);
-    let color = emptyCheck.parentElement.querySelector(".text").style.color;
-    let task = emptyCheck.parentElement.querySelector(".text").textContent;
-    emptyCheck.parentElement.remove();
-    console.log(task);
-    let donedId = listTasks.findIndex((todo => todo.task == task));
-    console.log(color);
+    let li = emptyCheck.parentElement;
+    let color = li.querySelector(".text").style.color;
+    let task = li.querySelector(".text").textContent;
+    let donedId = li.id.slice(4);
+    li.remove();
+    refreshId("list", "todo");
     gotItDone(donedId, color);
-  };
-  //const colorList = ["orange", "red", "darkmagenta", "dodgerblue", "forestgreen", "darkslategrey"];
-  let colorTag;
-  function colorChoice(thisOne){
-    colorTag = thisOne;
-    colorTag.insertAdjacentElement("afterend", colorPalet);
-    colorPalet.classList.remove("displayNone");
-    clickScreen.classList.remove("displayNone");
-    document.querySelectorAll("input[name='colorRadio']").forEach(radio => {
-      radio.addEventListener("click", () => {
-        let color = radio.value;
-        let li = colorTag.parentElement.querySelector(".text");
-        //li.classList.remove(...colorList);
-        let liTask = li.textContent;
-        console.log(liTask);
-        taskId = listTasks.findIndex((todo => todo.task == liTask));
-        listTasks[taskId].color = color;
-        console.log(listTasks);
-        localStorage.listTasks = JSON.stringify(listTasks);
-        li.style.color = color;
-//update the todo in listTasks
-      });
-    });
-    document.querySelector("#clickScreen").addEventListener("click", clickHandlerColor);
-  };
-  
-  function clickHandlerColor(){
-    colorPalet.classList.add("displayNone");
-    clickScreen.classList.add("displayNone");
-    document.querySelector("#clickScreen").removeEventListener("click", clickHandlerColor);
-  };
-  
-  function trashCanEvent(trashCan){
-    console.log("trashCanEvent");
-    let trashedLi = trashCan.parentElement;
-    let trashedTask = trashedLi.textContent;
-    trashedLi.remove();
-    let trashedTaskId = listDones.indexOf(trashedTask);
-    let trashedObject = listDones.splice(trashedTaskId, 1);
-    let trashedPDate = trashedObject[0].date;
-    let dateCount = listDones.filter((td) => td.date == trashedPDate).length;
-    if(dateCount == 0){
-      document.getElementById(trashedPDate + "p").remove();
-      document.getElementById(trashedPDate).remove();
-    };
-    localStorage.listDones = JSON.stringify(listDones);
   };
   
   function gotItDone(nb, color){
@@ -453,65 +476,70 @@
       color: color,
       date: donedDate
     };
+    let idx = listDones.length;
     listDones.push(doned);
     localStorage.listDones = JSON.stringify(listDones);
-    if(!document.getElementById(donedDate)){
-        let donedUlP = document.createElement("p");
-        donedUlP.setAttribute("id", donedDate + "p");
-        donedUlP.innerText = donedDate;
-        doneZone.appendChild(donedUlP);
-        let donedUl = document.createElement("ul");
-        donedUl.setAttribute("id", donedDate);
-        donedUlP.insertAdjacentElement("afterend", donedUl);
-      };
-    let donedLi = document.createElement("li");
-    donedLi.innerHTML = `<span class="typcn typcn-tick"></span>${doned.task}<span class="typcn typcn-trash trashCan" onclick="trashCanEvent(this)"></span>`;
-    donedLi.style.color = color;
-    document.getElementById(donedDate).appendChild(donedLi);
+    donedDateCreation(donedDate);
+    donedCreation(doned, idx);
   };
-  
-  addForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    let newTask = addInput.value;
-    let color = "darkslategrey";
-    if(!newTask == ""){
-      let todo = {
-        task: newTask,
-        color: color
-      };
-      listTasks.push(todo);
-      let li = document.createElement("li");
-      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><span class="text">${newTask}</span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
-      localStorage.listTasks = JSON.stringify(listTasks);
-      list.appendChild(li);
-      addForm.reset();
-      console.log(listTasks);
+
+  function trashCanEvent(trashCan){
+    console.log("trashCanEvent");
+    let trashedLi = trashCan.parentElement;
+    //let trashedUlDate = trashedLi.parentElement.id;
+    let trashedTask = trashedLi.querySelector(".text").textContent;
+    let trashedTaskId = trashedLi.id.slice(5);
+    trashedLi.remove();
+    refreshId("doneZone", "doned");
+    //let trashedTaskId = listDones.findIndex((doned) => doned.task == trashedTask && doned.date == trashedUlDate);
+    console.log(trashedTaskId);
+    let trashedObject = listDones.splice(trashedTaskId, 1);
+    let trashedPDate = trashedObject[0].date;
+    console.log(trashedPDate);
+    let dateCount = listDones.filter((td) => td.date == trashedPDate).length;
+    if(dateCount == 0){
+      document.getElementById(trashedPDate + "p").remove();
+      document.getElementById(trashedPDate).remove();
     };
+    localStorage.listDones = JSON.stringify(listDones);
+  };
+
+// *** REFRESH
+  function refreshId(list, task){
+    let idx = 0;
+    document.querySelectorAll("#" + list + " li") .forEach(li => {
+      li.setAttribute("id", task + idx);
+      idx++;
+    });
+  };
+
+// *** SHUFFLE
+  shuffleBtn.addEventListener("click", () => {
+    for (let i = listTasks.length - 1; i > 0; i--) { 
+      const j = Math.floor(Math.random() * (i + 1)); 
+      [listTasks[i], listTasks[j]] = [listTasks[j], listTasks[i]]; 
+    };
+    localStorage.listTasks = JSON.stringify(listTasks);
+    //console.log(listTasks);
+    list.innerHTML = ``;
+    let idx = 0;
+    listTasks.forEach(todo => {
+      todoCreation(todo, idx);
+      idx++;
+    });
+    //list.classList.add("first");
+    listSection.classList.toggle("displayNone");
+    toDoSection.classList.toggle("displayNone");
+    num = 0;
+    taskToDo.innerText = listTasks[num].task;
+    taskToDo.style.color = listTasks[num].color;
   });
-  
+
   nopeNextBtn.addEventListener("click", () => {
     if(listTasks.length == 0){
       taskToDo.innerText = "aller t'r'poser!";
     } else{
       num = num < (listTasks.length - 1) ? num + 1 : 0;
-      taskToDo.innerText = listTasks[num].task;
-      taskToDo.style.color = listTasks[num].color;
-    };
-  });
-  
-  doneNextBtn.addEventListener("click", () => {
-    let color;
-    document.querySelectorAll("li").forEach(li => {
-      if(li.innerText.includes(listTasks[num].task)){
-        color = li.querySelector(".text").style.color;
-        li.remove();
-      };
-    });
-    gotItDone(num, color);
-    if(listTasks.length == 0){
-      taskToDo.innerText = "aller t'reposer!";
-    } else{
-      num = num < listTasks.length ? num : 0;
       taskToDo.innerText = listTasks[num].task;
       taskToDo.style.color = listTasks[num].color;
     };
@@ -522,28 +550,40 @@
     toDoSection.classList.toggle("displayNone");
   });
   
-  shuffleBtn.addEventListener("click", () => {
-    for (let i = listTasks.length - 1; i > 0; i--) { 
-      const j = Math.floor(Math.random() * (i + 1)); 
-      [listTasks[i], listTasks[j]] = [listTasks[j], listTasks[i]]; 
-    };
-    localStorage.listTasks = JSON.stringify(listTasks);
-    //console.log(listTasks);
-    list.innerHTML = ``;
-    listTasks.forEach(todo => {
-      let li = document.createElement("li");
-      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><span class="text">${todo.task}</span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
-      li.querySelector(".text").style.color = todo.color;
-      list.appendChild(li);
+// *** COLOR
+//const colorList = ["orange", "red", "darkmagenta", "dodgerblue", "forestgreen", "darkslategrey"];
+let colorTag;
+  function colorChoice(thisOne){
+    colorTag = thisOne;
+    colorTag.insertAdjacentElement("afterend", colorPalet);
+    colorPalet.classList.remove("displayNone");
+    clickScreen.classList.remove("displayNone");
+    document.querySelectorAll("input[name='colorRadio']").forEach(radio => {
+      radio.addEventListener("click", () => {
+        let color = radio.value;
+        let li = colorTag.parentElement;
+        let liTask = li.querySelector(".text").textContent;
+        li.querySelector(".text").style.color = color;
+        console.log(liTask);
+        let taskId = li.id.slice(4);
+        //taskId = listTasks.findIndex((todo) => todo.task == liTask);
+        listTasks[taskId].color = color;
+        console.log(listTasks);
+        localStorage.listTasks = JSON.stringify(listTasks);
+        clickHandlerColor();
+      });
     });
-    //list.classList.add("first");
-    listSection.classList.toggle("displayNone");
-    toDoSection.classList.toggle("displayNone");
-    num = 0;
-    taskToDo.innerText = listTasks[num].task;
-    taskToDo.style.color = listTasks[num].color;
-  });
+    document.querySelector("#clickScreen").addEventListener("click", clickHandlerColor);
+  };
   
+  function clickHandlerColor(){
+    colorPalet.classList.add("displayNone");
+    list.insertAdjacentElement("afterend", colorPalet);
+    clickScreen.classList.add("displayNone");
+    document.querySelector("#clickScreen").removeEventListener("click", clickHandlerColor);
+  };
+
+// *** DATE
   function getTodayDate(){
     let date = new Date();
     let currentDay= String(date.getDate()).padStart(2, '0');

@@ -344,8 +344,8 @@
     //console.log(listTasks);
     listTasks.forEach(todo => {
       let li = document.createElement("li");
-      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span>${todo.task}<span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
-      li.style.color = todo.color;
+      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><span class="text">${todo.task}</span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
+      li.querySelector(".text").style.color = todo.color;
       list.appendChild(li);
     });
   };
@@ -385,10 +385,11 @@
   function checkEvent(emptyCheck){
     console.log("checkEvent");
     console.log(listTasks);
-    emptyCheck.parentElement.classList.add("displayNone");
-    let color = emptyCheck.parentElement.style.color;
-    let task = emptyCheck.parentElement.textContent;
-    let donedId = listTasks.indexOf(task);
+    let color = emptyCheck.parentElement.querySelector(".text").style.color;
+    let task = emptyCheck.parentElement.querySelector(".text").textContent;
+    emptyCheck.parentElement.remove();
+    console.log(task);
+    let donedId = listTasks.findIndex((todo => todo.task == task));
     console.log(color);
     gotItDone(donedId, color);
   };
@@ -402,8 +403,14 @@
     document.querySelectorAll("input[name='colorRadio']").forEach(radio => {
       radio.addEventListener("click", () => {
         let color = radio.value;
-        let li = colorTag.parentElement;
+        let li = colorTag.parentElement.querySelector(".text");
         //li.classList.remove(...colorList);
+        let liTask = li.textContent;
+        console.log(liTask);
+        taskId = listTasks.findIndex((todo => todo.task == liTask));
+        listTasks[taskId].color = color;
+        console.log(listTasks);
+        localStorage.listTasks = JSON.stringify(listTasks);
         li.style.color = color;
 //update the todo in listTasks
       });
@@ -420,14 +427,15 @@
   function trashCanEvent(trashCan){
     console.log("trashCanEvent");
     let trashedLi = trashCan.parentElement;
-    trashedLi.classList.add("displayNone");
     let trashedTask = trashedLi.textContent;
+    trashedLi.remove();
     let trashedTaskId = listDones.indexOf(trashedTask);
     let trashedObject = listDones.splice(trashedTaskId, 1);
     let trashedPDate = trashedObject[0].date;
     let dateCount = listDones.filter((td) => td.date == trashedPDate).length;
     if(dateCount == 0){
-      document.getElementById(trashedPDate + "p").classList.add("displayNone");
+      document.getElementById(trashedPDate + "p").remove();
+      document.getElementById(trashedPDate).remove();
     };
     localStorage.listDones = JSON.stringify(listDones);
   };
@@ -435,7 +443,8 @@
   function gotItDone(nb, color){
     console.log("gotItDone");
     console.log(nb);
-    let donedTask = listTasks.splice(nb, 1).toString();
+    let donedTaskSplice = listTasks.splice(nb, 1);
+    let donedTask = donedTaskSplice[0].task;
     console.log(donedTask);
     localStorage.listTasks = JSON.stringify(listTasks);
     let donedDate = getTodayDate(); //return
@@ -469,10 +478,10 @@
       let todo = {
         task: newTask,
         color: color
-      }
-      listTasks.push(newTask);
+      };
+      listTasks.push(todo);
       let li = document.createElement("li");
-      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span>${newTask}<span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
+      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><span class="text">${newTask}</span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
       localStorage.listTasks = JSON.stringify(listTasks);
       list.appendChild(li);
       addForm.reset();
@@ -485,16 +494,17 @@
       taskToDo.innerText = "aller t'r'poser!";
     } else{
       num = num < (listTasks.length - 1) ? num + 1 : 0;
-      taskToDo.innerText = listTasks[num];
+      taskToDo.innerText = listTasks[num].task;
+      taskToDo.style.color = listTasks[num].color;
     };
   });
   
   doneNextBtn.addEventListener("click", () => {
     let color;
     document.querySelectorAll("li").forEach(li => {
-      if(li.innerText.includes(listTasks[num])){
-        color = li.style.color;
-        li.classList.add("displayNone");
+      if(li.innerText.includes(listTasks[num].task)){
+        color = li.querySelector(".text").style.color;
+        li.remove();
       };
     });
     gotItDone(num, color);
@@ -502,7 +512,8 @@
       taskToDo.innerText = "aller t'reposer!";
     } else{
       num = num < listTasks.length ? num : 0;
-      taskToDo.innerText = listTasks[num];
+      taskToDo.innerText = listTasks[num].task;
+      taskToDo.style.color = listTasks[num].color;
     };
   });
     
@@ -516,19 +527,21 @@
       const j = Math.floor(Math.random() * (i + 1)); 
       [listTasks[i], listTasks[j]] = [listTasks[j], listTasks[i]]; 
     };
+    localStorage.listTasks = JSON.stringify(listTasks);
     //console.log(listTasks);
     list.innerHTML = ``;
     listTasks.forEach(todo => {
       let li = document.createElement("li");
-      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span>${todo.task}<span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
-      li.style.color = todo.color;
+      li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><span class="text">${todo.task}</span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
+      li.querySelector(".text").style.color = todo.color;
       list.appendChild(li);
     });
     //list.classList.add("first");
     listSection.classList.toggle("displayNone");
     toDoSection.classList.toggle("displayNone");
     num = 0;
-    taskToDo.innerText = listTasks[num];
+    taskToDo.innerText = listTasks[num].task;
+    taskToDo.style.color = listTasks[num].color;
   });
   
   function getTodayDate(){

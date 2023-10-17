@@ -153,6 +153,7 @@ function displayPlans() {
       let id = scheduleName.parentElement.parentElement.parentElement.id;
       scheduleName.addEventListener("click", () => {
         getSchedule(id);
+        document.querySelector("#togglePlans").checked = false;
       });
     });
 }
@@ -208,14 +209,15 @@ async function saveIt() {
    await setDoc(doc(db, "plan", auth.currentUser.email, "myPlans", destination), {
     ...steps,
     ordre: (getMaxPlans() + 1)
-  })  ;
-  getPlans();
-  document.getElementById("savePlanDiv").innerHTML = `
-  <h3 class="savePlanH3">You saved it!</h3>
-  <p style="text-align:center;">Now, go see it in your schedules!</p>`;
-  document.querySelector("#timePage").addEventListener("click", clickHandlerSaved);
-  }
-}
+    });
+    getPlans();
+    document.getElementById("savePlanDiv").innerHTML = `<h3 class="savePlanH3">You saved it!</h3>
+    <p style="text-align:center;">Now, go see it in your schedules!</p>`;
+    document.getElementById("screen").classList.replace("displayNone", "clickScreen");
+    document.getElementById("screen").addEventListener("click", clickHandlerSaved);
+    //document.querySelector("#timePage").addEventListener("click", clickHandlerSaved);
+  };
+};
 //window.saveIt = saveIt;
 
 
@@ -383,7 +385,7 @@ function displaySteps() {
         </div>
         </div>
     </li>`
-  })
+  });
   stepAll += `<ul id="sortable-List" class="sortable-List" style="padding:0;">${stepArray.join("")}</ul>`;
   stepAll += `<div class="stepBox">
       <button id="addStepBtn" class="timeFormButton" style="float:left; height: 30px; width: 30px; padding: 0;">
@@ -517,7 +519,6 @@ function savePlan() {
 function saveCancel() {
   document.getElementById("savePlanDiv").innerHTML = ``;
 }
-
 function saveOptCancel(){
   saveCancel();
   document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
@@ -542,16 +543,20 @@ async function saveOptReplace(){
   document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
   document.getElementById("scheduleTime").innerHTML = ``;
   getPlans();
-  savePlanDiv.innerHTML = `<h3 class="savePlanH3">You replaced it!</h3>
+  document.getElementById("savePlanDiv").innerHTML = `<h3 class="savePlanH3">You replaced it!</h3>
   <p style="text-align:center;">Now, go see it in your schedules!</p>`;
   console.log("saveOptReplace");
+  document.getElementById("screen").classList.replace("displayNone", "clickScreen");
+  document.getElementById("screen").addEventListener("click", clickHandlerSaved);
   //document.querySelector("#timePage").addEventListener("click", clickHandlerSaved);
-}
+};
 //window.saveOptReplace = saveOptReplace;
 
 function clickHandlerSaved(){
   document.getElementById("savePlanDiv").innerHTML = ``;
-  document.querySelector("#timePage").removeEventListener("click", clickHandlerSaved);
+  document.getElementById("screen").classList.replace("clickScreen", "displayNone");
+  document.getElementById("screen").removeEventListener("click", clickHandlerSaved);
+  // document.querySelector("#timePage").removeEventListener("click", clickHandlerSaved);
 };
 
 function trashMode() {
@@ -685,7 +690,8 @@ function calculateTime(e) {
   document.getElementById("togglePlansWhole").classList.add("displayNone");
   document.getElementById("switchSliderWhole").style.display = "none";
   e.stopPropagation();
-  document.querySelector("#timePage").addEventListener("click", clickHandler)
+  document.getElementById("screen").classList.replace("displayNone", "clickScreen");
+  document.getElementById("screen").addEventListener("click", clickHandler);
 };
 function ifNotes() {
   if (document.getElementById("notes").value) {
@@ -702,7 +708,8 @@ function clickHandler() {
   document.getElementById("timeForm").style.display = "block";
   document.getElementById("togglePlansWhole").classList.remove("displayNone");
   document.getElementById("switchSliderWhole").style.display = "block";
-  document.querySelector("#timePage").removeEventListener("click", clickHandler)
+  document.getElementById("screen").classList.replace("clickScreen", "displayNone");
+  document.getElementById("screen").removeEventListener("click", clickHandler);
 };
 function sumTimeSub(steps, stepIndex, arriveeTime) {
   let totalMin = 0;

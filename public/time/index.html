@@ -26,6 +26,7 @@
     <div id="mainContainer" class="mainContainer">
       <!-- this div needs to be "height:100%;" for webapp (no footer) like time and list pages, but "height:fit-content;" for pages with footer -->
       <div id="undermainContainer" style="height: fit-content; width: 100%;">
+        <div id="screen" class="displayNone"></div>
         <div id="switchSliderWhole">
           <div class="wrapper">
             <h6>See, that's how great a host I am;<br/>I even let you choose the color!</h6>
@@ -37,13 +38,6 @@
               <div id="switchModeBall" class="ballDark"></div>
               <div id="switchModeBallUnder" class="ballDark"></div>
           </div>
-        </div>
-        <!-- <div name="NopePage" class="justPage" id="nopePage" style="display:block;">
-          <h1 id="nopeH1" style="margin-top: calc(100vh/3); text-align: center;">Nope,<output class="h1like" id="displayName"></output> there's nothing here...</h1>
-        </div> -->
-        <div class="bottomButtons">
-          <!-- <div class="bottomButton backHome" onclick="toSectPage(this)" id="casa" title="Let's go back home!"><span class="typcn typcn-home"></span></div> -->
-          <div class="bottomButton backTop" onclick="backTop()" title="Again! From the top!" id="backTopButton"><span class="typcn typcn-chevron-right chevronTop"></span></div>
         </div>
         <!-- TimePage -->
         <div name="TimePage" id="timePage" class="sectionPage justPage">
@@ -58,8 +52,12 @@
           </div>
         </div>
       </div>
-      <footer id="footer">
+      <footer id="footer" class="yesCasaFoot">
       <hr style="border-color: var(--tx-color); margin-bottom: 0;"/>
+      <div style="text-align:center;">
+        <h2 style="margin: 0;">Alix rocks</h2>
+        <p>since 1985</p>
+      </div>
       <div>
         <h5 style="text-align:center;margin: 0;">I might not have a footer, but I've got two feet you can kiss.</h5>
       </div>

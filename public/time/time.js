@@ -726,6 +726,13 @@ function sumTimeSub(steps, stepIndex, arriveeTime) {
   return startTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" });
 };
 
+window.onload = () => {
+  setTimeout(function() {
+    document.getElementById("screen").classList.replace("blackScreen", "displayNone");
+}, 1000);
+  
+};
+
 const captureScreenshot = async () => {
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");

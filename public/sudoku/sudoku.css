@@ -1,3 +1,4 @@
+/* MyCellPhone = 410-412px (let's say 410px) */
 *{
   font-family: 'Nunito', sans-serif;
   box-sizing: content-box;
@@ -276,7 +277,8 @@ table#table,
   flex-wrap: row nowrap;
   width: fit-content;
   margin: 15px auto;
-  background-color: rgb(40, 70, 70);
+  background-color: rgb(47, 79, 79);
+  /* darkslategrey */
   border: solid 1px darkslategrey;
 }
 
@@ -307,7 +309,8 @@ table#table,
 }
 #circles div.filling {
   box-sizing: border-box;
-  background-image: linear-gradient(0deg, rgb(147.5, 162.5, 162.5) 0 50%, white 50% 100%);
+  background-image: linear-gradient(0deg, rgb(151, 167, 167) 0 50%, white 50% 100%);
+  /* darkslategrey at .5 on white */
   background-size: 100% 200%;
   background-position: 0 0;
   transition: background-position-y .5s;
@@ -334,7 +337,8 @@ table#table,
   height: 34px;
   border-radius: 5px;
   border: solid thin darkslategrey;
-  background-color: rgb(147.5, 162.5, 162.5);
+  background-color: rgb(151, 167, 167); 
+  /* darkslategrey at .5 on white */
 }
 .sliderV{
   position: absolute;

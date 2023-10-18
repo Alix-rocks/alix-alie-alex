@@ -1,7 +1,7 @@
 import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, Timestamp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
 import { app, analytics, db, auth, provider } from "../myFirebase.js";
-console.log("salut!");
+//console.log("salut!");
 //Check, si jamais t'utilise ça pour d'autre app, isole-le, comme myFirebase
 auth.languageCode = 'fr';
 
@@ -9,13 +9,13 @@ getRedirectResult(auth)
   .then((result) => {
     // This gives you a Google Access Token. You can use it to access Google APIs.
     const credential = GoogleAuthProvider.credentialFromResult(result);
-    console.log("alloooo");
+    //console.log("alloooo");
     const token = credential.accessToken;
     // The signed-in user info.
     const user = result.user;
     // IdP data available using getAdditionalUserInfo(result)
     // ...
-  }).catch((error) => {
+}).catch((error) => {
     // Handle Errors here.
     const errorCode = error.code;
     const errorMessage = error.message;
@@ -24,31 +24,37 @@ getRedirectResult(auth)
     // The AuthCredential type that was used.
     const credential = GoogleAuthProvider.credentialFromError(error);
     // ...
-  });
-  // console.log(auth);
-  function logIn(){
-      signInWithRedirect(auth, provider);
-      document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
-      document.getElementById("scheduleTime").innerHTML = ``;
-  }
-  window.logIn = logIn;
+});
+// console.log(auth);
 
-  onAuthStateChanged(auth,(user) => {
-    if(user){
-      console.log(user);
-      //document.getElementById("displayName").innerText = " " + user.displayName + ",";
-      document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
-      document.getElementById("scheduleTime").innerHTML = ``;
-      getPlans();
-    } else{
-      document.getElementById("displayName").innerText = "";
-      document.getElementById("scheduleTimeWhole").classList.add("popupBackDG");
-      document.getElementById("scheduleTime").innerHTML = `<h4><span class="h3like">First thing's first...</span><br/><span class="h1like" style="font-size: calc(19.53px + 0.19vw); font-weight: 900;">Who do you think you are?!</span></h4>
-      <div class="stepBox">
-        <button class="timeFormButton" onclick="window.logIn()">Log in</button>
-      </div>`;
-    };
-  });
+function logIn(){
+    signInWithRedirect(auth, provider);
+    document.getElementById("scheduleTimeWhole").classList.replace("popupBackDG", "displayNone");
+    document.getElementById("scheduleTime").innerHTML = ``;
+};
+//window.logIn = logIn;
+
+onAuthStateChanged(auth,(user) => {
+  if(user){
+    console.log(user);
+    //document.getElementById("displayName").innerText = " " + user.displayName + ",";
+    document.getElementById("scheduleTimeWhole").classList.replace("popupBackDG", "displayNone");
+    document.getElementById("scheduleTime").innerHTML = ``;
+    getPlans();
+  } else{
+    document.getElementById("displayName").innerText = "";
+    document.getElementById("scheduleTimeWhole").classList.replace("displayNone", "popupBackDG");
+    document.getElementById("scheduleTime").innerHTML = `<h4>
+      <span class="h3like">First thing's first...</span>
+      <br/>
+      <span class="h1like" style="font-size: calc(19.53px + 0.19vw); font-weight: 900;">Who do you think you are?!</span>
+    </h4>
+    <div class="stepBox">
+      <button id="logInBtn" class="timeFormButton">Log in</button>
+    </div>`;
+    logInBtn.addEventListener("click", logIn);
+  };
+});
 
 let steps;
 let myScheduleList = [];
@@ -68,24 +74,25 @@ async function getPlans() {
     displaySteps();
     if(myScheduleList.length >= 1){
       displayPlans();
-    }
+    };
   } else if(myScheduleList.length >= 1){
     displayPlans();
     getDefaultSchedule();
   } else{
     steps = {
-          ordre:"",
-          destination:"",
-          steps:[
-            // { name: t("Cooking"), value: 30, checked: true, id: crypto.randomUUID() },
-            { name: "Cooking", value: 30, checked: true, id: crypto.randomUUID() },
-            { name: "Eating", value: 60, checked: true, id: crypto.randomUUID() },
-            { name: "Toilet", value: 15, checked: true, id: crypto.randomUUID() },
-            { name: "Shower", value: 15, checked: true, id: crypto.randomUUID() },
-            { name: "Prepping", value: 30, checked: true, id: crypto.randomUUID() },
-            { name: "Travelling", value: 0, checked: true, id: crypto.randomUUID() }],
-          arriveeTime:"",
-          notes:""};
+      ordre:"",
+      destination:"",
+      steps:[
+        // { name: t("Cooking"), value: 30, checked: true, id: crypto.randomUUID() },
+        { name: "Cooking", value: 30, checked: true, id: crypto.randomUUID() },
+        { name: "Eating", value: 60, checked: true, id: crypto.randomUUID() },
+        { name: "Toilet", value: 15, checked: true, id: crypto.randomUUID() },
+        { name: "Shower", value: 15, checked: true, id: crypto.randomUUID() },
+        { name: "Prepping", value: 30, checked: true, id: crypto.randomUUID() },
+        { name: "Travelling", value: 0, checked: true, id: crypto.randomUUID() }],
+      arriveeTime:"",
+      notes:""
+    };
     displaySteps();
   };
 };
@@ -101,7 +108,7 @@ async function getDefaultSchedule(){
     steps = doc.data();
   })
   displaySteps();
-}
+};
 // getDefaultSchedule();
 //window.getDefaultSchedule = getDefaultSchedule;
 
@@ -118,53 +125,53 @@ function displayPlans() {
   });
   document.getElementById("togglePlansWhole").classList.remove("displayNone");
   let listLi = myScheduleList.map((schedule) => {
-      return `
-        <li class="listPlan"  id="${schedule.id}">
-            <p>
-              <span class="typcn icon typcn-star planStar" title="Default!"></span>
-              <span class="typcn icon typcn-th-small planDD" title="Drag & Drop"></span>
-              <span class="trashLinePlan">
-                <span class="underTrashLine scheduleName" title="Show that one">${schedule.id}</span>
-              </span>
-              <span class="typcn icon typcn-trash planTB" title="Trash it!"></span>
-            </p>
-        </li>`
+    return `
+      <li class="listPlan"  id="${schedule.id}">
+        <p>
+          <span class="typcn icon typcn-star planStar" title="Default!"></span>
+          <span class="typcn icon typcn-th-small planDD" title="Drag & Drop"></span>
+          <span class="trashLinePlan">
+            <span class="underTrashLine scheduleName" title="Show that one">${schedule.id}</span>
+          </span>
+          <span class="typcn icon typcn-trash planTB" title="Trash it!"></span>
+        </p>
+      </li>`
   }).join("");
   document.getElementById("mySchedules").innerHTML = `
     <ul class="listPlans">${listLi}</ul>
     <button title="Fix that mess!" id="manageModeBtn" class="timeFormButtonSmall" style="height: 30px; width: 90px;">Manage</button>
     <button title="Get out of manage mode!" id="manageCancelBtn" class="timeFormButtonSmall displayNone" style="float:left; width: 90px;">
     Cancel
-    <span class="typcn icon typcn-cancel" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
+      <span class="typcn icon typcn-cancel" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
     </button>
     <button title="That's the way I like it!" id="managedPlansBtn" class="timeFormButtonSmall displayNone" style="float:right; width: 100px;">
     Save this&hairsp;!
-    <span class="typcn icon typcn-cloud-storage-outline" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
+      <span class="typcn icon typcn-cloud-storage-outline" style="opacity: .8; font-size: 1.2em; line-height: 1em;"></span>
     </button>`;
-    let plans = document.querySelectorAll(".listPlans > .listPlan");
-    plans[0].classList.add("starDefault");
-    document.querySelectorAll(".planTB").forEach(trashCanPlan => {
-      trashCanPlan.addEventListener("click", trashPlan);
+  let plans = document.querySelectorAll(".listPlans > .listPlan");
+  plans[0].classList.add("starDefault");
+  document.querySelectorAll(".planTB").forEach(trashCanPlan => {
+    trashCanPlan.addEventListener("click", trashPlan);
+  });
+  manageModeBtn.addEventListener("click", manageMode);
+  manageCancelBtn.addEventListener("click", manageCancel);
+  managedPlansBtn.addEventListener("click", managedPlans);
+  document.querySelectorAll(".scheduleName").forEach(scheduleName => {
+    let id = scheduleName.parentElement.parentElement.parentElement.id;
+    scheduleName.addEventListener("click", () => {
+      getSchedule(id);
+      document.querySelector("#togglePlans").checked = false;
     });
-    manageModeBtn.addEventListener("click", manageMode);
-    manageCancelBtn.addEventListener("click", manageCancel);
-    managedPlansBtn.addEventListener("click", managedPlans);
-    document.querySelectorAll(".scheduleName").forEach(scheduleName => {
-      let id = scheduleName.parentElement.parentElement.parentElement.id;
-      scheduleName.addEventListener("click", () => {
-        getSchedule(id);
-        document.querySelector("#togglePlans").checked = false;
-      });
-    });
-}
+  });
+};
 
 async function getSchedule(id){
-  console.log(id);
+  //console.log(id);
   const schedule = await getDoc(doc(db, "plan", auth.currentUser.email, "myPlans", id));
   steps = schedule.data();
   displaySteps();
 };
-window.getSchedule = getSchedule;
+//window.getSchedule = getSchedule;
 
 
 
@@ -174,19 +181,15 @@ function getMaxPlans() {
     max = max > plan.ordre ? max : plan.ordre
   });
   return max;
-}
+};
 
 async function saveIt() {
   updateSteps();
   let destination = document.getElementById("nameToSave").value;
   const docRef = doc(db, "plan", auth.currentUser.email, "myPlans", destination);
   const docSnap = await getDoc(docRef);
-  // We need to look into only the owner's plans!
   if (docSnap.exists()) {
-  // if(await getDoc(doc(db, "plan", destination)).exists()){
-    document.getElementById("togglePlansWhole").classList.add("displayNone");
-    document.getElementById("timeForm").classList.add("displayNone");
-    document.getElementById("scheduleTimeWhole").classList.add("popupBackDG");
+    document.getElementById("scheduleTimeWhole").classList.replace("displayNone", "popupBackDG");
     document.getElementById("scheduleTime").innerHTML = `
       <h3>That one has a doppelganger, what should we do?!</h3>
       <h4><em>No, we can't keep them both, otherwise that'll create chaos!</em></h4>
@@ -207,22 +210,20 @@ async function saveIt() {
       saveOptReplaceBtn.addEventListener("click", saveOptReplace);
   } else{
    await setDoc(doc(db, "plan", auth.currentUser.email, "myPlans", destination), {
-    ...steps,
-    ordre: (getMaxPlans() + 1)
+      ...steps,
+      ordre: (getMaxPlans() + 1)
     });
     getPlans();
-    document.getElementById("savePlanDiv").innerHTML = `<h3 class="savePlanH3">You saved it!</h3>
-    <p style="text-align:center;">Now, go see it in your schedules!</p>`;
+    document.getElementById("scheduleTime").innerHTML = `<h3 class="savePlanH3">It's been saved!</h3>
+      <p style="text-align:center;">Now, go see it in your schedules!</p>`;
     document.getElementById("screen").classList.replace("displayNone", "clickScreen");
     document.getElementById("screen").addEventListener("click", clickHandlerSaved);
-    //document.querySelector("#timePage").addEventListener("click", clickHandlerSaved);
   };
 };
 //window.saveIt = saveIt;
 
-
 async function trashSchedules(){
-  console.log(trashedSchedules);
+  //console.log(trashedSchedules);
   for (const trashedSchedule of trashedSchedules) {
     await deleteDoc(doc(db, "plan", auth.currentUser.email, "myPlans", trashedSchedule.id));
   };
@@ -240,8 +241,6 @@ async function orderSchedules(){
 
 
 
-//**once it's connected to google accounts
-//**connect to an account and save the whole thing with a name for later [one collection "plan" for everyone, but owner value = email or user.id]
 //**once it's an app
 //**add a button to do a printscreen and make it your new background
 //**add a button to create notification for each steps
@@ -257,8 +256,8 @@ function clearStorage() {
   if (confirm("Are you sure?!\nBecause you'll loose all your changes!")) {
     localStorage.clear();
     location.reload();
-  }
-}
+  };
+};
 
 
 function manageMode(){
@@ -298,7 +297,8 @@ function manageMode(){
   listPlans.addEventListener("touchmove", listPlansDD);
   listPlans.addEventListener("touchend", listPlansOD);
 };
-window.manageMode = manageMode;
+// window.manageMode = manageMode;
+
 const listPlansDD = (e) => {
   let listPlans = document.querySelector(".listPlans");
   e.preventDefault();
@@ -318,6 +318,7 @@ const listPlansDD = (e) => {
   // Inserting the dragging item before the found sibling
   listPlans.insertBefore(draggingPlan, nextSibling);
 };
+
 function listPlansOD(){
   let plans = document.querySelectorAll(".listPlans > .listPlan");
   plans.forEach(plan => {
@@ -325,13 +326,17 @@ function listPlansOD(){
   });
   plans[0].classList.add("starDefault");
 };
+
 function trashPlan(event){
   event.currentTarget.parentElement.parentElement.classList.toggle("trashedPlan");
 };
+
 function manageCancel(){
   displayPlans();
 };
+
 let trashedSchedules = [];
+
 function managedPlans(){
   if (confirm("Are you sure?!\n'Cause you don't come back from that!")) {
     for (let i = myScheduleList.length - 1; i >= 0; i--) {
@@ -343,7 +348,6 @@ function managedPlans(){
       };
     };
     trashSchedules();
-    
     let plans = Array.from(document.querySelectorAll(".listPlans > .listPlan"));
     for (let a = 0; a < plans.length; a++) {
       let name = plans[a].id;
@@ -355,7 +359,6 @@ function managedPlans(){
   };
 };
 
-
 function displaySteps() {
   let timeForm = document.getElementById("timeForm");
   let stepAll = `
@@ -364,26 +367,27 @@ function displaySteps() {
     <input id="destination" class="timeDestination" type="text" value="${steps.destination}" onchange="updateSteps()"/>
     </div>`;
   let stepArray = steps.steps.map((step, idx) => {
+    //style="${step.style}"
     return `
-    <li class="iteme" draggable="true" data-index="${idx}" style="${step.style}" id="${step.id}">
-        <div class="changeIcon">
-        <span class="typcn icon typcn-th-small itemeDD" style="opacity: .8;"></span>
+    <li class="iteme" draggable="true" data-index="${idx}" id="${step.id}">
+      <div class="changeIcon">
+        <span class="typcn icon typcn-th-small itemeDD"></span>
         <input id="${step.id}trashCan" class="cossin trashCanCheck" type="checkbox"/>
         <label for="${step.id}trashCan" class="typcn icon typcn-trash trashLabel displayNone" style="opacity: .8; font-size: 1.5em; line-height: 1em; margin: 0 -5px 0 -2px;" ></label>
-        </div>
-        <div class="trashLine">
-        <div>
-            <input id="${step.id}Check" class="cossin timeSettingInput" name="${step.id}" type="checkbox" ${step.checked ? "checked" : ""} onchange="updateSteps(event)"/>
-            <label for="${step.id}Check" class="timeSettingLabel">
+      </div>
+      <div class="trashLine">
+        <div style="padding: 0 5% 0 0; display: flex; flex-flow: row nowrap; justify-content: space-around; align-items: center;flex-grow: 1;">
+          <input id="${step.id}Check" class="cossin timeSettingInput" name="${step.id}" type="checkbox" ${step.checked ? "checked" : ""} onchange="updateSteps(event)"/>
+          <label for="${step.id}Check" class="timeSettingLabel">
             <span class="timeSettingCheck"></span>
-            </label>
-            <input id="${step.id}Name" type="text" class="timeDestination timeDestination2" style="width:80px;" value="${step.name}" onchange="updateSteps(event)"/>
+          </label>
+          <input id="${step.id}Name" type="text" class="timeDestination" style="width: 100%;margin: 0 5% 0;flex-grow: 1;" value="${step.name}" onchange="updateSteps(event)"/>
         </div>
-        <div>
-            <input id="${step.id}Time" class="timeDestination timeDestination2" type="number" step="5" value="${step.value}" onchange="updateSteps(event)"/>
-            <span class="timeSettingLabel">min</span>
+        <div style="display: flex; flex-flow: row nowrap; justify-content: space-between; align-items: center;">
+          <input id="${step.id}Time" class="timeDestination timeDestination2" type="number" step="5" value="${step.value}" onchange="updateSteps(event)"/>
+          <span class="timeSettingLabel" style="padding: 0 0 0 5%;">min</span>
         </div>
-        </div>
+      </div>
     </li>`
   });
   stepAll += `<ul id="sortable-List" class="sortable-List" style="padding:0;">${stepArray.join("")}</ul>`;
@@ -487,76 +491,69 @@ const initSortableList = (e) => {
     } else {
       //if touch
       return e.changedTouches[0].clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
-    }
+    };
   });
   // Inserting the dragging item before the found sibling
   sortableList.insertBefore(draggingItem, nextSibling);
-}
+};
 
 function ondrop() {
   let itemes = Array.from(document.querySelectorAll(".sortable-List > .iteme"));
   steps.steps = itemes.map((iteme) => steps.steps[iteme.dataset.index]);
   updateItemesIndex();
   updateSteps();
-}
+};
 
 function savePlan() {
   document.getElementById("savePlanDiv").innerHTML = `<p style="font-size:calc(13.53px + 0.19vw); margin: 1em 0 0.2em;">How should we name that one?</p>
     <input id="nameToSave" class="timeDestination" type="text" value="${document.getElementById("destination").value}"/>
     <div class="stepBox" style="width: 100%;">
-        <button title="Nevermind!" id="saveCancelBtn" class="timeFormButtonSmall" style="height: 30px; width: 90px;">
-        Cancel
+      <button title="Nevermind!" id="saveCancelBtn" class="timeFormButtonSmall" style="height: 30px; width: 90px;">
+      Cancel
         <span class="typcn icon typcn-cancel" style="font-size: 1.2em; line-height: 1em;"></span>
-        </button>
-        <button title="Save it!" id="saveItBtn" class="timeFormButtonSmall" style="height: 30px; width: 90px;">
-        Save it&hairsp;!
+      </button>
+      <button title="Save it!" id="saveItBtn" class="timeFormButtonSmall" style="height: 30px; width: 90px;">
+      Save it&hairsp;!
         <span class="typcn icon typcn-cloud-storage-outline" style="font-size: 1.4em; line-height: 1em;"></span>
-        </button>
+      </button>
     </div>`;
   saveItBtn.addEventListener("click", saveIt);
   saveCancelBtn.addEventListener("click", saveCancel);
-}
+};
+
 function saveCancel() {
   document.getElementById("savePlanDiv").innerHTML = ``;
-}
+};
+
 function saveOptCancel(){
   saveCancel();
-  document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
+  document.getElementById("scheduleTimeWhole").classList.replace("popupBackDG", "displayNone");
   document.getElementById("scheduleTime").innerHTML = ``;
-  document.getElementById("togglePlansWhole").classList.remove("displayNone");
-  document.getElementById("timeForm").classList.remove("displayNone");
 };
+
 function saveOptSaveAs(){
-  document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
+  document.getElementById("scheduleTimeWhole").classList.replace("popupBackDG", "displayNone");
   document.getElementById("scheduleTime").innerHTML = ``;
-  document.getElementById("togglePlansWhole").classList.remove("displayNone");
-  document.getElementById("timeForm").classList.remove("displayNone");
 };
 
 async function saveOptReplace(){
   let destination = document.getElementById("nameToSave").value;
   await updateDoc(doc(db, "plan", auth.currentUser.email, "myPlans", destination), {
     ...steps
-  });
-  document.getElementById("togglePlansWhole").classList.remove("displayNone");
-  document.getElementById("timeForm").classList.remove("displayNone");
-  document.getElementById("scheduleTimeWhole").classList.remove("popupBackDG");
-  document.getElementById("scheduleTime").innerHTML = ``;
+  });  
   getPlans();
-  document.getElementById("savePlanDiv").innerHTML = `<h3 class="savePlanH3">You replaced it!</h3>
+  document.getElementById("scheduleTime").innerHTML = `<h3 class="savePlanH3">It's been replaced!</h3>
   <p style="text-align:center;">Now, go see it in your schedules!</p>`;
-  console.log("saveOptReplace");
   document.getElementById("screen").classList.replace("displayNone", "clickScreen");
   document.getElementById("screen").addEventListener("click", clickHandlerSaved);
-  //document.querySelector("#timePage").addEventListener("click", clickHandlerSaved);
 };
-//window.saveOptReplace = saveOptReplace;
 
 function clickHandlerSaved(){
+  document.getElementById("scheduleTimeWhole").classList.replace("popupBackDG", "displayNone");
+  document.getElementById("scheduleTime").innerHTML = ``;
   document.getElementById("savePlanDiv").innerHTML = ``;
   document.getElementById("screen").classList.replace("clickScreen", "displayNone");
   document.getElementById("screen").removeEventListener("click", clickHandlerSaved);
-  // document.querySelector("#timePage").removeEventListener("click", clickHandlerSaved);
 };
 
 function trashMode() {
@@ -571,13 +568,15 @@ function trashMode() {
   document.getElementById("trashModeBtn").classList.add('displayNone');
   document.getElementById("trashCancelBtn").classList.remove('displayNone');
   document.getElementById("trashItBtn").classList.remove('displayNone');
-}
+};
+
 function trashOrNot(event) {
   let trashCan = event.currentTarget;
   let trashDiv = trashCan.parentElement;
   let trashStep = trashDiv.parentElement;
   trashStep.classList.toggle("trashed");
-}
+};
+
 function trashCancel() {
   let trashables = document.querySelectorAll(".trashLabel");
   trashables.forEach((trashable) => {
@@ -594,7 +593,7 @@ function trashCancel() {
   trashTrasheds.forEach((trashTrashed) => {
     trashTrashed.classList.remove("trashed");
   });
-}
+};
 
 function trashIt() {
   updateSteps();
@@ -612,7 +611,7 @@ function trashIt() {
   } else {
     trashCancel();
   };
-}
+};
 
 function addStep() {
   updateSteps();
@@ -646,7 +645,7 @@ function updateItemesIndex() {
   for (let i = 0; i < itemes.length; i++) {
     itemes[i].dataset.index = i;
   };
-}
+};
 
 function calculateTime(e) {
   updateSteps();
@@ -656,7 +655,7 @@ function calculateTime(e) {
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() =>
         alert("When are you supposed to be there?"));
-    })
+    });
   } else {
     document.getElementById("arriveeTimeDiv").classList.remove("outlined");
   };
@@ -669,7 +668,7 @@ function calculateTime(e) {
     }
     else {
       return `<p>${step.name}: ${sumTimeSub(steps.steps, idx, arriveeTime)}</p>`;
-    }
+    };
   });
   // console.log(stepArray);
   // <button id="capture-screenshot"
@@ -679,38 +678,35 @@ function calculateTime(e) {
   let result = `
     <h2 id="finalDestination" style="text-align: center; margin: 0 0 .7em;">${document.getElementById("destination").value}</h2>
     <div style="padding: 0 10px; border: 2px solid;">
-        <h3 style="margin: 5px 0; text-decoration: underline;">Schedule</h3>
-        ${stepArray.join("")}
-        <p>Arrivée: ${arriveeTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" })}</p>
-        ${ifNotes()}
+      <h3 style="margin: 5px 0; text-decoration: underline;">Schedule</h3>
+      ${stepArray.join("")}
+      <p>Arrivée: ${arriveeTime.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" })}</p>
+      ${ifNotes()}
     </div>`;
   document.getElementById("scheduleTime").innerHTML = result;
-  document.getElementById("scheduleTimeWhole").style.display = "flex";
-  document.getElementById("timeForm").style.display = "none";
-  document.getElementById("togglePlansWhole").classList.add("displayNone");
-  document.getElementById("switchSliderWhole").style.display = "none";
+  document.getElementById("scheduleTimeWhole").classList.replace("displayNone", "scheduleTimeWhole");
   e.stopPropagation();
   document.getElementById("screen").classList.replace("displayNone", "clickScreen");
   document.getElementById("screen").addEventListener("click", clickHandler);
 };
+
 function ifNotes() {
   if (document.getElementById("notes").value) {
     return `<p style="margin-bottom: 5px;">Notes:</p>
     <div class="notesBorder">
-        <p>${document.getElementById("notes").value.replace(/\n/g, '<br/>')}</p>
+      <p>${document.getElementById("notes").value.replace(/\n/g, '<br/>')}</p>
     </div>`;
   } else {
     return ``;
   };
-}
+};
+
 function clickHandler() {
-  document.getElementById("scheduleTimeWhole").style.display = "none";
-  document.getElementById("timeForm").style.display = "block";
-  document.getElementById("togglePlansWhole").classList.remove("displayNone");
-  document.getElementById("switchSliderWhole").style.display = "block";
+  document.getElementById("scheduleTimeWhole").classList.replace("scheduleTimeWhole", "displayNone");
   document.getElementById("screen").classList.replace("clickScreen", "displayNone");
   document.getElementById("screen").removeEventListener("click", clickHandler);
 };
+
 function sumTimeSub(steps, stepIndex, arriveeTime) {
   let totalMin = 0;
   steps.filter((step) => {
@@ -719,7 +715,7 @@ function sumTimeSub(steps, stepIndex, arriveeTime) {
     if (idx >= stepIndex) {
       totalMin += step.value;
       // console.log(idx + " " + stepIndex + " " + totalMin + " " + step.value);
-    }
+    };
   });
   let startTime = new Date();
   startTime.setTime(arriveeTime.getTime() - totalMin * 60 * 1000);
@@ -728,9 +724,8 @@ function sumTimeSub(steps, stepIndex, arriveeTime) {
 
 window.onload = () => {
   setTimeout(function() {
-    document.getElementById("screen").classList.replace("blackScreen", "displayNone");
-}, 1000);
-  
+    document.getElementById("screen").classList.replace("waitingScreen", "displayNone");
+  }, 1000);
 };
 
 const captureScreenshot = async () => {

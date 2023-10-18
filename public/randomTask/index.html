@@ -104,6 +104,10 @@
     width: 100%;
     position: relative;
     font-weight: 600;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: baseline;
   }
   li span{
     padding-right: 3px;
@@ -111,15 +115,11 @@
   }
   .colorSpan{
     padding-left: 10px;
-    /* position: absolute;
-    top: -4px;
-    right: 0; */
   }
   .emptyCheck{
-    display: inline-block;
     font-size: 2em;
     translate: 0 3.5px;
-    line-height: 15px;
+    line-height: 1em;
   }
   .trashCan, .recycle{
     padding-left: 10px;
@@ -149,7 +149,7 @@
     border-radius: 2.5px;
   }
   input[name="colorRadio"]:checked + label > div{
-    background-color: rgba(40, 70, 70, .3);
+    background-color: rgba(47, 79, 79, .3);
  
   }
   .colorDiv{
@@ -190,6 +190,12 @@
   }
   #doneZone{
     margin-top: 8px;
+  }
+  #doneZone li{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: baseline;
   }
   #doneZone li span.text{
     font-size: 18px;
@@ -537,7 +543,7 @@ addForm.addEventListener("submit", (e) => {
 
   nopeNextBtn.addEventListener("click", () => {
     if(listTasks.length == 0){
-      taskToDo.innerText = "aller t'r'poser!";
+      taskToDo.innerText = "aller t'reposer!";
     } else{
       num = num < (listTasks.length - 1) ? num + 1 : 0;
       taskToDo.innerText = listTasks[num].task;

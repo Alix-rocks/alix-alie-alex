@@ -1,5 +1,6 @@
+/* MyCellPhone = 410-412px (let's say 410px) */
 #screen{
-  position: absolute;
+  position: fixed;
   width: 100vw;
   height: 100vh;
   top: 0;
@@ -12,25 +13,27 @@
 .clickScreen div{
   display: none;
 }
-.blackScreen{
+.waitingScreen{
   background-color: var(--bg-color);
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.blackScreen div{
+.waitingScreen div{
   text-align: center;
 }
-.blackScreen span{
+.waitingScreen span{
   font-size: 50px;
   line-height: 1em;
 }
-.blackScreen h6{
+.waitingScreen h6{
   margin-top: 0.5em;
 }
 
 .togglePlansWhole {
-  width: 240px;
+  width: 85%;
+  min-width: 240px;
+  max-width: 500px;
   margin: 20px auto;
 }
 
@@ -113,7 +116,11 @@
   width: 100%;
   margin-bottom: 0;
 }
-
+.itemeDD{
+  opacity: .8;
+  font-size: 1.2em;
+  line-height: 1em;
+}
 .timeDestination {
   width: 100%;
   background: var(--color-2);
@@ -131,7 +138,9 @@
 }
 
 .timeForm {
-  width: 240px;
+  width: 85%;
+  min-width: 240px;
+  max-width: 500px;
   margin: 0 auto 85px;
 }
 
@@ -216,13 +225,20 @@
 }
 
 .scheduleTimeWhole{
-  width: calc(100vw - 16px); 
-  height: calc(100vh - 16px); 
-  display:none;
+  background-color: var(--bg-color);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 20; 
+  display:flex;
 }
 
 .resultTime {
-  width: 200px;
+  width: 50%;
+  min-width: 200px;
+  max-width: 400px;
   margin:auto;
   z-index: 1000;
 }
@@ -230,7 +246,7 @@
 .popupBackDG{
   display: flex;
   background-color: var(--bg-color);
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
@@ -239,8 +255,9 @@
 }
 .popupBackDG .resultTime{
   background-color: var(--bg-color);
-  width: 32%;
+  width: 50%;
   min-width: 200px;
+  max-width: 400px;
   border: 2px solid;
   padding: 20px;
 }
@@ -254,6 +271,7 @@
 }
 .popupBackDG .resultTime p{
   margin:0;
+  text-align: right;
 }
 .popupBackDG .resultTime .timeFormButton{
   margin: 0 auto;
@@ -273,32 +291,30 @@
   margin: 0 0 0 15px;
 }
 .timeDestination2 {
-  width: 60px;
+  width: 50px;
 }
 
 .stepBox,
 .iteme {
   margin: 15px 0;
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+  flex-flow: row nowrap;
   justify-content: space-between;
+  align-items: center;
 }
 
 .dragging {
   opacity: .5;
 }
 
-.displayNone {
-  display: none;
-}
-
 .trashLine {
-  width: 215px;
+  flex-grow: 1;
+  /* width: 215px; */
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+  flex-flow: row nowrap;
   justify-content: space-between;
+  padding: 0 0 0 5%;
+  align-items: center;
 }
 
 .underTrashLine{
@@ -328,6 +344,9 @@
 
 .notesBorder p {
   margin: 0.3em;
+}
+footer div{
+  padding: 10px;
 }
 #capture-screenshot{
   position: fixed;

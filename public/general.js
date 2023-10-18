@@ -31,11 +31,11 @@ function switchMode(){
       document.getElementById('nopeH1').innerText = "Nope, still nothing...";
     }
     document.querySelector(':root').style.setProperty('--bg-color', '#F2F3F4');
-    setColors(0, 0, 0, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
+    setColors(24, 40, 40, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
     document.querySelector(".wrapper").style.visibility = "hidden";
   };
 }
-
+//rgb(24, 40, 40) darkslategrey
 
 function setColors(A, B, C, a, b, c, d, e, f, g, h, i, j){
   let root = document.documentElement;

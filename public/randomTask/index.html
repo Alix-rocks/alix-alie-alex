@@ -22,6 +22,33 @@
     color: darkslategrey;
     box-sizing: border-box;
   }
+  #logInScreen{
+    display: flex;
+    background-color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2000;
+  }
+  #logInDiv{
+    width: 50%;
+    padding: 15px;
+    margin: auto;
+    border-style: solid;
+    border-width: 2px 3px 3px 2px;
+    border-radius: 5px;
+    z-index: 2200;
+    text-align: center;
+  }
+  #cloudIt{
+    float: right;
+    margin-top: 15px;
+    font-size: 25px;
+    line-height: 1em;
+    padding: 2px 0 2px 5px;
+  }
   #listSection{
     position: relative;
   }
@@ -214,6 +241,13 @@
 </style>
   <div id="listSection">
     <div id="clickScreen" class="displayNone"></div>
+    <div id="logInScreen">
+      <div id="logInDiv">
+        <h3>First thing's first...</h3>
+        <h2 >Who do you think you are?!</h2>
+        <button id="logInBtn">Log in</button>
+      </div>
+    </div>
     <form id="addForm">
       <input id="addInput" type="text" />
       <button id="addBtn" type="submit">add</button>
@@ -279,7 +313,8 @@
     <button id="shuffleBtn">Shuffle it!</button>
     <h5 class="sousBtn">Tell me what to do!</h5>
     <hr />
-    <h3>Done Zone</h3>
+    <h3 style="display: inline-block;">Done Zone</h3>
+    <button id="cloudIt"><span class="typcn typcn-cloud-storage-outline"></span></button>
     <ul id="doneZone"></ul>
   </div>
   <div id="toDoSection" class="displayNone">
@@ -344,27 +379,108 @@
       </td>
     </tr>
   </table>-->
-<script>
+<script type="module">
+  import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, Timestamp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+  import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+  import { app, analytics, db, auth, provider } from "../myFirebase.js";
+  auth.languageCode = 'fr';
+
+  getRedirectResult(auth)
+    .then((result) => {
+      // This gives you a Google Access Token. You can use it to access Google APIs.
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      //console.log("alloooo");
+      const token = credential.accessToken;
+      // The signed-in user info.
+      const user = result.user;
+      // IdP data available using getAdditionalUserInfo(result)
+      // ...
+  }).catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      // const email = error.customData.email;
+      // The AuthCredential type that was used.
+      const credential = GoogleAuthProvider.credentialFromError(error);
+      // ...
+  });
+  // console.log(auth);
+
+  function logIn(){
+    signInWithRedirect(auth, provider);
+  };
+
+  onAuthStateChanged(auth,(user) => {
+    if(user){
+      console.log(user);
+      logInScreen.classList.add("displayNone");
+      getTasks();
+      getDones();
+    } else{
+      logInScreen.classList.remove("displayNone");
+      logInBtn.addEventListener("click", logIn);
+    };
+  });
+
   let listTasks = [];
   let listDones = [];
+  let myListTasks = [];
+  let myListDones = [];
   let num = 0;
   
 // *** START
-  if(localStorage.getItem("listTasks")){
-    listTasks = JSON.parse(localStorage.listTasks);
+
+  async function getTasks() {
+    // const getTasks = await getDocs(collection(db, "randomTask", auth.currentUser.email, "myListTasks"));
+    // getTasks.forEach(doc => {
+    //   const constTask = doc.task;
+    //   const constColor = doc.color;
+    //   myListTasks.push({task:constTask, color:constColor});
+    //   console.log(myListTasks);
+    // });
+    if(localStorage.getItem("listTasks")){
+      console.log("storage!");
+      listTasks = JSON.parse(localStorage.listTasks);
+    } else{
+      const getTasks = await getDocs(collection(db, "randomTask", auth.currentUser.email, "myListTasks"));
+      getTasks.forEach(doc => {
+        const constTask = doc.task;
+        const constColor = doc.color;
+        myListTasks.push({task:constTask, color:constColor});
+        console.log(myListTasks);
+      });
+      listTasks = myListTasks;
+    };
     let idx = 0;
     listTasks.forEach(todo => {
       todoCreation(todo, idx);
       idx++;
     });
   };
-  
-  if(localStorage.getItem("listDones")){
-    listDones = JSON.parse(localStorage.listDones);
-    //listLi = listDones.map(doned => {
-      //return `<li>${doned.date}<span class="typcn typcn-tick"></span>${doned.task}<span class="typcn typcn-trash trashCan"></span></li>`
-    //});
-    //doneZone.innerHTML = listLi.join("");
+  async function getDones() {
+    // const getDones = await getDocs(collection(db, "randomTask", auth.currentUser.email, "myListDones"));
+    // getDones.forEach(doc => {
+    //   const constTask = doc.task;
+    //   const constColor = doc.color;
+    //   const constDate = doc.date;
+    //   myListDones.push({task:constTask, color:constColor, date:constDate});
+    //   console.log(myListDones);
+    // });
+    if(localStorage.getItem("listDones")){
+      console.log("storageDones!");
+      listDones = JSON.parse(localStorage.listDones);
+    } else{
+      const getDones = await getDocs(collection(db, "randomTask", auth.currentUser.email, "myListDones"));
+      getDones.forEach(doc => {
+        const constTask = doc.task;
+        const constColor = doc.color;
+        const constDate = doc.date;
+        myListDones.push({task:constTask, color:constColor, date:constDate});
+        console.log(myListDones);
+      });
+      listDones = myListDones;
+    };
     let donedDates = [];
     listDones.forEach(doned => {
       if(!donedDates.includes(doned.date)){
@@ -380,7 +496,18 @@
       idx++;
     });
   };
+//Create a function for these next two that we'll put in the one up there for "if there is a user"
   
+  //listLi = listDones.map(doned => {
+      //return `<li>${doned.date}<span class="typcn typcn-tick"></span>${doned.task}<span class="typcn typcn-trash trashCan"></span></li>`
+    //});
+    //doneZone.innerHTML = listLi.join("");
+  
+// *** CLOUDSAVE
+  cloudIt.addEventListener("click", async () => {
+
+  });
+
 // *** CREATION
   function todoCreation(todo, idx){
     let li = document.createElement("li");

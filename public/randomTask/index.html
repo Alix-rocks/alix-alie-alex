@@ -22,45 +22,6 @@
     color: darkslategrey;
     box-sizing: border-box;
   }
-  #logInScreen{
-    display: flex;
-    background-color: white;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 2000;
-  }
-  #logInDiv{
-    width: 50%;
-    padding: 15px;
-    margin: auto;
-    border-style: solid;
-    border-width: 2px 3px 3px 2px;
-    border-radius: 5px;
-    z-index: 2200;
-    text-align: center;
-  }
-  #cloudIt{
-    float: right;
-    margin-top: 15px;
-    font-size: 25px;
-    line-height: 1em;
-    padding: 2px 0 2px 5px;
-  }
-  #listSection{
-    position: relative;
-  }
-  #clickScreen{
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    z-index: 500;
-    background-color: rgba(255, 255, 255, 0);
-  }
   button {
     border-top: 2px solid darkslategrey;
     border-left: 2px solid darkslategrey;
@@ -95,6 +56,61 @@
   }
   input[type="radio"]{
     display: none;
+  }
+  #logInScreen{
+    display: flex;
+    background-color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2000;
+  }
+  #logInDiv{
+    width: 50%;
+    padding: 15px;
+    margin: auto;
+    border-style: solid;
+    border-width: 2px 3px 3px 2px;
+    border-radius: 5px;
+    z-index: 2200;
+    text-align: center;
+  }
+  #logInBtn{
+    display: block;
+    margin: 10px auto;
+  }
+  #tryBtn{
+    border-top: 1px solid darkslategrey;
+    border-left: 1px solid darkslategrey;
+    border-right: 2px solid darkslategrey;
+    border-bottom: 2px solid darkslategrey;
+    border-radius: 3px;
+    padding: 3px 7px;
+    font-size: .7em;
+    font-weight: 500;
+    background-color: rgba(211, 211, 211, .5);
+  }
+  #cloudIt{
+    float: right;
+    margin-top: 15px;
+    font-size: 25px;
+    line-height: 1em;
+    padding: 2px 0 2px 5px;
+    background-color: rgba(237, 20, 61, 0);
+  }
+  #listSection{
+    position: relative;
+  }
+  #clickScreen{
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 500;
+    background-color: rgba(255, 255, 255, 0);
   }
   .topList{
     margin-bottom: 0;
@@ -231,10 +247,16 @@
     font-size: 18px;
     text-decoration: line-through;
   }
-  #doneZone p{
+  #doneZone p span{
+    display: inline-block;
+    margin-bottom: 0;
+    padding-left: 7px;
+  }
+  #doneZone p:not(span){
     margin-bottom: 0;
     text-decoration: underline;
   }
+  
   .displayNone{
     display: none!important;
   }
@@ -246,6 +268,7 @@
         <h3>First thing's first...</h3>
         <h2 >Who do you think you are?!</h2>
         <button id="logInBtn">Log in</button>
+        <button id="tryBtn">Free Trial</button>
       </div>
     </div>
     <form id="addForm">
@@ -416,10 +439,10 @@
       console.log(user);
       logInScreen.classList.add("displayNone");
       getTasks();
-      getDones();
     } else{
       logInScreen.classList.remove("displayNone");
       logInBtn.addEventListener("click", logIn);
+      tryBtn.addEventListener("click", freeIn);
     };
   });
 
@@ -428,56 +451,37 @@
   let myListTasks = [];
   let myListDones = [];
   let num = 0;
+  let cBC = 0;
   
 // *** START
 
   async function getTasks() {
-    // const getTasks = await getDocs(collection(db, "randomTask", auth.currentUser.email, "myListTasks"));
-    // getTasks.forEach(doc => {
-    //   const constTask = doc.task;
-    //   const constColor = doc.color;
-    //   myListTasks.push({task:constTask, color:constColor});
-    //   console.log(myListTasks);
-    // });
+    const getTasks = await getDoc(doc(db, "randomTask", auth.currentUser.email));
+
     if(localStorage.getItem("listTasks")){
-      console.log("storage!");
       listTasks = JSON.parse(localStorage.listTasks);
     } else{
-      const getTasks = await getDocs(collection(db, "randomTask", auth.currentUser.email, "myListTasks"));
-      getTasks.forEach(doc => {
-        const constTask = doc.task;
-        const constColor = doc.color;
-        myListTasks.push({task:constTask, color:constColor});
-        console.log(myListTasks);
+      getTasks.data().listTasks.map((todo) => {
+        let taskIt = todo.task;
+        let colorIt = todo.color;
+        myListTasks.push({task: taskIt, color: colorIt});
       });
       listTasks = myListTasks;
     };
-    let idx = 0;
+    let idT = 0;
     listTasks.forEach(todo => {
-      todoCreation(todo, idx);
-      idx++;
+      todoCreation(todo, idT);
+      idT++;
     });
-  };
-  async function getDones() {
-    // const getDones = await getDocs(collection(db, "randomTask", auth.currentUser.email, "myListDones"));
-    // getDones.forEach(doc => {
-    //   const constTask = doc.task;
-    //   const constColor = doc.color;
-    //   const constDate = doc.date;
-    //   myListDones.push({task:constTask, color:constColor, date:constDate});
-    //   console.log(myListDones);
-    // });
     if(localStorage.getItem("listDones")){
-      console.log("storageDones!");
       listDones = JSON.parse(localStorage.listDones);
     } else{
-      const getDones = await getDocs(collection(db, "randomTask", auth.currentUser.email, "myListDones"));
-      getDones.forEach(doc => {
-        const constTask = doc.task;
-        const constColor = doc.color;
-        const constDate = doc.date;
-        myListDones.push({task:constTask, color:constColor, date:constDate});
-        console.log(myListDones);
+      // const getDones = await getDoc(doc(db, "randomTask", auth.currentUser.email));
+      getTasks.data().listDones.map((done) => {
+        let taskIt = done.task;
+        let colorIt = done.color;
+        let dateIt = done.date;
+        myListDones.push({task:taskIt, color:colorIt, date:dateIt});
       });
       listDones = myListDones;
     };
@@ -487,26 +491,66 @@
         donedDates.push(doned.date);
       };
     });
-    donedDates.forEach(donedDate => {
+    let donedDatesSorted = donedDates.sort();
+    //let donedDatesReversed = donedDatesSorted.reverse();
+    donedDatesSorted.forEach(donedDate => {
       donedDateCreation(donedDate);
     });
-    let idx = 0;
+    let idD = 0;
     listDones.forEach(doned => {
-      donedCreation(doned, idx);
-      idx++;
+      donedCreation(doned, idD);
+      idD++;
     });
   };
-//Create a function for these next two that we'll put in the one up there for "if there is a user"
-  
-  //listLi = listDones.map(doned => {
-      //return `<li>${doned.date}<span class="typcn typcn-tick"></span>${doned.task}<span class="typcn typcn-trash trashCan"></span></li>`
-    //});
-    //doneZone.innerHTML = listLi.join("");
+
+  function freeIn(){
+    if(localStorage.getItem("listTasks")){
+      listTasks = JSON.parse(localStorage.listTasks);
+      let idT = 0;
+      listTasks.forEach(todo => {
+        todoCreation(todo, idT);
+        idT++;
+      });
+    };
+    
+    if(localStorage.getItem("listDones")){
+      listDones = JSON.parse(localStorage.listDones);
+      let donedDates = [];
+      listDones.forEach(doned => {
+        if(!donedDates.includes(doned.date)){
+          donedDates.push(doned.date);
+        };
+      });
+      let donedDatesSorted = donedDates.sort();
+      donedDatesSorted.forEach(donedDate => {
+        donedDateCreation(donedDate);
+      });
+      let idD = 0;
+      listDones.forEach(doned => {
+        donedCreation(doned, idD);
+        idD++;
+      });
+    };
+    logInScreen.classList.add("displayNone");
+  };
   
 // *** CLOUDSAVE
   cloudIt.addEventListener("click", async () => {
-
+    await updateDoc(doc(db, "randomTask", auth.currentUser.email), {
+      listTasks: listTasks,
+      listDones: listDones
+    });
+    cBC = 0;
+    cloudIt.style.backgroundColor = "rgba(237, 20, 61, " + cBC + ")";
   });
+
+  function updateCBC(){
+    console.log("cBC " + cBC);
+    cBC++;
+    let cBCD = cBC >= 10 ? 1 : "." + cBC;
+    console.log("cBCD " + cBCD);
+    cloudIt.style.backgroundColor = "rgba(237, 20, 61, " + cBCD + ")";
+  };
 
 // *** CREATION
   function todoCreation(todo, idx){
@@ -526,14 +570,21 @@
   };
 
   function donedDateCreation(donedDate){
+    let today = getTodayDate();
+    //donedDate = donedDate == today ? donedDate + " (aujourd'hui!)" : donedDate;
     if(!document.getElementById(donedDate)){
       let donedUlP = document.createElement("p");
       donedUlP.setAttribute("id", donedDate + "p");
       donedUlP.innerText = donedDate;
-      doneZone.appendChild(donedUlP);
+      doneZone.insertAdjacentElement("afterbegin", donedUlP);
       let donedUl = document.createElement("ul");
       donedUl.setAttribute("id", donedDate);
       donedUlP.insertAdjacentElement("afterend", donedUl);
+      if(donedDate == today){
+        let todaySpan = document.createElement("span");
+        todaySpan.innerText = "(aujourd'hui!)";
+        donedUlP.insertAdjacentElement("beforeend", todaySpan);
+      };
     };
   };
 
@@ -548,8 +599,13 @@
     let idx = listTasks.length;
     listTasks.push(todo);
     localStorage.listTasks = JSON.stringify(listTasks);
+    updateCBC();
     todoCreation(todo, idx);
   };
+  window.recycleEvent = recycleEvent;
+  // function addEvents(){
+
+  // }
 
 // *** ADD
 addForm.addEventListener("submit", (e) => {
@@ -564,6 +620,7 @@ addForm.addEventListener("submit", (e) => {
       let idx = listTasks.length;
       listTasks.push(todo);
       localStorage.listTasks = JSON.stringify(listTasks);
+      updateCBC();
       todoCreation(todo, idx);
       addForm.reset();
       console.log(listTasks);
@@ -598,6 +655,7 @@ addForm.addEventListener("submit", (e) => {
     refreshId("list", "todo");
     gotItDone(donedId, color);
   };
+  window.checkEvent = checkEvent;
   
   function gotItDone(nb, color){
     console.log("gotItDone");
@@ -614,7 +672,7 @@ addForm.addEventListener("submit", (e) => {
     };
     let idx = listDones.length;
     listDones.push(doned);
-    localStorage.listDones = JSON.stringify(listDones);
+    localStorageDones();
     donedDateCreation(donedDate);
     donedCreation(doned, idx);
   };
@@ -637,8 +695,19 @@ addForm.addEventListener("submit", (e) => {
       document.getElementById(trashedPDate + "p").remove();
       document.getElementById(trashedPDate).remove();
     };
-    localStorage.listDones = JSON.stringify(listDones);
+    localStorageDones();
   };
+  window.trashCanEvent = trashCanEvent;
+
+  function localStorageDones(){
+    updateCBC();
+    let lastWeek = getLastWeekDate();
+    console.log(lastWeek);
+    let recent = listDones.filter((td) => td.date >= lastWeek);
+    console.log(recent);
+    localStorage.listDones = JSON.stringify(recent);
+  };
+
 
 // *** REFRESH
   function refreshId(list, task){
@@ -688,7 +757,7 @@ addForm.addEventListener("submit", (e) => {
   
 // *** COLOR
 //const colorList = ["orange", "red", "darkmagenta", "dodgerblue", "forestgreen", "darkslategrey"];
-let colorTag;
+  let colorTag;
   function colorChoice(thisOne){
     colorTag = thisOne;
     colorTag.insertAdjacentElement("afterend", colorPalet);
@@ -706,12 +775,14 @@ let colorTag;
         listTasks[taskId].color = color;
         console.log(listTasks);
         localStorage.listTasks = JSON.stringify(listTasks);
+        updateCBC();
         clickHandlerColor();
       });
     });
     document.querySelector("#clickScreen").addEventListener("click", clickHandlerColor);
   };
-  
+  window.colorChoice = colorChoice;
+
   function clickHandlerColor(){
     colorPalet.classList.add("displayNone");
     list.insertAdjacentElement("afterend", colorPalet);
@@ -725,9 +796,19 @@ let colorTag;
     let currentDay= String(date.getDate()).padStart(2, '0');
     let currentMonth = String(date.getMonth()+1).padStart(2,"0");
     let currentYear = date.getFullYear();
-    let currentDate = `${currentDay}-${currentMonth}-${currentYear}`;
+    let currentDate = `${currentYear}-${currentMonth}-${currentDay}`;
     //let currentDate = currentYear + "-" + currentMonth + "-" + currentDay;
     return currentDate;
+  };
+
+  function getLastWeekDate(){
+    let date = new Date();
+    date.setDate(date.getDate() - 7);
+    let lastWeekDay= String(date.getDate()).padStart(2, '0');
+    let lastWeekMonth = String(date.getMonth()+1).padStart(2,"0");
+    let lastWeekYear = date.getFullYear();
+    let lastWeekDate = `${lastWeekYear}-${lastWeekMonth}-${lastWeekDay}`;
+    return lastWeekDate;
   };
   
 </script>

@@ -281,7 +281,7 @@ function manageMode(){
     });
   });
     let icons = document.querySelectorAll(".listPlans > .listPlan .planDD");
-    icons.forEach(icon =>{
+    icons.forEach(icon => {
     // Adding dragging class to item
     icon.addEventListener("touchstart", (evt) => {
       evt.currentTarget.parentElement.parentElement.classList.add("dragging");
@@ -455,6 +455,7 @@ function displaySteps() {
     iteme.addEventListener("dragstart", (evt) => {
       // Adding dragging class to item
       evt.currentTarget.classList.add("dragging");
+      //document.querySelector("#togglePlans").checked = false;
     });
     // Removing dragging class from item on dragend event
     iteme.addEventListener("dragend", (evt) => {
@@ -465,6 +466,7 @@ function displaySteps() {
     // Adding dragging class to item
     icon.addEventListener("touchstart", (evt) => {
       evt.currentTarget.parentElement.classList.add("dragging");
+      //document.querySelector("#togglePlans").checked = false; //It's not because the MySchedule is open or not, it's the window scrolling!!
     });
     // Removing dragging class from item on dragend event
     icon.addEventListener("touchend", (evt) => {

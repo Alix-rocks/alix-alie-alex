@@ -297,7 +297,7 @@
         <h2>Setting</h2>
         <h3>What time does your day really end?</h3>
         <input id="timeInput" type="time">
-        <button id="settingsBtn" class="ScreenBtn1">yep 👍</button>
+        <button id="settingsBtn" class="ScreenBtn1">yep <span class="typcn typcn-thumbs-up" style="padding: 0;"></span></button>
         <button id="cancelBtn" class="ScreenBtn2">Cancel</button>
       </div>
     </div>
@@ -462,13 +462,16 @@
   function logIn(){
     signInWithRedirect(auth, provider);
   };
-
+  let userConnected = false;
   onAuthStateChanged(auth,(user) => {
     if(user){
+      userConnected = true;
       console.log(user);
       logInScreen.classList.add("displayNone");
       getTasks();
+      getDones()
     } else{
+      userConnected = false;
       logInScreen.classList.remove("displayNone");
       logInBtn.addEventListener("click", logIn);
       tryBtn.addEventListener("click", tryOne); //freeIn
@@ -508,49 +511,86 @@
       todoCreation(todo, idT);
       idT++;
     });
+  };
+
+    
+
+
+    
+//     
+//     if(localStorage.getItem("listDones")){
+//       listDones = JSON.parse(localStorage.listDones);
+//     } else{
+// //(we can add a button later to see all the previous days... with a calendar, etc)
+//       let lastWeek = getLastWeekDate();
+//       getTasks.data().listDones.map((done) => {
+//         let dateIt = done.date;
+//         if(dateIt >= lastWeek){
+//           let listIt = [];
+//           done.list.map((tiDoned) => {
+//             let taskIt = tiDoned.task;
+//             let colorIt = tiDoned.color;
+//             listIt.push({task:taskIt, color:colorIt});
+//           });
+//           myListDones.push({date:dateIt, list:listIt});
+//         };
+//       });
+//       listDones = myListDones;
+//       // getTasks.data().listDones.map((done) => {
+//       //   let taskIt = done.task;
+//       //   let colorIt = done.color;
+//       //   let dateIt = done.date;
+//       //   myListDones.push({task:taskIt, color:colorIt, date:dateIt});
+//       // });
+//       // listDones = myListDones;
+//     };
+//     let donedDates = [];
+//     listDones.forEach(doned => {
+//       if(!donedDates.includes(doned.date)){
+//         donedDates.push(doned.date);
+//       };
+//     });
+//     let donedDatesSorted = donedDates.sort();
+//     donedDatesSorted.forEach(donedDate => {
+//       donedDateCreation(donedDate);
+//     });
+//     let idD = 0;
+//     listDones.forEach(doned => {
+//       donedCreation(doned, idD);
+//       idD++;
+//     });
+
+
+
+  async function getDones(){
+    const getDones = await getDocs(collection(db, "randomTask", auth.currentUser.email, "myListDones"));
     if(localStorage.getItem("listDones")){
       listDones = JSON.parse(localStorage.listDones);
     } else{
-//(we can add a button later to see all the previous days... with a calendar, etc)
-      let lastWeek = getLastWeekDate();
-      getTasks.data().listDones.map((done) => {
-        let dateIt = done.date;
-        if(dateIt >= lastWeek){
-          let listIt = [];
-          done.list.map((tiDoned) => {
-            let taskIt = tiDoned.task;
-            let colorIt = tiDoned.color;
-            listIt.push({task:taskIt, color:colorIt});
-          });
-          myListDones.push({date:dateIt, list:listIt});
-        };
+      getDones.forEach((donedDate) => {
+        let mydate = donedDate.id;
+        let donedDateDones = donedDate.data().dones;
+        let mylist = [];
+        donedDateDones.map((done) => {
+          let taskIt = done.task;
+          let colorIt = done.color;
+          mylist.push({task: taskIt, color: colorIt});
+        });
+        myListDones.push({date: mydate, list: mylist});
+        listDones = myListDones;
       });
-      listDones = myListDones;
-      // getTasks.data().listDones.map((done) => {
-      //   let taskIt = done.task;
-      //   let colorIt = done.color;
-      //   let dateIt = done.date;
-      //   myListDones.push({task:taskIt, color:colorIt, date:dateIt});
-      // });
-      // listDones = myListDones;
+      console.log(listDones);
     };
-    let donedDates = [];
-    listDones.forEach(doned => {
-      if(!donedDates.includes(doned.date)){
-        donedDates.push(doned.date);
-      };
-    });
-    let donedDatesSorted = donedDates.sort();
-    donedDatesSorted.forEach(donedDate => {
+    let sortedListDones = listDones.sort((d1, d2) => (d1.date > d2.date) ? 1 : (d1.date < d2.date) ? -1 : 0);
+    sortedListDones.forEach(doned => {
+      let donedDate = doned.date;
       donedDateCreation(donedDate);
+      doned.list.forEach(tidoned => {
+        donedCreation(donedDate, tidoned);
+      });
     });
-    let idD = 0;
-    listDones.forEach(doned => {
-      donedCreation(doned, idD);
-      idD++;
-    });
+    refreshDoneId();
   };
-
 //To adapt if we keep the new structure for listDones
   function freeIn(){ 
     if(localStorage.getItem("myTomorrow")){
@@ -625,6 +665,12 @@ logInScreen.classList.add("displayNone");
     cloudIt.style.backgroundColor = "rgba(237, 20, 61, " + cBC + ")";
   });
 
+  async function cloudSaveTomorrow(){
+    await updateDoc(doc(db, "randomTask", auth.currentUser.email), {
+      myTomorrow: myTomorrow,
+    })
+  };
+
   function updateCBC(){
     console.log("cBC " + cBC);
     cBC++;
@@ -639,7 +685,9 @@ logInScreen.classList.add("displayNone");
       console.log(timeInput.value);
       myTomorrow = `${timeInput.value}`;
       localStorage.myTomorrow = myTomorrow;
-      //Also save it in firestore! if(user){} although then that would be an async function...
+      if(userConnected){
+        cloudSaveTomorrow();
+      };
       settingsScreen.classList.add("displayNone");
     });
     cancelBtn.addEventListener("click", () => {

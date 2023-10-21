@@ -488,15 +488,23 @@ const initSortableList = (e) => {
   // Finding the sibling after which the dragging item should be placed
   let nextSibling = siblings.find(sibling => {
     if (e.clientX) {
+      //e.preventDefault();
       //if mouse
-      return e.clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
+      //return e.clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
+      return e.clientY <= sibling.offsetTop;
     } else {
+      //e.preventDefault();
       //if touch
-      return e.changedTouches[0].clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
+      console.log(sibling.offsetParent);
+      console.log("sot: " + sibling.offsetTop);
+      console.log(sibling.offsetTop + sibling.offsetHeight / 2);
+      //return e.changedTouches[0].clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
+      return e.changedTouches[0].clientY <= sibling.offsetTop;
     };
   });
   // Inserting the dragging item before the found sibling
-  sortableList.insertBefore(draggingItem, nextSibling);
+  nextSibling.insertAdjacentElement("beforebegin", draggingItem);
+  // sortableList.insertBefore(draggingItem, nextSibling);
 };
 
 function ondrop() {

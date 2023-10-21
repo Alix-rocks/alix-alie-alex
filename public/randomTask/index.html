@@ -481,12 +481,18 @@
   let myListDones = [];
   let num = 0;
   let cBC = 0;
+  let myTomorrow = ``;
   
 // *** START
 
   async function getTasks() {
     const getTasks = await getDoc(doc(db, "randomTask", auth.currentUser.email));
-
+    if(localStorage.getItem("myTomorrow")){
+      myTomorrow = localStorage.myTomorrow;
+    } else {
+      myTomorrow = getTasks.data().myTomorrow; //not sure if that'll work since it's a string in firestore and backticks here...
+    };
+    
     if(localStorage.getItem("listTasks")){
       listTasks = JSON.parse(localStorage.listTasks);
     } else{
@@ -547,6 +553,9 @@
 
 //To adapt if we keep the new structure for listDones
   function freeIn(){ 
+    if(localStorage.getItem("myTomorrow")){
+      myTomorrow = localStorage.myTomorrow;
+    };
     if(localStorage.getItem("listTasks")){
       listTasks = JSON.parse(localStorage.listTasks);
       let idT = 0;
@@ -626,6 +635,16 @@ logInScreen.classList.add("displayNone");
 // *** SETTINGS
   settings.addEventListener("click", () => {
     settingsScreen.classList.remove("displayNone");
+    settingsBtn.addEventListener("click", () => {
+      console.log(timeInput.value);
+      myTomorrow = `${timeInput.value}`;
+      localStorage.myTomorrow = myTomorrow;
+      //Also save it in firestore! if(user){} although then that would be an async function...
+      settingsScreen.classList.add("displayNone");
+    });
+    cancelBtn.addEventListener("click", () => {
+      settingsScreen.classList.add("displayNone");
+    });
   });
 
 // *** CREATION
@@ -917,8 +936,6 @@ addForm.addEventListener("submit", (e) => {
     clickScreen.classList.add("displayNone");
     document.querySelector("#clickScreen").removeEventListener("click", clickHandlerColor);
   };
-  
-  let myTomorrow = `02:00`;
 
 // *** DATE
   function getTodayDate(){
@@ -926,9 +943,6 @@ addForm.addEventListener("submit", (e) => {
     let currentHour = String(date.getHours()).padStart(2, "0");
     let currentMinute = String(date.getMinutes()).padStart(2, "0");
     let currentTime = `${currentHour}:${currentMinute}`;
-    console.log(currentTime);
-    console.log(myTomorrow);
-
     let currentDay= String(date.getDate()).padStart(2, '0');
     currentDay = currentTime <= myTomorrow ? currentDay - 1 : currentDay;
     let currentMonth = String(date.getMonth()+1).padStart(2,"0");

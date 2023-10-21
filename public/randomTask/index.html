@@ -57,7 +57,7 @@
   input[type="radio"]{
     display: none;
   }
-  #logInScreen{
+  .Screen{
     display: flex;
     background-color: white;
     position: fixed;
@@ -67,8 +67,8 @@
     height: 100vh;
     z-index: 2000;
   }
-  #logInDiv{
-    width: 50%;
+  .DivScreen{
+    width: 62%;
     padding: 15px;
     margin: auto;
     border-style: solid;
@@ -77,11 +77,11 @@
     z-index: 2200;
     text-align: center;
   }
-  #logInBtn{
+  .ScreenBtn1{
     display: block;
     margin: 10px auto;
   }
-  #tryBtn{
+  .ScreenBtn2{
     border-top: 1px solid darkslategrey;
     border-left: 1px solid darkslategrey;
     border-right: 2px solid darkslategrey;
@@ -111,6 +111,26 @@
     left: 0;
     z-index: 500;
     background-color: rgba(255, 255, 255, 0);
+  }
+  #settings{
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-top: 1px solid darkslategrey;
+    border-left: 1px solid darkslategrey;
+    border-right: 2px solid darkslategrey;
+    border-bottom: 2px solid darkslategrey;
+    border-radius: 3px;
+    text-align: center;
+    padding: 2px 3px;
+    font-size: 25px;
+    line-height: 1em;
+    font-weight: 500;
+    background-color: rgba(211, 211, 211, 0.5);
+  }
+  #settings span{
+    padding: 0;
+    opacity: .8;
   }
   .topList{
     margin-bottom: 0;
@@ -262,13 +282,23 @@
   }
 </style>
   <div id="listSection">
-    <div id="clickScreen" class="displayNone"></div>
-    <div id="logInScreen">
-      <div id="logInDiv">
+    <div id="clickScreen" class="Screen displayNone"></div>
+    <div id="logInScreen" class="Screen">
+      <div id="logInDiv" class="DivScreen">
         <h3>First thing's first...</h3>
         <h2 >Who do you think you are?!</h2>
-        <button id="logInBtn">Log in</button>
-        <button id="tryBtn">Free Trial</button>
+        <button id="logInBtn" class="ScreenBtn1">Log in</button>
+        <button id="tryBtn" class="ScreenBtn2">Free Trial</button>
+      </div>
+    </div>
+    <button id="settings"><span class="typcn typcn-cog-outline"></span></button>
+    <div id="settingsScreen" class="Screen displayNone">
+      <div id="settingsDiv" class="DivScreen">
+        <h2>Setting</h2>
+        <h3>What time does your day really end?</h3>
+        <input id="timeInput" type="time">
+        <button id="settingsBtn" class="ScreenBtn1">yep 👍</button>
+        <button id="cancelBtn" class="ScreenBtn2">Cancel</button>
       </div>
     </div>
     <form id="addForm">
@@ -593,6 +623,10 @@ logInScreen.classList.add("displayNone");
     console.log("cBCD " + cBCD);
     cloudIt.style.backgroundColor = "rgba(237, 20, 61, " + cBCD + ")";
   };
+// *** SETTINGS
+  settings.addEventListener("click", {
+    settingsScreen.classList.remove("displayNone");
+  });
 
 // *** CREATION
   function todoCreation(todo, idx){
@@ -883,11 +917,20 @@ addForm.addEventListener("submit", (e) => {
     clickScreen.classList.add("displayNone");
     document.querySelector("#clickScreen").removeEventListener("click", clickHandlerColor);
   };
+  
+  let myTomorrow = `02:00`;
 
 // *** DATE
   function getTodayDate(){
     let date = new Date();
+    let currentHour = String(date.getHours()).padStart(2, "0");
+    let currentMinute = String(date.getMinutes()).padStart(2, "0");
+    let currentTime = `${currentHour}:${currentMinute}`;
+    console.log(currentTime);
+    console.log(myTomorrow);
+
     let currentDay= String(date.getDate()).padStart(2, '0');
+    currentDay = currentTime <= myTomorrow ? currentDay - 1 : currentDay;
     let currentMonth = String(date.getMonth()+1).padStart(2,"0");
     let currentYear = date.getFullYear();
     let currentDate = `${currentYear}-${currentMonth}-${currentDay}`;

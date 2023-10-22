@@ -478,15 +478,15 @@
     };
   });
 
+  
+  
+  
+// *** START
   let listTasks = [];
   let listDones = [];
   let myListTasks = [];
   let myListDones = [];
-  let num = 0;
-  let cBC = 0;
   let myTomorrow = ``;
-  
-// *** START
 
   async function getTasks() {
     const getTasks = await getDoc(doc(db, "randomTask", auth.currentUser.email));
@@ -627,39 +627,41 @@
   
 
 // Tests
-listDones = [
-  { date: "2023-10-17",
-    list: [{task: "manger", color: "red"}, {task: "toilet", color: "forestgreen"}]}, 
-  { date: "2023-10-18",
-    list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}, 
-  { date: "2023-10-16",
-    list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}, 
-  { date: "2023-10-08",
-    list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}, 
-  { date: "2023-10-15",
-    list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}
-  ];
+  listDones = [
+    { date: "2023-10-17",
+      list: [{task: "manger", color: "red"}, {task: "toilet", color: "forestgreen"}]}, 
+    { date: "2023-10-18",
+      list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}, 
+    { date: "2023-10-16",
+      list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}, 
+    { date: "2023-10-08",
+      list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}, 
+    { date: "2023-10-15",
+      list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}
+    ];
 
-function tryOne(){
-  let sortedListDones = listDones.sort((d1, d2) => (d1.date > d2.date) ? 1 : (d1.date < d2.date) ? -1 : 0);
-  sortedListDones.forEach(doned => {
-  let donedDate = doned.date;
-  donedDateCreation(donedDate);
-  doned.list.forEach(tidoned => {
-    donedCreation(donedDate, tidoned);
+  function tryOne(){
+    let sortedListDones = listDones.sort((d1, d2) => (d1.date > d2.date) ? 1 : (d1.date < d2.date) ? -1 : 0);
+    sortedListDones.forEach(doned => {
+    let donedDate = doned.date;
+    donedDateCreation(donedDate);
+    doned.list.forEach(tidoned => {
+      donedCreation(donedDate, tidoned);
+    });
   });
-});
-refreshDoneId();
-logInScreen.classList.add("displayNone");
-};
+  refreshDoneId();
+  logInScreen.classList.add("displayNone");
+  };
 
 // *** CLOUDSAVE
+  let cBC = 0;
+  
   cloudIt.addEventListener("click", async () => {
     await updateDoc(doc(db, "randomTask", auth.currentUser.email), {
       listTasks: listTasks,
 //NOOOOONNN You need to add to listDones, otherwise you lose everything before the last week, because listDones is only ever 1 week old!!
 //How can we update only the last 7 days...
-      listDones: listDones
+      //listDones: listDones
     });
     cBC = 0;
     cloudIt.style.backgroundColor = "rgba(237, 20, 61, " + cBC + ")";
@@ -755,7 +757,7 @@ logInScreen.classList.add("displayNone");
 
 
 // *** ADD
-addForm.addEventListener("submit", (e) => {
+  addForm.addEventListener("submit", (e) => {
     e.preventDefault();
     let newTask = addInput.value;
     let color = "darkslategrey";
@@ -775,6 +777,8 @@ addForm.addEventListener("submit", (e) => {
   });
 
 // *** DONE/ERASE
+  let num = 0;
+
   doneNextBtn.addEventListener("click", () => {
     let doneLi = document.querySelector("#todo" + num);
     console.log(doneLi);

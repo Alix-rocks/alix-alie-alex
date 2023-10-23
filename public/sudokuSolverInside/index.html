@@ -390,23 +390,48 @@ let sudokuQuestionF = [
     //In i (then j then b) check if there's two kase that have the same opt (two values i.e. opt.length == 2), if so, remove these opt from all the others 
     for (let i = 0; i < 9; i++){
       let countI = sudokuSoFar[i].filter((num) => typeof num === 'object' && num.o.length == 2); 
-      let uniqueI = new Set(countI.map(c => c.o));
+      let uniqueI = new Set(countI.map(c => c.o.toString()));
       if(uniqueI.size < countI.length){
         console.log("duplicates found in i!");
+        console.log(countI);
       }
     };
     for (let j = 0; j < 9; j++){
-      //can't filter a 2d array, so create your own sudokuSoFar[j] by push all the j:j to an array, then filter it
+      let sudokuSoFarJ = [];
       for (let i = 0; i < 9; i++){
-        let countJ = sudokuSoFar[i].filter((num) => typeof num === 'object' && num.o.length == 2); 
+        sudokuSoFarJ.push(sudokuSoFar[i][j]);
+      };  
+      let countJ = sudokuSoFarJ.filter((num) => typeof num === 'object' && num.o.length == 2); 
+      //console.log(countJ);
+      let uniqueJ = new Set(countJ.map(c => c.o.toString()));
+      //console.log("uj " + uniqueJ.size);
+      //console.log("cj " + countJ.length);
+      if(uniqueJ.size < countJ.length){
+        console.log("duplicates found in j!");
         console.log(countJ);
-        let uniqueJ = new Set(countJ.map(c => c.o));
-        if(uniqueJ.size < countJ.length){
-          console.log("duplicates found in j!");
+      };
+    };
+    for (let b = 1; b < 10; b++) {
+      let sudokuSoFarB = [];
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++){
+          if(sudokuSoFar[i][j].b == b){
+            sudokuSoFarB.push(sudokuSoFar[i][j]);
+          };
         };
+      };
+      let countB = sudokuSoFarB.filter((num) => typeof num === 'object' && num.o.length == 2);
+      //console.log(countB);
+      let uniqueB = new Set(countB.map(c => c.o.toString()));
+      //console.log("ub " + uniqueB.size);
+      //console.log("cb " + countB.length);
+      if (uniqueB.size < countB.length) {
+        console.log("duplicates found in b!");
+        console.log(countB);
       };
     };
   };
+  //Now get the function removeLittlers and remove these numbers duplicated from the other kase
 
   function sudokuCompleteSolver(sudokuQuestion) {
     tableCreation(sudokuQuestion);

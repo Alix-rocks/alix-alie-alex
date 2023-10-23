@@ -234,7 +234,7 @@ let sudokuQuestionF = [
   [0,9,5,0,0,0,0,0,3]
 ];
 
-  let sudokuOptions = [
+  let sudokuQuestionX = [
       [],
       [],
       [],
@@ -331,9 +331,8 @@ let sudokuQuestionF = [
   let fucked = false;
   let tries = [];
   let lastFinal = "";
-  let values = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
-  function caseRunner(sudokuQuestion, classe, cClasse) {
+  function caseRunner(sudokuQuestion, sudokuSolution, classe, cClasse) {
     answers = 0;
     options = [];
     for (let i = 0; i < 9; i++) {
@@ -341,34 +340,14 @@ let sudokuQuestionF = [
         let kase = document.getElementById("r" + i + "c" + j);
         if (!kase.textContent) {
           let b = kase.dataset.bloc;
-          sudokuSolver(i, j, b, sudokuQuestion, classe, cClasse);
-          if (values.length == 0) {
-            fucked = true;
-          } else if (values.length == 1) {
-            answers++;
-            let rep = values[0];
-            let kase = document.getElementById("r" + i + "c" + j);
-            kase.innerText = rep;
-            kase.classList.add(classe, cClasse);
-            sudokuSoFar[i].splice(j, 1, rep);
-          } else if (values.length == 2) {
-            let option = {
-              kaseId: "r" + i + "c" + j,
-              values: values
-            };
-            if (!options.find(item => item.kaseId === "r" + i + "c" + j)) {
-              options.push(option);
-            };
-          };
+          sudokuSolver(i, j, b, sudokuQuestion, sudokuSolution, classe, cClasse);
         };
       };
     };
-    console.log(answers);
-    console.log(sudokuSoFar);
   };
 
-  function sudokuSolver(i, j, b, sudokuQuestion, classe, cClasse) {
-    values = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  function sudokuSolver(i, j, b, sudokuQuestion, sudokuSolution, classe, cClasse) {
+    let values = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
     document.querySelectorAll('.case[data-row="' + i + '"]').forEach((kaseI) => {
       let chiffre = kaseI.textContent;
       values = values.filter(num => num !== chiffre);
@@ -381,41 +360,31 @@ let sudokuQuestionF = [
       let chiffre = kaseB.textContent;
       values = values.filter(num => num !== chiffre);
     });
-    let kaseOptions = {b: b, i: i, j: j, o: values};
-    sudokuSoFar[i].splice(j, 1, kaseOptions);
-  };
-
-  function sudokuCleanerOne(){
-    console.log("sudokuCleanerOne");
-    //In i (then j then b) check if there's two kase that have the same opt (two values i.e. opt.length == 2), if so, remove these opt from all the others 
-    for (let i = 0; i < 9; i++){
-      let countI = sudokuSoFar[i].filter((num) => typeof num === 'object' && num.o.length == 2); 
-      let uniqueI = new Set(countI.map(c => c.o));
-      if(uniqueI.size < countI.length){
-        console.log("duplicates found in i!");
-      }
-    };
-    for (let j = 0; j < 9; j++){
-      //can't filter a 2d array, so create your own sudokuSoFar[j] by push all the j:j to an array, then filter it
-      for (let i = 0; i < 9; i++){
-        let countJ = sudokuSoFar[i].filter((num) => typeof num === 'object' && num.o.length == 2); 
-        console.log(countJ);
-        let uniqueJ = new Set(countJ.map(c => c.o));
-        if(uniqueJ.size < countJ.length){
-          console.log("duplicates found in j!");
-        };
+    if (values.length == 0) {
+      fucked = true;
+    } else if (values.length == 1) {
+      answers++;
+      let rep = values[0];
+      let kase = document.getElementById("r" + i + "c" + j);
+      kase.innerText = rep;
+      kase.classList.add(classe, cClasse);
+      sudokuSoFar[i].splice(j, 1, rep);
+    } else if (values.length == 2) {
+      let option = {
+        kaseId: "r" + i + "c" + j,
+        values: values
+      };
+      if (!options.find(item => item.kaseId === "r" + i + "c" + j)) {
+        options.push(option);
       };
     };
   };
 
-  function sudokuCompleteSolver(sudokuQuestion) {
+  function sudokuCompleteSolver(sudokuQuestion, sudokuSolution) {
     tableCreation(sudokuQuestion);
-    for (let c = 0; c < 6; c++) {
-      document.querySelectorAll(".case:not(.firstClass)").forEach((kase) => {
-          kase.classList.add("purpleAnswer");
-        });
+    for (let c = 0; c < 20; c++) {
       let soFar = sudokuSoFar.flat();
-      let countTot = soFar.filter((num) => typeof num !== 'object').length; 
+      let countTot = soFar.filter((num) => num == 0).length;
       if (countTot == 0) {
         showSudokuArray(sudokuQuestion, sudokuSoFar);
         console.log("en " + c + " coups");
@@ -425,13 +394,13 @@ let sudokuQuestionF = [
         document.querySelectorAll(".case:not(.firstClass)").forEach((kase) => {
           kase.classList.add("purpleAnswer");
         });
-        // let soSol = sudokuSolution.flat();
-        // if (soFar.toString() == soSol.toString()) {
-        //   console.log("yay!");
-        // } else {
-        //   console.log(soFar.toString());
-        // }
-        // break
+        let soSol = sudokuSolution.flat();
+        if (soFar.toString() == soSol.toString()) {
+          console.log("yay!");
+        } else {
+          console.log(soFar.toString());
+        }
+        break
       } else if (fucked && tries.length !== 0) {
         if (lastFinal !== "") {
           document.getElementById(lastFinal).innerText = "";
@@ -457,41 +426,40 @@ let sudokuQuestionF = [
         fucked = false;
         let classe = "trying";
         let cClasse = "c" + c;
-        caseRunner(sudokuQuestion, classe, cClasse);
+        caseRunner(sudokuQuestion, sudokuSolution, classe, cClasse);
       } else if ((answers == 0 && !fucked) || (fucked && tries.length == 0)) {
-        sudokuCleanerOne();
-        // tryingMode = true;
-        // if (lastFinal !== "") {
-        //   document.getElementById(lastFinal).innerText = "";
-        //   lastFinal = "";
-        // };
-        // let trie = {
-        //   cNum: c,
-        //   kaseId: options[0].kaseId,
-        //   val0: options[0].values[0],
-        //   val1: options[0].values[1]
-        // };
-        // let x = options.splice(0, 1);
-        // tries.push(trie);
-        // let kase = document.getElementById(trie.kaseId);
-        // let rep = trie.val0;
-        // kase.innerText = rep;
-        // kase.classList.add("littler", "trying");
-        // let i = kase.dataset.row;
-        // let j = kase.dataset.col;
-        // sudokuSoFar[i].splice(j, 1, rep);
-        // let classe = "trying";
-        // let cClasse = "c" + c;
-        // caseRunner(sudokuQuestion, classe, cClasse);
+        tryingMode = true;
+        if (lastFinal !== "") {
+          document.getElementById(lastFinal).innerText = "";
+          lastFinal = "";
+        };
+        let trie = {
+          cNum: c,
+          kaseId: options[0].kaseId,
+          val0: options[0].values[0],
+          val1: options[0].values[1]
+        };
+        let x = options.splice(0, 1);
+        tries.push(trie);
+        let kase = document.getElementById(trie.kaseId);
+        let rep = trie.val0;
+        kase.innerText = rep;
+        kase.classList.add("littler", "trying");
+        let i = kase.dataset.row;
+        let j = kase.dataset.col;
+        sudokuSoFar[i].splice(j, 1, rep);
+        let classe = "trying";
+        let cClasse = "c" + c;
+        caseRunner(sudokuQuestion, sudokuSolution, classe, cClasse);
       } else {
         if (tryingMode) {
           let classe = "trying";
           let cClasse = "c" + c;
-          caseRunner(sudokuQuestion, classe, cClasse);
+          caseRunner(sudokuQuestion, sudokuSolution, classe, cClasse);
         } else {
           let classe = "surring";
           let cClasse = "c" + c;
-          caseRunner(sudokuQuestion, classe, cClasse);
+          caseRunner(sudokuQuestion, sudokuSolution, classe, cClasse);
         };
       };
     };
@@ -515,7 +483,7 @@ let sudokuQuestionF = [
     ]`;
     solutionFinale.innerHTML = showArray;
   };
-  sudokuCompleteSolver(sudokuQuestionB);
+  sudokuCompleteSolver(sudokuQuestionD, sudokuSolutionC);
 
 //Il va falloir faire une version qui compte toutes les possibilités... donc on refait the whole thing pour chaque option (de 2 possibilités)?
 </script>

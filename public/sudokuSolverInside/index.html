@@ -393,7 +393,7 @@ let sudokuQuestionF = [
       let uniqueI = new Set(countI.map(c => c.o.toString()));
       if(uniqueI.size < countI.length){
         console.log("duplicates found in i!");
-        console.log(countI);
+        //console.log(countI);
       }
     };
     for (let j = 0; j < 9; j++){
@@ -408,7 +408,7 @@ let sudokuQuestionF = [
       //console.log("cj " + countJ.length);
       if(uniqueJ.size < countJ.length){
         console.log("duplicates found in j!");
-        console.log(countJ);
+        //console.log(countJ);
       };
     };
     for (let b = 1; b < 10; b++) {
@@ -427,11 +427,39 @@ let sudokuQuestionF = [
       //console.log("cb " + countB.length);
       if (uniqueB.size < countB.length) {
         console.log("duplicates found in b!");
-        console.log(countB);
+        //console.log(countB);
       };
     };
+    //removeForJ("2", 0, 2, 3);
+    //console.log(sudokuSoFar);
   };
-  //Now get the function removeLittlers and remove these numbers duplicated from the other kase
+  //Now create the removeForB function and find a way to call them in the sudokuCleanerOne function
+  
+  function removeForI(chiffre, i, j1, j2){
+    // for i
+    sudokuSoFar[i].forEach(kase => {
+      if(typeof kase === 'object' && kase.j !== j1 && kase.j !== j2){
+        let idx = kase.o.indexOf(chiffre);
+        kase.o.splice(idx, 1);
+      };
+    });
+  };
+  function removeForJ(chiffre, j, i1, i2){
+    // for j
+    //console.log("removeForJ");
+    let sudokuSoFarJ = [];
+    for (let i = 0; i < 9; i++){
+      sudokuSoFarJ.push(sudokuSoFar[i][j]);
+    }; 
+    //console.log(sudokuSoFarJ);
+    sudokuSoFarJ.forEach(kase => {
+      if(typeof kase === 'object' && kase.i !== i1 && kase.i !== i2){
+        let idx = kase.o.indexOf(chiffre);
+        kase.o.splice(idx, 1);
+      };
+    });
+    //console.log(sudokuSoFarJ);
+  };
 
   function sudokuCompleteSolver(sudokuQuestion) {
     tableCreation(sudokuQuestion);

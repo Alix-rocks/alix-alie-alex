@@ -393,7 +393,17 @@ let sudokuQuestionF = [
       let uniqueI = new Set(countI.map(c => c.o.toString()));
       if(uniqueI.size < countI.length){
         console.log("duplicates found in i!");
+        for (let a = 0; a < countI.length - 1; a++) {
+            for (let d = a + 1; d < countI.length; d++) {
+              if (countI[a].o.toString() === countI[d].o.toString()){
+                let i = countI[a].i;
+                let j1 = countI[a].j;
+                let j2 = countI[d].j;
+                let chiffre1 = countI[a].o[0];
+                let chiffre2 = countI[a].o[1];
+                //removeForI(chiffre1, chiffre2, i, j1, j2);
         //console.log(countI);
+     
       }
     };
     for (let j = 0; j < 9; j++){
@@ -408,7 +418,15 @@ let sudokuQuestionF = [
       //console.log("cj " + countJ.length);
       if(uniqueJ.size < countJ.length){
         console.log("duplicates found in j!");
-        //console.log(countJ);
+        for (let a = 0; a < countJ.length - 1; a++) {
+          for (let d = a + 1; d < countJ.length; d++) {
+            if (countJ[a].o.toString() === countJ[d].o.toString()) {
+              let j = countJ[a].j;
+              let i1 = countJ[a].i;
+              let i2 = countJ[d].i;
+              let chiffre1 = countJ[a].o[0];
+              let chiffre2 = countJ[a].o[1];
+              //removeForJ(chiffre1, chiffre2, j, i1, i2);
       };
     };
     for (let b = 1; b < 10; b++) {
@@ -427,24 +445,39 @@ let sudokuQuestionF = [
       //console.log("cb " + countB.length);
       if (uniqueB.size < countB.length) {
         console.log("duplicates found in b!");
+        for (let a = 0; a < countB.length - 1; a++) {
+            for (let d = a + 1; d < countB.length; d++) {
+              if (countB[a].o.toString() === countB[d].o.toString()){
+                let i1 = countB[a].i;
+                let j1 = countB[a].j;
+                let i2 = countB[d].i;
+                let j2 = countB[d].j;
+                let chiffre1 = countB[a].o[0];
+                let chiffre2 = countB[a].o[1];
+                //removeForB(chiffre1, chiffre2, b, i1, j1, i2, j2);
+              };
+            };
         //console.log(countB);
+        
       };
     };
-    //removeForJ("2", 0, 2, 3);
-    //console.log(sudokuSoFar);
+    console.log(sudokuSoFar);
+    //removeForB("2", 9, 7, 6, 8, 6);
   };
   //Now create the removeForB function and find a way to call them in the sudokuCleanerOne function
   
-  function removeForI(chiffre, i, j1, j2){
+  function removeForI(chiffre1, chiffre 2, i, j1, j2){
     // for i
     sudokuSoFar[i].forEach(kase => {
-      if(typeof kase === 'object' && kase.j !== j1 && kase.j !== j2){
-        let idx = kase.o.indexOf(chiffre);
-        kase.o.splice(idx, 1);
+      if(typeof kase === 'object' && (kase.j !== j1 && kase.j !== j2)){
+        let idx1 = sudokuSoFar[kase.i][kase.j].o.indexOf(chiffre1);
+        sudokuSoFar[kase.i][kase.j].o.splice(idx1, 1);
+        let idx2 = sudokuSoFar[kase.i][kase.j].o.indexOf(chiffre2);
+        sudokuSoFar[kase.i][kase.j].o.splice(idx2, 1);
       };
     });
   };
-  function removeForJ(chiffre, j, i1, i2){
+  function removeForJ(chiffre1, chiffre 2, j, i1, i2){
     // for j
     //console.log("removeForJ");
     let sudokuSoFarJ = [];
@@ -453,12 +486,39 @@ let sudokuQuestionF = [
     }; 
     //console.log(sudokuSoFarJ);
     sudokuSoFarJ.forEach(kase => {
-      if(typeof kase === 'object' && kase.i !== i1 && kase.i !== i2){
-        let idx = kase.o.indexOf(chiffre);
-        kase.o.splice(idx, 1);
+      if(typeof kase === 'object' && (kase.i !== i1 && kase.i !== i2)){
+        let idx1 = sudokuSoFar[kase.i][kase.j].o.indexOf(chiffre1);
+        sudokuSoFar[kase.i][kase.j].o.splice(idx1, 1);
+        let idx2 = sudokuSoFar[kase.i][kase.j].o.indexOf(chiffre2);
+        sudokuSoFar[kase.i][kase.j].o.splice(idx2, 1);
       };
     });
     //console.log(sudokuSoFarJ);
+  };
+  
+  function removeForB(chiffre1, chiffre 2, b, i1, j1, i2, j2){
+    // for b
+    console.log("removeForB");
+    let sudokuSoFarB = [];
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++){
+        if(sudokuSoFar[i][j].b == b){
+          sudokuSoFarB.push(sudokuSoFar[i][j]);
+        };
+      };
+    };
+    //removeForB("2", 9, 7, 6, 8, 6);
+    //console.log(sudokuSoFarB);
+    sudokuSoFarB.forEach(kase => {
+      if(typeof kase === 'object' && (kase.i !== i1 && kase.j !== j1) || (kase.i !== i2 && kase.j !== j2)){
+        console.log(kase);
+        let idx1 = sudokuSoFar[kase.i][kase.j].o.indexOf(chiffre1);
+        sudokuSoFar[kase.i][kase.j].o.splice(idx1, 1);
+        let idx2 = sudokuSoFar[kase.i][kase.j].o.indexOf(chiffre2);
+        sudokuSoFar[kase.i][kase.j].o.splice(idx2, 1);
+      };
+    });
+    console.log(sudokuSoFar);
   };
 
   function sudokuCompleteSolver(sudokuQuestion) {

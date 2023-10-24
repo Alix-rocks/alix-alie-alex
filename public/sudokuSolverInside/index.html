@@ -385,50 +385,63 @@ let sudokuQuestionF = [
     sudokuSoFar[i].splice(j, 1, kaseOptions);
   };
 
+  function cleanDuplicates(array){
+    let count = array.filter((num) => typeof num === 'object' && num.o.length == 2); 
+    let unique = new Set(count.map(c => c.o.toString()));
+    if(unique.size < count.length){
+      for (let a = 0; a < count.length - 1; a++) {
+        for (let d = a + 1; d < count.length; d++) {
+          if (count[a].o.toString() === count[d].o.toString()){
+            let i1 = count[a].i;
+            let j1 = count[a].j;
+            let i2 = count[d].i;
+            let j2 = count[d].j;
+            let chiffre1 = count[a].o[0];
+            let chiffre2 = count[a].o[1];
+            console.log(chiffre1, chiffre2, i1, j1, i2, j2);
+            return [chiffre1, chiffre2, i1, j1, i2, j2];
+          };
+        };
+      };
+    };
+  };
+
+  function cleanKaseOfDuplicates(kase, chiffre1, chiffre2){
+    console.log("chosen before: " + kase.o.toString());
+    let idx1 = sudokuSoFar[kase.i][kase.j].o.indexOf(chiffre1);
+    if(idx1 >= 0){
+      sudokuSoFar[kase.i][kase.j].o.splice(idx1, 1);
+    };        
+    let idx2 = sudokuSoFar[kase.i][kase.j].o.indexOf(chiffre2);
+    if(idx2 >= 0){
+      sudokuSoFar[kase.i][kase.j].o.splice(idx2, 1);
+    };
+    console.log("chosen after: " + kase.o.toString());
+  };
+
   function sudokuCleanerOne(){
     console.log("sudokuCleanerOne");
     //In i (then j then b) check if there's two kase that have the same opt (two values i.e. opt.length == 2), if so, remove these opt from all the others 
     for (let i = 0; i < 9; i++){
-      let countI = sudokuSoFar[i].filter((num) => typeof num === 'object' && num.o.length == 2); 
-      let uniqueI = new Set(countI.map(c => c.o.toString()));
-      if(uniqueI.size < countI.length){
-        console.log("duplicates found in i!");
-        for (let a = 0; a < countI.length - 1; a++) {
-            for (let d = a + 1; d < countI.length; d++) {
-              if (countI[a].o.toString() === countI[d].o.toString()){
-                let i = countI[a].i;
-                let j1 = countI[a].j;
-                let j2 = countI[d].j;
-                let chiffre1 = countI[a].o[0];
-                let chiffre2 = countI[a].o[1];
-                //removeForI(chiffre1, chiffre2, i, j1, j2);
-        //console.log(countI);
-     
+      cleanDuplicates(sudokuSoFar[i]);
+      if(cleanDuplicates(sudokuSoFar[i])){
+        const [chiffre1, chiffre2, i1, j1, i2, j2] = cleanDuplicates(sudokuSoFar[i]);
+        removeForI(chiffre1, chiffre2, i1, j1, j2);
       };
     };
+    
     for (let j = 0; j < 9; j++){
       let sudokuSoFarJ = [];
       for (let i = 0; i < 9; i++){
         sudokuSoFarJ.push(sudokuSoFar[i][j]);
       };  
-      let countJ = sudokuSoFarJ.filter((num) => typeof num === 'object' && num.o.length == 2); 
-      //console.log(countJ);
-      let uniqueJ = new Set(countJ.map(c => c.o.toString()));
-      //console.log("uj " + uniqueJ.size);
-      //console.log("cj " + countJ.length);
-      if(uniqueJ.size < countJ.length){
-        console.log("duplicates found in j!");
-        for (let a = 0; a < countJ.length - 1; a++) {
-          for (let d = a + 1; d < countJ.length; d++) {
-            if (countJ[a].o.toString() === countJ[d].o.toString()) {
-              let j = countJ[a].j;
-              let i1 = countJ[a].i;
-              let i2 = countJ[d].i;
-              let chiffre1 = countJ[a].o[0];
-              let chiffre2 = countJ[a].o[1];
-              //removeForJ(chiffre1, chiffre2, j, i1, i2);
+      cleanDuplicates(sudokuSoFarJ);
+      if(cleanDuplicates(sudokuSoFarJ)){
+        const [chiffre1, chiffre2, i1, j1, i2, j2] = cleanDuplicates(sudokuSoFarJ);
+        removeForJ(chiffre1, chiffre2, j1, i1, i2);
       };
     };
+
     for (let b = 1; b < 10; b++) {
       let sudokuSoFarB = [];
       for (let i = 0; i < 9; i++) {
@@ -438,46 +451,26 @@ let sudokuQuestionF = [
           };
         };
       };
-      let countB = sudokuSoFarB.filter((num) => typeof num === 'object' && num.o.length == 2);
-      //console.log(countB);
-      let uniqueB = new Set(countB.map(c => c.o.toString()));
-      //console.log("ub " + uniqueB.size);
-      //console.log("cb " + countB.length);
-      if (uniqueB.size < countB.length) {
-        console.log("duplicates found in b!");
-        for (let a = 0; a < countB.length - 1; a++) {
-            for (let d = a + 1; d < countB.length; d++) {
-              if (countB[a].o.toString() === countB[d].o.toString()){
-                let i1 = countB[a].i;
-                let j1 = countB[a].j;
-                let i2 = countB[d].i;
-                let j2 = countB[d].j;
-                let chiffre1 = countB[a].o[0];
-                let chiffre2 = countB[a].o[1];
-                //removeForB(chiffre1, chiffre2, b, i1, j1, i2, j2);
-              };
-            };
-        //console.log(countB);
-        
+      cleanDuplicates(sudokuSoFarB);
+      if(cleanDuplicates(sudokuSoFarB)){
+        const [chiffre1, chiffre2, i1, j1, i2, j2] = cleanDuplicates(sudokuSoFarB);
+        removeForB(chiffre1, chiffre2, b, i1, j1, i2, j2);
       };
     };
     console.log(sudokuSoFar);
-    //removeForB("2", 9, 7, 6, 8, 6);
   };
-  //Now create the removeForB function and find a way to call them in the sudokuCleanerOne function
   
-  function removeForI(chiffre1, chiffre 2, i, j1, j2){
+  function removeForI(chiffre1, chiffre2, i, j1, j2){
     // for i
     sudokuSoFar[i].forEach(kase => {
-      if(typeof kase === 'object' && (kase.j !== j1 && kase.j !== j2)){
-        let idx1 = sudokuSoFar[kase.i][kase.j].o.indexOf(chiffre1);
-        sudokuSoFar[kase.i][kase.j].o.splice(idx1, 1);
-        let idx2 = sudokuSoFar[kase.i][kase.j].o.indexOf(chiffre2);
-        sudokuSoFar[kase.i][kase.j].o.splice(idx2, 1);
+      if(typeof kase === 'object' && kase.j !== j1 && kase.j !== j2){
+        cleanKaseOfDuplicates(kase, chiffre1, chiffre2);
       };
     });
+    console.log("Icleaned");
+    console.log(sudokuSoFar);
   };
-  function removeForJ(chiffre1, chiffre 2, j, i1, i2){
+  function removeForJ(chiffre1, chiffre2, j, i1, i2){
     // for j
     //console.log("removeForJ");
     let sudokuSoFarJ = [];
@@ -486,17 +479,14 @@ let sudokuQuestionF = [
     }; 
     //console.log(sudokuSoFarJ);
     sudokuSoFarJ.forEach(kase => {
-      if(typeof kase === 'object' && (kase.i !== i1 && kase.i !== i2)){
-        let idx1 = sudokuSoFar[kase.i][kase.j].o.indexOf(chiffre1);
-        sudokuSoFar[kase.i][kase.j].o.splice(idx1, 1);
-        let idx2 = sudokuSoFar[kase.i][kase.j].o.indexOf(chiffre2);
-        sudokuSoFar[kase.i][kase.j].o.splice(idx2, 1);
+      if(typeof kase === 'object' && kase.i !== i1 && kase.i !== i2){
+        cleanKaseOfDuplicates(kase, chiffre1, chiffre2);
       };
     });
     //console.log(sudokuSoFarJ);
   };
   
-  function removeForB(chiffre1, chiffre 2, b, i1, j1, i2, j2){
+  function removeForB(chiffre1, chiffre2, b, i1, j1, i2, j2){
     // for b
     console.log("removeForB");
     let sudokuSoFarB = [];
@@ -507,23 +497,18 @@ let sudokuQuestionF = [
         };
       };
     };
-    //removeForB("2", 9, 7, 6, 8, 6);
-    //console.log(sudokuSoFarB);
     sudokuSoFarB.forEach(kase => {
       if(typeof kase === 'object' && (kase.i !== i1 && kase.j !== j1) || (kase.i !== i2 && kase.j !== j2)){
-        console.log(kase);
-        let idx1 = sudokuSoFar[kase.i][kase.j].o.indexOf(chiffre1);
-        sudokuSoFar[kase.i][kase.j].o.splice(idx1, 1);
-        let idx2 = sudokuSoFar[kase.i][kase.j].o.indexOf(chiffre2);
-        sudokuSoFar[kase.i][kase.j].o.splice(idx2, 1);
+        cleanKaseOfDuplicates(kase, chiffre1, chiffre2);
       };
     });
+    console.log("Bcleaned");
     console.log(sudokuSoFar);
   };
 
   function sudokuCompleteSolver(sudokuQuestion) {
     tableCreation(sudokuQuestion);
-    for (let c = 0; c < 6; c++) {
+    for (let c = 0; c < 7; c++) {
       document.querySelectorAll(".case:not(.firstClass)").forEach((kase) => {
           kase.classList.add("purpleAnswer");
         });
@@ -572,7 +557,9 @@ let sudokuQuestionF = [
         let cClasse = "c" + c;
         caseRunner(sudokuQuestion, classe, cClasse);
       } else if ((answers == 0 && !fucked) || (fucked && tries.length == 0)) {
-        sudokuCleanerOne();
+        sudokuCleanerOne(); //once you've cleaned it, you have to stick with sudokuSoFar and not the kases anymore!! (or we could do the whole thing with sudokuSoFar; right from the beginning? although that would be useless for the real easy ones that don't even need cleaning!)
+        //Also why not show the little ones?! That would make the whole coding so much easier! (et j'te rappelle que c'est justement à ça que sert la version Inside!)
+        
         // tryingMode = true;
         // if (lastFinal !== "") {
         //   document.getElementById(lastFinal).innerText = "";

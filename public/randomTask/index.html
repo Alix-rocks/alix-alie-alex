@@ -436,7 +436,7 @@
 
 // Add a setting: what time does your day really end?
 
-  import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, Timestamp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+  import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, writeBatch, Timestamp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
   import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
   import { app, analytics, db, auth, provider } from "../myFirebase.js";
   auth.languageCode = 'fr';
@@ -468,13 +468,14 @@
       userConnected = true;
       console.log(user);
       logInScreen.classList.add("displayNone");
-      getTasks();
-      getDones()
+      getCloudBC();
+      getTasksSettings();
+      getDones();
     } else{
       userConnected = false;
       logInScreen.classList.remove("displayNone");
       logInBtn.addEventListener("click", logIn);
-      tryBtn.addEventListener("click", tryOne); //freeIn
+      tryBtn.addEventListener("click", freeIn); //tryOne (for trying)
     };
   });
 
@@ -487,8 +488,20 @@
   let myListTasks = [];
   let myListDones = [];
   let myTomorrow = ``;
+  let cBC;
 
-  async function getTasks() {
+  function getCloudBC(){
+    if(localStorage.getItem("cBC")){
+      cBC = localStorage.cBC;
+      let cBCD = cBC >= 10 ? 1 : "." + cBC;
+      cloudIt.style.backgroundColor = "rgba(237, 20, 61, " + cBCD + ")";
+    } else {
+      cBC = 0;
+      localStorage.setItem("cBC", cBC);
+    };
+  };
+
+  async function getTasksSettings() {
     const getTasks = await getDoc(doc(db, "randomTask", auth.currentUser.email));
     if(localStorage.getItem("myTomorrow")){
       myTomorrow = localStorage.myTomorrow;
@@ -498,7 +511,7 @@
     
     if(localStorage.getItem("listTasks")){
       listTasks = JSON.parse(localStorage.listTasks);
-    } else{
+    } else if(getTasks.exists()){
       getTasks.data().listTasks.map((todo) => {
         let taskIt = todo.task;
         let colorIt = todo.color;
@@ -566,12 +579,13 @@
     const getDones = await getDocs(collection(db, "randomTask", auth.currentUser.email, "myListDones"));
     if(localStorage.getItem("listDones")){
       listDones = JSON.parse(localStorage.listDones);
-    } else{
+    } else if(getDones){
       getDones.forEach((donedDate) => {
         let mydate = donedDate.id;
         let donedDateDones = donedDate.data().dones;
+        console.log(donedDateDones);
         let mylist = [];
-        donedDateDones.map((done) => {
+        donedDateDones.list.forEach((done) => {
           let taskIt = done.task;
           let colorIt = done.color;
           mylist.push({task: taskIt, color: colorIt});
@@ -591,54 +605,6 @@
     });
     refreshDoneId();
   };
-//To adapt if we keep the new structure for listDones
-  function freeIn(){ 
-    if(localStorage.getItem("myTomorrow")){
-      myTomorrow = localStorage.myTomorrow;
-    };
-    if(localStorage.getItem("listTasks")){
-      listTasks = JSON.parse(localStorage.listTasks);
-      let idT = 0;
-      listTasks.forEach(todo => {
-        todoCreation(todo, idT);
-        idT++;
-      });
-    };
-    if(localStorage.getItem("listDones")){
-      listDones = JSON.parse(localStorage.listDones);
-      let donedDates = [];
-      listDones.forEach(doned => {
-        if(!donedDates.includes(doned.date)){
-          donedDates.push(doned.date);
-        };
-      });
-      let donedDatesSorted = donedDates.sort();
-      donedDatesSorted.forEach(donedDate => {
-        donedDateCreation(donedDate);
-      });
-      let idD = 0;
-      listDones.forEach(doned => {
-        donedCreation(doned, idD);
-        idD++;
-      });
-    };
-    logInScreen.classList.add("displayNone");
-  };
-  
-
-// Tests
-  listDones = [
-    { date: "2023-10-17",
-      list: [{task: "manger", color: "red"}, {task: "toilet", color: "forestgreen"}]}, 
-    { date: "2023-10-18",
-      list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}, 
-    { date: "2023-10-16",
-      list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}, 
-    { date: "2023-10-08",
-      list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}, 
-    { date: "2023-10-15",
-      list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}
-    ];
 
   function tryOne(){
     let sortedListDones = listDones.sort((d1, d2) => (d1.date > d2.date) ? 1 : (d1.date < d2.date) ? -1 : 0);
@@ -653,36 +619,207 @@
   logInScreen.classList.add("displayNone");
   };
 
+  function freeIn(){ 
+    if(localStorage.getItem("myTomorrow")){
+      myTomorrow = localStorage.myTomorrow;
+    };
+    
+    if(localStorage.getItem("listTasks")){
+      listTasks = JSON.parse(localStorage.listTasks);
+      let idT = 0;
+      listTasks.forEach(todo => {
+        todoCreation(todo, idT);
+        idT++;
+      });
+    };
+    
+    if(localStorage.getItem("listDones")){
+      listDones = JSON.parse(localStorage.listDones);
+      let sortedListDones = listDones.sort((d1, d2) => (d1.date > d2.date) ? 1 : (d1.date < d2.date) ? -1 : 0);
+      sortedListDones.forEach(doned => {
+        let donedDate = doned.date;
+        donedDateCreation(donedDate);
+        doned.list.forEach(tidoned => {
+          donedCreation(donedDate, tidoned);
+        });
+      });
+      refreshDoneId();
+    };
+    
+    logInScreen.classList.add("displayNone");
+  };
+  
+
+// Tests
+  // listDones = [
+  //   { date: "2023-10-17",
+  //     list: [{task: "manger", color: "red"}, {task: "toilet", color: "forestgreen"}]}, 
+  //   { date: "2023-10-18",
+  //     list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}, 
+  //   { date: "2023-10-16",
+  //     list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}, 
+  //   { date: "2023-10-08",
+  //     list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}, 
+  //   { date: "2023-10-15",
+  //     list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}
+  // ];
+  // getDones = [
+  //   { date: "2023-10-17",
+  //     list: [{task: "manger", color: "red"}, {task: "toilet", color: "forestgreen"}]}, 
+  //   { date: "2023-10-18",
+  //     list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}, 
+  //   { date: "2023-10-16",
+  //     list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}, 
+  //   { date: "2023-10-08",
+  //     list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}, 
+  //   { date: "2023-10-15",
+  //     list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}
+  // ];
+
+  
+  //push date in modif everytime you modify it, then empty it when the update has been done.
+
+  function addModif(date){
+    let modif = getModif();
+    if(!modif.includes(date)){
+      modif = [...modif, date];
+      //localStorage.setItem("modif", JSON.stringify(modif));
+      localStorage.modif = JSON.stringify(modif);
+    };
+  };
+
+  function getModif(){
+    let modif = [];
+    if(localStorage.getItem("modif")){
+      modif = JSON.parse(localStorage.modif);
+    } else{
+      modif = [];
+    };
+    return modif;
+  };
+
+  function resetModif(){
+    localStorage.modif = JSON.stringify([]);
+  };
+
+  function addDeleted(date){
+    let deleted = getDeleted();
+    let modif = getModif();
+    if(modif.includes(date)){
+      let idx = modif.indexOf(date);
+      modif.splice(idx, 1);
+      //localStorage.setItem("modif", JSON.stringify(modif));
+      localStorage.modif = JSON.stringify(modif);
+    };
+    if(!deleted.includes(date)){
+      deleted = [...deleted, date];
+      //localStorage.setItem("deleted", JSON.stringify(deleted));
+      localStorage.deleted = JSON.stringify(deleted);
+    };
+  };
+
+  function getDeleted(){
+    let deleted = [];
+    if(localStorage.getItem("deleted")){
+      deleted = JSON.parse(localStorage.deleted);
+    } else{
+      deleted = [];
+    };
+    return deleted;
+  };
+
+  function resetDeleted(){
+    localStorage.deleted = JSON.stringify([]);
+  };
+
+
+  
+
 // *** CLOUDSAVE
-  let cBC = 0;
   
   cloudIt.addEventListener("click", async () => {
-    await updateDoc(doc(db, "randomTask", auth.currentUser.email), {
-      listTasks: listTasks,
-//NOOOOONNN You need to add to listDones, otherwise you lose everything before the last week, because listDones is only ever 1 week old!!
-//How can we update only the last 7 days...
-      //listDones: listDones
+    const batch = writeBatch(db);
+
+    const docRefTasks = doc(db, "randomTask", auth.currentUser.email);
+    const docSnapTasks = await getDoc(docRefTasks);
+    if (docSnapTasks.exists()){
+      batch.update(doc(db, "randomTask", auth.currentUser.email), { // or batch.update or await updateDoc
+        listTasks: listTasks
+      });
+    } else{
+      batch.set(doc(db, "randomTask", auth.currentUser.email), { // or batch.set or await setDoc
+        listTasks: listTasks
+      });
+    }; 
+
+    const docRefDones = collection(db, "randomTask", auth.currentUser.email, "myListDones");
+    const docSnapDones = await getDocs(docRefDones);
+    let modif = getModif();
+    modif.map(modifDate => {
+      let doned = listDones.find((td) => td.date == modifDate);
+      if(docSnapDones){
+        if(docSnapDones[modifDate]){
+          batch.update(doc(db, "randomTask", auth.currentUser.email, "myListDones", modifDate), {
+            dones: doned
+          });
+        } else{
+          batch.set(doc(db, "randomTask", auth.currentUser.email, "myListDones", modifDate), {
+            dones: doned
+          });
+        };
+      } else{
+        batch.set(doc(db, "randomTask", auth.currentUser.email, "myListDones", modifDate), {
+          dones: doned
+        });
+      };
     });
+    let deleted = getDeleted();
+    deleted.map(deletedDate => {
+      if(docSnapDones){
+        if(docSnapDones[deletedDate]){
+          batch.delete(doc(db, "randomTask", auth.currentUser.email, "myListDones", deletedDate)); //Not working!
+        };
+      };
+    });
+     
+    await batch.commit();
+
     cBC = 0;
     cloudIt.style.backgroundColor = "rgba(237, 20, 61, " + cBC + ")";
+    localStorage.cBC = cBC;
+    resetModif();
+    resetDeleted();
   });
 
   async function cloudSaveTomorrow(){
-    await updateDoc(doc(db, "randomTask", auth.currentUser.email), {
-      myTomorrow: myTomorrow,
-    })
+    const docRef = doc(db, "randomTask", auth.currentUser.email);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()){
+      await updateDoc(doc(db, "randomTask", auth.currentUser.email), {
+        myTomorrow: myTomorrow
+      });
+    } else{
+      await setDoc(doc(db, "randomTask", auth.currentUser.email), {
+        myTomorrow: myTomorrow
+      });
+    };
   };
 
   function updateCBC(){
     console.log("cBC " + cBC);
     cBC++;
+    localStorage.cBC = cBC;
     let cBCD = cBC >= 10 ? 1 : "." + cBC;
     console.log("cBCD " + cBCD);
     cloudIt.style.backgroundColor = "rgba(237, 20, 61, " + cBCD + ")";
   };
+
 // *** SETTINGS
   settings.addEventListener("click", () => {
     settingsScreen.classList.remove("displayNone");
+    if(myTomorrow){
+      timeInput.value = myTomorrow;
+    };
     settingsBtn.addEventListener("click", () => {
       console.log(timeInput.value);
       myTomorrow = `${timeInput.value}`;
@@ -816,18 +953,30 @@
     console.log(donedTask);
     localStorage.listTasks = JSON.stringify(listTasks);
     let donedDate = getTodayDate(); //return
-    let doned = {
+    let donedItem = {
       task: donedTask,
       color: color
     };
+    let dateFound = false;
     for (const i in listDones) {
       if (listDones[i].date == donedDate) {
-        listDones[i].list.push(doned);
+        dateFound = true;
+        listDones[i].list.push(donedItem);
       };
     };
+    if(!dateFound){
+      let doneList = [donedItem];
+      let done = {
+        date: donedDate,
+        list: doneList
+      };
+      listDones.push(done);
+    };
+    
+    addModif(donedDate);
     localStorageDones();
     donedDateCreation(donedDate);
-    donedCreation(donedDate, doned);
+    donedCreation(donedDate, donedItem);
   };
 
   // function gotItDone(nb, color){
@@ -861,6 +1010,9 @@
           document.getElementById(trashedDate + "p").remove();
           document.getElementById(trashedDate).remove();
           listDones.splice(i, 1);
+          addDeleted(trashedDate);
+        } else{
+          addModif(trashedDate);
         };
       };
     };
@@ -897,7 +1049,6 @@
     let lastWeek = getLastWeekDate();
     console.log(lastWeek);
     let recent = listDones.filter((td) => td.date >= lastWeek);
-    console.log(recent);
     localStorage.listDones = JSON.stringify(recent);
   };
 
@@ -905,7 +1056,7 @@
 // *** REFRESH
   function refreshTodoId(){
     let idx = 0;
-    document.querySelectorAll("#todo li").forEach(li => {
+    document.querySelectorAll("#list li").forEach(li => {
       li.setAttribute("id", "todo" + idx);
       idx++;
     });

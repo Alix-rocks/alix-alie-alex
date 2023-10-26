@@ -114,6 +114,34 @@
       width: fit-content;
       margin: 10px auto;
     }
+    
+    .littler{
+  color: white;
+  text-shadow: 
+    1px 0 darkslategrey,
+    0 1px darkslategrey,
+    -1px 0 darkslategrey,
+    0 -1px darkslategrey;
+}
+    
+    table.littleTable{
+  margin: auto;
+}
+table.littleTable, .littleTable tr, .littleTable td{
+  border: none;
+}
+.littleTd{
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 5px;
+  height: 3px;
+  width: 3px;
+  text-align: center;
+  visibility: hidden;
+}
+.showIt{
+  visibility: visible;
+}
   </style>
   <div class="total">
     <div id="sudoku"></div>
@@ -332,7 +360,8 @@ let sudokuQuestionF = [
   let tries = [];
   let lastFinal = "";
   let values = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
-
+  let littleTableIn = false;
+  
   function caseRunner(sudokuQuestion, classe, cClasse) {
     answers = 0;
     options = [];
@@ -382,8 +411,56 @@ let sudokuQuestionF = [
       values = values.filter(num => num !== chiffre);
     });
     let kaseOptions = {b: b, i: i, j: j, o: values};
-    sudokuSoFar[i].splice(j, 1, kaseOptions);
+    sudokuSoFar[i].splice(j, 1, kaseOptions);//NOOON! Ne pas refaire ça après avoir cleaner parce que ça va remettre les values au complet, même celles qu'on vient de cleaner!!
+    //après avoir cleaner, on va rouler autrement : on va parcourir et voir qui a object.o.length == 1 (if 0 -> fucked) et à chaque fois qu'on va ajouter une réponse, on updater sudokuSoFar ET les little ones et enlevant le chiffre dans les object.o de sa i, j, b
+    
   };
+  
+  function littleOnes() {
+    let littlesTr = [];
+    for (let i = 1; i < 4; i++) {
+      let littlesTd = [];
+      for (let j = (1 + (i - 1) * 3); j < (4 + (i - 1) * 3); j++) {
+        let littleTd = `<td class="littleTd" id="lt${j}">${j}</td>`;
+        littlesTd.push(littleTd);
+      };
+      let littlesTdF = littlesTd.join("");
+      let littleTr = `<tr>${littlesTdF}</tr>`;
+      littlesTr.push(littleTr);
+    };
+    let littlesTrF = littlesTr.join("");
+    let littleTable = `<table class="littleTable">${littlesTrF}</table>`;
+    document.querySelectorAll(".case").forEach((kase) => {
+      if (kase.innerText == "") {
+        kase.innerHTML = littleTable;
+      };
+    });
+    littleTableIn = true;
+  };
+
+  function updateLittleOnes(){
+    console.log("updateLittleOnes");
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++){
+        let object = sudokuSoFar[i][j];
+        //console.log(object);
+        if(typeof object === 'object'){
+          let kase = document.querySelector("#r" + i + "c" + j);
+          kase.querySelectorAll(".littleTd").forEach(td => {
+            td.classList.remove("showIt");
+          });
+          //console.log(object.o);
+          object.o.forEach(chiffre => {
+            //console.log(chiffre);
+            let little = kase.querySelector("#lt" + chiffre);
+            
+            little.classList.add("showIt");
+          });
+        };
+      };
+    };
+  };
+    
 
   function cleanDuplicates(array){
     let count = array.filter((num) => typeof num === 'object' && num.o.length == 2); 
@@ -398,27 +475,26 @@ let sudokuQuestionF = [
             let j2 = count[d].j;
             let chiffre1 = count[a].o[0];
             let chiffre2 = count[a].o[1];
-            console.log(chiffre1, chiffre2, i1, j1, i2, j2);
+            //console.log(chiffre1, chiffre2, i1, j1, i2, j2);
             return [chiffre1, chiffre2, i1, j1, i2, j2];
           };
         };
       };
     };
   };
-
   function cleanKaseOfDuplicates(kase, chiffre1, chiffre2){
-    console.log("chosen before: " + kase.o.toString());
+    //console.log("chosen before: " + kase.o.toString());
     let idx1 = sudokuSoFar[kase.i][kase.j].o.indexOf(chiffre1);
     if(idx1 >= 0){
       sudokuSoFar[kase.i][kase.j].o.splice(idx1, 1);
+      
     };        
     let idx2 = sudokuSoFar[kase.i][kase.j].o.indexOf(chiffre2);
     if(idx2 >= 0){
       sudokuSoFar[kase.i][kase.j].o.splice(idx2, 1);
     };
-    console.log("chosen after: " + kase.o.toString());
+    //console.log("chosen after: " + kase.o.toString());
   };
-
   function sudokuCleanerOne(){
     console.log("sudokuCleanerOne");
     //In i (then j then b) check if there's two kase that have the same opt (two values i.e. opt.length == 2), if so, remove these opt from all the others 
@@ -457,9 +533,9 @@ let sudokuQuestionF = [
         removeForB(chiffre1, chiffre2, b, i1, j1, i2, j2);
       };
     };
-    console.log(sudokuSoFar);
+    //console.log(sudokuSoFar);
+    updateLittleOnes();
   };
-  
   function removeForI(chiffre1, chiffre2, i, j1, j2){
     // for i
     sudokuSoFar[i].forEach(kase => {
@@ -467,8 +543,8 @@ let sudokuQuestionF = [
         cleanKaseOfDuplicates(kase, chiffre1, chiffre2);
       };
     });
-    console.log("Icleaned");
-    console.log(sudokuSoFar);
+    //console.log("Icleaned");
+    //console.log(sudokuSoFar);
   };
   function removeForJ(chiffre1, chiffre2, j, i1, i2){
     // for j
@@ -485,10 +561,9 @@ let sudokuQuestionF = [
     });
     //console.log(sudokuSoFarJ);
   };
-  
   function removeForB(chiffre1, chiffre2, b, i1, j1, i2, j2){
     // for b
-    console.log("removeForB");
+    //console.log("removeForB");
     let sudokuSoFarB = [];
     for (let i = 0; i < 9; i++) {
       for (let j = 0; j < 9; j++){
@@ -502,8 +577,52 @@ let sudokuQuestionF = [
         cleanKaseOfDuplicates(kase, chiffre1, chiffre2);
       };
     });
-    console.log("Bcleaned");
-    console.log(sudokuSoFar);
+    //console.log("Bcleaned");
+    //console.log(sudokuSoFar);
+  };
+  
+  function sudokuCleanerTwo(){
+    
+  };
+  
+  
+  function objectRunner(){
+    console.log("objectRunner");
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++){
+        let object = sudokuSoFar[i][j];
+        if(typeof object === 'object'){
+          if(object.o.length == 1){
+            console.log(object);
+            let kase = document.querySelector("#r" + i + "c" + j);
+            let b = object.b;
+            let rep = object.o[0];
+            //let kase = document.getElementById("r" + i + "c" + j);
+            kase.innerText = rep;
+            //kase.classList.add(classe, cClasse);
+            sudokuSoFar[i].splice(j, 1, rep);
+            removeOthers(rep, i, j, b);
+          };
+        };
+      };
+    };
+    updateLittleOnes();
+  };
+
+  function removeOthers(chiffre, i, j, b){
+    console.log("removeOthers");
+    for (let r = 0; r < 9; r++) {
+      for (let c = 0; c < 9; c++){
+        let object = sudokuSoFar[r][c];
+        if(typeof object === 'object' && (object.i == i || object.j == j || object.b == b)){
+          let idx = object.o.indexOf(chiffre);
+          if(idx >= 0){
+            object.o.splice(idx, 1);
+            //console.log(object);
+          };
+        };
+      };
+    };
   };
 
   function sudokuCompleteSolver(sudokuQuestion) {
@@ -557,8 +676,14 @@ let sudokuQuestionF = [
         let cClasse = "c" + c;
         caseRunner(sudokuQuestion, classe, cClasse);
       } else if ((answers == 0 && !fucked) || (fucked && tries.length == 0)) {
-        sudokuCleanerOne(); //once you've cleaned it, you have to stick with sudokuSoFar and not the kases anymore!! (or we could do the whole thing with sudokuSoFar; right from the beginning? although that would be useless for the real easy ones that don't even need cleaning!)
-        //Also why not show the little ones?! That would make the whole coding so much easier! (et j'te rappelle que c'est justement à ça que sert la version Inside!)
+        if(!littleTableIn){
+          littleOnes();
+          sudokuCleanerOne();
+        };
+        objectRunner();
+        console.log(sudokuSoFar.flat());
+        console.log(sudokuSoFar.flat(3));
+        console.log(Array.prototype.flat.call(sudokuSoFar));
         
         // tryingMode = true;
         // if (lastFinal !== "") {

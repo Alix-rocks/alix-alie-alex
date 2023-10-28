@@ -436,7 +436,7 @@
 
 // Add a setting: what time does your day really end?
 
-  import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, writeBatch, Timestamp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+  import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
   import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
   import { app, analytics, db, auth, provider } from "../myFirebase.js";
   auth.languageCode = 'fr';
@@ -585,7 +585,7 @@
         let donedDateDones = donedDate.data().dones;
         console.log(donedDateDones);
         let mylist = [];
-        donedDateDones.list.forEach((done) => {
+        donedDateDones.map((done) => {
           let taskIt = done.task;
           let colorIt = done.color;
           mylist.push({task: taskIt, color: colorIt});
@@ -663,18 +663,7 @@
   //   { date: "2023-10-15",
   //     list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}
   // ];
-  // getDones = [
-  //   { date: "2023-10-17",
-  //     list: [{task: "manger", color: "red"}, {task: "toilet", color: "forestgreen"}]}, 
-  //   { date: "2023-10-18",
-  //     list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}, 
-  //   { date: "2023-10-16",
-  //     list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}, 
-  //   { date: "2023-10-08",
-  //     list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}, 
-  //   { date: "2023-10-15",
-  //     list: [{task: "ménage", color: "forestgreen"}, {task: "Time", color: "dodgerblue"}]}
-  // ];
+
 
   
   //push date in modif everytime you modify it, then empty it when the update has been done.
@@ -760,24 +749,31 @@
       if(docSnapDones){
         if(docSnapDones[modifDate]){
           batch.update(doc(db, "randomTask", auth.currentUser.email, "myListDones", modifDate), {
-            dones: doned
+            dones: doned.list
           });
         } else{
           batch.set(doc(db, "randomTask", auth.currentUser.email, "myListDones", modifDate), {
-            dones: doned
+            dones: doned.list
           });
         };
       } else{
         batch.set(doc(db, "randomTask", auth.currentUser.email, "myListDones", modifDate), {
-          dones: doned
+          dones: doned.list
         });
       };
     });
     let deleted = getDeleted();
+    let empty = [{color: "", task: ""}];
     deleted.map(deletedDate => {
       if(docSnapDones){
         if(docSnapDones[deletedDate]){
-          batch.delete(doc(db, "randomTask", auth.currentUser.email, "myListDones", deletedDate)); //Not working!
+          batch.update(doc(db, "randomTask", auth.currentUser.email, "myListDones", deletedDate), {
+            //dones: empty
+            //dones: deleteField()
+            ["dones"]: deleteField()
+            //dones: FieldValue.delete()
+          });
+          // batch.delete(doc(db, "randomTask", auth.currentUser.email, "myListDones", deletedDate)); //Not working!
         };
       };
     });
@@ -1010,7 +1006,8 @@
           document.getElementById(trashedDate + "p").remove();
           document.getElementById(trashedDate).remove();
           listDones.splice(i, 1);
-          addDeleted(trashedDate);
+          addDeleted(trashedDate); //That's not working at all
+          //addModif(trashedDate);
         } else{
           addModif(trashedDate);
         };

@@ -148,6 +148,7 @@
     width: 90vw;
     max-width: 500px;
   }
+/* Get computed width of .text and have this as taskInfo width! */
 
   .taskInfoInput{
     width: -webkit-fill-available!important;
@@ -1043,12 +1044,15 @@
 let taskToInfo;
   function taskAddInfo(thisOne){
     taskToInfo = thisOne;
+    let width = getComputedStyle(taskToInfo).width;
+    taskInfo.style.width = width;
     taskToInfo.insertAdjacentElement("afterend", taskInfo);
     taskInfo.classList.remove("displayNone");
     clickScreen.classList.remove("displayNone");
     let taskTitleInfo = taskToInfo.textContent;
     taskTitle.value = taskTitleInfo;
     let taskId = taskToInfo.parentElement.id.slice(4);
+    taskTitle.style.color = listTasks[taskId].color;
     if(listTasks[taskId].info){
       taskDetails.value = listTasks[taskId].info;
     } else{

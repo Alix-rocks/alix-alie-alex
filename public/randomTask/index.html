@@ -42,7 +42,7 @@
   button span:nth-of-type(2){
     padding-left: 5px;
   }
-  input[type="text"]{
+  input[type="text"], textarea{
     border-top: 2px solid darkslategrey;
     border-left: 2px solid darkslategrey;
     border-right: 4px solid darkslategrey;
@@ -131,6 +131,32 @@
   #settings span{
     padding: 0;
     opacity: .8;
+  }
+
+  #taskInfo{
+    background-color: white;
+    border: 2px solid darkslategrey;
+    border-radius: 5px;
+    position: absolute;
+    z-index: 1000;
+    top: 20px;
+    left: 45px;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    padding: 10px 0;
+    width: 90vw;
+    max-width: 500px;
+  }
+
+  .taskInfoInput{
+    width: -webkit-fill-available!important;
+    margin: 10px 20px;
+    text-align: left;
+  }
+
+  #taskInfoBtn{
+    margin: 10px 0;
   }
   .topList{
     margin-bottom: 0;
@@ -250,7 +276,7 @@
     background-color: darkslategrey;
     color: white;
   }
-  
+
   hr{
     margin: 30px 0 0;
   }
@@ -307,6 +333,12 @@
     </form>
     <h5 class="topList">The never ending list...</h5>
     <ul id="list"></ul>
+    <div id="taskInfo" class="displayNone">
+      <h5 class="topList taskInfoInput">Tell me more...</h5>
+      <input type="text" id="taskTitle" class="taskInfoInput">
+      <textarea id="taskDetails" class="taskInfoInput"></textarea>
+      <button id="taskInfoBtn">Save Info</button>
+    </div>
     <table id="colorPalet" class="displayNone">
       <tr class="colorTr">
         <td class="colorTd">
@@ -476,6 +508,7 @@
       logInScreen.classList.remove("displayNone");
       logInBtn.addEventListener("click", logIn);
       tryBtn.addEventListener("click", freeIn); //tryOne (for trying)
+      cloudIt.classList.add("displayNone");
     };
   });
 
@@ -515,7 +548,8 @@
       getTasks.data().listTasks.map((todo) => {
         let taskIt = todo.task;
         let colorIt = todo.color;
-        myListTasks.push({task: taskIt, color: colorIt});
+        let infoIt = todo.info;
+        myListTasks.push({task: taskIt, color: colorIt, info: infoIt});
       });
       listTasks = myListTasks;
     };
@@ -525,55 +559,6 @@
       idT++;
     });
   };
-
-    
-
-
-    
-//     
-//     if(localStorage.getItem("listDones")){
-//       listDones = JSON.parse(localStorage.listDones);
-//     } else{
-// //(we can add a button later to see all the previous days... with a calendar, etc)
-//       let lastWeek = getLastWeekDate();
-//       getTasks.data().listDones.map((done) => {
-//         let dateIt = done.date;
-//         if(dateIt >= lastWeek){
-//           let listIt = [];
-//           done.list.map((tiDoned) => {
-//             let taskIt = tiDoned.task;
-//             let colorIt = tiDoned.color;
-//             listIt.push({task:taskIt, color:colorIt});
-//           });
-//           myListDones.push({date:dateIt, list:listIt});
-//         };
-//       });
-//       listDones = myListDones;
-//       // getTasks.data().listDones.map((done) => {
-//       //   let taskIt = done.task;
-//       //   let colorIt = done.color;
-//       //   let dateIt = done.date;
-//       //   myListDones.push({task:taskIt, color:colorIt, date:dateIt});
-//       // });
-//       // listDones = myListDones;
-//     };
-//     let donedDates = [];
-//     listDones.forEach(doned => {
-//       if(!donedDates.includes(doned.date)){
-//         donedDates.push(doned.date);
-//       };
-//     });
-//     let donedDatesSorted = donedDates.sort();
-//     donedDatesSorted.forEach(donedDate => {
-//       donedDateCreation(donedDate);
-//     });
-//     let idD = 0;
-//     listDones.forEach(doned => {
-//       donedCreation(doned, idD);
-//       idD++;
-//     });
-
-
 
   async function getDones(){
     const getDones = await getDocs(collection(db, "randomTask", auth.currentUser.email, "myListDones"));
@@ -833,7 +818,7 @@
 // *** CREATION
   function todoCreation(todo, idx){
     let li = document.createElement("li");
-    li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><span class="text">${todo.task}</span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
+    li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><span class="text" onclick="taskAddInfo(this)">${todo.task}</span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
     li.setAttribute("id", "todo" + idx);
     li.querySelector(".text").style.color = todo.color;
     list.appendChild(li);
@@ -845,14 +830,6 @@
     donedLi.querySelector(".text").style.color = doned.color;
     document.getElementById(donedDate).appendChild(donedLi);
   };
-
-  // function donedCreation(doned, idx){
-  //   let donedLi = document.createElement("li");
-  //   donedLi.innerHTML = `<span class="typcn typcn-tick"></span><span class="text">${doned.task}</span><span class="typcn typcn-trash trashCan" onclick="trashCanEvent(this)"></span><span class="typcn typcn-arrow-sync recycle" onclick="recycleEvent(this)"></span>`;
-  //   donedLi.setAttribute("id", "doned" + idx);
-  //   donedLi.querySelector(".text").style.color = doned.color;
-  //   document.getElementById(doned.date).appendChild(donedLi);
-  // };
 
   function donedDateCreation(donedDate){
     let today = getTodayDate();
@@ -975,26 +952,6 @@
     donedCreation(donedDate, donedItem);
   };
 
-  // function gotItDone(nb, color){
-  //   console.log("gotItDone");
-  //   console.log(nb);
-  //   let donedTaskSplice = listTasks.splice(nb, 1);
-  //   let donedTask = donedTaskSplice[0].task;
-  //   console.log(donedTask);
-  //   localStorage.listTasks = JSON.stringify(listTasks);
-  //   let donedDate = getTodayDate(); //return
-  //   let doned = {
-  //     task: donedTask,
-  //     color: color,
-  //     date: donedDate
-  //   };
-  //   let idx = listDones.length;
-  //   listDones.push(doned);
-  //   localStorageDones();
-  //   donedDateCreation(donedDate);
-  //   donedCreation(doned, idx);
-  // };
-
   function trashCanEvent(trashCan){
     let trashedLi = trashCan.parentElement;
     let trashedDate = trashedLi.parentElement.id;
@@ -1018,27 +975,6 @@
     localStorageDones();  
   };
 
-
-  // function trashCanEvent(trashCan){
-  //   console.log("trashCanEvent");
-  //   let trashedLi = trashCan.parentElement;
-  //   //let trashedUlDate = trashedLi.parentElement.id;
-  //   let trashedTask = trashedLi.querySelector(".text").textContent;
-  //   let trashedTaskId = trashedLi.id.slice(5);
-  //   trashedLi.remove();
-  //   refreshId("doneZone", "doned");
-  //   //let trashedTaskId = listDones.findIndex((doned) => doned.task == trashedTask && doned.date == trashedUlDate);
-  //   console.log(trashedTaskId);
-  //   let trashedObject = listDones.splice(trashedTaskId, 1);
-  //   let trashedPDate = trashedObject[0].date;
-  //   console.log(trashedPDate);
-  //   let dateCount = listDones.filter((td) => td.date == trashedPDate).length;
-  //   if(dateCount == 0){
-  //     document.getElementById(trashedPDate + "p").remove();
-  //     document.getElementById(trashedPDate).remove();
-  //   };
-  //   localStorageDones();
-  // };
   window.trashCanEvent = trashCanEvent;
 
   function localStorageDones(){
@@ -1103,6 +1039,32 @@
     toDoSection.classList.toggle("displayNone");
   });
   
+// *** DETAILS
+let taskToInfo;
+  function taskAddInfo(thisOne){
+    taskToInfo = thisOne;
+    taskToInfo.insertAdjacentElement("afterend", taskInfo);
+    taskInfo.classList.remove("displayNone");
+    clickScreen.classList.remove("displayNone");
+    let taskTitleInfo = taskToInfo.textContent;
+    taskTitle.value = taskTitleInfo;
+    let taskId = taskToInfo.parentElement.id.slice(4);
+    if(listTasks[taskId].info){
+      taskDetails.value = listTasks[taskId].info;
+    } else{
+      taskDetails.value = "";
+    };
+    taskInfoBtn.addEventListener("click", () => {
+      listTasks[taskId].task = taskTitle.value;
+      listTasks[taskId].info = taskDetails.value;
+      localStorage.listTasks = JSON.stringify(listTasks);
+      updateCBC();
+      clickHandlerAddOn(taskInfo);
+    });
+    document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(taskInfo));
+  };
+  window.taskAddInfo = taskAddInfo;
+
 // *** COLOR
 //const colorList = ["orange", "red", "darkmagenta", "dodgerblue", "forestgreen", "darkslategrey"];
   let colorTag;
@@ -1123,18 +1085,18 @@
         console.log(listTasks);
         localStorage.listTasks = JSON.stringify(listTasks);
         updateCBC();
-        clickHandlerColor();
+        clickHandlerAddOn(colorPalet);
       });
     });
-    document.querySelector("#clickScreen").addEventListener("click", clickHandlerColor);
+    document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(colorPalet));
   };
   window.colorChoice = colorChoice;
 
-  function clickHandlerColor(){
-    colorPalet.classList.add("displayNone");
-    list.insertAdjacentElement("afterend", colorPalet);
+  function clickHandlerAddOn(addOn){
+    addOn.classList.add("displayNone");
+    list.insertAdjacentElement("afterend", addOn);
     clickScreen.classList.add("displayNone");
-    document.querySelector("#clickScreen").removeEventListener("click", clickHandlerColor);
+    document.querySelector("#clickScreen").removeEventListener("click", () => clickHandlerAddOn(addOn));
   };
 
 // *** DATE

@@ -236,9 +236,9 @@
 }
 
 .resultTime {
-  width: 50%;
+  width: fit-content;
   min-width: 200px;
-  max-width: 400px;
+  max-width: 90vw;
   margin:auto;
   z-index: 1000;
 }

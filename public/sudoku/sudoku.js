@@ -406,7 +406,7 @@ function animation(type, classe, num, delai, speed) {
     k++;
     if(k > delai){
       if(type == "levelLabel"){
-        document.getElementById("level1").checked = false;
+        document.getElementById("level" + niveau).checked = false;
       };
       o++;
       if (o < num) {
@@ -420,7 +420,7 @@ function animation(type, classe, num, delai, speed) {
       if (o == num) {
         clearInterval(animate);
         if(type == "levelLabel"){
-          document.getElementById("level1").checked = true;
+          document.getElementById("level" + niveau).checked = true;
         };
       };
     };

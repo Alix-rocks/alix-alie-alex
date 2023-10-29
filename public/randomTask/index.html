@@ -599,6 +599,7 @@
     let sortedListDones = listDones.sort((d1, d2) => (d1.date > d2.date) ? 1 : (d1.date < d2.date) ? -1 : 0);
     sortedListDones.forEach(doned => {
       let donedDate = doned.date;
+      //Vérifie si doned.list.length == 0. Si oui, ne pas faire donedDateCreation (répéter dans tryOne et FreeIn)
       donedDateCreation(donedDate);
       doned.list.forEach(tidoned => {
         donedCreation(donedDate, tidoned);
@@ -763,21 +764,22 @@
         });
       };
     });
-    let deleted = getDeleted();
-    let empty = [{color: "", task: ""}];
-    deleted.map(deletedDate => {
-      if(docSnapDones){
-        if(docSnapDones[deletedDate]){
-          batch.update(doc(db, "randomTask", auth.currentUser.email, "myListDones", deletedDate), {
-            //dones: empty
-            //dones: deleteField()
-            ["dones"]: deleteField()
-            //dones: FieldValue.delete()
-          });
-          // batch.delete(doc(db, "randomTask", auth.currentUser.email, "myListDones", deletedDate)); //Not working!
-        };
-      };
-    });
+//Et si: on laisse les deleted dans la listDones (pas de splice), pourqu'ils puissent simplement se faire updater ici avec un array vide; et on fait juste ajouter un if que si lenght==0, on fait pas "donedDateCreation".
+    // let deleted = getDeleted();
+    // let empty = [{color: "", task: ""}];
+    // deleted.map(deletedDate => {
+    //   if(docSnapDones){
+    //     if(docSnapDones[deletedDate]){
+    //       batch.update(doc(db, "randomTask", auth.currentUser.email, "myListDones", deletedDate), {
+    //         //dones: empty
+    //         dones: deleteField()
+    //         //["dones"]: deleteField()
+    //         //dones: FieldValue.delete()
+    //       });
+    //       // batch.delete(doc(db, "randomTask", auth.currentUser.email, "myListDones", deletedDate)); //Not working!
+    //     };
+    //   };
+    // });
      
     await batch.commit();
     resetCBC();
@@ -996,7 +998,7 @@
         if(listDones[i].list.length == 0){
           document.getElementById(trashedDate + "p").remove();
           document.getElementById(trashedDate).remove();
-          listDones.splice(i, 1);
+          listDones.splice(i, 1); //Et si, on l'enlève pas de la liste? Il va pouvoir se faire updater comme les autres addModif, mais avec un array vide; On a juste à empêcher la recréation du donedDateCreation si length == 0
           addDeleted(trashedDate); //That's not working at all
           //addModif(trashedDate);
         } else{
@@ -1077,33 +1079,36 @@
   
 // *** DETAILS
 let taskToInfo;
+let taskToInfoId;
   function taskAddInfo(thisOne){
-    taskToInfo = thisOne;
+    taskToInfo = thisOne; //taskToInfo est le span.text qui a été cliqué
     let width = getComputedStyle(taskToInfo).width;
     taskInfo.style.width = width;
-    taskToInfo.insertAdjacentElement("afterend", taskInfo);
+    taskToInfo.insertAdjacentElement("afterend", taskInfo); //taskInfo est le div qui apparait
     taskInfo.classList.remove("displayNone");
     clickScreen.classList.remove("displayNone");
-    let taskTitleInfo = taskToInfo.textContent;
-    taskTitle.value = taskTitleInfo;
-    let taskId = taskToInfo.parentElement.id.slice(4);
-    taskTitle.style.color = listTasks[taskId].color;
-    if(listTasks[taskId].info){
-      taskDetails.value = listTasks[taskId].info;
+    let taskTitleInfo = taskToInfo.textContent; //taskTitleInfo est le text contenu dans taskToInfo (span.text)
+    taskTitle.value = taskTitleInfo; //taskTitle est le input qui doit contenir le titre, dans le div
+    taskToInfoId = taskToInfo.parentElement.id.slice(4);
+    taskTitle.style.color = listTasks[taskToInfoId].color;
+    if(listTasks[taskToInfoId].info){
+      taskDetails.value = listTasks[taskToInfoId].info; //taskDetails est le testarea qui doit contenir les détails (si y'en a déjà), dans le div
     } else{
       taskDetails.value = "";
     };
-    taskInfoBtn.addEventListener("click", () => {
-      listTasks[taskId].task = taskTitle.value;
-      listTasks[taskId].info = taskDetails.value;
-      localStorage.listTasks = JSON.stringify(listTasks);
-      updateCBC();
-      clickHandlerAddOn(taskInfo);
-    });
+    
     document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(taskInfo));
   };
   window.taskAddInfo = taskAddInfo;
 
+  taskInfoBtn.addEventListener("click", () => {
+    listTasks[taskToInfoId].task = taskTitle.value;
+    listTasks[taskToInfoId].info = taskDetails.value;
+    taskToInfo.textContent = taskTitle.value;
+    localStorage.listTasks = JSON.stringify(listTasks);
+    updateCBC();
+    clickHandlerAddOn(taskInfo);
+  });
 // *** COLOR
 //const colorList = ["orange", "red", "darkmagenta", "dodgerblue", "forestgreen", "darkslategrey"];
   let colorTag;

@@ -598,12 +598,13 @@
     };
     let sortedListDones = listDones.sort((d1, d2) => (d1.date > d2.date) ? 1 : (d1.date < d2.date) ? -1 : 0);
     sortedListDones.forEach(doned => {
-      let donedDate = doned.date;
-      //Vérifie si doned.list.length == 0. Si oui, ne pas faire donedDateCreation (répéter dans tryOne et FreeIn)
-      donedDateCreation(donedDate);
-      doned.list.forEach(tidoned => {
-        donedCreation(donedDate, tidoned);
-      });
+      if (doned.list.length !== 0) {
+        let donedDate = doned.date;
+        donedDateCreation(donedDate);
+        doned.list.forEach(tidoned => {
+          donedCreation(donedDate, tidoned);
+        });
+      };
     });
     refreshDoneId();
   };
@@ -611,12 +612,14 @@
   function tryOne(){
     let sortedListDones = listDones.sort((d1, d2) => (d1.date > d2.date) ? 1 : (d1.date < d2.date) ? -1 : 0);
     sortedListDones.forEach(doned => {
-    let donedDate = doned.date;
-    donedDateCreation(donedDate);
-    doned.list.forEach(tidoned => {
-      donedCreation(donedDate, tidoned);
+      if(doned.list.length !== 0){
+        let donedDate = doned.date;
+        donedDateCreation(donedDate);
+        doned.list.forEach(tidoned => {
+          donedCreation(donedDate, tidoned);
+        });
+      };
     });
-  });
   refreshDoneId();
   logInScreen.classList.add("displayNone");
   };
@@ -639,11 +642,13 @@
       listDones = JSON.parse(localStorage.listDones);
       let sortedListDones = listDones.sort((d1, d2) => (d1.date > d2.date) ? 1 : (d1.date < d2.date) ? -1 : 0);
       sortedListDones.forEach(doned => {
-        let donedDate = doned.date;
-        donedDateCreation(donedDate);
-        doned.list.forEach(tidoned => {
-          donedCreation(donedDate, tidoned);
-        });
+        if(doned.list.length !== 0){
+          let donedDate = doned.date;
+          donedDateCreation(donedDate);
+          doned.list.forEach(tidoned => {
+            donedCreation(donedDate, tidoned);
+          });
+        };
       });
       refreshDoneId();
     };
@@ -784,7 +789,7 @@
     await batch.commit();
     resetCBC();
     resetModif();
-    resetDeleted();
+    //resetDeleted();
   });
 
   async function cloudSaveTomorrow(){
@@ -995,14 +1000,12 @@
     for (const i in listDones) {
       if (listDones[i].date == trashedDate) {
         listDones[i].list.splice(trashedTaskId, 1);
+        addModif(trashedDate);
         if(listDones[i].list.length == 0){
           document.getElementById(trashedDate + "p").remove();
           document.getElementById(trashedDate).remove();
-          listDones.splice(i, 1); //Et si, on l'enlève pas de la liste? Il va pouvoir se faire updater comme les autres addModif, mais avec un array vide; On a juste à empêcher la recréation du donedDateCreation si length == 0
-          addDeleted(trashedDate); //That's not working at all
-          //addModif(trashedDate);
-        } else{
-          addModif(trashedDate);
+          //listDones.splice(i, 1); //Et si, on l'enlève pas de la liste? Il va pouvoir se faire updater comme les autres addModif, mais avec un array vide; On a juste à empêcher la recréation du donedDateCreation si length == 0
+          //addDeleted(trashedDate); //That's not working at all
         };
       };
     };

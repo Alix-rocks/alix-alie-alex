@@ -76,6 +76,15 @@
     border-radius: 5px;
     z-index: 2200;
     text-align: center;
+    position: relative;
+  }
+  #exitX{
+    position: absolute;
+    top: 5px;
+    right: 7px;
+    font-size: 25px;
+    line-height: 25px;
+    font-weight: 700;
   }
   .ScreenBtn1{
     display: block;
@@ -104,7 +113,7 @@
     position: relative;
   }
   #clickScreen{
-    position: absolute;
+    position: fixed;
     width: 100vw;
     height: 100vh;
     top: 0;
@@ -321,8 +330,12 @@
     <button id="settings"><span class="typcn typcn-cog-outline"></span></button>
     <div id="settingsScreen" class="Screen displayNone">
       <div id="settingsDiv" class="DivScreen">
+        <span id="exitX">x</span>
+        <button id="clearStorageBtn" style="margin-top: 15px;">Update</button>
+        <hr />
         <h2>Settings</h2>
-          <button id="clearStorageBtn"><span class="typcn typcn-cancel-outline" style="padding: 0;"></span></button>
+        <!-- <h3>Update</h3> -->
+        <!-- <button id="clearStorageBtn"><span class="typcn typcn-cancel-outline" style="padding: 0;"></span></button> -->
         <h3>What time does your day really end?</h3>
         <input id="timeInput" type="time">
         <button id="settingsBtn" class="ScreenBtn1">yep <span class="typcn typcn-thumbs-up" style="padding: 0;"></span></button>
@@ -554,6 +567,7 @@
         myListTasks.push({task: taskIt, color: colorIt, info: infoIt});
       });
       listTasks = myListTasks;
+      localStorage.listTasks = JSON.stringify(listTasks);
     };
     let idT = 0;
     listTasks.forEach(todo => {
@@ -570,7 +584,6 @@
       getDones.forEach((donedDate) => {
         let mydate = donedDate.id;
         let donedDateDones = donedDate.data().dones;
-        console.log(donedDateDones);
         let mylist = [];
         donedDateDones.map((done) => {
           let taskIt = done.task;
@@ -578,8 +591,9 @@
           mylist.push({task: taskIt, color: colorIt});
         });
         myListDones.push({date: mydate, list: mylist});
-        listDones = myListDones;
       });
+      listDones = myListDones;
+      localStorageDones("first");
       console.log(listDones);
     };
     let sortedListDones = listDones.sort((d1, d2) => (d1.date > d2.date) ? 1 : (d1.date < d2.date) ? -1 : 0);
@@ -766,10 +780,7 @@
     });
      
     await batch.commit();
-
-    cBC = 0;
-    cloudIt.style.backgroundColor = "rgba(237, 20, 61, " + cBC + ")";
-    localStorage.cBC = cBC;
+    resetCBC();
     resetModif();
     resetDeleted();
   });
@@ -796,12 +807,30 @@
     console.log("cBCD " + cBCD);
     cloudIt.style.backgroundColor = "rgba(237, 20, 61, " + cBCD + ")";
   };
+  function resetCBC(){
+    cBC = 0;
+    cloudIt.style.backgroundColor = "rgba(237, 20, 61, " + cBC + ")";
+    localStorage.cBC = cBC;
+  };
 
 // *** SETTINGS
+//How to know if you need to update it? (otherwise, it would still show "updated"; if not, shows "update"). Update because the version you have is older than the version on the cloud (because last time you saved on the cloud it was from an other localStorage/device... but it can't be because myList and list are different, because that doesn't tell you which one is the newer one... timestamps?)
+//Is there a real way to check if it all really worked out before changing it to "updated!"?
   settings.addEventListener("click", () => {
     settingsScreen.classList.remove("displayNone");
     clearStorageBtn.addEventListener("click", () => {
       localStorage.clear();
+      list.innerHTML = "";
+      doneZone.innerHTML = "";
+      myListTasks = [];
+      myListDones = [];
+      resetCBC();
+      getTasksSettings();
+      getDones();
+      clearStorageBtn.textContent = "Updated!";
+    });
+    exitX.addEventListener("click", () => {
+      settingsScreen.classList.add("displayNone");
     });
     if(myTomorrow){
       timeInput.value = myTomorrow;
@@ -952,7 +981,7 @@
     };
     
     addModif(donedDate);
-    localStorageDones();
+    localStorageDones("next");
     donedDateCreation(donedDate);
     donedCreation(donedDate, donedItem);
   };
@@ -977,13 +1006,15 @@
     };
     trashedLi.remove();
     refreshDoneId();
-    localStorageDones();  
+    localStorageDones("next");  
   };
 
   window.trashCanEvent = trashCanEvent;
 
-  function localStorageDones(){
-    updateCBC();
+  function localStorageDones(time){
+    if(time == "next"){
+      updateCBC();
+    };
     let lastWeek = getLastWeekDate();
     console.log(lastWeek);
     let recent = listDones.filter((td) => td.date >= lastWeek);

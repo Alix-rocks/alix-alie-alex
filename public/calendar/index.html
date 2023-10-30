@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+<style>
+  .calendar{
+    border-collapse: collapse;
+    border: 1px solid darkslategrey;
+  }
+  .calendar td, .calendar th{
+    width: 15px;
+    height: 15px;
+    border: 1px solid darkslategrey;
+    text-align: center;
+  }
+</style>
+  <table class="calendar">
+    <thead>
+      <tr>
+        <th id="monthNameSpace" colspan="7"></th>
+      </tr>
+      <tr>
+        <th>D</th>
+        <th>L</th>
+        <th>M</th>
+        <th>M</th>
+        <th>G</th>
+        <th>V</th>
+        <th>S</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+<script>
+  //function getTodayDate(){
+    let date = new Date();
+    let today = date.getDate
+    let year = date.getFullYear();
+    let month = date.getMonth(); //pour vrai, enlève le "+ 1"
+    let monthName = date.toLocaleString('it-IT', { month: 'long' });
+    monthNameSpace.innerText = monthName.toLocaleUpperCase();
+    let last = new Date(year, month + 1, 0).getDate();
+    let first = new Date(year, month, 1);
+    let firstDay = first.getDay();
+    let befFirst = first.setDate(-firstDay);
+    let numStart = first.getDate();
+    let i = 0;
+    let num = numStart;
+    document.querySelectorAll("td").forEach((td) => {
+      if(i < firstDay){
+        td.innerText = num;
+        td.style.opacity = ".4";
+        num++;
+        i++;
+      } else if(i == firstDay){
+        num = 1;
+        td.innerText = num;
+        num++;
+        i++;
+      } else if((i > firstDay && i < (firstDay + last)) && (num > 1 && num <= last)){
+        td.innerText = num;
+        num++;
+        i++;
+      } else if(i == (firstDay + last)){
+        num = 1;
+        td.innerText = num;
+        td.style.opacity = ".4";
+        num++;
+        i++;
+      }else if(i > (firstDay + last)){
+        td.innerText = num;
+        td.style.opacity = ".5";
+        num++;
+        i++;
+      };
+    });
+</script>
+
+</html>

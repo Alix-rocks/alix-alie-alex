@@ -885,21 +885,26 @@
   };
 
   function recycleEvent(recycle){
-    let li = recycle.parentElement;
-    let color = li.querySelector(".text").style.color;
-    let task = li.querySelector(".text").textContent;
-    let todo = {
-      task: task,
-      color: color
-    };
-    let idx = listTasks.length;
-    listTasks.push(todo);
-    localStorage.listTasks = JSON.stringify(listTasks);
-    updateCBC();
-    todoCreation(todo, idx);
+    let recycleLi = recycle.parentElement;
+    let recycleId = recycleLi.id.slice(5);
+    let recycleDate = recycleLi.parentElement.id;
+    for (const i in listDones) {
+      if (listDones[i].date == recycleDate) {
+        let doned = listDones[i].list[recycleId];
+        let todo = {
+          task: doned.task,
+          color: doned.color,
+          info: doned.info
+        };
+        let idx = listTasks.length;
+        listTasks.push(todo);
+        localStorage.listTasks = JSON.stringify(listTasks);
+        updateCBC();
+        todoCreation(todo, idx);
+      };
+    };    
   };
   window.recycleEvent = recycleEvent;
-
 
 // *** ADD
   addForm.addEventListener("submit", (e) => {
@@ -927,10 +932,10 @@
   doneNextBtn.addEventListener("click", () => {
     let doneLi = document.querySelector("#todo" + num);
     console.log(doneLi);
-    let color = doneLi.querySelector(".text").style.color;
+    //let color = doneLi.querySelector(".text").style.color;
     doneLi.remove();
     refreshTodoId();
-    gotItDone(num, color);
+    gotItDone(num);
     if(listTasks.length == 0){
       taskToDo.innerText = "aller t'reposer!";
     } else{
@@ -944,26 +949,31 @@
     console.log("checkEvent");
     console.log(listTasks);
     let li = emptyCheck.parentElement;
-    let color = li.querySelector(".text").style.color;
-    let task = li.querySelector(".text").textContent;
+    //let color = li.querySelector(".text").style.color;
+    //let task = li.querySelector(".text").textContent;
     let donedId = li.id.slice(4);
     li.remove();
     refreshTodoId();
-    gotItDone(donedId, color);
+    gotItDone(donedId);
   };
   window.checkEvent = checkEvent;
   
-  function gotItDone(nb, color){
+  function gotItDone(nb){
     console.log("gotItDone");
     console.log(nb);
     let donedTaskSplice = listTasks.splice(nb, 1);
     let donedTask = donedTaskSplice[0].task;
     console.log(donedTask);
+    let donedColor = donedTaskSplice[0].color;
+    console.log(donedColor);
+    let donedInfo = donedTaskSplice[0].info;
+    console.log(donedInfo);
     localStorage.listTasks = JSON.stringify(listTasks);
     let donedDate = getTodayDate(); //return
     let donedItem = {
       task: donedTask,
-      color: color
+      color: donedColor,
+      info: donedInfo
     };
     let dateFound = false;
     for (const i in listDones) {
@@ -982,9 +992,10 @@
     };
     
     addModif(donedDate);
-    localStorageDones("next");
     donedDateCreation(donedDate);
     donedCreation(donedDate, donedItem);
+    refreshDoneId();
+    localStorageDones("next");
   };
 
   function trashCanEvent(trashCan){

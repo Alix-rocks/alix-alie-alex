@@ -4,11 +4,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rubik+Dirt&display=swap" rel="stylesheet">
+  <!--Typicons-->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/typicons/2.0.9/typicons.css" rel="stylesheet">
   <title></title>
 </head>
 
 <body>
 <style>
+  *{
+    font-family: 'Nunito', sans-serif;
+    color: darkslategrey;
+  }
+  .monthlyWrapper{
+    width: fit-content;
+    margin: auto;
+    display: flex;
+    flex-flow: row nowrap;
+  }
   .calendar{
     border-collapse: collapse;
     border: 1px solid darkslategrey;
@@ -18,115 +31,186 @@
     height: 15px;
     border: 1px solid darkslategrey;
     text-align: center;
+    position: relative;
+  }
+  .calendar th{
+    font-size: 12px;
+    line-height: 14px;
+  }
+  .circle{
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-radius: 25px;
+    top: 1px;
+    left: 1px;
+    text-align: center;
+    font-size: 10px;
+    line-height: 15px;
+  }
+  .heresToday{
+    background: rgba(30,144,255,.5);
   }
 </style>
-  <table class="calendar">
-    <thead>
-      <tr>
-        <th id="monthNameSpace" colspan="7"></th>
-      </tr>
-      <tr>
-        <th>D</th>
-        <th>L</th>
-        <th>M</th>
-        <th>M</th>
-        <th>G</th>
-        <th>V</th>
-        <th>S</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="monthlyWrapper">
+    <button id="monthBackward"><span class="typcn typcn-media-play-reverse"></span></button>
+    <table class="calendar">
+      <thead>
+        <tr>
+          <th id="yearNameSpace" colspan="7"></th>
+        </tr>
+        <tr>
+          <th id="monthNameSpace" colspan="7"></th>
+        </tr>
+        <tr>
+          <th>D</th>
+          <th>L</th>
+          <th>M</th>
+          <th>M</th>
+          <th>G</th>
+          <th>V</th>
+          <th>S</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+        </tr>
+        <tr>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+        </tr>
+        <tr>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+        </tr>
+        <tr>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+        </tr>
+        <tr>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+        </tr>
+        <tr>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+          <td><div class="circle"></div></td>
+        </tr>
+      </tbody>
+    </table>
+    <button id="monthForward"><span class="typcn typcn-media-play"></span></button>
+  </div>
 </body>
 <script>
-  //function getTodayDate(){
-    let date = new Date();
-    let today = date.getDate
-    let year = date.getFullYear();
-    let month = date.getMonth(); //pour vrai, enlève le "+ 1"
-    let monthName = date.toLocaleString('it-IT', { month: 'long' });
-    monthNameSpace.innerText = monthName.toLocaleUpperCase();
-    let last = new Date(year, month + 1, 0).getDate();
+  let year;
+  let month;
+  let date = new Date();
+  let todayDate = date.getDate();
+  let todayYear = date.getFullYear();
+  let todayMonth = date.getMonth(); //pour vrai, enlève le "+ 1"
+  year = todayYear;
+  month = todayMonth;
+  getMonthlyCalendar();
+  
+  function getMonthlyCalendar(){
     let first = new Date(year, month, 1);
+    let monthName = first.toLocaleString('it-IT', { month: 'long' });
+    monthNameSpace.innerText = monthName.toLocaleUpperCase();
+    yearNameSpace.innerText = year;
+    // let monthName = date.toLocaleString('it-IT', { month: 'long' });
+    let last = new Date(year, month + 1, 0).getDate();
     let firstDay = first.getDay();
-    let befFirst = first.setDate(-firstDay);
+    let befFirst = first.setDate(-(firstDay - 1));
     let numStart = first.getDate();
     let i = 0;
     let num = numStart;
-    document.querySelectorAll("td").forEach((td) => {
+    document.querySelectorAll(".circle").forEach((td) => {
+      td.classList.remove("heresToday");
       if(i < firstDay){
         td.innerText = num;
+        td.setAttribute("data-month", month - 1);
         td.style.opacity = ".4";
         num++;
         i++;
       } else if(i == firstDay){
         num = 1;
         td.innerText = num;
+        td.setAttribute("data-month", month);
+        td.style.opacity = "1";
         num++;
         i++;
       } else if((i > firstDay && i < (firstDay + last)) && (num > 1 && num <= last)){
         td.innerText = num;
+        td.setAttribute("data-month", month);
+        td.style.opacity = "1";
         num++;
         i++;
       } else if(i == (firstDay + last)){
         num = 1;
         td.innerText = num;
+        td.setAttribute("data-month", month + 1);
         td.style.opacity = ".4";
         num++;
         i++;
       }else if(i > (firstDay + last)){
         td.innerText = num;
-        td.style.opacity = ".5";
+        td.setAttribute("data-month", month + 1);
+        td.style.opacity = ".4";
         num++;
         i++;
       };
+      
+      if(td.dataset.month == todayMonth && td.innerText == todayDate){
+        td.classList.add("heresToday");
+      };
     });
+  };
+
+  monthBackward.addEventListener("click", () => {
+    month = month > 0 ? month - 1 : 11;
+    year = month == 11 ? year - 1 : year;
+    console.log(year + " " + month);
+    getMonthlyCalendar();
+  });
+
+  monthForward.addEventListener("click", () => {
+    month = month < 11 ? month + 1 : 0;
+    year = month == 1 ? year + 1 : year;
+    console.log(year + " " + month);
+    getMonthlyCalendar();
+  });
+
 </script>
 
 </html>

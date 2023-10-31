@@ -753,16 +753,10 @@
     let modif = getModif();
     modif.map(modifDate => {
       let doned = listDones.find((td) => td.date == modifDate);
-      if(docSnapDones){
-        if(docSnapDones[modifDate]){
-          batch.update(doc(db, "randomTask", auth.currentUser.email, "myListDones", modifDate), {
-            dones: doned.list
-          });
-        } else{
-          batch.set(doc(db, "randomTask", auth.currentUser.email, "myListDones", modifDate), {
-            dones: doned.list
-          });
-        };
+      if(docSnapDones[modifDate]){
+        batch.update(doc(db, "randomTask", auth.currentUser.email, "myListDones", modifDate), {
+          dones: doned.list
+        });
       } else{
         batch.set(doc(db, "randomTask", auth.currentUser.email, "myListDones", modifDate), {
           dones: doned.list

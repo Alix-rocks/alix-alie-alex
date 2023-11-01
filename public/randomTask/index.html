@@ -588,7 +588,8 @@
         donedDateDones.map((done) => {
           let taskIt = done.task;
           let colorIt = done.color;
-          mylist.push({task: taskIt, color: colorIt});
+          let infoIt = done.info;
+          mylist.push({task: taskIt, color: colorIt, info: infoIt});
         });
         myListDones.push({date: mydate, list: mylist});
       });
@@ -735,7 +736,7 @@
   
   cloudIt.addEventListener("click", async () => {
     const batch = writeBatch(db);
-
+    listTasks = JSON.parse(localStorage.listTasks);
     const docRefTasks = doc(db, "randomTask", auth.currentUser.email);
     const docSnapTasks = await getDoc(docRefTasks);
     if (docSnapTasks.exists()){
@@ -747,7 +748,7 @@
         listTasks: listTasks
       });
     }; 
-
+    listDones = JSON.parse(localStorage.listDones);
     const docRefDones = collection(db, "randomTask", auth.currentUser.email, "myListDones");
     const docSnapDones = await getDocs(docRefDones);
     let modif = getModif();
@@ -1069,6 +1070,7 @@
     taskToDo.innerText = listTasks[num].task;
     taskToDo.style.color = listTasks[num].color;
   });
+  //Add a toggle to show the info if there are any
 
   nopeNextBtn.addEventListener("click", () => {
     if(listTasks.length == 0){
@@ -1108,10 +1110,12 @@ let taskToInfoId;
     document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(taskInfo));
   };
   window.taskAddInfo = taskAddInfo;
+  window.listTasks = listTasks;
 
   taskInfoBtn.addEventListener("click", () => {
     listTasks[taskToInfoId].task = taskTitle.value;
     listTasks[taskToInfoId].info = taskDetails.value;
+    console.log(listTasks);
     taskToInfo.textContent = taskTitle.value;
     localStorage.listTasks = JSON.stringify(listTasks);
     updateCBC();

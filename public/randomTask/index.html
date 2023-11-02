@@ -187,10 +187,39 @@
     margin: 10px auto;
   }
   #taskToDo{
-    color: darkmagenta;
     font-size: 1.5em;
     font-weight: 700;
   }
+  .moreInfoChevron{
+    display: inline-block;
+    transform: rotate(90deg);
+    font-size: 25px;
+    line-height: 25px;
+  }
+  #moreInfoDiv{
+    opacity: 0;
+    visibility: hidden;
+    display: block;
+    height: 0;
+    flex-grow: 1;
+  }
+  #moreInfoInput:checked + label span{
+    transform: rotate(-90deg);
+  }
+  #moreInfoInput:checked ~ #moreInfoDiv{
+    opacity: 1;
+    visibility: visible;
+    min-height: fit-content;
+    height: fit-content;
+    width: fit-content;
+    padding: 10px 15px;
+    margin: auto;
+    border-width: 1px 2px 3px;
+    border-style: solid;
+    border-color: darkslategrey;
+    border-radius: 5px;
+  }
+
   ul{
     list-style: none;
     padding: 0;
@@ -312,7 +341,11 @@
     margin-bottom: 0;
     text-decoration: underline;
   }
-  
+  .cossin{
+    width: 0.1px;
+    margin: -2px;
+    border: 0;
+  }
   .displayNone{
     display: none!important;
   }
@@ -420,6 +453,11 @@
   <div id="toDoSection" class="displayNone">
     <h3>Fac là,<br />pour les 30 prochaines minutes,<br />tu vas...</h3>
     <p id="taskToDo"></p>
+    <div id="moreInfoWhole" class="displayNone">
+      <input id="moreInfoInput" type="checkbox" class="cossin" />
+      <label for="moreInfoInput"><span class="typcn typcn-chevron-right-outline moreInfoChevron"></span></label>
+      <div id="moreInfoDiv"></div>
+    </div>
     <button id="nopeNextBtn"><span class="typcn typcn-arrow-sync"></span>Nope, next!<span class="typcn typcn-arrow-sync"></span></button>
     <button id="doneNextBtn"><span class="typcn typcn-thumbs-up"></span>Done, next!!<span class="typcn typcn-arrow-right-outline"></span></button>
     <button id="backBtn"><span class="typcn typcn-arrow-left-outline"></span>Back!</button>
@@ -824,6 +862,8 @@
       localStorage.clear();
       list.innerHTML = "";
       doneZone.innerHTML = "";
+      listTasks = [];
+      listDones = [];
       myListTasks = [];
       myListDones = [];
       resetCBC();
@@ -943,6 +983,12 @@
       num = num < listTasks.length ? num : 0;
       taskToDo.innerText = listTasks[num].task;
       taskToDo.style.color = listTasks[num].color;
+      if(listTasks[num].info){
+        moreInfoWhole.classList.remove("displayNone");
+        moreInfoDiv.innerText = listTasks[num].info;
+      } else{
+        moreInfoWhole.classList.add("displayNone");
+      };
     };
   });
 
@@ -1069,16 +1115,29 @@
     num = 0;
     taskToDo.innerText = listTasks[num].task;
     taskToDo.style.color = listTasks[num].color;
+    if(listTasks[num].info){
+      moreInfoWhole.classList.remove("displayNone");
+      moreInfoDiv.innerText = listTasks[num].info;
+    } else{
+      moreInfoWhole.classList.add("displayNone");
+    };
   });
-  //Add a toggle to show the info if there are any
 
   nopeNextBtn.addEventListener("click", () => {
+    console.log(listTasks.length + " " + num);
     if(listTasks.length == 0){
       taskToDo.innerText = "aller t'reposer!";
     } else{
       num = num < (listTasks.length - 1) ? num + 1 : 0;
+      console.log(listTasks.length + " " + num);
       taskToDo.innerText = listTasks[num].task;
       taskToDo.style.color = listTasks[num].color;
+      if(listTasks[num].info){
+        moreInfoWhole.classList.remove("displayNone");
+        moreInfoDiv.innerText = listTasks[num].info;
+      } else{
+        moreInfoWhole.classList.add("displayNone");
+      };
     };
   });
     

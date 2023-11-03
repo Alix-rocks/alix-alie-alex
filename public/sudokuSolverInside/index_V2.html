@@ -481,63 +481,76 @@ let sudokuQuestionF = [
     return array;
   };
 
- 
-  function sudokuCleanerPlicates(){
-    console.log("sudokuCleanerPlicates");
-    //In i (then j then b) check if there's two kase that have the same opt (two values i.e. opt.length == 2), if so, remove these opt from all the others 
-    for (let i = 0; i < 9; i++){
-      findPlicates(sudokuSoFar[i]);
-    };
-    
-    for (let j = 0; j < 9; j++){
-      let sudokuSoFarJ = [];
-      for (let i = 0; i < 9; i++){
-        sudokuSoFarJ.push(sudokuSoFar[i][j]);
-      };  
-      findPlicates(sudokuSoFarJ);
-    };
-
-    for (let b = 1; b < 10; b++) {
-      let sudokuSoFarB = [];
-      for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++){
-          if(sudokuSoFar[i][j].b == b){
-            sudokuSoFarB.push(sudokuSoFar[i][j]);
-          };
-        };
-      };
-      findPlicates(sudokuSoFarB);
-    };
-    updateLittleOnes();
+  function findTriplicates(array){
+    let plicates = array.filter((num) => typeof num === 'object').filter((obj) => pos => obj.code).filter(
+            (o => v => (o[v] = (o[v] || 0) + 1) === 3)
+            ({})
+        );
+    array.filter((x) => {x.code == plicates[0]}); //devrait boucler au cas où y'en a plus qu'un
+    // let countM = array.filter((num) => typeof num === 'object')
+    // countM.forEach(obj => {
+    //   let code = obj.code;
+    //   let count2 = countM.filter(obj2 => obj2.code == code);
+    // });
   };
-  function findPlicates(array){
-    let allObject = array.filter((num) => typeof num === 'object');
+  function findTriplicatesMine(array){
+    let allObject = array.filter((num) => typeof num === 'object')
     allObject.forEach((obj) => {
       let option = obj.o.toString();
       let length = obj.o.length;
-      if(length > 1){
-        let allObjectCode = allObject.filter(obj2 => obj2.o.toString() == option);
-        if(allObjectCode.length == length){
-          allObject = allObject.filter(obj3 => obj3.o.toString() !== option);
-          console.log("plicates!");
-          cleanKasesOfPlicates(allObject, option);
-        };
+      
+      let allObjectCode = allObject.filter(obj2 => obj2.o.toString() == option);
+      
+      if(allObjectCode.length == length){
+        console.log(allObjectCode);
+        allObject = allObject.filter(obj3 => obj3.o.toString() !== option);
+        console.log(allObject);
+        console.log("obj.o " + obj.o);
+        console.log("option " + option);
       };
     });
   };
-  function cleanKasesOfPlicates(arrayObjects, options){
-    arrayObjects.forEach(obj => {
-      sudokuSoFar[obj.i][obj.j].o = sudokuSoFar[obj.i][obj.j].o.filter(opt => !options.includes(opt));
-    });
-  };
 
-  let singles = 0;
-  function sudokuCleanerSingles(){
-    singles = 0;
-    console.log("sudokuCleanerSingles");
+  function cleanDuplicates(array){
+    let count = array.filter((num) => typeof num === 'object' && num.o.length == 2); 
+    let unique = new Set(count.map(c => c.o.toString()));
+    if(unique.size < count.length){
+      for (let a = 0; a < count.length - 1; a++) {
+        for (let d = a + 1; d < count.length; d++) {
+          if (count[a].o.toString() === count[d].o.toString()){
+            let i1 = count[a].i;
+            let j1 = count[a].j;
+            let i2 = count[d].i;
+            let j2 = count[d].j;
+            let chiffre1 = count[a].o[0];
+            let chiffre2 = count[a].o[1];
+            //console.log(chiffre1, chiffre2, i1, j1, i2, j2);
+            return [chiffre1, chiffre2, i1, j1, i2, j2];
+          };
+        };
+      };
+    };
+  };
+  function cleanKaseOfDuplicates(kase, chiffre1, chiffre2){
+    let idx1 = sudokuSoFar[kase.i][kase.j].o.indexOf(chiffre1);
+    if(idx1 >= 0){
+      sudokuSoFar[kase.i][kase.j].o.splice(idx1, 1);
+    };        
+    let idx2 = sudokuSoFar[kase.i][kase.j].o.indexOf(chiffre2);
+    if(idx2 >= 0){
+      sudokuSoFar[kase.i][kase.j].o.splice(idx2, 1);
+    };
+  };
+  function sudokuCleanerDuplicates(){
+    console.log("sudokuCleanerDuplicates");
     //In i (then j then b) check if there's two kase that have the same opt (two values i.e. opt.length == 2), if so, remove these opt from all the others 
     for (let i = 0; i < 9; i++){
-      findSingles(sudokuSoFar[i]);
+      //const resultI = cleanDuplicates(sudokuSoFar[i]);
+      const resultI = findTriplicatesMine(sudokuSoFar[i]);
+      // if(resultI){
+      //   const [chiffre1, chiffre2, i1, j1, i2, j2] = resultI;
+      //   removeForI(chiffre1, chiffre2, i1, j1, j2);
+      // };
     };
     
     for (let j = 0; j < 9; j++){
@@ -545,7 +558,12 @@ let sudokuQuestionF = [
       for (let i = 0; i < 9; i++){
         sudokuSoFarJ.push(sudokuSoFar[i][j]);
       };  
-      findSingles(sudokuSoFarJ);
+      //const resultJ = cleanDuplicates(sudokuSoFarJ);
+      const resultJ = findTriplicatesMine(sudokuSoFarJ);
+      // if(resultJ){
+      //   const [chiffre1, chiffre2, i1, j1, i2, j2] = resultJ;
+      //   removeForJ(chiffre1, chiffre2, j1, i1, i2);
+      // };
     };
 
     for (let b = 1; b < 10; b++) {
@@ -557,99 +575,73 @@ let sudokuQuestionF = [
           };
         };
       };
-      findSingles(sudokuSoFarB);
+      //const resultB = cleanDuplicates(sudokuSoFarB);
+      const resultB = findTriplicatesMine(sudokuSoFarB);
+    //   if(resultB){
+    //     const [chiffre1, chiffre2, i1, j1, i2, j2] = resultB;
+    //     removeForB(chiffre1, chiffre2, b, i1, j1, i2, j2);
+    //   };
     };
+    //console.log(sudokuSoFar);
     updateLittleOnes();
-    if(singles == 0){
-      singlesNONE = true;
-    };
   };
-
-  function findSingles(array){
-    let allObject = array.filter((num) => typeof num === 'object');
-    for(let n = 1; n < 10; n++){
-      let count = allObject.filter((obj) => obj.o.includes(n.toString()));
-      if(count.length == 1){
-        console.log("single! " + n);
-        singles++;
-        let obj = count[0];
-        sudokuSoFar[obj.i][obj.j].o = sudokuSoFar[obj.i][obj.j].o.filter((opt) => opt == n.toString());
+  function removeForI(chiffre1, chiffre2, i, j1, j2){
+    // for i
+    sudokuSoFar[i].forEach(kase => {
+      if(typeof kase === 'object' && kase.j !== j1 && kase.j !== j2){
+        cleanKaseOfDuplicates(kase, chiffre1, chiffre2);
       };
-    };
+    });
+    //console.log("Icleaned");
+    //console.log(sudokuSoFar);
   };
-
-  function sudokuCleanerAligned(){
-    console.log("sudokuCleanerAligned");
-    for (let b = 1; b < 10; b++) {
-      let sudokuSoFarB = [];
-      for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++){
-          if(sudokuSoFar[i][j].b == b){
-            sudokuSoFarB.push(sudokuSoFar[i][j]);
-          };
-        };
-      };
-      findAligned(sudokuSoFarB, b);
-    };
-    console.log(sudokuSoFar);
-    updateLittleOnes();
-    alignedOUT = true;
-  };
-
-  function findAligned(array, b){
-    let allObject = array.filter((num) => typeof num === 'object');
-    for(let n = 1; n < 10; n++){
-      let count = allObject.filter((obj) => obj.o.includes(n.toString()));
-      if(count.length > 1){
-        // count.forEach((obj) => {
-          let i = count[0].i;
-          let countI = count.filter(obj2 => obj2.i == i);
-          if(count.length == countI.length){
-            console.log(n + " aligned in i = " + i + " in bloc " + b);
-            cleanKasesOfAlignedI(i, b, n);
-            // count = count.filter(obj3 => obj3.i !== i);
-            //cleanKasesOfPlicates(allObject, option);
-          } else{
-            let j = count[0].j;
-            let countJ = count.filter(obj4 => obj4.j == j);
-            if(count.length == countJ.length){
-              console.log(n + " aligned in j = " + j + " in bloc " + b);
-              cleanKasesOfAlignedJ(j, b, n);
-              // count = count.filter(obj5 => obj5.j !== j);
-            };
-          };
-        // }); 
-      };
-    };
-  };
-
-  function cleanKasesOfAlignedI(i, b, n){
-    for (let j = 0; j < 9; j++){
-      let object = sudokuSoFar[i][j];
-      if(typeof object === 'object' && object.b !== b){
-        object.o = object.o.filter(opt => opt !== n);
-      };
-    };
-  };
-  function cleanKasesOfAlignedJ(j, b, n){
+  function removeForJ(chiffre1, chiffre2, j, i1, i2){
+    // for j
+    //console.log("removeForJ");
+    let sudokuSoFarJ = [];
     for (let i = 0; i < 9; i++){
-      let object = sudokuSoFar[i][j];
-      if(typeof object === 'object' && object.b !== b.toString()){
-        object.o = object.o.filter(opt => opt !== n.toString());
+      sudokuSoFarJ.push(sudokuSoFar[i][j]);
+    }; 
+    //console.log(sudokuSoFarJ);
+    sudokuSoFarJ.forEach(kase => {
+      if(typeof kase === 'object' && kase.i !== i1 && kase.i !== i2){
+        cleanKaseOfDuplicates(kase, chiffre1, chiffre2);
+      };
+    });
+    //console.log(sudokuSoFarJ);
+  };
+  function removeForB(chiffre1, chiffre2, b, i1, j1, i2, j2){
+    // for b
+    //console.log("removeForB");
+    let sudokuSoFarB = [];
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++){
+        if(sudokuSoFar[i][j].b == b){
+          sudokuSoFarB.push(sudokuSoFar[i][j]);
+        };
       };
     };
+    sudokuSoFarB.forEach(kase => {
+      if(typeof kase === 'object' && (kase.i !== i1 && kase.j !== j1) || (kase.i !== i2 && kase.j !== j2)){
+        cleanKaseOfDuplicates(kase, chiffre1, chiffre2);
+      };
+    });
+    //console.log("Bcleaned");
+    //console.log(sudokuSoFar);
   };
   
-  let objectAnswers = 0;
+  function sudokuCleanerTriplicates(){
+    
+  };
+  
+  
   function objectRunner(){
-    objectAnswers = 0;
     console.log("objectRunner");
     for (let i = 0; i < 9; i++) {
       for (let j = 0; j < 9; j++){
         let object = sudokuSoFar[i][j];
         if(typeof object === 'object'){
           if(object.o.length == 1){
-            objectAnswers++;
             console.log(object);
             let kase = document.querySelector("#r" + i + "c" + j);
             let b = object.b;
@@ -664,7 +656,6 @@ let sudokuQuestionF = [
       };
     };
     updateLittleOnes();
-    console.log(objectAnswers);
   };
 
   function removeOthers(chiffre, i, j, b){
@@ -682,12 +673,10 @@ let sudokuQuestionF = [
       };
     };
   };
-  let plicatesOUT = false;
-  let singlesNONE = false;
-  let alignedOUT = false;
+
   function sudokuCompleteSolver(sudokuQuestion) {
     tableCreation(sudokuQuestion);
-    for (let c = 0; c < 12; c++) {
+    for (let c = 0; c < 7; c++) {
       document.querySelectorAll(".case:not(.firstClass)").forEach((kase) => {
           kase.classList.add("purpleAnswer");
         });
@@ -738,18 +727,9 @@ let sudokuQuestionF = [
       } else if ((answers == 0 && !fucked) || (fucked && tries.length == 0)) {
         if(!littleTableIn){
           littleOnes();
-        };
-        if(!plicatesOUT){
-          sudokuCleanerPlicates();
+          sudokuCleanerDuplicates();
         };
         objectRunner();
-        
-        if(objectAnswers == 0){
-          sudokuCleanerSingles();
-        };
-        if(objectAnswers == 0 && singlesNONE){
-          sudokuCleanerAligned();
-        };
         // console.log(sudokuSoFar.flat());
         // console.log(sudokuSoFar.flat(3));
         // console.log(Array.prototype.flat.call(sudokuSoFar));
@@ -809,7 +789,7 @@ let sudokuQuestionF = [
     ]`;
     solutionFinale.innerHTML = showArray;
   };
-  sudokuCompleteSolver(sudokuQuestionC);
+  sudokuCompleteSolver(sudokuQuestionB);
 
 //Il va falloir faire une version qui compte toutes les possibilités... donc on refait the whole thing pour chaque option (de 2 possibilités)?
 </script>

@@ -601,24 +601,29 @@ let sudokuQuestionF = [
     for(let n = 1; n < 10; n++){
       let count = allObject.filter((obj) => obj.o.includes(n.toString()));
       if(count.length > 1){
-        // count.forEach((obj) => {
-          let i = count[0].i;
-          let countI = count.filter(obj2 => obj2.i == i);
-          if(count.length == countI.length){
-            console.log(n + " aligned in i = " + i + " in bloc " + b);
-            cleanKasesOfAlignedI(i, b, n);
-            // count = count.filter(obj3 => obj3.i !== i);
-            //cleanKasesOfPlicates(allObject, option);
-          } else{
-            let j = count[0].j;
-            let countJ = count.filter(obj4 => obj4.j == j);
-            if(count.length == countJ.length){
-              console.log(n + " aligned in j = " + j + " in bloc " + b);
-              cleanKasesOfAlignedJ(j, b, n);
-              // count = count.filter(obj5 => obj5.j !== j);
-            };
+        let i = count[0].i;
+        let countI = count.filter(obj2 => obj2.i == i);
+        if(count.length == countI.length){
+          console.log(n + " aligned in i = " + i + " in bloc " + b);
+          cleanKasesOfAlignedI(i, b, n);
+          let kaseCodesI = count.map(obj => {
+            return `${obj.i}${obj.j}`;
+          }).join("");
+          console.log(kaseCodesI);
+          //prendre en note les ij des cases où n est aligné puis à la fin comparer tous les n pour voir s'ils ont les mêmes cases.
+          //mais il faut qu'on puisse se souvenir des n...
+        } else{
+          let j = count[0].j;
+          let countJ = count.filter(obj4 => obj4.j == j);
+          if(count.length == countJ.length){
+            console.log(n + " aligned in j = " + j + " in bloc " + b);
+            cleanKasesOfAlignedJ(j, b, n);
+            let kaseCodesJ = count.map(obj => {
+              return `${obj.i}${obj.j}`;
+            }).join("");
+          console.log(kaseCodesJ);
           };
-        // }); 
+        };
       };
     };
   };

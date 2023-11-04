@@ -142,34 +142,49 @@
     opacity: .8;
   }
 
-  #taskInfo{
+  #taskInfo, #calendarDiv{
     background-color: white;
     border: 2px solid darkslategrey;
     border-radius: 5px;
     position: absolute;
     z-index: 1000;
-    top: 20px;
-    left: 45px;
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
     padding: 10px 0;
+    
+  }
+  #taskInfo{
+    top: 20px;
+    left: 45px;
     width: 90vw;
     max-width: 500px;
   }
-/* Get computed width of .text and have this as taskInfo width! */
+  #calendarDiv{
+    top: 10px;
+    right: 43px;
+    width: fit-content;
+  }
+
 
   .taskInfoInput{
     width: -webkit-fill-available!important;
     margin: 10px 20px;
     text-align: left;
   }
+  h5.taskInfoInput{
+    margin-bottom: 0;
+  }
 
   #taskInfoBtn{
     margin: 10px 0;
   }
-  .topList{
-    margin-bottom: 0;
+  h3.topList{
+    text-decoration: underline;
+    margin: 0;
+  }
+  h5.topList{
+    margin: 0;
   }
   .sousBtn{
     margin-top: 0;
@@ -236,26 +251,62 @@
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
+    border-radius: 15px;
   }
+
   li span{
     padding-right: 3px;
-    font-size: 1.3em;
+    line-height: 1em;
+    font-size: 1.5em;
   }
   li .text{
     flex-grow: 1;
+  }
+  .selectedTask{
+    background-color: rgba(211, 211, 211, .5);
   }
   .colorSpan{
     padding-left: 10px;
   }
   .emptyCheck{
     font-size: 2em;
-    translate: 0 3.5px;
-    line-height: 1em;
   }
   .trashCan, .recycle{
     padding-left: 10px;
     font-size: 1.5em;
+  }
+  .whatDayLabel{
+    display: block;
+    font-size: 18px;
+  }
+  .whatDayLabel p{
+    line-height: 1em;
+    margin: 0;
+  }
+  .whatDayLabel span.smallText{
+    font-size: 13px;
+    padding: 0;
+  }
+  .calendarMargin{
+    margin: 10px 20px;
+  }
+  .myRadio{
+    padding: 0;
+    margin-right: 5px;
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+    border-radius: 25px;
+    border: 1px solid darkslategrey;
+  }
+  input[name="whatDay"]:checked + label span.myRadio{
+    height: 15px;
+    width: 15px;
+    outline: 2px solid white;
+    outline-offset: -3px;
+    border: 2px solid darkslategrey;
+    background-color: darkslategrey;
   }
   
   #colorPalet{
@@ -380,13 +431,31 @@
       <input id="addInput" type="text" />
       <button id="addBtn" type="submit">add</button>
     </form>
+    <h3 class="topList">Oups...</h3>
+    <h5 class="topList">What should've already been done...</h5>
+    <ul id="listOups"></ul>
+    <h3 class="topList">Today's fun</h3>
+    <h5 class="topList">What shall be done today...</h5>
+    <ul id="listToday"></ul>
+    <h3 class="topList">Whenever</h3>
     <h5 class="topList">The never ending list...</h5>
     <ul id="list"></ul>
     <div id="taskInfo" class="displayNone">
-      <h5 class="topList taskInfoInput">Tell me more...</h5>
+      <h5 class="taskInfoInput">Tell me more...</h5>
       <input type="text" id="taskTitle" class="taskInfoInput">
       <textarea id="taskDetails" class="taskInfoInput"></textarea>
       <button id="taskInfoBtn">Save Info</button>
+    </div>
+    <div id="calendarDiv" class="displayNone">
+      <h5 class="taskInfoInput">Tell me when...</h5>
+      <input type="date" id="calendarInput" style="margin: 20px 20px 10px" />
+      <div style="margin: 5px 20px 10px">
+        <input type="radio" id="todoDayInput" name="whatDay" />
+        <label for="todoDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span>To-do Day<br /><span class="smallText">(the day you want to do it)</span></p></label>
+        <input type="radio" id="doneDayInput" name="whatDay" />
+        <label for="doneDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span>Done Day<br /><span class="smallText">(the day by which it has to have been done)</span></label></p></label>
+      </div>
+      <button id="saveTheDateBtn" class="calendarMargin">Save The Date</button>
     </div>
     <table id="colorPalet" class="displayNone">
       <tr class="colorTr">
@@ -895,7 +964,7 @@
 // *** CREATION
   function todoCreation(todo, idx){
     let li = document.createElement("li");
-    li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><span class="text" onclick="taskAddInfo(this)">${todo.task}</span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
+    li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><span class="text" onclick="taskAddInfo(this)">${todo.task}</span><span class="typcn typcn-calendar-outline calendarSpan" onclick="calendarChoice(this)"></span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
     li.setAttribute("id", "todo" + idx);
     li.querySelector(".text").style.color = todo.color;
     list.appendChild(li);
@@ -1146,6 +1215,27 @@
     listSection.classList.toggle("displayNone");
     toDoSection.classList.toggle("displayNone");
   });
+
+// *** SAVE THE DATE
+let taskToDate;
+let taskToDateId;
+  function calendarChoice(thisOne){
+    taskToDate = thisOne;
+    let parent = taskToDate.parentElement;
+    parent.classList.add("selectedTask");
+    taskToDateId = parent.id.slice(4);
+    if(listTasks[taskToDateId].date){
+      calendarInput.value = listTasks[taskToDateId].date; //taskDetails est le testarea qui doit contenir les détails (si y'en a déjà), dans le div
+      //check whatDay is checked
+    } else{
+      calendarInput.value = "";
+    };
+    taskToDate.insertAdjacentElement("afterend", calendarDiv); //calendarDiv est le div qui apparait
+    calendarDiv.classList.remove("displayNone");
+    clickScreen.classList.remove("displayNone");
+    document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(calendarDiv, parent));
+  };
+  window.calendarChoice = calendarChoice;
   
 // *** DETAILS
 let taskToInfo;
@@ -1159,7 +1249,9 @@ let taskToInfoId;
     clickScreen.classList.remove("displayNone");
     let taskTitleInfo = taskToInfo.textContent; //taskTitleInfo est le text contenu dans taskToInfo (span.text)
     taskTitle.value = taskTitleInfo; //taskTitle est le input qui doit contenir le titre, dans le div
-    taskToInfoId = taskToInfo.parentElement.id.slice(4);
+    let parent = taskToInfo.parentElement;
+    parent.classList.add("selectedTask");
+    taskToInfoId = parent.id.slice(4);
     taskTitle.style.color = listTasks[taskToInfoId].color;
     if(listTasks[taskToInfoId].info){
       taskDetails.value = listTasks[taskToInfoId].info; //taskDetails est le testarea qui doit contenir les détails (si y'en a déjà), dans le div
@@ -1167,7 +1259,7 @@ let taskToInfoId;
       taskDetails.value = "";
     };
     
-    document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(taskInfo));
+    document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(taskInfo, parent));
   };
   window.taskAddInfo = taskAddInfo;
   window.listTasks = listTasks;
@@ -1186,6 +1278,8 @@ let taskToInfoId;
   let colorTag;
   function colorChoice(thisOne){
     colorTag = thisOne;
+    let parent = colorTag.parentElement;
+    parent.classList.add("selectedTask");
     colorTag.insertAdjacentElement("afterend", colorPalet);
     colorPalet.classList.remove("displayNone");
     clickScreen.classList.remove("displayNone");
@@ -1204,11 +1298,12 @@ let taskToInfoId;
         clickHandlerAddOn(colorPalet);
       });
     });
-    document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(colorPalet));
+    document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(colorPalet, parent));
   };
   window.colorChoice = colorChoice;
 
-  function clickHandlerAddOn(addOn){
+  function clickHandlerAddOn(addOn, parent){
+    parent.classList.remove("selectedTask");
     addOn.classList.add("displayNone");
     list.insertAdjacentElement("afterend", addOn);
     clickScreen.classList.add("displayNone");

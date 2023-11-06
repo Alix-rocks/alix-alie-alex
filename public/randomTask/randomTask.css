@@ -1,0 +1,394 @@
+*{
+  font-family: 'Nunito', sans-serif;
+  color: darkslategrey;
+  box-sizing: border-box;
+}
+button {
+  border-top: 2px solid darkslategrey;
+  border-left: 2px solid darkslategrey;
+  border-right: 4px solid darkslategrey;
+  border-bottom: 4px solid darkslategrey;
+  border-radius: 5px;
+  padding: 5px 10px;
+  width: fit-content;
+  color: darkslategrey;
+  text-align: center;
+  font-size: 1em;
+  font-weight: 600;
+  background-color: lightgrey;
+}
+button span:nth-of-type(1){
+  padding-right: 5px;
+}
+button span:nth-of-type(2){
+  padding-left: 5px;
+}
+input[type="text"], textarea{
+  border-top: 2px solid darkslategrey;
+  border-left: 2px solid darkslategrey;
+  border-right: 4px solid darkslategrey;
+  border-bottom: 4px solid darkslategrey;
+  border-radius: 5px;
+  padding: 5px 10px;
+  width: fit-content;
+  color: darkslategrey;
+  font-size: 1em;
+  font-weight: 600;
+}
+input[type="radio"]{
+  display: none;
+}
+.Screen{
+  display: flex;
+  background-color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000;
+}
+.DivScreen{
+  width: 62%;
+  padding: 15px;
+  margin: auto;
+  border-style: solid;
+  border-width: 2px 3px 3px 2px;
+  border-radius: 5px;
+  z-index: 2200;
+  text-align: center;
+  position: relative;
+}
+#exitX{
+  position: absolute;
+  top: 5px;
+  right: 7px;
+  font-size: 25px;
+  line-height: 25px;
+  font-weight: 700;
+}
+.ScreenBtn1{
+  display: block;
+  margin: 10px auto;
+}
+.ScreenBtn2{
+  border-top: 1px solid darkslategrey;
+  border-left: 1px solid darkslategrey;
+  border-right: 2px solid darkslategrey;
+  border-bottom: 2px solid darkslategrey;
+  border-radius: 3px;
+  padding: 3px 7px;
+  font-size: .7em;
+  font-weight: 500;
+  background-color: rgba(211, 211, 211, .5);
+}
+#cloudIt{
+  float: right;
+  margin-top: 15px;
+  font-size: 25px;
+  line-height: 1em;
+  padding: 2px 0 2px 5px;
+  background-color: rgba(237, 20, 61, 0);
+}
+#listSection{
+  position: relative;
+}
+#clickScreen{
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 500;
+  background-color: rgba(255, 255, 255, 0);
+}
+#settings{
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-top: 1px solid darkslategrey;
+  border-left: 1px solid darkslategrey;
+  border-right: 2px solid darkslategrey;
+  border-bottom: 2px solid darkslategrey;
+  border-radius: 3px;
+  text-align: center;
+  padding: 2px 3px;
+  font-size: 25px;
+  line-height: 1em;
+  font-weight: 500;
+  background-color: rgba(211, 211, 211, 0.5);
+}
+#settings span{
+  padding: 0;
+  opacity: .8;
+}
+
+#taskInfo, #calendarDiv{
+  background-color: white;
+  border: 2px solid darkslategrey;
+  border-radius: 5px;
+  position: absolute;
+  z-index: 1000;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  padding: 10px 0;
+  
+}
+#taskInfo{
+  top: 20px;
+  left: 45px;
+  width: 90vw;
+  max-width: 500px;
+}
+#calendarDiv{
+  top: 10px;
+  right: 43px;
+  width: fit-content;
+}
+
+
+.taskInfoInput{
+  width: -webkit-fill-available!important;
+  margin: 10px 20px;
+  text-align: left;
+}
+h5.taskInfoInput{
+  margin-bottom: 0;
+}
+
+#taskInfoBtn{
+  margin: 10px 0;
+}
+h3.topList{
+  text-decoration: underline;
+  margin: 0;
+}
+h5.topList{
+  margin: 0;
+}
+.sousBtn{
+  margin-top: 0;
+}
+#listSection{
+  text-align: left;
+}
+#toDoSection{
+  display: flex;
+  flex-flow: column nowrap;
+  text-align: center;
+}
+#toDoSection button{
+  width: fit-content;
+  margin: 10px auto;
+}
+#taskToDo{
+  font-size: 1.5em;
+  font-weight: 700;
+}
+.moreInfoChevron{
+  display: inline-block;
+  transform: rotate(90deg);
+  font-size: 25px;
+  line-height: 25px;
+}
+#moreInfoDiv{
+  opacity: 0;
+  visibility: hidden;
+  display: block;
+  height: 0;
+  flex-grow: 1;
+}
+#moreInfoInput:checked + label span{
+  transform: rotate(-90deg);
+}
+#moreInfoInput:checked ~ #moreInfoDiv{
+  opacity: 1;
+  visibility: visible;
+  min-height: fit-content;
+  height: fit-content;
+  width: fit-content;
+  padding: 10px 15px;
+  margin: auto;
+  border-width: 1px 2px 3px;
+  border-style: solid;
+  border-color: darkslategrey;
+  border-radius: 5px;
+  text-align: left;
+}
+
+ul{
+  list-style: none;
+  padding: 0;
+}
+#todoZone ul{
+  margin-top: 0;
+  width: 100%;
+}
+#todoZone li{
+  width: 100%;
+  position: relative;
+  font-weight: 600;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 15px;
+}
+
+li span{
+  padding-right: 3px;
+  line-height: 1em;
+  font-size: 1.5em;
+}
+li .text{
+  flex-grow: 1;
+  font-size: 20px;
+}
+.selectedTask{
+  background-color: rgba(211, 211, 211, .5);
+}
+.colorSpan{
+  padding-left: 10px;
+}
+.emptyCheck{
+  font-size: 2em;
+}
+.trashCan, .recycle{
+  padding-left: 10px;
+  font-size: 1.5em;
+}
+.whatDayLabel{
+  display: block;
+  font-size: 18px;
+}
+.whatDayLabel p{
+  line-height: 1em;
+  margin: 0;
+}
+.whatDayLabel span.smallText{
+  font-size: 13px;
+  padding: 0;
+}
+.whatDayLabel span.normalText{
+  font-size: 18px;
+  padding: 0;
+}
+.calendarMargin{
+  margin: 10px 20px;
+}
+.myRadio{
+  padding: 0;
+  margin-right: 5px;
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  border-radius: 25px;
+  border: 1px solid darkslategrey;
+}
+input[name="whatDay"]:checked + label span.myRadio{
+  height: 15px;
+  width: 15px;
+  outline: 2px solid white;
+  outline-offset: -3px;
+  border: 2px solid darkslategrey;
+  background-color: darkslategrey;
+}
+.todoDay{
+  color: limegreen;
+}
+.doneDay{
+  color: red;
+}
+#colorPalet{
+  background-color: white;
+  border: 2px solid darkslategrey;
+  border-radius: 5px;
+  position: absolute;
+  z-index: 1000;
+  top: 2px;
+  right: 2.5px;
+}
+.colorTd{
+  width: fit-content;
+  height: 25px;
+  border: none;
+}
+input[name="colorRadio"] + label > div{
+  width: 70px;
+  height: 25px;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  border-radius: 2.5px;
+}
+input[name="colorRadio"]:checked + label > div{
+  background-color: rgba(47, 79, 79, .3);
+
+}
+.colorDiv{
+  width: 65px;
+  height: 20px;
+  border-radius: 25px;
+  border: none;
+  margin: auto;
+  line-height: 14px;
+  text-align: center;
+  font-size: 14px;
+  padding: 3px 7px 4px;
+}
+.orange{
+  background-color: orange;
+}
+.red{
+  background-color: red;
+}
+.darkmagenta{
+  background-color: darkmagenta;
+  color: white;
+}
+.dodgerblue {
+  background-color: dodgerblue;
+}
+.forestgreen{
+  background-color: forestgreen;
+  color: white;
+}
+.darkslategrey{
+  background-color: darkslategrey;
+  color: white;
+}
+
+hr{
+  margin: 30px 0 0;
+}
+#doneZone{
+  margin-top: 8px;
+}
+#doneZone li{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: baseline;
+}
+#doneZone li span.text{
+  font-size: 18px;
+  text-decoration: line-through;
+}
+#doneZone p span{
+  display: inline-block;
+  margin-bottom: 0;
+  padding-left: 7px;
+}
+#doneZone p:not(span){
+  margin-bottom: 0;
+  text-decoration: underline;
+}
+.cossin{
+  width: 0.1px;
+  margin: -2px;
+  border: 0;
+}
+.displayNone{
+  display: none!important;
+}

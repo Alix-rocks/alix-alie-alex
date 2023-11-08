@@ -37,7 +37,7 @@ onAuthStateChanged(auth,(user) => {
     userConnected = false;
     logInScreen.classList.remove("displayNone");
     logInBtn.addEventListener("click", logIn);
-    tryBtn.addEventListener("click", freeIn); //tryOne (for trying)
+    tryBtn.addEventListener("click", freeIn);
     cloudIt.classList.add("displayNone");
   };
 });
@@ -127,20 +127,7 @@ async function getDones(){
   refreshDoneId();
 };
 
-function tryOne(){
-  let sortedListDones = listDones.sort((d1, d2) => (d1.date > d2.date) ? 1 : (d1.date < d2.date) ? -1 : 0);
-  sortedListDones.forEach(doned => {
-    if(doned.list.length !== 0){
-      let donedDate = doned.date;
-      donedDateCreation(donedDate);
-      doned.list.forEach(tidoned => {
-        donedCreation(donedDate, tidoned);
-      });
-    };
-  });
-refreshDoneId();
-logInScreen.classList.add("displayNone");
-};
+
 
 function freeIn(){ 
   if(localStorage.getItem("myTomorrow")){
@@ -214,35 +201,35 @@ function resetModif(){
   localStorage.modif = JSON.stringify([]);
 };
 
-function addDeleted(date){
-  let deleted = getDeleted();
-  let modif = getModif();
-  if(modif.includes(date)){
-    let idx = modif.indexOf(date);
-    modif.splice(idx, 1);
-    //localStorage.setItem("modif", JSON.stringify(modif));
-    localStorage.modif = JSON.stringify(modif);
-  };
-  if(!deleted.includes(date)){
-    deleted = [...deleted, date];
-    //localStorage.setItem("deleted", JSON.stringify(deleted));
-    localStorage.deleted = JSON.stringify(deleted);
-  };
-};
+// function addDeleted(date){
+//   let deleted = getDeleted();
+//   let modif = getModif();
+//   if(modif.includes(date)){
+//     let idx = modif.indexOf(date);
+//     modif.splice(idx, 1);
+//     //localStorage.setItem("modif", JSON.stringify(modif));
+//     localStorage.modif = JSON.stringify(modif);
+//   };
+//   if(!deleted.includes(date)){
+//     deleted = [...deleted, date];
+//     //localStorage.setItem("deleted", JSON.stringify(deleted));
+//     localStorage.deleted = JSON.stringify(deleted);
+//   };
+// };
 
-function getDeleted(){
-  let deleted = [];
-  if(localStorage.getItem("deleted")){
-    deleted = JSON.parse(localStorage.deleted);
-  } else{
-    deleted = [];
-  };
-  return deleted;
-};
+// function getDeleted(){
+//   let deleted = [];
+//   if(localStorage.getItem("deleted")){
+//     deleted = JSON.parse(localStorage.deleted);
+//   } else{
+//     deleted = [];
+//   };
+//   return deleted;
+// };
 
-function resetDeleted(){
-  localStorage.deleted = JSON.stringify([]);
-};
+// function resetDeleted(){
+//   localStorage.deleted = JSON.stringify([]);
+// };
 
 
 
@@ -299,7 +286,6 @@ cloudIt.addEventListener("click", async () => {
   await batch.commit();
   resetCBC();
   resetModif();
-  //resetDeleted();
 });
 
 async function cloudSaveTomorrow(){
@@ -462,13 +448,11 @@ addForm.addEventListener("submit", (e) => {
 let num = 0;
 
 doneNextBtn.addEventListener("click", () => {
-  //let doneId = listTasks.findIndex(todo => todo.id == wheneverList[num].id);
   let doneId = wheneverList[num].id;
   let doneLi = document.getElementById(doneId);
   console.log(doneId);
   doneLi.remove();
   gotItDone(doneId);
-  //refreshTodoId();
   wheneverList.splice(num, 1);
   if(wheneverList.length == 0){
     taskToDo.innerText = "aller t'reposer!";
@@ -489,11 +473,8 @@ function checkEvent(emptyCheck){
   console.log("checkEvent");
   console.log(listTasks);
   let li = emptyCheck.parentElement;
-  //let color = li.querySelector(".text").style.color;
-  //let task = li.querySelector(".text").textContent;
   let donedId = li.id;
   li.remove();
-  //refreshTodoId();
   gotItDone(donedId);
 };
 window.checkEvent = checkEvent;
@@ -501,7 +482,6 @@ window.checkEvent = checkEvent;
 function gotItDone(nb){
   console.log("gotItDone");
   console.log(nb);
-  //find the object with that id
   let donedTaskIndex = listTasks.findIndex(todo => todo.id == nb);
   let donedTaskSplice = listTasks.splice(donedTaskIndex, 1);
   console.log(donedTaskSplice);
@@ -576,18 +556,6 @@ function localStorageDones(time){
 
 
 // *** REFRESH
-// function refreshTodoId(){
-//   let idx = 0;
-//   let allIndex = [];
-//   document.querySelectorAll("#todoZone li").forEach((li) => {
-//     let index = li.id.slice(4);
-//     allIndex.push(index);
-//     li.setAttribute("id", "todo" + idx);
-//     idx++;
-//   });
-//   listTasks = allIndex.map(index => listTasks[index]);
-//   localStorage.listTasks = JSON.stringify(listTasks);
-// };
 function refreshDoneId(){
   document.querySelectorAll("#doneZone ul").forEach(ul => {
     let idx = 0;
@@ -601,7 +569,6 @@ function refreshDoneId(){
 // *** SHUFFLE
 let wheneverList = [];
 shuffleBtn.addEventListener("click", () => {
-  //refreshTodoId();
   let todayDate = getTodayDate();
   wheneverList = listTasks.filter(task => task.date > todayDate || !task.date || task.date == "");
   console.log(wheneverList);
@@ -609,13 +576,6 @@ shuffleBtn.addEventListener("click", () => {
     const j = Math.floor(Math.random() * (i + 1)); 
     [wheneverList[i], wheneverList[j]] = [wheneverList[j], wheneverList[i]]; 
   };
-  //localStorage.listTasks = JSON.stringify(listTasks);
-  // list.innerHTML = ``;
-  // let idx = 0;
-  // wheneverList.forEach(todo => {
-  //   todoCreation(todo, idx);
-  //   idx++;
-  // });
   listSection.classList.toggle("displayNone");
   toDoSection.classList.toggle("displayNone");
   num = 0;
@@ -696,7 +656,6 @@ saveTheDateBtn.addEventListener("click", () => {
     todoDayInput.checked = true;
     taskToDate.classList.remove(...lineDay);
     list.appendChild(parent);
-    //refreshTodoId();
   };
   if(previousDate !== listTasks[taskToDateIndex].date) {
     let todayDate = getTodayDate();
@@ -709,7 +668,6 @@ saveTheDateBtn.addEventListener("click", () => {
       togoList = "listOups";
     };
     document.getElementById(togoList).appendChild(parent);
-    //refreshTodoId();
   };
   localStorage.listTasks = JSON.stringify(listTasks);
   updateCBC();

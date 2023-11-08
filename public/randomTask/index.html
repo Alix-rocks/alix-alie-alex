@@ -43,6 +43,7 @@
         <button id="cancelBtn" class="ScreenBtn2">Cancel</button>
       </div>
     </div>
+    <button id="cloudIt"><span class="typcn typcn-cloud-storage-outline"></span></button>
     <div id="todoZone">
       <form id="addForm">
         <input id="addInput" type="text" />
@@ -132,10 +133,35 @@
       </table>
       <button id="shuffleBtn">Shuffle it!</button>
       <h5 class="sousBtn">Tell me what to do!</h5>
+      <input id="scheduledInput" type="checkbox" class="cossin listToggleInput" />
+      <div>
+        <label for="scheduledInput" class="listToggleLabel">
+          <h3 class="topList">Scheduled</h3>
+          <h5 class="topList">All in good time...</h5>
+          <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+        </label>
+        <ul id="listScheduled" class="listToggleList">
+          <!-- <li><span class="typcn typcn-media-stop-outline emptyCheck"></span><span class="text">Dire Allô!!</span><span class="typcn typcn-calendar-outline calendarSpan"></span><span class="typcn typcn-tag colorSpan"></span></li>
+          <li><span class="typcn typcn-media-stop-outline emptyCheck"></span><span class="text">Dire Salut!!</span><span class="typcn typcn-calendar-outline calendarSpan"></span><span class="typcn typcn-tag colorSpan"></span></li>
+          <li><span class="typcn typcn-media-stop-outline emptyCheck"></span><span class="text">Dire Babye!!</span><span class="typcn typcn-calendar-outline calendarSpan"></span><span class="typcn typcn-tag colorSpan"></span></li> -->
+        </ul>
+      </div>
+      <input id="recurringInput" type="checkbox" class="cossin listToggleInput" />
+      <div>
+        <label for="recurringInput" class="listToggleLabel">
+          <h3 class="topList">Recurring</h3>
+          <h5 class="topList">Don't worry, they'll be back...</h5>
+          <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+        </label>
+        <ul id="listRecurring" class="listToggleList">
+          <!-- <li><span class="typcn typcn-media-stop-outline emptyCheck"></span><span class="text">Dire Allô!!</span><span class="typcn typcn-calendar-outline calendarSpan"></span><span class="typcn typcn-tag colorSpan"></span></li>
+          <li><span class="typcn typcn-media-stop-outline emptyCheck"></span><span class="text">Dire Salut!!</span><span class="typcn typcn-calendar-outline calendarSpan"></span><span class="typcn typcn-tag colorSpan"></span></li>
+          <li><span class="typcn typcn-media-stop-outline emptyCheck"></span><span class="text">Dire Babye!!</span><span class="typcn typcn-calendar-outline calendarSpan"></span><span class="typcn typcn-tag colorSpan"></span></li> -->
+        </ul>
+      </div>
     </div>
-    <hr />
+    <hr class="zoneHr" />
     <h3 style="display: inline-block;">Done Zone</h3>
-    <button id="cloudIt"><span class="typcn typcn-cloud-storage-outline"></span></button>
     <ul id="doneZone"></ul>
   </div>
   <div id="toDoSection" class="displayNone">

@@ -84,7 +84,7 @@ input[type="radio"]{
 }
 #cloudIt{
   float: right;
-  margin-top: 15px;
+  margin-top: 0;
   font-size: 25px;
   line-height: 1em;
   padding: 2px 0 2px 5px;
@@ -105,7 +105,7 @@ input[type="radio"]{
 #settings{
   position: absolute;
   top: 0;
-  right: 0;
+  right: 50px;
   border-top: 1px solid darkslategrey;
   border-left: 1px solid darkslategrey;
   border-right: 2px solid darkslategrey;
@@ -358,8 +358,36 @@ input[name="colorRadio"]:checked + label > div{
   background-color: darkslategrey;
   color: white;
 }
-
-hr{
+.listToggleLabel{
+  position: relative;
+  display: block;
+  border-bottom: 1px dotted darkslategrey;
+}
+.listToggleChevron{
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: inline-block;
+  transform: rotate(90deg);
+  font-size: 30px;
+  line-height: 45px;
+}
+.listToggleList{
+  opacity: 0;
+  visibility: hidden;
+  /* display: block; */
+  height: 0;
+}
+.listToggleInput:checked + div .listToggleLabel .listToggleChevron{
+  transform: rotate(-90deg);
+}
+.listToggleInput:checked + div .listToggleList{
+  opacity: 1;
+  visibility: visible;
+  min-height: fit-content;
+  height: fit-content;
+}
+hr.zoneHr{
   margin: 30px 0 0;
 }
 #doneZone{

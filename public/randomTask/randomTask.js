@@ -324,10 +324,9 @@ settings.addEventListener("click", () => {
   //UPDATE
   clearStorageBtn.addEventListener("click", () => {
     localStorage.clear();
-    list.innerHTML = "";
-    listOups.innerHTML = "";
-    listToday.innerHTML = "";
-    doneZone.innerHTML = "";
+    document.querySelectorAll("ul").forEach(ul => {
+      ul.innerHTML = "";
+    });
     listTasks = [];
     listDones = [];
     wheneverList = [];
@@ -365,16 +364,25 @@ function todoCreation(todo){
   li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><span class="text" onclick="taskAddInfo(this)">${todo.task}</span><span class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
   li.setAttribute("id", todo.id);
   li.querySelector(".text").style.color = todo.color;
+  let togoList = getTogoList(todo);
+  document.getElementById(togoList).appendChild(li);
+};
+
+function getTogoList(todo){
   let todayDate = getTodayDate();
   let togoList;
   if(todo.date == "" || !todo.date || todo.date > todayDate){
-    togoList = "list";
+    if(todo.line == "todoDay"){
+      togoList = "listScheduled";
+    } else {
+      togoList = "list";
+    };
   } else if(todo.date == todayDate){
     togoList = "listToday";
   } else if(todo.date < todayDate){
     togoList = "listOups";
   };
-  document.getElementById(togoList).appendChild(li);
+  return togoList;
 };
 
 function donedCreation(donedDate, doned){
@@ -658,15 +666,7 @@ saveTheDateBtn.addEventListener("click", () => {
     list.appendChild(parent);
   };
   if(previousDate !== listTasks[taskToDateIndex].date) {
-    let todayDate = getTodayDate();
-    let togoList;
-    if(listTasks[taskToDateIndex].date == "" || !listTasks[taskToDateIndex].date || listTasks[taskToDateIndex].date > todayDate){
-      togoList = "list";
-    } else if(listTasks[taskToDateIndex].date == todayDate){
-      togoList = "listToday";
-    } else if(listTasks[taskToDateIndex].date < todayDate){
-      togoList = "listOups";
-    };
+    let togoList = getTogoList(listTasks[taskToDateIndex]);
     document.getElementById(togoList).appendChild(parent);
   };
   localStorage.listTasks = JSON.stringify(listTasks);

@@ -76,20 +76,20 @@ async function getTasksSettings() {
     listTasks = JSON.parse(localStorage.listTasks);
   } else if(getTasks.exists()){
     getTasks.data().listTasks.map((todo) => {
+      console.log(todo);
+      let idIt = todo.id;
       let taskIt = todo.task;
       let colorIt = todo.color;
       let infoIt = todo.info;
       let dateIt = todo.date;
       let lineIt = todo.line;
-      myListTasks.push({task: taskIt, color: colorIt, info: infoIt, date: dateIt, line: lineIt});
+      myListTasks.push({id: idIt, task: taskIt, color: colorIt, info: infoIt, date: dateIt, line: lineIt});
     });
     listTasks = myListTasks;
     localStorage.listTasks = JSON.stringify(listTasks);
   };
-  let idT = 0;
   listTasks.forEach(todo => {
-    todoCreation(todo, idT);
-    idT++;
+    todoCreation(todo);
   });
 };
 
@@ -149,10 +149,8 @@ function freeIn(){
   
   if(localStorage.getItem("listTasks")){
     listTasks = JSON.parse(localStorage.listTasks);
-    let idT = 0;
     listTasks.forEach(todo => {
-      todoCreation(todo, idT);
-      idT++;
+      todoCreation(todo);
     });
   };
   
@@ -376,10 +374,10 @@ settings.addEventListener("click", () => {
 });
 
 // *** CREATION
-function todoCreation(todo, idx){
+function todoCreation(todo){
   let li = document.createElement("li");
   li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><span class="text" onclick="taskAddInfo(this)">${todo.task}</span><span class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
-  li.setAttribute("id", "todo" + idx);
+  li.setAttribute("id", todo.id);
   li.querySelector(".text").style.color = todo.color;
   let todayDate = getTodayDate();
   let togoList;
@@ -426,15 +424,15 @@ function recycleEvent(recycle){
     if (listDones[i].date == recycleDate) {
       let doned = listDones[i].list[recycleId];
       let todo = {
+        id: crypto.randomUUID(),
         task: doned.task,
         color: doned.color,
         info: doned.info
       };
-      let idx = listTasks.length;
       listTasks.push(todo);
       localStorage.listTasks = JSON.stringify(listTasks);
       updateCBC();
-      todoCreation(todo, idx);
+      todoCreation(todo);
     };
   };    
 };
@@ -447,14 +445,14 @@ addForm.addEventListener("submit", (e) => {
   let color = "darkslategrey";
   if(!newTask == ""){
     let todo = {
+      id: crypto.randomUUID(),
       task: newTask,
       color: color
     };
-    let idx = listTasks.length;
     listTasks.push(todo);
     localStorage.listTasks = JSON.stringify(listTasks);
     updateCBC();
-    todoCreation(todo, idx);
+    todoCreation(todo);
     addForm.reset();
     console.log(listTasks);
   };
@@ -464,12 +462,13 @@ addForm.addEventListener("submit", (e) => {
 let num = 0;
 
 doneNextBtn.addEventListener("click", () => {
-  let doneId = listTasks.findIndex(todo => todo.task == wheneverList[num].task);
-  let doneLi = document.querySelector("#todo" + doneId);
+  //let doneId = listTasks.findIndex(todo => todo.id == wheneverList[num].id);
+  let doneId = wheneverList[num].id;
+  let doneLi = document.getElementById(doneId);
   console.log(doneId);
   doneLi.remove();
   gotItDone(doneId);
-  refreshTodoId();
+  //refreshTodoId();
   wheneverList.splice(num, 1);
   if(wheneverList.length == 0){
     taskToDo.innerText = "aller t'reposer!";
@@ -492,9 +491,9 @@ function checkEvent(emptyCheck){
   let li = emptyCheck.parentElement;
   //let color = li.querySelector(".text").style.color;
   //let task = li.querySelector(".text").textContent;
-  let donedId = li.id.slice(4);
+  let donedId = li.id;
   li.remove();
-  refreshTodoId();
+  //refreshTodoId();
   gotItDone(donedId);
 };
 window.checkEvent = checkEvent;
@@ -502,7 +501,10 @@ window.checkEvent = checkEvent;
 function gotItDone(nb){
   console.log("gotItDone");
   console.log(nb);
-  let donedTaskSplice = listTasks.splice(nb, 1);
+  //find the object with that id
+  let donedTaskIndex = listTasks.findIndex(todo => todo.id == nb);
+  let donedTaskSplice = listTasks.splice(donedTaskIndex, 1);
+  console.log(donedTaskSplice);
   let donedTask = donedTaskSplice[0].task;
   console.log(donedTask);
   let donedColor = donedTaskSplice[0].color;
@@ -574,17 +576,18 @@ function localStorageDones(time){
 
 
 // *** REFRESH
-function refreshTodoId(){
-  let idx = 0;
-  let allIndex = [];
-  document.querySelectorAll("#todoZone li").forEach((li) => {
-    let index = li.id.slice(4);
-    allIndex.push(index);
-    li.setAttribute("id", "todo" + idx);
-    idx++;
-  });
-  listTasks = allIndex.map(index => listTasks[index]);
-};
+// function refreshTodoId(){
+//   let idx = 0;
+//   let allIndex = [];
+//   document.querySelectorAll("#todoZone li").forEach((li) => {
+//     let index = li.id.slice(4);
+//     allIndex.push(index);
+//     li.setAttribute("id", "todo" + idx);
+//     idx++;
+//   });
+//   listTasks = allIndex.map(index => listTasks[index]);
+//   localStorage.listTasks = JSON.stringify(listTasks);
+// };
 function refreshDoneId(){
   document.querySelectorAll("#doneZone ul").forEach(ul => {
     let idx = 0;
@@ -598,7 +601,7 @@ function refreshDoneId(){
 // *** SHUFFLE
 let wheneverList = [];
 shuffleBtn.addEventListener("click", () => {
-  refreshTodoId();
+  //refreshTodoId();
   let todayDate = getTodayDate();
   wheneverList = listTasks.filter(task => task.date > todayDate || !task.date || task.date == "");
   console.log(wheneverList);
@@ -652,19 +655,20 @@ backBtn.addEventListener("click", () => {
 // *** SAVE THE DATE
 let parent;
 let taskToDate;
-let taskToDateId;
+let taskToDateIndex;
 let lineDay = ["todoDay", "doneDay"];
 function calendarChoice(thisOne){
   taskToDate = thisOne; // taskToDate est l'icon calendar
   parent = taskToDate.parentElement;
   parent.classList.add("selectedTask");
-  taskToDateId = parent.id.slice(4);
-  if(listTasks[taskToDateId].date){
-    calendarInput.value = listTasks[taskToDateId].date; //calendarInput est le dateInput qui doit contenir la date (si y'en a déjà une)
+  let taskToDateId = parent.id;
+  taskToDateIndex = listTasks.findIndex(todo => todo.id == taskToDateId);
+  if(listTasks[taskToDateIndex].date){
+    calendarInput.value = listTasks[taskToDateIndex].date; //calendarInput est le dateInput qui doit contenir la date (si y'en a déjà une)
   } else{
     calendarInput.value = "";
   };
-  if(listTasks[taskToDateId].line == "doneDay"){
+  if(listTasks[taskToDateIndex].line == "doneDay"){
     doneDayInput.checked = true;
   } else{
     todoDayInput.checked = true;
@@ -677,35 +681,35 @@ function calendarChoice(thisOne){
 window.calendarChoice = calendarChoice;
 
 saveTheDateBtn.addEventListener("click", () => {
-  let previousDate = listTasks[taskToDateId].date;
-  listTasks[taskToDateId].date = calendarInput.value;
+  let previousDate = listTasks[taskToDateIndex].date;
+  listTasks[taskToDateIndex].date = calendarInput.value;
   if(calendarInput.value){
     document.getElementsByName("whatDay").forEach(radio => {
       if(radio.checked == true){
-        listTasks[taskToDateId].line = radio.value;
+        listTasks[taskToDateIndex].line = radio.value;
         taskToDate.classList.remove(...lineDay);
         taskToDate.classList.add(radio.value);
       };
     });
   } else{
-    listTasks[taskToDateId].line = "";
+    listTasks[taskToDateIndex].line = "";
     todoDayInput.checked = true;
     taskToDate.classList.remove(...lineDay);
     list.appendChild(parent);
-    refreshTodoId();
+    //refreshTodoId();
   };
-  if(previousDate !== listTasks[taskToDateId].date) {
+  if(previousDate !== listTasks[taskToDateIndex].date) {
     let todayDate = getTodayDate();
     let togoList;
-    if(listTasks[taskToDateId].date == "" || !listTasks[taskToDateId].date || listTasks[taskToDateId].date > todayDate){
+    if(listTasks[taskToDateIndex].date == "" || !listTasks[taskToDateIndex].date || listTasks[taskToDateIndex].date > todayDate){
       togoList = "list";
-    } else if(listTasks[taskToDateId].date == todayDate){
+    } else if(listTasks[taskToDateIndex].date == todayDate){
       togoList = "listToday";
-    } else if(listTasks[taskToDateId].date < todayDate){
+    } else if(listTasks[taskToDateIndex].date < todayDate){
       togoList = "listOups";
     };
     document.getElementById(togoList).appendChild(parent);
-    refreshTodoId();
+    //refreshTodoId();
   };
   localStorage.listTasks = JSON.stringify(listTasks);
   updateCBC();
@@ -714,7 +718,7 @@ saveTheDateBtn.addEventListener("click", () => {
 
 // *** DETAILS
 let taskToInfo;
-let taskToInfoId;
+let taskToInfoIndex;
 function taskAddInfo(thisOne){
   taskToInfo = thisOne; //taskToInfo est le span.text qui a été cliqué
   let width = getComputedStyle(taskToInfo).width;
@@ -726,10 +730,12 @@ function taskAddInfo(thisOne){
   taskTitle.value = taskTitleInfo; //taskTitle est le input qui doit contenir le titre, dans le div
   parent = taskToInfo.parentElement;
   parent.classList.add("selectedTask");
-  taskToInfoId = parent.id.slice(4);
-  taskTitle.style.color = listTasks[taskToInfoId].color;
-  if(listTasks[taskToInfoId].info){
-    taskDetails.value = listTasks[taskToInfoId].info; //taskDetails est le testarea qui doit contenir les détails (si y'en a déjà), dans le div
+  let taskToInfoId = parent.id;
+  taskToInfoIndex = listTasks.findIndex(todo => todo.id == taskToInfoId);
+  console.log(taskToInfoIndex);
+  taskTitle.style.color = listTasks[taskToInfoIndex].color;
+  if(listTasks[taskToInfoIndex].info){
+    taskDetails.value = listTasks[taskToInfoIndex].info; //taskDetails est le testarea qui doit contenir les détails (si y'en a déjà), dans le div
   } else{
     taskDetails.value = "";
   };
@@ -740,8 +746,8 @@ window.taskAddInfo = taskAddInfo;
 window.listTasks = listTasks;
 
 taskInfoBtn.addEventListener("click", () => {
-  listTasks[taskToInfoId].task = taskTitle.value;
-  listTasks[taskToInfoId].info = taskDetails.value;
+  listTasks[taskToInfoIndex].task = taskTitle.value;
+  listTasks[taskToInfoIndex].info = taskDetails.value;
   console.log(listTasks);
   taskToInfo.textContent = taskTitle.value;
   localStorage.listTasks = JSON.stringify(listTasks);
@@ -765,8 +771,9 @@ function colorChoice(thisOne){
       let liTask = li.querySelector(".text").textContent;
       li.querySelector(".text").style.color = color;
       console.log(liTask);
-      let taskId = li.id.slice(4);
-      listTasks[taskId].color = color;
+      let taskId = li.id;
+      let taskIndex = listTasks.findIndex(todo => todo.id == taskId);
+      listTasks[taskIndex].color = color;
       console.log(listTasks);
       localStorage.listTasks = JSON.stringify(listTasks);
       updateCBC();

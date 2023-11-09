@@ -66,13 +66,66 @@
       </div>
       <div id="calendarDiv" class="displayNone">
         <h5 class="taskInfoInput">Tell me when...</h5>
-        <input type="date" id="calendarInput" style="margin: 20px 20px 10px" />
-        <div style="margin: 5px 20px 10px">
-          <input type="radio" id="todoDayInput" name="whatDay" value="todoDay" checked />
-          <label for="todoDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText todoDay">To-do Day</span><br /><span class="smallText">(the day you want to do it)</span></p></label>
-          <input type="radio" id="doneDayInput" name="whatDay" value="doneDay" />
-          <label for="doneDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText doneDay">Done Day</span><br /><span class="smallText">(the day by which it has to have been done)</span></label></p></label>
+        <input id="oneTimeInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="oneTimeInput" class="listToggleLabel">
+            <h5 class="taskInfoInput">It's a one time thing</h5>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron smallChevron"></span>
+          </label>
+          <div class="listToggleList smallToggleList">
+            <input type="date" id="calendarInput" style="margin: 20px 20px 10px" />
+            <div style="margin: 5px 20px 10px">
+              <input type="radio" id="todoDayInput" name="whatDay" value="todoDay" checked />
+              <label for="todoDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText todoDay">To-do Day</span><br /><span class="smallText">(the day you want to do it)</span></p></label>
+              <input type="radio" id="doneDayInput" name="whatDay" value="doneDay" />
+              <label for="doneDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText doneDay">Done Day</span><br /><span class="smallText">(the day by which it has to have been done)</span></label></p></label>
+            </div>
+          </div>
         </div>
+        <input id="moreTimeInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="moreTimeInput" class="listToggleLabel">
+            <h5 class="taskInfoInput">It's a recurring thing</h5>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron smallChevron"></span>
+          </label>
+          <div class="listToggleList smallToggleList">
+            <div>
+              <p class="calendarMargin">Dal<input type="date" style="margin: 0 10px;" />
+              <p class="calendarMargin">Si ripete ogni<input type="number" style="width: 50px; margin: 0 10px;" /><input id="timeVariation" list="timeVariations"></p>
+              <datalist id="timeVariations">
+                <option value="giorno"></option>
+                <option value="settimana"></option>
+                <option value="mese"></option>
+                <option value="anno"></option>
+              </datalist>
+              <div id="variationOptions">
+                <p class="calendarMargin">Da ripetere il</p>
+                <div class="dayCircleWeek calendarMargin">
+                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="domenica" value="domenica" />
+                  <label for="domenica" class="dayCircle">D</label>
+                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="lunedi" value="lunedi" />>
+                  <label for="lunedi" class="dayCircle">L</label>
+                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="martedi" value="martedi" />>
+                  <label for="martedi" class="dayCircle">M</label>
+                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="mercoledi" value="mercoledi" />>
+                  <label for="mercoledi" class="dayCircle">M</label>
+                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="giovedi" value="giovedi" />>
+                  <label for="giovedi" class="dayCircle">G</label>
+                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="venerdi" value="venerdi" />>
+                  <label for="venerdi" class="dayCircle">V</label>
+                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="sabato" value="sabato" />>
+                  <label for="sabato" class="dayCircle">S</label>
+                </div>
+                <p class="calendarMargin">Da ripetere</p>
+                <input type="radio" name="meseOptions" id="ogniXDate" />
+                <label for="ogniXDate"><span class="myRadio"></span><span id="ogniXDateText"></span></label>
+                <input type="radio" name="meseOptions" id="ogniXDay" />
+                <label for="ogniXDay"><span class="myRadio"></span><span id="ogniXDayText"></span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+        
         <button id="saveTheDateBtn" class="calendarMargin">Save The Date</button>
       </div>
       <table id="colorPalet" class="displayNone">

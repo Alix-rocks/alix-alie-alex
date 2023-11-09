@@ -145,8 +145,31 @@ input[type="radio"]{
   top: 10px;
   right: 43px;
   width: fit-content;
+  align-items: stretch;
 }
-
+.dayCircleWeek{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-evenly;
+}
+.dayCircle{
+  font-size: 16px;
+  width: 25px;
+  height: 25px;
+  line-height: 22px;
+  text-align: center;
+  border-radius: 25px;
+  border: 2px solid darkslategrey;
+  color: darkslategrey;
+}
+input[name="daysWeekChoice"]:checked + label.dayCircle{
+  background-color: darkslategrey;
+  color: white;
+}
+#saveTheDateBtn{
+  margin-top: 20px;
+  align-self: center;
+}
 
 .taskInfoInput{
   width: -webkit-fill-available!important;
@@ -371,12 +394,23 @@ input[name="colorRadio"]:checked + label > div{
   transform: rotate(90deg);
   font-size: 30px;
   line-height: 45px;
+  padding: 0;
+}
+.smallChevron{
+  right: 10px;
+  font-size: 20px;
+  line-height: 20px;
 }
 .listToggleList{
   opacity: 0;
   visibility: hidden;
-  /* display: block; */
   height: 0;
+}
+.smallToggleList{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
 }
 .listToggleInput:checked + div .listToggleLabel .listToggleChevron{
   transform: rotate(-90deg);

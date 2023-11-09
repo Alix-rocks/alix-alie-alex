@@ -236,7 +236,7 @@ function resetModif(){
 
 // *** CLOUDSAVE
 
-cloudIt.addEventListener("click", async () => {
+async function saveToCloud(){
   const batch = writeBatch(db);
   listTasks = JSON.parse(localStorage.listTasks);
   const docRefTasks = doc(db, "randomTask", auth.currentUser.email);
@@ -286,7 +286,39 @@ cloudIt.addEventListener("click", async () => {
   await batch.commit();
   resetCBC();
   resetModif();
+};
+
+cloudIt.addEventListener("click", saveToCloud);
+
+setInterval(() => {
+  if(cBC > 0){
+    saveToCloud();
+  };
+}, 10000); 
+
+browser.idle.onStateChanged.addListener((state) => {
+  if(state == "active"){
+    console.log("on synchronise!");
+    updateFromCloud();
+  };
 });
+
+function updateFromCloud(){
+  localStorage.clear();
+  document.querySelectorAll("ul").forEach(ul => {
+    ul.innerHTML = "";
+  });
+  listTasks = [];
+  listDones = [];
+  wheneverList = [];
+  myListTasks = [];
+  myListDones = [];
+  resetModif();
+  resetCBC();
+  getTasksSettings();
+  getDones();
+  clearStorageBtn.textContent = "Updated!";
+};
 
 async function cloudSaveTomorrow(){
   const docRef = doc(db, "randomTask", auth.currentUser.email);
@@ -322,22 +354,7 @@ function resetCBC(){
 settings.addEventListener("click", () => {
   settingsScreen.classList.remove("displayNone");
   //UPDATE
-  clearStorageBtn.addEventListener("click", () => {
-    localStorage.clear();
-    document.querySelectorAll("ul").forEach(ul => {
-      ul.innerHTML = "";
-    });
-    listTasks = [];
-    listDones = [];
-    wheneverList = [];
-    myListTasks = [];
-    myListDones = [];
-    resetModif();
-    resetCBC();
-    getTasksSettings();
-    getDones();
-    clearStorageBtn.textContent = "Updated!";
-  });
+  clearStorageBtn.addEventListener("click", updateFromCloud);
   exitX.addEventListener("click", () => {
     settingsScreen.classList.add("displayNone");
   });

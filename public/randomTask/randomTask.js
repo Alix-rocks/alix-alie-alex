@@ -290,18 +290,20 @@ async function saveToCloud(){
 
 cloudIt.addEventListener("click", saveToCloud);
 
-setInterval(() => {
-  if(cBC > 0){
-    saveToCloud();
-  };
-}, 10000); 
+// setInterval(() => {
+//   if(cBC > 0){
+//     saveToCloud();
+//   };
+// }, 60000); 
 
-browser.idle.onStateChanged.addListener((state) => {
-  if(state == "active"){
-    console.log("on synchronise!");
-    updateFromCloud();
-  };
-});
+// document.addEventListener("visibilitychange", () => {
+//   if (document.hidden) {
+
+//   } else {
+//     console.log("on synchronise!");
+//     updateFromCloud();
+//   };
+// });
 
 function updateFromCloud(){
   localStorage.clear();

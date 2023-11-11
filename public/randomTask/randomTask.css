@@ -141,6 +141,9 @@ input[type="radio"]{
   width: 90vw;
   max-width: 500px;
 }
+#taskDetails{
+  height: 105px;
+}
 #calendarDiv{
   top: 10px;
   right: 43px;
@@ -259,7 +262,7 @@ ul{
   border-radius: 15px;
 }
 
-li span{
+li>span{
   padding-right: 3px;
   line-height: 1em;
   font-size: 1.5em;
@@ -309,7 +312,8 @@ li .text{
   border-radius: 25px;
   border: 1px solid darkslategrey;
 }
-input[name="whatDay"]:checked + label span.myRadio{
+/* input[name="whatDay"]:checked + label span.myRadio{ */
+input.myRadio:checked + label span.myRadio{
   height: 15px;
   width: 15px;
   outline: 2px solid white;

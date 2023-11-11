@@ -75,13 +75,19 @@
           <div class="listToggleList smallToggleList">
             <input type="date" id="calendarInput" style="margin: 20px 20px 10px" />
             <div style="margin: 5px 20px 10px">
-              <input type="radio" id="todoDayInput" name="whatDay" value="todoDay" checked />
+              <input class="myRadio" type="radio" id="todoDayInput" name="whatDay" value="todoDay" checked />
               <label for="todoDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText todoDay">To-do Day</span><br /><span class="smallText">(the day you want to do it)</span></p></label>
-              <input type="radio" id="doneDayInput" name="whatDay" value="doneDay" />
+              <input class="myRadio" type="radio" id="doneDayInput" name="whatDay" value="doneDay" />
               <label for="doneDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText doneDay">Done Day</span><br /><span class="smallText">(the day by which it has to have been done)</span></label></p></label>
             </div>
           </div>
         </div>
+        <!-- <details>
+          <summary>To be or not to be?</summary>
+          <div>
+            That is the question!
+          </div>
+        </details> -->
         <input id="moreTimeInput" type="checkbox" class="cossin listToggleInput" />
         <div>
           <label for="moreTimeInput" class="listToggleLabel">
@@ -89,7 +95,7 @@
             <span class="typcn typcn-chevron-right-outline listToggleChevron smallChevron"></span>
           </label>
           <div class="listToggleList smallToggleList">
-            <div>
+            <div style="display: flex; flex-flow: column nowrap; padding-top: 10px;">
               <p class="calendarMargin">Dal<input type="date" style="margin: 0 10px;" />
               <p class="calendarMargin">Si ripete ogni<input type="number" style="width: 50px; margin: 0 10px;" /><input id="timeVariation" list="timeVariations"></p>
               <datalist id="timeVariations">
@@ -98,7 +104,7 @@
                 <option value="mese"></option>
                 <option value="anno"></option>
               </datalist>
-              <div id="variationOptions">
+              <div id="variationOptions" class="calendarMargin">
                 <p class="calendarMargin">Da ripetere il</p>
                 <div class="dayCircleWeek calendarMargin">
                   <input type="checkbox" name="daysWeekChoice" class="cossin" id="domenica" value="domenica" />
@@ -116,11 +122,22 @@
                   <input type="checkbox" name="daysWeekChoice" class="cossin" id="sabato" value="sabato" />
                   <label for="sabato" class="dayCircle">S</label>
                 </div>
+              </div>
+              <div class="calendarMargin">
                 <p class="calendarMargin">Da ripetere</p>
-                <input type="radio" name="meseOptions" id="ogniXDate" />
-                <label for="ogniXDate"><span class="myRadio"></span><span id="ogniXDateText">ogni mese, il giorno X</span></label>
-                <input type="radio" name="meseOptions" id="ogniXDay" />
+                <input class="myRadio" type="radio" name="meseOptions" id="ogniXDate" />
+                <label for="ogniXDate" style="display: block;"><span class="myRadio"></span><span id="ogniXDateText">ogni mese, il giorno X</span></label>
+                <input class="myRadio" type="radio" name="meseOptions" id="ogniXDay" />
                 <label for="ogniXDay"><span class="myRadio"></span><span id="ogniXDayText">ogni mese, il secondo giovedi</span></label>
+              </div>
+              <div class="calendarMargin">
+                <p class="calendarMargin">Termina</p>
+                <input class="myRadio" type="radio" name="fineOptions" id="fineMai" />
+                <label for="fineMai" style="display: block;"><span class="myRadio"></span>Mai</label>
+                <input class="myRadio" type="radio" name="fineOptions" id="fineGiorno" />
+                <label for="fineGiorno" style="display: block;"><span class="myRadio"></span>Il giorno<input type="date" style="margin: 0 10px;" /></label>
+                <input class="myRadio" type="radio" name="fineOptions" id="fineDopo" />
+                <label for="fineDopo" style="display: block;"><span class="myRadio"></span>Dopo<input type="number" style="width: 50px; margin: 0 10px;" />occorrenza</label>
               </div>
             </div>
           </div>

@@ -663,6 +663,7 @@ function calendarChoice(thisOne){
   taskToDate.insertAdjacentElement("afterend", calendarDiv); //calendarDiv est le div qui apparait
   calendarDiv.classList.remove("displayNone");
   clickScreen.classList.remove("displayNone");
+  parent.scrollIntoView();
   document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(calendarDiv));
 };
 window.calendarChoice = calendarChoice;
@@ -716,7 +717,7 @@ function taskAddInfo(thisOne){
   } else{
     taskDetails.value = "";
   };
-  
+  parent.scrollIntoView();
   document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(taskInfo));
 };
 window.taskAddInfo = taskAddInfo;

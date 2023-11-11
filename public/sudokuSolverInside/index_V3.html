@@ -349,13 +349,6 @@ let sudokuQuestionF = [
         ${linesF}
       </table>
       <p id="solutionFinale"></p>`;
-    for(let b = 1; b < 10; b++){
-      let s = 1;
-      document.querySelectorAll('[data-bloc="' + b + '"]').forEach(sub => {
-        sub.setAttribute("data-sub", s);
-        s++;
-      });
-    };
   };
 
 
@@ -377,8 +370,7 @@ let sudokuQuestionF = [
         let kase = document.getElementById("r" + i + "c" + j);
         if (!kase.textContent) {
           let b = kase.dataset.bloc;
-          let s = kase.dataset.sub;
-          sudokuSolver(i, j, b, s, sudokuQuestion, classe, cClasse);
+          sudokuSolver(i, j, b, sudokuQuestion, classe, cClasse);
           if (values.length == 0) {
             fucked = true;
           } else if (values.length == 1) {
@@ -404,7 +396,7 @@ let sudokuQuestionF = [
     console.log(sudokuSoFar);
   };
 
-  function sudokuSolver(i, j, b, s, sudokuQuestion, classe, cClasse) {
+  function sudokuSolver(i, j, b, sudokuQuestion, classe, cClasse) {
     values = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
     document.querySelectorAll('.case[data-row="' + i + '"]').forEach((kaseI) => {
       let chiffre = kaseI.textContent;
@@ -418,8 +410,8 @@ let sudokuQuestionF = [
       let chiffre = kaseB.textContent;
       values = values.filter(num => num !== chiffre);
     });
-    //let code = conversion(values);
-    let kaseOptions = {b: b, s: s, i: i, j: j, o: values};
+    let code = conversion(values);
+    let kaseOptions = {b: b, i: i, j: j, o: values, c: code};
     sudokuSoFar[i].splice(j, 1, kaseOptions);//NOOON! Ne pas refaire ça après avoir cleaner parce que ça va remettre les values au complet, même celles qu'on vient de cleaner!!
     //après avoir cleaner, on va rouler autrement : on va parcourir et voir qui a object.o.length == 1 (if 0 -> fucked) et à chaque fois qu'on va ajouter une réponse, on updater sudokuSoFar ET les little ones et enlevant le chiffre dans les object.o de sa i, j, b
     
@@ -542,7 +534,8 @@ let sudokuQuestionF = [
   let singles = 0;
   function sudokuCleanerSingles(){
     singles = 0;
-    console.log("sudokuCleanerSingles"); 
+    console.log("sudokuCleanerSingles");
+    //In i (then j then b) check if there's two kase that have the same opt (two values i.e. opt.length == 2), if so, remove these opt from all the others 
     for (let i = 0; i < 9; i++){
       findSingles(sudokuSoFar[i]);
     };
@@ -596,22 +589,11 @@ let sudokuQuestionF = [
           };
         };
       };
-      // console.log(sudokuSoFarB);
-      // let sudokuSoFarBtoCompare = [];
-      // for(let n = 1; n < 10; n++){
-      //   let arrayN = sudokuSoFarB.filter(obj => obj.o.includes(n.toString()));
-      //   if(arrayN.length > 1){
-      //     let arrayNsub = arrayN.map(obj => {
-      //       return obj.s;
-      //     });
-      //     let code = conversion(arrayNsub);
-      //     let toCompare = {n: n, c: code};
-      //     sudokuSoFarBtoCompare.push(toCompare);
-      //   };
-        
-      // };
-      // console.log(sudokuSoFarBtoCompare);
-      findAligned(sudokuSoFarB, b);
+      console.log(sudokuSoFarB);
+      if(sudokuSoFarB.includes(5)){
+        console.log("includes 5!");
+      }
+      //findAligned(sudokuSoFarB, b);
     };
     //console.log(sudokuSoFar);
     updateLittleOnes();
@@ -619,12 +601,11 @@ let sudokuQuestionF = [
   };
 
   function findAligned(array, b){
-    let compare = [];
+    let allObject = array.filter((num) => typeof num === 'object'); //no need to filter for object; they're all objects! (because they have b == b)
     for(let n = 1; n < 10; n++){
-      let count = array.filter((obj) => obj.o.includes(n.toString()));
+      let count = allObject.filter((obj) => obj.o.includes(n.toString()));
       if(count.length > 1){
         let i = count[0].i;
-        //let j = count[0].j;
         let countI = count.filter(obj2 => obj2.i == i);
         if(count.length == countI.length){
           console.log(n + " aligned in i = " + i + " in bloc " + b);
@@ -633,12 +614,9 @@ let sudokuQuestionF = [
             return `${obj.i}${obj.j}`;
           }).join("");
           console.log(kaseCodesI);
-          let com = {n: n, c: kaseCodesI};
-          compare.push(com);
           //prendre en note les ij des cases où n est aligné puis à la fin comparer tous les n pour voir s'ils ont les mêmes cases.
           //mais il faut qu'on puisse se souvenir des n...
         } else{
-          //let i = count[0].i;
           let j = count[0].j;
           let countJ = count.filter(obj4 => obj4.j == j);
           if(count.length == countJ.length){
@@ -648,73 +626,12 @@ let sudokuQuestionF = [
               return `${obj.i}${obj.j}`;
             }).join("");
           console.log(kaseCodesJ);
-          let com = {n: n, c: kaseCodesJ};
-          compare.push(com);
           };
         };
       };
     };
-    console.log(compare);
-    if(compare.length > 1){
-      compare.forEach(com => {
-        let first = com.c;
-        let countCom = compare.filter(comC => comC.c == first);
-        if(countCom.length > 1){
-          compare = compare.filter(comF => comF.c !== first);
-          console.log("compare!");
-          console.log(countCom);
-          let numCom = countCom.map(com => {
-            return com.n.toString();
-          });
-          console.log(numCom);
-          let f1i = first.substring(0, 1);
-          console.log(f1i);
-          let f1j = first.substring(1, 2);
-          console.log(f1j);
-          sudokuSoFar[f1i][f1j].o = sudokuSoFar[f1i][f1j].o.filter(opt => numCom.includes(opt));
-          console.log(sudokuSoFar[f1i][f1j].o);
-          let f2i = first.substring(2, 3);
-          console.log(f2i);
-          let f2j = first.substring(3, 4);
-          console.log(f2j);
-          sudokuSoFar[f2i][f2j].o = sudokuSoFar[f2i][f2j].o.filter(opt => numCom.includes(opt));
-          console.log(sudokuSoFar[f2i][f2j].o);
-          if(first.length == 6){
-            let f3i = first.substring(4, 5);
-            let f3j = first.substring(5, 6);
-            sudokuSoFar[f3i][f3j].o = sudokuSoFar[f3i][f3j].o.filter(opt => numCom.includes(opt));
-          };
-          
-        };
-      });
-      
-    };
-
   };
-/////
 
-
-// allObject.forEach((obj) => {
-//       let option = obj.o.toString();
-//       let length = obj.o.length;
-//       if(length > 1){
-//         let allObjectCode = allObject.filter(obj2 => obj2.o.toString() == option);
-//         if(allObjectCode.length == length){
-//           allObject = allObject.filter(obj3 => obj3.o.toString() !== option);
-//           console.log("plicates!");
-//           cleanKasesOfPlicates(allObject, option);
-//         };
-//       };
-//     });
-//   };
-//   function cleanKasesOfPlicates(arrayObjects, options){
-//     arrayObjects.forEach(obj => {
-//       sudokuSoFar[obj.i][obj.j].o = sudokuSoFar[obj.i][obj.j].o.filter(opt => !options.includes(opt));
-//     });
-//   };
-
-
-////
   function cleanKasesOfAlignedI(i, b, n){
     for (let j = 0; j < 9; j++){
       let object = sudokuSoFar[i][j];
@@ -779,13 +696,12 @@ let sudokuQuestionF = [
   let alignedOUT = false;
   function sudokuCompleteSolver(sudokuQuestion) {
     tableCreation(sudokuQuestion);
-    for (let c = 0; c < 50; c++) { //12
+    for (let c = 0; c < 7; c++) { //12
       document.querySelectorAll(".case:not(.firstClass)").forEach((kase) => {
           kase.classList.add("purpleAnswer");
         });
       let soFar = sudokuSoFar.flat();
-      let countTot = soFar.filter((num) => typeof num == 'object' || num == 0).length; 
-      console.log("countTot " + countTot);
+      let countTot = soFar.filter((num) => typeof num !== 'object').length; 
       if (countTot == 0) {
         showSudokuArray(sudokuQuestion, sudokuSoFar);
         console.log("en " + c + " coups");
@@ -801,7 +717,7 @@ let sudokuQuestionF = [
         // } else {
         //   console.log(soFar.toString());
         // }
-        break
+        // break
       } else if (fucked && tries.length !== 0) {
         if (lastFinal !== "") {
           document.getElementById(lastFinal).innerText = "";
@@ -902,7 +818,7 @@ let sudokuQuestionF = [
     ]`;
     solutionFinale.innerHTML = showArray;
   };
-  sudokuCompleteSolver(sudokuQuestionF);
+  sudokuCompleteSolver(sudokuQuestionC);
 
 //Il va falloir faire une version qui compte toutes les possibilités... donc on refait the whole thing pour chaque option (de 2 possibilités)?
 </script>

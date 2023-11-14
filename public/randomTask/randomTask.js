@@ -643,7 +643,7 @@ backBtn.addEventListener("click", () => {
 let parent;
 let taskToDate;
 let taskToDateIndex;
-let lineDay = ["todoDay", "doneDay"];
+let lineDay = ["todoDay", "doneDay", "recurringDay"];
 function calendarChoice(thisOne){
   taskToDate = thisOne; // taskToDate est l'icon calendar
   parent = taskToDate.parentElement;
@@ -657,16 +657,45 @@ function calendarChoice(thisOne){
   };
   if(listTasks[taskToDateIndex].line == "doneDay"){
     doneDayInput.checked = true;
-  } else{
+  } else if(listTasks[taskToDateIndex].line == "todoDay"){
     todoDayInput.checked = true;
+  } else if(listTasks[taskToDateIndex].line == "recurringDay"){
+    recurringDayInput.checked = true;
+    fillUpRecurring(listTasks[taskToDateIndex]);
+  } else{
+    document.getElementsByName("whatDay").forEach(radio => {
+      radio.checked = false;
+    });
   };
+  weekSection.classList.add("displayNone");
+  monthSection.classList.add("displayNone");
   taskToDate.insertAdjacentElement("afterend", calendarDiv); //calendarDiv est le div qui apparait
   calendarDiv.classList.remove("displayNone");
   clickScreen.classList.remove("displayNone");
   parent.scrollIntoView();
   document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(calendarDiv));
+  recurringDayInput.addEventListener("click", (evt) => {
+    if(evt.currentTarget.checked == true && calendarInput.value !== "" && dalInput.value == ""){
+      dalInput.value = calendarInput.value;
+    };
+  });
+  timeVariationInput.addEventListener("change", () => {
+    if(timeVariationInput.value == "settimana"){
+      weekSection.classList.remove("displayNone");
+      monthSection.classList.add("displayNone");
+    } else if(timeVariationInput.value == "mese"){
+      meseCalculate();
+      weekSection.classList.add("displayNone");
+      monthSection.classList.remove("displayNone");
+    } else{
+      weekSection.classList.add("displayNone");
+      monthSection.classList.add("displayNone");
+    };
+  });
 };
 window.calendarChoice = calendarChoice;
+
+
 
 saveTheDateBtn.addEventListener("click", () => {
   let previousDate = listTasks[taskToDateIndex].date;
@@ -681,7 +710,9 @@ saveTheDateBtn.addEventListener("click", () => {
     });
   } else{
     listTasks[taskToDateIndex].line = "";
-    todoDayInput.checked = true;
+    document.getElementsByName("whatDay").forEach(radio => {
+      radio.checked = false;
+    });
     taskToDate.classList.remove(...lineDay);
     list.appendChild(parent);
   };
@@ -693,6 +724,32 @@ saveTheDateBtn.addEventListener("click", () => {
   updateCBC();
   clickHandlerAddOn(calendarDiv);
 });
+
+// *** RECURRING
+function fillUpRecurring(todo){
+  
+  dalInput.value = todo.dal; //date
+  ogniInput.value = todo.ogni; //number
+  timeVariationInput = todo.var; //giorno, settimana, mese or anno
+  //if "mese" is selected ogniXDayText and ogniXDateText are calculated and filled up automatically from dal
+  if(todo.var == "settimana"){
+    todo.daysWeek.forEach(choice => {
+      document.getElementById(choice).checked = true;
+    });
+  } else if(todo.var == "mese"){
+    document.getElementById(todo.meseOpt).checked = true;
+  };
+
+};
+
+function meseCalculate(){
+  console.log(dalInput.value);
+  let date = new Date(dalInput.value);
+  console.log(date);
+  // let day = dalInput.value.getDay();
+  let day2 = date.setDate(date.getDate() + 2);
+  console.log(day2.toString());
+};
 
 // *** DETAILS
 let taskToInfo;

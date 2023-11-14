@@ -66,47 +66,29 @@
       </div>
       <div id="calendarDiv" class="displayNone">
         <h5 class="taskInfoInput">Tell me when...</h5>
-        <input id="oneTimeInput" type="checkbox" class="cossin listToggleInput" />
-        <div>
-          <label for="oneTimeInput" class="listToggleLabel">
-            <h5 class="taskInfoInput">It's a one time thing</h5>
-            <span class="typcn typcn-chevron-right-outline listToggleChevron smallChevron"></span>
-          </label>
-          <div class="listToggleList smallToggleList">
-            <input type="date" id="calendarInput" style="margin: 20px 20px 10px" />
-            <div style="margin: 5px 20px 10px">
-              <input class="myRadio" type="radio" id="todoDayInput" name="whatDay" value="todoDay" checked />
-              <label for="todoDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText todoDay">To-do Day</span><br /><span class="smallText">(the day you want to do it)</span></p></label>
-              <input class="myRadio" type="radio" id="doneDayInput" name="whatDay" value="doneDay" />
-              <label for="doneDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText doneDay">Done Day</span><br /><span class="smallText">(the day by which it has to have been done)</span></label></p></label>
-            </div>
-          </div>
-        </div>
-        <!-- <details>
-          <summary>To be or not to be?</summary>
-          <div>
-            That is the question!
-          </div>
-        </details> -->
-        <input id="moreTimeInput" type="checkbox" class="cossin listToggleInput" />
-        <div>
-          <label for="moreTimeInput" class="listToggleLabel">
-            <h5 class="taskInfoInput">It's a recurring thing</h5>
-            <span class="typcn typcn-chevron-right-outline listToggleChevron smallChevron"></span>
-          </label>
-          <div class="listToggleList smallToggleList">
-            <div style="display: flex; flex-flow: column nowrap; padding-top: 10px;">
-              <p class="calendarMargin">Dal<input type="date" style="margin: 0 10px;" />
-              <p class="calendarMargin">Si ripete ogni<input type="number" style="width: 50px; margin: 0 10px;" /><input id="timeVariation" list="timeVariations"></p>
-              <datalist id="timeVariations">
-                <option value="giorno"></option>
-                <option value="settimana"></option>
-                <option value="mese"></option>
-                <option value="anno"></option>
-              </datalist>
-              <div id="variationOptions" class="calendarMargin">
-                <p class="calendarMargin">Da ripetere il</p>
-                <div class="dayCircleWeek calendarMargin">
+        <div class="smallToggleList">
+          <h5 class="taskInfoInput">It's a one time thing</h5>
+          <input type="date" id="calendarInput" style="margin: 20px 20px 10px" />
+          <div style="margin: 5px 20px 10px">
+            <input class="myRadio" type="radio" id="todoDayInput" name="whatDay" value="todoDay" checked />
+            <label for="todoDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText todoDay">To-do Day</span><br /><span class="smallText">(the day you want to do it)</span></p></label>
+            <input class="myRadio" type="radio" id="doneDayInput" name="whatDay" value="doneDay" />
+            <label for="doneDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText doneDay">Done Day</span><br /><span class="smallText">(the day by which it has to have been done)</span></label></p></label>
+            <input class="myRadio" type="radio" id="recurringDayInput" name="whatDay" value="recurringDay" />
+            <label for="recurringDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText recurringDay">Recurring Day</span><br /><span class="smallText">(let it come back on its own)</span></label></p></label>
+            <div id="recurringDaySection">
+              <h5 class="taskInfoInput" style="margin-left: 0;">It's a recurring thing</h5>
+              <p class="calendarMargin">Dal<input id="dalInput" type="date" style="margin: 0 10px;" />
+              <p class="calendarMargin">Si ripete ogni<input id="ogniInput" type="number" style="width: 50px; margin: 0 10px;" />
+              <select id="timeVariationInput">
+                <option value="giorno">giorno</option>
+                <option value="settimana">settimana</option>
+                <option value="mese">mese</option>
+                <option value="anno">anno</option>
+              </select></p>
+              <div id="weekSection" class="displayNone calendarMargin" style="width: -webkit-fill-available;">
+                <p>Da ripetere il</p>
+                <div class="dayCircleWeek">
                   <input type="checkbox" name="daysWeekChoice" class="cossin" id="domenica" value="domenica" />
                   <label for="domenica" class="dayCircle">D</label>
                   <input type="checkbox" name="daysWeekChoice" class="cossin" id="lunedi" value="lunedi" />
@@ -123,15 +105,15 @@
                   <label for="sabato" class="dayCircle">S</label>
                 </div>
               </div>
-              <div class="calendarMargin">
-                <p class="calendarMargin">Da ripetere</p>
+              <div id="monthSection" class="displayNone calendarMargin">
+                <p>Da ripetere</p>
                 <input class="myRadio" type="radio" name="meseOptions" id="ogniXDate" />
                 <label for="ogniXDate" style="display: block;"><span class="myRadio"></span><span id="ogniXDateText">ogni mese, il giorno X</span></label>
                 <input class="myRadio" type="radio" name="meseOptions" id="ogniXDay" />
                 <label for="ogniXDay"><span class="myRadio"></span><span id="ogniXDayText">ogni mese, il secondo giovedi</span></label>
               </div>
               <div class="calendarMargin">
-                <p class="calendarMargin">Termina</p>
+                <p>Termina</p>
                 <input class="myRadio" type="radio" name="fineOptions" id="fineMai" />
                 <label for="fineMai" style="display: block;"><span class="myRadio"></span>Mai</label>
                 <input class="myRadio" type="radio" name="fineOptions" id="fineGiorno" />
@@ -142,6 +124,14 @@
             </div>
           </div>
         </div>
+        <!-- when recurringDay is checked, open details (? but with nothing in summary?) (or just display:block...) -->
+        <!-- <details>
+              <summary>To be or not to be?</summary>
+              <div>
+                That is the question!
+              </div>
+            </details> -->
+                
         
         <button id="saveTheDateBtn" class="calendarMargin">Save The Date</button>
       </div>

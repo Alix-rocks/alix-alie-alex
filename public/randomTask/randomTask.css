@@ -327,6 +327,18 @@ input.myRadio:checked + label span.myRadio{
 .doneDay{
   color: red;
 }
+.recurringDay{
+  color: rebeccapurple;
+}
+#recurringDaySection{
+  display: none; 
+  flex-flow: column nowrap; 
+  align-items: flex-start;
+  padding-top: 10px;
+}
+input#recurringDayInput:checked ~ div#recurringDaySection{
+  display: flex;
+}
 #colorPalet{
   background-color: white;
   border: 2px solid darkslategrey;

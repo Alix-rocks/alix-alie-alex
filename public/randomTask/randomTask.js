@@ -656,7 +656,8 @@ function calendarChoice(thisOne){
   let taskToDateId = parent.id;
   taskToDateIndex = listTasks.findIndex(todo => todo.id == taskToDateId);
   let todo = listTasks[taskToDateIndex];
-  calendarInput.value = todo.date ? todo.date : getTodayDate(); //calendarInput est le dateInput qui doit contenir la date (si y'en a déjà une)
+  let date = todo.date ? todo.date : getTodayDate();
+  calendarInput.value = date; //calendarInput est le dateInput qui doit contenir la date (si y'en a déjà une)
   weekSection.classList.add("displayNone");
   monthSection.classList.add("displayNone");
   if(todo.line == "doneDay"){
@@ -684,10 +685,11 @@ function calendarChoice(thisOne){
   });
   timeVariationInput.addEventListener("change", () => {
     if(timeVariationInput.value == "settimana"){
+      weekCalculate(date);
       weekSection.classList.remove("displayNone");
       monthSection.classList.add("displayNone");
     } else if(timeVariationInput.value == "mese"){
-      meseCalculate();
+      meseCalculate(date);
       weekSection.classList.add("displayNone");
       monthSection.classList.remove("displayNone");
     } else{
@@ -791,19 +793,23 @@ calendarDiv.addEventListener("submit", (e) => {
 //todo.fineCount => nombre d'occurences après lesquelles ça fini
 
 function calculateRecurringDate(todo){
-
+  //we're not figuring out which list todo should go to (they're all going in recurring list except those that are after the fineDate and those that are for Today (make sure the togolist function checks these), but only the date we should give it: either the dalDate if it hasn't started yet (we can calculate once there if it's really starting on the dalDate) or the fineDate if it's over; otherwise it's the next date (should we recycle it and not recalculate every time?)
+  let today = getTodayDate();
+  if(todo.dal <= today >= todo.fineDate){}
 };
 
 function fillUpRecurring(todo){
   console.log(todo.dal);
-  document.getElementById("dalInput").value = todo.dal ? todo.dal : calendarInput.value ? calendarInput.value : getTodayDate(); //date
+  let date = todo.dal ? todo.dal : calendarInput.value ? calendarInput.value : getTodayDate(); //date
+  document.getElementById("dalInput").value = date;
   document.getElementById("ogniInput").value = todo.ogni ? todo.ogni : ""; //number
   document.getElementById("timeVariationInput").value = todo.var ? todo.var : ""; //giorno, settimana, mese or anno
   if(todo.var == "settimana"){
+    weekCalculate(date);
     weekSection.classList.remove("displayNone");
     monthSection.classList.add("displayNone");
   } else if(todo.var == "mese"){
-    meseCalculate();
+    meseCalculate(date);
     weekSection.classList.add("displayNone");
     monthSection.classList.remove("displayNone");
   };
@@ -826,9 +832,20 @@ function fillUpRecurring(todo){
     document.getElementById("fineMai").checked = true;
   };
 };
+function weekCalculate(date){
+  let dayI = meseDayICalc(date);
+  let n = 0;
+  document.getElementsByName("daysWeekChoice").forEach(choice => {
+    if(dayI == n){
+      choice.checked = true;
+      n++;
+    } else{
+      n++;
+    };
+  });
+};
 const giorniNomi = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"];
-function meseCalculate(){
-  let date = dalInput.value ? dalInput.value : getTodayDate();
+function meseCalculate(date){
   let dalG = meseDateCalc(date);
   let dayIdx = meseDayICalc(date);
   let dayC = meseDayNCalc(date);

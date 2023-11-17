@@ -64,7 +64,7 @@
         <textarea id="taskDetails" class="taskInfoInput"></textarea>
         <button id="taskInfoBtn">Save Info</button>
       </div>
-      <div id="calendarDiv" class="displayNone">
+      <form id="calendarDiv" class="displayNone">
         <h5 class="taskInfoInput">Tell me when...</h5>
         <div class="smallToggleList">
           <h5 class="taskInfoInput">It's a one time thing</h5>
@@ -86,7 +86,7 @@
                 <option value="mese">mese</option>
                 <option value="anno">anno</option>
               </select></p>
-              <div id="weekSection" class="displayNone calendarMargin" style="width: -webkit-fill-available;">
+              <div id="weekSection" class="calendarMargin displayNone" style="width: -webkit-fill-available;">
                 <p>Da ripetere il</p>
                 <div class="dayCircleWeek">
                   <input type="checkbox" name="daysWeekChoice" class="cossin" id="domenica" value="domenica" />
@@ -105,7 +105,7 @@
                   <label for="sabato" class="dayCircle">S</label>
                 </div>
               </div>
-              <div id="monthSection" class="displayNone calendarMargin">
+              <div id="monthSection" class="calendarMargin displayNone">
                 <p>Da ripetere</p>
                 <input class="myRadio" type="radio" name="meseOptions" id="ogniXDate" />
                 <label for="ogniXDate" style="display: block;"><span class="myRadio"></span><span id="ogniXDateText">ogni mese, il giorno X</span></label>
@@ -114,12 +114,12 @@
               </div>
               <div class="calendarMargin">
                 <p>Termina</p>
-                <input class="myRadio" type="radio" name="fineOptions" id="fineMai" />
+                <input class="myRadio" type="radio" name="fineOptions" id="fineMai" checked />
                 <label for="fineMai" style="display: block;"><span class="myRadio"></span>Mai</label>
                 <input class="myRadio" type="radio" name="fineOptions" id="fineGiorno" />
-                <label for="fineGiorno" style="display: block;"><span class="myRadio"></span>Il giorno<input type="date" style="margin: 0 10px;" /></label>
+                <label for="fineGiorno" style="display: block;"><span class="myRadio"></span>Il giorno<input id="fineDate" type="date" style="margin: 0 10px;" /></label>
                 <input class="myRadio" type="radio" name="fineOptions" id="fineDopo" />
-                <label for="fineDopo" style="display: block;"><span class="myRadio"></span>Dopo<input type="number" style="width: 50px; margin: 0 10px;" />occorrenza</label>
+                <label for="fineDopo" style="display: block;"><span class="myRadio"></span>Dopo<input id="fineCount" type="number" style="width: 50px; margin: 0 10px;" />occorrenza</label>
               </div>
             </div>
           </div>
@@ -133,8 +133,8 @@
             </details> -->
                 
         
-        <button id="saveTheDateBtn" class="calendarMargin">Save The Date</button>
-      </div>
+        <button id="saveTheDateBtn" class="calendarMargin" type="submit">Save The Date</button>
+      </form>
       <table id="colorPalet" class="displayNone">
         <tr class="colorTr">
           <td class="colorTd">

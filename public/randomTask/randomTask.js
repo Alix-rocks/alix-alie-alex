@@ -75,17 +75,18 @@ async function getTasksSettings() {
   if(localStorage.getItem("listTasks")){
     listTasks = JSON.parse(localStorage.listTasks);
   } else if(getTasks.exists()){
-    getTasks.data().listTasks.map((todo) => {
-      console.log(todo);
-      let idIt = todo.id;
-      let taskIt = todo.task;
-      let colorIt = todo.color;
-      let infoIt = todo.info;
-      let dateIt = todo.date;
-      let lineIt = todo.line;
-      myListTasks.push({id: idIt, task: taskIt, color: colorIt, info: infoIt, date: dateIt, line: lineIt});
-    });
-    listTasks = myListTasks;
+    // getTasks.data().listTasks.map((todo) => {
+    //   console.log(todo);
+    //   let idIt = todo.id;
+    //   let taskIt = todo.task;
+    //   let colorIt = todo.color;
+    //   let infoIt = todo.info;
+    //   let dateIt = todo.date;
+    //   let lineIt = todo.line;
+    //   myListTasks.push({id: idIt, task: taskIt, color: colorIt, info: infoIt, date: dateIt, line: lineIt});
+    // });
+    // listTasks = myListTasks;
+    listTasks = getTasks.data().listTasks;
     localStorage.listTasks = JSON.stringify(listTasks);
   };
   listTasks.forEach(todo => {
@@ -393,6 +394,8 @@ function getTogoList(todo){
   if(todo.date == "" || !todo.date || todo.date > todayDate){
     if(todo.line == "todoDay"){
       togoList = "listScheduled";
+    } else if(todo.line == "recurringDay"){
+      togoList = "listRecurring";
     } else {
       togoList = "list";
     };
@@ -470,6 +473,7 @@ addForm.addEventListener("submit", (e) => {
     console.log(listTasks);
   };
 });
+
 
 // *** DONE/ERASE
 let num = 0;
@@ -640,6 +644,7 @@ backBtn.addEventListener("click", () => {
 });
 
 // *** SAVE THE DATE
+// >>>>>>> MAKE IT A FORM! (so that you can do form.reset())
 let parent;
 let taskToDate;
 let taskToDateIndex;
@@ -650,33 +655,31 @@ function calendarChoice(thisOne){
   parent.classList.add("selectedTask");
   let taskToDateId = parent.id;
   taskToDateIndex = listTasks.findIndex(todo => todo.id == taskToDateId);
-  if(listTasks[taskToDateIndex].date){
-    calendarInput.value = listTasks[taskToDateIndex].date; //calendarInput est le dateInput qui doit contenir la date (si y'en a déjà une)
-  } else{
-    calendarInput.value = "";
-  };
-  if(listTasks[taskToDateIndex].line == "doneDay"){
-    doneDayInput.checked = true;
-  } else if(listTasks[taskToDateIndex].line == "todoDay"){
-    todoDayInput.checked = true;
-  } else if(listTasks[taskToDateIndex].line == "recurringDay"){
-    recurringDayInput.checked = true;
-    fillUpRecurring(listTasks[taskToDateIndex]);
-  } else{
-    document.getElementsByName("whatDay").forEach(radio => {
-      radio.checked = false;
-    });
-  };
+  let todo = listTasks[taskToDateIndex];
+  calendarInput.value = todo.date ? todo.date : getTodayDate(); //calendarInput est le dateInput qui doit contenir la date (si y'en a déjà une)
   weekSection.classList.add("displayNone");
   monthSection.classList.add("displayNone");
+  if(todo.line == "doneDay"){
+    doneDayInput.checked = true;
+  } else if(todo.line == "todoDay"){
+    todoDayInput.checked = true;
+  } else if(todo.line == "recurringDay"){
+    fillUpRecurring(todo);
+    recurringDayInput.checked = true;
+  } else{
+    todoDayInput.checked = true;
+    // document.getElementsByName("whatDay").forEach(radio => {
+    //   radio.checked = false;
+    // });
+  };
   taskToDate.insertAdjacentElement("afterend", calendarDiv); //calendarDiv est le div qui apparait
   calendarDiv.classList.remove("displayNone");
   clickScreen.classList.remove("displayNone");
   parent.scrollIntoView();
   document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(calendarDiv));
   recurringDayInput.addEventListener("click", (evt) => {
-    if(evt.currentTarget.checked == true && calendarInput.value !== "" && dalInput.value == ""){
-      dalInput.value = calendarInput.value;
+    if(evt.currentTarget.checked == true){
+      fillUpRecurring(todo);
     };
   });
   timeVariationInput.addEventListener("change", () => {
@@ -692,63 +695,174 @@ function calendarChoice(thisOne){
       monthSection.classList.add("displayNone");
     };
   });
+  document.getElementById("fineDate").addEventListener("input", () => {
+    document.getElementById("fineGiorno").checked = true;
+  });
+  document.getElementById("fineCount").addEventListener("input", () => {
+    document.getElementById("fineDopo").checked = true;
+  });
 };
 window.calendarChoice = calendarChoice;
 
-
-
-saveTheDateBtn.addEventListener("click", () => {
-  let previousDate = listTasks[taskToDateIndex].date;
-  listTasks[taskToDateIndex].date = calendarInput.value;
-  if(calendarInput.value){
+calendarDiv.addEventListener("submit", (e) => {
+  e.preventDefault();
+  let todo = listTasks[taskToDateIndex];
+  let previousDate = todo.date;
+  let previousLine = todo.line;
+  todo.date = calendarInput.value;
+  if(calendarInput.value || dalInput.value){
     document.getElementsByName("whatDay").forEach(radio => {
       if(radio.checked == true){
-        listTasks[taskToDateIndex].line = radio.value;
+        todo.line = radio.value;
         taskToDate.classList.remove(...lineDay);
         taskToDate.classList.add(radio.value);
       };
     });
   } else{
-    listTasks[taskToDateIndex].line = "";
-    document.getElementsByName("whatDay").forEach(radio => {
-      radio.checked = false;
-    });
+    todo.line = "";
+    // document.getElementsByName("whatDay").forEach(radio => {
+    //   radio.checked = false;
+    // });
     taskToDate.classList.remove(...lineDay);
-    list.appendChild(parent);
+    //list.appendChild(parent);
   };
-  if(previousDate !== listTasks[taskToDateIndex].date) {
-    let togoList = getTogoList(listTasks[taskToDateIndex]);
+  if(todo.line == "recurringDay"){
+    todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fineDate = todo.fineCount = "";
+    //add all the info to todo
+    todo.dal = dalInput.value;
+    todo.ogni = ogniInput.value;
+    todo.var = timeVariationInput.value;
+    if(todo.var == "settimana"){
+      let daysWeek = [];
+      document.getElementsByName("daysWeekChoice").forEach(choice => {
+        if(document.getElementById(choice.id).checked == true){
+          daysWeek.push(choice.value);
+        };
+      });
+      todo.daysWeek = daysWeek;
+    } else if(todo.var == "mese"){
+      document.getElementsByName("meseOptions").forEach(radio => {
+        if(radio.checked == true){
+          todo.meseOpt = radio.id;
+        };
+      });
+      if(todo.meseOpt == "ogniXDate"){
+        todo.meseDate = meseDateCalc(dalInput.value);
+      } else if(todo.meseOpt == "ogniXDay"){
+        todo.meseDayN = meseDayNCalc(dalInput.value);
+        todo.meseDayI = meseDayICalc(dalInput.value);
+      };
+    };
+    document.getElementsByName("fineOptions").forEach(radio => {
+      if(radio.checked == true){
+        todo.fineOpt = radio.id;
+      };
+    });
+    if(todo.fineOpt == "fineGiorno"){
+      todo.fineDate = document.getElementById("fineDate").value;
+    } else if(todo.fineOpt == "fineDopo"){
+      todo.fineCount = document.getElementById("fineCount").value;
+    };
+    //todo.date = calculateRecurringDate(todo);
+  };
+  if(previousDate !== todo.date || previousLine !== todo.line) {
+    let togoList = getTogoList(todo);
     document.getElementById(togoList).appendChild(parent);
   };
   localStorage.listTasks = JSON.stringify(listTasks);
   updateCBC();
   clickHandlerAddOn(calendarDiv);
+  calendarDiv.reset();
 });
 
+
 // *** RECURRING
-function fillUpRecurring(todo){
-  
-  dalInput.value = todo.dal; //date
-  ogniInput.value = todo.ogni; //number
-  timeVariationInput = todo.var; //giorno, settimana, mese or anno
-  //if "mese" is selected ogniXDayText and ogniXDateText are calculated and filled up automatically from dal
-  if(todo.var == "settimana"){
-    todo.daysWeek.forEach(choice => {
-      document.getElementById(choice).checked = true;
-    });
-  } else if(todo.var == "mese"){
-    document.getElementById(todo.meseOpt).checked = true;
-  };
+// todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fineDate = todo.fineCount = "";
+//todo.dal => date que ça commence
+//todo.ogni => numéro de répétition
+//todo.var => timeVariation, type de variation : "giorno", "settimana", "mese" or "anno"
+//todo.daysWeek => [] : "domenica", "lunedi", "martedi", "mercoledi", "giovedi", "venerdi" or "sabato"
+//todo.meseOpt => option mois : "ogniXDate" or "ogniXDay"
+//todo.meseDate => jour du mois où ça revient (xx)
+//todo.meseDayN => numéro du day (1, 2, 3, ou 4)
+//todo.meseDayI => index du day (0 = domenica, 1 = lunedi, 2 = martedi, etc)
+//todo.fineOpt => option quand ça fini: "fineMai", "fineGiorno" or "fineDopo"
+//todo.fineDate => jour que ça fini (date)
+//todo.fineCount => nombre d'occurences après lesquelles ça fini
+
+function calculateRecurringDate(todo){
 
 };
 
+function fillUpRecurring(todo){
+  console.log(todo.dal);
+  document.getElementById("dalInput").value = todo.dal ? todo.dal : calendarInput.value ? calendarInput.value : getTodayDate(); //date
+  document.getElementById("ogniInput").value = todo.ogni ? todo.ogni : ""; //number
+  document.getElementById("timeVariationInput").value = todo.var ? todo.var : ""; //giorno, settimana, mese or anno
+  if(todo.var == "settimana"){
+    weekSection.classList.remove("displayNone");
+    monthSection.classList.add("displayNone");
+  } else if(todo.var == "mese"){
+    meseCalculate();
+    weekSection.classList.add("displayNone");
+    monthSection.classList.remove("displayNone");
+  };
+  //if "mese" is selected ogniXDayText and ogniXDateText are calculated and filled up automatically from dal
+  document.getElementsByName("daysWeekChoice").forEach(choice => {
+    document.getElementById(choice.id).checked = (todo.var == "settimana" && todo.daysWeek && todo.daysWeek.includes(choice.value)) ? true : false;
+  });
+  document.getElementsByName("meseOptions").forEach(radio => {
+    radio.checked = (todo.var == "mese" && todo.meseOpt == radio.id) ? true : false;
+  });
+  document.getElementById("fineDate").value = document.getElementById("fineCount").value = "";
+  if(todo.fineOpt){
+    document.getElementById(todo.fineOpt).checked = true;
+    if(todo.fineOpt == "fineGiorno"){
+      document.getElementById("fineDate").value = todo.fineDate;
+    } else if(todo.fineOpt == "fineDopo"){
+      document.getElementById("fineCount").value = todo.fineCount;
+    };
+  } else{
+    document.getElementById("fineMai").checked = true;
+  };
+};
+const giorniNomi = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"];
 function meseCalculate(){
-  console.log(dalInput.value);
-  let date = new Date(dalInput.value);
-  console.log(date);
-  // let day = dalInput.value.getDay();
-  let day2 = date.setDate(date.getDate() + 2);
-  console.log(day2.toString());
+  let date = dalInput.value ? dalInput.value : getTodayDate();
+  let dalG = meseDateCalc(date);
+  let dayIdx = meseDayICalc(date);
+  let dayC = meseDayNCalc(date);
+  ogniXDateText.innerText = `ogni mese, il giorno ${dalG}`;
+  ogniXDayText.innerText = `ogni mese, il ${dayC}° ${giorniNomi[dayIdx]}`;
+};
+function getDateFromString(date){
+  let dalA = date.slice(0, 4);
+  let dalM = date.slice(5, 7);
+  // let dalG = date.slice(8, 10);
+  let dalG = meseDateCalc(date);
+  return new Date(dalA, dalM - 1, dalG);
+};
+function meseDateCalc(date){
+  return date.slice(8, 10);
+};
+function meseDayICalc(date){
+  let dateHere = getDateFromString(date);
+  return dateHere.getDay();
+};
+function meseDayNCalc(date){
+  let dalA = date.slice(0, 4);
+  let dalM = date.slice(5, 7);
+  // let dalG = date.slice(8, 10);
+  let dalG = meseDateCalc(date);
+  let dayIdx = meseDayICalc(date);
+  let dayC = 0;
+  for(let n = 1; n < Number(dalG) + 1; n++){
+    let dayN = new Date(dalA, dalM - 1, n).getDay();
+    if(dayN == dayIdx){
+      dayC++;
+    };
+  };
+  return dayC;
 };
 
 // *** DETAILS
@@ -767,10 +881,10 @@ function taskAddInfo(thisOne){
   parent.classList.add("selectedTask");
   let taskToInfoId = parent.id;
   taskToInfoIndex = listTasks.findIndex(todo => todo.id == taskToInfoId);
-  console.log(taskToInfoIndex);
-  taskTitle.style.color = listTasks[taskToInfoIndex].color;
-  if(listTasks[taskToInfoIndex].info){
-    taskDetails.value = listTasks[taskToInfoIndex].info; //taskDetails est le testarea qui doit contenir les détails (si y'en a déjà), dans le div
+  let todo = listTasks[taskToDateIndex];
+  taskTitle.style.color = todo.color;
+  if(todo.info){
+    taskDetails.value = todo.info; //taskDetails est le testarea qui doit contenir les détails (si y'en a déjà), dans le div
   } else{
     taskDetails.value = "";
   };
@@ -781,8 +895,9 @@ window.taskAddInfo = taskAddInfo;
 window.listTasks = listTasks;
 
 taskInfoBtn.addEventListener("click", () => {
-  listTasks[taskToInfoIndex].task = taskTitle.value;
-  listTasks[taskToInfoIndex].info = taskDetails.value;
+  let todo = listTasks[taskToDateIndex];
+  todo.task = taskTitle.value;
+  todo.info = taskDetails.value;
   console.log(listTasks);
   taskToInfo.textContent = taskTitle.value;
   localStorage.listTasks = JSON.stringify(listTasks);
@@ -833,7 +948,7 @@ function getTodayDate(){
   let currentHour = String(date.getHours()).padStart(2, "0");
   let currentMinute = String(date.getMinutes()).padStart(2, "0");
   let currentTime = `${currentHour}:${currentMinute}`;
-  let currentDay= String(date.getDate()).padStart(2, "0");
+  let currentDay = String(date.getDate()).padStart(2, "0");
   currentDay = currentTime <= myTomorrow ? String(currentDay - 1).padStart(2, "0") : currentDay;
   let currentMonth = String(date.getMonth()+1).padStart(2, "0");
   let currentYear = date.getFullYear();

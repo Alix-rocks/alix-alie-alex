@@ -76,6 +76,8 @@
             <label for="doneDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText doneDay">Done Day</span><br /><span class="smallText">(the day by which it has to have been done)</span></label></p></label>
             <input class="myRadio" type="radio" id="recurringDayInput" name="whatDay" value="recurringDay" />
             <label for="recurringDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText recurringDay">Recurring Day</span><br /><span class="smallText">(let it come back on its own)</span></label></p></label>
+            <input class="myRadio" type="radio" id="noDayInput" name="whatDay" value="noDay" />
+            <label for="noDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText">No Day</span><br /><span class="smallText">(just go with the flow)</span></label></p></label>
             <div id="recurringDaySection">
               <h5 class="taskInfoInput" style="margin-left: 0;">It's a recurring thing</h5>
               <p class="calendarMargin">Dal<input id="dalInput" type="date" style="margin: 0 10px;" />
@@ -122,6 +124,7 @@
                 <label for="fineDopo" style="display: block;"><span class="myRadio"></span>Dopo<input id="fineCount" type="number" style="width: 50px; margin: 0 10px;" />occorrenza</label>
               </div>
             </div>
+            
           </div>
         </div>
         <!-- when recurringDay is checked, open details (? but with nothing in summary?) (or just display:block...) -->
@@ -198,7 +201,7 @@
         <label for="scheduledInput" class="listToggleLabel">
           <h3 class="topList">Scheduled</h3>
           <h5 class="topList">All in good time...</h5>
-          <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          <span id="listScheduledChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
         </label>
         <ul id="listScheduled" class="listToggleList">
           <!-- <li><span class="typcn typcn-media-stop-outline emptyCheck"></span><span class="text">Dire Allô!!</span><span class="typcn typcn-calendar-outline calendarSpan"></span><span class="typcn typcn-tag colorSpan"></span></li>
@@ -211,7 +214,7 @@
         <label for="recurringInput" class="listToggleLabel">
           <h3 class="topList">Recurring</h3>
           <h5 class="topList">Don't worry, they'll be back...</h5>
-          <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          <span id="listRecurringChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
         </label>
         <ul id="listRecurring" class="listToggleList">
           <!-- <li><span class="typcn typcn-media-stop-outline emptyCheck"></span><span class="text">Dire Allô!!</span><span class="typcn typcn-calendar-outline calendarSpan"></span><span class="typcn typcn-tag colorSpan"></span></li>

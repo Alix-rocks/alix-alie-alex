@@ -92,6 +92,7 @@ async function getTasksSettings() {
   listTasks.forEach(todo => {
     todoCreation(todo);
   });
+  updateArrowsColor();
 };
 
 async function getDones(){
@@ -156,7 +157,7 @@ function freeIn(){
     });
     refreshDoneId();
   };
-  
+  updateArrowsColor();
   logInScreen.classList.add("displayNone");
 };
 
@@ -321,6 +322,7 @@ function updateFromCloud(){
   getTasksSettings();
   getDones();
   clearStorageBtn.textContent = "Updated!";
+  updateArrowsColor();
 };
 
 async function cloudSaveTomorrow(){
@@ -337,13 +339,30 @@ async function cloudSaveTomorrow(){
   };
 };
 
+function updateArrowsColor(){
+  //update arrows color
+  if(document.querySelectorAll("#listScheduled > li").length > 0){
+    listScheduledChevron.classList.replace("typcn-chevron-right-outline", "typcn-chevron-right");
+    listScheduledChevron.classList.add("todoDay");
+  } else{
+    listScheduledChevron.classList.replace("typcn-chevron-right", "typcn-chevron-right-outline");
+    listScheduledChevron.classList.remove("todoDay");
+  };
+  if(document.querySelectorAll("#listRecurring > li").length > 0){
+    listRecurringChevron.classList.replace("typcn-chevron-right-outline", "typcn-chevron-right");
+    listRecurringChevron.classList.add("recurringDay");
+  } else{
+    listRecurringChevron.classList.replace("typcn-chevron-right", "typcn-chevron-right-outline");
+    listRecurringChevron.classList.remove("recurringDay");
+  };
+};
+
 function updateCBC(){
-  console.log("cBC " + cBC);
   cBC++;
   localStorage.cBC = cBC;
   let cBCD = cBC >= 10 ? 1 : "." + cBC;
-  console.log("cBCD " + cBCD);
   cloudIt.style.backgroundColor = "rgba(237, 20, 61, " + cBCD + ")";
+  updateArrowsColor();
 };
 function resetCBC(){
   cBC = 0;
@@ -712,6 +731,10 @@ calendarDiv.addEventListener("submit", (e) => {
   let previousDate = todo.date;
   let previousLine = todo.line;
   todo.date = calendarInput.value;
+  if(noDayInput.checked == true){
+    todo.line = noDayInput.value;
+    todo.date = todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fineDate = todo.fineCount = "";
+  };
   if(calendarInput.value || dalInput.value){
     document.getElementsByName("whatDay").forEach(radio => {
       if(radio.checked == true){
@@ -728,6 +751,7 @@ calendarDiv.addEventListener("submit", (e) => {
     taskToDate.classList.remove(...lineDay);
     //list.appendChild(parent);
   };
+  
   if(todo.line == "recurringDay"){
     todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fineDate = todo.fineCount = "";
     //add all the info to todo

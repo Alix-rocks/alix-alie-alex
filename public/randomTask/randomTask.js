@@ -368,7 +368,7 @@ settings.addEventListener("click", () => {
 // *** CREATION
 function todoCreation(todo){
   let li = document.createElement("li");
-  li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><span class="text" onclick="taskAddInfo(this)">${todo.task}</span><span class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
+  li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><span class="text" onclick="taskAddInfo(this)">${todo.info ? '*' : ''}${todo.task}</span><span class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
   li.setAttribute("id", todo.id);
   li.querySelector(".text").style.color = todo.color;
   let togoList = getTogoList(todo);
@@ -908,7 +908,7 @@ taskInfoBtn.addEventListener("click", () => {
   todo.task = taskTitle.value;
   todo.info = taskDetails.value;
   console.log(listTasks);
-  taskToInfo.textContent = taskTitle.value;
+  taskToInfo.textContent = `${todo.info ? '*' : ''}${taskTitle.value}`;
   localStorage.listTasks = JSON.stringify(listTasks);
   updateCBC();
   clickHandlerAddOn(taskInfo);

@@ -203,38 +203,6 @@ function resetModif(){
   localStorage.modif = JSON.stringify([]);
 };
 
-// function addDeleted(date){
-//   let deleted = getDeleted();
-//   let modif = getModif();
-//   if(modif.includes(date)){
-//     let idx = modif.indexOf(date);
-//     modif.splice(idx, 1);
-//     //localStorage.setItem("modif", JSON.stringify(modif));
-//     localStorage.modif = JSON.stringify(modif);
-//   };
-//   if(!deleted.includes(date)){
-//     deleted = [...deleted, date];
-//     //localStorage.setItem("deleted", JSON.stringify(deleted));
-//     localStorage.deleted = JSON.stringify(deleted);
-//   };
-// };
-
-// function getDeleted(){
-//   let deleted = [];
-//   if(localStorage.getItem("deleted")){
-//     deleted = JSON.parse(localStorage.deleted);
-//   } else{
-//     deleted = [];
-//   };
-//   return deleted;
-// };
-
-// function resetDeleted(){
-//   localStorage.deleted = JSON.stringify([]);
-// };
-
-
-
 
 // *** CLOUDSAVE
 
@@ -818,6 +786,7 @@ calendarDiv.addEventListener("submit", (e) => {
 
 function calculateRecurringDate(todo){
   //we're not figuring out which list todo should go to (they're all going in recurring list except those that are after the fineDate and those that are for Today (make sure the togolist function checks these), but only the date we should give it: either the dalDate if it hasn't started yet (we can calculate once there if it's really starting on the dalDate) or the fineDate if it's over; otherwise it's the next date (should we recycle it and not recalculate every time?)
+  //On pourrait créer un array pour todo.date avec les X prochaines dates (ou que ça soit un autre, genre todo.dates et qu'on fasse juste checker si c'est recurring ou pas pour savoir lequel qu'on utilise. On utilise le premier à chaque fois puis l'enlève de l'Array quand la date est passée et qu'on est rendu à la prochaine; sinon garde la date, même si elle passée pour qu'il reste dans le Oups. Quand la tache est Done, on enlève cette date-là de l'array pour qu'il réapparaisse pas dans oups)
   let today = getTodayDate();
   if(todo.dal <= today >= todo.fineDate){}
 };
@@ -837,7 +806,6 @@ function fillUpRecurring(todo){
     weekSection.classList.add("displayNone");
     monthSection.classList.remove("displayNone");
   };
-  //if "mese" is selected ogniXDayText and ogniXDateText are calculated and filled up automatically from dal
   document.getElementsByName("daysWeekChoice").forEach(choice => {
     document.getElementById(choice.id).checked = (todo.var == "settimana" && todo.daysWeek && todo.daysWeek.includes(choice.value)) ? true : false;
   });
@@ -922,7 +890,7 @@ function taskAddInfo(thisOne){
   parent.classList.add("selectedTask");
   let taskToInfoId = parent.id;
   taskToInfoIndex = listTasks.findIndex(todo => todo.id == taskToInfoId);
-  let todo = listTasks[taskToDateIndex];
+  let todo = listTasks[taskToInfoIndex];
   taskTitle.style.color = todo.color;
   if(todo.info){
     taskDetails.value = todo.info; //taskDetails est le testarea qui doit contenir les détails (si y'en a déjà), dans le div
@@ -936,7 +904,7 @@ window.taskAddInfo = taskAddInfo;
 window.listTasks = listTasks;
 
 taskInfoBtn.addEventListener("click", () => {
-  let todo = listTasks[taskToDateIndex];
+  let todo = listTasks[taskToInfoIndex];
   todo.task = taskTitle.value;
   todo.info = taskDetails.value;
   console.log(listTasks);

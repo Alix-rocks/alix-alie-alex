@@ -932,10 +932,10 @@ window.listTasks = listTasks;
 
 taskInfoBtn.addEventListener("click", () => {
   let todo = listTasks[taskToInfoIndex];
-  todo.task = taskTitle.value;
+  todo.task = taskTitle.value.startsWith("*") ? taskTitle.value.substring(1) : taskTitle.value;
   todo.info = taskDetails.value;
   console.log(listTasks);
-  taskToInfo.textContent = `${todo.info ? '*' : ''}${taskTitle.value}`;
+  taskToInfo.textContent = `${todo.info ? '*' : ''}${todo.task}`;
   localStorage.listTasks = JSON.stringify(listTasks);
   updateCBC();
   clickHandlerAddOn(taskInfo);

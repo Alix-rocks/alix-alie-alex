@@ -309,6 +309,13 @@ async function cloudSaveTomorrow(){
 
 function updateArrowsColor(){
   //update arrows color
+  if(document.querySelectorAll("#list > li").length > 0){
+    listChevron.classList.replace("typcn-chevron-right-outline", "typcn-chevron-right");
+    listChevron.style.color = "mediumvioletred";
+  } else{
+    listChevron.classList.replace("typcn-chevron-right", "typcn-chevron-right-outline");
+    listChevron.style.color = "darkslategrey";
+  };
   if(document.querySelectorAll("#listScheduled > li").length > 0){
     listScheduledChevron.classList.replace("typcn-chevron-right-outline", "typcn-chevron-right");
     listScheduledChevron.classList.add("todoDay");
@@ -787,8 +794,28 @@ calendarDiv.addEventListener("submit", (e) => {
 function calculateRecurringDate(todo){
   //we're not figuring out which list todo should go to (they're all going in recurring list except those that are after the fineDate and those that are for Today (make sure the togolist function checks these), but only the date we should give it: either the dalDate if it hasn't started yet (we can calculate once there if it's really starting on the dalDate) or the fineDate if it's over; otherwise it's the next date (should we recycle it and not recalculate every time?)
   //On pourrait créer un array pour todo.date avec les X prochaines dates (ou que ça soit un autre, genre todo.dates et qu'on fasse juste checker si c'est recurring ou pas pour savoir lequel qu'on utilise. On utilise le premier à chaque fois puis l'enlève de l'Array quand la date est passée et qu'on est rendu à la prochaine; sinon garde la date, même si elle passée pour qu'il reste dans le Oups. Quand la tache est Done, on enlève cette date-là de l'array pour qu'il réapparaisse pas dans oups)
-  let today = getTodayDate();
-  if(todo.dal <= today >= todo.fineDate){}
+  if(todo.var == "giorno"){
+    for(let d = todo.dal; d < (todo.fineDate + 1); d + todo.ogni){
+      todo.listDates.push(d);
+    };
+    
+  };
+};
+
+function testDates(){
+  let dalS = "2023-11-12";
+  let dal = getDateFromString(dalS);
+  console.log(dal);
+  let fineDateS = "2023-12-12";
+  let fineDate = getDateFromString(fineDateS) ;
+  console.log(fineDate);
+  let ogni = 2;
+  let listDates = [];
+  for (let d = dal; d < (fineDate + 1); d + ogni) {
+    //console.log(d);
+    //listDates.push(d);
+  };
+  //console.log(listDates);
 };
 
 function fillUpRecurring(todo){
@@ -818,7 +845,7 @@ function fillUpRecurring(todo){
     if(todo.fineOpt == "fineGiorno"){
       document.getElementById("fineDate").value = todo.fineDate;
     } else if(todo.fineOpt == "fineDopo"){
-      document.getElementById("fineCount").value = todo.fineCount;
+      document.getElementById("fineCount").value = todo.fineCount; //Google Calendar n'update pas le nombre d'occurence au fur du temps; garde le nombre qu'on a mis au début
     };
   } else{
     document.getElementById("fineMai").checked = true;

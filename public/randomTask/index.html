@@ -54,10 +54,20 @@
       <ul id="listOups"></ul>
       <h3 class="topList">Today's fun</h3>
       <h5 class="topList">What shall be done today...</h5>
-      <ul id="listToday"></ul>
-      <h3 class="topList">Whenever</h3>
-      <h5 class="topList">The never ending list...</h5>
-      <ul id="list"></ul>
+      <ul id="listToday"></ul> 
+      <input id="listInput" type="checkbox" class="cossin listToggleInput" />
+      <div>       
+        <label for="listInput" class="listToggleLabel">
+          <h3 class="topList">Whenever</h3>
+          <h5 class="topList">The never ending list...</h5>
+          <span id="listChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+        </label>
+        <div class="listToggleList">
+          <ul id="list"></ul>
+          <button id="shuffleBtn">Shuffle it!</button>
+          <h5 class="sousBtn">Tell me what to do!</h5>
+        </div>
+      </div>
       <div id="taskInfo" class="displayNone">
         <h5 class="taskInfoInput">Tell me more...</h5>
         <input type="text" id="taskTitle" class="taskInfoInput">
@@ -194,8 +204,7 @@
           </td>
         </tr>
       </table>
-      <button id="shuffleBtn">Shuffle it!</button>
-      <h5 class="sousBtn">Tell me what to do!</h5>
+      
       <input id="scheduledInput" type="checkbox" class="cossin listToggleInput" />
       <div>
         <label for="scheduledInput" class="listToggleLabel">

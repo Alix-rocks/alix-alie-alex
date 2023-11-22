@@ -375,7 +375,7 @@ settings.addEventListener("click", () => {
 // *** CREATION
 function todoCreation(todo){
   let li = document.createElement("li");
-  li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><span class="text" onclick="taskAddInfo(this)">${todo.info ? '*' : ''}${todo.task}</span><span class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
+  li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><i onclick="iconChoice(this)" class="fa-solid fa-ban noIcon"></i><span class="text" onclick="taskAddInfo(this)">${todo.info ? '*' : ''}${todo.task}</span><span class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
   li.setAttribute("id", todo.id);
   li.querySelector(".text").style.color = todo.color;
   let togoList = getTogoList(todo);
@@ -951,9 +951,8 @@ taskInfoBtn.addEventListener("click", () => {
 });
 // *** COLOR
 //const colorList = ["orange", "red", "darkmagenta", "dodgerblue", "forestgreen", "darkslategrey"];
-let colorTag;
 function colorChoice(thisOne){
-  colorTag = thisOne;
+  let colorTag = thisOne;
   parent = colorTag.parentElement;
   parent.classList.add("selectedTask");
   colorTag.insertAdjacentElement("afterend", colorPalet);
@@ -986,6 +985,35 @@ function clickHandlerAddOn(addOn){
   clickScreen.classList.add("displayNone");
   document.querySelector("#clickScreen").removeEventListener("click", () => clickHandlerAddOn(addOn));
 };
+
+// *** ICON
+function iconChoice(thisOne){
+  let iconTag = thisOne;
+  parent = iconTag.parentElement;
+  parent.classList.add("selectedTask");
+  iconTag.insertAdjacentElement("afterend", iconsPalet);
+  iconsPalet.classList.remove("displayNone");
+  clickScreen.classList.remove("displayNone");
+  document.querySelectorAll("input[name='iconRadio']").forEach(radio => {
+    radio.addEventListener("click", () => {
+      let icon = radio.value; //??
+      //box.className = ''; to remove all classes
+      let li = iconTag.parentElement;
+      let liTask = li.querySelector(".text").textContent;
+      li.querySelector(".text").style.color = color;
+      console.log(liTask);
+      let taskId = li.id;
+      let taskIndex = listTasks.findIndex(todo => todo.id == taskId);
+      listTasks[taskIndex].color = color;
+      console.log(listTasks);
+      localStorage.listTasks = JSON.stringify(listTasks);
+      updateCBC();
+      clickHandlerAddOn(iconsPalet);
+    });
+  });
+  document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(iconsPalet));
+};
+window.iconChoice = iconChoice;
 
 // *** DATE
 function getTodayDate(){

@@ -362,11 +362,16 @@ input#recurringDayInput:checked ~ div#recurringDaySection{
   flex-flow: row wrap;
   justify-content: space-between;
   align-content: space-between;
-  width: 150px;
+  width: 220px;
   padding: 5px;
 }
 #iconsPalet i{
-  margin: 5px;
+  margin: 7px;
+  font-size: 25px;
+}
+.noIcon{
+  opacity: .4;
+  margin-right: 9px;
 }
 #colorPalet{
   background-color: white;

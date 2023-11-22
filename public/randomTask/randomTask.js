@@ -951,8 +951,9 @@ taskInfoBtn.addEventListener("click", () => {
 });
 // *** COLOR
 //const colorList = ["orange", "red", "darkmagenta", "dodgerblue", "forestgreen", "darkslategrey"];
+let colorTag;
 function colorChoice(thisOne){
-  let colorTag = thisOne;
+  colorTag = thisOne;
   parent = colorTag.parentElement;
   parent.classList.add("selectedTask");
   colorTag.insertAdjacentElement("afterend", colorPalet);
@@ -996,16 +997,16 @@ function iconChoice(thisOne){
   clickScreen.classList.remove("displayNone");
   document.querySelectorAll("input[name='iconRadio']").forEach(radio => {
     radio.addEventListener("click", () => {
-      let icon = radio.value; //??
+      let icon = radio.value;
       //box.className = ''; to remove all classes
       let li = iconTag.parentElement;
-      let liTask = li.querySelector(".text").textContent;
-      li.querySelector(".text").style.color = color;
-      console.log(liTask);
+      let liIcon = li.querySelector(".noIcon");
+      liIcon.className = "";
+      liIcon.classList.add(icon);
       let taskId = li.id;
       let taskIndex = listTasks.findIndex(todo => todo.id == taskId);
-      listTasks[taskIndex].color = color;
-      console.log(listTasks);
+      listTasks[taskIndex].icon = icon;
+      console.log(listTasks[taskIndex]);
       localStorage.listTasks = JSON.stringify(listTasks);
       updateCBC();
       clickHandlerAddOn(iconsPalet);

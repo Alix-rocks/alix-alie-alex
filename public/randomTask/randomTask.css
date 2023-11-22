@@ -182,6 +182,11 @@ input[name="daysWeekChoice"]:checked + label.dayCircle{
 h5.taskInfoInput{
   margin-bottom: 0;
 }
+.termLabel{
+  width: -webkit-fill-available!important;
+  margin: 5px 20px;
+  text-align: left;
+}
 
 #taskInfoBtn{
   margin: 10px 0;
@@ -192,6 +197,12 @@ h3.topList{
 }
 h5.topList{
   margin: 0;
+}
+h4.subList{
+  color: slategrey;
+  width: 100%;
+  border-bottom: 1px dotted slategrey;
+  margin-bottom: 0;
 }
 .sousBtn{
   margin-top: 0;
@@ -338,6 +349,24 @@ input.myRadio:checked + label span.myRadio{
 }
 input#recurringDayInput:checked ~ div#recurringDaySection{
   display: flex;
+}
+#iconsPalet{
+  background-color: white;
+  border: 2px solid darkslategrey;
+  border-radius: 5px;
+  position: absolute;
+  z-index: 1000;
+  top: 2px;
+  left: 2.5px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-content: space-between;
+  width: 150px;
+  padding: 5px;
+}
+#iconsPalet i{
+  margin: 5px;
 }
 #colorPalet{
   background-color: white;

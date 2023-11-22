@@ -12,6 +12,8 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/b4f765f607.js" crossorigin="anonymous"></script>
   <!-- CSS -->
   <link rel="stylesheet" href="randomTask.css">
   <title>Random Task</title>
@@ -63,7 +65,10 @@
           <span id="listChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
         </label>
         <div class="listToggleList">
+          <h4 class="subList">The long term shit</h4>
           <ul id="list"></ul>
+          <h4 class="subList">The one time thing</h4>
+          <ul id="listOne"></ul>
           <button id="shuffleBtn">Shuffle it!</button>
           <h5 class="sousBtn">Tell me what to do!</h5>
         </div>
@@ -72,6 +77,10 @@
         <h5 class="taskInfoInput">Tell me more...</h5>
         <input type="text" id="taskTitle" class="taskInfoInput">
         <textarea id="taskDetails" class="taskInfoInput"></textarea>
+        <input class="myRadio" type="radio" name="termOptions" id="oneTime" value="oneTime" />
+        <label for="oneTime" style="display: block;" class="termLabel"><span class="myRadio"></span><span>It's a one time thing</span></label>
+        <input class="myRadio" type="radio" name="termOptions" id="longTerm" value="longTerm" />
+        <label for="longTerm" class="termLabel"><span class="myRadio"></span><span>It's a long term shit</span></label>
         <button id="taskInfoBtn">Save Info</button>
       </div>
       <form id="calendarDiv" class="displayNone">
@@ -148,6 +157,21 @@
         
         <button id="saveTheDateBtn" class="calendarMargin" type="submit">Save The Date</button>
       </form>
+      <div id="iconsPalet" class="displayNone">
+        <i class="fa-solid fa-user"></i>
+        <i class="fa-solid fa-dollar-sign"></i>
+        <i class="fa-solid fa-spider"></i>
+        <i class="fa-solid fa-gavel"></i>
+        <i class="fa-solid fa-couch"></i>
+        <i class="fa-solid fa-head-side-virus"></i>
+        <i class="fa-solid fa-screwdriver-wrench"></i>
+        <i class="fa-solid fa-universal-access"></i>
+        <i class="fa-solid fa-droplet"></i>
+        <i class="fa-solid fa-code"></i>
+        <i class="fa-solid fa-poo"></i>
+        <i class="fa-solid fa-globe"></i>
+        <i class="fa-solid fa-briefcase"></i>
+      </div>
       <table id="colorPalet" class="displayNone">
         <tr class="colorTr">
           <td class="colorTd">

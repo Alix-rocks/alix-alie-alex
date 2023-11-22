@@ -390,8 +390,10 @@ function getTogoList(todo){
       togoList = "listScheduled";
     } else if(todo.line == "recurringDay"){
       togoList = "listRecurring";
-    } else {
-      togoList = "list";
+    } else if(todo.term == "oneTime"){
+        togoList = "listOne";
+    } else{
+      togoList = "list";      
     };
   } else if(todo.date == todayDate){
     togoList = "listToday";
@@ -919,11 +921,12 @@ function taskAddInfo(thisOne){
   taskToInfoIndex = listTasks.findIndex(todo => todo.id == taskToInfoId);
   let todo = listTasks[taskToInfoIndex];
   taskTitle.style.color = todo.color;
-  if(todo.info){
-    taskDetails.value = todo.info; //taskDetails est le testarea qui doit contenir les détails (si y'en a déjà), dans le div
+  if(todo.term){
+    document.getElementById(todo.term).checked = true; 
   } else{
-    taskDetails.value = "";
+    oneTime.checked = true;
   };
+  taskDetails.value = todo.info ? todo.info : ""; //taskDetails est le testarea qui doit contenir les détails (si y'en a déjà), dans le div
   parent.scrollIntoView();
   document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(taskInfo));
 };
@@ -932,11 +935,17 @@ window.listTasks = listTasks;
 
 taskInfoBtn.addEventListener("click", () => {
   let todo = listTasks[taskToInfoIndex];
+  let previousTerm = todo.term;
   todo.task = taskTitle.value.startsWith("*") ? taskTitle.value.substring(1) : taskTitle.value;
   todo.info = taskDetails.value;
-  console.log(listTasks);
+  todo.term = document.querySelector('input[name="termOptions"]:checked').value;
+  console.log(todo);
   taskToInfo.textContent = `${todo.info ? '*' : ''}${todo.task}`;
   localStorage.listTasks = JSON.stringify(listTasks);
+  if(previousTerm !== todo.term){
+    let togoList = getTogoList(todo);
+    document.getElementById(togoList).appendChild(parent);
+  };
   updateCBC();
   clickHandlerAddOn(taskInfo);
 });

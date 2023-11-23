@@ -51,28 +51,34 @@
         <input id="addInput" type="text" />
         <button id="addBtn" type="submit">add</button>
       </form>
-      <h3 class="topList">Oups...</h3>
-      <h5 class="topList">What should've already been done...</h5>
-      <ul id="listOups"></ul>
-      <h3 class="topList">Today's fun</h3>
-      <h5 class="topList">What shall be done today...</h5>
-      <ul id="listToday"></ul> 
-      <input id="listInput" type="checkbox" class="cossin listToggleInput" />
-      <div>       
-        <label for="listInput" class="listToggleLabel">
-          <h3 class="topList">Whenever</h3>
-          <h5 class="topList">The never ending list...</h5>
-          <span id="listChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
-        </label>
-        <div class="listToggleList">
-          <h4 class="subList">The long term shit</h4>
-          <ul id="list"></ul>
-          <h4 class="subList">The one time thing</h4>
-          <ul id="listOne"></ul>
-          <button id="shuffleBtn">Shuffle it!</button>
-          <h5 class="sousBtn">Tell me what to do!</h5>
+      <section>
+        <h3 class="topList">Oups...</h3>
+        <h5 class="topList">What should've already been done...</h5>
+        <ul id="listOups"></ul>
+      </section>
+      <section>
+        <h3 class="topList">Today's fun</h3>
+        <h5 class="topList">What shall be done today...</h5>
+        <ul id="listToday"></ul>
+      </section> 
+      <section>
+        <input id="listInput" type="checkbox" class="cossin listToggleInput" />
+        <div id="wheneverLists">
+          <label for="listInput" class="listToggleLabel">
+            <h3 class="topList">Whenever</h3>
+            <h5 class="topList">The never ending list...</h5>
+            <span id="listChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <div class="listToggleList">
+            <h4 class="subList">The long term shit</h4>
+            <ul id="list"></ul>
+            <h4 class="subList">The one time thing</h4>
+            <ul id="listOne"></ul>
+            <button id="shuffleBtn">Shuffle it!</button>
+            <h5 class="sousBtn">Tell me what to do!</h5>
+          </div>
         </div>
-      </div>
+      </section>
       <div id="taskInfo" class="displayNone">
         <h5 class="taskInfoInput">Tell me more...</h5>
         <input type="text" id="taskTitle" class="taskInfoInput">
@@ -89,7 +95,7 @@
           <h5 class="taskInfoInput">It's a one time thing</h5>
           <input type="date" id="calendarInput" style="margin: 20px 20px 10px" />
           <div style="margin: 5px 20px 10px">
-            <input class="myRadio" type="radio" id="todoDayInput" name="whatDay" value="todoDay" checked />
+            <input class="myRadio" type="radio" id="todoDayInput" name="whatDay" value="todoDay" />
             <label for="todoDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText todoDay">To-do Day</span><br /><span class="smallText">(the day you want to do it)</span></p></label>
             <input class="myRadio" type="radio" id="doneDayInput" name="whatDay" value="doneDay" />
             <label for="doneDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText doneDay">Done Day</span><br /><span class="smallText">(the day by which it has to have been done)</span></label></p></label>
@@ -157,200 +163,7 @@
         
         <button id="saveTheDateBtn" class="calendarMargin" type="submit">Save The Date</button>
       </form>
-      <div id="iconsPalet" class="displayNone">
-        <input type="radio" id="commentsRadio" name="iconRadio" value="fa-solid fa-comments" />
-          <label for="commentsRadio">
-            <div>
-              <i class="fa-solid fa-comments"></i>
-            </div>
-          </label>
-        <input type="radio" id="lightbulbRadio" name="iconRadio" value="fa-solid fa-lightbulb" />
-          <label for="lightbulbRadio">
-            <div>
-              <i class="fa-solid fa-lightbulb"></i>
-            </div>
-          </label>
-        <input type="radio" id="dollarsignRadio" name="iconRadio" value="fa-solid fa-dollar-sign" />
-          <label for="dollarsignRadio">
-            <div>    
-              <i class="fa-solid fa-dollar-sign"></i>
-            </div>
-          </label>
-        <input type="radio" id="spiderRadio" name="iconRadio" value="fa-solid fa-spider" />
-          <label for="spiderRadio">
-            <div>      
-                <i class="fa-solid fa-spider"></i>
-            </div>
-          </label>
-        <input type="radio" id="gavelRadio" name="iconRadio" value="fa-solid fa-gavel" />
-          <label for="gavelRadio">
-            <div>
-              <i class="fa-solid fa-gavel"></i>
-            </div>
-          </label>
-        <input type="radio" id="couchRadio" name="iconRadio" value="fa-solid fa-couch" />
-          <label for="couchRadio">
-            <div>
-              <i class="fa-solid fa-couch"></i>
-            </div>
-          </label>
-        <input type="radio" id="headsidevirusRadio" name="iconRadio" value="fa-solid fa-head-side-virus" />
-          <label for="headsidevirusRadio">
-            <div>
-              <i class="fa-solid fa-head-side-virus"></i>
-            </div>
-          </label>
-        <input type="radio" id="screwdriverwrenchRadio" name="iconRadio" value="fa-solid fa-screwdriver-wrench" />
-          <label for="screwdriverwrenchRadio">
-            <div>
-              <i class="fa-solid fa-screwdriver-wrench"></i>
-            </div>
-          </label>
-        <input type="radio" id="universalaccessRadio" name="iconRadio" value="fa-solid fa-universal-access" />
-          <label for="universalaccessRadio">
-            <div>
-              <i class="fa-solid fa-universal-access"></i>
-            </div>
-          </label>
-        <input type="radio" id="dropletRadio" name="iconRadio" value="fa-solid fa-droplet" />
-          <label for="dropletRadio">
-            <div>
-              <i class="fa-solid fa-droplet"></i>
-            </div>
-          </label>
-        <input type="radio" id="codeRadio" name="iconRadio" value="fa-solid fa-code" />
-          <label for="codeRadio">
-            <div>
-              <i class="fa-solid fa-code"></i>
-            </div>
-          </label>
-        <input type="radio" id="pooRadio" name="iconRadio" value="fa-solid fa-poo" />
-          <label for="pooRadio">
-            <div>
-              <i class="fa-solid fa-poo"></i>
-            </div>
-          </label>
-        <input type="radio" id="globeRadio" name="iconRadio" value="fa-solid fa-globe" />
-          <label for="globeRadio">
-            <div>
-              <i class="fa-solid fa-globe"></i>
-            </div>
-          </label>
-        <input type="radio" id="briefcaseRadio" name="iconRadio" value="fa-solid fa-briefcase" />
-          <label for="briefcaseRadio">
-            <div>
-              <i class="fa-solid fa-briefcase"></i>
-            </div>
-          </label>
-        <input type="radio" id="facegrinstarsRadio" name="iconRadio" value="fa-regular fa-face-grin-stars" />
-          <label for="facegrinstarsRadio">
-            <div>
-              <i class="fa-regular fa-face-grin-stars"></i>
-            </div>
-          </label>
-        <input type="radio" id="facegrinheartsRadio" name="iconRadio" value="fa-regular fa-face-grin-hearts" />
-          <label for="facegrinheartsRadio">
-            <div>
-              <i class="fa-regular fa-face-grin-hearts"></i>
-            </div>
-          </label>
-        <input type="radio" id="facegrinsquintRadio" name="iconRadio" value="fa-regular fa-face-grin-squint" />
-          <label for="facegrinsquintRadio">
-            <div>
-              <i class="fa-regular fa-face-grin-squint"></i>
-            </div>
-          </label>
-        <input type="radio" id="facesmilewinkRadio" name="iconRadio" value="fa-regular fa-face-smile-wink" />
-          <label for="facesmilewinkRadio">
-            <div>
-              <i class="fa-regular fa-face-smile-wink"></i>
-            </div>
-          </label>
-        <input type="radio" id="facemehblankRadio" name="iconRadio" value="fa-regular fa-face-meh-blank" />
-          <label for="facemehblankRadio">
-            <div>
-              <i class="fa-regular fa-face-meh-blank"></i>
-            </div>
-          </label>
-        <input type="radio" id="faceflushedRadio" name="iconRadio" value="fa-regular fa-face-flushed" />
-          <label for="faceflushedRadio">
-            <div>
-              <i class="fa-regular fa-face-flushed"></i>
-            </div>
-          </label>
-        <input type="radio" id="facegrimaceRadio" name="iconRadio" value="fa-regular fa-face-grimace" />
-          <label for="facegrimaceRadio">
-            <div>
-              <i class="fa-regular fa-face-grimace"></i>
-            </div>
-          </label>
-        <input type="radio" id="facerollingeyesRadio" name="iconRadio" value="fa-regular fa-face-rolling-eyes" />
-          <label for="facerollingeyesRadio">
-            <div>
-              <i class="fa-regular fa-face-rolling-eyes"></i>
-            </div>
-          </label>
-        <input type="radio" id="facegrinbeamsweatRadio" name="iconRadio" value="fa-regular fa-face-grin-beam-sweat" />
-          <label for="facegrinbeamsweatRadio">
-            <div>
-              <i class="fa-regular fa-face-grin-beam-sweat"></i>
-            </div>
-          </label>
-        <input type="radio" id="facesurpriseRadio" name="iconRadio" value="fa-regular fa-face-surprise" />
-          <label for="facesurpriseRadio">
-            <div>
-              <i class="fa-regular fa-face-surprise"></i>
-            </div>
-          </label>
-        <input type="radio" id="facefrownopenRadio" name="iconRadio" value="fa-regular fa-face-frown-open" />
-          <label for="facefrownopenRadio">
-            <div>
-              <i class="fa-regular fa-face-frown-open"></i>
-            </div>
-          </label>
-        <input type="radio" id="facefrownRadio" name="iconRadio" value="fa-regular fa-face-frown" />
-          <label for="facefrownRadio">
-            <div>
-              <i class="fa-regular fa-face-frown"></i>
-            </div>
-          </label>
-        <input type="radio" id="facesadtearRadio" name="iconRadio" value="fa-regular fa-face-sad-tear" />
-          <label for="facesadtearRadio">
-            <div>
-              <i class="fa-regular fa-face-sad-tear"></i>
-            </div>
-          </label>
-        <input type="radio" id="facetiredRadio" name="iconRadio" value="fa-regular fa-face-tired" />
-          <label for="facetiredRadio">
-            <div>
-              <i class="fa-regular fa-face-tired"></i>
-            </div>
-          </label>
-        <input type="radio" id="facesadcryRadio" name="iconRadio" value="fa-regular fa-face-sad-cry" />
-          <label for="facesadcryRadio">
-            <div>
-              <i class="fa-regular fa-face-sad-cry"></i>
-            </div>
-          </label>
-        <input type="radio" id="facedizzyRadio" name="iconRadio" value="fa-regular fa-face-dizzy" />
-          <label for="facedizzyRadio">
-            <div>
-              <i class="fa-regular fa-face-dizzy"></i>
-            </div>
-          </label>
-        <input type="radio" id="faceangryRadio" name="iconRadio" value="fa-regular fa-face-angry" />
-          <label for="faceangryRadio">
-            <div>
-              <i class="fa-regular fa-face-angry"></i>
-            </div>
-          </label>
-        <input type="radio" id="banNoIconRadio" name="iconRadio" value="fa-solid fa-ban noIcon" />
-          <label for="banNoIconRadio">
-            <div>
-              <i class="fa-solid fa-ban noIcon"></i>
-            </div>
-          </label>
-        </div>
+      <div id="iconsPalet" class="displayNone"></div>
       <table id="colorPalet" class="displayNone">
         <tr class="colorTr">
           <td class="colorTd">
@@ -408,32 +221,28 @@
         </tr>
       </table>
       
-      <input id="scheduledInput" type="checkbox" class="cossin listToggleInput" />
-      <div>
-        <label for="scheduledInput" class="listToggleLabel">
-          <h3 class="topList">Scheduled</h3>
-          <h5 class="topList">All in good time...</h5>
-          <span id="listScheduledChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
-        </label>
-        <ul id="listScheduled" class="listToggleList">
-          <!-- <li><span class="typcn typcn-media-stop-outline emptyCheck"></span><span class="text">Dire Allô!!</span><span class="typcn typcn-calendar-outline calendarSpan"></span><span class="typcn typcn-tag colorSpan"></span></li>
-          <li><span class="typcn typcn-media-stop-outline emptyCheck"></span><span class="text">Dire Salut!!</span><span class="typcn typcn-calendar-outline calendarSpan"></span><span class="typcn typcn-tag colorSpan"></span></li>
-          <li><span class="typcn typcn-media-stop-outline emptyCheck"></span><span class="text">Dire Babye!!</span><span class="typcn typcn-calendar-outline calendarSpan"></span><span class="typcn typcn-tag colorSpan"></span></li> -->
-        </ul>
-      </div>
-      <input id="recurringInput" type="checkbox" class="cossin listToggleInput" />
-      <div>
-        <label for="recurringInput" class="listToggleLabel">
-          <h3 class="topList">Recurring</h3>
-          <h5 class="topList">Don't worry, they'll be back...</h5>
-          <span id="listRecurringChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
-        </label>
-        <ul id="listRecurring" class="listToggleList">
-          <!-- <li><span class="typcn typcn-media-stop-outline emptyCheck"></span><span class="text">Dire Allô!!</span><span class="typcn typcn-calendar-outline calendarSpan"></span><span class="typcn typcn-tag colorSpan"></span></li>
-          <li><span class="typcn typcn-media-stop-outline emptyCheck"></span><span class="text">Dire Salut!!</span><span class="typcn typcn-calendar-outline calendarSpan"></span><span class="typcn typcn-tag colorSpan"></span></li>
-          <li><span class="typcn typcn-media-stop-outline emptyCheck"></span><span class="text">Dire Babye!!</span><span class="typcn typcn-calendar-outline calendarSpan"></span><span class="typcn typcn-tag colorSpan"></span></li> -->
-        </ul>
-      </div>
+      <section>
+        <input id="scheduledInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="scheduledInput" class="listToggleLabel">
+            <h3 class="topList">Scheduled</h3>
+            <h5 class="topList">All in good time...</h5>
+            <span id="listScheduledChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <ul id="listScheduled" class="listToggleList"></ul>
+        </div>
+      </section>
+      <section>
+        <input id="recurringInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="recurringInput" class="listToggleLabel">
+            <h3 class="topList">Recurring</h3>
+            <h5 class="topList">Don't worry, they'll be back...</h5>
+            <span id="listRecurringChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <ul id="listRecurring" class="listToggleList"></ul>
+        </div>
+      </section>
     </div>
     <hr class="zoneHr" />
     <h3 style="display: inline-block;">Done Zone</h3>

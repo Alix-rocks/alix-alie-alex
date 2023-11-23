@@ -370,6 +370,11 @@ input#recurringDayInput:checked ~ div#recurringDaySection{
   margin: 7px;
   font-size: 25px;
 }
+input[name="iconRadio"]:hover + label > div,
+input[name="iconRadio"]:checked + label > div{
+  background-color: rgba(47, 79, 79, .3);
+}
+
 .noIcon{
   opacity: .4;
 }
@@ -395,9 +400,9 @@ input[name="colorRadio"] + label > div{
   align-items: center;
   border-radius: 2.5px;
 }
+input[name="colorRadio"]:hover + label > div,
 input[name="colorRadio"]:checked + label > div{
   background-color: rgba(47, 79, 79, .3);
-
 }
 .colorDiv{
   width: 65px;

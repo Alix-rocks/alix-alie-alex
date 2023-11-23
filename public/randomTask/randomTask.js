@@ -52,6 +52,23 @@ let myListTasks = [];
 let myListDones = [];
 let myTomorrow = ``;
 let cBC;
+let icons = ["fa-solid fa-comments", "fa-solid fa-lightbulb", "fa-solid fa-dollar-sign", "fa-solid fa-spider", "fa-solid fa-gavel", "fa-solid fa-couch", "fa-solid fa-head-side-virus", "fa-solid fa-screwdriver-wrench", "fa-solid fa-universal-access", "fa-solid fa-droplet", "fa-solid fa-code", "fa-solid fa-poo", "fa-solid fa-globe", "fa-solid fa-briefcase", "fa-solid fa-brain", "fa-solid fa-champagne-glasses", "fa-solid fa-seedling", "fa-solid fa-utensils", "fa-solid fa-heart-pulse", "fa-solid fa-sun", "fa-regular fa-face-grin-stars", "fa-regular fa-face-grin-hearts", "fa-regular fa-face-grin-squint", "fa-regular fa-face-smile-wink", "fa-regular fa-face-meh-blank", "fa-regular fa-face-flushed", "fa-regular fa-face-grimace", "fa-regular fa-face-rolling-eyes", "fa-regular fa-face-grin-beam-sweat", "fa-regular fa-face-surprise", "fa-regular fa-face-frown-open", "fa-regular fa-face-frown", "fa-regular fa-face-sad-tear", "fa-regular fa-face-tired", "fa-regular fa-face-sad-cry", "fa-regular fa-face-dizzy", "fa-regular fa-face-angry", "fa-solid fa-ban noIcon"];
+
+(() => {
+  let iconsAll = icons.map(icon => {
+    let index = icon.search(" fa-") + 4;
+    let subname = icon.substring(index);
+    let name = subname.split('-').join('');
+    name = name.replace(' ', '');
+    return `<input type="radio" id="${name}Radio" name="iconRadio" value="${icon}" />
+    <label for="${name}Radio">
+      <div>
+        <i class="${icon}"></i>
+      </div>
+    </label>`;
+  }).join("");
+  document.getElementById("iconsPalet").innerHTML = iconsAll;
+})();
 
 function getCloudBC(){
   if(localStorage.getItem("cBC")){
@@ -652,28 +669,42 @@ function calendarChoice(thisOne){
   let taskToDateId = parent.id;
   taskToDateIndex = listTasks.findIndex(todo => todo.id == taskToDateId);
   let todo = listTasks[taskToDateIndex];
-  let date = todo.date ? todo.date : getTodayDate();
+  let date = todo.date ? todo.date : todo.line == "noDay" ? "" : getTodayDate();
   calendarInput.value = date; //calendarInput est le dateInput qui doit contenir la date (si y'en a déjà une)
   weekSection.classList.add("displayNone");
   monthSection.classList.add("displayNone");
-  if(todo.line == "doneDay"){
-    doneDayInput.checked = true;
-  } else if(todo.line == "todoDay"){
-    todoDayInput.checked = true;
-  } else if(todo.line == "recurringDay"){
-    fillUpRecurring(todo);
-    recurringDayInput.checked = true;
+  if(todo.line){
+    document.getElementById(todo.line + "Input").checked = true;
   } else{
-    todoDayInput.checked = true;
-    // document.getElementsByName("whatDay").forEach(radio => {
-    //   radio.checked = false;
-    // });
+    Array.from( document.querySelectorAll('input[name="whatDay"]'), input => input.checked = false );
+  }
+  if(todo.line == "recurringDay"){
+    fillUpRecurring(todo);
   };
+  // if(todo.line == "doneDay"){
+  //   doneDayInput.checked = true;
+  // } else if(todo.line == "todoDay"){
+  //   todoDayInput.checked = true;
+  // } else if(todo.line == "recurringDay"){
+  //   fillUpRecurring(todo);
+  //   recurringDayInput.checked = true;
+  // } else{
+  //   todoDayInput.checked = true;
+  //   // document.getElementsByName("whatDay").forEach(radio => {
+  //   //   radio.checked = false;
+  //   // });
+  //   //Array.from( document.querySelectorAll('input[name="whatDay"]'), input => input.checked = false );
+  // };
   taskToDate.insertAdjacentElement("afterend", calendarDiv); //calendarDiv est le div qui apparait
   calendarDiv.classList.remove("displayNone");
   clickScreen.classList.remove("displayNone");
   parent.scrollIntoView();
   document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(calendarDiv));
+  noDayInput.addEventListener("click", (evt) => {
+    if(evt.currentTarget.checked == true){
+      calendarInput.value = "";
+    };
+  });
   recurringDayInput.addEventListener("click", (evt) => {
     if(evt.currentTarget.checked == true){
       fillUpRecurring(todo);
@@ -731,7 +762,7 @@ calendarDiv.addEventListener("submit", (e) => {
   
   if(todo.line == "recurringDay"){
     todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fineDate = todo.fineCount = "";
-    //add all the info to todo
+  
     todo.dal = dalInput.value;
     todo.ogni = ogniInput.value;
     todo.var = timeVariationInput.value;
@@ -772,6 +803,9 @@ calendarDiv.addEventListener("submit", (e) => {
     let togoList = getTogoList(todo);
     document.getElementById(togoList).appendChild(parent);
   };
+  console.log(parent.parentElement.id);
+  parent.parentElement.scrollIntoView();
+  //Faire que la section où est la liste soit développée ([input du toggle].checked = true), mais wheneverLists est parentElement du parentElement, alors que scheduled et recurring sont juste parentElement...
   localStorage.listTasks = JSON.stringify(listTasks);
   updateCBC();
   clickHandlerAddOn(calendarDiv);
@@ -924,7 +958,7 @@ function taskAddInfo(thisOne){
   if(todo.term){
     document.getElementById(todo.term).checked = true; 
   } else{
-    oneTime.checked = true;
+    Array.from( document.querySelectorAll('input[name="termOptions"]'), input => input.checked = false );
   };
   taskDetails.value = todo.info ? todo.info : ""; //taskDetails est le testarea qui doit contenir les détails (si y'en a déjà), dans le div
   parent.scrollIntoView();
@@ -938,7 +972,8 @@ taskInfoBtn.addEventListener("click", () => {
   let previousTerm = todo.term;
   todo.task = taskTitle.value.startsWith("*") ? taskTitle.value.substring(1) : taskTitle.value;
   todo.info = taskDetails.value;
-  todo.term = document.querySelector('input[name="termOptions"]:checked').value;
+  let checked = document.querySelector('input[name="termOptions"]:checked');
+  todo.term = checked ? checked.value : "";
   console.log(todo);
   taskToInfo.textContent = `${todo.info ? '*' : ''}${todo.task}`;
   localStorage.listTasks = JSON.stringify(listTasks);
@@ -963,9 +998,7 @@ function colorChoice(thisOne){
     radio.addEventListener("click", () => {
       let color = radio.value;
       let li = colorTag.parentElement;
-      let liTask = li.querySelector(".text").textContent;
       li.querySelector(".text").style.color = color;
-      console.log(liTask);
       let taskId = li.id;
       let taskIndex = listTasks.findIndex(todo => todo.id == taskId);
       listTasks[taskIndex].color = color;
@@ -978,8 +1011,17 @@ function colorChoice(thisOne){
 };
 window.colorChoice = colorChoice;
 
+function scrollToSection(){
+  let section = parent.closest("section");
+  if(section.querySelector(".listToggleInput")){
+    section.querySelector(".listToggleInput").checked = true;
+  };
+  section.scrollIntoView();
+};
+
 function clickHandlerAddOn(addOn){
   parent.classList.remove("selectedTask");
+  scrollToSection();
   addOn.classList.add("displayNone");
   list.insertAdjacentElement("afterend", addOn);
   clickScreen.classList.add("displayNone");

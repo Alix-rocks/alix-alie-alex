@@ -281,6 +281,7 @@ li>span{
 li .text{
   flex-grow: 1;
   font-size: 20px;
+  margin-left: 7px;
 }
 .selectedTask{
   background-color: rgba(211, 211, 211, .5);
@@ -356,8 +357,8 @@ input#recurringDayInput:checked ~ div#recurringDaySection{
   border-radius: 5px;
   position: absolute;
   z-index: 1000;
-  top: 2px;
-  left: 2.5px;
+  top: 27px;
+  left: 35px;
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
@@ -371,7 +372,6 @@ input#recurringDayInput:checked ~ div#recurringDaySection{
 }
 .noIcon{
   opacity: .4;
-  margin-right: 9px;
 }
 #colorPalet{
   background-color: white;

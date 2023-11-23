@@ -375,7 +375,7 @@ settings.addEventListener("click", () => {
 // *** CREATION
 function todoCreation(todo){
   let li = document.createElement("li");
-  li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><i onclick="iconChoice(this)" class="fa-solid fa-ban noIcon"></i><span class="text" onclick="taskAddInfo(this)">${todo.info ? '*' : ''}${todo.task}</span><span class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
+  li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><span class="text" onclick="taskAddInfo(this)">${todo.info ? '*' : ''}${todo.task}</span><span class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
   li.setAttribute("id", todo.id);
   li.querySelector(".text").style.color = todo.color;
   let togoList = getTogoList(todo);
@@ -969,7 +969,6 @@ function colorChoice(thisOne){
       let taskId = li.id;
       let taskIndex = listTasks.findIndex(todo => todo.id == taskId);
       listTasks[taskIndex].color = color;
-      console.log(listTasks);
       localStorage.listTasks = JSON.stringify(listTasks);
       updateCBC();
       clickHandlerAddOn(colorPalet);
@@ -988,8 +987,9 @@ function clickHandlerAddOn(addOn){
 };
 
 // *** ICON
+let iconTag;
 function iconChoice(thisOne){
-  let iconTag = thisOne;
+  iconTag = thisOne;
   parent = iconTag.parentElement;
   parent.classList.add("selectedTask");
   iconTag.insertAdjacentElement("afterend", iconsPalet);
@@ -998,15 +998,12 @@ function iconChoice(thisOne){
   document.querySelectorAll("input[name='iconRadio']").forEach(radio => {
     radio.addEventListener("click", () => {
       let icon = radio.value;
-      //box.className = ''; to remove all classes
       let li = iconTag.parentElement;
-      let liIcon = li.querySelector(".noIcon");
-      liIcon.className = "";
-      liIcon.classList.add(icon);
+      let liIcon = li.querySelector(".IconI");
+      liIcon.className = `IconI ${icon}`;
       let taskId = li.id;
       let taskIndex = listTasks.findIndex(todo => todo.id == taskId);
       listTasks[taskIndex].icon = icon;
-      console.log(listTasks[taskIndex]);
       localStorage.listTasks = JSON.stringify(listTasks);
       updateCBC();
       clickHandlerAddOn(iconsPalet);

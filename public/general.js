@@ -1,5 +1,3 @@
-
-
 window.addEventListener("scroll", () => {
   if(document.getElementById("backTopButton")){
     if(window.scrollY > window.innerHeight){

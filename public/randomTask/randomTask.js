@@ -125,7 +125,8 @@ async function getDones(){
         let taskIt = done.task;
         let colorIt = done.color;
         let infoIt = done.info;
-        mylist.push({task: taskIt, color: colorIt, info: infoIt});
+        let iconIt = done.icon;
+        mylist.push({task: taskIt, color: colorIt, info: infoIt, icon: iconIt});
       });
       myListDones.push({date: mydate, list: mylist});
     });
@@ -252,24 +253,7 @@ async function saveToCloud(){
         dones: doned.list
       });
     };
-  });
-//Et si: on laisse les deleted dans la listDones (pas de splice), pourqu'ils puissent simplement se faire updater ici avec un array vide; et on fait juste ajouter un if que si lenght==0, on fait pas "donedDateCreation".
-  // let deleted = getDeleted();
-  // let empty = [{color: "", task: ""}];
-  // deleted.map(deletedDate => {
-  //   if(docSnapDones){
-  //     if(docSnapDones[deletedDate]){
-  //       batch.update(doc(db, "randomTask", auth.currentUser.email, "myListDones", deletedDate), {
-  //         //dones: empty
-  //         dones: deleteField()
-  //         //["dones"]: deleteField()
-  //         //dones: FieldValue.delete()
-  //       });
-  //       // batch.delete(doc(db, "randomTask", auth.currentUser.email, "myListDones", deletedDate)); //Not working!
-  //     };
-  //   };
-  // });
-   
+  });   
   await batch.commit();
   resetCBC();
   resetModif();
@@ -326,27 +310,15 @@ async function cloudSaveTomorrow(){
 
 function updateArrowsColor(){
   //update arrows color
-  if(document.querySelectorAll("#list > li").length > 0){
-    listChevron.classList.replace("typcn-chevron-right-outline", "typcn-chevron-right");
-    listChevron.style.color = "mediumvioletred";
-  } else{
-    listChevron.classList.replace("typcn-chevron-right", "typcn-chevron-right-outline");
-    listChevron.style.color = "darkslategrey";
-  };
-  if(document.querySelectorAll("#listScheduled > li").length > 0){
-    listScheduledChevron.classList.replace("typcn-chevron-right-outline", "typcn-chevron-right");
-    listScheduledChevron.classList.add("todoDay");
-  } else{
-    listScheduledChevron.classList.replace("typcn-chevron-right", "typcn-chevron-right-outline");
-    listScheduledChevron.classList.remove("todoDay");
-  };
-  if(document.querySelectorAll("#listRecurring > li").length > 0){
-    listRecurringChevron.classList.replace("typcn-chevron-right-outline", "typcn-chevron-right");
-    listRecurringChevron.classList.add("recurringDay");
-  } else{
-    listRecurringChevron.classList.replace("typcn-chevron-right", "typcn-chevron-right-outline");
-    listRecurringChevron.classList.remove("recurringDay");
-  };
+  document.querySelectorAll("section").forEach(section => {
+    if(section.querySelector("input.listToggleInput")){
+      if(section.querySelectorAll("li").length > 0){
+        section.querySelector("span.listToggleChevron").classList.add("fullSection");
+      } else{
+        section.querySelector("span.listToggleChevron").classList.remove("fullSection");
+      };
+    };
+  });
 };
 
 function updateCBC(){
@@ -390,18 +362,35 @@ settings.addEventListener("click", () => {
 });
 
 // *** CREATION
+// function todoCreation(todo){
+//   let li = document.createElement("li");
+//   if(todo.stock){
+
+//   } else{
+//     li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><span class="text" onclick="taskAddInfo(this)">${todo.info ? '*' : ''}${todo.task}</span><span class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
+//   };
+//   li.setAttribute("id", todo.id);
+//   li.querySelector(".text").style.color = todo.color;
+//   let togoList = getTogoList(todo);
+//   document.getElementById(togoList).appendChild(li);
+// };
+
 function todoCreation(todo){
-  let li = document.createElement("li");
-  li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><span class="text" onclick="taskAddInfo(this)">${todo.info ? '*' : ''}${todo.task}</span><span class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
-  li.setAttribute("id", todo.id);
-  li.querySelector(".text").style.color = todo.color;
   let togoList = getTogoList(todo);
-  document.getElementById(togoList).appendChild(li);
+  if(todo.stock){// when you recycle it you need a new id...
+    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><i class="fa-solid fa-recycle" onclick="useItEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span></li>`);
+  } else{
+    //How are we gonna make it stockable?
+    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span><span class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span></li>`);
+  };
 };
 
 function getTogoList(todo){
   let todayDate = getTodayDate();
   let togoList;
+  if(todo.stock){
+    togoList = "listStorage";
+  };
   if(todo.date == "" || !todo.date || todo.date > todayDate){
     if(todo.line == "todoDay"){
       togoList = "listScheduled";
@@ -421,10 +410,7 @@ function getTogoList(todo){
 };
 
 function donedCreation(donedDate, doned){
-  let donedLi = document.createElement("li");
-  donedLi.innerHTML = `<span class="typcn typcn-tick"></span><span class="text">${doned.task}</span><span class="typcn typcn-trash trashCan" onclick="trashCanEvent(this)"></span><span class="typcn typcn-arrow-sync recycle" onclick="recycleEvent(this)"></span>`;
-  donedLi.querySelector(".text").style.color = doned.color;
-  document.getElementById(donedDate).appendChild(donedLi);
+  document.getElementById(donedDate).insertAdjacentHTML("beforeend", `<li><span class="typcn typcn-tick"></span><span class="text" style="color:${doned.color};">${doned.task}</span><span class="typcn typcn-trash trashCan" onclick="trashCanEvent(this)"></span><span class="typcn typcn-arrow-sync recycle" onclick="recycleEvent(this)"></span></li>`);
 };
 
 function donedDateCreation(donedDate){
@@ -455,6 +441,7 @@ function recycleEvent(recycle){
       let todo = {
         id: crypto.randomUUID(),
         task: doned.task,
+        icon: doned.icon,
         color: doned.color,
         info: doned.info
       };
@@ -489,6 +476,7 @@ addForm.addEventListener("submit", (e) => {
 
 
 // *** DONE/ERASE
+// !!! What happens when you click DONED a recurring task?!
 let num = 0;
 
 doneNextBtn.addEventListener("click", () => {
@@ -524,21 +512,17 @@ function checkEvent(emptyCheck){
 window.checkEvent = checkEvent;
 
 function gotItDone(nb){
-  console.log("gotItDone");
-  console.log(nb);
   let donedTaskIndex = listTasks.findIndex(todo => todo.id == nb);
   let donedTaskSplice = listTasks.splice(donedTaskIndex, 1);
-  console.log(donedTaskSplice);
   let donedTask = donedTaskSplice[0].task;
-  console.log(donedTask);
+  let donedIcon = donedTaskSplice[0].icon;
   let donedColor = donedTaskSplice[0].color;
-  console.log(donedColor);
   let donedInfo = donedTaskSplice[0].info;
-  console.log(donedInfo);
   localStorage.listTasks = JSON.stringify(listTasks);
   let donedDate = getTodayDate(); //return
   let donedItem = {
     task: donedTask,
+    icon: donedIcon,
     color: donedColor,
     info: donedInfo
   };
@@ -966,6 +950,7 @@ function taskAddInfo(thisOne){
   taskToInfoIndex = listTasks.findIndex(todo => todo.id == taskToInfoId);
   let todo = listTasks[taskToInfoIndex];
   taskTitle.style.color = todo.color;
+  //colorTag.style.color = todo.color
   if(todo.term){
     document.getElementById(todo.term).checked = true; 
   } else{

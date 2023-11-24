@@ -182,12 +182,15 @@ input[name="daysWeekChoice"]:checked + label.dayCircle{
 h5.taskInfoInput{
   margin-bottom: 0;
 }
-.termLabel{
-  width: -webkit-fill-available!important;
-  margin: 5px 20px;
-  text-align: left;
+.tryOne{
+  position: relative;
 }
-
+.tryTwo{
+  position: absolute;
+  top: 0;
+  right: 10px;
+  font-size: 24px;
+}
 #taskInfoBtn{
   margin: 10px 0;
 }
@@ -450,6 +453,7 @@ input[name="colorRadio"]:checked + label > div{
   font-size: 30px;
   line-height: 45px;
   padding: 0;
+  opacity: .4;
 }
 .smallChevron{
   right: 10px;
@@ -475,6 +479,9 @@ input[name="colorRadio"]:checked + label > div{
   visibility: visible;
   min-height: fit-content;
   height: fit-content;
+}
+.fullSection{
+  opacity: 1;
 }
 hr.zoneHr{
   margin: 30px 0 0;

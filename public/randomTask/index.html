@@ -81,12 +81,17 @@
       </section>
       <div id="taskInfo" class="displayNone">
         <h5 class="taskInfoInput">Tell me more...</h5>
-        <input type="text" id="taskTitle" class="taskInfoInput">
+        <div class="taskInfoInput tryOne">
+          <input type="text" id="taskTitle" class="taskInfoInput" style="margin:0;">
+          <span class="typcn typcn-tag colorSpan tryTwo" onclick="colorChoice(this)"></span>
+        </div>
         <textarea id="taskDetails" class="taskInfoInput"></textarea>
-        <input class="myRadio" type="radio" name="termOptions" id="oneTime" value="oneTime" />
-        <label for="oneTime" style="display: block;" class="termLabel"><span class="myRadio"></span><span>It's a one time thing</span></label>
-        <input class="myRadio" type="radio" name="termOptions" id="longTerm" value="longTerm" />
-        <label for="longTerm" class="termLabel"><span class="myRadio"></span><span>It's a long term shit</span></label>
+        <div class="taskInfoInput">
+          <input class="myRadio" type="radio" name="termOptions" id="oneTime" value="oneTime" />
+          <label for="oneTime" style="display: block;" class="termLabel"><span class="myRadio"></span><span>It's a one time thing</span></label>
+          <input class="myRadio" type="radio" name="termOptions" id="longTerm" value="longTerm" />
+          <label for="longTerm" class="termLabel"><span class="myRadio"></span><span>It's a long term shit</span></label>
+        </div>
         <button id="taskInfoBtn">Save Info</button>
       </div>
       <form id="calendarDiv" class="displayNone">
@@ -241,6 +246,17 @@
             <span id="listRecurringChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
           <ul id="listRecurring" class="listToggleList"></ul>
+        </div>
+      </section>
+      <section>
+        <input id="storageInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="storageInput" class="listToggleLabel">
+            <h3 class="topList">Storage</h3>
+            <h5 class="topList">Recycling is good...</h5>
+            <span id="listStorageChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <ul id="listStorage" class="listToggleList"></ul>
         </div>
       </section>
     </div>

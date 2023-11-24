@@ -741,7 +741,7 @@ calendarDiv.addEventListener("submit", (e) => {
   todo.date = calendarInput.value;
   if(noDayInput.checked == true){
     todo.line = noDayInput.value;
-    todo.date = todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fineDate = todo.fineCount = "";
+    todo.date = todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fine = todo.fineCount = "";
   };
   if(calendarInput.value || dalInput.value){
     document.getElementsByName("whatDay").forEach(radio => {
@@ -761,7 +761,7 @@ calendarDiv.addEventListener("submit", (e) => {
   };
   
   if(todo.line == "recurringDay"){
-    todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fineDate = todo.fineCount = "";
+    todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fine = todo.fineCount = "";
   
     todo.dal = dalInput.value;
     todo.ogni = ogniInput.value;
@@ -793,19 +793,17 @@ calendarDiv.addEventListener("submit", (e) => {
       };
     });
     if(todo.fineOpt == "fineGiorno"){
-      todo.fineDate = document.getElementById("fineDate").value;
+      todo.fine = document.getElementById("fineDate").value;
     } else if(todo.fineOpt == "fineDopo"){
       todo.fineCount = document.getElementById("fineCount").value;
     };
     //todo.date = calculateRecurringDate(todo);
+    ogniGiornoFine(todo);
   };
   if(previousDate !== todo.date || previousLine !== todo.line) {
     let togoList = getTogoList(todo);
     document.getElementById(togoList).appendChild(parent);
   };
-  console.log(parent.parentElement.id);
-  parent.parentElement.scrollIntoView();
-  //Faire que la section où est la liste soit développée ([input du toggle].checked = true), mais wheneverLists est parentElement du parentElement, alors que scheduled et recurring sont juste parentElement...
   localStorage.listTasks = JSON.stringify(listTasks);
   updateCBC();
   clickHandlerAddOn(calendarDiv);
@@ -814,7 +812,7 @@ calendarDiv.addEventListener("submit", (e) => {
 
 
 // *** RECURRING
-// todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fineDate = todo.fineCount = "";
+// todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fine = todo.fineCount = "";
 //todo.dal => date que ça commence
 //todo.ogni => numéro de répétition
 //todo.var => timeVariation, type de variation : "giorno", "settimana", "mese" or "anno"
@@ -824,11 +822,11 @@ calendarDiv.addEventListener("submit", (e) => {
 //todo.meseDayN => numéro du day (1, 2, 3, ou 4)
 //todo.meseDayI => index du day (0 = domenica, 1 = lunedi, 2 = martedi, etc)
 //todo.fineOpt => option quand ça fini: "fineMai", "fineGiorno" or "fineDopo"
-//todo.fineDate => jour que ça fini (date)
+//todo.fine => jour que ça fini (date)
 //todo.fineCount => nombre d'occurences après lesquelles ça fini
 
 function calculateRecurringDate(todo){
-  //we're not figuring out which list todo should go to (they're all going in recurring list except those that are after the fineDate and those that are for Today (make sure the togolist function checks these), but only the date we should give it: either the dalDate if it hasn't started yet (we can calculate once there if it's really starting on the dalDate) or the fineDate if it's over; otherwise it's the next date (should we recycle it and not recalculate every time?)
+  //we're not figuring out which list todo should go to (they're all going in recurring list except those that are after the fine and those that are for Today (make sure the togolist function checks these), but only the date we should give it: either the dalDate if it hasn't started yet (we can calculate once there if it's really starting on the dalDate) or the fine if it's over; otherwise it's the next date (should we recycle it and not recalculate every time?)
   //On pourrait créer un array pour todo.date avec les X prochaines dates (ou que ça soit un autre, genre todo.dates et qu'on fasse juste checker si c'est recurring ou pas pour savoir lequel qu'on utilise. On utilise le premier à chaque fois puis l'enlève de l'Array quand la date est passée et qu'on est rendu à la prochaine; sinon garde la date, même si elle passée pour qu'il reste dans le Oups. Quand la tache est Done, on enlève cette date-là de l'array pour qu'il réapparaisse pas dans oups)
   if(todo.var == "giorno"){
     for(let d = todo.dal; d < (todo.fineDate + 1); d + todo.ogni){
@@ -838,24 +836,37 @@ function calculateRecurringDate(todo){
   };
 };
 
-function testDates(){
-  let dalS = "2023-11-12";
-  let dal = getDateFromString(dalS);
-  console.log(dal);
-  let fineDateS = "2023-12-12";
-  let fineDate = getDateFromString(fineDateS) ;
-  console.log(fineDate);
-  let ogni = 2;
+//ogniGiornoFine(todo) For ogni X days until fine
+//ogniGiornoDopo(todo) For ogni X days until dopo Y occorrenza
+//ogniGiornoMai(todo) For ogni X days until mai
+//ogniSettimanaFine(todo) For ogni X week on []day until fine
+//ogniSettimanaDopo(todo) For ogni X week on []day until dopo Y occorrenza
+//ogniSettimanaMai(todo) For ogni X week on []day until mai
+//ogniMeseDateFine(todo) For ogni X month on Y date until fine
+//ogniMeseDateDopo(todo) For ogni X month on Y date until dopo Y occorrenza
+//ogniMeseDateMai(todo) For ogni X month on Y date until mai
+//ogniMeseDayFine(todo) For ogni X month on Y° day until fine
+//ogniMeseDayDopo(todo) For ogni X month on Y° day until dopo Y occorrenza
+//ogniMeseDayMai(todo) For ogni X month on Y° day until mai
+//ogniAnnoFine(todo) For ogni X year on Y date until fine
+//ogniAnnoDopo(todo) For ogni X year on Y date until dopo Y occorrenza
+//ogniAnnoMai(todo) For ogni X year on Y date until mai
+
+function ogniGiornoFine(todo){ //That works!! For ogni X days until fine
+  let dalDate = getDateFromString(todo.dal);
+  let prefineDate = getDateFromString(todo.fine);
+  let fineDate = prefineDate.setDate(prefineDate.getDate() + 1);
+  let date = dalDate;
   let listDates = [];
-  for (let d = dal; d < (fineDate + 1); d + ogni) {
-    //console.log(d);
-    //listDates.push(d);
+  while (date <= fineDate){
+    console.log(date);
+    listDates.push(date); //Do you want dates or strings?
+    date.setDate(date.getDate() + Number(todo.ogni));
   };
-  //console.log(listDates);
+  console.log(listDates);
 };
 
 function fillUpRecurring(todo){
-  console.log(todo.dal);
   let date = todo.dal ? todo.dal : calendarInput.value ? calendarInput.value : getTodayDate(); //date
   document.getElementById("dalInput").value = date;
   document.getElementById("ogniInput").value = todo.ogni ? todo.ogni : ""; //number
@@ -879,7 +890,7 @@ function fillUpRecurring(todo){
   if(todo.fineOpt){
     document.getElementById(todo.fineOpt).checked = true;
     if(todo.fineOpt == "fineGiorno"){
-      document.getElementById("fineDate").value = todo.fineDate;
+      document.getElementById("fineDate").value = todo.fine;
     } else if(todo.fineOpt == "fineDopo"){
       document.getElementById("fineCount").value = todo.fineCount; //Google Calendar n'update pas le nombre d'occurence au fur du temps; garde le nombre qu'on a mis au début
     };
@@ -991,16 +1002,21 @@ function colorChoice(thisOne){
   colorTag = thisOne;
   parent = colorTag.parentElement;
   parent.classList.add("selectedTask");
+  let li = colorTag.parentElement;
+  let taskId = li.id;
+  let taskIndex = listTasks.findIndex(todo => todo.id == taskId);
   colorTag.insertAdjacentElement("afterend", colorPalet);
   colorPalet.classList.remove("displayNone");
   clickScreen.classList.remove("displayNone");
   document.querySelectorAll("input[name='colorRadio']").forEach(radio => {
+    if(listTasks[taskIndex].color == radio.value || li.querySelector(".text").style.color == radio.value){
+      radio.checked = true;
+    } else{
+      radio.checked = false;
+    };
     radio.addEventListener("click", () => {
       let color = radio.value;
-      let li = colorTag.parentElement;
       li.querySelector(".text").style.color = color;
-      let taskId = li.id;
-      let taskIndex = listTasks.findIndex(todo => todo.id == taskId);
       listTasks[taskIndex].color = color;
       localStorage.listTasks = JSON.stringify(listTasks);
       updateCBC();
@@ -1034,17 +1050,22 @@ function iconChoice(thisOne){
   iconTag = thisOne;
   parent = iconTag.parentElement;
   parent.classList.add("selectedTask");
+  let li = iconTag.parentElement;
+  let taskId = li.id;
+  let taskIndex = listTasks.findIndex(todo => todo.id == taskId);
   iconTag.insertAdjacentElement("afterend", iconsPalet);
   iconsPalet.classList.remove("displayNone");
   clickScreen.classList.remove("displayNone");
   document.querySelectorAll("input[name='iconRadio']").forEach(radio => {
+    if(listTasks[taskIndex].icon == radio.value){
+      radio.checked = true;
+    } else{
+      radio.checked = false;
+    };
     radio.addEventListener("click", () => {
       let icon = radio.value;
-      let li = iconTag.parentElement;
       let liIcon = li.querySelector(".IconI");
       liIcon.className = `IconI ${icon}`;
-      let taskId = li.id;
-      let taskIndex = listTasks.findIndex(todo => todo.id == taskId);
       listTasks[taskIndex].icon = icon;
       localStorage.listTasks = JSON.stringify(listTasks);
       updateCBC();

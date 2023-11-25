@@ -80,10 +80,11 @@
         </div>
       </section>
       <div id="taskInfo" class="displayNone">
-        <h5 class="taskInfoInput">Tell me more...</h5>
-        <div class="taskInfoInput tryOne">
-          <input type="text" id="taskTitle" class="taskInfoInput" style="margin:0;">
-          <span class="typcn typcn-tag colorSpan tryTwo" onclick="colorChoice(this)"></span>
+          <span id="storeIt" class="typcn typcn-pin-outline pinSpan"></span>
+          <h5 class="taskInfoInput">Tell me more...</h5>
+        <div class="taskInfoInput relDiv">
+          <input type="text" id="taskTitle" class="taskInfoInput" style="margin:0;padding-right: 39px;">
+          <span id="colorIt" class="typcn typcn-tag tagSpan"></span>
         </div>
         <textarea id="taskDetails" class="taskInfoInput"></textarea>
         <div class="taskInfoInput">
@@ -93,6 +94,7 @@
           <label for="longTerm" class="termLabel"><span class="myRadio"></span><span>It's a long term shit</span></label>
         </div>
         <button id="taskInfoBtn">Save Info</button>
+        <button id="taskStoreBtn" style="margin: 10px auto;">Save & Store</button>
       </div>
       <form id="calendarDiv" class="displayNone">
         <h5 class="taskInfoInput">Tell me when...</h5>

@@ -182,10 +182,17 @@ input[name="daysWeekChoice"]:checked + label.dayCircle{
 h5.taskInfoInput{
   margin-bottom: 0;
 }
-.tryOne{
+.pinSpan{
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 24px;
+  line-height: 24px;
+}
+.relDiv{
   position: relative;
 }
-.tryTwo{
+.tagSpan{
   position: absolute;
   top: 0;
   right: 10px;
@@ -289,6 +296,7 @@ li .text{
 .selectedTask{
   background-color: rgba(211, 211, 211, .5);
 }
+/* colorSpan devient obsolete */
 .colorSpan{
   padding-left: 10px;
 }

@@ -378,7 +378,7 @@ settings.addEventListener("click", () => {
 function todoCreation(todo){
   let togoList = getTogoList(todo);
   if(todo.stock){// when you recycle it you need a new id...
-    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><i class="fa-solid fa-recycle" onclick="useItEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span></li>`);
+    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><span class="typcn typcn-trash trashCan" onclick="trashCanItEvent(this)"></span><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
   } else{
     //How are we gonna make it stockable?
     document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span><span class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span></li>`);
@@ -431,6 +431,30 @@ function donedDateCreation(donedDate){
   };
 };
 
+
+
+// *** ADD
+addForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  let newTask = addInput.value;
+  let color = "darkslategrey";
+  if(!newTask == ""){
+    let todo = {
+      id: crypto.randomUUID(),
+      task: newTask,
+      color: color
+    };
+    listTasks.push(todo);
+    localStorage.listTasks = JSON.stringify(listTasks);
+    updateCBC();
+    todoCreation(todo);
+    document.querySelector("#listInput").checked = true;
+    document.querySelector("#wheneverLists").scrollIntoView();
+    addForm.reset();
+    console.log(listTasks);
+  };
+});
+
 function recycleEvent(recycle){
   let recycleLi = recycle.parentElement;
   let recycleId = recycleLi.id.slice(5);
@@ -449,31 +473,38 @@ function recycleEvent(recycle){
       localStorage.listTasks = JSON.stringify(listTasks);
       updateCBC();
       todoCreation(todo);
+      document.querySelector("#listInput").checked = true;
+      document.querySelector("#wheneverLists").scrollIntoView();
     };
   };    
 };
 window.recycleEvent = recycleEvent;
 
-// *** ADD
-addForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  let newTask = addInput.value;
-  let color = "darkslategrey";
-  if(!newTask == ""){
-    let todo = {
-      id: crypto.randomUUID(),
-      task: newTask,
-      color: color
-    };
-    listTasks.push(todo);
-    localStorage.listTasks = JSON.stringify(listTasks);
-    updateCBC();
-    todoCreation(todo);
-    addForm.reset();
-    console.log(listTasks);
-  };
-});
+function storeItEvent(todo){ // or taskStoreBtn.addEventListener ... ?
 
+};
+
+function reuseItEvent(thisOne){
+  let reuseLi = thisOne.parentElement;
+  let reuseId = reuseLi.id;
+  reuseIndex = listTasks.findIndex(todo => todo.id == reuseId);
+  let reuse = listTasks[reuseIndex];
+  let todo = {
+    id: crypto.randomUUID(),
+    task: reuse.task,
+    icon: reuse.icon,
+    color: reuse.color,
+    info: reuse.info,
+    term: reuse.term
+  };
+  listTasks.push(todo);
+  localStorage.listTasks = JSON.stringify(listTasks);
+  todoCreation(todo);
+  document.querySelector("#listInput").checked = true;
+  document.querySelector("#wheneverLists").scrollIntoView();
+  updateCBC();
+};
+window.reuseItEvent = reuseItEvent;
 
 // *** DONE/ERASE
 // !!! What happens when you click DONED a recurring task?!
@@ -569,8 +600,18 @@ function trashCanEvent(trashCan){
   refreshDoneId();
   localStorageDones("next");  
 };
-
 window.trashCanEvent = trashCanEvent;
+
+function trashCanItEvent(thisOne){
+  let trashLi = thisOne.parentElement;
+  let trashId = trashLi.id;
+  trashIndex = listTasks.findIndex(todo => todo.id == trashId);
+  listTasks.splice(trashIndex, 1);
+  localStorage.listTasks = JSON.stringify(listTasks);
+  trashLi.remove();
+  updateCBC();
+};
+window.trashCanItEvent = trashCanItEvent;
 
 function localStorageDones(time){
   if(time == "next"){
@@ -778,11 +819,13 @@ calendarDiv.addEventListener("submit", (e) => {
     });
     if(todo.fineOpt == "fineGiorno"){
       todo.fine = document.getElementById("fineDate").value;
+      ogniGiornoFine(todo);
     } else if(todo.fineOpt == "fineDopo"){
       todo.fineCount = document.getElementById("fineCount").value;
+      ogniGiornoDopo(todo);
     };
     //todo.date = calculateRecurringDate(todo);
-    ogniGiornoFine(todo);
+   
   };
   if(previousDate !== todo.date || previousLine !== todo.line) {
     let togoList = getTogoList(todo);
@@ -836,18 +879,35 @@ function calculateRecurringDate(todo){
 //ogniAnnoDopo(todo) For ogni X year on Y date until dopo Y occorrenza
 //ogniAnnoMai(todo) For ogni X year on Y date until mai
 
-function ogniGiornoFine(todo){ //That works!! For ogni X days until fine
+function ogniGiornoFine(todo){ //Doesn't work... For ogni X days until fine
   let dalDate = getDateFromString(todo.dal);
-  let prefineDate = getDateFromString(todo.fine);
-  let fineDate = prefineDate.setDate(prefineDate.getDate() + 1);
+  let fineDate = getDateFromString(todo.fine);
+  // let fineDate = prefineDate.setDate(prefineDate.getDate() + 1);
   let date = dalDate;
   let listDates = [];
   while (date <= fineDate){
     console.log(date);
+    //function getStringFromDate(date);
     listDates.push(date); //Do you want dates or strings?
     date.setDate(date.getDate() + Number(todo.ogni));
   };
   console.log(listDates);
+};
+
+function ogniGiornoDopo(todo){ //Doesn't work... For ogni X days until dopo Y occorrenza
+  let dalDate = getDateFromString(todo.dal);
+  let dopo = Number(todo.fineCount);
+  let date = dalDate;
+  let d = 1;
+  let listDates = [];
+  while (d <= dopo){
+    console.log(d);
+    console.log(date);
+    listDates.push(date); //Do you want dates or strings?
+    date.setDate(date.getDate() + Number(todo.ogni));
+    d++;
+  };
+  console.log(listDates); //All the same last date...
 };
 
 function fillUpRecurring(todo){
@@ -949,14 +1009,17 @@ function taskAddInfo(thisOne){
   let taskToInfoId = parent.id;
   taskToInfoIndex = listTasks.findIndex(todo => todo.id == taskToInfoId);
   let todo = listTasks[taskToInfoIndex];
+  storeIt.className = todo.stock ? "typcn typcn-pin pinSpan" : "typcn typcn-pin-outline pinSpan";
   taskTitle.style.color = todo.color;
-  //colorTag.style.color = todo.color
+  colorIt.style.color = todo.color;
   if(todo.term){
     document.getElementById(todo.term).checked = true; 
   } else{
     Array.from( document.querySelectorAll('input[name="termOptions"]'), input => input.checked = false );
   };
   taskDetails.value = todo.info ? todo.info : ""; //taskDetails est le testarea qui doit contenir les détails (si y'en a déjà), dans le div
+  document.getElementById("storeIt").addEventListener("click", () => storeItEvent(todo));
+  document.getElementById("colorIt").addEventListener("click", () => colorItEvent(todo));
   parent.scrollIntoView();
   document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(taskInfo));
 };

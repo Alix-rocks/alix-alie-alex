@@ -136,8 +136,8 @@ input[type="radio"]{
   
 }
 #taskInfo{
-  top: 20px;
-  left: 45px;
+  top: 25px;
+  left: 0px;
   width: 90vw;
   max-width: 500px;
 }
@@ -291,7 +291,9 @@ li>span{
 li .text{
   flex-grow: 1;
   font-size: 20px;
-  margin-left: 7px;
+  margin: 0 7px;
+  padding: 0;
+  position: relative;
 }
 .selectedTask{
   background-color: rgba(211, 211, 211, .5);

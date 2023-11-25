@@ -999,7 +999,7 @@ function taskAddInfo(thisOne){
   taskToInfo = thisOne; //taskToInfo est le span.text qui a été cliqué
   let width = getComputedStyle(taskToInfo).width;
   taskInfo.style.width = width;
-  taskToInfo.insertAdjacentElement("afterend", taskInfo); //taskInfo est le div qui apparait
+  taskToInfo.insertAdjacentElement("beforeend", taskInfo); //taskInfo est le div qui apparait
   taskInfo.classList.remove("displayNone");
   clickScreen.classList.remove("displayNone");
   let taskTitleInfo = taskToInfo.textContent; //taskTitleInfo est le text contenu dans taskToInfo (span.text)

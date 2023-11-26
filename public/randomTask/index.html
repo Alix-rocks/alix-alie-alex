@@ -80,7 +80,11 @@
         </div>
       </section>
       <div id="taskInfo" class="displayNone">
-          <span id="storeIt" class="typcn typcn-pin-outline pinSpan"></span>
+        <input id="storeIt" type="checkbox" class="cossin">
+        <label for="storeIt" class="storeItLabel">
+          <span class="typcn typcn-pin-outline pinUnChecked"></span>
+          <span class="typcn typcn-pin pinChecked"></span>
+        </label>
           <h5 class="taskInfoInput">Tell me more...</h5>
         <div class="taskInfoInput relDiv">
           <input type="text" id="taskTitle" class="taskInfoInput" style="margin:0;padding-right: 39px;">
@@ -93,8 +97,7 @@
           <input class="myRadio" type="radio" name="termOptions" id="longTerm" value="longTerm" />
           <label for="longTerm" class="termLabel"><span class="myRadio"></span><span>It's a long term shit</span></label>
         </div>
-        <button id="taskInfoBtn">Save Info</button>
-        <button id="taskStoreBtn" style="margin: 10px auto;">Save & Store</button>
+        <button id="taskInfoBtn">Save</button>
       </div>
       <form id="calendarDiv" class="displayNone">
         <h5 class="taskInfoInput">Tell me when...</h5>

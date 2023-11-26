@@ -182,12 +182,31 @@ input[name="daysWeekChoice"]:checked + label.dayCircle{
 h5.taskInfoInput{
   margin-bottom: 0;
 }
-.pinSpan{
+.storeItLabel{
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 30px;
+  height: 30px;
+}
+.pinUnChecked, .pinChecked{
   position: absolute;
   top: 5px;
   right: 5px;
   font-size: 24px;
   line-height: 24px;
+}
+.pinUnChecked{
+  opacity: 1;
+}
+.pinChecked{
+  opacity: 0;
+}
+#storeIt:checked + label > .pinUnChecked{
+  opacity: 0;
+}
+#storeIt:checked + label > .pinChecked{
+  opacity: 1;
 }
 .relDiv{
   position: relative;

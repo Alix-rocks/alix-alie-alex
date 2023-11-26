@@ -378,7 +378,7 @@ settings.addEventListener("click", () => {
 function todoCreation(todo){
   let togoList = getTogoList(todo);
   if(todo.stock){// when you recycle it you need a new id...
-    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><span class="typcn typcn-trash trashCan" onclick="trashCanItEvent(this)"></span><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
+    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><span class="typcn typcn-trash trashCan" onclick="trashCanItEvent(this)"></span><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
   } else{
     //How are we gonna make it stockable?
     document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><span class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span></li>`);
@@ -480,8 +480,21 @@ function recycleEvent(recycle){
 };
 window.recycleEvent = recycleEvent;
 
-function storeItEvent(todo){ // or taskStoreBtn.addEventListener ... ?
-
+function stockCreaction(todo){ 
+  // let todo = {
+  //   id: crypto.randomUUID(),
+  //   task: reuse.task,
+  //   icon: reuse.icon,
+  //   color: reuse.color,
+  //   info: reuse.info,
+  //   term: reuse.term
+  // };
+  // listTasks.push(todo);
+  // localStorage.listTasks = JSON.stringify(listTasks);
+  // todoCreation(todo);
+  // document.querySelector("#listInput").checked = true;
+  // document.querySelector("#wheneverLists").scrollIntoView();
+  // updateCBC();
 };
 
 function reuseItEvent(thisOne){
@@ -1009,7 +1022,7 @@ function taskAddInfo(thisOne){
   let taskToInfoId = parent.id;
   taskToInfoIndex = listTasks.findIndex(todo => todo.id == taskToInfoId);
   let todo = listTasks[taskToInfoIndex];
-  storeIt.className = todo.stock == true ? "typcn typcn-pin pinSpan" : "typcn typcn-pin-outline pinSpan";
+  storeIt.checked = todo.stored ? true : false;
   taskTitle.value = todo.task;
   taskTitle.style.color = todo.color;
   colorIt.style.color = todo.color;
@@ -1019,8 +1032,7 @@ function taskAddInfo(thisOne){
     Array.from( document.querySelectorAll('input[name="termOptions"]'), input => input.checked = false );
   };
   taskDetails.value = todo.info ? todo.info : ""; //taskDetails est le testarea qui doit contenir les détails (si y'en a déjà), dans le div
-  document.getElementById("storeIt").addEventListener("click", () => storeItEvent(todo));
-  document.getElementById("colorIt").addEventListener("click", () => colorItEvent(todo));
+  //document.getElementById("colorIt").addEventListener("click", () => colorItEvent(todo));
   parent.scrollIntoView();
   document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(taskInfo));
 };
@@ -1032,6 +1044,10 @@ taskInfoBtn.addEventListener("click", () => {
   let previousTerm = todo.term;
   todo.task = taskTitle.value.startsWith("*") ? taskTitle.value.substring(1) : taskTitle.value;
   todo.info = taskDetails.value;
+  todo.stored = storeIt.checked ? true : false;
+  // if(todo.stored){
+  //   stockCreaction(todo);
+  // };
   let checked = document.querySelector('input[name="termOptions"]:checked');
   todo.term = checked ? checked.value : "";
   console.log(todo);

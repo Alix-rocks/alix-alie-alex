@@ -381,7 +381,7 @@ function todoCreation(todo){
     document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><span class="typcn typcn-trash trashCan" onclick="trashCanItEvent(this)"></span><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
   } else{
     //How are we gonna make it stockable?
-    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span><span class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span></li>`);
+    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><span class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span></li>`);
   };
 };
 
@@ -410,7 +410,7 @@ function getTogoList(todo){
 };
 
 function donedCreation(donedDate, doned){
-  document.getElementById(donedDate).insertAdjacentHTML("beforeend", `<li><span class="typcn typcn-tick"></span><span class="text" style="color:${doned.color};">${doned.task}</span><span class="typcn typcn-trash trashCan" onclick="trashCanEvent(this)"></span><span class="typcn typcn-arrow-sync recycle" onclick="recycleEvent(this)"></span></li>`);
+  document.getElementById(donedDate).insertAdjacentHTML("beforeend", `<li><span class="typcn typcn-tick"></span><span class="textDone" style="color:${doned.color};">${doned.task}</span><span class="typcn typcn-trash trashCan" onclick="trashCanEvent(this)"></span><span class="typcn typcn-arrow-sync recycle" onclick="recycleEvent(this)"></span></li>`);
 };
 
 function donedDateCreation(donedDate){
@@ -996,20 +996,21 @@ function meseDayNCalc(date){
 let taskToInfo;
 let taskToInfoIndex;
 function taskAddInfo(thisOne){
-  taskToInfo = thisOne; //taskToInfo est le span.text qui a été cliqué
+  taskToInfo = thisOne.parentElement; //taskToInfo est le span.text qui a été cliqué
   let width = getComputedStyle(taskToInfo).width;
   taskInfo.style.width = width;
   taskToInfo.insertAdjacentElement("beforeend", taskInfo); //taskInfo est le div qui apparait
   taskInfo.classList.remove("displayNone");
   clickScreen.classList.remove("displayNone");
-  let taskTitleInfo = taskToInfo.textContent; //taskTitleInfo est le text contenu dans taskToInfo (span.text)
-  taskTitle.value = taskTitleInfo; //taskTitle est le input qui doit contenir le titre, dans le div
+  //let taskTitleInfo = taskToInfo.textContent; //taskTitleInfo est le text contenu dans taskToInfo (span.text)
+  //taskTitle.value = taskTitleInfo; //taskTitle est le input qui doit contenir le titre, dans le div
   parent = taskToInfo.parentElement;
   parent.classList.add("selectedTask");
   let taskToInfoId = parent.id;
   taskToInfoIndex = listTasks.findIndex(todo => todo.id == taskToInfoId);
   let todo = listTasks[taskToInfoIndex];
-  storeIt.className = todo.stock ? "typcn typcn-pin pinSpan" : "typcn typcn-pin-outline pinSpan";
+  storeIt.className = todo.stock == true ? "typcn typcn-pin pinSpan" : "typcn typcn-pin-outline pinSpan";
+  taskTitle.value = todo.task;
   taskTitle.style.color = todo.color;
   colorIt.style.color = todo.color;
   if(todo.term){
@@ -1034,7 +1035,7 @@ taskInfoBtn.addEventListener("click", () => {
   let checked = document.querySelector('input[name="termOptions"]:checked');
   todo.term = checked ? checked.value : "";
   console.log(todo);
-  taskToInfo.textContent = `${todo.info ? '*' : ''}${todo.task}`;
+  taskToInfo.querySelector(".text").textContent = `${todo.info ? '*' : ''}${todo.task}`;
   localStorage.listTasks = JSON.stringify(listTasks);
   if(previousTerm !== todo.term){
     let togoList = getTogoList(todo);

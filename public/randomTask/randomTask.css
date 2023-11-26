@@ -289,11 +289,21 @@ li>span{
   font-size: 1.5em;
 }
 li .text{
-  flex-grow: 1;
   font-size: 20px;
-  margin: 0 7px;
+  line-height: 1em;
   padding: 0;
+}
+li .textDiv{
+  flex-grow: 1;
+  margin: 0 7px;
   position: relative;
+}
+li .textDone{
+  font-size: 20px;
+  line-height: 1em;
+  padding: 0;
+  flex-grow: 1;
+  margin: 0 7px;
 }
 .selectedTask{
   background-color: rgba(211, 211, 211, .5);

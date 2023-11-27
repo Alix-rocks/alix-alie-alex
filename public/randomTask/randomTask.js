@@ -481,18 +481,19 @@ function recycleEvent(recycle){
 window.recycleEvent = recycleEvent;
 
 function stockCreaction(todo){ 
-  // let todo = {
-  //   id: crypto.randomUUID(),
-  //   task: reuse.task,
-  //   icon: reuse.icon,
-  //   color: reuse.color,
-  //   info: reuse.info,
-  //   term: reuse.term
-  // };
-  // listTasks.push(todo);
-  // localStorage.listTasks = JSON.stringify(listTasks);
-  // todoCreation(todo);
-  // document.querySelector("#listInput").checked = true;
+  let newtodo = {
+    id: crypto.randomUUID(),
+    task: todo.task,
+    icon: todo.icon,
+    color: todo.color,
+    info: todo.info,
+    term: todo.term,
+    stock: true
+  };
+  listTasks.push(newtodo);
+  localStorage.listTasks = JSON.stringify(listTasks);
+  todoCreation(newtodo);
+  //document.querySelector("#storageInput").checked = true;
   // document.querySelector("#wheneverLists").scrollIntoView();
   // updateCBC();
 };
@@ -1045,14 +1046,14 @@ taskInfoBtn.addEventListener("click", () => {
   todo.task = taskTitle.value.startsWith("*") ? taskTitle.value.substring(1) : taskTitle.value;
   todo.info = taskDetails.value;
   todo.stored = storeIt.checked ? true : false;
-  // if(todo.stored){
-  //   stockCreaction(todo);
-  // };
   let checked = document.querySelector('input[name="termOptions"]:checked');
   todo.term = checked ? checked.value : "";
   console.log(todo);
   taskToInfo.querySelector(".text").textContent = `${todo.info ? '*' : ''}${todo.task}`;
   localStorage.listTasks = JSON.stringify(listTasks);
+  if(todo.stored){
+    stockCreaction(todo);
+  };
   if(previousTerm !== todo.term){
     let togoList = getTogoList(todo);
     document.getElementById(togoList).appendChild(parent);

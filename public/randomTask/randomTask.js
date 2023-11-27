@@ -378,7 +378,7 @@ settings.addEventListener("click", () => {
 function todoCreation(todo){
   let togoList = getTogoList(todo);
   if(todo.stock){// when you recycle it you need a new id...
-    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><span class="typcn typcn-trash trashCan" onclick="trashCanItEvent(this)"></span><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
+    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><i class="typcn typcn-trash trashCan" onclick="trashCanItEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
   } else{
     //How are we gonna make it stockable?
     document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><span class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span></li>`);
@@ -390,8 +390,7 @@ function getTogoList(todo){
   let togoList;
   if(todo.stock){
     togoList = "listStorage";
-  };
-  if(todo.date == "" || !todo.date || todo.date > todayDate){
+  } else if(todo.date == "" || !todo.date || todo.date > todayDate){
     if(todo.line == "todoDay"){
       togoList = "listScheduled";
     } else if(todo.line == "recurringDay"){
@@ -455,7 +454,7 @@ addForm.addEventListener("submit", (e) => {
   };
 });
 
-function recycleEvent(recycle){
+function recycleEvent(recycle){ //from Done
   let recycleLi = recycle.parentElement;
   let recycleId = recycleLi.id.slice(5);
   let recycleDate = recycleLi.parentElement.id;
@@ -490,18 +489,20 @@ function stockCreaction(todo){
     term: todo.term,
     stock: true
   };
+  console.log(newtodo);
   listTasks.push(newtodo);
+  todo.stored = true;
   localStorage.listTasks = JSON.stringify(listTasks);
   todoCreation(newtodo);
-  //document.querySelector("#storageInput").checked = true;
-  // document.querySelector("#wheneverLists").scrollIntoView();
-  // updateCBC();
+  document.querySelector("#storageInput").checked = true;
+  document.querySelector("#storageList").scrollIntoView();
+  updateCBC();
 };
 
-function reuseItEvent(thisOne){
+function reuseItEvent(thisOne){ //from Stock
   let reuseLi = thisOne.parentElement;
   let reuseId = reuseLi.id;
-  reuseIndex = listTasks.findIndex(todo => todo.id == reuseId);
+  let reuseIndex = listTasks.findIndex(todo => todo.id == reuseId);
   let reuse = listTasks[reuseIndex];
   let todo = {
     id: crypto.randomUUID(),
@@ -509,7 +510,8 @@ function reuseItEvent(thisOne){
     icon: reuse.icon,
     color: reuse.color,
     info: reuse.info,
-    term: reuse.term
+    term: reuse.term,
+    stored: true
   };
   listTasks.push(todo);
   localStorage.listTasks = JSON.stringify(listTasks);
@@ -619,7 +621,7 @@ window.trashCanEvent = trashCanEvent;
 function trashCanItEvent(thisOne){
   let trashLi = thisOne.parentElement;
   let trashId = trashLi.id;
-  trashIndex = listTasks.findIndex(todo => todo.id == trashId);
+  let trashIndex = listTasks.findIndex(todo => todo.id == trashId);
   listTasks.splice(trashIndex, 1);
   localStorage.listTasks = JSON.stringify(listTasks);
   trashLi.remove();
@@ -1023,7 +1025,7 @@ function taskAddInfo(thisOne){
   let taskToInfoId = parent.id;
   taskToInfoIndex = listTasks.findIndex(todo => todo.id == taskToInfoId);
   let todo = listTasks[taskToInfoIndex];
-  storeIt.checked = todo.stored ? true : false;
+  storeIt.checked = todo.stored || todo.stock ? true : false;
   taskTitle.value = todo.task;
   taskTitle.style.color = todo.color;
   colorIt.style.color = todo.color;
@@ -1051,9 +1053,9 @@ taskInfoBtn.addEventListener("click", () => {
   console.log(todo);
   taskToInfo.querySelector(".text").textContent = `${todo.info ? '*' : ''}${todo.task}`;
   localStorage.listTasks = JSON.stringify(listTasks);
-  if(todo.stored == false && storeIt.checked == true){
-    stockCreaction(todo);
-    //todo.stored = true;
+  if(!todo.stock && !todo.stored && storeIt.checked){
+    console.log("should store it!");
+    stockCreaction(todo); //todo.stored = true; (included in stockCreation)
   };
   if(previousTerm !== todo.term){
     let togoList = getTogoList(todo);

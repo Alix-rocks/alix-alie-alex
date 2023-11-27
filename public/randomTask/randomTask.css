@@ -208,6 +208,11 @@ h5.taskInfoInput{
 #storeIt:checked + label > .pinChecked{
   opacity: 1;
 }
+#listStorage > li > i{
+  padding: 0;
+  width: 30px;
+  text-align: center;
+}
 .relDiv{
   position: relative;
 }

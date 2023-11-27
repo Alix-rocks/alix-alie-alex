@@ -1045,14 +1045,15 @@ taskInfoBtn.addEventListener("click", () => {
   let previousTerm = todo.term;
   todo.task = taskTitle.value.startsWith("*") ? taskTitle.value.substring(1) : taskTitle.value;
   todo.info = taskDetails.value;
-  todo.stored = storeIt.checked ? true : false;
+  //todo.stored = storeIt.checked ? true : false;
   let checked = document.querySelector('input[name="termOptions"]:checked');
   todo.term = checked ? checked.value : "";
   console.log(todo);
   taskToInfo.querySelector(".text").textContent = `${todo.info ? '*' : ''}${todo.task}`;
   localStorage.listTasks = JSON.stringify(listTasks);
-  if(todo.stored){
+  if(todo.stored == false && storeIt.checked == true){
     stockCreaction(todo);
+    //todo.stored = true;
   };
   if(previousTerm !== todo.term){
     let togoList = getTogoList(todo);

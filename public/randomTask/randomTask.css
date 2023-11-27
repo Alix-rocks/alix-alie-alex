@@ -534,7 +534,7 @@ hr.zoneHr{
   justify-content: space-between;
   align-items: baseline;
 }
-#doneZone li span.text{
+#doneZone li span.textDone{
   font-size: 18px;
   text-decoration: line-through;
 }

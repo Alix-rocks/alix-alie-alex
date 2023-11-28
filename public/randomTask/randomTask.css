@@ -307,6 +307,7 @@ li > i{
   padding: 0;
   width: 30px;
   text-align: center;
+  flex-shrink: 0;
 }
 li .typcn{
   font-size: 1.5em;
@@ -536,7 +537,7 @@ hr.zoneHr{
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
 }
 #doneZone li span.textDone{
   font-size: 18px;

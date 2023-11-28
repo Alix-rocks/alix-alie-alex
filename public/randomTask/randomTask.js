@@ -33,6 +33,7 @@ onAuthStateChanged(auth,(user) => {
     getCloudBC();
     getTasksSettings();
     getDones();
+    console.log(`Tomorrow: ${getTomorrowDate()}`);
   } else{
     userConnected = false;
     logInScreen.classList.remove("displayNone");
@@ -387,12 +388,17 @@ function todoCreation(todo){
 
 function getTogoList(todo){
   let todayDate = getTodayDate();
+  let tomorrowDate = getTomorrowDate();
   let togoList;
   if(todo.stock){
     togoList = "listStorage";
   } else if(todo.date == "" || !todo.date || todo.date > todayDate){
     if(todo.line == "todoDay"){
-      togoList = "listScheduled";
+      if(todo.date == tomorrowDate){
+        togoList = "listTomorrow";
+      } else{
+        togoList = "listScheduled";
+      };
     } else if(todo.line == "recurringDay"){
       togoList = "listRecurring";
     } else if(todo.term == "oneTime"){
@@ -409,7 +415,7 @@ function getTogoList(todo){
 };
 
 function donedCreation(donedDate, doned){
-  document.getElementById(donedDate).insertAdjacentHTML("beforeend", `<li><span class="typcn typcn-tick"></span><span class="textDone" style="color:${doned.color};">${doned.task}</span><span class="typcn typcn-trash trashCan" onclick="trashCanEvent(this)"></span><span class="typcn typcn-arrow-sync recycle" onclick="recycleEvent(this)"></span></li>`);
+  document.getElementById(donedDate).insertAdjacentHTML("beforeend", `<li><i class="typcn typcn-tick"></i><span class="textDone" style="color:${doned.color};">${doned.task}</span><i class="typcn typcn-trash trashCan" onclick="trashCanEvent(this)"></i><i class="typcn typcn-arrow-sync recycle" onclick="recycleEvent(this)"></i></li>`);
 };
 
 function donedDateCreation(donedDate){
@@ -662,7 +668,6 @@ function localStorageDones(time){
     updateCBC();
   };
   let lastWeek = getLastWeekDate();
-  console.log(lastWeek);
   let recent = listDones.filter((td) => td.date >= lastWeek);
   localStorage.listDones = JSON.stringify(recent);
 };
@@ -746,24 +751,10 @@ function calendarChoice(thisOne){
     document.getElementById(todo.line + "Input").checked = true;
   } else{
     Array.from( document.querySelectorAll('input[name="whatDay"]'), input => input.checked = false );
-  }
+  };
   if(todo.line == "recurringDay"){
     fillUpRecurring(todo);
   };
-  // if(todo.line == "doneDay"){
-  //   doneDayInput.checked = true;
-  // } else if(todo.line == "todoDay"){
-  //   todoDayInput.checked = true;
-  // } else if(todo.line == "recurringDay"){
-  //   fillUpRecurring(todo);
-  //   recurringDayInput.checked = true;
-  // } else{
-  //   todoDayInput.checked = true;
-  //   // document.getElementsByName("whatDay").forEach(radio => {
-  //   //   radio.checked = false;
-  //   // });
-  //   //Array.from( document.querySelectorAll('input[name="whatDay"]'), input => input.checked = false );
-  // };
   taskToDate.insertAdjacentElement("afterend", calendarDiv); //calendarDiv est le div qui apparait
   calendarDiv.classList.remove("displayNone");
   clickScreen.classList.remove("displayNone");
@@ -835,7 +826,19 @@ calendarDiv.addEventListener("submit", (e) => {
     todo.dal = dalInput.value;
     todo.ogni = ogniInput.value;
     todo.var = timeVariationInput.value;
-    if(todo.var == "settimana"){
+    document.getElementsByName("fineOptions").forEach(radio => {
+      if(radio.checked == true){
+        todo.fineOpt = radio.id;
+      };
+    });
+    if(todo.fineOpt == "fineGiorno"){
+      todo.fine = document.getElementById("fineDate").value;
+    } else if(todo.fineOpt == "fineDopo"){
+      todo.fineCount = document.getElementById("fineCount").value;
+    };
+    if(todo.var == "giorno"){
+      ogniGiorno(todo);
+    } else if(todo.var == "settimana"){
       let daysWeek = [];
       document.getElementsByName("daysWeekChoice").forEach(choice => {
         if(document.getElementById(choice.id).checked == true){
@@ -843,6 +846,7 @@ calendarDiv.addEventListener("submit", (e) => {
         };
       });
       todo.daysWeek = daysWeek;
+      ogniSettimana(todo);
     } else if(todo.var == "mese"){
       document.getElementsByName("meseOptions").forEach(radio => {
         if(radio.checked == true){
@@ -851,23 +855,16 @@ calendarDiv.addEventListener("submit", (e) => {
       });
       if(todo.meseOpt == "ogniXDate"){
         todo.meseDate = meseDateCalc(dalInput.value);
+        ogniMeseDate(todo);
       } else if(todo.meseOpt == "ogniXDay"){
         todo.meseDayN = meseDayNCalc(dalInput.value);
         todo.meseDayI = meseDayICalc(dalInput.value);
       };
+    } else if(todo.var == "anno"){
+        ogniAnno(todo);
     };
-    document.getElementsByName("fineOptions").forEach(radio => {
-      if(radio.checked == true){
-        todo.fineOpt = radio.id;
-      };
-    });
-    if(todo.fineOpt == "fineGiorno"){
-      todo.fine = document.getElementById("fineDate").value;
-      ogniGiornoFine(todo);
-    } else if(todo.fineOpt == "fineDopo"){
-      todo.fineCount = document.getElementById("fineCount").value;
-      ogniGiornoDopo(todo);
-    };
+    
+    
     //todo.date = calculateRecurringDate(todo);
    
   };
@@ -906,52 +903,143 @@ function calculateRecurringDate(todo){
     
   };
 };
+function getStringFromDate(date){
+  let currentDate = String(date.getDate()).padStart(2, "0");
+  let currentMonth = String(date.getMonth()+1).padStart(2, "0");
+  let currentYear = date.getFullYear();
+  let currentFullDate = `${currentYear}-${currentMonth}-${currentDate}`;
+  return currentFullDate;
+};
 
-//ogniGiornoFine(todo) For ogni X days until fine
-//ogniGiornoDopo(todo) For ogni X days until dopo Y occorrenza
-//ogniGiornoMai(todo) For ogni X days until mai
-//ogniSettimanaFine(todo) For ogni X week on []day until fine
-//ogniSettimanaDopo(todo) For ogni X week on []day until dopo Y occorrenza
-//ogniSettimanaMai(todo) For ogni X week on []day until mai
-//ogniMeseDateFine(todo) For ogni X month on Y date until fine
-//ogniMeseDateDopo(todo) For ogni X month on Y date until dopo Y occorrenza
-//ogniMeseDateMai(todo) For ogni X month on Y date until mai
-//ogniMeseDayFine(todo) For ogni X month on Y° day until fine
-//ogniMeseDayDopo(todo) For ogni X month on Y° day until dopo Y occorrenza
-//ogniMeseDayMai(todo) For ogni X month on Y° day until mai
-//ogniAnnoFine(todo) For ogni X year on Y date until fine
-//ogniAnnoDopo(todo) For ogni X year on Y date until dopo Y occorrenza
-//ogniAnnoMai(todo) For ogni X year on Y date until mai
+//ogniGiorno(todo) For ogni X days until fine o dopo Y occorrenza o 50 se mai
+//ogniMeseDate(todo) For ogni X month on Y date until fine o dopo Y occorrenza o 50 se mai
+//ogniAnno(todo) For ogni X year on Y date until fine o dopo Y occorrenza o 50 se mai
+//********* Mettre les 3 ensemble! */
 
-function ogniGiornoFine(todo){ //Doesn't work... For ogni X days until fine
-  let dalDate = getDateFromString(todo.dal);
-  let fineDate = getDateFromString(todo.fine);
-  // let fineDate = prefineDate.setDate(prefineDate.getDate() + 1);
-  let date = dalDate;
+
+//ogniSettimana(todo) For ogni X week on []day until fine o dopo Y occorrenza o 50 se mai
+//ogniMeseDay(todo) For ogni X month on Y° day until dopo Y occorrenza o 50 se mai
+
+
+
+function ogniGiorno(todo){ //For ogni X days until fine o  dopo Y occorrenza o 50 se mai
+  let start;
+  let stop;
+  let date = getDateFromString(todo.dal);
   let listDates = [];
-  while (date <= fineDate){
-    console.log(date);
-    //function getStringFromDate(date);
-    listDates.push(date); //Do you want dates or strings?
+  let count = false;
+  if(todo.fineOpt == "fineGiorno"){
+    start = date;
+    stop = getDateFromString(todo.fine);
+  } else if(todo.fineOpt == "fineDopo" || todo.fineOpt == "fineMai"){
+    start = 1;
+    stop = todo.fineCount ? Number(todo.fineCount) : 50;
+    count = true;
+  };  
+  while (start <= stop){
+    let Sdate = getStringFromDate(date);
+    listDates.push(Sdate);
     date.setDate(date.getDate() + Number(todo.ogni));
+    //start = count ? start++ : date; //bugged the whole thing! so let's keep the naive way!
+    if(count){
+      start++;
+    } else{
+      start = date;
+    };
   };
   console.log(listDates);
 };
 
-function ogniGiornoDopo(todo){ //Doesn't work... For ogni X days until dopo Y occorrenza
-  let dalDate = getDateFromString(todo.dal);
-  let dopo = Number(todo.fineCount);
-  let date = dalDate;
-  let d = 1;
+function ogniSettimana(todo){
+  let start;
+  let stop;
+  let date = getDateFromString(todo.dal);
   let listDates = [];
-  while (d <= dopo){
-    console.log(d);
-    console.log(date);
-    listDates.push(date); //Do you want dates or strings?
-    date.setDate(date.getDate() + Number(todo.ogni));
-    d++;
+  let count = false;
+  let days = todo.daysWeek;
+  let nw = 0;
+  if(todo.fineOpt == "fineGiorno"){
+    start = date;
+    stop = getDateFromString(todo.fine);
+  } else if(todo.fineOpt == "fineDopo" || todo.fineOpt == "fineMai"){
+    start = 1;
+    stop = todo.fineCount ? Number(todo.fineCount) : 50;
+    count = true;
+  }; 
+  while (start <= stop){
+    if(nw == 0 && days.includes(String(date.getDay()))){
+      let Sdate = getStringFromDate(date);
+      listDates.push(Sdate);
+      if(count){
+        start++;
+      };
+    };
+    if(date.getDay() == 6){
+      nw++;
+    };
+    if(nw == Number(todo.ogni)){
+      nw = 0;
+    };
+    date.setDate(date.getDate() + 1);
+    if(!count){
+      start = date;
+    };
   };
-  console.log(listDates); //All the same last date...
+  console.log(listDates);
+};
+
+function ogniMeseDate(todo){ //For ogni X month on Y date until fine o dopo Y occorrenza o 50 se mai
+  let start;
+  let stop;
+  let date = getDateFromString(todo.dal);
+  let listDates = [];
+  let count = false;
+  if(todo.fineOpt == "fineGiorno"){
+    start = date;
+    stop = getDateFromString(todo.fine);
+  } else if(todo.fineOpt == "fineDopo" || todo.fineOpt == "fineMai"){
+    start = 1;
+    stop = todo.fineCount ? Number(todo.fineCount) : 50;
+    count = true;
+  };  
+  while (start <= stop){
+    let Sdate = getStringFromDate(date);
+    listDates.push(Sdate);
+    date.setMonth(date.getMonth() + Number(todo.ogni));
+    if(count){
+      start++;
+    } else{
+      start = date;
+    };
+  };
+  console.log(listDates);
+};
+
+function ogniAnno(todo){ //For ogni X anno until fine o dopo Y occorrenza o 50 se mai
+  let start;
+  let stop;
+  let date = getDateFromString(todo.dal);
+  let listDates = [];
+  let count = false;
+  if(todo.fineOpt == "fineGiorno"){
+    start = date;
+    stop = getDateFromString(todo.fine);
+  } else if(todo.fineOpt == "fineDopo" || todo.fineOpt == "fineMai"){
+    start = 1;
+    stop = todo.fineCount ? Number(todo.fineCount) : 50;
+    count = true;
+  };  
+  while (start <= stop){
+    let Sdate = getStringFromDate(date);
+    listDates.push(Sdate);
+    date.setFullYear(date.getFullYear() + Number(todo.ogni));
+    if(count){
+      start++;
+    } else{
+      start = date;
+    };
+  };
+  console.log(listDates);
 };
 
 function fillUpRecurring(todo){
@@ -1177,6 +1265,19 @@ function getTodayDate(){
   let currentMinute = String(date.getMinutes()).padStart(2, "0");
   let currentTime = `${currentHour}:${currentMinute}`;
   let currentDay = String(date.getDate()).padStart(2, "0");
+  currentDay = currentTime <= myTomorrow ? String(currentDay - 1).padStart(2, "0") : currentDay;
+  let currentMonth = String(date.getMonth()+1).padStart(2, "0");
+  let currentYear = date.getFullYear();
+  let currentDate = `${currentYear}-${currentMonth}-${currentDay}`;
+  return currentDate;
+};
+
+function getTomorrowDate(){
+  let date = new Date();
+  let currentHour = String(date.getHours()).padStart(2, "0");
+  let currentMinute = String(date.getMinutes()).padStart(2, "0");
+  let currentTime = `${currentHour}:${currentMinute}`;
+  let currentDay = String(date.getDate() + 1).padStart(2, "0");
   currentDay = currentTime <= myTomorrow ? String(currentDay - 1).padStart(2, "0") : currentDay;
   let currentMonth = String(date.getMonth()+1).padStart(2, "0");
   let currentYear = date.getFullYear();

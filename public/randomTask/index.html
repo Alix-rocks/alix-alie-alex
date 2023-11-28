@@ -126,19 +126,19 @@
               <div id="weekSection" class="calendarMargin displayNone" style="width: -webkit-fill-available;">
                 <p>Da ripetere il</p>
                 <div class="dayCircleWeek">
-                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="domenica" value="domenica" />
+                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="domenica" value="0" />
                   <label for="domenica" class="dayCircle">D</label>
-                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="lunedi" value="lunedi" />
+                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="lunedi" value="1" />
                   <label for="lunedi" class="dayCircle">L</label>
-                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="martedi" value="martedi" />
+                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="martedi" value="2" />
                   <label for="martedi" class="dayCircle">M</label>
-                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="mercoledi" value="mercoledi" />
+                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="mercoledi" value="3" />
                   <label for="mercoledi" class="dayCircle">M</label>
-                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="giovedi" value="giovedi" />
+                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="giovedi" value="4" />
                   <label for="giovedi" class="dayCircle">G</label>
-                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="venerdi" value="venerdi" />
+                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="venerdi" value="5" />
                   <label for="venerdi" class="dayCircle">V</label>
-                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="sabato" value="sabato" />
+                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="sabato" value="6" />
                   <label for="sabato" class="dayCircle">S</label>
                 </div>
               </div>
@@ -239,7 +239,12 @@
             <h5 class="topList">All in good time...</h5>
             <span id="listScheduledChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
-          <ul id="listScheduled" class="listToggleList"></ul>
+          <div class="listToggleList">
+            <h4 class="subList">Tomorrow</h4>
+            <ul id="listTomorrow"></ul>
+            <h4 class="subList">Later</h4>
+            <ul id="listScheduled"></ul>
+          </div>
         </div>
       </section>
       <section>

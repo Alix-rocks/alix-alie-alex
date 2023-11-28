@@ -208,11 +208,6 @@ h5.taskInfoInput{
 #storeIt:checked + label > .pinChecked{
   opacity: 1;
 }
-#listStorage > li > i{
-  padding: 0;
-  width: 30px;
-  text-align: center;
-}
 .relDiv{
   position: relative;
 }
@@ -307,10 +302,17 @@ ul{
   border-radius: 15px;
 }
 
-li>span{
-  padding-right: 3px;
+li > i{
   line-height: 1em;
+  padding: 0;
+  width: 30px;
+  text-align: center;
+}
+li .typcn{
   font-size: 1.5em;
+}
+li .emptyCheck{
+  font-size: 2em;
 }
 li .text{
   font-size: 20px;
@@ -336,13 +338,10 @@ li .textDone{
 .colorSpan{
   padding-left: 10px;
 }
-.emptyCheck{
-  font-size: 2em;
-}
-.trashCan, .recycle{
-  padding-left: 10px;
+
+/* .trashCan, .recycle{
   font-size: 1.5em;
-}
+} */
 .whatDayLabel{
   display: block;
   font-size: 18px;

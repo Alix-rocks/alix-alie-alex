@@ -381,7 +381,7 @@ function todoCreation(todo){
     document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><i class="typcn typcn-trash trashCan" onclick="trashCanItEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
   } else{
     //How are we gonna make it stockable?
-    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><span class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span></li>`);
+    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><i class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></i></li>`);
   };
 };
 
@@ -480,6 +480,7 @@ function recycleEvent(recycle){ //from Done
 window.recycleEvent = recycleEvent;
 
 function stockCreaction(todo){ 
+  console.log("stockCreation");
   let newtodo = {
     id: crypto.randomUUID(),
     task: todo.task,
@@ -487,11 +488,13 @@ function stockCreaction(todo){
     color: todo.color,
     info: todo.info,
     term: todo.term,
-    stock: true
+    stock: true,
+    storedId: [todo.id]
   };
   console.log(newtodo);
   listTasks.push(newtodo);
   todo.stored = true;
+  todo.stockId = newtodo.id;
   localStorage.listTasks = JSON.stringify(listTasks);
   todoCreation(newtodo);
   document.querySelector("#storageInput").checked = true;
@@ -500,6 +503,7 @@ function stockCreaction(todo){
 };
 
 function reuseItEvent(thisOne){ //from Stock
+  console.log("reuseItEvent");
   let reuseLi = thisOne.parentElement;
   let reuseId = reuseLi.id;
   let reuseIndex = listTasks.findIndex(todo => todo.id == reuseId);
@@ -511,9 +515,12 @@ function reuseItEvent(thisOne){ //from Stock
     color: reuse.color,
     info: reuse.info,
     term: reuse.term,
-    stored: true
+    stored: true,
+    stockId: reuse.id
   };
   listTasks.push(todo);
+  reuse.storedId.push(todo.id);
+  console.log(reuse);
   localStorage.listTasks = JSON.stringify(listTasks);
   todoCreation(todo);
   document.querySelector("#listInput").checked = true;
@@ -560,6 +567,13 @@ window.checkEvent = checkEvent;
 
 function gotItDone(nb){
   let donedTaskIndex = listTasks.findIndex(todo => todo.id == nb);
+  if(listTasks[donedTaskIndex].stored == true){
+    let donedTaskId = listTasks[donedTaskIndex].id;
+    let stockId = listTasks[donedTaskIndex].stockId;
+    let stockIndex = listTasks.findIndex(todo => todo.id == stockId);
+    listTasks[stockIndex].storedId = listTasks[stockIndex].storedId.filter(id => id !== donedTaskId);
+    console.log(listTasks[stockIndex]);
+  };
   let donedTaskSplice = listTasks.splice(donedTaskIndex, 1);
   let donedTask = donedTaskSplice[0].task;
   let donedIcon = donedTaskSplice[0].icon;
@@ -596,7 +610,7 @@ function gotItDone(nb){
   localStorageDones("next");
 };
 
-function trashCanEvent(trashCan){
+function trashCanEvent(trashCan){ // From Done
   let trashedLi = trashCan.parentElement;
   let trashedDate = trashedLi.parentElement.id;
   let trashedTaskId = trashedLi.id.slice(5);
@@ -618,16 +632,30 @@ function trashCanEvent(trashCan){
 };
 window.trashCanEvent = trashCanEvent;
 
-function trashCanItEvent(thisOne){
+function trashCanItEvent(thisOne){ //from Storage
+  console.log("trashCanItEvent");
   let trashLi = thisOne.parentElement;
-  let trashId = trashLi.id;
-  let trashIndex = listTasks.findIndex(todo => todo.id == trashId);
-  listTasks.splice(trashIndex, 1);
-  localStorage.listTasks = JSON.stringify(listTasks);
-  trashLi.remove();
-  updateCBC();
+  let trashId = trashLi.id; 
+  trashStock(trashId); 
 };
 window.trashCanItEvent = trashCanItEvent;
+
+function trashStock(trashId){
+  let trashIndex = listTasks.findIndex(todo => todo.id == trashId);
+  let trash = listTasks[trashIndex];
+  if(trash.storedId.length > 0){
+    trash.storedId.forEach(todoId => {
+      let todoIndex = listTasks.findIndex(todo => todo.id == todoId);
+      listTasks[todoIndex].stored = false;
+      listTasks[todoIndex].stockId = "";
+      console.log(listTasks[todoIndex]);
+    });
+  };
+  listTasks.splice(trashIndex, 1);
+  localStorage.listTasks = JSON.stringify(listTasks);
+  document.getElementById(trashId).remove();
+  updateCBC();
+};
 
 function localStorageDones(time){
   if(time == "next"){
@@ -1035,7 +1063,24 @@ function taskAddInfo(thisOne){
     Array.from( document.querySelectorAll('input[name="termOptions"]'), input => input.checked = false );
   };
   taskDetails.value = todo.info ? todo.info : ""; //taskDetails est le testarea qui doit contenir les détails (si y'en a déjà), dans le div
-  //document.getElementById("colorIt").addEventListener("click", () => colorItEvent(todo));
+  document.getElementById("colorIt").addEventListener("click", () => {
+    colorIt.insertAdjacentElement("afterend", colorPalet);
+    colorPalet.classList.remove("displayNone");
+    document.querySelectorAll("input[name='colorRadio']").forEach(radio => {
+      if(todo.color == radio.value){
+        radio.checked = true;
+      } else{
+        radio.checked = false;
+      };
+      radio.addEventListener("click", () => {
+        let newcolor = radio.value;
+        taskTitle.style.color = newcolor;
+        colorIt.style.color = newcolor;
+        colorPalet.classList.add("displayNone");
+        list.insertAdjacentElement("afterend", colorPalet);
+      });
+    });
+  });
   parent.scrollIntoView();
   document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(taskInfo));
 };
@@ -1047,7 +1092,8 @@ taskInfoBtn.addEventListener("click", () => {
   let previousTerm = todo.term;
   todo.task = taskTitle.value.startsWith("*") ? taskTitle.value.substring(1) : taskTitle.value;
   todo.info = taskDetails.value;
-  //todo.stored = storeIt.checked ? true : false;
+  todo.color = colorIt.style.color;
+  taskToInfo.querySelector(".text").style.color = colorIt.style.color;
   let checked = document.querySelector('input[name="termOptions"]:checked');
   todo.term = checked ? checked.value : "";
   console.log(todo);
@@ -1056,6 +1102,14 @@ taskInfoBtn.addEventListener("click", () => {
   if(!todo.stock && !todo.stored && storeIt.checked){
     console.log("should store it!");
     stockCreaction(todo); //todo.stored = true; (included in stockCreation)
+  };
+  if(todo.stock && !storeIt.checked){
+    console.log("should unstore it!");
+    trashStock(todo.id);
+  };
+  if(todo.stored && !storeIt.checked){
+    console.log("should unstore it!");
+    trashStock(todo.stockId);
   };
   if(previousTerm !== todo.term){
     let togoList = getTogoList(todo);
@@ -1066,35 +1120,6 @@ taskInfoBtn.addEventListener("click", () => {
 });
 // *** COLOR
 //const colorList = ["orange", "red", "darkmagenta", "dodgerblue", "forestgreen", "darkslategrey"];
-let colorTag;
-function colorChoice(thisOne){
-  colorTag = thisOne;
-  parent = colorTag.parentElement;
-  parent.classList.add("selectedTask");
-  let li = colorTag.parentElement;
-  let taskId = li.id;
-  let taskIndex = listTasks.findIndex(todo => todo.id == taskId);
-  colorTag.insertAdjacentElement("afterend", colorPalet);
-  colorPalet.classList.remove("displayNone");
-  clickScreen.classList.remove("displayNone");
-  document.querySelectorAll("input[name='colorRadio']").forEach(radio => {
-    if(listTasks[taskIndex].color == radio.value || li.querySelector(".text").style.color == radio.value){
-      radio.checked = true;
-    } else{
-      radio.checked = false;
-    };
-    radio.addEventListener("click", () => {
-      let color = radio.value;
-      li.querySelector(".text").style.color = color;
-      listTasks[taskIndex].color = color;
-      localStorage.listTasks = JSON.stringify(listTasks);
-      updateCBC();
-      clickHandlerAddOn(colorPalet);
-    });
-  });
-  document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(colorPalet));
-};
-window.colorChoice = colorChoice;
 
 function scrollToSection(){
   let section = parent.closest("section");

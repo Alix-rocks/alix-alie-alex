@@ -129,6 +129,10 @@ input[type="radio"]{
   background-color: white;
   padding: 5px 5px 0;
   border-radius: 5px;
+  z-index: 400;
+}
+#AlixTime a{
+  text-decoration: none;
 }
 #AlixTime button{
   background-color: rgb(19 32 32);
@@ -255,7 +259,7 @@ h4.subList{
   color: slategrey;
   width: 100%;
   border-bottom: 1px dotted slategrey;
-  margin-bottom: 0;
+  margin-bottom: 5px;
 }
 .sousBtn{
   margin-top: 0;
@@ -413,6 +417,15 @@ input.myRadio:checked + label span.myRadio{
 .recurringDay{
   color: rebeccapurple;
 }
+.recurry{
+  /* border: 2.5px solid rebeccapurple; */
+  border-radius: 10px;
+  outline-offset: -1px;
+  outline-color: rebeccapurple;
+  outline-style: solid;
+  outline-width: 2.5px;
+  width: fit-content;
+}
 #recurringDaySection{
   display: none; 
   flex-flow: column nowrap; 
@@ -511,6 +524,7 @@ input[name="colorRadio"]:checked + label > div{
   position: relative;
   display: block;
   border-bottom: 1px dotted darkslategrey;
+  margin-bottom: 5px;
 }
 .listToggleChevron{
   position: absolute;

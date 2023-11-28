@@ -378,10 +378,11 @@ settings.addEventListener("click", () => {
 
 function todoCreation(todo){
   let togoList = getTogoList(todo);
-  if(todo.stock){// when you recycle it you need a new id...
-    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><i class="typcn typcn-trash trashCan" onclick="trashCanItEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
+  if(todo.stock){
+    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><i class="typcn typcn-trash trashCan" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
+  } else if(todo.line == "recurringDay"){
+    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><i class="typcn typcn-trash trashCan" onclick="trashRecurringEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><i class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></i></li>`);
   } else{
-    //How are we gonna make it stockable?
     document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><i class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></i></li>`);
   };
 };
@@ -401,6 +402,8 @@ function getTogoList(todo){
       };
     } else if(todo.line == "recurringDay"){
       togoList = "listRecurring";
+      //then we need a function to also create a normal todo (todoDay) with yesterday, today or tomorrow date (depending on the first date in the listDates array, then remove that first date from the array)
+      recurryCreation(todo);
     } else if(todo.term == "oneTime"){
         togoList = "listOne";
     } else{
@@ -414,8 +417,25 @@ function getTogoList(todo){
   return togoList;
 };
 
+function recurryCreation(todo){
+  let tomorrowDate = getTomorrowDate();
+  console.log(todo.listDates[0]);
+  let firstDate = todo.listDates[0];
+  if(firstDate <= tomorrowDate){ //il faudrait le faire au moins 3 fois (au cas où y'a oups, today et tomorrow à créer)
+    // let newtodo.... 
+    //todo.date = firstDate,
+    //todo.line = "todoDay"
+    // todoCreation(newtodo);
+    //will establish itself which list it should go (oups, today or tomorrow)
+
+    //then todo.listDate."remove first date"
+  } else{
+    //later, so nothing
+  }
+};
+
 function donedCreation(donedDate, doned){
-  document.getElementById(donedDate).insertAdjacentHTML("beforeend", `<li><i class="typcn typcn-tick"></i><span class="textDone" style="color:${doned.color};">${doned.task}</span><i class="typcn typcn-trash trashCan" onclick="trashCanEvent(this)"></i><i class="typcn typcn-arrow-sync recycle" onclick="recycleEvent(this)"></i></li>`);
+  document.getElementById(donedDate).insertAdjacentHTML("beforeend", `<li><i class="typcn typcn-tick"></i><span class="textDone" style="color:${doned.color};">${doned.task}</span><i class="typcn typcn-trash trashCan" onclick="trashDoneEvent(this)"></i><i class="typcn typcn-arrow-sync recycle" onclick="recycleEvent(this)"></i></li>`);
 };
 
 function donedDateCreation(donedDate){
@@ -616,7 +636,7 @@ function gotItDone(nb){
   localStorageDones("next");
 };
 
-function trashCanEvent(trashCan){ // From Done
+function trashDoneEvent(trashCan){ // From Done
   let trashedLi = trashCan.parentElement;
   let trashedDate = trashedLi.parentElement.id;
   let trashedTaskId = trashedLi.id.slice(5);
@@ -636,15 +656,15 @@ function trashCanEvent(trashCan){ // From Done
   refreshDoneId();
   localStorageDones("next");  
 };
-window.trashCanEvent = trashCanEvent;
+window.trashDoneEvent = trashDoneEvent;
 
-function trashCanItEvent(thisOne){ //from Storage
-  console.log("trashCanItEvent");
+function trashStockEvent(thisOne){ //from Storage
+  console.log("trashStockEvent");
   let trashLi = thisOne.parentElement;
   let trashId = trashLi.id; 
   trashStock(trashId); 
 };
-window.trashCanItEvent = trashCanItEvent;
+window.trashStockEvent = trashStockEvent;
 
 function trashStock(trashId){
   let trashIndex = listTasks.findIndex(todo => todo.id == trashId);
@@ -801,7 +821,7 @@ calendarDiv.addEventListener("submit", (e) => {
   todo.date = calendarInput.value;
   if(noDayInput.checked == true){
     todo.line = noDayInput.value;
-    todo.date = todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fine = todo.fineCount = "";
+    todo.date = todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fine = todo.fineCount = todo.listDates = todo.recurring = "";
   };
   if(calendarInput.value || dalInput.value){
     document.getElementsByName("whatDay").forEach(radio => {
@@ -821,7 +841,7 @@ calendarDiv.addEventListener("submit", (e) => {
   };
   
   if(todo.line == "recurringDay"){
-    todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fine = todo.fineCount = "";
+    todo.date = todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fine = todo.fineCount = todo.listDates = todo.recurring = "";
   
     todo.dal = dalInput.value;
     todo.ogni = ogniInput.value;
@@ -865,12 +885,14 @@ calendarDiv.addEventListener("submit", (e) => {
     };
     
     
-    //todo.date = calculateRecurringDate(todo);
+    //Doesn't have a todo.date, that one goes straight in the recurring list! (once there, recurryCreation will happen)
    
   };
   if(previousDate !== todo.date || previousLine !== todo.line) {
-    let togoList = getTogoList(todo);
+    let togoList = getTogoList(todo); //recurryCreation(todo) will happen there
     document.getElementById(togoList).appendChild(parent);
+  } else if(todo.line == "recurringDay"){
+    recurryCreation(todo);
   };
   localStorage.listTasks = JSON.stringify(listTasks);
   updateCBC();
@@ -879,8 +901,18 @@ calendarDiv.addEventListener("submit", (e) => {
 });
 
 
-// *** RECURRING
-// todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fine = todo.fineCount = "";
+//todo.id
+//todo.task
+//todo.info
+//todo.color
+//todo.icon
+//todo.term => "oneTime", "longTerm"
+//todo.date
+//todo.line => "todoDay", "doneDay", "recurringDay", "noDay"
+//todo.stored => true/false
+//todo.stockId
+//todo.stock => true/false
+//todo.storedId = []
 //todo.dal => date que ça commence
 //todo.ogni => numéro de répétition
 //todo.var => timeVariation, type de variation : "giorno", "settimana", "mese" or "anno"
@@ -892,7 +924,11 @@ calendarDiv.addEventListener("submit", (e) => {
 //todo.fineOpt => option quand ça fini: "fineMai", "fineGiorno" or "fineDopo"
 //todo.fine => jour que ça fini (date)
 //todo.fineCount => nombre d'occurences après lesquelles ça fini
+//todo.listDates = []
 
+
+// *** RECURRING
+// todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fine = todo.fineCount = todo.listDates = todo.recurring = "";
 function calculateRecurringDate(todo){
   //we're not figuring out which list todo should go to (they're all going in recurring list except those that are after the fine and those that are for Today (make sure the togolist function checks these), but only the date we should give it: either the dalDate if it hasn't started yet (we can calculate once there if it's really starting on the dalDate) or the fine if it's over; otherwise it's the next date (should we recycle it and not recalculate every time?)
   //On pourrait créer un array pour todo.date avec les X prochaines dates (ou que ça soit un autre, genre todo.dates et qu'on fasse juste checker si c'est recurring ou pas pour savoir lequel qu'on utilise. On utilise le premier à chaque fois puis l'enlève de l'Array quand la date est passée et qu'on est rendu à la prochaine; sinon garde la date, même si elle passée pour qu'il reste dans le Oups. Quand la tache est Done, on enlève cette date-là de l'array pour qu'il réapparaisse pas dans oups)
@@ -948,6 +984,7 @@ function ogniGiorno(todo){ //For ogni X days until fine o  dopo Y occorrenza o 5
     };
   };
   console.log(listDates);
+  todo.listDates = listDates;
 };
 
 function ogniSettimana(todo){
@@ -986,6 +1023,7 @@ function ogniSettimana(todo){
     };
   };
   console.log(listDates);
+  todo.listDates = listDates;
 };
 
 function ogniMeseDate(todo){ //For ogni X month on Y date until fine o dopo Y occorrenza o 50 se mai
@@ -1013,6 +1051,7 @@ function ogniMeseDate(todo){ //For ogni X month on Y date until fine o dopo Y oc
     };
   };
   console.log(listDates);
+  todo.listDates = listDates;
 };
 
 function ogniAnno(todo){ //For ogni X anno until fine o dopo Y occorrenza o 50 se mai
@@ -1040,6 +1079,7 @@ function ogniAnno(todo){ //For ogni X anno until fine o dopo Y occorrenza o 50 s
     };
   };
   console.log(listDates);
+  todo.listDates = listDates;
 };
 
 function fillUpRecurring(todo){

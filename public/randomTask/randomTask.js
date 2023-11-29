@@ -363,18 +363,6 @@ settings.addEventListener("click", () => {
 });
 
 // *** CREATION
-// function todoCreation(todo){
-//   let li = document.createElement("li");
-//   if(todo.stock){
-
-//   } else{
-//     li.innerHTML = `<span class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></span><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><span class="text" onclick="taskAddInfo(this)">${todo.info ? '*' : ''}${todo.task}</span><span class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></span><span class="typcn typcn-tag colorSpan" onclick="colorChoice(this)"></span>`;
-//   };
-//   li.setAttribute("id", todo.id);
-//   li.querySelector(".text").style.color = todo.color;
-//   let togoList = getTogoList(todo);
-//   document.getElementById(togoList).appendChild(li);
-// };
 
 function todoCreation(todo){
   let togoList = getTogoList(todo);
@@ -394,7 +382,7 @@ function getTogoList(todo){
   if(todo.stock){
     togoList = "listStorage";
   } else if(todo.date == "" || !todo.date || todo.date > todayDate){
-    if(todo.line == "todoDay"){
+    if(todo.line == "todoDay" || todo.line == "recurry"){
       if(todo.date == tomorrowDate){
         togoList = "listTomorrow";
       } else{
@@ -402,7 +390,6 @@ function getTogoList(todo){
       };
     } else if(todo.line == "recurringDay"){
       togoList = "listRecurring";
-      //then we need a function to also create a normal todo (todoDay) with yesterday, today or tomorrow date (depending on the first date in the listDates array, then remove that first date from the array)
       recurryCreation(todo);
     } else if(todo.term == "oneTime"){
         togoList = "listOne";
@@ -418,20 +405,28 @@ function getTogoList(todo){
 };
 
 function recurryCreation(todo){
+  console.log("recurryCreation");
   let tomorrowDate = getTomorrowDate();
-  console.log(todo.listDates[0]);
-  let firstDate = todo.listDates[0];
-  if(firstDate <= tomorrowDate){ //il faudrait le faire au moins 3 fois (au cas où y'a oups, today et tomorrow à créer)
-    // let newtodo.... 
-    //todo.date = firstDate,
-    //todo.line = "todoDay"
-    // todoCreation(newtodo);
-    //will establish itself which list it should go (oups, today or tomorrow)
-
-    //then todo.listDate."remove first date"
-  } else{
-    //later, so nothing
-  }
+  let date = todo.listDates[0];
+  while (date <= tomorrowDate){
+    console.log(date);
+    let newtodo = {
+      id: crypto.randomUUID(),
+      date: date,
+      line: "recurry",
+      task: todo.task,
+      icon: todo.icon,
+      color: todo.color,
+      info: todo.info,
+      term: todo.term
+    };
+    listTasks.push(newtodo);
+    todo.listDates.splice(0, 1);
+    localStorage.listTasks = JSON.stringify(listTasks);
+    todoCreation(newtodo);
+    updateCBC();
+    date = todo.listDates[0];
+  };
 };
 
 function donedCreation(donedDate, doned){
@@ -525,7 +520,6 @@ function stockCreaction(todo){
   todoCreation(newtodo);
   document.querySelector("#storageInput").checked = true;
   document.querySelector("#storageList").scrollIntoView();
-  updateCBC();
 };
 
 function reuseItEvent(thisOne){ //from Stock
@@ -556,7 +550,6 @@ function reuseItEvent(thisOne){ //from Stock
 window.reuseItEvent = reuseItEvent;
 
 // *** DONE/ERASE
-// !!! What happens when you click DONED a recurring task?!
 let num = 0;
 
 doneNextBtn.addEventListener("click", () => {
@@ -663,6 +656,7 @@ function trashStockEvent(thisOne){ //from Storage
   let trashLi = thisOne.parentElement;
   let trashId = trashLi.id; 
   trashStock(trashId); 
+  updateCBC();
 };
 window.trashStockEvent = trashStockEvent;
 
@@ -680,8 +674,18 @@ function trashStock(trashId){
   listTasks.splice(trashIndex, 1);
   localStorage.listTasks = JSON.stringify(listTasks);
   document.getElementById(trashId).remove();
+};
+
+function trashRecurringEvent(thisOne){
+  let trashLi = thisOne.parentElement;
+  let trashId = trashLi.id;
+  let trashIndex = listTasks.findIndex(todo => todo.id == trashId);
+  listTasks.splice(trashIndex, 1);
+  localStorage.listTasks = JSON.stringify(listTasks);
+  trashLi.remove();
   updateCBC();
 };
+window.trashRecurringEvent = trashRecurringEvent;
 
 function localStorageDones(time){
   if(time == "next"){
@@ -708,7 +712,7 @@ function refreshDoneId(){
 let wheneverList = [];
 shuffleBtn.addEventListener("click", () => {
   let todayDate = getTodayDate();
-  wheneverList = listTasks.filter(task => task.date > todayDate || !task.date || task.date == "");
+  wheneverList = listTasks.filter(task => task.date > todayDate || !task.date || task.date == ""); //ajouter d'enlever les recurring, stock et scheduled... et pourquoi on inclu pas ceux qui sont en retard ou pour today?!
   console.log(wheneverList);
   for (let i = wheneverList.length - 1; i > 0; i--) { 
     const j = Math.floor(Math.random() * (i + 1)); 
@@ -755,7 +759,7 @@ backBtn.addEventListener("click", () => {
 let parent;
 let taskToDate;
 let taskToDateIndex;
-let lineDay = ["todoDay", "doneDay", "recurringDay"];
+let lineDay = ["todoDay", "doneDay", "recurringDay", "noDay", "recurry"];
 function calendarChoice(thisOne){
   taskToDate = thisOne; // taskToDate est l'icon calendar
   parent = taskToDate.parentElement;
@@ -768,7 +772,8 @@ function calendarChoice(thisOne){
   weekSection.classList.add("displayNone");
   monthSection.classList.add("displayNone");
   if(todo.line){
-    document.getElementById(todo.line + "Input").checked = true;
+    let line = todo.line == "recurry" ? "todoDay" : todo.line;
+    document.getElementById(line + "Input").checked = true;
   } else{
     Array.from( document.querySelectorAll('input[name="whatDay"]'), input => input.checked = false );
   };
@@ -824,13 +829,18 @@ calendarDiv.addEventListener("submit", (e) => {
     todo.date = todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fine = todo.fineCount = todo.listDates = todo.recurring = "";
   };
   if(calendarInput.value || dalInput.value){
-    document.getElementsByName("whatDay").forEach(radio => {
-      if(radio.checked == true){
-        todo.line = radio.value;
-        taskToDate.classList.remove(...lineDay);
-        taskToDate.classList.add(radio.value);
-      };
-    });
+    if(previousLine == "recurry"){
+      todo.line = "recurry";
+      taskToDate.classList.add("recurry");
+    } else{
+      document.getElementsByName("whatDay").forEach(radio => {
+        if(radio.checked == true){
+          todo.line = radio.value;
+          taskToDate.classList.remove(...lineDay);
+          taskToDate.classList.add(radio.value);
+        };
+      });
+    };
   } else{
     todo.line = "";
     // document.getElementsByName("whatDay").forEach(radio => {
@@ -883,17 +893,18 @@ calendarDiv.addEventListener("submit", (e) => {
     } else if(todo.var == "anno"){
         ogniAnno(todo);
     };
-    
-    
-    //Doesn't have a todo.date, that one goes straight in the recurring list! (once there, recurryCreation will happen)
-   
+    recurryCreation(todo);
   };
   if(previousDate !== todo.date || previousLine !== todo.line) {
     let togoList = getTogoList(todo); //recurryCreation(todo) will happen there
     document.getElementById(togoList).appendChild(parent);
-  } else if(todo.line == "recurringDay"){
-    recurryCreation(todo);
+    if(previousLine == "recurringDay"){
+      parent.querySelector(".trashCan").outerHTML = '<i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>';
+    } else if(previousLine !== "recurringDay" && todo.line == "recurringDay"){
+      parent.querySelector(".emptyCheck").outerHTML = '<i class="typcn typcn-trash trashCan" onclick="trashRecurringEvent(this)"></i>';
+    };
   };
+
   localStorage.listTasks = JSON.stringify(listTasks);
   updateCBC();
   clickHandlerAddOn(calendarDiv);
@@ -929,16 +940,7 @@ calendarDiv.addEventListener("submit", (e) => {
 
 // *** RECURRING
 // todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fine = todo.fineCount = todo.listDates = todo.recurring = "";
-function calculateRecurringDate(todo){
-  //we're not figuring out which list todo should go to (they're all going in recurring list except those that are after the fine and those that are for Today (make sure the togolist function checks these), but only the date we should give it: either the dalDate if it hasn't started yet (we can calculate once there if it's really starting on the dalDate) or the fine if it's over; otherwise it's the next date (should we recycle it and not recalculate every time?)
-  //On pourrait créer un array pour todo.date avec les X prochaines dates (ou que ça soit un autre, genre todo.dates et qu'on fasse juste checker si c'est recurring ou pas pour savoir lequel qu'on utilise. On utilise le premier à chaque fois puis l'enlève de l'Array quand la date est passée et qu'on est rendu à la prochaine; sinon garde la date, même si elle passée pour qu'il reste dans le Oups. Quand la tache est Done, on enlève cette date-là de l'array pour qu'il réapparaisse pas dans oups)
-  if(todo.var == "giorno"){
-    for(let d = todo.dal; d < (todo.fineDate + 1); d + todo.ogni){
-      todo.listDates.push(d);
-    };
-    
-  };
-};
+
 function getStringFromDate(date){
   let currentDate = String(date.getDate()).padStart(2, "0");
   let currentMonth = String(date.getMonth()+1).padStart(2, "0");

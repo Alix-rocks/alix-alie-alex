@@ -418,13 +418,14 @@ input.myRadio:checked + label span.myRadio{
   color: rebeccapurple;
 }
 .recurry{
+  color:darkmagenta;
   /* border: 2.5px solid rebeccapurple; */
-  border-radius: 10px;
+  /* border-radius: 10px;
   outline-offset: -1px;
   outline-color: rebeccapurple;
   outline-style: solid;
   outline-width: 2.5px;
-  width: fit-content;
+  width: fit-content; */
 }
 #recurringDaySection{
   display: none; 

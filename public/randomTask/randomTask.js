@@ -111,7 +111,8 @@ async function getTasksSettings() {
     todoCreation(todo);
   });
   updateArrowsColor();
-  sort();
+  sortColor("listOne");
+  //sortDate("listScheduled");
 };
 
 async function getDones(){
@@ -372,7 +373,7 @@ function todoCreation(todo){
   } else if(todo.line == "recurringDay"){
     document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><i class="typcn typcn-trash trashCan" onclick="trashRecurringEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><i class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></i></li>`);
   } else{
-    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><i class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></i></li>`);
+    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}"><i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><i class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></i></li>`);
   };
 };
 
@@ -726,20 +727,15 @@ function refreshDoneId(){
   });
 };
 
-function sort() { 
-          
+function sortColor(listName) { 
   // Declaring Variables 
   let list, i, run, li, stop; 
-
   // Taking content of list as input 
-  list = document.getElementById("listOne"); 
-
+  list = document.getElementById(listName); 
   run = true; 
-
   while (run) { 
       run = false; 
       li = list.getElementsByTagName("li"); 
-
       // Loop traversing through all the list items 
       for (i = 0; i < (li.length - 1); i++) { 
           stop = false; 
@@ -747,20 +743,48 @@ function sort() {
               li[i + 1].querySelector(".text").style.color) { 
               stop = true; 
               break; 
-          } 
-      } 
-
+          }; 
+      }; 
       /* If the current item is smaller than  
          the next item then adding it after  
          it using insertBefore() method */ 
       if (stop) { 
           li[i].parentNode.insertBefore( 
                   li[i + 1], li[i]); 
-
           run = true; 
-      } 
-  } 
-} 
+      }; 
+  }; 
+}; 
+function sortDate(listName) { 
+  // Declaring Variables 
+  let list, i, run, li, stop; 
+  // Taking content of list as input 
+  list = document.getElementById(listName); 
+  run = true; 
+  while (run) { 
+      run = false; 
+      li = list.getElementsByTagName("li"); 
+      // Loop traversing through all the list items 
+      for (i = 0; i < (li.length - 1); i++) { 
+          stop = false; 
+          if (li[i].dataset.date >  
+              li[i + 1].dataset.date) { 
+              stop = true; 
+              break; 
+          }; 
+      }; 
+      /* If the current item is smaller than  
+         the next item then adding it after  
+         it using insertBefore() method */ 
+      if (stop) { 
+          li[i].parentNode.insertBefore( 
+                  li[i + 1], li[i]); 
+          run = true; 
+      }; 
+  }; 
+}; 
+
+
 
 // *** SHUFFLE
 let wheneverList = [];
@@ -1079,6 +1103,8 @@ function ogniSettimana(todo, date){
 
 function ogniMeseDay(todo, date){ //For ogni X month on Y° day until fine o dopo Y occorrenza o 50 se mai
   console.log("ogniMeseDay " + todo);
+  console.log("todo.meseDayN " + todo.meseDayN);//c'est le combientième du mois
+  console.log("todo.meseDayI " + todo.meseDayI);//l'index dans le array des jours de la semaine 
   //todo.meseDayN
   //todo.meseDayI
 };

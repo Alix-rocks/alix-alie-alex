@@ -112,7 +112,7 @@ async function getTasksSettings() {
   });
   updateArrowsColor();
   sortColor("listOne");
-  //sortDate("listScheduled");
+  sortDate("listScheduled");
 };
 
 async function getDones(){

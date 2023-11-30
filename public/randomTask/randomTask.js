@@ -111,6 +111,7 @@ async function getTasksSettings() {
     todoCreation(todo);
   });
   updateArrowsColor();
+  sort();
 };
 
 async function getDones(){
@@ -404,8 +405,10 @@ function getTogoList(todo){
   return togoList;
 };
 
-function recurryCreation(todo){
+function recurryCreation(todo){ //todo == le recurring (newtodo est le recurry/normal qui est créé)
   console.log("recurryCreation");
+  //First let's make sure there are still dates in listDates, if it's fineMai; otherwise calculate more, but not from dal, from last date + 1
+  
   let tomorrowDate = getTomorrowDate();
   let date = todo.listDates[0];
   while (date <= tomorrowDate){
@@ -421,6 +424,20 @@ function recurryCreation(todo){
       term: todo.term
     };
     listTasks.push(newtodo);
+    if(todo.fineOpt == "fineMai" && todo.listDates.length == 1){
+      let newDate = date.setDate(date.getDate() + 1);//doesn't work! si c'est chaque année au 29 nov, là tu vas être au 30 nov... mais tu veux pas non plus, en avoir deux pour la même date (le dernier ici et le premier nouveau...) À moins qu'on ne fasse pas le dernier...
+      if(todo.var == "giorno" || todo.var == "anno"){
+        ogniOgni(todo, date);
+      } else if(todo.var == "settimana"){
+        ogniSettimana(todo, date);
+      } else if(todo.var == "mese"){
+        if(todo.meseOpt == "ogniXDate"){
+          ogniOgni(todo, date);
+        } else if(todo.meseOpt == "ogniXDay"){
+          ogniMeseDay(todo, date);
+        };
+      };
+    };
     todo.listDates.splice(0, 1);
     localStorage.listTasks = JSON.stringify(listTasks);
     todoCreation(newtodo);
@@ -462,7 +479,8 @@ addForm.addEventListener("submit", (e) => {
     let todo = {
       id: crypto.randomUUID(),
       task: newTask,
-      color: color
+      color: color,
+      icon: "fa-solid fa-ban noIcon"
     };
     listTasks.push(todo);
     localStorage.listTasks = JSON.stringify(listTasks);
@@ -708,11 +726,47 @@ function refreshDoneId(){
   });
 };
 
+function sort() { 
+          
+  // Declaring Variables 
+  let list, i, run, li, stop; 
+
+  // Taking content of list as input 
+  list = document.getElementById("listOne"); 
+
+  run = true; 
+
+  while (run) { 
+      run = false; 
+      li = list.getElementsByTagName("li"); 
+
+      // Loop traversing through all the list items 
+      for (i = 0; i < (li.length - 1); i++) { 
+          stop = false; 
+          if (li[i].querySelector(".text").style.color >  
+              li[i + 1].querySelector(".text").style.color) { 
+              stop = true; 
+              break; 
+          } 
+      } 
+
+      /* If the current item is smaller than  
+         the next item then adding it after  
+         it using insertBefore() method */ 
+      if (stop) { 
+          li[i].parentNode.insertBefore( 
+                  li[i + 1], li[i]); 
+
+          run = true; 
+      } 
+  } 
+} 
+
 // *** SHUFFLE
 let wheneverList = [];
 shuffleBtn.addEventListener("click", () => {
   let todayDate = getTodayDate();
-  wheneverList = listTasks.filter(task => task.date > todayDate || !task.date || task.date == ""); //ajouter d'enlever les recurring, stock et scheduled... et pourquoi on inclu pas ceux qui sont en retard ou pour today?!
+  wheneverList = listTasks.filter(task => ((!task.date || task.date == "") && (task.line !== "recurringDay" && !task.stock)) || (task.date > todayDate && task.line !== "todoDay")); //ajouter d'enlever les recurring, stock et scheduled... et pourquoi on inclu pas ceux qui sont en retard ou pour today?!
   console.log(wheneverList);
   for (let i = wheneverList.length - 1; i > 0; i--) { 
     const j = Math.floor(Math.random() * (i + 1)); 
@@ -856,6 +910,7 @@ calendarDiv.addEventListener("submit", (e) => {
     todo.dal = dalInput.value;
     todo.ogni = ogniInput.value;
     todo.var = timeVariationInput.value;
+    let date = getDateFromString(todo.dal);
     document.getElementsByName("fineOptions").forEach(radio => {
       if(radio.checked == true){
         todo.fineOpt = radio.id;
@@ -867,7 +922,7 @@ calendarDiv.addEventListener("submit", (e) => {
       todo.fineCount = document.getElementById("fineCount").value;
     };
     if(todo.var == "giorno"){
-      ogniGiorno(todo);
+      ogniOgni(todo, date);
     } else if(todo.var == "settimana"){
       let daysWeek = [];
       document.getElementsByName("daysWeekChoice").forEach(choice => {
@@ -876,7 +931,7 @@ calendarDiv.addEventListener("submit", (e) => {
         };
       });
       todo.daysWeek = daysWeek;
-      ogniSettimana(todo);
+      ogniSettimana(todo, date);
     } else if(todo.var == "mese"){
       document.getElementsByName("meseOptions").forEach(radio => {
         if(radio.checked == true){
@@ -885,13 +940,14 @@ calendarDiv.addEventListener("submit", (e) => {
       });
       if(todo.meseOpt == "ogniXDate"){
         todo.meseDate = meseDateCalc(dalInput.value);
-        ogniMeseDate(todo);
+        ogniOgni(todo, date);
       } else if(todo.meseOpt == "ogniXDay"){
         todo.meseDayN = meseDayNCalc(dalInput.value);
         todo.meseDayI = meseDayICalc(dalInput.value);
+        ogniMeseDay(todo, date);
       };
     } else if(todo.var == "anno"){
-        ogniAnno(todo);
+        ogniOgni(todo, date);
     };
     recurryCreation(todo);
   };
@@ -919,7 +975,7 @@ calendarDiv.addEventListener("submit", (e) => {
 //todo.icon
 //todo.term => "oneTime", "longTerm"
 //todo.date
-//todo.line => "todoDay", "doneDay", "recurringDay", "noDay"
+//todo.line => "todoDay", "doneDay", "recurringDay", "noDay", "recurry"
 //todo.stored => true/false
 //todo.stockId
 //todo.stock => true/false
@@ -949,21 +1005,9 @@ function getStringFromDate(date){
   return currentFullDate;
 };
 
-//ogniGiorno(todo) For ogni X days until fine o dopo Y occorrenza o 50 se mai
-//ogniMeseDate(todo) For ogni X month on Y date until fine o dopo Y occorrenza o 50 se mai
-//ogniAnno(todo) For ogni X year on Y date until fine o dopo Y occorrenza o 50 se mai
-//********* Mettre les 3 ensemble! */
-
-
-//ogniSettimana(todo) For ogni X week on []day until fine o dopo Y occorrenza o 50 se mai
-//ogniMeseDay(todo) For ogni X month on Y° day until dopo Y occorrenza o 50 se mai
-
-
-
-function ogniGiorno(todo){ //For ogni X days until fine o  dopo Y occorrenza o 50 se mai
+function ogniOgni(todo, date){ //For ogni X days/month(on Y date)/year until fine o dopo Y occorrenza o 50 se mai
   let start;
   let stop;
-  let date = getDateFromString(todo.dal);
   let listDates = [];
   let count = false;
   if(todo.fineOpt == "fineGiorno"){
@@ -977,7 +1021,13 @@ function ogniGiorno(todo){ //For ogni X days until fine o  dopo Y occorrenza o 5
   while (start <= stop){
     let Sdate = getStringFromDate(date);
     listDates.push(Sdate);
-    date.setDate(date.getDate() + Number(todo.ogni));
+    if(todo.var == "giorno"){
+      date.setDate(date.getDate() + Number(todo.ogni));
+    } else if(todo.var == "mese"){
+      date.setMonth(date.getMonth() + Number(todo.ogni));
+    } else if(todo.var == "anno"){
+      date.setFullYear(date.getFullYear() + Number(todo.ogni));
+    };
     //start = count ? start++ : date; //bugged the whole thing! so let's keep the naive way!
     if(count){
       start++;
@@ -989,10 +1039,9 @@ function ogniGiorno(todo){ //For ogni X days until fine o  dopo Y occorrenza o 5
   todo.listDates = listDates;
 };
 
-function ogniSettimana(todo){
+function ogniSettimana(todo, date){
   let start;
   let stop;
-  let date = getDateFromString(todo.dal);
   let listDates = [];
   let count = false;
   let days = todo.daysWeek;
@@ -1028,60 +1077,10 @@ function ogniSettimana(todo){
   todo.listDates = listDates;
 };
 
-function ogniMeseDate(todo){ //For ogni X month on Y date until fine o dopo Y occorrenza o 50 se mai
-  let start;
-  let stop;
-  let date = getDateFromString(todo.dal);
-  let listDates = [];
-  let count = false;
-  if(todo.fineOpt == "fineGiorno"){
-    start = date;
-    stop = getDateFromString(todo.fine);
-  } else if(todo.fineOpt == "fineDopo" || todo.fineOpt == "fineMai"){
-    start = 1;
-    stop = todo.fineCount ? Number(todo.fineCount) : 50;
-    count = true;
-  };  
-  while (start <= stop){
-    let Sdate = getStringFromDate(date);
-    listDates.push(Sdate);
-    date.setMonth(date.getMonth() + Number(todo.ogni));
-    if(count){
-      start++;
-    } else{
-      start = date;
-    };
-  };
-  console.log(listDates);
-  todo.listDates = listDates;
-};
-
-function ogniAnno(todo){ //For ogni X anno until fine o dopo Y occorrenza o 50 se mai
-  let start;
-  let stop;
-  let date = getDateFromString(todo.dal);
-  let listDates = [];
-  let count = false;
-  if(todo.fineOpt == "fineGiorno"){
-    start = date;
-    stop = getDateFromString(todo.fine);
-  } else if(todo.fineOpt == "fineDopo" || todo.fineOpt == "fineMai"){
-    start = 1;
-    stop = todo.fineCount ? Number(todo.fineCount) : 50;
-    count = true;
-  };  
-  while (start <= stop){
-    let Sdate = getStringFromDate(date);
-    listDates.push(Sdate);
-    date.setFullYear(date.getFullYear() + Number(todo.ogni));
-    if(count){
-      start++;
-    } else{
-      start = date;
-    };
-  };
-  console.log(listDates);
-  todo.listDates = listDates;
+function ogniMeseDay(todo, date){ //For ogni X month on Y° day until fine o dopo Y occorrenza o 50 se mai
+  console.log("ogniMeseDay " + todo);
+  //todo.meseDayN
+  //todo.meseDayI
 };
 
 function fillUpRecurring(todo){
@@ -1169,10 +1168,15 @@ function meseDayNCalc(date){
 // *** DETAILS
 let taskToInfo;
 let taskToInfoIndex;
+let newcolor;
+let newicon;
 function taskAddInfo(thisOne){
   taskToInfo = thisOne.parentElement; //taskToInfo est le span.text qui a été cliqué
   let width = getComputedStyle(taskToInfo).width;
-  taskInfo.style.width = width;
+  let num = width.slice(0, -2);
+  let newWidth = Number(num) + 37;
+  console.log(newWidth);
+  taskInfo.style.width = newWidth + "px";
   taskToInfo.insertAdjacentElement("beforeend", taskInfo); //taskInfo est le div qui apparait
   taskInfo.classList.remove("displayNone");
   clickScreen.classList.remove("displayNone");
@@ -1186,13 +1190,16 @@ function taskAddInfo(thisOne){
   storeIt.checked = todo.stored || todo.stock ? true : false;
   taskTitle.value = todo.task;
   taskTitle.style.color = todo.color;
-  colorIt.style.color = todo.color;
+  colorIt.style.color = newcolor = todo.color;
+  newicon = todo.icon;
+  iconIt.className = `IconI ${todo.icon}`;
   if(todo.term){
     document.getElementById(todo.term).checked = true; 
   } else{
     Array.from( document.querySelectorAll('input[name="termOptions"]'), input => input.checked = false );
   };
   taskDetails.value = todo.info ? todo.info : ""; //taskDetails est le testarea qui doit contenir les détails (si y'en a déjà), dans le div
+  //COLOR
   document.getElementById("colorIt").addEventListener("click", () => {
     colorIt.insertAdjacentElement("afterend", colorPalet);
     colorPalet.classList.remove("displayNone");
@@ -1203,11 +1210,29 @@ function taskAddInfo(thisOne){
         radio.checked = false;
       };
       radio.addEventListener("click", () => {
-        let newcolor = radio.value;
+        newcolor = radio.value;
         taskTitle.style.color = newcolor;
         colorIt.style.color = newcolor;
         colorPalet.classList.add("displayNone");
         list.insertAdjacentElement("afterend", colorPalet);
+      });
+    });
+  });
+  //ICON
+  document.getElementById("iconIt").addEventListener("click", () => {
+    iconIt.insertAdjacentElement("afterend", iconsPalet);
+    iconsPalet.classList.remove("displayNone");
+    document.querySelectorAll("input[name='iconRadio']").forEach(radio => {
+      if(todo.icon == radio.value){
+        radio.checked = true;
+      } else{
+        radio.checked = false;
+      };
+      radio.addEventListener("click", () => {
+        newicon = radio.value;
+        iconIt.className = `IconI ${newicon}`;
+        iconsPalet.classList.add("displayNone");
+        list.insertAdjacentElement("afterend", iconsPalet);
       });
     });
   });
@@ -1222,8 +1247,10 @@ taskInfoBtn.addEventListener("click", () => {
   let previousTerm = todo.term;
   todo.task = taskTitle.value.startsWith("*") ? taskTitle.value.substring(1) : taskTitle.value;
   todo.info = taskDetails.value;
-  todo.color = colorIt.style.color;
-  taskToInfo.querySelector(".text").style.color = colorIt.style.color;
+  todo.color = newcolor;
+  taskToInfo.querySelector(".text").style.color = newcolor;
+  todo.icon = newicon;
+  parent.querySelector(".IconI").className = `IconI ${newicon}`;
   let checked = document.querySelector('input[name="termOptions"]:checked');
   todo.term = checked ? checked.value : "";
   console.log(todo);

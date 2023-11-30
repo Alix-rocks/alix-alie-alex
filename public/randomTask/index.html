@@ -76,9 +76,43 @@
             <span id="listChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
           <div class="listToggleList">
-            <h4 class="subList">The long term shit</h4>
+            <div style="position: relative;">
+              <h4 class="subList">The long term shit</h4>
+              <div class="sortWhole">
+                <input type="checkbox" id="sortlistOne" class="sortInput cossin">
+                <div class="sortDiv">
+                  <input type="radio" name="sortTypes" id="sortColor" class="cossin">
+                  <label for="sortColor"><i class="fa-solid fa-palette"></i></label>
+                  <input type="radio" name="sortTypes" id="sortDate" class="cossin">
+                  <label for="sortColor"><i class="fa-regular fa-calendar-check"></i></label>
+                  <input type="radio" name="sortTypes" id="sortIcon" class="cossin">
+                  <label for="sortColor"><i class="fa-solid fa-icons"></i></label>
+                </div>
+                <label for="sortlistOne" class="sortLabel">
+                  <i class="fa-solid fa-chevron-left sortChevron"></i>
+                  <i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i>
+                </label>
+              </div>
+            </div>
             <ul id="list"></ul>
-            <h4 class="subList">The one time thing</h4>
+            <div style="position: relative;">
+              <h4 class="subList">The one time thing</h4>
+              <div class="sortWhole">
+                <input type="checkbox" id="sortlistOne" class="sortInput cossin">
+                <div class="sortDiv">
+                  <input type="radio" name="sortTypes" id="sortColor" class="cossin">
+                  <label for="sortColor"><i class="fa-solid fa-palette"></i></label>
+                  <input type="radio" name="sortTypes" id="sortDate" class="cossin">
+                  <label for="sortColor"><i class="fa-regular fa-calendar-check"></i></label>
+                  <input type="radio" name="sortTypes" id="sortIcon" class="cossin">
+                  <label for="sortColor"><i class="fa-solid fa-icons"></i></label>
+                </div>
+                <label for="sortlistOne" class="sortLabel">
+                  <i class="fa-solid fa-chevron-left sortChevron"></i>
+                  <i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i>
+                </label>
+              </div>
+            </div>
             <ul id="listOne"></ul>
             <button id="shuffleBtn">Shuffle it!</button>
             <h5 class="sousBtn">Tell me what to do!</h5>
@@ -93,7 +127,8 @@
         </label>
           <h5 class="taskInfoInput">Tell me more...</h5>
         <div class="taskInfoInput relDiv">
-          <input type="text" id="taskTitle" class="taskInfoInput" style="margin:0;padding-right: 39px;">
+          <span id="iconIt" class="IconI fa-solid fa-ban noIcon"></span>
+          <input type="text" id="taskTitle" class="taskInfoInput" style="margin:0;padding-right: 39px;padding-left: 41px;">
           <span id="colorIt" class="typcn typcn-tag tagSpan"></span>
         </div>
         <textarea id="taskDetails" class="taskInfoInput"></textarea>
@@ -246,9 +281,43 @@
             <span id="listScheduledChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
           <div class="listToggleList">
-            <h4 class="subList">Tomorrow</h4>
+            <div style="position: relative;">
+              <h4 class="subList">Tomorrow</h4>
+              <div class="sortWhole">
+                <input type="checkbox" id="sortlistOne" class="sortInput cossin">
+                <div class="sortDiv">
+                  <input type="radio" name="sortTypes" id="sortColor" class="cossin">
+                  <label for="sortColor"><i class="fa-solid fa-palette"></i></label>
+                  <input type="radio" name="sortTypes" id="sortDate" class="cossin">
+                  <label for="sortColor"><i class="fa-regular fa-calendar-check"></i></label>
+                  <input type="radio" name="sortTypes" id="sortIcon" class="cossin">
+                  <label for="sortColor"><i class="fa-solid fa-icons"></i></label>
+                </div>
+                <label for="sortlistOne" class="sortLabel">
+                  <i class="fa-solid fa-chevron-left sortChevron"></i>
+                  <i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i>
+                </label>
+              </div>
+            </div>
             <ul id="listTomorrow"></ul>
-            <h4 class="subList">Later</h4>
+            <div style="position: relative;">
+              <h4 class="subList">Later</h4>
+              <div class="sortWhole">
+                <input type="checkbox" id="sortlistScheduled" class="sortInput cossin">
+                <div class="sortDiv">
+                  <input type="radio" name="sortTypes" id="sortColor" class="cossin">
+                  <label for="sortColor"><i class="fa-solid fa-palette"></i></label>
+                  <input type="radio" name="sortTypes" id="sortDate" class="cossin">
+                  <label for="sortColor"><i class="fa-regular fa-calendar-check"></i></label>
+                  <input type="radio" name="sortTypes" id="sortIcon" class="cossin">
+                  <label for="sortColor"><i class="fa-solid fa-icons"></i></label>
+                </div>
+                <label for="sortlistScheduled" class="sortLabel">
+                  <i class="fa-solid fa-chevron-left sortChevron"></i>
+                  <i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i>
+                </label>
+              </div>
+            </div>
             <ul id="listScheduled"></ul>
           </div>
         </div>

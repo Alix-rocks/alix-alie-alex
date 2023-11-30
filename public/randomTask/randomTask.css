@@ -165,9 +165,9 @@ input[type="radio"]{
 }
 #taskInfo{
   top: 25px;
-  left: 0px;
-  width: 90vw;
-  max-width: 500px;
+  left: -37px;
+  /* max-width: 90vw; */
+  /* max-width: 500px; */
 }
 #taskDetails{
   height: 105px;
@@ -244,6 +244,15 @@ h5.taskInfoInput{
   top: 0;
   right: 10px;
   font-size: 24px;
+}
+#iconIt{
+  position: absolute;
+  top: 0;
+  left: 10px;
+  font-size: 20px;
+  line-height: 35px;
+  width: 30px;
+  text-align: left;
 }
 #taskInfoBtn{
   margin: 10px 0;
@@ -563,6 +572,54 @@ input[name="colorRadio"]:checked + label > div{
   min-height: fit-content;
   height: fit-content;
 }
+.sortWhole{
+  display: none;
+  /* position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  margin-bottom: 1px;
+  overflow: hidden; */
+}
+.sortLabel{
+  padding: 0 5px;
+  line-height: 25px;
+}
+.sortLabel i{
+  color: slategrey;
+}
+.sortChevron{
+  font-size: 10px;
+  display: inline-block;
+}
+.sortDiv{
+  background-color: white;
+  display: flex;
+  flex-flow: row nowrap;
+  width: 0;
+  opacity: 0;
+  visibility: hidden;
+  height: 0;
+}
+.sortDiv i{
+  width: 30px;
+  height: 25px;
+  text-align: center;
+  line-height: 25px;
+}
+.sortInput:checked ~ div.sortDiv{
+  opacity: 1;
+  visibility: visible;
+  min-height: fit-content;
+  height: fit-content;
+  width: fit-content;
+}
+.sortInput:checked ~ label > i.sortChevron{
+  transform: rotate(180deg);
+}
+
 .fullSection{
   opacity: 1;
 }

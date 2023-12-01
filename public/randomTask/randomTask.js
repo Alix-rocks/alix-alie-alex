@@ -393,10 +393,10 @@ function getTogoList(todo){
     } else if(todo.line == "recurringDay"){
       togoList = "listRecurring";
       recurryCreation(todo);
-    } else if(todo.term == "oneTime"){
-        togoList = "listOne";
     } else if(todo.line == "doneDay" && todo.date == tomorrowDate){
       togoList = "listTomorrow";
+    } else if (todo.term == "oneTime") {
+      togoList = "listOne";
     } else {
       togoList = "list";
     };

@@ -395,8 +395,10 @@ function getTogoList(todo){
       recurryCreation(todo);
     } else if(todo.term == "oneTime"){
         togoList = "listOne";
-    } else{
-      togoList = "list";      
+    } else if(todo.line == "doneDay" && todo.date == tomorrowDate){
+      togoList = "listTomorrow";
+    } else {
+      togoList = "list";
     };
   } else if(todo.date == todayDate){
     togoList = "listToday";

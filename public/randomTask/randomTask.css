@@ -573,15 +573,14 @@ input[name="colorRadio"]:checked + label > div{
   height: fit-content;
 }
 .sortWhole{
-  display: none;
-  /* position: absolute;
+  position: absolute;
   bottom: 0;
   right: 0;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   margin-bottom: 1px;
-  overflow: hidden; */
+  overflow: hidden;
 }
 .sortLabel{
   padding: 0 5px;
@@ -602,12 +601,16 @@ input[name="colorRadio"]:checked + label > div{
   opacity: 0;
   visibility: hidden;
   height: 0;
+  
 }
-.sortDiv i{
+.sortDiv button{
   width: 30px;
   height: 25px;
   text-align: center;
   line-height: 25px;
+  padding: 0;
+  border: none;
+  background-color: white;
 }
 .sortInput:checked ~ div.sortDiv{
   opacity: 1;

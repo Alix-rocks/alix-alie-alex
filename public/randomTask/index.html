@@ -100,13 +100,10 @@
               <h4 class="subList">The one time thing</h4>
               <div class="sortWhole">
                 <input type="checkbox" id="sortlistOne" class="sortInput cossin">
-                <div class="sortDiv">
-                  <input type="radio" name="sortTypes" id="sortColor" class="cossin">
-                  <label for="sortColor"><i class="fa-solid fa-palette"></i></label>
-                  <input type="radio" name="sortTypes" id="sortDate" class="cossin">
-                  <label for="sortColor"><i class="fa-regular fa-calendar-check"></i></label>
-                  <input type="radio" name="sortTypes" id="sortIcon" class="cossin">
-                  <label for="sortColor"><i class="fa-solid fa-icons"></i></label>
+                <div id="sortChoices" class="sortDiv">
+                  <button class="sortBtn" data-list="listOne" data-sort="color"><i class="fa-solid fa-palette"></i></button>
+                  <button class="sortBtn" data-list="listOne" data-sort="date"><i class="fa-regular fa-calendar-check"></i></button>
+                  <button class="sortBtn" data-list="listOne" data-sort="icon"><i class="fa-solid fa-icons"></i></button>
                 </div>
                 <label for="sortlistOne" class="sortLabel">
                   <i class="fa-solid fa-chevron-left sortChevron"></i>

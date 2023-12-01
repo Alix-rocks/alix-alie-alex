@@ -838,7 +838,7 @@ function calendarChoice(thisOne){
   calendarDiv.classList.remove("displayNone");
   clickScreen.classList.remove("displayNone");
   parent.scrollIntoView();
-  document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(calendarDiv));
+  document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(calendarDiv, clickScreen));
   noDayInput.addEventListener("click", (evt) => {
     if(evt.currentTarget.checked == true){
       calendarInput.value = "";
@@ -963,7 +963,7 @@ calendarDiv.addEventListener("submit", (e) => {
 
   localStorage.listTasks = JSON.stringify(listTasks);
   updateCBC();
-  clickHandlerAddOn(calendarDiv);
+  clickHandlerAddOn(calendarDiv, clickScreen);
   calendarDiv.reset();
 });
 
@@ -1203,6 +1203,7 @@ function taskAddInfo(thisOne){
   document.getElementById("colorIt").addEventListener("click", () => {
     colorIt.insertAdjacentElement("afterend", colorPalet);
     colorPalet.classList.remove("displayNone");
+    SupClickScreen.classList.remove("displayNone");
     document.querySelectorAll("input[name='colorRadio']").forEach(radio => {
       if(todo.color == radio.value){
         radio.checked = true;
@@ -1214,14 +1215,17 @@ function taskAddInfo(thisOne){
         taskTitle.style.color = newcolor;
         colorIt.style.color = newcolor;
         colorPalet.classList.add("displayNone");
+        clickHandlerAddOn(colorPalet, SupClickScreen);
         list.insertAdjacentElement("afterend", colorPalet);
       });
     });
+    document.querySelector("#SupClickScreen").addEventListener("click", () => clickHandlerAddOn(colorPalet, SupClickScreen));
   });
   //ICON
   document.getElementById("iconIt").addEventListener("click", () => {
     iconIt.insertAdjacentElement("afterend", iconsPalet);
     iconsPalet.classList.remove("displayNone");
+    SupClickScreen.classList.remove("displayNone");
     document.querySelectorAll("input[name='iconRadio']").forEach(radio => {
       if(todo.icon == radio.value){
         radio.checked = true;
@@ -1232,12 +1236,14 @@ function taskAddInfo(thisOne){
         newicon = radio.value;
         iconIt.className = `IconI ${newicon}`;
         iconsPalet.classList.add("displayNone");
+        clickHandlerAddOn(iconsPalet, SupClickScreen);
         list.insertAdjacentElement("afterend", iconsPalet);
       });
     });
+    document.querySelector("#SupClickScreen").addEventListener("click", () => clickHandlerAddOn(iconsPalet, SupClickScreen));
   });
   parent.scrollIntoView();
-  document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(taskInfo));
+  document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(taskInfo, clickScreen));
 };
 window.taskAddInfo = taskAddInfo;
 window.listTasks = listTasks;
@@ -1273,7 +1279,7 @@ taskInfoBtn.addEventListener("click", () => {
     document.getElementById(togoList).appendChild(parent);
   };
   updateCBC();
-  clickHandlerAddOn(taskInfo);
+  clickHandlerAddOn(taskInfo, clickScreen);
 });
 // *** COLOR
 //const colorList = ["orange", "red", "darkmagenta", "dodgerblue", "forestgreen", "darkslategrey"];
@@ -1286,13 +1292,13 @@ function scrollToSection(){
   section.scrollIntoView();
 };
 
-function clickHandlerAddOn(addOn){
+function clickHandlerAddOn(addOn, screen){
   parent.classList.remove("selectedTask");
   scrollToSection();
   addOn.classList.add("displayNone");
   list.insertAdjacentElement("afterend", addOn);
-  clickScreen.classList.add("displayNone");
-  document.querySelector("#clickScreen").removeEventListener("click", () => clickHandlerAddOn(addOn));
+  screen.classList.add("displayNone");
+  screen.removeEventListener("click", () => clickHandlerAddOn(addOn, screen));
 };
 
 // *** ICON
@@ -1320,10 +1326,10 @@ function iconChoice(thisOne){
       listTasks[taskIndex].icon = icon;
       localStorage.listTasks = JSON.stringify(listTasks);
       updateCBC();
-      clickHandlerAddOn(iconsPalet);
+      clickHandlerAddOn(iconsPalet, clickScreen);
     });
   });
-  document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(iconsPalet));
+  document.querySelector("#clickScreen").addEventListener("click", () => clickHandlerAddOn(iconsPalet, clickScreen));
 };
 window.iconChoice = iconChoice;
 

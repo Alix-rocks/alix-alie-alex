@@ -94,12 +94,11 @@ input[type="radio"]{
   position: relative;
 }
 #clickScreen{
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
   z-index: 500;
+  background-color: rgba(255, 255, 255, 0);
+}
+#SupClickScreen{
+  z-index: 1250;
   background-color: rgba(255, 255, 255, 0);
 }
 #settings{
@@ -450,7 +449,7 @@ input#recurringDayInput:checked ~ div#recurringDaySection{
   border: 2px solid darkslategrey;
   border-radius: 5px;
   position: absolute;
-  z-index: 1000;
+  z-index: 1500;
   top: 27px;
   left: 35px;
   display: flex;
@@ -477,7 +476,7 @@ input[name="iconRadio"]:checked + label > div{
   border: 2px solid darkslategrey;
   border-radius: 5px;
   position: absolute;
-  z-index: 1000;
+  z-index: 1500;
   top: 2px;
   right: 2.5px;
 }

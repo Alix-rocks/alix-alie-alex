@@ -156,17 +156,19 @@ input[type="radio"]{
   border-radius: 5px;
   position: absolute;
   z-index: 1000;
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
-  padding: 10px 0;
-  
 }
 #taskInfo{
   top: 25px;
   left: -37px;
-  /* max-width: 90vw; */
-  /* max-width: 500px; */
+}
+.taskInfoWrapper{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  padding: 10px 0;
 }
 #taskDetails{
   height: 105px;
@@ -176,6 +178,10 @@ input[type="radio"]{
   right: 43px;
   width: fit-content;
   align-items: stretch;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  padding: 10px 0;
 }
 .dayCircleWeek{
   display: flex;
@@ -444,7 +450,7 @@ input.myRadio:checked + label span.myRadio{
 input#recurringDayInput:checked ~ div#recurringDaySection{
   display: flex;
 }
-#iconsPalet{
+.iconsPaletClass{
   background-color: white;
   border: 2px solid darkslategrey;
   border-radius: 5px;
@@ -458,6 +464,10 @@ input#recurringDayInput:checked ~ div#recurringDaySection{
   align-content: space-between;
   width: 220px;
   padding: 5px;
+}
+.inTaskDiv{
+  top: 64px;
+  left: 26px;
 }
 #iconsPalet i{
   margin: 7px;
@@ -477,8 +487,8 @@ input[name="iconRadio"]:checked + label > div{
   border-radius: 5px;
   position: absolute;
   z-index: 1500;
-  top: 2px;
-  right: 2.5px;
+  top: 64px;
+  right: 28px;
 }
 .colorTd{
   width: fit-content;
@@ -528,6 +538,33 @@ input[name="colorRadio"]:checked + label > div{
 .darkslategrey{
   background-color: darkslategrey;
   color: white;
+}
+.swipeContainer{
+  position: relative;
+  overflow: hidden;
+}
+.swipeDiv{
+  position: absolute;
+}
+.swipeDiv1{
+  top: 0;
+  left: 0;
+}
+.swipeDiv2{
+  top: 0;
+  left: 100%;
+}
+.swipeLabel{
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.swipeChevron{
+  display: inline-block;
+  font-size: 30px;
+}
+#swipeInput:checked + .swipeLabel > .swipeChevron{
+  transform: rotate(180deg);
 }
 .listToggleLabel{
   position: relative;

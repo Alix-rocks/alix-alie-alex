@@ -1229,7 +1229,8 @@ function taskAddInfo(thisOne){
   taskDetails.value = todo.info ? todo.info : ""; //taskDetails est le testarea qui doit contenir les détails (si y'en a déjà), dans le div
   //COLOR
   document.getElementById("colorIt").addEventListener("click", () => {
-    colorIt.insertAdjacentElement("afterend", colorPalet);
+    //colorIt.insertAdjacentElement("afterend", colorPalet);
+    taskInfo.insertAdjacentElement("beforeend", colorPalet);
     colorPalet.classList.remove("displayNone");
     SupClickScreen.classList.remove("displayNone");
     document.querySelectorAll("input[name='colorRadio']").forEach(radio => {
@@ -1251,8 +1252,10 @@ function taskAddInfo(thisOne){
   });
   //ICON
   document.getElementById("iconIt").addEventListener("click", () => {
-    iconIt.insertAdjacentElement("afterend", iconsPalet);
-    iconsPalet.classList.remove("displayNone");
+    //iconIt.insertAdjacentElement("afterend", iconsPalet);
+    taskInfo.insertAdjacentElement("beforeend", iconsPalet);
+    //iconsPalet.classList.remove("displayNone");
+    iconsPalet.classList.replace("displayNone", "inTaskDiv");
     SupClickScreen.classList.remove("displayNone");
     document.querySelectorAll("input[name='iconRadio']").forEach(radio => {
       if(todo.icon == radio.value){
@@ -1263,7 +1266,8 @@ function taskAddInfo(thisOne){
       radio.addEventListener("click", () => {
         newicon = radio.value;
         iconIt.className = `IconI ${newicon}`;
-        iconsPalet.classList.add("displayNone");
+        // iconsPalet.classList.add("displayNone");
+        iconsPalet.classList.replace("inTaskDiv", "displayNone");
         clickHandlerAddOn(iconsPalet, SupClickScreen);
         list.insertAdjacentElement("afterend", iconsPalet);
       });

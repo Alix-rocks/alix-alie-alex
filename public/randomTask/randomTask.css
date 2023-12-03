@@ -262,6 +262,62 @@ h5.taskInfoInput{
 #taskInfoBtn{
   margin: 10px 0;
 }
+.sectionSwipeWhole{
+  display: flex;
+  flex-flow: row nowrap;
+  height: fit-content;
+  position: relative;
+  padding-left: 4px;
+}
+.tomorrowDiv, .todayDiv{
+  flex-grow: 1;
+  overflow: hidden;
+}
+.todayDiv{
+  width: 100%;
+  height: fit-content;
+}
+.tomorrowDiv{
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+/* .swipeContainer{
+  position: relative;
+  overflow: hidden;
+}
+.swipeDiv{
+  position: absolute;
+}
+.swipeDiv1{
+  top: 0;
+  left: 0;
+}
+.swipeDiv2{
+  top: 0;
+  left: 100%;
+} */
+.swipeLabel{
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.swipeChevron{
+  display: inline-block;
+  font-size: 30px;
+}
+#swipeInput:checked + .swipeLabel > .swipeChevron{
+  transform: rotate(180deg);
+}
+#swipeInput:checked ~ div.tomorrowDiv{
+  width: 100%;
+  height: fit-content;
+}
+#swipeInput:checked ~ div.todayDiv{
+  width: 0;
+  height: 0;
+}
+
 h3.topList{
   text-decoration: underline;
   margin: 0;
@@ -539,33 +595,7 @@ input[name="colorRadio"]:checked + label > div{
   background-color: darkslategrey;
   color: white;
 }
-.swipeContainer{
-  position: relative;
-  overflow: hidden;
-}
-.swipeDiv{
-  position: absolute;
-}
-.swipeDiv1{
-  top: 0;
-  left: 0;
-}
-.swipeDiv2{
-  top: 0;
-  left: 100%;
-}
-.swipeLabel{
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-.swipeChevron{
-  display: inline-block;
-  font-size: 30px;
-}
-#swipeInput:checked + .swipeLabel > .swipeChevron{
-  transform: rotate(180deg);
-}
+
 .listToggleLabel{
   position: relative;
   display: block;

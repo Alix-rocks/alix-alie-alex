@@ -111,8 +111,12 @@ async function getTasksSettings() {
     todoCreation(todo);
   });
   updateArrowsColor();
-  sortColor("listOne");
-  sortDate("listScheduled");
+  sortIt("color", "listOne");
+  sortIt("date", "listScheduled");
+  sortIt("text", "listStorage");
+  // sortColor("listOne");
+  // sortDate("listScheduled");
+  // sortText("listStorage");
 };
 
 async function getDones(){
@@ -729,60 +733,40 @@ function refreshDoneId(){
   });
 };
 
-function sortColor(listName) { 
+
+
+function sortIt(type, listName) { 
   // Declaring Variables 
-  let list, i, run, li, stop; 
+  let list, i, run, li, stop, first, second; 
   // Taking content of list as input 
   list = document.getElementById(listName); 
   run = true; 
   while (run) { 
-      run = false; 
-      li = list.getElementsByTagName("li"); 
-      // Loop traversing through all the list items 
-      for (i = 0; i < (li.length - 1); i++) { 
-          stop = false; 
-          if (li[i].querySelector(".text").style.color >  
-              li[i + 1].querySelector(".text").style.color) { 
-              stop = true; 
-              break; 
-          }; 
+    run = false; 
+    li = list.getElementsByTagName("li"); 
+    // Loop traversing through all the list items 
+    for (i = 0; i < (li.length - 1); i++) { 
+      stop = false; 
+      if(type == "text"){
+        first = li[i].querySelector(".text").textContent;
+        second = li[i + 1].querySelector(".text").textContent;
+      } else if(type == "color"){
+        first = li[i].querySelector(".text").style.color;
+        second = li[i + 1].querySelector(".text").style.color;
+      } else if(type == "date"){
+        first = li[i].dataset.date;
+        second = li[i + 1].dataset.date;
+      };
+      if (first > second){ 
+        stop = true; 
+        break; 
       }; 
-      /* If the current item is smaller than  
-         the next item then adding it after  
-         it using insertBefore() method */ 
-      if (stop) { 
-          li[i].parentNode.insertBefore( 
-                  li[i + 1], li[i]); 
-          run = true; 
-      }; 
-  }; 
-}; 
-function sortDate(listName) { 
-  // Declaring Variables 
-  let list, i, run, li, stop; 
-  // Taking content of list as input 
-  list = document.getElementById(listName); 
-  run = true; 
-  while (run) { 
-      run = false; 
-      li = list.getElementsByTagName("li"); 
-      // Loop traversing through all the list items 
-      for (i = 0; i < (li.length - 1); i++) { 
-          stop = false; 
-          if (li[i].dataset.date >  
-              li[i + 1].dataset.date) { 
-              stop = true; 
-              break; 
-          }; 
-      }; 
-      /* If the current item is smaller than  
-         the next item then adding it after  
-         it using insertBefore() method */ 
-      if (stop) { 
-          li[i].parentNode.insertBefore( 
-                  li[i + 1], li[i]); 
-          run = true; 
-      }; 
+    }; 
+    /* If the current item is smaller than the next item then adding it after it using insertBefore() method */ 
+    if(stop){ 
+      li[i].parentNode.insertBefore(li[i + 1], li[i]); 
+      run = true; 
+    }; 
   }; 
 }; 
 

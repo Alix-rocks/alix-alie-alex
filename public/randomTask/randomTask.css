@@ -271,11 +271,11 @@ h5.taskInfoInput{
 }
 .tomorrowDiv, .todayDiv{
   flex-grow: 1;
-  overflow: hidden;
 }
 .todayDiv{
   width: 100%;
   height: fit-content;
+  overflow: visible;
 }
 .tomorrowDiv{
   width: 0;
@@ -312,10 +312,12 @@ h5.taskInfoInput{
 #swipeInput:checked ~ div.tomorrowDiv{
   width: 100%;
   height: fit-content;
+  overflow: visible;
 }
 #swipeInput:checked ~ div.todayDiv{
   width: 0;
   height: 0;
+  overflow: hidden;
 }
 
 h3.topList{

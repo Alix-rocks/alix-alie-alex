@@ -425,6 +425,7 @@ li .textDiv{
   margin: 0 7px;
   position: relative;
 }
+
 li .textDone{
   font-size: 20px;
   line-height: 1em;
@@ -596,6 +597,66 @@ input[name="colorRadio"]:checked + label > div{
 .darkslategrey{
   background-color: darkslategrey;
   color: white;
+}
+li.showLi{
+  border-radius: 10px;
+  border: .5px solid darkslategrey;
+}
+.clientShow{
+  background-color: darkmagenta;
+}
+.clientShow i.emptyCheck,
+.clientShow i.IconI,
+.clientShow span.text,
+.clientShow span.timeSpan,
+.clientShow i.calendarSpan,
+.clientShow i.typcn-tick,
+.clientShow span.textDone,
+.clientShow i.trashCan,
+.clientShow i.recycle{
+  color: azure;
+}
+.myselfShow{
+  background-color: darkcyan;
+}
+.myselfShow i.emptyCheck,
+.myselfShow i.IconI,
+.myselfShow span.text,
+.myselfShow span.timeSpan,
+.myselfShow i.calendarSpan,
+.myselfShow i.typcn-tick,
+.myselfShow span.textDone,
+.myselfShow i.trashCan,
+.myselfShow i.recycle{
+  color: azure;
+}
+.orderlyShow{
+  background-color: goldenrod;
+}
+.orderlyShow i.emptyCheck,
+.orderlyShow i.IconI,
+.orderlyShow span.text,
+.orderlyShow span.timeSpan,
+.orderlyShow i.calendarSpan,
+.orderlyShow i.typcn-tick,
+.orderlyShow span.textDone,
+.orderlyShow i.trashCan,
+.orderlyShow i.recycle{
+  color: darkslategrey;
+}
+.caliaShow{
+  background-color: seagreen;
+}
+.caliaShow i.emptyCheck,
+.caliaShow i.IconI,
+.caliaShow span.text,
+.caliaShow span.timeSpan,
+.caliaShow i.calendarSpan,
+.caliaShow i.typcn-tick,
+.caliaShow span.textDone,
+.caliaShow i.trashCan,
+.caliaShow i.recycle{
+  color: darkslategrey;
 }
 
 .listToggleLabel{

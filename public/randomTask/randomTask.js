@@ -113,6 +113,18 @@ async function getTasksSettings() {
   sortIt("color", "listOne");
   sortIt("date", "listScheduled");
   sortIt("text", "listStorage");
+  sortIt("time", "listToday");
+  sortIt("time", "listTomorrow");
+  // sortIt("order", "listToday");
+  // sortIt("order", "listTomorrow");
+  // document.querySelectorAll("#listToday > li").forEach(element => {
+  //   element.setAttribute("draggable", true);
+  //   // onLongPress(element, "listToday", drapDropIt);
+  //   onLongPress(element, "listToday");
+  // });
+  // document.querySelectorAll("#listTomorrow > li").forEach(element => {
+  //   onLongPress(element, "listTomorrow");
+  // });
   // sortColor("listOne");
   // sortDate("listScheduled");
   // sortText("listStorage");
@@ -132,7 +144,9 @@ async function getDones(){
         let colorIt = done.color;
         let infoIt = done.info;
         let iconIt = done.icon;
-        mylist.push({task: taskIt, color: colorIt, info: infoIt, icon: iconIt});
+        let termIt = done.term;
+        let showTypeIt = done.showType;
+        mylist.push({task: taskIt, color: colorIt, info: infoIt, icon: iconIt, term: termIt, showType: showTypeIt});
       });
       myListDones.push({date: mydate, list: mylist});
     });
@@ -369,14 +383,29 @@ settings.addEventListener("click", () => {
 
 function todoCreation(todo){
   let togoList = getTogoList(todo);
+  //console.log(togoList);
   if(todo.stock){
-    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><i class="typcn typcn-trash trashCan" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
+    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><i class="typcn typcn-trash trashCan" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><span class="timeSpan">${todo.time ? todo.time : ''}</span><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
   } else if(todo.line == "recurringDay"){
-    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><i class="typcn typcn-trash trashCan" onclick="trashRecurringEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><i class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></i></li>`);
-  } else if(todo.show && togoList){
-    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" class="showLi ${todo.showType}"><i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)">${todo.info ? '*' : ''}${todo.task}</span></div><span class="timeSpan">${todo.showTime}</span><i class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></i></li>`);
+    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}"><i class="typcn typcn-trash trashCan" onclick="trashRecurringEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><span class="timeSpan">${todo.time ? todo.time : ''}</span><i class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></i></li>`);
+  } else if(todo.term == "showThing" && togoList){
+    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.time ? todo.time : ""}" data-order="${todo.order ? todo.order : ""}" class="showLi ${todo.showType}">
+      <i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>
+      <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
+      <div class="textDiv"><span class="text" onclick="taskAddInfo(this)">${todo.info ? '*' : ''}${todo.task}</span></div>
+      <span class="timeSpan" onclick="timeItEvent(this)">${todo.time ? todo.time : `<i class="fa-regular fa-clock"></i>`}</span>
+      <input type="time" class="displayNone"/>
+      <i class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></i>
+    </li>`);
   } else{
-    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}"><i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div><i class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></i></li>`);
+    document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.time ? todo.time : ""}" data-order="${todo.order ? todo.order : ""}">
+      <i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>
+      <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
+      <div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div>
+      <span class="timeSpan" onclick="timeItEvent(this)">${todo.time ? todo.time : `<i class="fa-regular fa-clock"></i>`}</span>
+      <input type="time" class="displayNone"/>
+      <i class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></i>
+    </li>`);
   };
 };
 
@@ -390,11 +419,13 @@ function getTogoList(todo){
     if(todo.line == "todoDay" || todo.line == "recurry"){
       if(todo.date == tomorrowDate){
         togoList = "listTomorrow";
-      } else if(todo.show){
+      } else if(todo.term == "showThing"){
         togoList = "";
       } else{
         togoList = "listScheduled";
       };
+    } else if(todo.term == "showThing"){
+      togoList = "";
     } else if(todo.line == "recurringDay"){
       togoList = "listRecurring";
       recurryCreation(todo);
@@ -408,7 +439,7 @@ function getTogoList(todo){
   } else if(todo.date == todayDate){
     togoList = "listToday";
   } else if(todo.date < todayDate){
-    if(todo.show){
+    if(todo.term == "showThing"){
       togoList = "";
     } else{
       togoList = "listOups";
@@ -457,7 +488,7 @@ function recurryCreation(todo){ //todo == le recurring (newtodo est le recurry/n
 };
 
 function donedCreation(donedDate, doned){
-  if(doned.show){
+  if(doned.term == "showThing"){
     document.getElementById(donedDate).insertAdjacentHTML("beforeend", `<li class="showLi ${doned.showType}"><i class="typcn typcn-tick"></i><span class="textDone" style="color:${doned.color};">${doned.task}</span><i class="typcn typcn-trash trashCan" onclick="trashDoneEvent(this)"></i><i class="typcn typcn-arrow-sync recycle" onclick="recycleEvent(this)"></i></li>`);
   } else {
     document.getElementById(donedDate).insertAdjacentHTML("beforeend", `<li><i class="typcn typcn-tick"></i><span class="textDone" style="color:${doned.color};">${doned.task}</span><i class="typcn typcn-trash trashCan" onclick="trashDoneEvent(this)"></i><i class="typcn typcn-arrow-sync recycle" onclick="recycleEvent(this)"></i></li>`);
@@ -519,7 +550,7 @@ function recycleEvent(recycle){ //from Done
         icon: doned.icon,
         color: doned.color,
         info: doned.info
-      };
+      };//et si c'est un showThing?!
       listTasks.push(todo);
       localStorage.listTasks = JSON.stringify(listTasks);
       updateCBC();
@@ -622,10 +653,9 @@ function gotItDone(nb){
   let donedIcon = donedTaskSplice[0].icon;
   let donedColor = donedTaskSplice[0].color;
   let donedInfo = donedTaskSplice[0].info;
-  let donedShow;
+  let donedTerm = donedTaskSplice[0].term;
   let donedShowType = "";
-  if(donedTaskSplice[0].show == true){
-    donedShow = true;
+  if(donedTaskSplice[0].term == "showThing"){
     donedShowType = donedTaskSplice[0].showType;
   };
   localStorage.listTasks = JSON.stringify(listTasks);
@@ -635,7 +665,7 @@ function gotItDone(nb){
     icon: donedIcon,
     color: donedColor,
     info: donedInfo,
-    show: donedShow,
+    term: donedTerm,
     showType: donedShowType
   };
   let dateFound = false;
@@ -761,6 +791,12 @@ function sortIt(type, listName) {
       } else if(type == "date"){
         first = li[i].dataset.date;
         second = li[i + 1].dataset.date;
+      } else if(type == "order"){
+        first = li[i].dataset.order;
+        second = li[i + 1].dataset.order;
+      } else if(type == "time"){
+        first = li[i].dataset.time;
+        second = li[i + 1].dataset.time;
       };
       if (first > second){ 
         stop = true; 
@@ -820,6 +856,35 @@ backBtn.addEventListener("click", () => {
   toDoSection.classList.toggle("displayNone");
 });
 
+// *** TIME
+function timeItEvent(thisOne){
+  thisOne.classList.add("displayNone");
+  let li = thisOne.parentElement;
+  let list = li.parentElement.id;
+  console.log(list);
+  let input = li.querySelector("input[type='time']");
+  let todoIndex = listTasks.findIndex(todo => todo.id == li.id);
+  let todo = listTasks[todoIndex];
+  input.classList.remove("displayNone");
+  input.addEventListener("input", () => {
+    todo.time = input.value;
+    li.setAttribute("data-time", input.value);
+    localStorage.listTasks = JSON.stringify(listTasks);
+    updateCBC();
+    if(!input.value){
+      thisOne.innerHTML = `<i class="fa-regular fa-clock"></i>`;
+    } else if(input.value){
+      thisOne.textContent = input.value;
+    };
+    thisOne.classList.remove("displayNone");
+    input.classList.add("displayNone");
+    if(list == "listToday" || list == "listTomorrow"){
+      sortIt("time", list);
+    };
+  });
+};
+window.timeItEvent = timeItEvent;
+
 // *** SAVE THE DATE
 // >>>>>>> MAKE IT A FORM! (so that you can do form.reset())
 let parent;
@@ -862,6 +927,7 @@ function calendarChoice(thisOne){
     };
   });
   timeVariationInput.addEventListener("change", () => {
+    date = document.getElementById("dalInput").value;
     if(timeVariationInput.value == "settimana"){
       weekCalculate(date);
       weekSection.classList.remove("displayNone");
@@ -977,6 +1043,7 @@ calendarDiv.addEventListener("submit", (e) => {
   updateCBC();
   clickHandlerAddOn(calendarDiv, clickScreen);
   calendarDiv.reset();
+  //If we save on a show, there won't be any togoList if the date is later than tomorrow...
 });
 
 
@@ -1207,6 +1274,11 @@ function taskAddInfo(thisOne){
   iconIt.className = `IconI ${todo.icon}`;
   if(todo.term){
     document.getElementById(todo.term).checked = true; 
+    if(todo.term == "showThing"){
+      document.getElementById(todo.showType).checked = true;
+    } else{
+      Array.from( document.querySelectorAll('input[name="showOptions"]'), input => input.checked = false );
+    };
   } else{
     Array.from( document.querySelectorAll('input[name="termOptions"]'), input => input.checked = false );
   };
@@ -1275,6 +1347,9 @@ taskInfoBtn.addEventListener("click", () => {
   parent.querySelector(".IconI").className = `IconI ${newicon}`;
   let checked = document.querySelector('input[name="termOptions"]:checked');
   todo.term = checked ? checked.value : "";
+  if(todo.term == "showThing"){
+    todo.showType = document.querySelector('input[name="showOptions"]:checked').value;
+  };
   taskToInfo.querySelector(".text").textContent = `${todo.info ? '*' : ''}${todo.task}`;
   localStorage.listTasks = JSON.stringify(listTasks);
   if(!todo.stock && !todo.stored && storeIt.checked){
@@ -1288,10 +1363,20 @@ taskInfoBtn.addEventListener("click", () => {
   };
   if(previousTerm !== todo.term){
     let togoList = getTogoList(todo);
-    document.getElementById(togoList).appendChild(parent);
+    if(togoList == ""){
+      parent.remove();
+    } else{
+      if(todo.term == "showThing"){
+        parent.className = `showLi ${todo.showType}`;
+        parent.querySelector(".text").style.color = "";
+      };
+      document.getElementById(togoList).appendChild(parent);
+    };
+    
   };
   updateCBC();
   clickHandlerAddOn(taskInfo, clickScreen);
+  console.log(todo);
 });
 // *** COLOR
 //const colorList = ["orange", "red", "darkmagenta", "dodgerblue", "forestgreen", "darkslategrey"];
@@ -1382,4 +1467,81 @@ function getLastWeekDate(){
   let lastWeekYear = date.getFullYear();
   let lastWeekDate = `${lastWeekYear}-${lastWeekMonth}-${lastWeekDay}`;
   return lastWeekDate;
+};
+
+
+function onLongPress(element, list, callback) {
+  let timer;
+  let wholeList;
+  let siblings;
+  // element.addEventListener('touchstart', (e) => { 
+  //   timer = setTimeout(() => {
+  //     timer = null;
+  //     element.classList.add("dragging");
+  //     console.log(element);
+  //     wholeList = document.querySelector("#" + list);
+  //     siblings = [...wholeList.querySelectorAll("li:not(.dragging)")];
+  //     console.log(siblings);
+  //     callback(e, list);
+  //   }, 500);
+  // });
+  element.addEventListener('dragstart', (e) => { 
+      element.classList.add("dragging");
+      console.log(element);
+      wholeList = document.querySelector("#" + list);
+      siblings = [...wholeList.querySelectorAll("li:not(.dragging)")];
+      console.log(siblings);
+      //callback(e);
+  });
+  function cancel(e) {
+    clearTimeout(timer);
+    e.currentTarget.classList.remove("dragging");
+    setNewOrder(list);
+  };
+  function drapDropIt(e){
+    e.preventDefault();
+    // let wholeList = document.querySelector("#" + list);
+    //const draggingLi = document.querySelector(".dragging");
+    // let siblings = [...wholeList.querySelectorAll("li:not(.dragging)")];
+    console.log(siblings);
+    let nextSibling = siblings.find(sibling => {
+      if (e.clientX) {
+        //if mouse
+        return e.clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
+      } else {
+        //if touch
+        return e.changedTouches[0].clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
+      };
+    });
+    //nextSibling.insertAdjacentElement("beforebegin", element);
+    wholeList.insertBefore(element, nextSibling);
+  };
+  element.addEventListener('touchmove', (e) => {
+    drapDropIt(e);
+  });
+  element.addEventListener('dragover', (e) => {
+    drapDropIt(e);
+  });
+  element.addEventListener('touchend', (e) => {
+    cancel(e);
+  });
+  element.addEventListener('dragend', (e) => {
+    cancel(e);
+  });
+  element.addEventListener('drop', (e) => {
+    cancel(e);
+  });
+};
+
+function setNewOrder(list){
+  let n = 1;
+  document.querySelectorAll("#" + list + " > li").forEach(li => {
+    li.setAttribute("data-order", n);
+    let todoIndex = listTasks.findIndex(el => el.id == li.id);
+    let todo = listTasks[todoIndex];
+    todo.order = n;
+    n++;
+  });
+  localStorage.listTasks = JSON.stringify(listTasks);
+  updateCBC();
 };

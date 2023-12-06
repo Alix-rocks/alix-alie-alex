@@ -163,11 +163,24 @@
             <span id="colorIt" class="typcn typcn-tag tagSpan"></span>
           </div>
           <textarea id="taskDetails" class="taskInfoInput"></textarea>
-          <div class="taskInfoInput">
+          <div class="taskInfoInput" style="position: relative;">
+            <i id="dateIt" class="typcn typcn-calendar-outline dateSpan"></i>
             <input class="myRadio" type="radio" name="termOptions" id="oneTime" value="oneTime" />
-            <label for="oneTime" style="display: block;" class="termLabel"><span class="myRadio"></span><span>It's a one time thing</span></label>
+            <label for="oneTime" class="termLabel"><span class="myRadio"></span><span>It's a one time thing</span></label>
             <input class="myRadio" type="radio" name="termOptions" id="longTerm" value="longTerm" />
             <label for="longTerm" class="termLabel"><span class="myRadio"></span><span>It's a long term shit</span></label>
+            <input class="myRadio" type="radio" name="termOptions" id="showThing" value="showThing" />
+            <label for="showThing" class="termLabel"><span class="myRadio"></span><span>It's a whole show!</span></label>
+            <div class="showDiv">
+              <input class="showInput" type="radio" name="showOptions" id="myselfShow" value="myselfShow">
+              <label for="myselfShow" class="showLi myselfShow showTypeLabel">Myself<i class="typcn typcn-tick showTick"></i></label>
+              <input class="showInput" type="radio" name="showOptions" id="orderlyShow" value="orderlyShow">
+              <label for="orderlyShow" class="showLi orderlyShow showTypeLabel">Orderly<i class="typcn typcn-tick showTick"></i></label>
+              <input class="showInput" type="radio" name="showOptions" id="clientShow" value="clientShow">
+              <label for="clientShow" class="showLi clientShow showTypeLabel">Clients<i class="typcn typcn-tick showTick"></i></label>
+              <input class="showInput" type="radio" name="showOptions" id="caliaShow" value="caliaShow">
+              <label for="caliaShow" class="showLi caliaShow showTypeLabel">Alie<i class="typcn typcn-tick showTick"></i></label>
+            </div>
           </div>
           <button id="taskInfoBtn">Save</button>
         </div>
@@ -178,6 +191,7 @@
         <div class="smallToggleList">
           <h5 class="taskInfoInput">It's a one time thing</h5>
           <input type="date" id="calendarInput" style="margin: 20px 20px 10px" />
+          <input type="time">
           <div style="margin: 5px 20px 10px">
             <input class="myRadio" type="radio" id="todoDayInput" name="whatDay" value="todoDay" />
             <label for="todoDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText todoDay">To-do Day</span><br /><span class="smallText">(the day you want to do it)</span></p></label>
@@ -189,7 +203,7 @@
             <label for="noDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText">No Day</span><br /><span class="smallText">(just go with the flow)</span></label></p></label>
             <div id="recurringDaySection">
               <h5 class="taskInfoInput" style="margin-left: 0;">It's a recurring thing</h5>
-              <p class="calendarMargin">Dal<input id="dalInput" type="date" style="margin: 0 10px;" />
+              <p class="calendarMargin">Dal<input id="dalInput" type="date" style="margin: 0 10px;" />alle<input type="time" style="margin: 0 0 0 10px;"></p>
               <p class="calendarMargin">Si ripete ogni<input id="ogniInput" type="number" style="width: 50px; margin: 0 10px;" />
               <select id="timeVariationInput">
                 <option value="giorno">giorno</option>

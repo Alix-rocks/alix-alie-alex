@@ -2,7 +2,9 @@
   font-family: 'Nunito', sans-serif;
   color: darkslategrey;
   box-sizing: border-box;
+  user-select: none;
 }
+
 button {
   border-top: 2px solid darkslategrey;
   border-left: 2px solid darkslategrey;
@@ -34,6 +36,7 @@ input[type="text"], textarea{
   color: darkslategrey;
   font-size: 1em;
   font-weight: 600;
+  user-select: auto;
 }
 input[type="radio"]{
   display: none;
@@ -259,6 +262,12 @@ h5.taskInfoInput{
   width: 30px;
   text-align: left;
 }
+.showDiv{
+  display: none;
+}
+#showThing:checked ~ div.showDiv{
+  display: block;
+}
 #taskInfoBtn{
   margin: 10px 0;
 }
@@ -402,7 +411,7 @@ ul{
   border-radius: 15px;
 }
 
-li > i{
+li i{
   line-height: 1em;
   padding: 0;
   width: 30px;
@@ -598,12 +607,29 @@ input[name="colorRadio"]:checked + label > div{
   background-color: darkslategrey;
   color: white;
 }
-li.showLi{
+.termLabel{
+  display: block;
+}
+.dateSpan{
+  position: absolute;
+  top: -5px;
+  right: 10px;
+  line-height: 1;
+}
+.showLi{
   border-radius: 10px;
   border: .5px solid darkslategrey;
 }
+.showTypeLabel{
+  padding: 0 7px;
+  margin: 5px 0;
+  display: block;
+  position: relative;
+  opacity: .7;
+}
 .clientShow{
   background-color: darkmagenta;
+  color: azure;
 }
 .clientShow i.emptyCheck,
 .clientShow i.IconI,
@@ -617,7 +643,8 @@ li.showLi{
   color: azure;
 }
 .myselfShow{
-  background-color: darkcyan;
+  background-color: #06a9a9;
+  color: darkslategrey;
 }
 .myselfShow i.emptyCheck,
 .myselfShow i.IconI,
@@ -628,10 +655,11 @@ li.showLi{
 .myselfShow span.textDone,
 .myselfShow i.trashCan,
 .myselfShow i.recycle{
-  color: azure;
+  color: darkslategrey;
 }
 .orderlyShow{
   background-color: goldenrod;
+  color: darkslategrey;
 }
 .orderlyShow i.emptyCheck,
 .orderlyShow i.IconI,
@@ -646,6 +674,7 @@ li.showLi{
 }
 .caliaShow{
   background-color: seagreen;
+  color: azure;
 }
 .caliaShow i.emptyCheck,
 .caliaShow i.IconI,
@@ -656,9 +685,21 @@ li.showLi{
 .caliaShow span.textDone,
 .caliaShow i.trashCan,
 .caliaShow i.recycle{
-  color: darkslategrey;
+  color: azure;
 }
-
+.showTick{
+  position: absolute;
+  line-height: 1em;
+  top: -3px;
+  right: 3px;
+  display: none;
+}
+input[name="showOptions"]:checked + label.showTypeLabel{
+  opacity: 1;
+}
+input[name="showOptions"]:checked + label.showTypeLabel > i.showTick{
+  display: block;
+}
 .listToggleLabel{
   position: relative;
   display: block;
@@ -779,6 +820,9 @@ hr.zoneHr{
 #doneZone p:not(span){
   margin-bottom: 0;
   text-decoration: underline;
+}
+.dragging{
+  opacity: .4;
 }
 .cossin{
   width: 0.1px;

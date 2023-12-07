@@ -58,6 +58,11 @@
         <input id="addInput" type="text" />
         <button id="addBtn" type="submit">add</button>
       </form>
+      <section id="sectionLimbo" class="displayNone">
+        <h3 class="topList">Limbo...</h3>
+        <h5 class="topList">What are you meant to be?...</h5>
+        <ul id="listLimbo"></ul>
+      </section>
       <section>
         <h3 class="topList">Oups...</h3>
         <h5 class="topList">What should've already been done...</h5>
@@ -191,7 +196,8 @@
         <div class="smallToggleList">
           <h5 class="taskInfoInput">It's a one time thing</h5>
           <input type="date" id="calendarInput" style="margin: 20px 20px 10px" />
-          <input type="time">
+          <input id="calendarTimeInput" type="time">
+          <!-- add the question if it's "Tutto il giorno" or "a l'ora magica" -->
           <div style="margin: 5px 20px 10px">
             <input class="myRadio" type="radio" id="todoDayInput" name="whatDay" value="todoDay" />
             <label for="todoDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText todoDay">To-do Day</span><br /><span class="smallText">(the day you want to do it)</span></p></label>

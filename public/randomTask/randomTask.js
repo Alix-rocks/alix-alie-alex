@@ -52,7 +52,7 @@ let myListTasks = [];
 let myListDones = [];
 let myTomorrow = ``;
 let cBC;
-let icons = ["fa-solid fa-comments", "fa-solid fa-lightbulb", "fa-solid fa-dollar-sign", "fa-solid fa-spider", "fa-solid fa-gavel", "fa-solid fa-couch", "fa-solid fa-head-side-virus", "fa-solid fa-screwdriver-wrench", "fa-solid fa-universal-access", "fa-solid fa-droplet", "fa-solid fa-code", "fa-solid fa-poo", "fa-solid fa-globe", "fa-solid fa-briefcase", "fa-solid fa-brain", "fa-solid fa-champagne-glasses", "fa-solid fa-seedling", "fa-solid fa-utensils", "fa-solid fa-heart-pulse", "fa-solid fa-sun", "fa-regular fa-face-grin-stars", "fa-regular fa-face-grin-hearts", "fa-regular fa-face-grin-squint", "fa-regular fa-face-smile-wink", "fa-regular fa-face-meh-blank", "fa-regular fa-face-flushed", "fa-regular fa-face-grimace", "fa-regular fa-face-rolling-eyes", "fa-regular fa-face-grin-beam-sweat", "fa-regular fa-face-surprise", "fa-regular fa-face-frown-open", "fa-regular fa-face-frown", "fa-regular fa-face-sad-tear", "fa-regular fa-face-tired", "fa-regular fa-face-sad-cry", "fa-regular fa-face-dizzy", "fa-regular fa-face-angry", "fa-solid fa-ban noIcon"];
+let icons = ["fa-solid fa-comments", "fa-solid fa-lightbulb", "fa-solid fa-dollar-sign", "fa-solid fa-spider", "fa-solid fa-gavel", "fa-solid fa-couch", "fa-solid fa-head-side-virus", "fa-solid fa-screwdriver-wrench", "fa-solid fa-universal-access", "fa-solid fa-droplet", "fa-solid fa-code", "fa-solid fa-poo", "fa-solid fa-globe", "fa-solid fa-briefcase", "fa-solid fa-brain", "fa-solid fa-champagne-glasses", "fa-solid fa-seedling", "fa-solid fa-utensils", "fa-solid fa-heart-pulse", "fa-solid fa-sun", "fa-solid fa-broom", "fa-solid fa-people-group", "fa-solid fa-bullhorn", "fa-regular fa-face-grin-stars", "fa-regular fa-face-grin-hearts", "fa-regular fa-face-grin-squint", "fa-regular fa-face-smile-wink", "fa-regular fa-face-meh-blank", "fa-regular fa-face-flushed", "fa-regular fa-face-grimace", "fa-regular fa-face-rolling-eyes", "fa-regular fa-face-grin-beam-sweat", "fa-regular fa-face-surprise", "fa-regular fa-face-frown-open", "fa-regular fa-face-frown", "fa-regular fa-face-sad-tear", "fa-regular fa-face-tired", "fa-regular fa-face-sad-cry", "fa-regular fa-face-dizzy", "fa-regular fa-face-angry", "fa-solid fa-ban noIcon"];
 
 (() => {
   let iconsAll = icons.map(icon => {
@@ -413,7 +413,9 @@ function getTogoList(todo){
   let todayDate = getTodayDate();
   let tomorrowDate = getTomorrowDate();
   let togoList;
-  if(todo.stock){
+  if(newShit){
+    togoList = "listLimbo";
+  } else if(todo.stock){
     togoList = "listStorage";
   } else if(todo.date == "" || !todo.date || todo.date > todayDate){
     if(todo.line == "todoDay" || todo.line == "recurry"){
@@ -489,7 +491,7 @@ function recurryCreation(todo){ //todo == le recurring (newtodo est le recurry/n
 
 function donedCreation(donedDate, doned){
   if(doned.term == "showThing"){
-    document.getElementById(donedDate).insertAdjacentHTML("beforeend", `<li class="showLi ${doned.showType}"><i class="typcn typcn-tick"></i><span class="textDone" style="color:${doned.color};">${doned.task}</span><i class="typcn typcn-trash trashCan" onclick="trashDoneEvent(this)"></i><i class="typcn typcn-arrow-sync recycle" onclick="recycleEvent(this)"></i></li>`);
+    document.getElementById(donedDate).insertAdjacentHTML("beforeend", `<li class="showLi ${doned.showType}"><i class="typcn typcn-tick"></i><span class="textDone">${doned.task}</span><i class="typcn typcn-trash trashCan" onclick="trashDoneEvent(this)"></i><i class="typcn typcn-arrow-sync recycle" onclick="recycleEvent(this)"></i></li>`);
   } else {
     document.getElementById(donedDate).insertAdjacentHTML("beforeend", `<li><i class="typcn typcn-tick"></i><span class="textDone" style="color:${doned.color};">${doned.task}</span><i class="typcn typcn-trash trashCan" onclick="trashDoneEvent(this)"></i><i class="typcn typcn-arrow-sync recycle" onclick="recycleEvent(this)"></i></li>`);
   };
@@ -516,6 +518,7 @@ function donedDateCreation(donedDate){
 
 
 // *** ADD
+let newShit = false;
 addForm.addEventListener("submit", (e) => {
   e.preventDefault();
   let newTask = addInput.value;
@@ -530,9 +533,11 @@ addForm.addEventListener("submit", (e) => {
     listTasks.push(todo);
     localStorage.listTasks = JSON.stringify(listTasks);
     updateCBC();
+    newShit = true;
     todoCreation(todo);
-    document.querySelector("#listInput").checked = true;
-    document.querySelector("#wheneverLists").scrollIntoView();
+    document.querySelector("#sectionLimbo").classList.remove("displayNone");
+    // document.querySelector("#listInput").checked = true;
+    // document.querySelector("#wheneverLists").scrollIntoView();
     addForm.reset();
   };
 });
@@ -570,11 +575,11 @@ function stockCreaction(todo){
     color: todo.color,
     info: todo.info,
     term: todo.term,
-    stock: true,
+    stock: true, //is in storage
     storedId: [todo.id]
   };
   listTasks.push(newtodo);
-  todo.stored = true;
+  todo.stored = true; //has a model in storage
   todo.stockId = newtodo.id;
   localStorage.listTasks = JSON.stringify(listTasks);
   todoCreation(newtodo);
@@ -771,6 +776,7 @@ function refreshDoneId(){
 
 
 function sortIt(type, listName) { 
+  console.log(listName);
   // Declaring Variables 
   let list, i, run, li, stop, first, second; 
   // Taking content of list as input 
@@ -953,12 +959,18 @@ window.calendarChoice = calendarChoice;
 calendarDiv.addEventListener("submit", (e) => {
   e.preventDefault();
   let todo = listTasks[taskToDateIndex];
-  let previousDate = todo.date;
-  let previousLine = todo.line;
+  let previousDate = todo.date ? todo.date : "0000-00-00";
+  let previousLine = todo.line ? todo.line : "never";
+  let previousTime = todo.time ? todo.time : "99:99";
   todo.date = calendarInput.value;
+  parent.setAttribute("data-date", calendarInput.value);
+  todo.time = calendarTimeInput.value;
+  parent.setAttribute("data-time", calendarTimeInput.value);
+  //Add if the recurring is all day or at a specific time!
   if(noDayInput.checked == true){
     todo.line = noDayInput.value;
     todo.date = todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fine = todo.fineCount = todo.listDates = todo.recurring = "";
+    parent.setAttribute("data-date", "");
   };
   if(calendarInput.value || dalInput.value){
     if(previousLine == "recurry"){
@@ -984,7 +996,7 @@ calendarDiv.addEventListener("submit", (e) => {
   
   if(todo.line == "recurringDay"){
     todo.date = todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fine = todo.fineCount = todo.listDates = todo.recurring = "";
-  
+    parent.setAttribute("data-date", "");
     todo.dal = dalInput.value;
     todo.ogni = ogniInput.value;
     todo.var = timeVariationInput.value;
@@ -1029,21 +1041,40 @@ calendarDiv.addEventListener("submit", (e) => {
     };
     recurryCreation(todo);
   };
-  if(previousDate !== todo.date || previousLine !== todo.line) {
-    let togoList = getTogoList(todo); //recurryCreation(todo) will happen there
-    document.getElementById(togoList).appendChild(parent);
+  if(previousDate !== todo.date || previousLine !== todo.line || previousTime !== todo.time) {
     if(previousLine == "recurringDay"){
       parent.querySelector(".trashCan").outerHTML = '<i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>';
+      parent.setAttribute("data-date", todo.date);
     } else if(previousLine !== "recurringDay" && todo.line == "recurringDay"){
       parent.querySelector(".emptyCheck").outerHTML = '<i class="typcn typcn-trash trashCan" onclick="trashRecurringEvent(this)"></i>';
+      parent.setAttribute("data-date", "");
     };
+    if(newShit && (todo.date || todo.line)){
+      newShit = false;
+      document.querySelector("#sectionLimbo").classList.add("displayNone");
+    };
+    let togoList = getTogoList(todo); //recurryCreation(todo) will happen there
+    if(togoList == ""){
+      parent.remove();
+    } else{
+      document.getElementById(togoList).appendChild(parent);
+      if(togoList == "listScheduled"){
+        sortIt("date", togoList);
+      };
+      if(togoList == "listOne" || togoList == "list"){
+        sortIt("color", togoList);
+      };
+      if(togoList == "listToday" || togoList == "listTomorrow"){
+        sortIt("time", togoList);
+      };
+    };
+    
   };
 
   localStorage.listTasks = JSON.stringify(listTasks);
   updateCBC();
   clickHandlerAddOn(calendarDiv, clickScreen);
   calendarDiv.reset();
-  //If we save on a show, there won't be any togoList if the date is later than tomorrow...
 });
 
 
@@ -1281,6 +1312,7 @@ function taskAddInfo(thisOne){
     };
   } else{
     Array.from( document.querySelectorAll('input[name="termOptions"]'), input => input.checked = false );
+    Array.from( document.querySelectorAll('input[name="showOptions"]'), input => input.checked = false );
   };
   taskDetails.value = todo.info ? todo.info : ""; //taskDetails est le testarea qui doit contenir les détails (si y'en a déjà), dans le div
   //COLOR
@@ -1338,7 +1370,7 @@ window.listTasks = listTasks;
 
 taskInfoBtn.addEventListener("click", () => {
   let todo = listTasks[taskToInfoIndex];
-  let previousTerm = todo.term;
+  let previousTerm = todo.term ? todo.term : "always";
   todo.task = taskTitle.value.startsWith("*") ? taskTitle.value.substring(1) : taskTitle.value;
   todo.info = taskDetails.value;
   todo.color = newcolor;
@@ -1353,7 +1385,7 @@ taskInfoBtn.addEventListener("click", () => {
   taskToInfo.querySelector(".text").textContent = `${todo.info ? '*' : ''}${todo.task}`;
   localStorage.listTasks = JSON.stringify(listTasks);
   if(!todo.stock && !todo.stored && storeIt.checked){
-    stockCreaction(todo); //todo.stored = true; (included in stockCreation)
+    stockCreaction(todo); //todo.stored = true; (has a model in storage) (included in stockCreation)
   };
   if(todo.stock && !storeIt.checked){
     trashStock(todo.id);
@@ -1362,6 +1394,10 @@ taskInfoBtn.addEventListener("click", () => {
     trashStock(todo.stockId);
   };
   if(previousTerm !== todo.term){
+    if(newShit && (todo.stored || (todo.term == "showThing" && todo.date) || todo.term == "oneTime" || todo.term == "longTerm")){
+      newShit = false;
+      document.querySelector("#sectionLimbo").classList.add("displayNone");
+    };
     let togoList = getTogoList(todo);
     if(togoList == ""){
       parent.remove();

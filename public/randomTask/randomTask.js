@@ -893,6 +893,7 @@ window.timeItEvent = timeItEvent;
 
 // *** SAVE THE DATE
 // >>>>>>> MAKE IT A FORM! (so that you can do form.reset())
+let moving = false;
 let parent;
 let taskToDate;
 let taskToDateIndex;
@@ -958,6 +959,7 @@ window.calendarChoice = calendarChoice;
 
 calendarDiv.addEventListener("submit", (e) => {
   e.preventDefault();
+  let previousList = parent.parentElement.id;
   let todo = listTasks[taskToDateIndex];
   let previousDate = todo.date ? todo.date : "0000-00-00";
   let previousLine = todo.line ? todo.line : "never";
@@ -966,6 +968,7 @@ calendarDiv.addEventListener("submit", (e) => {
   parent.setAttribute("data-date", calendarInput.value);
   todo.time = calendarTimeInput.value;
   parent.setAttribute("data-time", calendarTimeInput.value);
+  parent.querySelector(".timeSpan").innerText = calendarTimeInput.value;
   //Add if the recurring is all day or at a specific time!
   if(noDayInput.checked == true){
     todo.line = noDayInput.value;
@@ -1041,7 +1044,8 @@ calendarDiv.addEventListener("submit", (e) => {
     };
     recurryCreation(todo);
   };
-  if(previousDate !== todo.date || previousLine !== todo.line || previousTime !== todo.time) {
+  let togoList = getTogoList(todo); //recurryCreation(todo) will happen there
+  if(previousList !== togoList) {
     if(previousLine == "recurringDay"){
       parent.querySelector(".trashCan").outerHTML = '<i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>';
       parent.setAttribute("data-date", todo.date);
@@ -1053,20 +1057,11 @@ calendarDiv.addEventListener("submit", (e) => {
       newShit = false;
       document.querySelector("#sectionLimbo").classList.add("displayNone");
     };
-    let togoList = getTogoList(todo); //recurryCreation(todo) will happen there
     if(togoList == ""){
       parent.remove();
     } else{
       document.getElementById(togoList).appendChild(parent);
-      if(togoList == "listScheduled"){
-        sortIt("date", togoList);
-      };
-      if(togoList == "listOne" || togoList == "list"){
-        sortIt("color", togoList);
-      };
-      if(togoList == "listToday" || togoList == "listTomorrow"){
-        sortIt("time", togoList);
-      };
+      moving = true;
     };
     
   };
@@ -1370,6 +1365,7 @@ window.listTasks = listTasks;
 
 taskInfoBtn.addEventListener("click", () => {
   let todo = listTasks[taskToInfoIndex];
+  let previousList = parent.parentElement.id;
   let previousTerm = todo.term ? todo.term : "always";
   todo.task = taskTitle.value.startsWith("*") ? taskTitle.value.substring(1) : taskTitle.value;
   todo.info = taskDetails.value;
@@ -1401,14 +1397,14 @@ taskInfoBtn.addEventListener("click", () => {
     let togoList = getTogoList(todo);
     if(togoList == ""){
       parent.remove();
-    } else{
-      if(todo.term == "showThing"){
-        parent.className = `showLi ${todo.showType}`;
-        parent.querySelector(".text").style.color = "";
-      };
-      document.getElementById(togoList).appendChild(parent);
+    } else if(todo.term == "showThing"){
+      parent.className = `showLi ${todo.showType}`;
+      parent.querySelector(".text").style.color = "";
     };
-    
+    if(previousList !== togoList){
+      document.getElementById(togoList).appendChild(parent);
+      moving = true;
+    };
   };
   updateCBC();
   clickHandlerAddOn(taskInfo, clickScreen);
@@ -1427,8 +1423,9 @@ function scrollToSection(){
 
 function clickHandlerAddOn(addOn, screen){
   parent.classList.remove("selectedTask");
-  if(screen == clickScreen){
+  if(moving && screen == clickScreen){
     scrollToSection();
+    moving = false;
   };
   addOn.classList.add("displayNone");
   list.insertAdjacentElement("afterend", addOn);

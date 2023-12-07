@@ -110,11 +110,12 @@ async function getTasksSettings() {
     todoCreation(todo);
   });
   updateArrowsColor();
-  sortIt("color", "listOne");
-  sortIt("date", "listScheduled");
-  sortIt("text", "listStorage");
-  sortIt("time", "listToday");
-  sortIt("time", "listTomorrow");
+  sortItAll();
+  // sortIt("color", "listOne");
+  // sortIt("date", "listScheduled");
+  // sortIt("text", "listStorage");
+  // sortIt("time", "listToday");
+  // sortIt("time", "listTomorrow");
   // sortIt("order", "listToday");
   // sortIt("order", "listTomorrow");
   // document.querySelectorAll("#listToday > li").forEach(element => {
@@ -402,7 +403,7 @@ function todoCreation(todo){
       <i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>
       <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
       <div class="textDiv"><span class="text" onclick="taskAddInfo(this)" style="color:${todo.color};">${todo.info ? '*' : ''}${todo.task}</span></div>
-      <span class="timeSpan" onclick="timeItEvent(this)">${todo.time ? todo.time : `<i class="fa-regular fa-clock"></i>`}</span>
+      <span class="timeSpan" onclick="timeItEvent(this)">${todo.time ? todo.time : ""}</span>
       <input type="time" class="displayNone"/>
       <i class="typcn typcn-calendar-outline calendarSpan ${todo.line}" onclick="calendarChoice(this)"></i>
     </li>`);
@@ -773,7 +774,46 @@ function refreshDoneId(){
   });
 };
 
-
+function sortItAll(){
+  document.querySelectorAll(".sortedList").forEach(list => {
+    let type = list.dataset.sort; 
+    let i, run, li, stop, first, second; 
+    run = true; 
+    while (run) { 
+      run = false; 
+      li = list.getElementsByTagName("li"); 
+      // Loop traversing through all the list items 
+      for (i = 0; i < (li.length - 1); i++) { 
+        stop = false; 
+        if(type == "text"){
+          first = li[i].querySelector(".text").textContent;
+          second = li[i + 1].querySelector(".text").textContent;
+        } else if(type == "color"){
+          first = li[i].querySelector(".text").style.color;
+          second = li[i + 1].querySelector(".text").style.color;
+        } else if(type == "date"){
+          first = li[i].dataset.date;
+          second = li[i + 1].dataset.date;
+        } else if(type == "order"){
+          first = li[i].dataset.order;
+          second = li[i + 1].dataset.order;
+        } else if(type == "time"){
+          first = li[i].dataset.time;
+          second = li[i + 1].dataset.time;
+        };
+        if (first > second){ 
+          stop = true; 
+          break; 
+        }; 
+      }; 
+      /* If the current item is smaller than the next item then adding it after it using insertBefore() method */ 
+      if(stop){ 
+        li[i].parentNode.insertBefore(li[i + 1], li[i]); 
+        run = true; 
+      }; 
+    }; 
+  });
+};
 
 function sortIt(type, listName) { 
   console.log(listName);
@@ -867,10 +907,12 @@ function timeItEvent(thisOne){
   thisOne.classList.add("displayNone");
   let li = thisOne.parentElement;
   let list = li.parentElement.id;
-  console.log(list);
   let input = li.querySelector("input[type='time']");
   let todoIndex = listTasks.findIndex(todo => todo.id == li.id);
   let todo = listTasks[todoIndex];
+  if(todo.time){
+    input.value = todo.time;
+  };
   input.classList.remove("displayNone");
   input.addEventListener("input", () => {
     todo.time = input.value;
@@ -907,6 +949,7 @@ function calendarChoice(thisOne){
   let todo = listTasks[taskToDateIndex];
   let date = todo.date ? todo.date : todo.line == "noDay" ? "" : getTodayDate();
   calendarInput.value = date; //calendarInput est le dateInput qui doit contenir la date (si y'en a déjà une)
+  calendarTimeInput.value = todo.time ? todo.time : "";
   weekSection.classList.add("displayNone");
   monthSection.classList.add("displayNone");
   if(todo.line){
@@ -961,14 +1004,13 @@ calendarDiv.addEventListener("submit", (e) => {
   e.preventDefault();
   let previousList = parent.parentElement.id;
   let todo = listTasks[taskToDateIndex];
-  let previousDate = todo.date ? todo.date : "0000-00-00";
   let previousLine = todo.line ? todo.line : "never";
-  let previousTime = todo.time ? todo.time : "99:99";
   todo.date = calendarInput.value;
   parent.setAttribute("data-date", calendarInput.value);
   todo.time = calendarTimeInput.value;
   parent.setAttribute("data-time", calendarTimeInput.value);
   parent.querySelector(".timeSpan").innerText = calendarTimeInput.value;
+  parent.querySelector("input[type='time']").value = calendarTimeInput.value;
   //Add if the recurring is all day or at a specific time!
   if(noDayInput.checked == true){
     todo.line = noDayInput.value;
@@ -1067,6 +1109,7 @@ calendarDiv.addEventListener("submit", (e) => {
   };
 
   localStorage.listTasks = JSON.stringify(listTasks);
+  sortItAll();
   updateCBC();
   clickHandlerAddOn(calendarDiv, clickScreen);
   calendarDiv.reset();
@@ -1379,7 +1422,6 @@ taskInfoBtn.addEventListener("click", () => {
     todo.showType = document.querySelector('input[name="showOptions"]:checked').value;
   };
   taskToInfo.querySelector(".text").textContent = `${todo.info ? '*' : ''}${todo.task}`;
-  localStorage.listTasks = JSON.stringify(listTasks);
   if(!todo.stock && !todo.stored && storeIt.checked){
     stockCreaction(todo); //todo.stored = true; (has a model in storage) (included in stockCreation)
   };
@@ -1406,6 +1448,8 @@ taskInfoBtn.addEventListener("click", () => {
       moving = true;
     };
   };
+  localStorage.listTasks = JSON.stringify(listTasks);
+  sortItAll();
   updateCBC();
   clickHandlerAddOn(taskInfo, clickScreen);
   console.log(todo);

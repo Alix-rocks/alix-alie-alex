@@ -94,13 +94,13 @@
           <div class="todayDiv">
             <h3 class="topList">Today's fun</h3>
             <h5 class="topList">What shall be done today...</h5>
-            <ul id="listToday"></ul>
+            <ul id="listToday" class="sortedList" data-sort="time"></ul>
           </div>
           
           <div class="tomorrowDiv">
             <h3 class="topList">Tomorrow's plan</h3>
             <h5 class="topList">Plan for the worst, aim for the best...</h5>
-            <ul id="listTomorrow"></ul>
+            <ul id="listTomorrow" class="sortedList" data-sort="time"></ul>
           </div>
         </div>
       </section> 
@@ -131,7 +131,7 @@
                 </label>
               </div> -->
             </div>
-            <ul id="list"></ul>
+            <ul id="list" class="sortedList" data-sort="color"></ul>
             <div style="position: relative;">
               <h4 class="subList">The one time thing</h4>
               <!-- <div class="sortWhole">
@@ -147,7 +147,7 @@
                 </label>
               </div> -->
             </div>
-            <ul id="listOne"></ul>
+            <ul id="listOne" class="sortedList" data-sort="color"></ul>
             <button id="shuffleBtn">Shuffle it!</button>
             <h5 class="sousBtn">Tell me what to do!</h5>
           </div>
@@ -354,7 +354,7 @@
                 </label>
               </div> -->
             </div>
-            <ul id="listScheduled"></ul>
+            <ul id="listScheduled" class="sortedList" data-sort="date"></ul>
           </div>
         </div>
       </section>
@@ -366,7 +366,7 @@
             <h5 class="topList">Don't worry, they'll be back...</h5>
             <span id="listRecurringChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
-          <ul id="listRecurring" class="listToggleList"></ul>
+          <ul id="listRecurring" class="listToggleList sortedList" data-sort="text"></ul>
         </div>
       </section>
       <section>
@@ -377,7 +377,7 @@
             <h5 class="topList">Recycling is good...</h5>
             <span id="listStorageChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
-          <ul id="listStorage" class="listToggleList"></ul>
+          <ul id="listStorage" class="listToggleList sortedList" data-sort="text"></ul>
         </div>
       </section>
     </div>

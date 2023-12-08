@@ -59,12 +59,12 @@
         <button id="addBtn" type="submit">add</button>
       </form>
       <section id="sectionLimbo" class="displayNone">
-        <h3 class="topList">Limbo...</h3>
+        <h3 class="topList"><span class="topListTitle">Limbo...</span></h3>
         <h5 class="topList">What are you meant to be?...</h5>
         <ul id="listLimbo"></ul>
       </section>
       <section>
-        <h3 class="topList">Oups...</h3>
+        <h3 class="topList"><span class="topListTitle">Oups...</span></h3>
         <h5 class="topList">What should've already been done...</h5>
         <ul id="listOups"></ul>
       </section>
@@ -92,13 +92,13 @@
             <i class="typcn typcn-chevron-right swipeChevron"></i>
           </label>
           <div class="todayDiv">
-            <h3 class="topList">Today's fun</h3>
+            <h3 class="topList"><span class="topListTitle">Today's fun</span> <span class="topListDate" id="todaysDateSpan"></span></h3>
             <h5 class="topList">What shall be done today...</h5>
             <ul id="listToday" class="sortedList" data-sort="time"></ul>
           </div>
           
           <div class="tomorrowDiv">
-            <h3 class="topList">Tomorrow's plan</h3>
+            <h3 class="topList"><span class="topListTitle">Tomorrow's plan</span> <span class="topListDate" id="tomorrowsDateSpan"></span></h3>
             <h5 class="topList">Plan for the worst, aim for the best...</h5>
             <ul id="listTomorrow" class="sortedList" data-sort="time"></ul>
           </div>
@@ -108,7 +108,7 @@
         <input id="listInput" type="checkbox" class="cossin listToggleInput" />
         <div id="wheneverLists">
           <label for="listInput" class="listToggleLabel">
-            <h3 class="topList">Whenever</h3>
+            <h3 class="topList"><span class="topListTitle">Whenever</span></h3>
             <h5 class="topList">The never ending list...</h5>
             <span id="listChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
@@ -209,7 +209,7 @@
             <label for="noDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText">No Day</span><br /><span class="smallText">(just go with the flow)</span></label></p></label>
             <div id="recurringDaySection">
               <h5 class="taskInfoInput" style="margin-left: 0;">It's a recurring thing</h5>
-              <p class="calendarMargin">Dal<input id="dalInput" type="date" style="margin: 0 10px;" />alle<input type="time" style="margin: 0 0 0 10px;"></p>
+              <p class="calendarMargin">Dal<input id="dalInput" type="date" style="margin: 0 10px;" />alle<input id="recurringTimeInput" type="time" style="margin: 0 0 0 10px;"></p>
               <p class="calendarMargin">Si ripete ogni<input id="ogniInput" type="number" style="width: 50px; margin: 0 10px;" />
               <select id="timeVariationInput">
                 <option value="giorno">giorno</option>
@@ -329,7 +329,7 @@
         <input id="scheduledInput" type="checkbox" class="cossin listToggleInput" />
         <div>
           <label for="scheduledInput" class="listToggleLabel">
-            <h3 class="topList">Scheduled</h3>
+            <h3 class="topList"><span class="topListTitle">Scheduled</span></h3>
             <h5 class="topList">All in good time...</h5>
             <span id="listScheduledChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
@@ -362,7 +362,7 @@
         <input id="recurringInput" type="checkbox" class="cossin listToggleInput" />
         <div>
           <label for="recurringInput" class="listToggleLabel">
-            <h3 class="topList">Recurring</h3>
+            <h3 class="topList"><span class="topListTitle">Recurring</span></h3>
             <h5 class="topList">Don't worry, they'll be back...</h5>
             <span id="listRecurringChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
@@ -373,7 +373,7 @@
         <input id="storageInput" type="checkbox" class="cossin listToggleInput" />
         <div id="storageList">
           <label for="storageInput" class="listToggleLabel">
-            <h3 class="topList">Storage</h3>
+            <h3 class="topList"><span class="topListTitle">Storage</span></h3>
             <h5 class="topList">Recycling is good...</h5>
             <span id="listStorageChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>

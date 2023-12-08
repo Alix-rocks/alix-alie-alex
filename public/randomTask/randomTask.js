@@ -70,6 +70,13 @@ let icons = ["fa-solid fa-comments", "fa-solid fa-lightbulb", "fa-solid fa-dolla
   document.getElementById("iconsPalet").innerHTML = iconsAll;
 })();
 
+(() => {
+  let todayDate = getTodayDate();
+  let tomorrowDate = getTomorrowDate();
+  document.getElementById("todaysDateSpan").innerHTML = `(${todayDate})`;
+  document.getElementById("tomorrowsDateSpan").innerHTML = `(${tomorrowDate})`;
+})();
+
 function getCloudBC(){
   if(localStorage.getItem("cBC")){
     cBC = localStorage.cBC;
@@ -863,7 +870,7 @@ function sortIt(type, listName) {
 let wheneverList = [];
 shuffleBtn.addEventListener("click", () => {
   let todayDate = getTodayDate();
-  wheneverList = listTasks.filter(task => ((!task.date || task.date == "") && (task.line !== "recurringDay" && !task.stock)) || (task.date > todayDate && task.line !== "todoDay")); //ajouter d'enlever les recurring, stock et scheduled... et pourquoi on inclu pas ceux qui sont en retard ou pour today?!
+  wheneverList = listTasks.filter(task => ((!task.date || task.date == "" || task.date <= todayDate) && (task.line !== "recurringDay" && !task.stock)) || (task.date > todayDate && task.line == "doneDay")); 
   for (let i = wheneverList.length - 1; i > 0; i--) { 
     const j = Math.floor(Math.random() * (i + 1)); 
     [wheneverList[i], wheneverList[j]] = [wheneverList[j], wheneverList[i]]; 
@@ -1011,11 +1018,15 @@ calendarDiv.addEventListener("submit", (e) => {
   parent.setAttribute("data-time", calendarTimeInput.value);
   parent.querySelector(".timeSpan").innerText = calendarTimeInput.value;
   parent.querySelector("input[type='time']").value = calendarTimeInput.value;
-  //Add if the recurring is all day or at a specific time!
   if(noDayInput.checked == true){
     todo.line = noDayInput.value;
     todo.date = todo.dal = todo.ogni = todo.var = todo.daysWeek = todo.meseOpt = todo.meseDate = todo.meseDayN = todo.meseDayI = todo.fineOpt = todo.fine = todo.fineCount = todo.listDates = todo.recurring = "";
     parent.setAttribute("data-date", "");
+   
+    // add = todo.time = ""
+    // parent.setAttribute("data-time", "");
+    // parent.querySelector(".timeSpan").innerText = "";
+    // parent.querySelector("input[type='time']").value = "";
   };
   if(calendarInput.value || dalInput.value){
     if(previousLine == "recurry"){
@@ -1353,7 +1364,9 @@ function taskAddInfo(thisOne){
     Array.from( document.querySelectorAll('input[name="showOptions"]'), input => input.checked = false );
   };
   taskDetails.value = todo.info ? todo.info : ""; //taskDetails est le testarea qui doit contenir les détails (si y'en a déjà), dans le div
-  //COLOR
+  
+  // *** COLOR
+//const colorList = ["orange", "red", "darkmagenta", "dodgerblue", "forestgreen", "darkslategrey"];
   document.getElementById("colorIt").addEventListener("click", () => {
     //colorIt.insertAdjacentElement("afterend", colorPalet);
     taskInfo.insertAdjacentElement("beforeend", colorPalet);
@@ -1454,8 +1467,7 @@ taskInfoBtn.addEventListener("click", () => {
   clickHandlerAddOn(taskInfo, clickScreen);
   console.log(todo);
 });
-// *** COLOR
-//const colorList = ["orange", "red", "darkmagenta", "dodgerblue", "forestgreen", "darkslategrey"];
+
 
 function scrollToSection(){
   let section = parent.closest("section");

@@ -70,12 +70,6 @@ let icons = ["fa-solid fa-comments", "fa-solid fa-lightbulb", "fa-solid fa-dolla
   document.getElementById("iconsPalet").innerHTML = iconsAll;
 })();
 
-(() => {
-  let todayDate = getTodayDate();
-  let tomorrowDate = getTomorrowDate();
-  document.getElementById("todaysDateSpan").innerHTML = `(${todayDate})`;
-  document.getElementById("tomorrowsDateSpan").innerHTML = `(${tomorrowDate})`;
-})();
 
 function getCloudBC(){
   if(localStorage.getItem("cBC")){
@@ -93,9 +87,14 @@ async function getTasksSettings() {
   if(localStorage.getItem("myTomorrow")){
     myTomorrow = localStorage.myTomorrow;
   } else {
-    myTomorrow = getTasks.data().myTomorrow; //not sure if that'll work since it's a string in firestore and backticks here...
+    myTomorrow = getTasks.data().myTomorrow;
   };
-  
+  (() => {
+    let todayDate = getTodayDate();
+    let tomorrowDate = getTomorrowDate();
+    document.getElementById("todaysDateSpan").innerHTML = `(${todayDate})`;
+    document.getElementById("tomorrowsDateSpan").innerHTML = `(${tomorrowDate})`;
+  })();
   if(localStorage.getItem("listTasks")){
     listTasks = JSON.parse(localStorage.listTasks);
   } else if(getTasks.exists()){
@@ -661,7 +660,6 @@ function gotItDone(nb){
     listTasks[stockIndex].storedId = listTasks[stockIndex].storedId.filter(id => id !== donedTaskId);
   };
   let donedTaskSplice = listTasks.splice(donedTaskIndex, 1);
-  console.log(donedTaskSplice[0]);
   let donedTask = donedTaskSplice[0].task;
   let donedIcon = donedTaskSplice[0].icon;
   let donedColor = donedTaskSplice[0].color;
@@ -823,7 +821,6 @@ function sortItAll(){
 };
 
 function sortIt(type, listName) { 
-  console.log(listName);
   // Declaring Variables 
   let list, i, run, li, stop, first, second; 
   // Taking content of list as input 
@@ -1220,7 +1217,7 @@ function ogniSettimana(todo, date){
         start++;
       };
     };
-    if(date.getDay() == 6){
+    if(date.getDay() == 6){ //if == 1 nm => nm++ (mais le mettre avant pour que le 1 soit considéré...)
       nw++;
     };
     if(nw == Number(todo.ogni)){
@@ -1231,7 +1228,6 @@ function ogniSettimana(todo, date){
       start = date;
     };
   };
-  console.log(listDates);
   todo.listDates = listDates;
 };
 
@@ -1241,6 +1237,7 @@ function ogniMeseDay(todo, date){ //For ogni X month on Y° day until fine o dop
   console.log("todo.meseDayI " + todo.meseDayI);//l'index dans le array des jours de la semaine 
   //todo.meseDayN
   //todo.meseDayI
+  //à chaque jour, on a le nombre de week; si le jour est 1, le nw retombe à 0; on check l'index (0 à 6) et quand on arrive à meseDayI, on ajoute nw++; quand nw++ égale meseDayN, on ajoute la date à la list
 };
 
 function fillUpRecurring(todo){
@@ -1465,7 +1462,6 @@ taskInfoBtn.addEventListener("click", () => {
   sortItAll();
   updateCBC();
   clickHandlerAddOn(taskInfo, clickScreen);
-  console.log(todo);
 });
 
 

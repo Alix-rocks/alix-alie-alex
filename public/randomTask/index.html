@@ -68,26 +68,9 @@
         <h5 class="topList">What should've already been done...</h5>
         <ul id="listOups"></ul>
       </section>
-      <section>
-        <!-- <div class="swipeContainer">
-          <div class="swipeDiv swipeDiv1">
-            <div style="position: relative;">
-              <h3 class="topList">Today's fun</h3>
-              <h5 class="topList">What shall be done today...</h5>
-              <input type="checkbox" id="swipeInput" class="cossin">
-              <label for="swipeInput" class="swipeLabel">
-                <i class="typcn typcn-chevron-right swipeChevron"></i>
-              </label>
-            </div>
-            <ul id="listToday"></ul>
-          </div>
-          <div class="swipeDiv swipeDiv2">
-            <h4 class="subList">Tomorrow</h4>
-            <ul id="listTomorrow"></ul>
-          </div>
-        </div> -->
+      <section id="swipingSection">
         <div class="sectionSwipeWhole">
-          <input type="checkbox" id="swipeInput" class="cossin">
+          <input type="checkbox" id="swipeInput" class="swipingInput cossin">
           <label for="swipeInput" class="swipeLabel">
             <i class="typcn typcn-chevron-right swipeChevron"></i>
           </label>
@@ -104,7 +87,7 @@
           </div>
         </div>
       </section> 
-      <section>
+      <section id="wheneverSection">
         <input id="listInput" type="checkbox" class="cossin listToggleInput" />
         <div id="wheneverLists">
           <label for="listInput" class="listToggleLabel">
@@ -153,65 +136,54 @@
           </div>
         </div>
       </section>
-      <div id="taskInfo" class="displayNone">
-        <div class="taskInfoWrapper">
-          <div id="SupClickScreen" class="Screen displayNone"></div>
-          <input id="storeIt" type="checkbox" class="cossin">
-          <label for="storeIt" class="storeItLabel">
-            <span class="typcn typcn-pin-outline pinUnChecked"></span>
-            <span class="typcn typcn-pin pinChecked"></span>
-          </label>
-            <h5 class="taskInfoInput">Tell me more...</h5>
-          <div class="taskInfoInput relDiv">
-            <span id="iconIt" class="IconI fa-solid fa-ban noIcon"></span>
-            <input type="text" id="taskTitle" class="taskInfoInput" style="margin:0;padding-right: 39px;padding-left: 41px;">
-            <span id="colorIt" class="typcn typcn-tag tagSpan"></span>
-          </div>
-          <textarea id="taskDetails" class="taskInfoInput"></textarea>
-          <div class="taskInfoInput" style="position: relative;">
-            <i id="dateIt" class="typcn typcn-calendar-outline dateSpan"></i>
-            <h5 style="margin: 0;">Task</h5>
-            <input class="myRadio" type="radio" name="termOptions" id="oneTime" value="oneTime" />
-            <label for="oneTime" class="termLabel"><span class="myRadio"></span><span>It's a one time thing</span></label>
-            <input class="myRadio" type="radio" name="termOptions" id="longTerm" value="longTerm" />
-            <label for="longTerm" class="termLabel"><span class="myRadio"></span><span>It's a long term shit</span></label>
-            <h5 style="margin: 0;">Event</h5>
-            <input class="myRadio" type="radio" name="termOptions" id="showThing" value="showThing" />
-            <label for="showThing" class="termLabel"><span class="myRadio"></span><span>It's a whole show!</span></label>
-            <div class="showDiv">
-              <input class="showInput" type="radio" name="showOptions" id="myselfShow" value="myselfShow">
-              <label for="myselfShow" class="showLi myselfShow showTypeLabel">Myself<i class="typcn typcn-tick showTick"></i></label>
-              <input class="showInput" type="radio" name="showOptions" id="orderlyShow" value="orderlyShow">
-              <label for="orderlyShow" class="showLi orderlyShow showTypeLabel">Orderly<i class="typcn typcn-tick showTick"></i></label>
-              <input class="showInput" type="radio" name="showOptions" id="clientShow" value="clientShow">
-              <label for="clientShow" class="showLi clientShow showTypeLabel">Clients<i class="typcn typcn-tick showTick"></i></label>
-              <input class="showInput" type="radio" name="showOptions" id="caliaShow" value="caliaShow">
-              <label for="caliaShow" class="showLi caliaShow showTypeLabel">Alie<i class="typcn typcn-tick showTick"></i></label>
-            </div>
-          </div>
-          <button id="taskInfoBtn">Save</button>
-        </div>
-      </div>
       
-      <form id="calendarDiv" class="displayNone">
+      <!-- <form id="calendarDiv" class="displayNone">
         <h5 class="taskInfoInput">Tell me when...</h5>
         <div class="smallToggleList">
-          <h5 class="taskInfoInput">It's a one time thing</h5>
-          <input type="date" id="calendarInput" style="margin: 20px 20px 10px" />
-          <input id="calendarTimeInput" type="time">
-          <!-- add the question if it's "Tutto il giorno" or "a l'ora magica" -->
           <div style="margin: 5px 20px 10px">
             <input class="myRadio" type="radio" id="todoDayInput" name="whatDay" value="todoDay" />
             <label for="todoDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText todoDay">To-do Day</span><br /><span class="smallText">(the day you want to do it)</span></p></label>
             <input class="myRadio" type="radio" id="doneDayInput" name="whatDay" value="doneDay" />
             <label for="doneDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText doneDay">Done Day</span><br /><span class="smallText">(the day by which it has to have been done)</span></label></p></label>
+            <div class="DaySection" id="oneDaySection">
+              <h5 class="taskInfoInput" style="margin-left: 0;">It's a one time thing</h5>
+              <input type="date" id="calendarInput" style="margin: 20px 20px 10px" />
+              <input id="oneTuttoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin">
+              <div class="taskInfoInput tuttoGiornoDiv">
+                <h5 style="margin: 0;">Tutto il giorno?!</h5>
+                <label for="oneTuttoGiornoInput" class="slideZone">
+                  <div class="slider">
+                    <span class="si">Sì</span>
+                    <span class="no">No</span>
+                  </div>
+                </label>
+              </div>
+              <div class="noneTuttoGiornoDiv taskInfoInput">
+                <p><span>c'è un inizio?</span><input id="oneDayTimeDalleInput" type="time" class="dalle"></p>
+                <p><span>c'è una fine?</span><input id="oneDayTimeAlleInput" type="time" class="alle"></p>
+              </div>
+            </div>
             <input class="myRadio" type="radio" id="recurringDayInput" name="whatDay" value="recurringDay" />
             <label for="recurringDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText recurringDay">Recurring Day</span><br /><span class="smallText">(let it come back on its own)</span></label></p></label>
             <input class="myRadio" type="radio" id="noDayInput" name="whatDay" value="noDay" />
             <label for="noDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText">No Day</span><br /><span class="smallText">(just go with the flow)</span></label></p></label>
-            <div id="recurringDaySection">
+            <div class="DaySection" id="recurringDaySection">
               <h5 class="taskInfoInput" style="margin-left: 0;">It's a recurring thing</h5>
-              <p class="calendarMargin">Dal<input id="dalInput" type="date" style="margin: 0 10px;" />alle<input id="recurringTimeInput" type="time" style="margin: 0 0 0 10px;"></p>
+              <p class="calendarMargin">Dal<input id="dalInput" type="date" style="margin: 0 10px;" /></p>
+              <input id="recuTuttoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin">
+              <div class="taskInfoInput tuttoGiornoDiv">
+                <h5 style="margin: 0;">Tutto il giorno?!</h5>
+                <label for="recuTuttoGiornoInput" class="slideZone">
+                  <div class="slider">
+                    <span class="si">Sì</span>
+                    <span class="no">No</span>
+                  </div>
+                </label>
+              </div>
+              <div class="noneTuttoGiornoDiv taskInfoInput">
+                <p><span>c'è un inizio?</span><input id="recuTimeDalleInput" type="time" class="dalle"></p>
+                <p><span>c'è una fine?</span><input id="recuTimeAlleInput" type="time" class="alle"></p>
+              </div>
               <p class="calendarMargin">Si ripete ogni<input id="ogniInput" type="number" style="width: 50px; margin: 0 10px;" />
               <select id="timeVariationInput">
                 <option value="giorno">giorno</option>
@@ -267,8 +239,8 @@
             </details> -->
                 
         
-        <button id="saveTheDateBtn" class="calendarMargin" type="submit">Save The Date</button>
-      </form>
+        <!-- <button id="saveTheDateBtn" class="calendarMargin" type="submit">Save The Date</button>
+      </form> -->
       <div id="iconsPalet" class="iconsPaletClass displayNone"></div>
       <table id="colorPalet" class="displayNone">
         <tr class="colorTr">
@@ -327,7 +299,7 @@
         </tr>
       </table>
       
-      <section>
+      <section id="scheduledSection">
         <input id="scheduledInput" type="checkbox" class="cossin listToggleInput" />
         <div>
           <label for="scheduledInput" class="listToggleLabel">
@@ -360,7 +332,7 @@
           </div>
         </div>
       </section>
-      <section>
+      <section id="recurringSection">
         <input id="recurringInput" type="checkbox" class="cossin listToggleInput" />
         <div>
           <label for="recurringInput" class="listToggleLabel">
@@ -371,7 +343,7 @@
           <ul id="listRecurring" class="listToggleList sortedList" data-sort="text"></ul>
         </div>
       </section>
-      <section>
+      <section id="storageSection">
         <input id="storageInput" type="checkbox" class="cossin listToggleInput" />
         <div id="storageList">
           <label for="storageInput" class="listToggleLabel">

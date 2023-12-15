@@ -1,8 +1,11 @@
 *{
   font-family: 'Nunito', sans-serif;
-  color: darkslategrey;
+  
   box-sizing: border-box;
   user-select: none;
+}
+body{
+  color: darkslategrey;
 }
 
 button {
@@ -153,7 +156,8 @@ input[type="radio"]{
   margin: 0;
   text-align: center;
 }
-#taskInfo, #calendarDiv{
+#taskInfo, #calendarDiv.onIcon{
+  color: darkslategrey;
   background-color: white;
   border: 2px solid darkslategrey;
   border-radius: 5px;
@@ -176,15 +180,25 @@ input[type="radio"]{
 #taskDetails{
   height: 105px;
 }
-#calendarDiv{
-  top: 10px;
-  right: 43px;
-  width: fit-content;
-  align-items: stretch;
+
+.onIcon{
+  top: 27px;
+  right: 27px;
   display: flex;
   flex-flow: column nowrap;
-  align-items: center;
-  padding: 10px 0;
+  padding: 10px;
+}
+.inDaySection{
+  border: thin dotted;
+  padding: 0 10px;
+  border-radius: 0 15px 15px 15px;
+}
+.centerDateInput{
+  margin: 20px auto 0;
+  display: block;
+}
+#calendarHome{
+  width: 100%;
 }
 .dayCircleWeek{
   display: flex;
@@ -225,6 +239,7 @@ h5.taskInfoInput{
   width: 30px;
   height: 30px;
 }
+/*You might have to revise some of them here */
 .pinUnChecked, .pinChecked{
   position: absolute;
   top: 5px;
@@ -246,6 +261,11 @@ h5.taskInfoInput{
 }
 .relDiv{
   position: relative;
+}
+#taskTitle{
+  margin:0;
+  padding-right: 39px;
+  padding-left: 41px;
 }
 .tagSpan{
   position: absolute;
@@ -478,6 +498,9 @@ li .textDone{
 .calendarMargin{
   margin: 10px 20px;
 }
+.calendarInsideMargin{
+  margin: 10px 0;
+}
 .myRadio{
   padding: 0;
   margin-right: 5px;
@@ -515,15 +538,80 @@ input.myRadio:checked + label span.myRadio{
   outline-width: 2.5px;
   width: fit-content; */
 }
-#recurringDaySection{
+.DaySection{
   display: none; 
   flex-flow: column nowrap; 
   align-items: flex-start;
-  padding-top: 10px;
+  padding: 0 10%;
+}
+input#todoDayInput:checked ~ div#oneDaySection{
+  display: flex;
+}
+input#doneDayInput:checked ~ div#lastDaySection{
+  display: flex;
 }
 input#recurringDayInput:checked ~ div#recurringDaySection{
   display: flex;
 }
+.tuttoGiornoDiv{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  width: -webkit-fill-available!important;
+}
+.slideZone{
+  display: block;
+  position: relative;
+  width: 35px;
+  height: 20px;
+  border-radius: 25px;
+  border: solid thin darkslategrey;
+  background-color: lightgrey;
+}
+.slider{
+  float: left;
+  width: 18px;
+  height: 18px;
+  border-radius: 25px;
+  border: solid thin darkslategrey;
+  background-color: white;
+}
+.slider span{
+  text-align: center;
+  line-height: 18px;
+  font-size: 10px;
+}
+.slider span.no{
+  display: block;
+}
+.slider span.si{
+  display: none;
+}
+.tuttoGiornoInput:checked + div.tuttoGiornoDiv > label{
+  background-color: rgba(50,205,50,.9);
+}
+.tuttoGiornoInput:checked + div.tuttoGiornoDiv > label > .slider{
+  float: right;
+}
+.tuttoGiornoInput:checked + div.tuttoGiornoDiv > label > .slider > span.si{
+  display: block;
+}
+.tuttoGiornoInput:checked + div.tuttoGiornoDiv > label > .slider > span.no{
+  display: none;
+}
+.noneTuttoGiornoDiv{
+  display: block;
+}
+.tuttoGiornoInput:checked ~ div.noneTuttoGiornoDiv{
+  display: none;
+}
+.dalleTxt, .alleTxt, .finaleTxt{
+  margin: 0 0 0 10px;
+}
+#timeVariationInput option[value="settimana"]:checked ~ div#weekSection{
+  color: red;
+}
+
 .iconsPaletClass{
   background-color: white;
   border: 2px solid darkslategrey;
@@ -626,12 +714,17 @@ input[name="colorRadio"]:checked + label > div{
   border-radius: 10px;
   border: .5px solid darkslategrey;
 }
+.showTypeLabelDiv{
+  display: flex;
+  align-items: baseline;
+}
 .showTypeLabel{
   padding: 0 7px;
   margin: 5px 0;
-  display: block;
+  display: inline-block;
   position: relative;
   opacity: .7;
+  width: 100%;
 }
 .clientShow{
   background-color: darkmagenta;
@@ -700,11 +793,89 @@ input[name="colorRadio"]:checked + label > div{
   right: 3px;
   display: none;
 }
+
 input[name="showOptions"]:checked + label.showTypeLabel{
   opacity: 1;
 }
 input[name="showOptions"]:checked + label.showTypeLabel > i.showTick{
   display: block;
+}
+#addShowTypeDiv{
+  margin-top: 10px;
+}
+#addShowTypeDiv label{
+  display: inline-block;
+}
+.showTypeCreation{
+  display: none;
+}
+.showTypeAdding{
+  height: 33px;
+}
+#addShowType:checked ~ label.showTypeAdding{
+  display: none;
+}
+#addShowType:checked ~ .showTypeCreation{
+  display: flex;
+}
+.showTypeCreationInside{
+  position: relative;
+  display: inline-block;
+  flex-grow: 1;
+}
+.showTypeCreationInside > input[type=text]{
+  width: 100%;
+  border: .5px solid darkslategrey;
+  border-radius: 10px;
+  height: 22.5px;
+  padding: 0 7px;
+}
+.showTypeCreationInside > i.typcn-media-record{
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 2.2em;
+  line-height: .6em;
+}
+.showTypeIconsDiv{
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  align-content: space-around;
+  width: 165px;
+  height: 120px;
+  border: 2px solid darkslategrey;
+  border-radius: 5px;
+  background-color: white;
+  padding: 5px;
+}
+.showTypeIconsB{
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.showTypeIconsB:hover{
+  background-color: rgba(47, 79, 79, .3);
+}
+.showTypeIconsC{
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
+  text-align: center;
+  border: .5px solid darkslategrey;
+  margin: 3px;
+}
+.showTypeIconsC i{
+  font-size: 22px;
+  line-height: 23px;
+}
+.underh5{
+  margin: 0;
 }
 .listToggleLabel{
   position: relative;

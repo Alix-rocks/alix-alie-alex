@@ -222,6 +222,7 @@ input[name="daysWeekChoice"]:checked + label.dayCircle{
 #saveTheDateBtn{
   margin-top: 20px;
   align-self: center;
+  line-height: 1em;
 }
 
 .taskInfoInput{
@@ -232,31 +233,48 @@ input[name="daysWeekChoice"]:checked + label.dayCircle{
 h5.taskInfoInput{
   margin-bottom: 0;
 }
-.storeItLabel{
+.cornerItLabel{
   position: absolute;
   top: 5px;
-  right: 5px;
   width: 30px;
   height: 30px;
 }
-/*You might have to revise some of them here */
-.pinUnChecked, .pinChecked{
+.storeItLabel{
+  right: 5px;
+}
+.copyItLabel{
+  right: 50px;
+}
+.trashItLabel{
+  right: 95px;
+}
+#trashedArea{
+  display: block;
+  width: 100%;
+}
+#trashIt:checked ~ div#trashedArea{
+  display: none;
+}
+.cornerItUnChecked, .cornerItChecked{
   position: absolute;
   top: 5px;
-  right: 5px;
+  font-size: 18px;
+  line-height: 24px;
+}
+.pinUnChecked, .pinChecked{
   font-size: 24px;
   line-height: 24px;
 }
-.pinUnChecked{
+.cornerItUnChecked{
   opacity: 1;
 }
-.pinChecked{
+.cornerItChecked{
   opacity: 0;
 }
-#storeIt:checked + label > .pinUnChecked{
+.cornerItInput:checked + label > .cornerItUnChecked{
   opacity: 0;
 }
-#storeIt:checked + label > .pinChecked{
+.cornerItInput:checked + label > .cornerItChecked{
   opacity: 1;
 }
 .relDiv{
@@ -468,17 +486,25 @@ li .textDone{
   flex-grow: 1;
   margin: 0 7px;
 }
+li .projetOnglet{
+  position: absolute;
+  top: -13px;
+  left: 30px;
+  border: 0.5px solid darkslategrey;
+  border-radius: 2px 8px 0 0;
+  font-size: 10px;
+  padding: 2px 5px 0 3px;
+  line-height: 1em;
+}
 .selectedTask{
   background-color: rgba(211, 211, 211, .5);
 }
-/* colorSpan devient obsolete */
-.colorSpan{
-  padding-left: 10px;
+#todoZone li.projetLi{
+  border-radius: 2px 8px 0 2px;
+  margin-top: 13px;
+  outline: 4px solid;
+  outline-offset: -4px;
 }
-
-/* .trashCan, .recycle{
-  font-size: 1.5em;
-} */
 .whatDayLabel{
   display: block;
   font-size: 18px;
@@ -487,11 +513,11 @@ li .textDone{
   line-height: 1em;
   margin: 0;
 }
-.whatDayLabel span.smallText{
+span.smallText{
   font-size: 13px;
   padding: 0;
 }
-.whatDayLabel span.normalText{
+span.normalText{
   font-size: 18px;
   padding: 0;
 }

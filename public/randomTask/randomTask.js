@@ -379,6 +379,15 @@ function todoCreation(todo){
         <input type="time" class="displayNone"/>
         <i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.line}" onclick="smallCalendarChoice(this)"></i>
       </li>`);
+      // document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.term == "showThing" ? `class="showLi" style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``} ${todo.projet ? `class="projetLi" style="outline-color: ${todo.PColorBG};"` : ``}>
+      //   <i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>
+      //   <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
+      //   ${todo.projet ? `<div class="projetOnglet" style="background-color:${todo.PColorBG}; color:${todo.PColorTX};">${todo.projetName}</div>` : ``}
+      //   <div class="textDiv"><span onclick="taskAddAllInfo(this)" class="text" ${todo.term == "showThing" ? `` : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span></div>
+      //   <span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
+      //   <input type="time" class="displayNone"/>
+      //   <i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.line}" onclick="smallCalendarChoice(this)"></i>
+      // </li>`);
     };
   };
 };
@@ -1033,7 +1042,7 @@ window.smallCalendarChoice = smallCalendarChoice;
 function creatingCalendar(todo, home, classs){
   let rec = todo.line == "recurringDay" ? true : false;
   let shw = todo.term == "showThing" ? true : false;
-  let date = todo.date ? todo.date : todo.line == "noDay" ? "" : rec ? todo.dal : getTodayDate();
+  let date = todo.date ? todo.date : rec ? todo.dal : getTodayDate();
   let daysWeek = daysWeekChoices.map((day, idx) => {
     return `<input type="checkbox" name="daysWeekChoice" class="cossin" id="${day.name}" value="${idx}" ${(rec && todo.var == "settimana" && todo.daysWeek && todo.daysWeek.includes(day.name)) ? `checked` : meseDayICalc(date) == idx ? `checked` : ``} />
     <label for="${day.name}" class="dayCircle">${day.letter}</label>`;
@@ -1141,7 +1150,7 @@ function creatingCalendar(todo, home, classs){
       </div>
       ${noDayDiv}
     </div>
-    ${classs == "onIcon" ? `<button id="saveTheDateBtn" class="calendarMargin">Save The Date</button>` : ``}
+    ${classs == "onIcon" ? `<button id="saveTheDateBtn" class="calendarMargin">STD<br /><span class="smallText">(Save The Date)</span></button>` : ``}
   </div>`;
   if(classs == "onIcon"){
     home.insertAdjacentHTML("afterend", smallCalendar);
@@ -1235,6 +1244,12 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
       todo.dal = inDaySection.querySelector("#dalInput").value;
       todo.ogni = inDaySection.querySelector("#ogniInput").value;
       todo.var = inDaySection.querySelector("#timeVariationInput").value; 
+      todo.fineOpt = inDaySection.querySelector('input[name="fineOptions"]:checked').value;
+      if(todo.fineOpt == "fineGiorno"){
+        todo.fine = inDaySection.querySelector("#fineDate").value;
+      } else if(todo.fineOpt == "fineDopo"){
+        todo.fineCount = inDaySection.querySelector("#fineCount").value;
+      };
       let date = getDateFromString(todo.dal);
       if(todo.var == "giorno"){
         ogniOgni(todo, date);
@@ -1261,13 +1276,6 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
         };
       } else if(todo.var == "anno"){
           ogniOgni(todo, date);
-      };
-      todo.fineOpt = inDaySection.querySelector('input[name="fineOptions"]:checked').value;
-      console.log(inDaySection.querySelector('input[name="fineOptions"]:checked'));
-      if(todo.fineOpt == "fineGiorno"){
-        todo.fine = inDaySection.querySelector("#fineDate").value;
-      } else if(todo.fineOpt == "fineDopo"){
-        todo.fineCount = inDaySection.querySelector("#fineCount").value;
       };
       recurryCreation(todo);
     } else{ //means it's either todoDay or doneDay
@@ -1544,7 +1552,6 @@ function taskAddAllInfo(thisOne){
   let newWidth = Number(num) + 37;
   let taskToInfoIndex = listTasks.findIndex(todo => todo.id == parent.id);
   let todo = listTasks[taskToInfoIndex];
-  console.log(todo);
   let myShows;
   if(myShowTypes.length > 0){
     myShows = myShowTypes.map((myShowType, idx) => {
@@ -1560,10 +1567,20 @@ function taskAddAllInfo(thisOne){
   let taskAllInfo = `<div id="taskInfo" style="width:${newWidth}px;">
     <div class="taskInfoWrapper">
       <div id="SupClickScreen" class="Screen displayNone"></div>
-      <input id="storeIt" type="checkbox" class="cossin" ${todo.stored || todo.stock ? `checked` : ``} />
-      <label for="storeIt" class="storeItLabel">
-        <span class="typcn typcn-pin-outline pinUnChecked"></span>
-        <span class="typcn typcn-pin pinChecked"></span>
+      <input id="storeIt" type="checkbox" class="cossin cornerItInput" ${todo.stored || todo.stock ? `checked` : ``} />
+      <label for="storeIt" class="storeItLabel cornerItLabel">
+        <span class="typcn typcn-pin-outline cornerItUnChecked pinUnChecked"></span>
+        <span class="typcn typcn-pin cornerItChecked pinChecked"></span>
+      </label>
+      <input id="copyIt" type="checkbox" class="cossin cornerItInput" />
+      <label for="copyIt" class="copyItLabel cornerItLabel">
+        <i class="fa-regular fa-copy cornerItUnChecked"></i>
+        <i class="fa-solid fa-copy cornerItChecked"></i>
+      </label>
+      <input id="trashIt" type="checkbox" class="cossin cornerItInput" />
+      <label for="trashIt" class="trashItLabel cornerItLabel">
+        <i class="fa-regular fa-trash-can cornerItUnChecked"></i>
+        <i class="fa-solid fa-trash-can cornerItChecked"></i>
       </label>
       <h5 class="taskInfoInput">Tell me more...</h5>
       <div class="taskInfoInput relDiv">
@@ -1571,37 +1588,39 @@ function taskAddAllInfo(thisOne){
         <input type="text" id="taskTitle" class="taskInfoInput" style="color:${todo.color};" value="${todo.task}">
         <span id="colorIt" class="typcn typcn-tag tagSpan" style="color:${todo.color};"></span>
       </div>
-      <textarea id="taskDetails" class="taskInfoInput">${todo.info ? todo.info : ""}</textarea>
-      <h5 class="taskInfoInput">Tell me what...</h5>
-      <div class="taskInfoInput relDiv">
-        <h5 style="margin: 0;">Task</h5>
-        <input class="myRadio" type="radio" name="termOptions" id="oneTime" value="oneTime" ${todo.term == "oneTime" ? `checked` : ``} />
-        <label for="oneTime" class="termLabel"><span class="myRadio"></span><span>It's a one time thing</span></label>
-        <input class="myRadio" type="radio" name="termOptions" id="longTerm" value="longTerm" ${todo.term == "longTerm" ? `checked` : ``} />
-        <label for="longTerm" class="termLabel"><span class="myRadio"></span><span>It's a long term shit</span></label>
-        <h5 style="margin: 0;">Event</h5>
-        <input class="myRadio" type="radio" name="termOptions" id="showThing" value="showThing" ${todo.term == "showThing" ? `checked` : ``} />
-        <label for="showThing" class="termLabel"><span class="myRadio"></span><span>It's a whole show!</span></label>
-        <div class="showDiv">
-          <div id="myShowDiv">
-          ${myShows}
-          </div>
-          <div id="addShowTypeDiv">
-            <input type="radio" name="showCreation" id="addShowType" class="cossin">
-            <input type="radio" name="showCreation" id="saveShowType" class="cossin">
-            <label for="addShowType" class="showTypeAdding"><i class="typcn typcn-plus"></i></label>
-            <div class="showTypeCreation">
-              <div class="showTypeCreationInside">
-                <input id="showTypeCreationInput" type="text" placeholder="new type of show" />
-                <i id="showTypeChoiceIcon" class="typcn typcn-media-record"></i>
-              </div>
-              <label for="saveShowType" style="display: inline-block;"><i id="showTypeCreationConfirm" class="typcn typcn-tick" style="font-size: 2em;line-height: .5em;"></i></label>
+      <div id="trashedArea">
+        <textarea id="taskDetails" class="taskInfoInput">${todo.info ? todo.info : ""}</textarea>
+        <h5 class="taskInfoInput">Tell me what...</h5>
+        <div class="taskInfoInput relDiv">
+          <h5 style="margin: 0;">Task</h5>
+          <input class="myRadio" type="radio" name="termOptions" id="oneTime" value="oneTime" ${todo.term == "oneTime" ? `checked` : ``} />
+          <label for="oneTime" class="termLabel"><span class="myRadio"></span><span>It's a one time thing</span></label>
+          <input class="myRadio" type="radio" name="termOptions" id="longTerm" value="longTerm" ${todo.term == "longTerm" ? `checked` : ``} />
+          <label for="longTerm" class="termLabel"><span class="myRadio"></span><span>It's a long term shit</span></label>
+          <h5 style="margin: 0;">Event</h5>
+          <input class="myRadio" type="radio" name="termOptions" id="showThing" value="showThing" ${todo.term == "showThing" ? `checked` : ``} />
+          <label for="showThing" class="termLabel"><span class="myRadio"></span><span>It's a whole show!</span></label>
+          <div class="showDiv">
+            <div id="myShowDiv">
+            ${myShows}
             </div>
-          </div>      
+            <div id="addShowTypeDiv">
+              <input type="radio" name="showCreation" id="addShowType" class="cossin">
+              <input type="radio" name="showCreation" id="saveShowType" class="cossin">
+              <label for="addShowType" class="showTypeAdding"><i class="typcn typcn-plus"></i></label>
+              <div class="showTypeCreation">
+                <div class="showTypeCreationInside">
+                  <input id="showTypeCreationInput" type="text" placeholder="new type of show" />
+                  <i id="showTypeChoiceIcon" class="typcn typcn-media-record"></i>
+                </div>
+                <label for="saveShowType" style="display: inline-block;"><i id="showTypeCreationConfirm" class="typcn typcn-tick" style="font-size: 2em;line-height: .5em;"></i></label>
+              </div>
+            </div>      
+          </div>
         </div>
+        <h5 class="taskInfoInput">Tell me when...</h5>
+        <div id="calendarHome"></div>
       </div>
-      <h5 class="taskInfoInput">Tell me when...</h5>
-      <div id="calendarHome"></div>
       <button id="taskInfoBtn">Save</button>
     </div>
   </div>`;
@@ -1610,6 +1629,8 @@ function taskAddAllInfo(thisOne){
   creatingCalendar(todo, calendarHome, "inHome");
   let taskInfo = document.querySelector("#taskInfo");
   let storeIt = document.querySelector("#storeIt");
+  let copyIt = document.querySelector("#copyIt");
+  let trashIt = document.querySelector("#trashIt");
   let taskTitle = document.querySelector("#taskTitle");
   let taskDetails = document.querySelector("#taskDetails");
   let SupClickScreen = document.querySelector("#SupClickScreen");
@@ -1617,7 +1638,23 @@ function taskAddAllInfo(thisOne){
   let colorPalet = document.querySelector("#colorPalet");
   let iconIt = document.querySelector("#iconIt");
   let iconsPalet = document.querySelector("#iconsPalet");
-
+  let taskInfoBtn = document.querySelector("#taskInfoBtn");
+  trashIt.addEventListener("click", () => {
+    if(trashIt.checked){
+      taskInfoBtn.innerText = "Trash it!";
+      copyIt.checked = false;
+    } else{
+      taskInfoBtn.innerText = "Save";
+    };
+  });
+  copyIt.addEventListener("click", () => {
+    if(copyIt.checked){
+      taskInfoBtn.innerText = "Save & Copy";
+      trashIt.checked = false;
+    } else{
+      taskInfoBtn.innerText = "Save";
+    };
+  });
   // *** COLOR
   //const colorList = ["orange", "red", "darkmagenta", "dodgerblue", "forestgreen", "darkslategrey"];
   let newcolor = todo.color;
@@ -1763,78 +1800,89 @@ function taskAddAllInfo(thisOne){
   clickScreen.addEventListener("click", () => clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList));
 
   //SAVE BUTTON
-  document.querySelector("#taskInfoBtn").addEventListener("click", (e) => {
-    if(newSTing){
-      console.log("should stop");
-      e.preventDefault();//This is not working
-      e.currentTarget.insertAdjacentHTML("beforebegin", `<h5>Don't you want to save your brand new type of show?</h5>
-      <h6>(If you don't, just click again!)</h6>`);
-      showTypeCreationConfirm.style.color = "red";
-      newSTing = false;
-    };
-    let previousList = parent.parentElement.id;
-    todo.task = taskTitle.value.startsWith("*") ? taskTitle.value.substring(1) : taskTitle.value;
-    if(taskDetails.value !== ""){
-      todo.info = taskDetails.value;
-    } else{
-      delete todo.info;
-    };
-    todo.color = newcolor;
-    todo.icon = newicon;
-    todo.term = document.querySelector('input[name="termOptions"]:checked').value;
-    if(todo.term == "showThing"){
-      let chosen = false;
-      document.querySelectorAll('input[name="showOptions"]').forEach(radio => {
-        if(radio.checked){
-          todo.showType = radio.value;
-          let indexST = myShowTypes.findIndex(show => show.name == todo.showType);
-          todo.STColorBG = myShowTypes[indexST].colorBG;
-          todo.STColorTX = myShowTypes[indexST].colorTX;
-          chosen = true;
-        };
-      });
-      if(!chosen){
+  taskInfoBtn.addEventListener("click", (e) => {
+    if(!trashIt.checked){
+      if(newSTing){
         console.log("should stop");
         e.preventDefault();//This is not working
-        e.currentTarget.insertAdjacentHTML("beforebegin", `<h5>You need to decide what kinda show that is</h5>`);
+        e.currentTarget.insertAdjacentHTML("beforebegin", `<h5>Don't you want to save your brand new type of show?</h5>
+        <h6>(If you don't, just click again!)</h6>`);
+        showTypeCreationConfirm.style.color = "red";
+        newSTing = false;
       };
-    } else{
-      delete todo.showType;
-      delete todo.STColorBG;
-      delete todo.STColorTX;
-    };
-    
-    if(!todo.stock && !todo.stored && storeIt.checked){
-      stockCreaction(todo); //todo.stored = true; (has a model in storage) (included in stockCreation)
-    };
-    if(todo.stock && !storeIt.checked){
-      trashStock(todo.id);
-    };
-    if(todo.stored && !storeIt.checked){
-      trashStock(todo.stockId);
-    };
-
-    calendarSave(todo); //parent is global (no need for parent since todoCreation)
-
-    if(todo.newShit){//considérer juste un bouton "add" et directement avoir la fenêtre taskAddAllInfo (ça permet moins le capture tool effet, mais la création est plus rapide... Au pire, ça pourrait être un setting!)
-      delete todo.newShit;
-      if(document.querySelectorAll("#listLimbo > li").length <= 1){
-        document.querySelector("#sectionLimbo").classList.add("displayNone");
-      };
-    };
-    togoList = getTogoList(todo);
-    if(previousList !== togoList){
-      if(togoList == ""){
-        moving = false;
+      let previousList = parent.parentElement.id;
+      todo.task = taskTitle.value.startsWith("*") ? taskTitle.value.substring(1) : taskTitle.value;
+      if(taskDetails.value !== ""){
+        todo.info = taskDetails.value;
       } else{
-        moving = true;
+        delete todo.info;
       };
+      todo.color = newcolor;
+      todo.icon = newicon;
+      todo.term = document.querySelector('input[name="termOptions"]:checked').value;
+      if(todo.term == "showThing"){
+        let chosen = false;
+        document.querySelectorAll('input[name="showOptions"]').forEach(radio => {
+          if(radio.checked){
+            todo.showType = radio.value;
+            let indexST = myShowTypes.findIndex(show => show.name == todo.showType);
+            todo.STColorBG = myShowTypes[indexST].colorBG;
+            todo.STColorTX = myShowTypes[indexST].colorTX;
+            chosen = true;
+          };
+        });
+        if(!chosen){
+          console.log("should stop");
+          e.preventDefault();//This is not working
+          e.currentTarget.insertAdjacentHTML("beforebegin", `<h5>You need to decide what kinda show that is</h5>`);
+        };
+      } else{
+        delete todo.showType;
+        delete todo.STColorBG;
+        delete todo.STColorTX;
+      };
+      
+      if(!todo.stock && !todo.stored && storeIt.checked){
+        stockCreaction(todo); //todo.stored = true; (has a model in storage) (included in stockCreation)
+      };
+      if(todo.stock && !storeIt.checked){
+        trashStock(todo.id);
+      };
+      if(todo.stored && !storeIt.checked){
+        trashStock(todo.stockId);
+      };
+  
+      calendarSave(todo); //parent is global (no need for parent since todoCreation)
+  
+      if(todo.newShit){//considérer juste un bouton "add" et directement avoir la fenêtre taskAddAllInfo (ça permet moins le capture tool effet, mais la création est plus rapide... Au pire, ça pourrait être un setting!)
+        delete todo.newShit;
+        if(document.querySelectorAll("#listLimbo > li").length <= 1){
+          document.querySelector("#sectionLimbo").classList.add("displayNone");
+        };
+      };
+      togoList = getTogoList(todo);
+      if(previousList !== togoList){
+        if(togoList == ""){
+          moving = false;
+        } else{
+          moving = true;
+        };
+      };
+      if(copyIt.checked){
+        let newTodo = JSON.parse(JSON.stringify(todo));
+        listTasks.push(newTodo);
+        todoCreation(newTodo);
+      };
+      console.log(todo);
+      todoCreation(todo);
+      sortItAll();
+    } else if(trashIt.checked){
+      let trashIndex = listTasks.findIndex(td => td.id == todo.id);
+      listTasks.splice(trashIndex, 1);
     };
-    parent.remove();
-    todoCreation(todo);
 
+    parent.remove();
     localStorage.listTasks = JSON.stringify(listTasks);
-    sortItAll();
     updateCBC();
     clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
   });
@@ -1847,10 +1895,13 @@ function trashShowTypeEvent(thisOne){
   let index = myShowTypes.findIndex(show => show.name == name);
   myShowTypes.splice(index, 1);
   div.remove();
-  console.log(myShowTypes);
+  localStorage.myShowTypes = JSON.stringify(myShowTypes);
 };
 window.trashShowTypeEvent = trashShowTypeEvent;
 
+function trashTask(){
+
+};
 
 window.listTasks = listTasks;
 
@@ -1865,7 +1916,6 @@ window.listTasks = listTasks;
 function scrollToSection(list){
   let listToGo = document.querySelector(`#${list}`);
   let section = listToGo.closest("section");
-  console.log(section.id);
   if(section.querySelector(".listToggleInput")){
     section.querySelector(".listToggleInput").checked = true;
   } else if(section.querySelector(".swipingInput")){

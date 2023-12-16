@@ -20,7 +20,45 @@
 </head>
 
 <body>
-  <div id="listSection">
+  <input id="switchPageInput" type="checkbox" class="displayNone">
+    <label for="switchPageInput" id="switchPageLabel">
+      <div id="toCalendar" class="bottomBtn">
+        <i class="fa-solid fa-calendar-days"></i>
+      </div>
+      <div id="toList" class="bottomBtn">
+        <i class="fa-solid fa-list-check"></i>
+      </div>
+    </label>
+  <div id="calMonthPage">
+    <div id="monthlyScreen" class="wholeScreenCalendar">
+      <div class="monthlyWrapper">
+        <table class="monthlyCalendar">
+          <thead>
+            <tr>
+              <th><button id="monthBackward"><span class="typcn typcn-media-play-reverse"></span></button></th>
+              <th id="yearNameSpace" colspan="5"></th>
+              <th><button id="monthForward"><span class="typcn typcn-media-play"></span></button></th>
+            </tr>
+            <tr>
+              <th id="monthNameSpace" colspan="7"></th>
+            </tr>
+            <tr>
+              <th>D</th>
+              <th>L</th>
+              <th>M</th>
+              <th>M</th>
+              <th>G</th>
+              <th>V</th>
+              <th>S</th>
+            </tr>
+          </thead>
+          <tbody id="monthlyCalendarTBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div id="listPage">
     <div id="clickScreen" class="Screen displayNone"></div>
     <div id="logInScreen" class="Screen">
       <div id="logInDiv" class="DivScreen">
@@ -211,7 +249,7 @@
     <h3 style="display: inline-block;">Done Zone</h3>
     <ul id="doneZone"></ul>
   </div>
-  <div id="toDoSection" class="displayNone">
+  <div id="toDoPage" class="displayNone">
     <h3>Fac là,<br />pour les 30 prochaines minutes,<br />tu vas...</h3>
     <p id="taskToDo"></p>
     <div id="moreInfoWhole" class="displayNone">

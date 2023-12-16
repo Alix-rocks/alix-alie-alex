@@ -873,6 +873,8 @@ function sortIt(type, listName) {
 
 // *** SHUFFLE
 let wheneverList = [];
+let listPage = document.querySelector("#listPage");
+let toDoPage = document.querySelector("#toDoPage");
 shuffleBtn.addEventListener("click", () => {
   let todayDate = getTodayDate();
   wheneverList = listTasks.filter(task => ((!task.date || task.date == "" || task.date <= todayDate) && (task.line !== "recurringDay" && !task.stock)) || (task.date > todayDate && task.line == "doneDay")); 
@@ -880,8 +882,8 @@ shuffleBtn.addEventListener("click", () => {
     const j = Math.floor(Math.random() * (i + 1)); 
     [wheneverList[i], wheneverList[j]] = [wheneverList[j], wheneverList[i]]; 
   };
-  listSection.classList.toggle("displayNone");
-  toDoSection.classList.toggle("displayNone");
+  listPage.classList.toggle("displayNone");
+  toDoPage.classList.toggle("displayNone");
   num = 0;
   taskToDo.innerText = wheneverList[num].task;
   taskToDo.style.color = wheneverList[num].color;
@@ -910,8 +912,8 @@ nopeNextBtn.addEventListener("click", () => {
 });
   
 backBtn.addEventListener("click", () => {
-  listSection.classList.toggle("displayNone");
-  toDoSection.classList.toggle("displayNone");
+  listPage.classList.toggle("displayNone");
+  toDoPage.classList.toggle("displayNone");
 });
 
 // *** TIME
@@ -1958,6 +1960,173 @@ function getLastWeekDate(){
   let lastWeekDate = `${lastWeekYear}-${lastWeekMonth}-${lastWeekDay}`;
   return lastWeekDate;
 };
+
+// *** MONTHLY CALENDAR
+
+let date = new Date();
+let todayDate = date.getDate();
+let year = date.getFullYear();
+let month = date.getMonth(); //pour vrai, enlève le "+ 1"
+let todayWholeDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(todayDate).padStart(2, "0")}`
+
+function putShowsIn(){
+  
+  //check if shows is sorted before sorting it?
+  let sortedShows = shows.sort((s1, s2) => (s1.date < s2.date) ? -1 : (s1.date > s2.date) ? 1 : (s1.date == s2.date) ? (s1.time < s2.time) ? -1 : (s1.time > s2.time) ? 1 : 0 : 0);
+  shows = sortedShows;
+  console.log(shows);
+  shows.forEach(show => {
+    let eventDiv = `<div id="${show.id}" data-showType=${show.type} class="eventDiv" style="background-color:${show.colorBG}; color:${show.colorTX};">${show.name}</div>`;
+    let kase = document.querySelector("[data-wholedate='" + show.date + "']");
+    if(kase){
+      kase.insertAdjacentHTML("beforeend", eventDiv);
+      document.querySelector(`#${show.id}`).addEventListener("click", (e) => {
+        document.querySelectorAll(".eventDiv").forEach(div => {
+          if(div == e.currentTarget){
+            if(e.currentTarget.classList.contains("selectedKase")){
+              e.currentTarget.classList.remove("selectedKase");
+            } else{
+              e.currentTarget.classList.add("selectedKase");
+            };
+          } else{
+            div.classList.remove("selectedKase");
+          };
+        });
+      });
+    }; 
+  });
+};
+let tbodyMC = document.querySelector("#monthlyCalendarTBody");
+function createBody(){
+  let trs = [];
+  for(let i = 0; i < 6; i++){
+    let tds = [];
+    for(let j = 0; j < 7; j++){
+      let td = `<td><div class="circle"></div><span class="typcn typcn-plus addEvent displayNone"></span></td>`;
+      tds.push(td);
+    };
+    let tdsF = tds.join("");
+    let tr = `<tr>${tdsF}</tr>`;
+    trs.push(tr);
+  };
+  let trsF = trs.join("");
+  tbodyMC.innerHTML = trsF;
+  getMonthlyCalendar();
+  document.querySelector("#monthBackward").addEventListener("click", () => {
+    document.querySelectorAll(".circle").forEach(circle => {
+      circle.parentElement.classList.remove("selectedKase");
+      circle.parentElement.querySelector(".addEvent").classList.add("displayNone");
+    });
+    document.querySelectorAll(".eventDiv").forEach(div => {
+      div.remove();
+    });
+    month = month > 0 ? month - 1 : 11;
+    year = month == 11 ? year - 1 : year;
+    getMonthlyCalendar();
+  });
+  
+  document.querySelector("#monthForward").addEventListener("click", () => {
+    document.querySelectorAll(".circle").forEach(circle => {
+      circle.parentElement.classList.remove("selectedKase");
+      circle.parentElement.querySelector(".addEvent").classList.add("displayNone");
+    });
+    document.querySelectorAll(".eventDiv").forEach(div => {
+      div.remove();
+    });
+    month = month < 11 ? month + 1 : 0;
+    year = month == 0 ? year + 1 : year;
+    getMonthlyCalendar();
+  });
+};  
+
+
+function getMonthlyCalendar(){
+  let first = new Date(year, month, 1);
+  let monthName = first.toLocaleString('it-IT', { month: 'long' });
+  monthNameSpace.innerText = monthName.toLocaleUpperCase();
+  yearNameSpace.innerText = year;
+  // let monthName = date.toLocaleString('it-IT', { month: 'long' });
+  let last = new Date(year, month + 1, 0).getDate();
+  let firstDay = first.getDay();
+  let befFirst = first.setDate(-(firstDay - 1));
+  let numStart = first.getDate();
+  let i = 0;
+  let num = numStart;
+  tbodyMC.querySelectorAll(".circle").forEach((td) => {
+    td.classList.remove("heresToday");
+    if(i < firstDay){
+      td.innerText = num;
+      let day = String(num).padStart(2, "0");
+      let thisMonth = String(month).padStart(2, "0");
+      td.parentElement.setAttribute("data-wholedate", `${year}-${thisMonth}-${day}`);
+      td.style.opacity = ".4";
+      num++;
+      i++;
+    } else if(i == firstDay){
+      num = 1;
+      td.innerText = num;
+      let day = String(num).padStart(2, "0");
+      let thisMonth = String(month + 1).padStart(2, "0");
+      td.parentElement.setAttribute("data-wholedate", `${year}-${thisMonth}-${day}`);
+      td.style.opacity = "1";
+      num++;
+      i++;
+    } else if((i > firstDay && i < (firstDay + last)) && (num > 1 && num <= last)){
+      td.innerText = num;
+      let day = String(num).padStart(2, "0");
+      let thisMonth = String(month + 1).padStart(2, "0");
+      td.parentElement.setAttribute("data-wholedate", `${year}-${thisMonth}-${day}`);
+      td.style.opacity = "1";
+      num++;
+      i++;
+    } else if(i == (firstDay + last)){
+      num = 1;
+      td.innerText = num;
+      let day = String(num).padStart(2, "0");
+      let thisMonth = String(month + 2).padStart(2, "0");
+      td.parentElement.setAttribute("data-wholedate", `${year}-${thisMonth}-${day}`);
+      td.style.opacity = ".4";
+      num++;
+      i++;
+    }else if(i > (firstDay + last)){
+      td.innerText = num;
+      let day = String(num).padStart(2, "0");
+      let thisMonth = String(month + 2).padStart(2, "0");
+      td.parentElement.setAttribute("data-wholedate", `${year}-${thisMonth}-${day}`);
+      td.style.opacity = ".4";
+      num++;
+      i++;
+    };
+    
+    if(td.parentElement.dataset.wholedate == todayWholeDate){
+      td.classList.add("heresToday");
+    };
+    td.addEventListener("click", () => {
+      document.querySelectorAll(".circle").forEach(circle => {
+        circle.parentElement.classList.remove("selectedKase");
+        circle.parentElement.querySelector(".addEvent").classList.add("displayNone");
+      });
+      td.parentElement.classList.add("selectedKase");
+      td.parentElement.querySelector(".addEvent").classList.remove("displayNone");
+    });
+  });
+  document.querySelectorAll(".addEvent").forEach(plus => {
+    plus.addEventListener("click", () => {
+      
+    });
+  });
+  //putShowsIn();
+};
+
+
+
+createBody();
+
+
+
+
+
+
 
 
 function onLongPress(element, list, callback) {

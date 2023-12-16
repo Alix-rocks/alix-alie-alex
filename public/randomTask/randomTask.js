@@ -428,45 +428,6 @@ function getTogoList(todo){
       togoList = "listScheduled";
     };
   };
-  
-  
-  
-  
-  
-  // if(todo.newShit){
-  //   togoList = "listLimbo";
-  // } else if(todo.stock){
-  //   togoList = "listStorage";
-  // } else if(todo.date == "" || !todo.date || todo.date > todayDate){
-  //   if(todo.line == "todoDay"){
-  //     if(todo.date == tomorrowDate){
-  //       togoList = "listTomorrow";
-  //     } else if(todo.term == "showThing"){
-  //       togoList = "";
-  //     } else{
-  //       togoList = "listScheduled";
-  //     };
-  //   } else if(todo.term == "showThing"){
-  //     togoList = "";
-  //   } else if(todo.line == "recurringDay"){
-  //     togoList = "listRecurring";
-  //     recurryCreation(todo);
-  //   } else if(todo.line == "doneDay" && todo.date == tomorrowDate){
-  //     togoList = "listTomorrow";
-  //   } else if (todo.term == "oneTime") {
-  //     togoList = "listOne";
-  //   } else {
-  //     togoList = "list";
-  //   };
-  // } else if(todo.date == todayDate){
-  //   togoList = "listToday";
-  // } else if(todo.date < todayDate){
-  //   if(todo.term == "showThing"){
-  //     togoList = "";
-  //   } else{
-  //     togoList = "listOups";
-  //   };
-  // };
   return togoList;
 };
 
@@ -803,6 +764,7 @@ function refreshDoneId(){
   });
 };
 
+// *** SORT
 function sortItAll(){
   document.querySelectorAll(".sortedList").forEach(list => {
     let type = list.dataset.sort; 
@@ -842,7 +804,29 @@ function sortItAll(){
       }; 
     }; 
   });
+  //Scheduled subLists
+  let year;
+  let previousYear = "0000";
+  let month;
+  let previousMonth = "00";
+  document.querySelectorAll("#listScheduled > li").forEach(li => {
+    let date = li.dataset.date;
+    year = date.substring(0, 4);
+    month = date.substring(5, 7);
+    let first = new Date(year, month - 1, 1);
+    let monthName = first.toLocaleString('it-IT', {month: 'long'});
+    let finalMonthName = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+    if(previousMonth < month){
+      li.insertAdjacentHTML("beforebegin", `<h4 class="subList">${finalMonthName} ${year}</h4>`);
+      previousMonth = month;
+    } else if(previousMonth > month){
+      li.insertAdjacentHTML("beforebegin", `<h4 class="subList">${finalMonthName} ${year}</h4>`);
+      previousMonth = month;
+      previousYear = year;
+    };
+  });
 };
+
 
 function sortIt(type, listName) { 
   // Declaring Variables 
@@ -1178,10 +1162,10 @@ function creatingCalendar(todo, home, classs){
     };
   });
   document.querySelector("#fineDate").addEventListener("input", () => {
-    document.querySelector("#fineGiorno").checked = true;
+    document.querySelector("#fineGiornoInput").checked = true;
   });
   document.querySelector("#fineCount").addEventListener("input", () => {
-    document.querySelector("#fineDopo").checked = true;
+    document.querySelector("#fineDopoInput").checked = true;
   });
   document.querySelectorAll(".dalleTxt").forEach(dalle => {
     dalle.addEventListener("change", () => {
@@ -1211,6 +1195,7 @@ function creatingCalendar(todo, home, classs){
     });
   };
 };
+
 function clearRecurringData(todo){
   delete todo.dal;
   delete todo.ogni;
@@ -1256,8 +1241,6 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
       } else if(todo.var == "settimana"){
         let daysWeek = [];
         inDaySection.querySelectorAll('input[name="daysWeekChoice"]').forEach(choice => {
-        // inDaySection.getElementsByName("daysWeekChoice").forEach(choice => {
-          //if(document.getElementById(choice.id).checked == true){
           if(choice.checked == true){
             daysWeek.push(choice.value);
           };
@@ -1517,27 +1500,6 @@ let showTypeChoices = [{
   colorBG: "#3B9869", //green
   colorTX: "white"
 }];
-// let myShowTypes = [{
-//   name: "Myself",
-//   colorBG: "#06a9a9",
-//   colorTX: "darkslategrey"
-// }, {
-//   name: "Orderly",
-//   colorBG: "goldenrod",
-//   colorTX: "darkslategrey"
-// }, {
-//   name: "Session",
-//   colorBG: "darkmagenta",
-//   colorTX: "white"
-// }, {
-//   name: "Calia",
-//   colorBG: "seagreen",
-//   colorTX: "white"
-// }];
-
-
-
-
 
 function taskAddAllInfo(thisOne){
   moving = false;
@@ -1732,8 +1694,6 @@ function taskAddAllInfo(thisOne){
       };
     });
   });
-  
-  
 
   showTypeCreationInput.addEventListener("input", () => {
     newSTing = true;
@@ -1899,18 +1859,8 @@ function trashShowTypeEvent(thisOne){
 };
 window.trashShowTypeEvent = trashShowTypeEvent;
 
-function trashTask(){
-
-};
 
 window.listTasks = listTasks;
-
-
-
-
-
-
-
 
 
 function scrollToSection(list){
@@ -1925,7 +1875,7 @@ function scrollToSection(list){
 };
 
 function clickHandlerAddOn(addOn, future, screen, listToGo){
-  //parent.classList.remove("selectedTask");
+  parent.classList.remove("selectedTask");
   if(moving && screen == clickScreen){
     scrollToSection(listToGo);
     moving = false;

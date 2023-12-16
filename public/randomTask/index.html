@@ -21,7 +21,6 @@
 
 <body>
   <div id="listSection">
-    
     <div id="clickScreen" class="Screen displayNone"></div>
     <div id="logInScreen" class="Screen">
       <div id="logInDiv" class="DivScreen">
@@ -96,40 +95,9 @@
             <span id="listChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
           <div class="listToggleList">
-            <div style="position: relative;">
-              <h4 class="subList">The long term shit</h4>
-              <!-- <div class="sortWhole">
-                <input type="checkbox" id="sortlistOne" class="sortInput cossin">
-                <div class="sortDiv">
-                  <input type="radio" name="sortTypes" id="sortColor" class="cossin">
-                  <label for="sortColor"><i class="fa-solid fa-palette"></i></label>
-                  <input type="radio" name="sortTypes" id="sortDate" class="cossin">
-                  <label for="sortColor"><i class="fa-regular fa-calendar-check"></i></label>
-                  <input type="radio" name="sortTypes" id="sortIcon" class="cossin">
-                  <label for="sortColor"><i class="fa-solid fa-icons"></i></label>
-                </div>
-                <label for="sortlistOne" class="sortLabel">
-                  <i class="fa-solid fa-chevron-left sortChevron"></i>
-                  <i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i>
-                </label>
-              </div> -->
-            </div>
+            <h4 class="subList">The long term shit</h4>
             <ul id="list" class="sortedList" data-sort="color"></ul>
-            <div style="position: relative;">
-              <h4 class="subList">The one time thing</h4>
-              <!-- <div class="sortWhole">
-                <input type="checkbox" id="sortlistOne" class="sortInput cossin">
-                <div id="sortChoices" class="sortDiv">
-                  <button class="sortBtn" data-list="listOne" data-sort="color"><i class="fa-solid fa-palette"></i></button>
-                  <button class="sortBtn" data-list="listOne" data-sort="date"><i class="fa-regular fa-calendar-check"></i></button>
-                  <button class="sortBtn" data-list="listOne" data-sort="icon"><i class="fa-solid fa-icons"></i></button>
-                </div>
-                <label for="sortlistOne" class="sortLabel">
-                  <i class="fa-solid fa-chevron-left sortChevron"></i>
-                  <i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i>
-                </label>
-              </div> -->
-            </div>
+            <h4 class="subList">The one time thing</h4>
             <ul id="listOne" class="sortedList" data-sort="color"></ul>
             <button id="shuffleBtn">Shuffle it!</button>
             <h5 class="sousBtn">Tell me what to do!</h5>
@@ -137,99 +105,6 @@
         </div>
       </section>
       
-      <!-- <form id="calendarDiv" class="displayNone">
-        <h5 class="taskInfoInput">Tell me when...</h5>
-        <div class="smallToggleList">
-          <div style="margin: 5px 20px 10px">
-            <input class="myRadio" type="radio" id="todoDayInput" name="whatDay" value="todoDay" />
-            <label for="todoDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText todoDay">To-do Day</span><br /><span class="smallText">(the day you want to do it)</span></p></label>
-            <input class="myRadio" type="radio" id="doneDayInput" name="whatDay" value="doneDay" />
-            <label for="doneDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText doneDay">Done Day</span><br /><span class="smallText">(the day by which it has to have been done)</span></label></p></label>
-            <div class="DaySection" id="oneDaySection">
-              <h5 class="taskInfoInput" style="margin-left: 0;">It's a one time thing</h5>
-              <input type="date" id="calendarInput" style="margin: 20px 20px 10px" />
-              <input id="oneTuttoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin">
-              <div class="taskInfoInput tuttoGiornoDiv">
-                <h5 style="margin: 0;">Tutto il giorno?!</h5>
-                <label for="oneTuttoGiornoInput" class="slideZone">
-                  <div class="slider">
-                    <span class="si">Sì</span>
-                    <span class="no">No</span>
-                  </div>
-                </label>
-              </div>
-              <div class="noneTuttoGiornoDiv taskInfoInput">
-                <p><span>c'è un inizio?</span><input id="oneDayTimeDalleInput" type="time" class="dalle"></p>
-                <p><span>c'è una fine?</span><input id="oneDayTimeAlleInput" type="time" class="alle"></p>
-              </div>
-            </div>
-            <input class="myRadio" type="radio" id="recurringDayInput" name="whatDay" value="recurringDay" />
-            <label for="recurringDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText recurringDay">Recurring Day</span><br /><span class="smallText">(let it come back on its own)</span></label></p></label>
-            <input class="myRadio" type="radio" id="noDayInput" name="whatDay" value="noDay" />
-            <label for="noDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText">No Day</span><br /><span class="smallText">(just go with the flow)</span></label></p></label>
-            <div class="DaySection" id="recurringDaySection">
-              <h5 class="taskInfoInput" style="margin-left: 0;">It's a recurring thing</h5>
-              <p class="calendarMargin">Dal<input id="dalInput" type="date" style="margin: 0 10px;" /></p>
-              <input id="recuTuttoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin">
-              <div class="taskInfoInput tuttoGiornoDiv">
-                <h5 style="margin: 0;">Tutto il giorno?!</h5>
-                <label for="recuTuttoGiornoInput" class="slideZone">
-                  <div class="slider">
-                    <span class="si">Sì</span>
-                    <span class="no">No</span>
-                  </div>
-                </label>
-              </div>
-              <div class="noneTuttoGiornoDiv taskInfoInput">
-                <p><span>c'è un inizio?</span><input id="recuTimeDalleInput" type="time" class="dalle"></p>
-                <p><span>c'è una fine?</span><input id="recuTimeAlleInput" type="time" class="alle"></p>
-              </div>
-              <p class="calendarMargin">Si ripete ogni<input id="ogniInput" type="number" style="width: 50px; margin: 0 10px;" />
-              <select id="timeVariationInput">
-                <option value="giorno">giorno</option>
-                <option value="settimana">settimana</option>
-                <option value="mese">mese</option>
-                <option value="anno">anno</option>
-              </select></p>
-              <div id="weekSection" class="calendarMargin displayNone" style="width: -webkit-fill-available;">
-                <p>Da ripetere il</p>
-                <div class="dayCircleWeek">
-                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="domenica" value="0" />
-                  <label for="domenica" class="dayCircle">D</label>
-                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="lunedi" value="1" />
-                  <label for="lunedi" class="dayCircle">L</label>
-                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="martedi" value="2" />
-                  <label for="martedi" class="dayCircle">M</label>
-                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="mercoledi" value="3" />
-                  <label for="mercoledi" class="dayCircle">M</label>
-                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="giovedi" value="4" />
-                  <label for="giovedi" class="dayCircle">G</label>
-                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="venerdi" value="5" />
-                  <label for="venerdi" class="dayCircle">V</label>
-                  <input type="checkbox" name="daysWeekChoice" class="cossin" id="sabato" value="6" />
-                  <label for="sabato" class="dayCircle">S</label>
-                </div>
-              </div>
-              <div id="monthSection" class="calendarMargin displayNone">
-                <p>Da ripetere</p>
-                <input class="myRadio" type="radio" name="meseOptions" id="ogniXDate" />
-                <label for="ogniXDate" style="display: block;"><span class="myRadio"></span><span id="ogniXDateText">ogni mese, il giorno X</span></label>
-                <input class="myRadio" type="radio" name="meseOptions" id="ogniXDay" />
-                <label for="ogniXDay"><span class="myRadio"></span><span id="ogniXDayText">ogni mese, il secondo giovedi</span></label>
-              </div>
-              <div class="calendarMargin">
-                <p>Termina</p>
-                <input class="myRadio" type="radio" name="fineOptions" id="fineMai" checked />
-                <label for="fineMai" style="display: block;"><span class="myRadio"></span>Mai</label>
-                <input class="myRadio" type="radio" name="fineOptions" id="fineGiorno" />
-                <label for="fineGiorno" style="display: block;"><span class="myRadio"></span>Il giorno<input id="fineDate" type="date" style="margin: 0 10px;" /></label>
-                <input class="myRadio" type="radio" name="fineOptions" id="fineDopo" />
-                <label for="fineDopo" style="display: block;"><span class="myRadio"></span>Dopo<input id="fineCount" type="number" style="width: 50px; margin: 0 10px;" />occorrenza</label>
-              </div>
-            </div>
-            
-          </div>
-        </div>
         <!-- when recurringDay is checked, open details (? but with nothing in summary?) (or just display:block...) -->
         <!-- <details>
               <summary>To be or not to be?</summary>
@@ -237,10 +112,7 @@
                 That is the question!
               </div>
             </details> -->
-                
-        
-        <!-- <button id="saveTheDateBtn" class="calendarMargin" type="submit">Save The Date</button>
-      </form> -->
+
       <div id="iconsPalet" class="iconsPaletClass displayNone"></div>
       <table id="colorPalet" class="displayNone">
         <tr class="colorTr">
@@ -308,26 +180,6 @@
             <span id="listScheduledChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
           <div class="listToggleList">
-            <!-- <h4 class="subList">Tomorrow</h4>
-            <ul id="listTomorrow"></ul> -->
-            <div style="position: relative;">
-              <h4 class="subList">Later</h4>
-              <!-- <div class="sortWhole">
-                <input type="checkbox" id="sortlistScheduled" class="sortInput cossin">
-                <div class="sortDiv">
-                  <input type="radio" name="sortTypes" id="sortColor" class="cossin">
-                  <label for="sortColor"><i class="fa-solid fa-palette"></i></label>
-                  <input type="radio" name="sortTypes" id="sortDate" class="cossin">
-                  <label for="sortColor"><i class="fa-regular fa-calendar-check"></i></label>
-                  <input type="radio" name="sortTypes" id="sortIcon" class="cossin">
-                  <label for="sortColor"><i class="fa-solid fa-icons"></i></label>
-                </div>
-                <label for="sortlistScheduled" class="sortLabel">
-                  <i class="fa-solid fa-chevron-left sortChevron"></i>
-                  <i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i>
-                </label>
-              </div> -->
-            </div>
             <ul id="listScheduled" class="sortedList" data-sort="date"></ul>
           </div>
         </div>
@@ -371,61 +223,7 @@
     <button id="doneNextBtn"><span class="typcn typcn-thumbs-up"></span>Done, next!!<span class="typcn typcn-arrow-right-outline"></span></button>
     <button id="backBtn"><span class="typcn typcn-arrow-left-outline"></span>Back!</button>
   </div>
-  <!-- errands, housework, computer, cellphone, people -->
-  <!-- <table id="colorPalet" class="displayNone">
-    <tr class="colorTr">
-      <td class="colorTd">
-        <input type="radio" id="orangeRadio" name="colorRadio" value="orange" />
-        <label for="orangeRadio">
-          <div>
-            <div class="colorDiv orange"></div>
-          </div>
-        </label>
-      </td>
-      <td class="colorTd">
-        <input type="radio" id="redRadio" name="colorRadio" value="red" />
-        <label for="redRadio">
-          <div>
-            <div class="colorDiv red"></div>
-          </div>
-        </label>
-      </td>
-      <td class="colorTd">
-        <input type="radio" id="darkmagentaRadio" name="colorRadio" value="darkmagenta" />
-        <label for="darkmagentaRadio">
-          <div>
-            <div class="colorDiv darkmagenta"></div>
-          </div>
-        </label>
-      </td>
-    </tr>
-    <tr class="colorTr">
-      <td class="colorTd">
-        <input type="radio" id="dodgerblueRadio" name="colorRadio" value="dodgerblue" />
-        <label for="dodgerblueRadio">
-          <div>
-            <div class="colorDiv dodgerblue"></div>
-          </div>
-        </label>
-      </td>
-      <td class="colorTd">
-        <input type="radio" id="forestgreenRadio" name="colorRadio" value="forestgreen" />
-        <label for="forestgreenRadio">
-          <div>
-              <div class="colorDiv forestgreen"></div>
-          </div>
-        </label>
-      </td>
-      <td class="colorTd">
-        <input type="radio" id="darkslategreyRadio" name="colorRadio" value="darkslategrey" checked/>
-        <label for="darkslategreyRadio">
-          <div>
-            <div class="colorDiv darkslategrey"></div>
-          </div>
-        </label>
-      </td>
-    </tr>
-  </table>-->
+
 <script type="module" src="randomTask.js"></script>
 </body>
 

@@ -610,14 +610,18 @@ function reuseItEvent(thisOne){ //from Stock
 window.reuseItEvent = reuseItEvent;
 
 function reDateEvent(thisOne){
-  let toRedateLi = thisOne.parentElement;
-  let reDateDiv = `<div class="reDateDiv"><h5 class="calendarMargin">Then, when have you done that?!</h5><input id="reDateInput" type="date" class="calendarMargin" /><button id="reDateBtn" class="calendarMargin">STD<br /><span class="smallText">(Save The Date)</span></button></div>`;
-  toRedateLi.insertAdjacentHTML("beforeend", reDateDiv);
+  parent = thisOne.parentElement;
+  parent.classList.add("selectedTask");
+  let reDateDivHTML = `<div class="reDateDiv"><h5 class="calendarMargin">Then, when have you done that?!</h5><input id="reDateInput" type="date" class="calendarMargin" /><button id="reDateBtn" class="calendarMargin">STD<br /><span class="smallText">(Save The Date)</span></button></div>`;
+  parent.insertAdjacentHTML("beforeend", reDateDivHTML);
+  let reDateDiv = document.querySelector(".reDateDiv");
+  clickScreen.classList.remove("displayNone");
+  clickScreen.addEventListener("click", () => clickHandlerAddOn(reDateDiv, "trash", clickScreen, "nowhere"));
   document.querySelector("#reDateBtn").addEventListener("click", () => {
     let newDate = document.querySelector("#reDateInput").value;
     console.log(newDate);
-    let toRedateTask = toRedateLi.querySelector(".textDone").textContent;
-    let toRedateUl = toRedateLi.parentElement;
+    let toRedateTask = parent.querySelector(".textDone").textContent;
+    let toRedateUl = parent.parentElement;
     let oldDate = toRedateUl.id;
     let toRedateIndexOut = listDones.findIndex(done => done.date == oldDate);
     let toRedateIndexIn = listDones[toRedateIndexOut].list.findIndex(done => done.task == toRedateTask);
@@ -644,8 +648,8 @@ function reDateEvent(thisOne){
     donedCreation(newDate, toRedate);
     refreshDoneId();
     localStorageDones("next");
-    document.querySelector(".reDateDiv").remove();
-    toRedateLi.remove();
+    parent.remove();
+    clickHandlerAddOn(reDateDiv, "trash", clickScreen, "nowhere");
   });
 };
 

@@ -433,7 +433,7 @@ function getTogoList(todo){
 
 function recurryCreation(todo){ //todo == le recurring (newtodo est le recurry/normal qui est créé)
   //First let's make sure there are still dates in listDates, if it's fineMai; otherwise calculate more, but not from dal, from last date + 1
-  
+ 
   let tomorrowDate = getTomorrowDate();
   let date = todo.listDates[0];
   while (date <= tomorrowDate){
@@ -1164,9 +1164,9 @@ function creatingCalendar(todo, home, classs){
           </div>
           <div id="monthSection" class="calendarInsideMargin ${rec && todo.var == "mese" ? `` : `displayNone`}">
             <p>Da ripetere</p>
-            <input class="myRadio" type="radio" name="meseOptions" id="ogniXDate" ${rec && todo.var == "mese" && todo.meseOpt == "ogniXDate" ? `checked` : ``} />
+            <input class="myRadio" type="radio" name="meseOptions" id="ogniXDate" ${rec && todo.var == "mese" && todo.meseOpt == "ogniXDate" ? `checked` : ``} value="ogniXDate" />
             <label for="ogniXDate" style="display: block;"><span class="myRadio"></span><span id="ogniXDateText"></span></label>
-            <input class="myRadio" type="radio" name="meseOptions" id="ogniXDay" ${rec && todo.var == "mese" && todo.meseOpt == "ogniXDay" ? `checked` : ``} />
+            <input class="myRadio" type="radio" name="meseOptions" id="ogniXDay" ${rec && todo.var == "mese" && todo.meseOpt == "ogniXDay" ? `checked` : ``} value="ogniXDay" />
             <label for="ogniXDay"><span class="myRadio"></span><span id="ogniXDayText"></span></label>
           </div>
           <div class="calendarInsideMargin">
@@ -1189,7 +1189,7 @@ function creatingCalendar(todo, home, classs){
   } else{
     home.insertAdjacentHTML("beforeend", smallCalendar);
   };
-  meseCalculate(date);
+  meseCalculate(date);//need it here otherwise the text just isn't there, because, ci-bas, meseCalculate only happens when var is changed, but if it is mese from the beginning, it wouldn't happen (week is taken care of earlier when we check them all)
   let weekSection = document.querySelector("#weekSection");
   let monthSection = document.querySelector("#monthSection");
   let timeVariationInput = document.querySelector("#timeVariationInput");
@@ -1208,6 +1208,11 @@ function creatingCalendar(todo, home, classs){
       weekSection.classList.add("displayNone");
       monthSection.classList.add("displayNone");
     };
+  });
+  document.querySelector("#dalInput").addEventListener("change", () => {
+    date = document.querySelector("#dalInput").value;
+    weekCalculate(date);
+    meseCalculate(date);
   });
   document.querySelector("#fineDate").addEventListener("input", () => {
     document.querySelector("#fineGiornoInput").checked = true;
@@ -1278,6 +1283,7 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
       todo.ogni = inDaySection.querySelector("#ogniInput").value;
       todo.var = inDaySection.querySelector("#timeVariationInput").value; 
       todo.fineOpt = inDaySection.querySelector('input[name="fineOptions"]:checked').value;
+      console.log(todo.var);
       if(todo.fineOpt == "fineGiorno"){
         todo.fine = inDaySection.querySelector("#fineDate").value;
       } else if(todo.fineOpt == "fineDopo"){
@@ -1297,6 +1303,7 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
         ogniSettimana(todo, date);
       } else if(todo.var == "mese"){
         todo.meseOpt = inDaySection.querySelector('input[name="meseOptions"]:checked').value;
+        console.log(todo.meseOpt);
         if(todo.meseOpt == "ogniXDate"){
           todo.meseDate = meseDateCalc(todo.dal);
           ogniOgni(todo, date);
@@ -1308,6 +1315,7 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
       } else if(todo.var == "anno"){
           ogniOgni(todo, date);
       };
+      console.log(todo);
       recurryCreation(todo);
     } else{ //means it's either todoDay or doneDay
       todo.date = inDaySection.querySelector('input[type="date"].centerDateInput').value;
@@ -1468,6 +1476,7 @@ function weekCalculate(date){
       choice.checked = true;
       n++;
     } else{
+      choice.checked = false;
       n++;
     };
   });

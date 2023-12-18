@@ -1050,13 +1050,13 @@ hr.zoneHr{
   border-collapse: collapse;
 }
 .monthlyCalendar td, .monthlyCalendar th{
-  width: 12vw;
+  width: calc((100vw - 20px) / 7);
   border: 1px solid rgba(67, 69, 91, 0.3);
   text-align: center;
   position: relative;
 }
 .monthlyCalendar td{
-  height: 10vh;
+  height: calc((100vh - 51px - 20px) / 6);
 }
 .monthlyCalendar th{
   height: 15px;

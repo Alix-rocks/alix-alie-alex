@@ -33,6 +33,7 @@ onAuthStateChanged(auth,(user) => {
     getCloudBC();
     getTasksSettings();
     getDones();
+    //createBody();
   } else{
     userConnected = false;
     logInScreen.classList.remove("displayNone");
@@ -115,6 +116,8 @@ async function getTasksSettings() {
   });
   updateArrowsColor();
   sortItAll();
+  console.log(listTasks);
+  createBody();
 };
 
 async function getDones(){
@@ -158,6 +161,7 @@ function freeIn(){
     listTasks.forEach(todo => {
       todoCreation(todo);
     });
+    createBody();
   };
   
   if(localStorage.getItem("listDones")){
@@ -291,6 +295,7 @@ function updateFromCloud(){
   resetCBC();
   getTasksSettings();
   getDones();
+  createBody();
   clearStorageBtn.textContent = "Updated!";
   updateArrowsColor();
 };
@@ -318,6 +323,25 @@ function updateArrowsColor(){
       } else{
         section.querySelector("span.listToggleChevron").classList.remove("fullSection");
       };
+      if(section.id == "limboSection"){
+        if(section.querySelectorAll("li").length == 1){
+          section.classList.remove("displayNone");
+          section.querySelector("label").classList.remove("listToggleLabel");
+          section.querySelector("#listLimboChevron").classList.add("displayNone");
+          section.querySelector("#listLimbo").classList.remove("listToggleList");
+        } else if(section.querySelectorAll("li").length > 1){
+          section.classList.remove("displayNone");
+          section.querySelector("label").classList.add("listToggleLabel");
+          section.querySelector("#listLimboChevron").classList.remove("displayNone");
+          section.querySelector("#listLimbo").classList.add("listToggleList");
+        } else if(section.querySelectorAll("li").length == 0){
+          section.classList.add("displayNone");
+          section.querySelector("label").classList.remove("listToggleLabel");
+          section.querySelector("#listLimboChevron").classList.add("displayNone");
+          section.querySelector("#listLimbo").classList.remove("listToggleList");
+        };
+      }
+      
     };
   });
 };
@@ -392,9 +416,12 @@ function todoCreation(todo){
   };
 };
 
-function getTogoList(todo){
-  let todayDate = getTodayDate();
-  let tomorrowDate = getTomorrowDate();
+function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dalle!
+  let modifiedDalle = todo.dalle ? todo.dalle.replace(":", "-") : "5-00";
+  let todoTime = `${todo.date}-${modifiedDalle}`;
+  let hierOggiTime = timeLimit("hierOggi");
+  let oggiDemainTime = timeLimit("oggiDemain");
+  let demainApresTime = timeLimit("demainApres");
   let togoList;
   if(todo.newShit){
     togoList = "listLimbo";
@@ -409,15 +436,19 @@ function getTogoList(todo){
     } else{
       togoList = "list";
     };
-  } else if(todo.date == todayDate){ //it's a todoDay or a doneDay
+  // } else if(todo.date == todayDate){ //it's a todoDay or a doneDay
+  } else if(hierOggiTime < todoTime && todoTime < oggiDemainTime){ //it's a todoDay or a doneDay
     togoList = "listToday";
-  } else if(todo.date == tomorrowDate){
+  // } else if(todo.date == tomorrowDate){
+  } else if((oggiDemainTime < todoTime) && (todoTime < demainApresTime)){
     togoList = "listTomorrow";
   } else if(todo.term == "showThing"){ //date is either before today or after tomorrow
     togoList = "";
-  } else if(todo.date < todayDate){
+  // } else if(todo.date < todayDate){
+  } else if(todoTime < hierOggiTime){
     togoList = "listOups";
-  } else if(todo.date > tomorrowDate){
+  // } else if(todo.date > tomorrowDate){
+  } else if(todoTime > demainApresTime){
     if(todo.line == "doneDay"){
       if(todo.term == "oneTime"){
         togoList = "listOne";
@@ -433,22 +464,32 @@ function getTogoList(todo){
 
 function recurryCreation(todo){ //todo == le recurring (newtodo est le recurry/normal qui est créé)
   //First let's make sure there are still dates in listDates, if it's fineMai; otherwise calculate more, but not from dal, from last date + 1
- 
-  let tomorrowDate = getTomorrowDate();
-  let date = todo.listDates[0];
-  while (date <= tomorrowDate){
-    let newtodo = {
-      id: crypto.randomUUID(),
-      date: date,
-      line: "todoDay",
-      recurry: true,
-      task: todo.task,
-      icon: todo.icon,
-      color: todo.color,
-      info: todo.info,
-      term: todo.term
-    };
-    listTasks.push(newtodo);
+  let hierOggiTime = timeLimit("hierOggi");
+  let demainApresTime = timeLimit("demainApres");
+  let dateTime = `${todo.listDates[0]}-${todo.dalle ? todo.dalle.replace(":", "-") : "5-00"}`;
+  while ((hierOggiTime < dateTime) && (dateTime < demainApresTime)){
+    let date = todo.listDates[0];
+    //
+    let newTodo = JSON.parse(JSON.stringify(todo));
+    clearRecurringData(newTodo);
+    newTodo.id = crypto.randomUUID();
+    newTodo.date = date;
+    newTodo.line = "todoDay";
+    newTodo.recurry = true;
+    // let newtodo = { //YOU HAVE TO COPY IT! BECAUSE IT MIGHT BE A SHOW!, JUST CLEAR RECURRING STUFF!
+    //   id: crypto.randomUUID(),
+    //   date: date,
+    //   dalle: todo.dalle,
+    //   alle: todo.alle,
+    //   line: "todoDay",
+    //   recurry: true,
+    //   task: todo.task,
+    //   icon: todo.icon,
+    //   color: todo.color,
+    //   info: todo.info,
+    //   term: todo.term
+    // };
+    listTasks.push(newTodo);
     if(todo.fineOpt == "fineMai" && todo.listDates.length == 1){
       let newDate = date.setDate(date.getDate() + 1);//doesn't work! si c'est chaque année au 29 nov, là tu vas être au 30 nov... mais tu veux pas non plus, en avoir deux pour la même date (le dernier ici et le premier nouveau...) À moins qu'on ne fasse pas le dernier...
       if(todo.var == "giorno" || todo.var == "anno"){
@@ -465,9 +506,9 @@ function recurryCreation(todo){ //todo == le recurring (newtodo est le recurry/n
     };
     todo.listDates.splice(0, 1);
     localStorage.listTasks = JSON.stringify(listTasks);
-    todoCreation(newtodo);
+    todoCreation(newTodo);
     updateCBC();
-    date = todo.listDates[0];
+    dateTime = `${todo.listDates[0]}-${todo.dalle ? todo.dalle.replace(":", "-") : "5-00"}`;
   };
 };
 
@@ -511,11 +552,8 @@ addForm.addEventListener("submit", (e) => {
     };
     listTasks.push(todo);
     localStorage.listTasks = JSON.stringify(listTasks);
-    updateCBC();
     todoCreation(todo);
-    document.querySelector("#sectionLimbo").classList.remove("displayNone");
-    // document.querySelector("#listInput").checked = true;
-    // document.querySelector("#wheneverLists").scrollIntoView();
+    updateCBC();
     addForm.reset();
   };
 });
@@ -835,8 +873,8 @@ function sortItAll(){
           first = li[i].dataset.order;
           second = li[i + 1].dataset.order;
         } else if(type == "time"){
-          first = li[i].dataset.time;
-          second = li[i + 1].dataset.time;
+          first = `${li[i].dataset.date}-${li[i].dataset.time.replace(":", "-")}`;
+          second = `${li[i + 1].dataset.date}-${li[i + 1].dataset.time.replace(":", "-")}`;
         };
         if (first > second){ 
           stop = true; 
@@ -855,6 +893,9 @@ function sortItAll(){
   let previousYear = "0000";
   let month;
   let previousMonth = "00";
+  document.querySelectorAll("#listScheduled > h4.subList").forEach(h => {
+    h.remove();
+  });
   document.querySelectorAll("#listScheduled > li").forEach(li => {
     let date = li.dataset.date;
     year = date.substring(0, 4);
@@ -899,8 +940,8 @@ function sortIt(type, listName) {
         first = li[i].dataset.order;
         second = li[i + 1].dataset.order;
       } else if(type == "time"){
-        first = li[i].dataset.time;
-        second = li[i + 1].dataset.time;
+        first = `${li[i].dataset.date}-${li[i].dataset.time.replace(":", "-")}`;
+        second = `${li[i + 1].dataset.date}-${li[i + 1].dataset.time.replace(":", "-")}`;
       };
       if (first > second){ 
         stop = true; 
@@ -922,7 +963,7 @@ let wheneverList = [];
 let listPage = document.querySelector("#listPage");
 let toDoPage = document.querySelector("#toDoPage");
 shuffleBtn.addEventListener("click", () => {
-  let todayDate = getTodayDate();
+  let todayDate = getTodayDate(); //that might not work getTodayTime()
   wheneverList = listTasks.filter(task => ((!task.date || task.date == "" || task.date <= todayDate) && (task.line !== "recurringDay" && !task.stock)) || (task.date > todayDate && task.line == "doneDay")); 
   for (let i = wheneverList.length - 1; i > 0; i--) { 
     const j = Math.floor(Math.random() * (i + 1)); 
@@ -1046,9 +1087,9 @@ function smallCalendarChoice(thisOne){
     calendarSave(todo);
     if(todo.newShit){
       delete todo.newShit;
-      if(document.querySelectorAll("#listLimbo > li").length <= 1){
-        document.querySelector("#sectionLimbo").classList.add("displayNone");
-      };
+      // if(document.querySelectorAll("#listLimbo > li").length <= 1){
+      //   document.querySelector("#limboSection").classList.add("displayNone");
+      // };
     };
     togoList = getTogoList(todo);
     if(previousList !== togoList){
@@ -1276,6 +1317,21 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
     delete todo.recurry;
   } else{ //means it's either todoDay, doneDay or recurringDay
     let inDaySection = document.querySelector('input[name="whatDay"]:checked ~ div.DaySection > div.inDaySection');
+    todo.tutto = inDaySection.querySelector('input[type="checkbox"].tuttoGiornoInput').checked ? true : false;
+    if(!todo.tutto){
+      let dalle = inDaySection.querySelector('input[type="time"].dalle').value;
+      if(dalle){
+        todo.dalle = dalle;
+      } else{
+        delete todo.dalle;
+      };
+      let alle = inDaySection.querySelector('input[type="time"].alle').value;
+      if(alle){
+        todo.alle = alle;
+      } else{
+        delete todo.alle;
+      };
+    };
     if(todo.line == "recurringDay"){
       delete todo.date;
       delete todo.recurry;
@@ -1321,21 +1377,6 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
       todo.date = inDaySection.querySelector('input[type="date"].centerDateInput').value;
       if(todo.line == "doneDay"){
         delete todo.recurry;
-      };
-    };
-    todo.tutto = inDaySection.querySelector('input[type="checkbox"].tuttoGiornoInput').checked ? true : false;
-    if(!todo.tutto){
-      let dalle = inDaySection.querySelector('input[type="time"].dalle').value;
-      if(dalle){
-        todo.dalle = dalle;
-      } else{
-        delete todo.dalle;
-      };
-      let alle = inDaySection.querySelector('input[type="time"].alle').value;
-      if(alle){
-        todo.alle = alle;
-      } else{
-        delete todo.alle;
       };
     };
   };
@@ -1418,6 +1459,7 @@ function ogniOgni(todo, date){ //For ogni X days/month(on Y date)/year until fin
       start = date;
     };
   };
+  listDates = pruning(todo, listDates);
   todo.listDates = listDates;
 };
 
@@ -1455,6 +1497,7 @@ function ogniSettimana(todo, date){
       start = date;
     };
   };
+  listDates = pruning(todo, listDates);
   todo.listDates = listDates;
 };
 
@@ -1467,6 +1510,22 @@ function ogniMeseDay(todo, date){ //For ogni X month on Y° day until fine o dop
   //à chaque jour, on a le nombre de week; si le jour est 1, le nw retombe à 0; on check l'index (0 à 6) et quand on arrive à meseDayI, on ajoute nw++; quand nw++ égale meseDayN, on ajoute la date à la list
 };
 
+
+
+function pruning(todo, listDates){
+  let hierOggiTime = timeLimit("hierOggi");
+  let time = todo.dalle ? todo.dalle.replace(":", "-") : "5-00";
+  function isNewEnough(date){
+    let dateTime = `${date}-${time}`;
+    if(dateTime > hierOggiTime){
+      return true;
+    } else{
+      return false;
+    };
+  };
+  listDates = listDates.filter(isNewEnough);
+  return listDates;
+};
 
 function weekCalculate(date){
   let dayI = meseDayICalc(date);
@@ -1873,9 +1932,9 @@ function taskAddAllInfo(thisOne){
   
       if(todo.newShit){//considérer juste un bouton "add" et directement avoir la fenêtre taskAddAllInfo (ça permet moins le capture tool effet, mais la création est plus rapide... Au pire, ça pourrait être un setting!)
         delete todo.newShit;
-        if(document.querySelectorAll("#listLimbo > li").length <= 1){
-          document.querySelector("#sectionLimbo").classList.add("displayNone");
-        };
+        // if(document.querySelectorAll("#listLimbo > li").length <= 1){
+        //   document.querySelector("#limboSection").classList.add("displayNone");
+        // };
       };
       togoList = getTogoList(todo);
       if(previousList !== togoList){
@@ -1927,7 +1986,11 @@ function scrollToSection(list){
   if(section.querySelector(".listToggleInput")){
     section.querySelector(".listToggleInput").checked = true;
   } else if(section.querySelector(".swipingInput")){
-    section.querySelector(".swipingInput").checked = true;
+    if(list == "listTomorrow"){
+      section.querySelector(".swipingInput").checked = true;
+    } else if(list == "listToday"){
+      section.querySelector(".swipingInput").checked = false;
+    };
   };
   section.scrollIntoView();
 };
@@ -1994,7 +2057,7 @@ function getTodayDate(){
   return currentDate;
 };
 
-function getTomorrowDate(){
+function getTomorrowDate(){ //that doesn't work!!!
   let date = new Date();
   let currentHour = String(date.getHours()).padStart(2, "0");
   let currentMinute = String(date.getMinutes()).padStart(2, "0");
@@ -2005,6 +2068,23 @@ function getTomorrowDate(){
   let currentYear = date.getFullYear();
   let currentDate = `${currentYear}-${currentMonth}-${currentDay}`;
   return currentDate;
+};
+
+function timeLimit(limit){
+  let nowDate = new Date();
+  let currentMonth = String(nowDate.getMonth()+1).padStart(2, "0");
+  let currentYear = nowDate.getFullYear();
+  let limitDay;
+  let modifiedTomorrow = myTomorrow.replace(":", "-")
+  if(limit == "hierOggi"){
+    limitDay = String(nowDate.getDate()).padStart(2, "0");
+  } else if(limit == "oggiDemain"){
+    limitDay = String(nowDate.getDate() + 1).padStart(2, "0");
+  } else if(limit == "demainApres"){
+    limitDay = String(nowDate.getDate() + 2).padStart(2, "0");
+  };
+  let timeLimit = `${currentYear}-${currentMonth}-${limitDay}-${modifiedTomorrow}`;
+  return timeLimit;
 };
 
 function getLastWeekDate(){
@@ -2026,17 +2106,16 @@ let month = date.getMonth(); //pour vrai, enlève le "+ 1"
 let todayWholeDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(todayDate).padStart(2, "0")}`
 
 function putShowsIn(){
-  
+  let shows = listTasks.filter((todo) => todo.term == "showThing");
   //check if shows is sorted before sorting it?
-  let sortedShows = shows.sort((s1, s2) => (s1.date < s2.date) ? -1 : (s1.date > s2.date) ? 1 : (s1.date == s2.date) ? (s1.time < s2.time) ? -1 : (s1.time > s2.time) ? 1 : 0 : 0);
+  let sortedShows = shows.sort((s1, s2) => (s1.date < s2.date) ? -1 : (s1.date > s2.date) ? 1 : (s1.date == s2.date) ? (s1.dalle < s2.dalle) ? -1 : (s1.dalle > s2.dalle) ? 1 : 0 : 0);
   shows = sortedShows;
-  console.log(shows);
   shows.forEach(show => {
-    let eventDiv = `<div id="${show.id}" data-showType=${show.type} class="eventDiv" style="background-color:${show.colorBG}; color:${show.colorTX};">${show.name}</div>`;
+    let eventDiv = `<div id="${show.id}Evt" data-showType=${show.showType} class="eventDiv" style="background-color:${show.STColorBG}; color:${show.STColorTX};">${show.task}</div>`;
     let kase = document.querySelector("[data-wholedate='" + show.date + "']");
     if(kase){
       kase.insertAdjacentHTML("beforeend", eventDiv);
-      document.querySelector(`#${show.id}`).addEventListener("click", (e) => {
+      document.getElementById(show.id + "Evt").addEventListener("click", (e) => {
         document.querySelectorAll(".eventDiv").forEach(div => {
           if(div == e.currentTarget){
             if(e.currentTarget.classList.contains("selectedKase")){
@@ -2171,12 +2250,12 @@ function getMonthlyCalendar(){
       
     });
   });
-  //putShowsIn();
+  putShowsIn();
 };
 
 
 
-createBody();
+
 
 
 

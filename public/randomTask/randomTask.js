@@ -33,7 +33,6 @@ onAuthStateChanged(auth,(user) => {
     getCloudBC();
     getTasksSettings();
     getDones();
-    //createBody();
   } else{
     userConnected = false;
     logInScreen.classList.remove("displayNone");
@@ -436,18 +435,14 @@ function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dal
     } else{
       togoList = "list";
     };
-  // } else if(todo.date == todayDate){ //it's a todoDay or a doneDay
   } else if(hierOggiTime < todoTime && todoTime < oggiDemainTime){ //it's a todoDay or a doneDay
     togoList = "listToday";
-  // } else if(todo.date == tomorrowDate){
   } else if((oggiDemainTime < todoTime) && (todoTime < demainApresTime)){
     togoList = "listTomorrow";
   } else if(todo.term == "showThing"){ //date is either before today or after tomorrow
     togoList = "";
-  // } else if(todo.date < todayDate){
   } else if(todoTime < hierOggiTime){
     togoList = "listOups";
-  // } else if(todo.date > tomorrowDate){
   } else if(todoTime > demainApresTime){
     if(todo.line == "doneDay"){
       if(todo.term == "oneTime"){
@@ -2057,7 +2052,7 @@ function getTodayDate(){
   return currentDate;
 };
 
-function getTomorrowDate(){ //that doesn't work!!!
+function getTomorrowDate(){ //that doesn't work!!! (just if you don't need to consider the hour)
   let date = new Date();
   let currentHour = String(date.getHours()).padStart(2, "0");
   let currentMinute = String(date.getMinutes()).padStart(2, "0");
@@ -2072,16 +2067,21 @@ function getTomorrowDate(){ //that doesn't work!!!
 
 function timeLimit(limit){
   let nowDate = new Date();
+  let currentHour = String(nowDate.getHours()).padStart(2, "0");
+  let currentMinute = String(nowDate.getMinutes()).padStart(2, "0");
+  let currentTime = `${currentHour}:${currentMinute}`;
+  let currentDay = nowDate.getDate();
+  currentDay = currentTime <= myTomorrow ? (nowDate.getDate() - 1) : nowDate.getDate();
   let currentMonth = String(nowDate.getMonth()+1).padStart(2, "0");
   let currentYear = nowDate.getFullYear();
   let limitDay;
   let modifiedTomorrow = myTomorrow.replace(":", "-")
   if(limit == "hierOggi"){
-    limitDay = String(nowDate.getDate()).padStart(2, "0");
+    limitDay = currentDay;
   } else if(limit == "oggiDemain"){
-    limitDay = String(nowDate.getDate() + 1).padStart(2, "0");
+    limitDay = String(currentDay + 1).padStart(2, "0");
   } else if(limit == "demainApres"){
-    limitDay = String(nowDate.getDate() + 2).padStart(2, "0");
+    limitDay = String(currentDay + 2).padStart(2, "0");
   };
   let timeLimit = `${currentYear}-${currentMonth}-${limitDay}-${modifiedTomorrow}`;
   return timeLimit;

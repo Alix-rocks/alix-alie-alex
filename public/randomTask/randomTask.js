@@ -132,7 +132,7 @@ async function getTasksSettings() {
   //console.log(listTasks);
   createBody();
   getWeeklyCalendar();
-  console.log(listTasks.filter(task => (task.line == "recurringDay")));
+  //console.log(listTasks.filter(task => (task.line == "recurringDay")));
 };
 
 async function getDones(){
@@ -406,7 +406,6 @@ settings.addEventListener("click", () => {
 
 function todoCreation(todo){
   let togoList = getTogoList(todo);
-  console.log(togoList);
   if(togoList !== ""){ //what happens if one is stock/stored AND recurring/recurry?
     if(todo.stock){
       document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" ${todo.term == "showThing" ? `data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" class="showLi" style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``}><i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo(this)" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
@@ -493,7 +492,6 @@ function recurryOuting(todo){ //todo == le recurring (newtodo est le recurry/nor
       if(!document.getElementById(recurry.id)){
         todoCreation(recurry);
         recurry.out = true;
-        console.log(todo);
         //WOLA what about todo.listDates.splice(0, 1);
         //WOLA attention, quand tu sort un recurry (parce que modifié), il faudrait-y pas que tu enlève la date aussi de listDates?
         idx++;
@@ -522,7 +520,6 @@ function recurryOuting(todo){ //todo == le recurring (newtodo est le recurry/nor
     dateTime = `${recurry.date}-${recurry.dalle ? recurry.dalle.replace(":", "-") : "5-00"}`;
   };
   localStorage.listTasks = JSON.stringify(listTasks);
-  updateCBC();
 };
 
 // function recurryCreation(todo){ //todo == le recurring (newtodo est le recurry/normal qui est créé)
@@ -748,7 +745,7 @@ let num = 0;
 doneNextBtn.addEventListener("click", () => {
   let doneId = wheneverList[num].id;
   let doneLi = document.getElementById(doneId);
-  if(doneLi.dataset.rec !== "undefined"){
+  if(doneLi.dataset.rec && doneLi.dataset.rec !== "undefined"){
     let rec = doneLi.dataset.rec;
     gotItDone(donedId, rec);
   } else{
@@ -775,7 +772,7 @@ doneNextBtn.addEventListener("click", () => {
 function checkEvent(emptyCheck){
   let li = emptyCheck.parentElement;
   let donedId = li.id;
-  if(li.dataset.rec !== "undefined"){
+  if(li.dataset.rec && li.dataset.rec !== "undefined"){
     let rec = li.dataset.rec;
     gotItDone(donedId, rec);
   } else{
@@ -1085,7 +1082,7 @@ function timeItEvent(thisOne){
   let todo;
   let recIndex;
   let todoIndex;
-  if(li.dataset.rec !== "undefined"){
+  if(li.dataset.rec && li.dataset.rec !== "undefined"){
     let rec = li.dataset.rec;
     recIndex = listTasks.findIndex(todo => todo.id == rec);
     todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == li.id);
@@ -1112,7 +1109,7 @@ function timeItEvent(thisOne){
     if(list == "listToday" || list == "listTomorrow"){
       sortIt("time", list);
     };
-    if(li.dataset.rec !== "undefined"){
+    if(li.dataset.rec && li.dataset.rec !== "undefined"){
       delete li.dataset.rec;
       let oldRecurry = listTasks[recIndex].recurrys.splice(todoIndex, 1);
       delete oldRecurry[0].recurry;
@@ -1181,7 +1178,7 @@ function smallCalendarChoice(thisOne){
   let todo;
   let recIndex;
   let todoIndex;
-  if(parent.dataset.rec !== "undefined"){
+  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
     let rec = parent.dataset.rec;
     recIndex = listTasks.findIndex(todo => todo.id == rec);
     todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == parent.id);
@@ -1196,7 +1193,7 @@ function smallCalendarChoice(thisOne){
   document.querySelector("#saveTheDateBtn").addEventListener("click", () => {
     let previousList = parent.parentElement.id;
     calendarSave(todo);
-    if(parent.dataset.rec !== "undefined"){
+    if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
       let oldRecurry = listTasks[recIndex].recurrys.splice(todoIndex, 1);
       delete oldRecurry[0].recurry;
       delete oldRecurry[0].out;
@@ -1452,13 +1449,13 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
     todo.tutto = inDaySection.querySelector('input[type="checkbox"].tuttoGiornoInput').checked ? true : false;
     if(!todo.tutto){
       let dalle = inDaySection.querySelector('input[type="time"].dalle');
-      if(dalle.value){
+      if(dalle && dalle.value){
         todo.dalle = dalle.value;
       } else{
         delete todo.dalle;
       };
       let alle = inDaySection.querySelector('input[type="time"].alle');
-      if(alle.value){
+      if(alle && alle.value){
         todo.alle = alle.value;
       } else{
         delete todo.alle;
@@ -1594,7 +1591,6 @@ function ogniOgni(todo, date){ //For ogni X days/month(on Y date)/year until fin
   listDates = pruning(todo, listDates);
   todo.listDates = listDates;
   allRecurrysCreation(todo);
-  console.log(todo);
 };
 
 function ogniSettimana(todo, date){
@@ -1830,7 +1826,7 @@ function taskAddAllInfo(thisOne){
   let recIndex;
   let todoIndex;
   let todo;
-  if(parent.dataset.rec !== "undefined"){
+  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
     let rec = parent.dataset.rec;
     recIndex = listTasks.findIndex(todo => todo.id == rec);
     todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == parent.id);
@@ -2146,7 +2142,7 @@ function taskAddAllInfo(thisOne){
 
       calendarSave(todo); // s'il était un recurringDay, les recurrys ont tous été recréés à son image... FUCK (pas ceux qui étaient déjà out!)! ... à moins que... il en cré de nouveaux!! car dans todoCreation, tu passe par togoList et ça fait recurryOuting... et les nouveaux recurry seront pas encore "out", fac ils vont être créés... alors il faudrait juste se débarasser des anciens! ça pourrait être dans clearRecurringData...
       //parent is global (no need for parent since todoCreation)
-      if(parent.dataset.rec !== "undefined"){
+      if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
         let oldRecurry = listTasks[recIndex].recurrys.splice(todoIndex, 1);
         todo = oldRecurry[0];
         delete todo.recurry;
@@ -2163,7 +2159,6 @@ function taskAddAllInfo(thisOne){
         todoCreation(newTodo);
       };
       todoCreation(todo);
-      console.log(todo);
       sortItAll();
     } else if(trashIt.checked){
       if(todo.recurry && todo.recId){
@@ -2236,7 +2231,7 @@ function iconChoice(thisOne){
   let todo;
   let recIndex;
   let todoIndex;
-  if(li.dataset.rec !== "undefined"){
+  if(li.dataset.rec && li.dataset.rec !== "undefined"){
     let rec = li.dataset.rec;
     recIndex = listTasks.findIndex(todo => todo.id == rec);
     todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == li.id);
@@ -2259,7 +2254,7 @@ function iconChoice(thisOne){
       let liIcon = li.querySelector(".IconI");
       liIcon.className = `IconI ${icon}`;
       todo.icon = icon;
-      if(li.dataset.rec !== "undefined"){
+      if(li.dataset.rec && li.dataset.rec !== "undefined"){
         delete li.dataset.rec;
         let oldRecurry = listTasks[recIndex].recurrys.splice(todoIndex, 1);
         delete oldRecurry[0].recurry;

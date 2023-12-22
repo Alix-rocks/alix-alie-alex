@@ -101,6 +101,7 @@ async function getTasksSettings() {
     myTomorrow = localStorage.myTomorrow;
   } else if(getTasks.exists() && getTasks.data().myTomorrow){
     myTomorrow = getTasks.data().myTomorrow;
+    localStorage.myTomorrow = myTomorrow;
   } else{
     localStorage.myTomorrow = myTomorrow;
   };
@@ -1076,7 +1077,7 @@ backBtn.addEventListener("click", () => {
 // *** TIME
 function timeItEvent(thisOne){
   thisOne.classList.add("displayNone");
-  let li = thisOne.parentElement;
+  let li = thisOne.parentElement.parentElement;
   let list = li.parentElement.id;
   let input = li.querySelector("input[type='time']");
   let todo;
@@ -1084,14 +1085,16 @@ function timeItEvent(thisOne){
   let todoIndex;
   if(li.dataset.rec && li.dataset.rec !== "undefined"){
     let rec = li.dataset.rec;
+    console.log("rec " + rec);
     recIndex = listTasks.findIndex(todo => todo.id == rec);
     todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == li.id);
     todo = listTasks[recIndex].recurrys[todoIndex];
   } else{
+    console.log("list " + li.id);
     todoIndex = listTasks.findIndex(todo => todo.id == li.id);
     todo = listTasks[todoIndex];
   };
-  
+  console.log(todo);
   if(todo.dalle){
     input.value = todo.dalle;
   };
@@ -2350,6 +2353,7 @@ let todayWholeDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(tod
 function putShowsInMonth(){
   let shows = listTasks.filter((todo) => todo.term == "showThing");
   //check if shows is sorted before sorting it?
+  // ADD RECURRYS!
   let sortedShows = shows.sort((s1, s2) => (s1.date < s2.date) ? -1 : (s1.date > s2.date) ? 1 : (s1.date == s2.date) ? (s1.dalle < s2.dalle) ? -1 : (s1.dalle > s2.dalle) ? 1 : 0 : 0);
   shows = sortedShows;
   shows.forEach(show => {
@@ -2421,7 +2425,7 @@ function getMonthlyCalendar(){
   let first = new Date(year, month, 1);
   monthNameSpace.innerText = monthName;
   yearNameSpace.innerText = year;
-  // let monthName = date.toLocaleString('it-IT', { month: 'long' });
+  let monthName = date.toLocaleString('it-IT', { month: 'long' });
   let last = new Date(year, month + 1, 0).getDate();
   let firstDay = first.getDay();
   let befFirst = first.setDate(-(firstDay - 1));
@@ -2494,23 +2498,7 @@ function getMonthlyCalendar(){
   putShowsInMonth();
 };
 
-function putShowsInWeek(){
-  let shows = listTasks.filter((todo) => todo.term == "showThing");
-  shows.map(show => {
-    let dayIdx = meseDayICalc(show.date);
-    let day = `${daysWeekChoices[dayIdx].letter}${dayIdx}`;
-    let hourStart = show.dalle ? show.dalle.replace(":", "-") : "00-00";
-    let hourEnd = show.alle ? show.alle.replace(":", "-") : "end";
-    let add = `<div id="${show.id}We" data-showType=${show.showType} class="weeklyEvent" style="background-color:${show.STColorBG}; color:${show.STColorTX}; grid-column:col-${day}; grid-row:row-${hourStart}/row-${hourEnd};">${show.task}</div>`;
-    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", add);
-  });
-  
-};
-
-function getWeeklyCalendar(){
-  let date = new Date();
-  let dayIdx = date.getDay();
-  date.setDate(date.getDate() - dayIdx);
+function putDatesInWeek(date){
   let arrayDate = [];
   for(let d = 0; d < 7; d++){
     let thisDate = {
@@ -2520,20 +2508,79 @@ function getWeeklyCalendar(){
     arrayDate.push(thisDate);
     date.setDate(date.getDate() + 1);
   };
-  //console.log(arrayDate);
+  console.log(arrayDate);
+  let i = 0;
+  document.querySelectorAll(".weeklyDateSpan").forEach(span => {
+    span.innerHTML = arrayDate[i].date;
+    span.parentElement.setAttribute("data-date", arrayDate[i].full);
+    i++;
+  });
+  let today = new Date();
+  let dayIdx = today.getDay();
+  today = getStringFromDate(today);
+  const test = arrayDate.some(el => (el.full == today));
+  if(test){
+    let todayDay = `${daysWeekChoices[dayIdx].letter}${dayIdx}`;
+    let tomoDay = `${daysWeekChoices[dayIdx + 1].letter}${dayIdx + 1}`;
+    let todayArea = `<div class="todayArea" style="grid-area: row-Day / col-${todayDay} / row-end / col-${tomoDay}"></div>`;
+    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", todayArea);
+  };
+
+  let Dday = arrayDate[0].full;
+  let Sday = arrayDate[arrayDate.length - 1].full;
+  let Ddate = getDateFromString(Dday);
+  let Sdate = getDateFromString(Sday);
+  let DYear = Ddate.getFullYear();
+  let SYear = Sdate.getFullYear();
+  let DMonthName = Ddate.toLocaleString('it-IT', { month: 'long' }).toLocaleUpperCase();
+  let SMonthName = Sdate.toLocaleString('it-IT', { month: 'long' }).toLocaleUpperCase();
+  document.querySelector("#weeklyYearSpan").innerHTML = `${DYear}${DYear !== SYear ? ` / ${SYear}` : ``}`;
+  document.querySelector("#weeklyMonthSpan").innerHTML = `${DMonthName}${DMonthName !== SMonthName ? ` / ${SMonthName}` : ``}`;
+  putShowsInWeek(Dday, Sday);
+};
+
+function putShowsInWeek(Dday, Sday){
+  console.log("Dday: " + Dday + " & Sday: " + Sday);
+  let shows = listTasks.filter((todo) => (todo.term == "showThing"));
+  shows.map(show => {
+    if(show.line == "recurringDay"){ 
+      show.recurrys.map(recurry => {
+      if(Dday <= recurry.date && recurry.date <= Sday){//takes only the ones that should show up this week
+        createWeeklyshow(recurry);
+      };
+      })
+    } else if(Dday <= show.date && show.date <= Sday){//takes only the ones that should show up this week
+      createWeeklyshow(show);
+    };
+  });
+};
+
+function createWeeklyshow(show){
+  let dayIdx = meseDayICalc(show.date);
+  let day = `${daysWeekChoices[dayIdx].letter}${dayIdx}`;
+  let hourStart = show.dalle ? show.dalle.replace(":", "-") : "00-00";
+  let hourEnd = show.alle ? show.alle.replace(":", "-") : "end";
+  let add = `<div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} data-showType=${show.showType} class="weeklyEvent" style="background-color:${show.STColorBG}; color:${show.STColorTX}; grid-column:col-${day}; grid-row:row-${hourStart}/row-${hourEnd};">${show.task}<br /><i class="IconI ${show.icon}"></i></div>`;
+  document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", add);
+};
+
+function getWeeklyCalendar(){
   let arrayItem = [];
   let rowYear = `<div class="weeklyItem weeklyTitle" style="grid-row:1; border-bottom-width: 1px;"><button class="weeklyBtn" id="weekBackward" style="float: left;"><span class="typcn typcn-media-play-reverse"></span></button><span id="weeklyYearSpan">${year}</span><button class="weeklyBtn" id="weekForward" style="float: right;"><span class="typcn typcn-media-play"></span></button></div>`;
   let rowMonth = `<div class="weeklyItem weeklyTitle" style="grid-row:2; border-bottom-width: 2px;"><span id="weeklyMonthSpan">${monthName}</span></div>`;
   arrayItem.push(rowYear, rowMonth);
+  let myDay = Number(myTomorrow.substring(0, 2));
+  console.log(myDay);
   for(let c = 1; c < 9; c++){
     let arrayC = [];
-    let rowDay = `<div class="weeklyItem" style="grid-column:${c}; grid-row:3; font-size:14px; font-weight:600; border-radius:2px 2px 0 0; border-bottom:1px solid rgba(47, 79, 79, .5); ${c == 1 ? "border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}">${c > 1 ? `${daysWeekChoices[c - 2].letter}<br /><span class="weeklyDateSpan">${arrayDate[c - 2].date}` : ``}</span></div>`; //shall we add the date as an id, as a data-date or as an area?
+    let rowDay = `<div ${c == 2 ? `id="Dday"` : c == 8 ? `id="Sday"` : ``} class="weeklyItem" style="grid-column:${c}; grid-row:3; font-size:14px; font-weight:600; border-radius:2px 2px 0 0; border-bottom:1px solid rgba(47, 79, 79, .5); ${c == 1 ? "border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}">${c > 1 ? `${daysWeekChoices[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : ``}</div>`; //shall we add the date as an id, as a data-date or as an area?
     arrayC.push(rowDay);
     let line = 4;
     for(let r = 1; r < 25; r++){
-      let item = `<div class="weeklyItem" style="grid-column:${c}; grid-row:${line} / ${line + 4}; ${c == 1 ? "border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}">${c == 1 ? `${String(r - 1).padStart(2, "0")}:00` : ``}</div>`;
+      let item = `<div class="weeklyItem" style="grid-column:${c}; grid-row:${line} / ${line + 4}; ${c == 1 ? "border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""} ${myDay == 23 ? "border-bottom:2px solid rgba(47, 79, 79, .8);" : ""}">${c == 1 ? `${String(myDay).padStart(2, "0")}:00` : ``}</div>`;
       arrayC.push(item);
       line += 4;
+      myDay == 23 ? myDay = 0 : myDay++;
     };
     let arrayCs = arrayC.join("");
     arrayItem.push(arrayCs);
@@ -2545,12 +2592,14 @@ function getWeeklyCalendar(){
   nomiCol.unshift(firstCol);
   let nomiCols = nomiCol.join(" ");
   let nomiRow = [];
+  //myDay = Number(myTomorrow.substring(0, 2));
   for(let h = 0; h < 24; h++){ //93
-    let rowH = `[row-${String(h).padStart(2, "0")}-00] .25fr`;
-    let rowH15 = `[row-${String(h).padStart(2, "0")}-15] .25fr`;
-    let rowH30 = `[row-${String(h).padStart(2, "0")}-30] .25fr`;
-    let rowH45 = `[row-${String(h).padStart(2, "0")}-45] .25fr`;
+    let rowH = `[row-${String(myDay).padStart(2, "0")}-00] .25fr`;
+    let rowH15 = `[row-${String(myDay).padStart(2, "0")}-15] .25fr`;
+    let rowH30 = `[row-${String(myDay).padStart(2, "0")}-30] .25fr`;
+    let rowH45 = `[row-${String(myDay).padStart(2, "0")}-45] .25fr`;
     nomiRow.push(rowH, rowH15, rowH30, rowH45);
+    myDay == 23 ? myDay = 0 : myDay++;
   };
   let firstRows = `[row-Year] 1fr [row-Month] 1fr [row-Day] 2fr`;
   let lastLine = `[row-end]`;
@@ -2560,21 +2609,43 @@ function getWeeklyCalendar(){
   let container = document.querySelector(".weeklyContainer");
   container.style.gridTemplateRows = nomiRows;
   container.style.gridTemplateColumns = nomiCols;
-  let today = new Date();
-  let todayIdx = today.getDay();
-  let todayDay = `${daysWeekChoices[todayIdx].letter}${todayIdx}`;
-  let tomoDay = `${daysWeekChoices[todayIdx + 1].letter}${todayIdx + 1}`;
-  let todayArea = `<div class="todayArea" style="grid-area: row-Day / col-${todayDay} / row-end / col-${tomoDay}"></div>`;
-  arrayItem.push(todayArea);
+  
+  //arrayItem.push(todayArea);
   let arrayItems = arrayItem.join("");
   container.innerHTML = arrayItems;
-  putShowsInWeek();
-  document.querySelector("#weekBackward").addEventListener("click", () => {
 
+  let date = new Date();
+  let dayIdx = date.getDay();
+  date.setDate(date.getDate() - dayIdx);
+  putDatesInWeek(date);
+  
+  document.querySelector("#weekBackward").addEventListener("click", () => {
+    let todayAreaDiv = document.querySelector(".todayArea");
+    if(todayAreaDiv){
+      todayAreaDiv.remove();
+    };
+    document.querySelectorAll(".weeklyEvent").forEach(we => {
+      we.remove();
+    });
+    let Dday = document.querySelector("#Dday").dataset.date;
+    let Ddate = getDateFromString(Dday);
+    Ddate.setDate(Ddate.getDate() - 7);
+    putDatesInWeek(Ddate);
   });
   document.querySelector("#weekForward").addEventListener("click", () => {
-
+    let todayAreaDiv = document.querySelector(".todayArea");
+    if(todayAreaDiv){
+      todayAreaDiv.remove();
+    };
+    document.querySelectorAll(".weeklyEvent").forEach(we => {
+      we.remove();
+    });
+    let Sday = document.querySelector("#Sday").dataset.date;
+    let Sdate = getDateFromString(Sday);
+    Sdate.setDate(Sdate.getDate() + 1);
+    putDatesInWeek(Sdate);
   });
+  
 };
 
 

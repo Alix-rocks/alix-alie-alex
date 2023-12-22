@@ -1181,6 +1181,7 @@ hr.zoneHr{
   border: 1px solid darkslategrey;
   border-radius: 8px;
   z-index: 2;
+  text-align: center;
 }
 
 .cossin{

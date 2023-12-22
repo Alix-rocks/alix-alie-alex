@@ -75,7 +75,7 @@ input[type="radio"]{
 }
 .ScreenBtn1{
   display: block;
-  margin: 10px auto;
+  margin: 25px auto 10px;
 }
 .ScreenBtn2{
   border-top: 1px solid darkslategrey;
@@ -213,6 +213,7 @@ input[type="radio"]{
   border: .5px solid darkslategrey;
   text-align: center;
   border-radius: 5px;
+  display: inline-block;
 }
 .menuBtn{
   width: 40px;
@@ -258,10 +259,7 @@ input[type="radio"]{
   position: absolute;
   z-index: 1000;
 }
-#taskInfo{
-  top: 25px;
-  left: -37px;
-}
+
 .taskInfoWrapper{
   position: relative;
   width: 100%;
@@ -384,6 +382,10 @@ h5.taskInfoInput{
   top: 0;
   right: 10px;
   font-size: 24px;
+}
+.hidden{
+  opacity: 0;
+  visibility: hidden;
 }
 #iconIt{
   position: absolute;
@@ -553,7 +555,7 @@ li i{
   text-align: center;
   flex-shrink: 0;
 }
-li .typcn{
+li .typcn, #taskInfo .typcn{
   font-size: 1.5em;
 }
 li .emptyCheck{
@@ -615,6 +617,7 @@ span.smallText{
 span.normalText{
   font-size: 18px;
   padding: 0;
+  font-weight: 600;
 }
 .calendarMargin{
   margin: 10px 20px;
@@ -1091,6 +1094,8 @@ hr.zoneHr{
   background-color: white;
   border: none;
   line-height: 1em;
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
 }
 .monthlyCalendar{
   border-collapse: collapse;
@@ -1149,7 +1154,7 @@ hr.zoneHr{
   border-radius: 2px;
 }
 .weeklyItem{
-  border: 0.5px solid rgba(47, 79, 79, .3);;
+  border: 0.5px solid rgba(47, 79, 79, .3);
   border-radius: 2px;
   width: -webkit-fill-available;
   height: -webkit-fill-available;
@@ -1175,13 +1180,20 @@ hr.zoneHr{
 .todayArea{
   border: 2px solid rgba(64, 115, 243, 0.5);
   border-radius: 3px;
-  z-index: 3;
+  z-index: 2;
 }
 .weeklyEvent{
   border: 1px solid darkslategrey;
   border-radius: 8px;
-  z-index: 2;
+  z-index: 3;
   text-align: center;
+  font-size: 12px;
+}
+.weeklyAfterDateSpan{
+  color: rgba(47, 79, 79, .3);
+}
+.pastEvent{
+  opacity: .4;
 }
 
 .cossin{

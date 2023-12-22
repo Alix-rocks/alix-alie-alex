@@ -1085,16 +1085,13 @@ function timeItEvent(thisOne){
   let todoIndex;
   if(li.dataset.rec && li.dataset.rec !== "undefined"){
     let rec = li.dataset.rec;
-    console.log("rec " + rec);
     recIndex = listTasks.findIndex(todo => todo.id == rec);
     todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == li.id);
     todo = listTasks[recIndex].recurrys[todoIndex];
   } else{
-    console.log("list " + li.id);
     todoIndex = listTasks.findIndex(todo => todo.id == li.id);
     todo = listTasks[todoIndex];
   };
-  console.log(todo);
   if(todo.dalle){
     input.value = todo.dalle;
   };
@@ -2423,9 +2420,10 @@ function createBody(){
 
 function getMonthlyCalendar(){
   let first = new Date(year, month, 1);
+  monthName = first.toLocaleString('it-IT', { month: 'long' }).toLocaleUpperCase();
   monthNameSpace.innerText = monthName;
   yearNameSpace.innerText = year;
-  let monthName = date.toLocaleString('it-IT', { month: 'long' });
+  
   let last = new Date(year, month + 1, 0).getDate();
   let firstDay = first.getDay();
   let befFirst = first.setDate(-(firstDay - 1));
@@ -2508,7 +2506,6 @@ function putDatesInWeek(date){
     arrayDate.push(thisDate);
     date.setDate(date.getDate() + 1);
   };
-  console.log(arrayDate);
   let i = 0;
   document.querySelectorAll(".weeklyDateSpan").forEach(span => {
     span.innerHTML = arrayDate[i].date;
@@ -2540,7 +2537,6 @@ function putDatesInWeek(date){
 };
 
 function putShowsInWeek(Dday, Sday){
-  console.log("Dday: " + Dday + " & Sday: " + Sday);
   let shows = listTasks.filter((todo) => (todo.term == "showThing"));
   shows.map(show => {
     if(show.line == "recurringDay"){ 
@@ -2570,7 +2566,6 @@ function getWeeklyCalendar(){
   let rowMonth = `<div class="weeklyItem weeklyTitle" style="grid-row:2; border-bottom-width: 2px;"><span id="weeklyMonthSpan">${monthName}</span></div>`;
   arrayItem.push(rowYear, rowMonth);
   let myDay = Number(myTomorrow.substring(0, 2));
-  console.log(myDay);
   for(let c = 1; c < 9; c++){
     let arrayC = [];
     let rowDay = `<div ${c == 2 ? `id="Dday"` : c == 8 ? `id="Sday"` : ``} class="weeklyItem" style="grid-column:${c}; grid-row:3; font-size:14px; font-weight:600; border-radius:2px 2px 0 0; border-bottom:1px solid rgba(47, 79, 79, .5); ${c == 1 ? "border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}">${c > 1 ? `${daysWeekChoices[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : ``}</div>`; //shall we add the date as an id, as a data-date or as an area?

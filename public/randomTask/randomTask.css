@@ -22,12 +22,12 @@ button {
   font-weight: 600;
   background-color: lightgrey;
 }
-button span:nth-of-type(1){
+/* button span:nth-of-type(1){
   padding-right: 5px;
 }
 button span:nth-of-type(2){
   padding-left: 5px;
-}
+} */
 input[type="text"], textarea{
   border-top: 2px solid darkslategrey;
   border-left: 2px solid darkslategrey;
@@ -93,7 +93,7 @@ input[type="radio"]{
   margin-top: 0;
   font-size: 25px;
   line-height: 1em;
-  padding: 2px 0 2px 5px;
+  padding: 2px 5px 2px 5px;
   background-color: rgba(237, 20, 61, 0);
 }
 #listPage{
@@ -129,7 +129,7 @@ input[type="radio"]{
   padding: 0;
   opacity: .8;
 }
-#AlixTime, .bottomBtn{
+#AlixTime{
   position: fixed;
   bottom: 10px;
   border-radius: 5px;
@@ -139,22 +139,6 @@ input[type="radio"]{
   right: 13px;
   padding: 5px 5px 0;
   background-color: white;
-}
-.bottomBtn{
-  width: 40px;
-  height: 40px;
-  left: 13px;
-  padding: 5px;
-  border: .5px solid darkslategrey;
-  text-align: center;
-}
-#toCalendar{
-  background-color: white;
-  opacity: 1;
-}
-#toList{
-  background-color: purple;
-  opacity: 0;
 }
 #AlixTime a{
   text-decoration: none;
@@ -168,46 +152,104 @@ input[type="radio"]{
 #AlixTime button{
   background-color: rgb(19 32 32);
 }
-
 #AlixTime button i{
   font-size: 20px;
   line-height: 25px;
   text-align: center;
 }
-#AlixTime button i, #toCalendar i{
+#AlixTime button i{
   color: purple;
-}
-#toList i{
-  color: white;
 }
 #AlixTime button i{
   font-size: 20px;
-}
-.bottomBtn i{
-  font-size: 25px;
-  line-height: 30px;
 }
 #AlixTime h6{
   margin: 0;
   text-align: center;
   color: purple;
 }
-#calMonthPage{
+/* #calMonthPage, #calWeekPage{
   display: none;
-}
-#switchPageInput:checked + label > #toCalendar{
+} */
+/* #switchPageInput:checked + label > #toCalendar{
   opacity: 0;
 }
 #switchPageInput:checked + label > #toList{
   opacity: 1;
 }
-#switchPageInput:checked ~ div#calMonthPage{
+#switchPageInput:checked ~ div#calWeekPage{
   display: block;
 }
 #switchPageInput:checked ~ div#listPage{
   display: none;
+} */
+#menuPages{
+  position: fixed;
+  bottom: 10px;
+  /* width: 40px;
+  height: 40px; */
+  left: 13px;
+  /* padding: 5px;
+  border: .5px solid darkslategrey;
+  text-align: center;
+  border-radius: 5px; */
+  z-index: 400;
 }
-
+#allPagesMenu{
+  position: absolute;
+  bottom: 40px;
+  width: 40px;
+  display: none;
+  flex-flow: column nowrap;
+  align-items: center;
+}
+#switchMenuInput:checked ~ div#allPagesMenu{
+  display: flex;
+}
+.bottomBtn{
+  width: 35px;
+  height: 35px;
+  padding: 5px;
+  border: .5px solid darkslategrey;
+  text-align: center;
+  border-radius: 5px;
+}
+.menuBtn{
+  width: 40px;
+  height: 40px;
+}
+.bottomBtn i{
+  font-size: 22px;
+  line-height: 25px;
+}
+.menuBtn i{
+  font-size: 25px;
+  line-height: 30px;
+}
+.whiteOnPurple{
+  background-color: purple;
+}
+.whiteOnPurple i{
+  color: white;
+}
+.purpleOnWhite{
+  background-color: white;
+}
+.purpleOnWhite i{
+  color: purple;
+}
+/* input[name="switchPageRadios"]:checked ~ div#menuPages > div.allPagesMenu > {
+  display: block;
+} */
+#switchPageInputMonth:checked + div.onePage{
+  display: block;
+}
+#switchPageInputWeek:checked + div.onePage{
+  display: block;
+}
+#switchPageInputList:checked + div.onePage{
+  display: block;
+}
 #taskInfo, #calendarDiv.onIcon, .reDateDiv{
   color: darkslategrey;
   background-color: white;
@@ -526,6 +568,10 @@ li .textDiv{
   flex-grow: 1;
   margin: 0 7px;
   position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
 }
 
 li .textDone{
@@ -1032,7 +1078,7 @@ hr.zoneHr{
   left: 0;
   width: 100%;
   height: 100%;
-  padding: 10px 0;
+  padding: 10px;
 }
 .monthlyWrapper{
   width: fit-content;
@@ -1093,6 +1139,48 @@ hr.zoneHr{
 }
 .selectedKase{
   outline: 2px solid darkslategrey;
+}
+
+.weeklyContainer{
+  display: grid;
+  align-content: center;
+  justify-content: center;
+  border: 1px solid rgba(47, 79, 79, .5);;
+  border-radius: 2px;
+}
+.weeklyItem{
+  border: 0.5px solid rgba(47, 79, 79, .3);;
+  border-radius: 2px;
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
+  z-index: 1;
+  font-size: 12px;
+  text-align: center;
+  line-height: 20px;
+}
+.weeklyTitle{
+  grid-column: 1 / 9;
+  font-size: 14px; 
+  font-weight: 600; 
+  border-radius: 0; 
+  border: .5px solid rgba(47, 79, 79, .5);
+}
+.weeklyBtn{
+  padding: 0 5px;
+  background-color: white;
+  border: none;
+  line-height: 1em;
+  font-size: 20px;
+}
+.todayArea{
+  border: 2px solid rgba(64, 115, 243, 0.5);
+  border-radius: 3px;
+  z-index: 3;
+}
+.weeklyEvent{
+  border: 1px solid darkslategrey;
+  border-radius: 8px;
+  z-index: 2;
 }
 
 .cossin{

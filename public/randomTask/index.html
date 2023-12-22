@@ -20,45 +20,46 @@
 </head>
 
 <body>
-  <input id="switchPageInput" type="checkbox" class="displayNone">
-    <label for="switchPageInput" id="switchPageLabel">
-      <div id="toCalendar" class="bottomBtn">
-        <i class="fa-solid fa-calendar-days"></i>
-      </div>
-      <div id="toList" class="bottomBtn">
-        <i class="fa-solid fa-list-check"></i>
-      </div>
-    </label>
-  <div id="calMonthPage">
-    <div id="monthlyScreen" class="wholeScreenCalendar">
-      <div class="monthlyWrapper">
-        <table class="monthlyCalendar">
-          <thead>
-            <tr>
-              <th><button id="monthBackward"><span class="typcn typcn-media-play-reverse"></span></button></th>
-              <th id="yearNameSpace" colspan="5"></th>
-              <th><button id="monthForward"><span class="typcn typcn-media-play"></span></button></th>
-            </tr>
-            <tr>
-              <th id="monthNameSpace" colspan="7"></th>
-            </tr>
-            <tr>
-              <th>D</th>
-              <th>L</th>
-              <th>M</th>
-              <th>M</th>
-              <th>G</th>
-              <th>V</th>
-              <th>S</th>
-            </tr>
-          </thead>
-          <tbody id="monthlyCalendarTBody">
-          </tbody>
-        </table>
-      </div>
+  
+  
+  
+  
+  <input id="switchPageInputMonth" name="switchPageRadios" type="radio" class="displayNone">
+  <div id="calMonthPage" class="wholeScreenCalendar onePage displayNone">
+    <div class="monthlyWrapper">
+      <table class="monthlyCalendar">
+        <thead>
+          <tr>
+            <th><button id="monthBackward"><span class="typcn typcn-media-play-reverse"></span></button></th>
+            <th id="yearNameSpace" colspan="5"></th>
+            <th><button id="monthForward"><span class="typcn typcn-media-play"></span></button></th>
+          </tr>
+          <tr>
+            <th id="monthNameSpace" colspan="7"></th>
+          </tr>
+          <tr>
+            <th>D</th>
+            <th>L</th>
+            <th>M</th>
+            <th>M</th>
+            <th>G</th>
+            <th>V</th>
+            <th>S</th>
+          </tr>
+        </thead>
+        <tbody id="monthlyCalendarTBody">
+        </tbody>
+      </table>
     </div>
   </div>
-  <div id="listPage">
+  <input id="switchPageInputWeek" name="switchPageRadios" type="radio" class="displayNone">
+  <div id="calWeekPage" class="wholeScreenCalendar onePage displayNone">
+    <div class="weeklyContainer">
+      
+    </div>
+  </div>
+  <input id="switchPageInputList" name="switchPageRadios" type="radio" class="displayNone">
+  <div id="listPage" class="onePage">
     <div id="clickScreen" class="Screen displayNone"></div>
     <div id="logInScreen" class="Screen">
       <div id="logInDiv" class="DivScreen">
@@ -266,7 +267,7 @@
     <h3 style="display: inline-block;">Done Zone</h3>
     <ul id="doneZone"></ul>
   </div>
-  <div id="toDoPage" class="displayNone">
+  <div id="toDoPage" class="onePage displayNone">
     <h3>Fac là,<br />pour les 30 prochaines minutes,<br />tu vas...</h3>
     <p id="taskToDo"></p>
     <div id="moreInfoWhole" class="displayNone">
@@ -277,6 +278,25 @@
     <button id="nopeNextBtn"><span class="typcn typcn-arrow-sync"></span>Nope, next!<span class="typcn typcn-arrow-sync"></span></button>
     <button id="doneNextBtn"><span class="typcn typcn-thumbs-up"></span>Done, next!!<span class="typcn typcn-arrow-right-outline"></span></button>
     <button id="backBtn"><span class="typcn typcn-arrow-left-outline"></span>Back!</button>
+  </div>
+  <div id="menuPages">
+    <input id="switchMenuInput" type="checkbox" class="displayNone">
+    <label for="switchMenuInput" id="switchPageLabel">
+      <div id="toAllPages" class="bottomBtn menuBtn whiteOnPurple">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+    </label>
+    <div id="allPagesMenu">
+      <label for="switchPageInputWeek" id="toWeek" class="bottomBtn purpleOnWhite">
+        <i class="fa-solid fa-calendar-week"></i>
+      </label>
+      <label for="switchPageInputMonth" id="toMonth" class="bottomBtn purpleOnWhite">
+        <i class="fa-solid fa-calendar-days"></i>
+      </label>
+      <label for="switchPageInputList" id="toList" class="bottomBtn purpleOnWhite">
+        <i class="fa-solid fa-list-check"></i>
+      </label>
+    </div>
   </div>
 
 <script type="module" src="randomTask.js"></script>

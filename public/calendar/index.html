@@ -51,165 +51,162 @@
   .heresToday{
     background: rgba(30,144,255,.5);
   }
+  .container{
+    display: grid;
+    align-content: center;
+    justify-content: center;
+    border: 1px solid rgba(47, 79, 79, .5);;
+    border-radius: 2px;
+  }
+  .item{
+    border: 0.5px solid rgba(47, 79, 79, .3);;
+    border-radius: 2px;
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+    z-index: 1;
+    font-size: 12px;
+    text-align: center;
+    line-height: 20px;
+  }
+  #event1{
+    background-color: purple;
+    border: 2px solid darkslategrey;
+    border-radius: 10px;
+    grid-column: 5;
+    grid-row: 10 / 12;
+    z-index: 2;
+  }
+  .weekEvent{
+    background-color: goldenrod;
+    border: 1px solid darkslategrey;
+    border-radius: 8px;
+    z-index: 2;
+  }
 </style>
-  <div class="monthlyWrapper">
-    <button id="monthBackward"><span class="typcn typcn-media-play-reverse"></span></button>
-    <table class="calendar">
-      <thead>
-        <tr>
-          <th id="yearNameSpace" colspan="7"></th>
-        </tr>
-        <tr>
-          <th id="monthNameSpace" colspan="7"></th>
-        </tr>
-        <tr>
-          <th>D</th>
-          <th>L</th>
-          <th>M</th>
-          <th>M</th>
-          <th>G</th>
-          <th>V</th>
-          <th>S</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-        </tr>
-        <tr>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-        </tr>
-        <tr>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-        </tr>
-        <tr>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-        </tr>
-        <tr>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-        </tr>
-        <tr>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-          <td><div class="circle"></div></td>
-        </tr>
-      </tbody>
-    </table>
-    <button id="monthForward"><span class="typcn typcn-media-play"></span></button>
-  </div>
+<div class="container">
+</div>
 </body>
 <script>
-  let year;
-  let month;
-  let date = new Date();
-  let todayDate = date.getDate();
-  let todayYear = date.getFullYear();
-  let todayMonth = date.getMonth(); //pour vrai, enlève le "+ 1"
-  year = todayYear;
-  month = todayMonth;
-  getMonthlyCalendar();
-  
-  function getMonthlyCalendar(){
-    let first = new Date(year, month, 1);
-    let monthName = first.toLocaleString('it-IT', { month: 'long' });
-    monthNameSpace.innerText = monthName.toLocaleUpperCase();
-    yearNameSpace.innerText = year;
-    // let monthName = date.toLocaleString('it-IT', { month: 'long' });
-    let last = new Date(year, month + 1, 0).getDate();
-    let firstDay = first.getDay();
-    let befFirst = first.setDate(-(firstDay - 1));
-    let numStart = first.getDate();
-    let i = 0;
-    let num = numStart;
-    document.querySelectorAll(".circle").forEach((td) => {
-      td.classList.remove("heresToday");
-      if(i < firstDay){
-        td.innerText = num;
-        td.setAttribute("data-month", month - 1);
-        td.style.opacity = ".4";
-        num++;
-        i++;
-      } else if(i == firstDay){
-        num = 1;
-        td.innerText = num;
-        td.setAttribute("data-month", month);
-        td.style.opacity = "1";
-        num++;
-        i++;
-      } else if((i > firstDay && i < (firstDay + last)) && (num > 1 && num <= last)){
-        td.innerText = num;
-        td.setAttribute("data-month", month);
-        td.style.opacity = "1";
-        num++;
-        i++;
-      } else if(i == (firstDay + last)){
-        num = 1;
-        td.innerText = num;
-        td.setAttribute("data-month", month + 1);
-        td.style.opacity = ".4";
-        num++;
-        i++;
-      }else if(i > (firstDay + last)){
-        td.innerText = num;
-        td.setAttribute("data-month", month + 1);
-        td.style.opacity = ".4";
-        num++;
-        i++;
+  const giorniNomi = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"];
+  (() => {
+    let arrayItem = [];
+    for(let c = 1; c < 9; c++){
+      let arrayC = [];
+      let line = 2;
+      for(let r = 1; r < 26; r++){//95
+        let item = `<div class="item" style="grid-column:${c}; grid-row:${r == 1 ? r : `${line} / ${line + 4}`}; ${r == 1 ? "font-size:14px; font-weight:600; border-radius:2px 2px 0 0; border-bottom:1px solid rgba(47, 79, 79, .5);" : ""} ${c == 1 ? "border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}">${c == 1 && r > 1 ? `${String(r - 2).padStart(2, "0")}:00` : r == 1 && c > 1 ? `${giorniNomi[c - 2].charAt(0).toUpperCase() + giorniNomi[c - 2].slice(1)}` : ``}</div>`;
+        arrayC.push(item);
+        r > 1 ? line += 4 : line = line;
       };
-      
-      if(td.dataset.month == todayMonth && td.innerText == todayDate){
-        td.classList.add("heresToday");
-      };
+      let arrayCs = arrayC.join("");
+      arrayItem.push(arrayCs);
+    };
+    let nomiCol = giorniNomi.map(giorno => {
+      return `[col-${giorno}] 1fr`;
     });
-  };
+    let firstCol = `[col-Hour] 35px`;
+    nomiCol.unshift(firstCol);
+    let nomiCols = nomiCol.join(" ");
+    let nomiRow = [];
+    for(let h = 0; h < 24; h++){ //93
+      let rowH = `[row-${String(h).padStart(2, "0")}-00] .25fr`;
+      let rowH15 = `[row-${String(h).padStart(2, "0")}-15] .25fr`;
+      let rowH30 = `[row-${String(h).padStart(2, "0")}-30] .25fr`;
+      let rowH45 = `[row-${String(h).padStart(2, "0")}-45] .25fr`;
+      nomiRow.push(rowH, rowH15, rowH30, rowH45);
+    };
+    let firstRow = `[row-Day] 1fr`;
+    nomiRow.unshift(firstRow);
+    let nomiRows = nomiRow.join(" ");
+    let container = document.querySelector(".container");
+    container.style.gridTemplateRows = nomiRows;
+    container.style.gridTemplateColumns = nomiCols;
+    let day = giorniNomi[4];
+    let hourStart = "13-15";
+    let hourEnd = "15-30";
+    let add = `<div id="event2" style="grid-column:col-${day}; grid-row:row-${hourStart}/row-${hourEnd};" >Allo</div>`;
+    arrayItem.push(add);
+    let arrayItems = arrayItem.join("");
+    container.innerHTML = arrayItems;
+  })();
 
-  monthBackward.addEventListener("click", () => {
-    month = month > 0 ? month - 1 : 11;
-    year = month == 11 ? year - 1 : year;
-    console.log(year + " " + month);
-    getMonthlyCalendar();
-  });
+  // let year;
+  // let month;
+  // let date = new Date();
+  // let todayDate = date.getDate();
+  // let todayYear = date.getFullYear();
+  // let todayMonth = date.getMonth(); //pour vrai, enlève le "+ 1"
+  // year = todayYear;
+  // month = todayMonth;
+  // getMonthlyCalendar();
+  
+  // function getMonthlyCalendar(){
+  //   let first = new Date(year, month, 1);
+  //   let monthName = first.toLocaleString('it-IT', { month: 'long' });
+  //   monthNameSpace.innerText = monthName.toLocaleUpperCase();
+  //   yearNameSpace.innerText = year;
+  //   // let monthName = date.toLocaleString('it-IT', { month: 'long' });
+  //   let last = new Date(year, month + 1, 0).getDate();
+  //   let firstDay = first.getDay();
+  //   let befFirst = first.setDate(-(firstDay - 1));
+  //   let numStart = first.getDate();
+  //   let i = 0;
+  //   let num = numStart;
+  //   document.querySelectorAll(".circle").forEach((td) => {
+  //     td.classList.remove("heresToday");
+  //     if(i < firstDay){
+  //       td.innerText = num;
+  //       td.setAttribute("data-month", month - 1);
+  //       td.style.opacity = ".4";
+  //       num++;
+  //       i++;
+  //     } else if(i == firstDay){
+  //       num = 1;
+  //       td.innerText = num;
+  //       td.setAttribute("data-month", month);
+  //       td.style.opacity = "1";
+  //       num++;
+  //       i++;
+  //     } else if((i > firstDay && i < (firstDay + last)) && (num > 1 && num <= last)){
+  //       td.innerText = num;
+  //       td.setAttribute("data-month", month);
+  //       td.style.opacity = "1";
+  //       num++;
+  //       i++;
+  //     } else if(i == (firstDay + last)){
+  //       num = 1;
+  //       td.innerText = num;
+  //       td.setAttribute("data-month", month + 1);
+  //       td.style.opacity = ".4";
+  //       num++;
+  //       i++;
+  //     }else if(i > (firstDay + last)){
+  //       td.innerText = num;
+  //       td.setAttribute("data-month", month + 1);
+  //       td.style.opacity = ".4";
+  //       num++;
+  //       i++;
+  //     };
+      
+  //     if(td.dataset.month == todayMonth && td.innerText == todayDate){
+  //       td.classList.add("heresToday");
+  //     };
+  //   });
+  // };
 
-  monthForward.addEventListener("click", () => {
-    month = month < 11 ? month + 1 : 0;
-    year = month == 1 ? year + 1 : year;
-    console.log(year + " " + month);
-    getMonthlyCalendar();
-  });
+  // monthBackward.addEventListener("click", () => {
+  //   month = month > 0 ? month - 1 : 11;
+  //   year = month == 11 ? year - 1 : year;
+  //   console.log(year + " " + month);
+  //   getMonthlyCalendar();
+  // });
+
+  // monthForward.addEventListener("click", () => {
+  //   month = month < 11 ? month + 1 : 0;
+  //   year = month == 1 ? year + 1 : year;
+  //   console.log(year + " " + month);
+  //   getMonthlyCalendar();
+  // });
 
 </script>
 

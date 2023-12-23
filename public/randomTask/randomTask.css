@@ -325,6 +325,10 @@ input[name="daysWeekChoice"]:checked + label.dayCircle{
 h5.taskInfoInput{
   margin-bottom: 0;
 }
+.taskInfoSubTitle{
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+}
 .cornerItLabel{
   position: absolute;
   top: 5px;
@@ -575,6 +579,35 @@ li .textDiv{
   justify-content: space-between;
   align-items: center;
 }
+
+.numberedCal{
+  position: relative;
+  padding: 0;
+  width: 30px;
+  text-align: center;
+  flex-shrink: 0;
+  height: 30px;
+}
+.numberedCal i{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.numberedCal span{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 30px;
+  /* text-shadow: -1px -1px 0 #fff, 0 -1px 0 #fff, 1px -1px 0 #fff, 1px 0 0 #fff, 1px 1px 0 #fff, 0 1px 0 #fff, -1px 1px 0 #fff, -1px 0 0 #fff; */
+  text-shadow: -0.75px -0.75px 0 #fff, 0 -0.75px 0 #fff, 0.75px -0.75px 0 #fff, 0.75px 0 0 #fff, 0.75px 0.75px 0 #fff, 0 0.75px 0 #fff, -0.75px 0.75px 0 #fff, -0.75px 0 0 #fff;
+  /* text-shadow: -0.5px -0.5px .25px #fff, 0 -0.5px .25px #fff, 0.5px -0.5px .25px #fff, 0.5px 0 .25px #fff, 0.5px 0.5px .25px #fff, 0 0.5px .25px #fff, -0.5px 0.5px .25px #fff, -0.5px 0 .25px #fff; */
+  /* text-shadow: -0.5px -0.5px 0 #fff, 0 -0.5px 0 #fff, 0.5px -0.5px 0 #fff, 0.5px  0   0 #fff, 0.5px  0.5px 0 #fff, 0    0.5px 0 #fff, -0.5px  0.5px 0 #fff, -0.5px  0   0 #fff; */
+}
+
 
 li .textDone{
   font-size: 20px;

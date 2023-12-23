@@ -464,6 +464,14 @@ settings.addEventListener("click", () => {
 
 function todoCreation(todo){
   let togoList = getTogoList(todo);
+  let numberedDays;
+  let todayDate = getDateFromString(getTodayDate());
+  if(todo.line == "doneDay"){
+    let doneDate = getDateFromString(todo.date);
+    // numberedDays = doneDate.getTime() - todayDate.getTime();
+    numberedDays = Math.round(Math.abs(doneDate - todayDate)/(1000 * 3600 * 24));
+    console.log(numberedDays);
+  };
   if(togoList !== ""){ //what happens if one is stock/stored AND recurring/recurry?
     if(todo.stock){
       document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" ${todo.term == "showThing" ? `data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" class="showLi" style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``}><i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo(this, 'list')" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
@@ -475,7 +483,7 @@ function todoCreation(todo){
         <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
         <div class="textDiv"><span onclick="taskAddAllInfo(this, 'list')" class="text" ${todo.term == "showThing" ? `` : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
         <input type="time" class="displayNone"/></div>
-        <i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.line}" onclick="smallCalendarChoice(this)"></i>
+        <div class="numberedCal" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.line}"></i><span class="${todo.line == "doneDay" ? `` : `displayNone`}">${todo.line == "doneDay" ? numberedDays : ``}</span></div>
       </li>`);
       // document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.term == "showThing" ? `class="showLi" style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``} ${todo.projet ? `class="projetLi" style="outline-color: ${todo.PColorBG};"` : ``}>
       //   <i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>
@@ -508,6 +516,8 @@ function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dal
   } else if(todo.line == "noDay"){ //whenever
     if(todo.term == "oneTime"){
       togoList = "listOne";
+    } else if(todo.term == "crazyShit"){
+      togoList = "listIdea";
     } else{
       togoList = "list";
     };
@@ -523,6 +533,8 @@ function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dal
     if(todo.line == "doneDay"){
       if(todo.term == "oneTime"){
         togoList = "listOne";
+      } else if(todo.term == "crazyShit"){
+        togoList = "listIdea";
       } else{
         togoList = "list";
       };
@@ -1951,12 +1963,14 @@ function taskAddAllInfo(thisOne, where){
         <textarea id="taskDetails" class="taskInfoInput">${todo.info ? todo.info : ""}</textarea>
         <h5 class="taskInfoInput">Tell me what...</h5>
         <div class="taskInfoInput relDiv">
-          <h5 style="margin: 0;">Task</h5>
+          <h5 class="taskInfoSubTitle" style="margin: 0;">Task</h5>
           <input class="myRadio" type="radio" name="termOptions" id="oneTime" value="oneTime" ${todo.term == "oneTime" ? `checked` : ``} />
           <label for="oneTime" class="termLabel"><span class="myRadio"></span><span>It's a one time thing</span></label>
           <input class="myRadio" type="radio" name="termOptions" id="longTerm" value="longTerm" ${todo.term == "longTerm" ? `checked` : ``} />
           <label for="longTerm" class="termLabel"><span class="myRadio"></span><span>It's a long term shit</span></label>
-          <h5 style="margin: 0;">Event</h5>
+          <input class="myRadio" type="radio" name="termOptions" id="crazyShit" value="crazyShit" ${todo.term == "crazyShit" ? `checked` : ``} />
+          <label for="crazyShit" class="termLabel"><span class="myRadio"></span><span>It's just a <em>maybe-one-day-probably-never</em> kinda crazy idea</span></label>
+          <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Event</h5>
           <input class="myRadio" type="radio" name="termOptions" id="showThing" value="showThing" ${todo.term == "showThing" ? `checked` : ``} />
           <label for="showThing" class="termLabel"><span class="myRadio"></span><span>It's a whole show!</span></label>
           <div class="showDiv">
@@ -1977,7 +1991,7 @@ function taskAddAllInfo(thisOne, where){
             </div>      
           </div>
         </div>
-        <h5 class="taskInfoInput">Tell me when...</h5>
+        <h5 class="taskInfoInput" style="margin-top: 20px;">Tell me when...</h5>
         <div id="calendarHome"></div>
       </div>
       <button id="taskInfoBtn">Save</button>
@@ -2667,7 +2681,8 @@ function putDatesInWeek(date){
   const test = arrayDate.some(el => (el.full == today));
   if(test){
     let todayDay = `${daysWeekChoices[dayIdx].letter}${dayIdx}`;
-    let tomoDay = `${daysWeekChoices[dayIdx + 1].letter}${dayIdx + 1}`;
+    let nextDayIdx = dayIdx == 6 ? 0 : dayIdx + 1;
+    let tomoDay = `${daysWeekChoices[nextDayIdx].letter}${dayIdx + 1}`;
     let todayArea;
     if(today == arrayDate[arrayDate.length - 1].full){
       todayArea = `<div class="todayArea" style="grid-area: row-00-00 / col-${todayDay} / row-end / col-${tomoDay}"></div>`;

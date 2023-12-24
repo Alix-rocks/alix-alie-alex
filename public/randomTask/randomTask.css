@@ -871,6 +871,10 @@ input[name="colorRadio"]:checked + label > div{
   border-radius: 10px;
   border: .5px solid darkslategrey;
 }
+.sameHabit .textDiv span.text{
+  opacity: .6;
+  font-size: 1em;
+}
 .showTypeLabelDiv{
   display: flex;
   align-items: baseline;

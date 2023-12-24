@@ -474,11 +474,11 @@ function todoCreation(todo){
   };
   if(togoList !== ""){ //what happens if one is stock/stored AND recurring/recurry?
     if(todo.stock){
-      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" ${todo.term == "showThing" ? `data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" class="showLi" style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``}><i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo(this, 'list')" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo(this, 'list')" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
     } else if(todo.line == "recurringDay"){
-      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" ${todo.term == "showThing" ? `data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" class="showLi" style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``}><i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo(this, 'list')" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.line}" onclick="smallCalendarChoice(this)"></i></li>`);
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo(this, 'list')" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.line}" onclick="smallCalendarChoice(this)"></i></li>`);
     } else{
-      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.recurry ? `data-rec="${todo.recId}"` : ``} ${todo.term == "showThing" ? `class="showLi" style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``}>
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" ${todo.term == "showThing" ? `style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``}>
         <i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>
         <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
         <div class="textDiv"><span onclick="taskAddAllInfo(this, 'list')" class="text" ${todo.term == "showThing" ? `` : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
@@ -1963,7 +1963,10 @@ function taskAddAllInfo(thisOne, where){
         <textarea id="taskDetails" class="taskInfoInput">${todo.info ? todo.info : ""}</textarea>
         <h5 class="taskInfoInput">Tell me what...</h5>
         <div class="taskInfoInput relDiv">
-          <h5 class="taskInfoSubTitle" style="margin: 0;">Task</h5>
+          <h5 class="taskInfoSubTitle" style="margin: 0;">Habit</h5>
+          <input class="myRadio" type="radio" name="termOptions" id="sameHabit" value="sameHabit" ${todo.term == "sameHabit" ? `checked` : ``} />
+          <label for="sameHabit" class="termLabel"><span class="myRadio"></span><span>It's always the same thing...</span></label>
+          <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Task</h5>
           <input class="myRadio" type="radio" name="termOptions" id="oneTime" value="oneTime" ${todo.term == "oneTime" ? `checked` : ``} />
           <label for="oneTime" class="termLabel"><span class="myRadio"></span><span>It's a one time thing</span></label>
           <input class="myRadio" type="radio" name="termOptions" id="longTerm" value="longTerm" ${todo.term == "longTerm" ? `checked` : ``} />
@@ -2341,11 +2344,11 @@ function iconChoice(thisOne){
   iconTag = thisOne;
   parent = iconTag.parentElement;
   parent.classList.add("selectedTask");
-  let li = iconTag.parentElement;
+  let li = iconTag.parentElement; //li and parent are the same!!!
   let todo;
   let recIndex;
   let todoIndex;
-  if(li.dataset.rec && li.dataset.rec !== "undefined"){
+  if(li.dataset.rec && li.dataset.rec !== "undefined"){ // have a function to do that, that will return the todo. because with project, you'll have the same math to do
     let rec = li.dataset.rec;
     recIndex = listTasks.findIndex(todo => todo.id == rec);
     todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == li.id);

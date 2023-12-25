@@ -931,7 +931,7 @@ input[name="showOptions"]:checked + label.showTypeLabel > i.showTick{
   height: 22.5px;
   padding: 0 7px;
 }
-.showTypeCreationInside > i.typcn-media-record{
+#taskInfo .showTypeCreationInside > i.typcn-media-record{
   position: absolute;
   top: 0;
   right: 0;
@@ -977,6 +977,11 @@ input[name="showOptions"]:checked + label.showTypeLabel > i.showTick{
 }
 .underh5{
   margin: 0;
+  font-weight: 500;
+}
+.consigne{
+  margin: 5px 0 0 0;
+  font-weight: 500;
 }
 .listToggleLabel{
   position: relative;
@@ -1214,6 +1219,10 @@ hr.zoneHr{
   line-height: 1em;
   font-size: 20px;
 }
+.sleepArea{
+  z-index: 1;
+  background-color: rgba(47, 79, 79, .2);
+}
 .todayArea{
   border: 2px solid rgba(64, 115, 243, 0.5);
   border-radius: 3px;
@@ -1225,6 +1234,12 @@ hr.zoneHr{
   z-index: 3;
   text-align: center;
   font-size: 12px;
+}
+.weeklyBuffer{
+  border: 0.5px solid darkslategrey;
+  border-radius: 5px;
+  z-index: 3;
+  background-color: rgba(47, 79, 79, .4);
 }
 .weeklyAfterDateSpan{
   color: rgba(47, 79, 79, .3);

@@ -107,6 +107,7 @@ const pageEvent = new Event("click");
 (() => {
   document.querySelectorAll('input[name="switchPageRadios"]').forEach(radio => {
     radio.addEventListener("click", () => {
+      document.querySelector("#switchMenuInput").checked = false;
       document.querySelectorAll(".onePage").forEach(page => {
         page.classList.add("displayNone");
       });
@@ -2887,6 +2888,9 @@ function getWeeklyCalendar(){
     document.querySelectorAll(".weeklyEvent").forEach(we => {
       we.remove();
     });
+    document.querySelectorAll(".weeklyBuffer").forEach(we => {
+      we.remove();
+    });
     let Dday = document.querySelector("#Dday").dataset.date;
     let Ddate = getDateFromString(Dday);
     Ddate.setDate(Ddate.getDate() - 7);
@@ -2898,6 +2902,9 @@ function getWeeklyCalendar(){
       todayAreaDiv.remove();
     };
     document.querySelectorAll(".weeklyEvent").forEach(we => {
+      we.remove();
+    });
+    document.querySelectorAll(".weeklyBuffer").forEach(we => {
       we.remove();
     });
     let Sday = document.querySelector("#Sday").dataset.date;

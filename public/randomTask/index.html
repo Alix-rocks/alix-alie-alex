@@ -22,8 +22,14 @@
 <body>
   
   
+  <!-- Settings -->
+  <input id="switchPageInputSetting" name="switchPageRadios" type="radio" class="displayNone">
+  <div id="settingsScreen" class="onePage displayNone">
+    <div id="settingsDiv" class="DivScreen">
+    </div>
+  </div>
   
-  
+  <!-- Month -->
   <input id="switchPageInputMonth" name="switchPageRadios" type="radio" class="displayNone">
   <div id="calMonthPage" class="wholeScreenCalendar onePage displayNone">
     <div class="monthlyWrapper">
@@ -52,12 +58,15 @@
       </table>
     </div>
   </div>
+
+  <!-- Week -->
   <input id="switchPageInputWeek" name="switchPageRadios" type="radio" class="displayNone">
   <div id="calWeekPage" class="wholeScreenCalendar onePage displayNone">
     <div class="weeklyContainer">
-      
     </div>
   </div>
+
+  <!-- List -->
   <input id="switchPageInputList" name="switchPageRadios" type="radio" class="displayNone">
   <div id="listPage" class="onePage">
     <div id="clickScreen" class="Screen displayNone"></div>
@@ -69,7 +78,6 @@
         <button id="tryBtn" class="ScreenBtn2">Free Trial</button>
       </div>
     </div>
-    <button id="settings"><span class="typcn typcn-cog-outline"></span></button>
     <button id="cloudIt"><span class="typcn typcn-cloud-storage-outline"></span></button>
     <div id="AlixTime">
       <a href="https://alix.rocks/time">
@@ -284,41 +292,21 @@
       </div>
     </label>
     <div id="allPagesMenu">
-      <label for="switchPageInputWeek" class="bottomBtn purpleOnWhite">
+      <label for="switchPageInputWeek" data-page="switchPageInputWeek" class="bottomBtn menuLabel purpleOnWhite">
         <i class="fa-solid fa-calendar-week"></i>
       </label>
-      <label for="switchPageInputMonth" class="bottomBtn purpleOnWhite">
+      <label for="switchPageInputMonth" data-page="switchPageInputMonth" class="bottomBtn menuLabel purpleOnWhite">
         <i class="fa-solid fa-calendar-days"></i>
       </label>
-      <label for="switchPageInputList" class="bottomBtn purpleOnWhite">
+      <label for="switchPageInputList"  data-page="switchPageInputList" class="bottomBtn menuLabel purpleOnWhite">
         <i class="fa-solid fa-list-check"></i>
+      </label>
+      <label for="switchPageInputSetting" class="bottomBtn menuLabel purpleOnWhite">
+        <i class="fa-solid fa-cog"></i>
       </label>
     </div>
   </div>
-  <div id="settingsScreen" class="Screen displayNone">
-    <div id="settingsDiv" class="DivScreen">
-      <span id="exitX">x</span>
-      <button id="clearStorageBtn" style="margin-top: 15px;">Update</button>
-      <hr />
-      <h2>Settings</h2>
-      <!-- <h3>Update</h3> -->
-      <!-- <button id="clearStorageBtn"><span class="typcn typcn-cancel-outline" style="padding: 0;"></span></button> -->
-      <h3>What time does your day really end?</h3>
-      <input id="timeInput" type="time">
-      <h3>What's the first thing you wanna see when you get here?</h3>
-      <label for="switchPageInputList" class="bottomBtn purpleOnWhite">
-        <i class="fa-solid fa-list-check"></i>
-      </label>
-      <label for="switchPageInputMonth" class="bottomBtn purpleOnWhite">
-        <i class="fa-solid fa-calendar-days"></i>
-      </label>
-      <label for="switchPageInputWeek" class="bottomBtn purpleOnWhite">
-        <i class="fa-solid fa-calendar-week"></i>
-      </label>
-      <button id="settingsBtn" class="ScreenBtn1">yep <span class="typcn typcn-thumbs-up" style="padding: 0;"></span></button>
-      <button id="cancelBtn" class="ScreenBtn2">Cancel</button>
-    </div>
-  </div>
+  
 
 <script type="module" src="randomTask.js"></script>
 </body>

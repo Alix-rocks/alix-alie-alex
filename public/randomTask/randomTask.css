@@ -73,6 +73,25 @@ input[type="radio"]{
   line-height: 25px;
   font-weight: 700;
 }
+.clockingDiv{
+  text-align: justify;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+}
+.clockingDiv div{
+  margin: 15px 0;
+}
+.clockingDiv div p{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  margin: 5px 0;
+}
+.clockingDiv div p:first-of-type{
+  text-decoration: underline;
+  font-weight: 700;
+}
 .ScreenBtn1{
   display: block;
   margin: 25px auto 10px;
@@ -239,18 +258,14 @@ input[type="radio"]{
 .purpleOnWhite i{
   color: purple;
 }
-/* input[name="switchPageRadios"]:checked ~ div#menuPages > div.allPagesMenu > {
-  display: block;
-} */
-#switchPageInputMonth:checked + div.onePage{
-  display: block;
+
+input[name="choicePageRadios"]:checked + label{
+  background-color: purple;
 }
-#switchPageInputWeek:checked + div.onePage{
-  display: block;
+input[name="choicePageRadios"]:checked + label i{
+  color: white;
 }
-#switchPageInputList:checked + div.onePage{
-  display: block;
-}
+
 #taskInfo, #calendarDiv.onIcon, .reDateDiv{
   color: darkslategrey;
   background-color: white;

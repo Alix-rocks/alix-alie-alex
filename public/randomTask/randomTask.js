@@ -2155,7 +2155,7 @@ function taskAddAllInfo(thisOne, where){
           <input class="myRadio" type="radio" name="termOptions" id="oneTime" value="oneTime" ${todo.term == "oneTime" ? `checked` : ``} />
           <label for="oneTime" class="termLabel"><span class="myRadio"></span><span>It's a one time thing</span></label>
           <input class="myRadio" type="radio" name="termOptions" id="longTerm" value="longTerm" ${todo.term == "longTerm" ? `checked` : ``} />
-          <labe for="longTerm" class="termLabel"><span class="myRadio"></span><span>It's a long term shit</span></labe
+          <label for="longTerm" class="termLabel"><span class="myRadio"></span><span>It's a long term shit</span></label>
           <input class="myRadio" type="radio" name="termOptions" id="crazyShit" value="crazyShit" ${todo.term == "crazyShit" ? `checked` : ``} />
           <label for="crazyShit" class="termLabel"><span class="myRadio"></span><span>It's just a <em>maybe-one-day-probably-never</em> kinda crazy idea</span></label>
           <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Event</h5>
@@ -2474,8 +2474,11 @@ function taskAddAllInfo(thisOne, where){
     updateWeek();
     updateMonth();
     
-    if(where == "list"){
+    if(where == "list" && togoList !== ""){
       moving = true;
+      parent.remove();
+      clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
+    } else if(where == "list" && togoList == ""){
       parent.remove();
       clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
     } else{

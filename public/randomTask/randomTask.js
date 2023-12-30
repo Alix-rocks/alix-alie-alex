@@ -654,6 +654,9 @@ function resetCBC(){
 // *** CREATION
 
 function todoCreation(todo){
+  if(todo.copy){
+    console.log(todo);
+  };
   let togoList = getTogoList(todo);
   let numberedDays;
   let todayDate = getDateTimeFromString(getTodayDate(), mySettings.myTomorrow);
@@ -712,7 +715,7 @@ function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dal
     togoList = "listRecurring";
     //recurryCreation(todo);
     recurryOuting(todo);
-  } else if(todo.line == "noDay"){ //whenever
+  } else if(todo.line == "noDay" || todo.copy){ // ( || copy ) //whenever
     if(todo.term == "oneTime"){
       togoList = "listOne";
     } else if(todo.term == "crazyShit"){
@@ -720,15 +723,21 @@ function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dal
     } else{
       togoList = "list";
     };
-  } else if(hierOggiTime < todoTime && todoTime < oggiDemainTime){ //it's a todoDay or a doneDay
+  } else if((hierOggiTime < todoTime) && (todoTime < oggiDemainTime) && !todo.copy){ //it's a todoDay or a doneDay
     togoList = "listToday";
-  } else if((oggiDemainTime < todoTime) && (todoTime < demainApresTime)){
-    togoList = "listTomorrow";
+  } else if((oggiDemainTime < todoTime) && (todoTime < demainApresTime) && !todo.copy){
+    togoList = "listTomorrow"; //whether it's todoDay or doneDay
+    if((todo.term == "oneTime" || todo.term == "longTerm" || todo.term == "crazyShit" || todo.term == "sameHabit") && !todo.recurry){
+      if(document.querySelectorAll(`#copy${todo.id}`).length <= 1){// there could already be one, but it's gonna be removed soon anyway
+        copyDoneTomorrow(todo);
+      };
+    };
+    //we already know it's not a recurringDay, we just need to make sure: (term == oneTime || longTerm || crazyShit {Anything that usually shows in the lists... what about sameHabit? do they usually show in the lists...}) && !recurry ... then we make a copy of it! copy but don't push in listTasks and just add "copy" at the beginning of the id and add newTodo.copy = true
   } else if(todo.term == "showThing"){ //date is either before today or after tomorrow
     togoList = "";
   } else if(todoTime < hierOggiTime){
     togoList = "listOups";
-  } else if(todoTime > demainApresTime){
+  } else if(todoTime > demainApresTime){ //we might need to revisit that part once we separate DoneDay
     if(todo.line == "doneDay"){
       if(todo.term == "oneTime"){
         togoList = "listOne";
@@ -744,6 +753,12 @@ function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dal
   return togoList;
 };
 
+function copyDoneTomorrow(todo){
+  let newTodo = JSON.parse(JSON.stringify(todo));
+  newTodo.id = `copy${todo.id}`;
+  newTodo.copy = true;
+  todoCreation(newTodo);
+};
 
 function recurryOuting(todo){ //todo == le recurring (newtodo est le recurry/normal qui est pris de l'array d'objet todo.recurrys)
   
@@ -1426,6 +1441,8 @@ function smallCalendarChoice(thisOne){
     todoIndex = listTasks.findIndex(todo => todo.id == parent.id);
     todo = listTasks[todoIndex];
   };
+  let parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
+  console.log(parents);
   creatingCalendar(todo, thisOne, "onIcon");
   let calendarDiv = document.querySelector("#calendarDiv");
   clickScreen.addEventListener("click", () => clickHandlerAddOn(calendarDiv, "trash", clickScreen, togoList));
@@ -1450,7 +1467,10 @@ function smallCalendarChoice(thisOne){
         moving = true;
       };
     };
-    parent.remove();
+    parents.forEach(parent => {
+      parent.remove();
+    });
+    //parent.remove();
     todoCreation(todo);
 
     localStorage.listTasks = JSON.stringify(listTasks);
@@ -2075,18 +2095,22 @@ function taskAddAllInfo(thisOne, where){
   let togoList;
   let div;
   let parentId;
-  if(where == "list"){
-    div = thisOne.parentElement; //not in month/week
-    parent = div.parentElement; //not in month/week
-    parentId = parent.id;
-    togoList = parent.parentElement.id; //not in month/week
-    parent.classList.add("selectedTask"); //not in month/week (the div will take most of the screen so no need to select it)
-    parent.scrollIntoView(); //not in month/week
-    let width = getComputedStyle(div).width; //not in month/week
-    let num = width.slice(0, -2); //not in month/week
-    newWidth = Number(num) + 44; //not in month/week
-    clickScreen.classList.remove("displayNone"); //different in month/week
-  } else{
+  if(where == "list"){ //not in month/week
+    div = thisOne.parentElement; 
+    parent = div.parentElement; 
+    // parentId = parent.id;
+    // if(parentId.startsWith("copy")){
+    //   parentId = parentId.substring(4);
+    // };
+    parentId = parent.id.startsWith("copy") ? parent.id.substring(4) : parent.id;
+    togoList = parent.parentElement.id; 
+    parent.classList.add("selectedTask");
+    parent.scrollIntoView(); 
+    let width = getComputedStyle(div).width; 
+    let num = width.slice(0, -2); 
+    newWidth = Number(num) + 44; 
+    clickScreen.classList.remove("displayNone"); 
+  } else{ //in month/week
     newWidth = Number(window.innerWidth - 20);
     div = document.getElementById(where);
     parent = thisOne;
@@ -2105,6 +2129,10 @@ function taskAddAllInfo(thisOne, where){
     todoIndex = listTasks.findIndex(todo => todo.id == parentId);
     todo = listTasks[todoIndex];
   };
+
+  let parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
+  console.log(parents);
+
   let myShows;
   if(mySettings.myShowTypes.length > 0){
     myShows = mySettings.myShowTypes.map((myShowType, idx) => {
@@ -2476,12 +2504,18 @@ function taskAddAllInfo(thisOne, where){
     
     if(where == "list" && togoList !== ""){
       moving = true;
-      parent.remove();
+      parents.forEach(parent => {
+        parent.remove();
+      });
+      //parent.remove(); // it wasn't complaining but that was still useless...
       clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
     } else if(where == "list" && togoList == ""){
-      parent.remove();
+      parents.forEach(parent => {
+        parent.remove();
+      });
+      //parent.remove(); // it wasn't complaining but that was still useless...
       clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
-    } else{
+    } else{ //not in the list, so month/week
       moving = false;
       taskInfo.remove();
     };
@@ -2905,7 +2939,7 @@ function putDatesInWeek(date){
   if(test){
     let todayDay = `${mySettings.myWeeksDayArray[dayIdx].code}`;
     let nextDayIdx = dayIdx == 6 ? 0 : dayIdx + 1;
-    let tomoDay = `${mySettings.myWeeksDayArray[nextDayIdx].code}`;
+    let tomoDay = `${dayIdx == 6 ? `end` : mySettings.myWeeksDayArray[nextDayIdx].code}`;
     let todayArea;
     if(today == arrayDate[arrayDate.length - 1].full){
       todayArea = `<div class="todayArea" style="grid-area: row-00-00 / col-${todayDay} / row-end / col-${tomoDay}"></div>`;
@@ -3013,9 +3047,11 @@ function getWeeklyCalendar(){
   console.log(mySettings);
   for(let c = 1; c < 9; c++){
     let arrayC = [];
-    let rowDay = `<div ${c == 2 ? `id="Dday"` : c == 8 ? `id="Sday"` : ``} class="weeklyItem" style="grid-column:${c}; grid-row:3; font-size:14px; font-weight:600; border-radius:2px 2px 0 0; border-bottom:1px solid rgba(47, 79, 79, .5); ${c == 1 ? "border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}">${c > 1 ? `${mySettings.myWeeksDayArray[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : ``}</div>`; //shall we add the date as an id, as a data-date or as an area?
+    let rowDay = `<div ${c == 2 ? `id="Dday"` : c == 8 ? `id="Sday"` : ``} class="weeklyItem" style="grid-column:${c}; grid-row:3; font-size:14px; font-weight:600; line-height: calc(((92vh / 29) * 1.5) / 2); border-radius:2px 2px 0 0; border-bottom:1px solid rgba(47, 79, 79, .5); ${c == 1 ? "border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}">${c > 1 ? `${mySettings.myWeeksDayArray[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : ``}</div>`; //shall we add the date as an id, as a data-date or as an area?
+    let rowTutto = `<div class="weeklyItem" style="grid-column:${c}; grid-row:4;     border-bottom: 1px solid rgba(47, 79, 79, .5);"></div>`;
     arrayC.push(rowDay);
-    let line = 4;
+    arrayC.push(rowTutto);
+    let line = 5;
     for(let r = 1; r < 25; r++){
       let item = `<div class="weeklyItem" style="grid-column:${c}; grid-row:${line} / ${line + 4}; ${c == 1 ? "border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""} ${myDay == 23 ? "border-bottom:2px solid rgba(47, 79, 79, .8);" : ""}">${c == 1 ? `${String(myDay).padStart(2, "0")}:00` : ``}${mySettings.myTomorrow !== "00:00" && myDay == 0 && c > 1 ? `<span class="weeklyAfterDateSpan"></span>` : ``}</div>`;
       arrayC.push(item);
@@ -3029,18 +3065,20 @@ function getWeeklyCalendar(){
     return `[col-${giorno.code}] 1fr`;
   });
   let firstCol = `[col-Hour] 45px`;
+  let lastCol = `[col-end]`;
   nomiCol.unshift(firstCol);
+  nomiCol.push(lastCol);
   let nomiCols = nomiCol.join(" ");
   let nomiRow = [];
   for(let h = 0; h < 24; h++){ //93
-    let rowH = `[row-${String(myDay).padStart(2, "0")}-00] .25fr`;
-    let rowH15 = `[row-${String(myDay).padStart(2, "0")}-15] .25fr`;
-    let rowH30 = `[row-${String(myDay).padStart(2, "0")}-30] .25fr`;
-    let rowH45 = `[row-${String(myDay).padStart(2, "0")}-45] .25fr`;
+    let rowH = `[row-${String(myDay).padStart(2, "0")}-00] minmax(0, .25fr)`;
+    let rowH15 = `[row-${String(myDay).padStart(2, "0")}-15] minmax(0, .25fr)`;
+    let rowH30 = `[row-${String(myDay).padStart(2, "0")}-30] minmax(0, .25fr)`;
+    let rowH45 = `[row-${String(myDay).padStart(2, "0")}-45] minmax(0, .25fr)`;
     nomiRow.push(rowH, rowH15, rowH30, rowH45);
     myDay == 23 ? myDay = 0 : myDay++;
   };
-  let firstRows = `[row-Year] 1fr [row-Month] 1fr [row-Day] 2fr`;
+  let firstRows = `[row-Year] 1fr [row-Month] 1fr [row-Day] 1.5fr [row-tutto] 1fr`;
   let lastLine = `[row-end]`;
   nomiRow.unshift(firstRows);
   nomiRow.push(lastLine);

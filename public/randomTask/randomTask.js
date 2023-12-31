@@ -654,9 +654,6 @@ function resetCBC(){
 // *** CREATION
 
 function todoCreation(todo){
-  if(todo.copy){
-    console.log(todo);
-  };
   let togoList = getTogoList(todo);
   let numberedDays;
   let todayDate = getDateTimeFromString(getTodayDate(), mySettings.myTomorrow);
@@ -671,7 +668,13 @@ function todoCreation(todo){
   //   numberedDays = Math.round(Math.abs(doneDate - todayDate)/(1000 * 3600 * 24));
   // };
   if(togoList !== ""){ //what happens if one is stock/stored AND recurring/recurry?
-    if(todo.stock){
+    if(todo.term == "reminder"){
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" class="reminderClass">
+        <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
+        <div class="textDiv"><span onclick="taskAddAllInfo(this, 'list')" class="text" style="color:${todo.color};"}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
+        <input type="time" class="displayNone"/></div>
+      </li>`);
+    } else if(todo.stock){
       document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo(this, 'list')" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
     } else if(todo.line == "recurringDay"){
       let time = todo.recurrys[0].dalle ? todo.recurrys[0].dalle : mySettings.myTomorrow;
@@ -724,16 +727,24 @@ function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dal
       togoList = "list";
     };
   } else if((hierOggiTime < todoTime) && (todoTime < oggiDemainTime) && !todo.copy){ //it's a todoDay or a doneDay
-    togoList = "listToday";
+    if(todo.term == "reminder"){
+      togoList = "listTodayReminder";
+    } else {
+      togoList = "listToday";
+    };
   } else if((oggiDemainTime < todoTime) && (todoTime < demainApresTime) && !todo.copy){
-    togoList = "listTomorrow"; //whether it's todoDay or doneDay
-    if((todo.term == "oneTime" || todo.term == "longTerm" || todo.term == "crazyShit" || todo.term == "sameHabit") && !todo.recurry){
-      if(document.querySelectorAll(`#copy${todo.id}`).length <= 1){// there could already be one, but it's gonna be removed soon anyway
-        copyDoneTomorrow(todo);
+    if(todo.term == "reminder"){
+      togoList = "listTomorrowReminder";
+    } else{
+      togoList = "listTomorrow"; //whether it's todoDay or doneDay
+      if((todo.term == "oneTime" || todo.term == "longTerm" || todo.term == "crazyShit" || todo.term == "sameHabit") && !todo.recurry){
+        if(document.querySelectorAll(`#copy${todo.id}`).length <= 1){// there could already be one, but it's gonna be removed soon anyway
+          copyDoneTomorrow(todo);
+        };
       };
     };
     //we already know it's not a recurringDay, we just need to make sure: (term == oneTime || longTerm || crazyShit {Anything that usually shows in the lists... what about sameHabit? do they usually show in the lists...}) && !recurry ... then we make a copy of it! copy but don't push in listTasks and just add "copy" at the beginning of the id and add newTodo.copy = true
-  } else if(todo.term == "showThing"){ //date is either before today or after tomorrow
+  } else if(todo.term == "showThing" || todo.term == "reminder"){ //date is either before today or after tomorrow
     togoList = "";
   } else if(todoTime < hierOggiTime){
     togoList = "listOups";
@@ -1015,12 +1026,12 @@ doneNextBtn.addEventListener("click", () => {
   let doneLi = document.getElementById(doneId);
   if(doneLi.dataset.rec && doneLi.dataset.rec !== "undefined"){
     let rec = doneLi.dataset.rec;
-    gotItDone(donedId, rec);
+    gotItDone(doneId, rec);
   } else{
-    gotItDone(donedId, "");
+    gotItDone(doneId, "");
   };
   doneLi.remove();
-  gotItDone(doneId);
+  //gotItDone(doneId);
   wheneverList.splice(num, 1);
   if(wheneverList.length == 0){
     taskToDo.innerText = "aller t'reposer!";
@@ -1051,7 +1062,7 @@ function checkEvent(emptyCheck){
 window.checkEvent = checkEvent;
 
 
-function gotItDone(nb, rec){
+function gotItDone(nb, rec){ //nb = todo.id, rec = recurring Id (or "" if directly in listTasks)
   let doned;
   if(rec !== ""){ //it's a recurry! and rec is its recurring id
     let recurringIndex = listTasks.findIndex(todo => todo.id == rec);
@@ -1072,7 +1083,7 @@ function gotItDone(nb, rec){
   
   localStorage.listTasks = JSON.stringify(listTasks);
   let donedDate = getTodayDate(); //return
-  //let's just copy the whole thing! (with date and dalle and alle, etc, so that we can put them in the weekly! and so they can be tracked, etc) OR we keep them all in the listTask and just add a status: todo/done and the doneDate: ""
+  //let's just copy the whole thing! (with date and dalle and alle, etc, so that we can put them in the weekly! and so they can be tracked, etc) OR we keep them all in the listTask and just add a todo.status: todo/done and the doneDate: ""
   // let donedItem = { 
   //   task: doned.task,
   //   icon: doned.icon,
@@ -1485,7 +1496,7 @@ window.smallCalendarChoice = smallCalendarChoice;
 
 function creatingCalendar(todo, home, classs){
   let rec = todo.line == "recurringDay" ? true : false;
-  let shw = todo.term == "showThing" ? true : false;
+  let shw = todo.term == "showThing" || todo.term == "reminder" ? true : false;
   let date = todo.date ? todo.date : rec ? todo.dal : getTodayDate();
   
   let daysWeek = mySettings.myWeeksDayArray.map((day, idx) => {
@@ -2148,6 +2159,11 @@ function taskAddAllInfo(thisOne, where){
   let taskAllInfo = `<div id="taskInfo" style="width:${newWidth}px; ${where == "list" ? `top: 25px; left: -37px;` : `top: 10px; left: 10px;`}">
     <div class="taskInfoWrapper">
       <div id="SupClickScreen" class="Screen displayNone"></div>
+      <input id="doneIt" type="checkbox" class="cossin cornerItInput" />
+      <label for="doneIt" class="doneItLabel cornerItLabel">
+        <i class="typcn typcn-input-checked-outline cornerItUnChecked"></i>
+        <i class="typcn typcn-input-checked cornerItChecked"></i>
+      </label>
       ${todo.recurry || todo.line == "recurringDay" ? `
       <div class="storeItLabel cornerItLabel">
         <span class="typcn typcn-arrow-repeat"></span>
@@ -2176,7 +2192,10 @@ function taskAddAllInfo(thisOne, where){
         <textarea id="taskDetails" class="taskInfoInput">${todo.info ? todo.info : ""}</textarea>
         <h5 class="taskInfoInput">Tell me what...</h5>
         <div class="taskInfoInput relDiv">
-          <h5 class="taskInfoSubTitle" style="margin: 0;">Habit</h5>
+        <h5 class="taskInfoSubTitle" style="margin: 0;">Reminder</h5>
+          <input class="myRadio" type="radio" name="termOptions" id="reminder" value="reminder" ${todo.term == "reminder" ? `checked` : ``} />
+          <label for="reminder" class="termLabel"><span class="myRadio"></span><span>It's such a special day...</span></label>
+          <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Habit</h5>
           <input class="myRadio" type="radio" name="termOptions" id="sameHabit" value="sameHabit" ${todo.term == "sameHabit" ? `checked` : ``} />
           <label for="sameHabit" class="termLabel"><span class="myRadio"></span><span>It's always the same thing...</span></label>
           <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Task</h5>
@@ -2221,6 +2240,7 @@ function taskAddAllInfo(thisOne, where){
   let calendarHome = document.querySelector("#calendarHome");
   creatingCalendar(todo, calendarHome, "inHome");
   let taskInfo = document.querySelector("#taskInfo");
+  let doneIt = document.querySelector("#doneIt");
   let copyIt = document.querySelector("#copyIt");
   let trashIt = document.querySelector("#trashIt");
   let taskTitle = document.querySelector("#taskTitle");
@@ -2240,10 +2260,20 @@ function taskAddAllInfo(thisOne, where){
       taskInfo.remove();
     };
   });
+  doneIt.addEventListener("click", () => {
+    if(doneIt.checked){
+      taskInfoBtn.innerText = "Save & declare it done!";
+      trashIt.checked = false;
+      copyIt.checked = false;
+    } else{
+      taskInfoBtn.innerText = "Save";
+    };
+  });
   trashIt.addEventListener("click", () => {
     if(trashIt.checked){
       taskInfoBtn.innerText = "Trash it!";
       copyIt.checked = false;
+      doneIt.checked = false;
     } else{
       taskInfoBtn.innerText = "Save";
     };
@@ -2252,6 +2282,7 @@ function taskAddAllInfo(thisOne, where){
     if(copyIt.checked){
       taskInfoBtn.innerText = "Save & Copy";
       trashIt.checked = false;
+      doneIt.checked = false;
     } else{
       taskInfoBtn.innerText = "Save";
     };
@@ -2325,6 +2356,14 @@ function taskAddAllInfo(thisOne, where){
         doneDaySection.classList.add("displayNone");
         noDaySection.classList.add("displayNone"); 
         bufferSection.classList.remove("displayNone");       
+        if(todo.line !== "recurringDay"){
+          document.querySelector("#todoDayInput").checked = true;
+        };
+        document.querySelector("#todoDayInputLabel").innerHTML = `<p><span class="myRadio"></span><span class="normalText todoDay">Happening Day</span><br /><span class="smallText">(the day this is all gonna go down)</span></p>`;
+      } else if(radio.checked && radio.value == "reminder"){
+        doneDaySection.classList.add("displayNone");
+        noDaySection.classList.add("displayNone"); 
+        bufferSection.classList.add("displayNone");       
         if(todo.line !== "recurringDay"){
           document.querySelector("#todoDayInput").checked = true;
         };
@@ -2453,6 +2492,11 @@ function taskAddAllInfo(thisOne, where){
         delete todo.STColorBG;
         delete todo.STColorTX;
       };
+
+      if(todo.newShit){//considérer juste un bouton "add" et directement avoir la fenêtre taskAddAllInfo (ça permet moins le capture tool effet, mais la création est plus rapide... Au pire, ça pourrait être un setting!)
+        delete todo.newShit;
+      };
+
       if(!todo.recurry && todo.line !== "recurringDay"){
         let storeIt = document.querySelector("#storeIt");
         if(!todo.stock && !todo.stored && storeIt.checked){
@@ -2466,9 +2510,7 @@ function taskAddAllInfo(thisOne, where){
         };
       };
   
-      if(todo.newShit){//considérer juste un bouton "add" et directement avoir la fenêtre taskAddAllInfo (ça permet moins le capture tool effet, mais la création est plus rapide... Au pire, ça pourrait être un setting!)
-        delete todo.newShit;
-      };
+      
 
       calendarSave(todo); // s'il était un recurringDay, les recurrys ont tous été recréés à son image... FUCK (pas ceux qui étaient déjà out!)! ... à moins que... il en cré de nouveaux!! car dans todoCreation, tu passe par togoList et ça fait recurryOuting... et les nouveaux recurry seront pas encore "out", fac ils vont être créés... alors il faudrait juste se débarasser des anciens! ça pourrait être dans clearRecurringData...
       //parent is global (no need for parent since todoCreation)
@@ -2479,7 +2521,8 @@ function taskAddAllInfo(thisOne, where){
         delete todo.out;
         delete todo.recId;
         listTasks.push(todo);
-      };
+      }; //donc le todo est sorti de son recurring et pushed dans listTasks
+
       //WOLA si todo était stored ou stock et là devient reccuringDay?!
 
       if(copyIt.checked){
@@ -2488,9 +2531,17 @@ function taskAddAllInfo(thisOne, where){
         listTasks.push(newTodo);
         todoCreation(newTodo);
       };
+
       togoList = getTogoList(todo);
-      todoCreation(todo); 
-      sortItAll();
+
+      if(doneIt.checked){
+        gotItDone(todo.id, "");
+      } else{
+        todoCreation(todo); 
+        sortItAll();
+      };
+      
+      
     } else if(trashIt.checked){
       if(todo.recurry && todo.recId){
         listTasks[recIndex].recurrys.splice(todoIndex, 1);

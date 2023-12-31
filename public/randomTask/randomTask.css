@@ -365,6 +365,10 @@ h5.taskInfoInput{
 .trashItLabel{
   right: 95px;
 }
+.doneItLabel{
+  left: 5px;
+  font-size: 1.3em;
+}
 #trashedArea{
   display: block;
   width: 100%;
@@ -600,7 +604,6 @@ li .textDiv{
   justify-content: space-between;
   align-items: center;
 }
-
 .numberedCal{
   position: relative;
   padding: 0;
@@ -895,6 +898,16 @@ input[name="colorRadio"]:checked + label > div{
 .sameHabit .textDiv span.text{
   opacity: .6;
   font-size: 1em;
+}
+.reminderClass{
+  font-size: .8em;
+  line-height: 2em;
+}
+.reminderClass .textDiv{
+  margin: 0 7px 0 0;
+}
+.reminderClass > .textDiv > span.text{
+  font-size: 1.2em;
 }
 .showTypeLabelDiv{
   display: flex;

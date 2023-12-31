@@ -567,12 +567,11 @@ function resetCBC(){
     <button id="settingsBtn" class="ScreenBtn1">yep <span class="typcn typcn-thumbs-up" style="padding: 0;"></span></button>
     <button id="cancelBtn" class="ScreenBtn2">Cancel</button>`;
     let timeInput = document.querySelector("#timeInput");
-    clearStorageBtn.addEventListener("click", updateFromCloud);
-    exitX.addEventListener("click", () => {
-      //settingsScreen.classList.add("displayNone");
-      document.getElementById(previousPage).checked = true;
-      document.getElementById(previousPage).dispatchEvent(pageEvent);
-    });
+    let clearStorageBtn = document.querySelector("#clearStorageBtn");
+    let exitX = document.querySelector("#exitX");
+    let cancelBtn = document.querySelector("#cancelBtn");
+    let settingsBtn = document.querySelector("#settingsBtn");
+    
     if(mySettings.myTomorrow){
       timeInput.value = mySettings.myTomorrow;
     };
@@ -582,6 +581,19 @@ function resetCBC(){
       document.getElementById(mySettings.myFavoriteView).dispatchEvent(pageEvent);
     };
     let previousFirstDay = document.querySelector("#firstDayOfWeekInput").value;
+
+    clearStorageBtn.addEventListener("click", updateFromCloud);
+    exitX.addEventListener("click", () => {
+      //settingsScreen.classList.add("displayNone");
+      document.getElementById(previousPage).checked = true;
+      document.getElementById(previousPage).dispatchEvent(pageEvent);
+    });
+    cancelBtn.addEventListener("click", () => {
+      // settingsScreen.classList.add("displayNone");
+      // document.querySelector('input[name="switchPageRadios"]:checked').nextElementSibling.classList.remove("displayNone");
+      document.getElementById(previousPage).checked = true;
+      document.getElementById(previousPage).dispatchEvent(pageEvent);
+    });
     settingsBtn.addEventListener("click", () => {
       mySettings.myTomorrow = `${timeInput.value}`;
       if(previousTomorrow !== mySettings.myTomorrow){
@@ -594,6 +606,7 @@ function resetCBC(){
         });
         updateArrowsColor();
         sortItAll();
+        getWeeklyCalendar();
       };
 
       mySettings.myFavoriteView = document.querySelector('input[name="choicePageRadios"]:checked').id;
@@ -612,8 +625,9 @@ function resetCBC(){
         //   mySettings.myWeeksDayArray[codeIdx].clockIn = div.querySelector(".clockIn").value;
         //   mySettings.myWeeksDayArray[codeIdx].clockOut = div.querySelector(".clockOut").value;
         // });
-        createBody();
-        getWeeklyCalendar();
+        //createBody(); I don't think we need to redo the monthly...
+        //getWeeklyCalendar(); we don't need to redo the whole weekly either, just the sleepy area
+        updateSleepAreas();
       };
 
       let firstDay = document.querySelector("#firstDayOfWeekInput").value;
@@ -624,7 +638,6 @@ function resetCBC(){
             run = false;
           } else{
             let removed = mySettings.myWeeksDayArray.shift();
-            console.log(removed);
             mySettings.myWeeksDayArray.push(removed);
             run = true;
           };
@@ -639,12 +652,6 @@ function resetCBC(){
       // settingsScreen.classList.add("displayNone");
       // document.querySelector('input[name="switchPageRadios"]:checked').nextElementSibling.classList.remove("displayNone");
       updateCBC();
-      document.getElementById(previousPage).checked = true;
-      document.getElementById(previousPage).dispatchEvent(pageEvent);
-    });
-    cancelBtn.addEventListener("click", () => {
-      // settingsScreen.classList.add("displayNone");
-      // document.querySelector('input[name="switchPageRadios"]:checked').nextElementSibling.classList.remove("displayNone");
       document.getElementById(previousPage).checked = true;
       document.getElementById(previousPage).dispatchEvent(pageEvent);
     });
@@ -668,25 +675,26 @@ function todoCreation(todo){
   //   numberedDays = Math.round(Math.abs(doneDate - todayDate)/(1000 * 3600 * 24));
   // };
   if(togoList !== ""){ //what happens if one is stock/stored AND recurring/recurry?
-    if(todo.term == "reminder"){
-      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" class="reminderClass">
-        <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
-        <div class="textDiv"><span onclick="taskAddAllInfo(this, 'list')" class="text" style="color:${todo.color};"}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
-        <input type="time" class="displayNone"/></div>
-      </li>`);
-    } else if(todo.stock){
-      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo(this, 'list')" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
+    if(todo.stock){
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo(this, 'list', 'mod')" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
     } else if(todo.line == "recurringDay"){
       let time = todo.recurrys[0].dalle ? todo.recurrys[0].dalle : mySettings.myTomorrow;
       let nextDate = getDateTimeFromString(todo.recurrys[0].date, time);
       numberedDays = Math.floor(Math.abs(nextDate.getTime() - todayDate.getTime())/(1000 * 3600 * 24));
-      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo(this, 'list')" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div>
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo(this, 'list', 'mod')" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div>
       <div class="numberedCal" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.line}"></i><span style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG};` : ``}">${numberedDays}</span></div></li>`);
-    } else{
+    } else if(todo.term == "reminder"){
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" class="reminderClass">
+        <i class="typcn typcn-bell" style="font-size: 1em;"></i>
+        <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" style="font-size: .8em;"></i>
+        <div class="textDiv"><span onclick="taskAddAllInfo(this, 'list', 'mod')" class="text" style="color:${todo.color}; font-size: 1em;">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" style="font-size: .8em;" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
+        <input type="time" class="displayNone"/></div>
+      </li>`);
+    } else {
       document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" ${todo.term == "showThing" ? `style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``}>
         <i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>
         <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
-        <div class="textDiv"><span onclick="taskAddAllInfo(this, 'list')" class="text" ${todo.term == "showThing" ? `` : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
+        <div class="textDiv"><span onclick="taskAddAllInfo(this, 'list', 'mod')" class="text" ${todo.term == "showThing" ? `` : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
         <input type="time" class="displayNone"/></div>
         <div class="numberedCal" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.line}"></i><span class="${todo.line == "doneDay" ? `` : `displayNone`}" style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG};` : ``}">${todo.line == "doneDay" ? numberedDays : ``}</span></div>
       </li>`);
@@ -1226,6 +1234,9 @@ function sortItAll(){
         } else if(type == "date"){
           first = li[i].dataset.date;
           second = li[i + 1].dataset.date;
+        } else if(type == "term"){
+          first = li[i].dataset.term;
+          second = li[i + 1].dataset.term;
         } else if(type == "order"){
           first = li[i].dataset.order;
           second = li[i + 1].dataset.order;
@@ -1453,7 +1464,6 @@ function smallCalendarChoice(thisOne){
     todo = listTasks[todoIndex];
   };
   let parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
-  console.log(parents);
   creatingCalendar(todo, thisOne, "onIcon");
   let calendarDiv = document.querySelector("#calendarDiv");
   clickScreen.addEventListener("click", () => clickHandlerAddOn(calendarDiv, "trash", clickScreen, togoList));
@@ -2101,48 +2111,88 @@ let showTypeChoices = [{
   colorTX: "white"
 }];
 
-function taskAddAllInfo(thisOne, where){
+function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", "calMonthPage"
   moving = false; //must stay false in month/week
-  let togoList;
   let div;
-  let parentId;
-  if(where == "list"){ //not in month/week
-    div = thisOne.parentElement; 
-    parent = div.parentElement; 
-    // parentId = parent.id;
-    // if(parentId.startsWith("copy")){
-    //   parentId = parentId.substring(4);
-    // };
-    parentId = parent.id.startsWith("copy") ? parent.id.substring(4) : parent.id;
-    togoList = parent.parentElement.id; 
-    parent.classList.add("selectedTask");
-    parent.scrollIntoView(); 
-    let width = getComputedStyle(div).width; 
-    let num = width.slice(0, -2); 
-    newWidth = Number(num) + 44; 
-    clickScreen.classList.remove("displayNone"); 
-  } else{ //in month/week
+  let todo;
+  let parents;
+  let togoList;
+  // NOPE!! chaque day in month et chaque item in weekly va avoir son onclick et on va aller en chercher la date et l'heure et mettre ça dans le nouveau todo!
+  if(why == "new" && where == "calWeekPage"){ //in month/weekly creation of a new one
+    let rowNum = thisOne.style.gridRowStart;
+    let hourMath = ((rowNum - 5) / 4) + 3;
+    let hourNum = hourMath < 24 ? hourMath : hourMath - 24;
+    let rowhour = `${String(hourNum).padStart(2, "0")}:00`;
+    let colNum = thisOne.style.gridColumnStart;
+    let code = mySettings.myWeeksDayArray[colNum - 2].code;
+    let colEl = document.querySelector(`[data-code="${code}"]`);
+    let colDate = colEl.dataset.date;
+    todo = {
+      newShit: true,
+      id: crypto.randomUUID(),
+      color: "darkslategrey",
+      icon: "fa-solid fa-ban noIcon",
+      term: "showThing",
+      line: "todoDay",
+      dalle: rowhour,
+      date: colDate
+    };
+    listTasks.push(todo);
     newWidth = Number(window.innerWidth - 20);
     div = document.getElementById(where);
-    parent = thisOne;
-    parentId = parent.dataset.id;
+  } else if(why == "new" && where == "calMonthPage"){
+    let kaseDate = thisOne.parentElement.dataset.wholedate;
+    todo = {
+      newShit: true,
+      id: crypto.randomUUID(),
+      color: "darkslategrey",
+      icon: "fa-solid fa-ban noIcon",
+      term: "showThing",
+      line: "todoDay",
+      date: kaseDate
+    };
+    listTasks.push(todo);
+    newWidth = Number(window.innerWidth - 20);
+    div = document.getElementById(where);
+  } else{
+    let parentId;
+    if(where == "list"){ //not in month/week
+      div = thisOne.parentElement; 
+      parent = div.parentElement; 
+      // parentId = parent.id;
+      // if(parentId.startsWith("copy")){
+      //   parentId = parentId.substring(4);
+      // };
+      parentId = parent.id.startsWith("copy") ? parent.id.substring(4) : parent.id;
+      togoList = parent.parentElement.id; 
+      parent.classList.add("selectedTask");
+      parent.scrollIntoView(); 
+      let width = getComputedStyle(div).width; 
+      let num = width.slice(0, -2); 
+      newWidth = Number(num) + 44; 
+      clickScreen.classList.remove("displayNone"); 
+    } else{ //in month/week
+      newWidth = Number(window.innerWidth - 20);
+      div = document.getElementById(where);
+      parent = thisOne;
+      parentId = parent.dataset.id;
+    };
+    
+    let recIndex;
+    let todoIndex;
+    if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+      let rec = parent.dataset.rec;
+      recIndex = listTasks.findIndex(todo => todo.id == rec);
+      todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == parentId);
+      todo = listTasks[recIndex].recurrys[todoIndex];
+    } else{
+      todoIndex = listTasks.findIndex(todo => todo.id == parentId);
+      todo = listTasks[todoIndex];
+    };
+
+    parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
   };
   
-  let recIndex;
-  let todoIndex;
-  let todo;
-  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
-    let rec = parent.dataset.rec;
-    recIndex = listTasks.findIndex(todo => todo.id == rec);
-    todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == parentId);
-    todo = listTasks[recIndex].recurrys[todoIndex];
-  } else{
-    todoIndex = listTasks.findIndex(todo => todo.id == parentId);
-    todo = listTasks[todoIndex];
-  };
-
-  let parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
-  console.log(parents);
 
   let myShows;
   if(mySettings.myShowTypes.length > 0){
@@ -2185,7 +2235,7 @@ function taskAddAllInfo(thisOne, where){
       <h5 class="taskInfoInput">Tell me more...</h5>
       <div class="taskInfoInput relDiv">
         <span id="iconIt" class="IconI ${todo.icon}"></span>
-        <input type="text" id="taskTitle" class="taskInfoInput" style="color:${todo.term == "showThing" ? `darkslategrey` : todo.color};" value="${todo.task}">
+        <input type="text" id="taskTitle" class="taskInfoInput" style="color:${todo.term == "showThing" ? `darkslategrey` : todo.color};" value="${todo.task ? todo.task : ""}">
         <span id="colorIt" class="typcn typcn-tag tagSpan ${todo.term == "showThing" ? `hidden` : ``}" style="color:${todo.color};"></span>
       </div>
       <div id="trashedArea">
@@ -2514,7 +2564,7 @@ function taskAddAllInfo(thisOne, where){
 
       calendarSave(todo); // s'il était un recurringDay, les recurrys ont tous été recréés à son image... FUCK (pas ceux qui étaient déjà out!)! ... à moins que... il en cré de nouveaux!! car dans todoCreation, tu passe par togoList et ça fait recurryOuting... et les nouveaux recurry seront pas encore "out", fac ils vont être créés... alors il faudrait juste se débarasser des anciens! ça pourrait être dans clearRecurringData...
       //parent is global (no need for parent since todoCreation)
-      if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+      if(why !== "new" && parent.dataset.rec && parent.dataset.rec !== "undefined"){
         let oldRecurry = listTasks[recIndex].recurrys.splice(todoIndex, 1);
         todo = oldRecurry[0];
         delete todo.recurry;
@@ -2797,7 +2847,7 @@ function putShowsInMonth(monthlyFirst, monthlyLast){
   let sortedShows = shows.sort((s1, s2) => (s1.date < s2.date) ? -1 : (s1.date > s2.date) ? 1 : (s1.date == s2.date) ? (s1.dalle < s2.dalle) ? -1 : (s1.dalle > s2.dalle) ? 1 : 0 : 0);
   shows = sortedShows;
   shows.forEach(show => {
-    let eventDiv = `<div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} data-showType="${show.showType}" ${!show.past ? `onclick="taskAddAllInfo(this, 'calMonthPage')"` : ``} class="eventDiv ${show.past ? "pastEvent" : ""}" style="background-color:${show.STColorBG}; color:${show.STColorTX};">${show.task}</div>`;
+    let eventDiv = `<div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} data-showType="${show.showType}" ${!show.past ? `onclick="taskAddAllInfo(this, 'calMonthPage', 'mod')"` : ``} class="eventDiv ${show.past ? "pastEvent" : ""}" style="background-color:${show.STColorBG}; color:${show.STColorTX};">${show.task}</div>`;
     let kase = document.querySelector("[data-wholedate='" + show.date + "']");
     if(kase){
       kase.insertAdjacentHTML("beforeend", eventDiv);
@@ -2823,7 +2873,7 @@ function createBody(){
   for(let i = 0; i < 6; i++){
     let tds = [];
     for(let j = 0; j < 7; j++){
-      let td = `<td ${i == 0 && j == 0 ? `id="monthlyFirst"` : i == 5 && j == 6 ? `id="monthlyLast"` : ``}><div class="circle"></div><span class="typcn typcn-plus addEvent displayNone"></span></td>`;
+      let td = `<td ${i == 0 && j == 0 ? `id="monthlyFirst"` : i == 5 && j == 6 ? `id="monthlyLast"` : ``}><div class="circle"></div><span class="typcn typcn-plus addEvent displayNone" onclick="taskAddAllInfo(this, 'calMonthPage', 'new')"></span></td>`;
       tds.push(td);
     };
     let tdsF = tds.join("");
@@ -2993,18 +3043,13 @@ function putDatesInWeek(date){
     let tomoDay = `${dayIdx == 6 ? `end` : mySettings.myWeeksDayArray[nextDayIdx].code}`;
     let todayArea;
     if(today == arrayDate[arrayDate.length - 1].full){
-      todayArea = `<div class="todayArea" style="grid-area: row-00-00 / col-${todayDay} / row-end / col-${tomoDay}"></div>`;
+      todayArea = `<div class="todayArea" style="grid-area: row-00-00 / col-${mySettings.myWeeksDayArray[mySettings.myWeeksDayArray.length - 1].code} / row-end / col-end"></div>`;
     } else{
       todayArea = `<div class="todayArea" style="grid-area: row-Day / col-${todayDay} / row-00-00 / col-${tomoDay}"></div>`;
     };    
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", todayArea);
   };
-  let myDay = Number(mySettings.myTomorrow.substring(0, 2));
-  let sleepAreas = mySettings.myWeeksDayArray.map((clock) => {
-    return `<div class="sleepArea" style="grid-area: row-${String(myDay).padStart(2, "0")}-00 / col-${clock.code} / row-${clock.clockIn.replace(":", "-")} / col-${clock.code}"></div>
-    <div class="sleepArea" style="grid-area: row-${clock.clockOut.replace(":", "-")} / col-${clock.code} / row-end / col-${clock.code}"></div>`;
-  }).join("");
-  document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", sleepAreas);
+  updateSleepAreas();
 
   let Dday = arrayDate[0].full;
   let Sday = arrayDate[arrayDate.length - 2].full;
@@ -3017,6 +3062,18 @@ function putDatesInWeek(date){
   document.querySelector("#weeklyYearSpan").innerHTML = `${DYear}${DYear !== SYear ? ` / ${SYear}` : ``}`;
   document.querySelector("#weeklyMonthSpan").innerHTML = `${DMonthName}${DMonthName !== SMonthName ? ` / ${SMonthName}` : ``}`;
   putShowsInWeek(Dday, Sday);
+};
+
+function updateSleepAreas(){
+  document.querySelectorAll(".sleepArea").forEach(we => {
+    we.remove();
+  });
+  let myDay = Number(mySettings.myTomorrow.substring(0, 2));
+  let sleepAreas = mySettings.myWeeksDayArray.map((clock) => {
+    return `<div class="sleepArea" style="grid-area: row-${String(myDay).padStart(2, "0")}-00 / col-${clock.code} / row-${clock.clockIn.replace(":", "-")} / col-${clock.code}"></div>
+    <div class="sleepArea" style="grid-area: row-${clock.clockOut.replace(":", "-")} / col-${clock.code} / row-end / col-${clock.code}"></div>`;
+  }).join("");
+  document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", sleepAreas);
 };
 
 function putShowsInWeek(Dday, Sday){
@@ -3080,7 +3137,7 @@ function createWeeklyshow(show){
 
   let add = `
     ${primaDiv}
-    <div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} data-showTdivype="${show.showType}" onclick="taskAddAllInfo(this, 'calWeekPage')" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="background-color:${show.STColorBG}; color:${show.STColorTX}; grid-column:col-${day}; grid-row:row-${hourStart}/row-${hourEnd};">
+    <div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} data-showTdivype="${show.showType}" onclick="taskAddAllInfo(this, 'calWeekPage', 'mod')" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="background-color:${show.STColorBG}; color:${show.STColorTX}; grid-column:col-${day}; grid-row:row-${hourStart}/row-${hourEnd};">
       ${show.task}<br />
       <i class="IconI ${show.icon}"></i>
     </div>
@@ -3095,16 +3152,15 @@ function getWeeklyCalendar(){
   let rowMonth = `<div class="weeklyItem weeklyTitle" style="grid-row:2; border-bottom-width: 2px;"><span id="weeklyMonthSpan">${monthName}</span></div>`;
   arrayItem.push(rowYear, rowMonth);
   let myDay = Number(mySettings.myTomorrow.substring(0, 2));
-  console.log(mySettings);
   for(let c = 1; c < 9; c++){
     let arrayC = [];
-    let rowDay = `<div ${c == 2 ? `id="Dday"` : c == 8 ? `id="Sday"` : ``} class="weeklyItem" style="grid-column:${c}; grid-row:3; font-size:14px; font-weight:600; line-height: calc(((92vh / 29) * 1.5) / 2); border-radius:2px 2px 0 0; border-bottom:1px solid rgba(47, 79, 79, .5); ${c == 1 ? "border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}">${c > 1 ? `${mySettings.myWeeksDayArray[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : ``}</div>`; //shall we add the date as an id, as a data-date or as an area?
+    let rowDay = `<div ${c == 2 ? `id="Dday"` : c == 8 ? `id="Sday"` : ``} class="weeklyItem" style="grid-column:${c}; grid-row:3; font-size:14px; font-weight:600; line-height: calc(((92vh / 29) * 1.5) / 2); border-radius:2px 2px 0 0; border-bottom:1px solid rgba(47, 79, 79, .5);${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}"${c > 1 ? ` data-code="${mySettings.myWeeksDayArray[c - 2].code}">${mySettings.myWeeksDayArray[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : `>`}</div>`; //shall we add the date as an id, as a data-date or as an area?
     let rowTutto = `<div class="weeklyItem" style="grid-column:${c}; grid-row:4;     border-bottom: 1px solid rgba(47, 79, 79, .5);"></div>`;
     arrayC.push(rowDay);
     arrayC.push(rowTutto);
     let line = 5;
     for(let r = 1; r < 25; r++){
-      let item = `<div class="weeklyItem" style="grid-column:${c}; grid-row:${line} / ${line + 4}; ${c == 1 ? "border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""} ${myDay == 23 ? "border-bottom:2px solid rgba(47, 79, 79, .8);" : ""}">${c == 1 ? `${String(myDay).padStart(2, "0")}:00` : ``}${mySettings.myTomorrow !== "00:00" && myDay == 0 && c > 1 ? `<span class="weeklyAfterDateSpan"></span>` : ``}</div>`;
+      let item = `<div class="weeklyItem" ${c > 1 ? `onclick="taskAddAllInfo(this, 'calWeekPage', 'new')"` : ``} style="grid-column:${c}; grid-row:${line} / ${line + 4};${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""} ${myDay == 23 ? " border-bottom:2px solid rgba(47, 79, 79, .8);" : ""}">${c == 1 ? `${String(myDay).padStart(2, "0")}:00` : ``}${mySettings.myTomorrow !== "00:00" && myDay == 0 && c > 1 ? `<span class="weeklyAfterDateSpan"></span>` : ``}</div>`;
       arrayC.push(item);
       line += 4;
       myDay == 23 ? myDay = 0 : myDay++;
@@ -3190,7 +3246,22 @@ function updateWeek(){
   putShowsInWeek(Dday, Sday);
 };
 
+function addNewWeekly(thisOne){
+  let rowNum = thisOne.style.gridRowStart;
+  let hourMath = ((rowNum - 5) / 4) + 3;
+  let hourNum = hourMath < 24 ? hourMath : hourMath - 24;
+  let rowhour = `${String(hourNum).padStart(2, "0")}:00`;
+  let colNum = thisOne.style.gridColumnStart;
+  let code = mySettings.myWeeksDayArray[colNum - 2].code;
+  let colEl = document.querySelector(`[data-code="${code}"]`);
+  let colDate = colEl.dataset.date;
+  // we need a date
+  console.log(colNum);
+  console.log(code);
+  console.log(colDate);
+};
 
+window.addNewWeekly = addNewWeekly;
 
 
 

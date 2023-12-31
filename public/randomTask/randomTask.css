@@ -477,6 +477,7 @@ h5.taskInfoInput{
 .swipeChevron{
   display: inline-block;
   font-size: 30px;
+  line-height: 30px;
 }
 #swipeInput:checked + .swipeLabel > .swipeChevron{
   transform: rotate(180deg);
@@ -895,20 +896,27 @@ input[name="colorRadio"]:checked + label > div{
   border-radius: 10px;
   border: .5px solid darkslategrey;
 }
+.topListReminder{
+  margin: 10px 0 5px;
+  border-bottom: .5px solid darkslategrey;
+  padding: 2.5px 0;
+}
 .sameHabit .textDiv span.text{
   opacity: .6;
   font-size: 1em;
 }
-.reminderClass{
+/* .reminderClass > i{
   font-size: .8em;
-  line-height: 2em;
-}
+} */
+/* .reminderClass > span.timeSpan{
+  font-size: .8em;
+} */
 .reminderClass .textDiv{
   margin: 0 7px 0 0;
 }
-.reminderClass > .textDiv > span.text{
-  font-size: 1.2em;
-}
+/* .reminderClass > .textDiv > span.text{
+  font-size: 1em;
+} */
 .showTypeLabelDiv{
   display: flex;
   align-items: baseline;

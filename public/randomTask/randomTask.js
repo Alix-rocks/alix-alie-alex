@@ -664,10 +664,10 @@ function todoCreation(todo){
   let togoList = getTogoList(todo);
   let numberedDays;
   let todayDate = getDateTimeFromString(getTodayDate(), mySettings.myTomorrow);
-  if(todo.line == "doneDay"){
+  if(todo.line == "doneDay" || togoList == "listOups"){
     let time = todo.dalle ? todo.dalle : mySettings.myTomorrow;
     let doneDate = getDateTimeFromString(todo.date, time);
-    numberedDays = Math.floor(Math.abs(doneDate - todayDate)/(1000 * 3600 * 24));
+    numberedDays = Math.floor((doneDate - todayDate)/(1000 * 3600 * 24));
   };
   // let todayDate = getDateFromString(getTodayDate());
   // if(todo.line == "doneDay"){
@@ -696,7 +696,7 @@ function todoCreation(todo){
         <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
         <div class="textDiv"><span onclick="taskAddAllInfo(this, 'list', 'mod')" class="text" ${todo.term == "showThing" ? `` : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
         <input type="time" class="displayNone"/></div>
-        <div class="numberedCal" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.line}"></i><span class="${todo.line == "doneDay" ? `` : `displayNone`}" style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG};` : ``}">${todo.line == "doneDay" ? numberedDays : ``}</span></div>
+        <div class="numberedCal" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.line}"></i><span class="${todo.line == "doneDay" || togoList == "listOups" ? `` : `displayNone`}" style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG};` : ``}">${todo.line == "doneDay" || togoList == "listOups" ? numberedDays : ``}</span></div>
       </li>`);
       // document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.term == "showThing" ? `class="showLi" style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``} ${todo.projet ? `class="projetLi" style="outline-color: ${todo.PColorBG};"` : ``}>
       //   <i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>
@@ -2745,10 +2745,11 @@ function getTodayDate(){
 
 function getTomorrowDate(){ //that doesn't work!!! (just if you don't need to consider the hour)
   let date = new Date();
+  date.setDate(date.getDate() + 1);
   let currentHour = String(date.getHours()).padStart(2, "0");
   let currentMinute = String(date.getMinutes()).padStart(2, "0");
   let currentTime = `${currentHour}:${currentMinute}`;
-  let currentDay = String(date.getDate() + 1).padStart(2, "0");
+  let currentDay = String(date.getDate()).padStart(2, "0");
   currentDay = currentTime <= mySettings.myTomorrow ? String(currentDay - 1).padStart(2, "0") : currentDay;
   let currentMonth = String(date.getMonth()+1).padStart(2, "0");
   let currentYear = date.getFullYear();
@@ -2756,7 +2757,7 @@ function getTomorrowDate(){ //that doesn't work!!! (just if you don't need to co
   return currentDate;
 };
 
-function timeLimit(limit){
+function timeLimit(limit){ //That's a fucked up mess!!!!
   let nowDate = new Date();
   let currentHour = String(nowDate.getHours()).padStart(2, "0");
   let currentMinute = String(nowDate.getMinutes()).padStart(2, "0");
@@ -2765,14 +2766,22 @@ function timeLimit(limit){
   currentDay = currentTime <= mySettings.myTomorrow ? (nowDate.getDate() - 1) : nowDate.getDate();
   let currentMonth = String(nowDate.getMonth()+1).padStart(2, "0");
   let currentYear = nowDate.getFullYear();
+  // let tomoDate = nowDate.setDate(nowDate.getDate() + 1);
+  // let tomoDay = currentTime <= mySettings.myTomorrow ? (tomoDate.getDate() - 1) : tomoDate.getDate();
+  // let afterDate = nowDate.setDate(nowDate.getDate() + 2);
+  // let afterDay = currentTime <= mySettings.myTomorrow ? (afterDate.getDate() - 1) : afterDate.getDate();
+  nowDate.setDate(nowDate.getDate() + 1);
+  let tomoDay = currentTime <= mySettings.myTomorrow ? (nowDate.getDate() - 1) : nowDate.getDate();
+  nowDate.setDate(nowDate.getDate() + 1);
+  let afterDay = currentTime <= mySettings.myTomorrow ? (nowDate.getDate() - 1) : nowDate.getDate();
   let limitDay;
   let modifiedTomorrow = mySettings.myTomorrow.replace(":", "-")
   if(limit == "hierOggi"){
-    limitDay = currentDay;
+    limitDay = String(currentDay).padStart(2, "0");
   } else if(limit == "oggiDemain"){
-    limitDay = String(currentDay + 1).padStart(2, "0");
+    limitDay = String(tomoDay).padStart(2, "0");
   } else if(limit == "demainApres"){
-    limitDay = String(currentDay + 2).padStart(2, "0");
+    limitDay = String(afterDay).padStart(2, "0");
   };
   let timeLimit = `${currentYear}-${currentMonth}-${limitDay}-${modifiedTomorrow}`;
   return timeLimit;

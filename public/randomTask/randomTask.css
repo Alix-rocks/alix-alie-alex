@@ -1281,6 +1281,12 @@ hr.zoneHr{
   line-height: 12px;
   overflow: hidden;
 }
+.weeklyTutto{
+  overflow: visible;
+}
+.weeklyTutto > div{
+  margin: 3px 0;
+}
 .weeklyBuffer{
   border: 0.5px solid darkslategrey;
   border-radius: 5px;

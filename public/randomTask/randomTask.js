@@ -669,11 +669,6 @@ function todoCreation(todo){
     let doneDate = getDateTimeFromString(todo.date, time);
     numberedDays = Math.floor((doneDate - todayDate)/(1000 * 3600 * 24));
   };
-  // let todayDate = getDateFromString(getTodayDate());
-  // if(todo.line == "doneDay"){
-  //   let doneDate = getDateFromString(todo.date);
-  //   numberedDays = Math.round(Math.abs(doneDate - todayDate)/(1000 * 3600 * 24));
-  // };
   if(togoList !== ""){ //what happens if one is stock/stored AND recurring/recurry?
     if(todo.stock){
       document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo(this, 'list', 'mod')" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
@@ -1541,7 +1536,7 @@ function creatingCalendar(todo, home, classs){
   <label for="recurringDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText recurringDay">Recurring Day</span><br /><span class="smallText">(let it come back on its own)</span></label></p></label>
   <div class="DaySection" id="recurringDaySection">
     <h5 class="taskInfoInput" style="margin-left: 0;">It's a recurring thing</h5>
-    <div class="inDaySection" width: -webkit-fill-available; max-width: 280px;>
+    <div class="inDaySection" style="width: -webkit-fill-available; max-width: 280px;">
       <p class="calendarInsideMargin">Dal<input id="dalInput" type="date" style="margin: 0 10px;" value="${date}" /></p>
       <input id="recuTuttoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.tutto ? `checked` : ``} />
       <div class="calendarInsideMargin tuttoGiornoDiv">
@@ -1594,7 +1589,7 @@ function creatingCalendar(todo, home, classs){
 
   let bufferDiv = `<div id="bufferSection" class="taskInfoInput ${shw ? `` : `displayNone`}" style="margin-top: 20px;">
     <h5 class="taskInfoInput" style="margin-left: 0;">How long will that really take?</h5>
-    <div class="inDaySection">
+    <div class="inDaySection" style="width: -webkit-fill-available; max-width: 200px;">
       <p style="margin-top: 10px;"><span>Before: </span><input id="primaBuffer" type="time" step="900" value="${todo.prima ? todo.prima : `00:00`}" /></p>
       <p><span>After: </span><input id="dopoBuffer" type="time" step="900" value="${todo.dopo ? todo.dopo : `00:00`}" /></p>
     </div>
@@ -3086,7 +3081,7 @@ function updateSleepAreas(){
 };
 
 function putShowsInWeek(Dday, Sday){
-  let shows = listTasks.filter((todo) => (todo.term == "showThing"));
+  let shows = listTasks.filter((todo) => (todo.term == "showThing" || todo.term == "reminder"));
   shows.map(show => {
     if(show.line == "recurringDay"){ 
       show.recurrys.map(recurry => {
@@ -3105,7 +3100,7 @@ function putShowsInWeek(Dday, Sday){
         doned.date = done.date;
         doned.past = true;
         createWeeklyshow(doned);
-      };
+      };// if the show has been marked doned at an other date, that makes it weird... that's why we should separate the date and the doneDate. and, anyway, the pastEvent should be past, based on the date and not on whether they've been done or not. But for the task, you'll want the doneDate 
     });
   });
 };
@@ -3130,29 +3125,39 @@ function timeMath(one, math, two){
 
 function createWeeklyshow(show){
   let dayIdx = meseDayICalc(show.date);
-  let day = `${mySettings.myWeeksDayArray[dayIdx].code}`;
-  let hourStart = show.dalle ? show.dalle.replace(":", "-") : "00-00";
-  let hourEnd = show.alle ? show.alle.replace(":", "-") : "end";
-  let primaDiv = ``;
-  let dopoDiv = ``;
-  if(show.dalle && show.dalle !== "" && show.prima && show.prima !== "00:00"){
-    let prima = timeMath(show.dalle, "minus", show.prima);
-    primaDiv = `<div class="weeklyBuffer ${show.past ? "pastEvent" : ""}" style="grid-column:col-${day}; grid-row:row-${prima}/row-${hourStart};"></div>`;
-  };
-  if(show.alle && show.alle !== "" && show.dopo && show.dopo !== "00:00"){
-    let dopo = timeMath(show.alle, "plus", show.dopo);
-    dopoDiv = `<div class="weeklyBuffer ${show.past ? "pastEvent" : ""}" style="grid-column:col-${day}; grid-row:row-${hourEnd}/row-${dopo};"></div>`;
-  };
-
-  let add = `
+  let day = `${mySettings.myWeeksDayArray[dayIdx].code}`;  
+  let div;
+  let add;
+  if(show.tutto || !show.dalle || show.dalle == ""){
+    div = document.querySelector(`[data-tutto="${day}"]`);
+    add = `<div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="taskAddAllInfo(this, 'calWeekPage', 'mod')" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `color:${show.color}; border:none;`}">
+    ${show.task} <i class="IconI ${show.icon}"></i>
+  </div>`;
+  } else{
+    let primaDiv = ``;
+    let dopoDiv = ``;
+    div = document.querySelector(".weeklyContainer");
+    let hourStart = show.dalle ? show.dalle.replace(":", "-") : "00-00";
+    let hourEnd = show.alle ? show.alle.replace(":", "-") : "end";
+    if(show.dalle && show.dalle !== "" && show.prima && show.prima !== "00:00"){
+      let prima = timeMath(show.dalle, "minus", show.prima);
+      primaDiv = `<div class="weeklyBuffer ${show.past ? "pastEvent" : ""}" style="grid-column:col-${day}; grid-row:row-${prima}/row-${hourStart};"></div>`;
+    };
+    if(show.alle && show.alle !== "" && show.dopo && show.dopo !== "00:00"){
+      let dopo = timeMath(show.alle, "plus", show.dopo);
+      dopoDiv = `<div class="weeklyBuffer ${show.past ? "pastEvent" : ""}" style="grid-column:col-${day}; grid-row:row-${hourEnd}/row-${dopo};"></div>`;
+    };
+    add = `
     ${primaDiv}
-    <div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} data-showTdivype="${show.showType}" onclick="taskAddAllInfo(this, 'calWeekPage', 'mod')" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="background-color:${show.STColorBG}; color:${show.STColorTX}; grid-column:col-${day}; grid-row:row-${hourStart}/row-${hourEnd};">
+    <div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="taskAddAllInfo(this, 'calWeekPage', 'mod')" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `color:${show.color}; border:none;`}  grid-column:col-${day}; grid-row:row-${hourStart}${show.term == "reminder" ? `` : `/row-${hourEnd}`};">
       ${show.task}<br />
       <i class="IconI ${show.icon}"></i>
     </div>
     ${dopoDiv}
     `;
-  document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", add);
+  };
+  
+  div.insertAdjacentHTML("beforeend", add);
 };
 
 function getWeeklyCalendar(){
@@ -3164,7 +3169,7 @@ function getWeeklyCalendar(){
   for(let c = 1; c < 9; c++){
     let arrayC = [];
     let rowDay = `<div ${c == 2 ? `id="Dday"` : c == 8 ? `id="Sday"` : ``} class="weeklyItem" style="grid-column:${c}; grid-row:3; font-size:14px; font-weight:600; line-height: calc(((92vh / 29) * 1.5) / 2); border-radius:2px 2px 0 0; border-bottom:1px solid rgba(47, 79, 79, .5);${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}"${c > 1 ? ` data-code="${mySettings.myWeeksDayArray[c - 2].code}">${mySettings.myWeeksDayArray[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : `>`}</div>`; //shall we add the date as an id, as a data-date or as an area?
-    let rowTutto = `<div class="weeklyItem" style="grid-column:${c}; grid-row:4;     border-bottom: 1px solid rgba(47, 79, 79, .5);"></div>`;
+    let rowTutto = `<div class="weeklyItem weeklyTutto" ${c > 1 ? `data-tutto="${mySettings.myWeeksDayArray[c - 2].code}"` : ``} style="grid-column:${c}; grid-row:4; border-bottom: 1px solid rgba(47, 79, 79, .5);"></div>`;
     arrayC.push(rowDay);
     arrayC.push(rowTutto);
     let line = 5;
@@ -3187,7 +3192,7 @@ function getWeeklyCalendar(){
   let nomiCols = nomiCol.join(" ");
   let nomiRow = [];
   for(let h = 0; h < 24; h++){ //93
-    let rowH = `[row-${String(myDay).padStart(2, "0")}-00] minmax(0, .25fr)`;
+    let rowH = `[row-${String(myDay).padStart(2, "0")}-00${h == 0 ? ` row-tutto-end` : ``}] minmax(0, .25fr)`;
     let rowH15 = `[row-${String(myDay).padStart(2, "0")}-15] minmax(0, .25fr)`;
     let rowH30 = `[row-${String(myDay).padStart(2, "0")}-30] minmax(0, .25fr)`;
     let rowH45 = `[row-${String(myDay).padStart(2, "0")}-45] minmax(0, .25fr)`;

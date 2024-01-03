@@ -33,7 +33,7 @@ onAuthStateChanged(auth,(user) => {
     getCloudBC();
     getTasksSettings();
     getDones();
-    settingsPage();
+    //settingsPage();
     //getMines();
     // createBody();
     // getWeeklyCalendar();
@@ -50,6 +50,7 @@ onAuthStateChanged(auth,(user) => {
 
 
 // *** START
+let search = false;
 let listTasks = [];
 let listDones = [];
 let mySettings = {
@@ -57,6 +58,7 @@ let mySettings = {
   myFavoriteView: "switchPageInputList",
   myFirstDayOfTheWeek: "domenica",
   myWeeksDayArray: [{
+    day: 0,
     name0Maj: "domenica",
     name1Maj: "Domenica",
     nameNoAcc: "domenica",
@@ -65,6 +67,7 @@ let mySettings = {
     clockIn: "10:00",
     clockOut: "02:00"
   }, {
+    day: 1,
     name0Maj: "lunedì",
     name1Maj: "Lunedì",
     nameNoAcc: "lunedi",
@@ -73,6 +76,7 @@ let mySettings = {
     clockIn: "10:00",
     clockOut: "02:00"
   }, {
+    day: 2,
     name0Maj: "martedì",
     name1Maj: "Martedì",
     nameNoAcc: "martedi",
@@ -81,6 +85,7 @@ let mySettings = {
     clockIn: "10:00",
     clockOut: "02:00"
   }, {
+    day: 3,
     name0Maj: "mercoledì",
     name1Maj: "Mercoledì",
     nameNoAcc: "mercoledi",
@@ -89,6 +94,7 @@ let mySettings = {
     clockIn: "10:00",
     clockOut: "02:00"
   }, {
+    day: 4,
     name0Maj: "giovedì",
     name1Maj: "Giovedì",
     nameNoAcc: "giovedi",
@@ -97,6 +103,7 @@ let mySettings = {
     clockIn: "10:00",
     clockOut: "02:00"
   }, {
+    day: 5,
     name0Maj: "venerdì",
     name1Maj: "Venerdì",
     nameNoAcc: "venerdi",
@@ -105,6 +112,7 @@ let mySettings = {
     clockIn: "10:00",
     clockOut: "02:00"
   }, {
+    day: 6,
     name0Maj: "sabato",
     name1Maj: "Sabato",
     nameNoAcc: "sabato",
@@ -117,7 +125,7 @@ let mySettings = {
 };
 //localStorage.mySettings = JSON.stringify(mySettings);
 let cBC;
-let icons = ["fa-solid fa-comments", "fa-solid fa-lightbulb", "fa-solid fa-dollar-sign", "fa-solid fa-spider", "fa-solid fa-gavel", "fa-solid fa-couch", "fa-solid fa-head-side-virus", "fa-solid fa-screwdriver-wrench", "fa-solid fa-universal-access", "fa-solid fa-droplet", "fa-solid fa-code", "fa-solid fa-poo", "fa-solid fa-globe", "fa-solid fa-briefcase", "fa-solid fa-brain", "fa-solid fa-champagne-glasses", "fa-solid fa-seedling", "fa-solid fa-utensils", "fa-solid fa-heart-pulse", "fa-solid fa-sun", "fa-solid fa-broom", "fa-solid fa-people-group", "fa-solid fa-bullhorn", "fa-regular fa-face-grin-stars", "fa-regular fa-face-grin-hearts", "fa-regular fa-face-grin-squint", "fa-regular fa-face-smile-wink", "fa-regular fa-face-meh-blank", "fa-regular fa-face-flushed", "fa-regular fa-face-grimace", "fa-regular fa-face-rolling-eyes", "fa-regular fa-face-grin-beam-sweat", "fa-regular fa-face-surprise", "fa-regular fa-face-frown-open", "fa-regular fa-face-frown", "fa-regular fa-face-sad-tear", "fa-regular fa-face-tired", "fa-regular fa-face-sad-cry", "fa-regular fa-face-dizzy", "fa-regular fa-face-angry", "fa-solid fa-ban noIcon"];
+let icons = ["fa-solid fa-comments", "fa-solid fa-lightbulb", "fa-solid fa-dollar-sign", "fa-solid fa-spider", "fa-solid fa-gavel", "fa-solid fa-couch", "fa-solid fa-head-side-virus", "fa-solid fa-screwdriver-wrench", "fa-solid fa-universal-access", "fa-solid fa-droplet", "fa-solid fa-code", "fa-solid fa-poo", "fa-solid fa-globe", "fa-solid fa-briefcase", "fa-solid fa-brain", "fa-solid fa-champagne-glasses", "fa-solid fa-seedling", "fa-solid fa-utensils", "fa-solid fa-heart-pulse", "fa-solid fa-sun", "fa-solid fa-broom", "fa-solid fa-people-group", "fa-solid fa-bullhorn", "fa-solid fa-magnifying-glass", "fa-solid fa-heart", "fa-solid fa-cake-candles", "fa-regular fa-hourglass-half", "fa-solid fa-road", "fa-regular fa-face-grin-stars", "fa-regular fa-face-grin-hearts", "fa-regular fa-face-grin-squint", "fa-regular fa-face-smile-wink", "fa-regular fa-face-meh-blank", "fa-regular fa-face-flushed", "fa-regular fa-face-grimace", "fa-regular fa-face-rolling-eyes", "fa-regular fa-face-grin-beam-sweat", "fa-regular fa-face-surprise", "fa-regular fa-face-frown-open", "fa-regular fa-face-frown", "fa-regular fa-face-sad-tear", "fa-regular fa-face-tired", "fa-regular fa-face-sad-cry", "fa-regular fa-face-dizzy", "fa-regular fa-face-angry", "fa-solid fa-ban noIcon"];
 
 (() => {
   let iconsAll = icons.map(icon => {
@@ -143,6 +151,7 @@ const pageEvent = new Event("click");
       if(radio.id == "switchPageInputSetting"){
         let previousPages = document.getElementsByClassName("bottomBtn menuLabel whiteOnPurple");
         previousPage = previousPages[0].dataset.page;
+        settingsPage();
       };
       document.querySelector("#switchMenuInput").checked = false;
       document.querySelectorAll(".onePage").forEach(page => {
@@ -301,7 +310,7 @@ function freeIn(){
     refreshDoneId();
   };
   updateArrowsColor();
-  settingsPage();
+  //settingsPage();
   logInScreen.classList.add("displayNone");
 };
 
@@ -454,7 +463,7 @@ function updateFromCloud(){
   getDones();
   createBody();
   getWeeklyCalendar();
-  settingsPage();
+  //settingsPage();
   clearStorageBtn.textContent = "Updated!";
   updateArrowsColor();
 };
@@ -542,15 +551,15 @@ function resetCBC(){
     <hr />
     <h2>Settings</h2>
     <h3>What's the first thing you wanna see when you get here?</h3>
-    <input id="choicePageInputList" name="choicePageRadios" type="radio" class="displayNone" ${mySettings.myFavoriteView == "switchPageInputList" ? `checked` : ``} />
+    <input id="choicePageInputList" value="switchPageInputList" name="choicePageRadios" type="radio" class="displayNone" ${mySettings.myFavoriteView == "switchPageInputList" ? `checked` : ``} />
     <label for="choicePageInputList" class="bottomBtn purpleOnWhite">
       <i class="fa-solid fa-list-check"></i>
     </label>
-    <input id="choicePageInputMonth" name="choicePageRadios" type="radio" class="displayNone" ${mySettings.myFavoriteView == "switchPageInputMonth" ? `checked` : ``} />
+    <input id="choicePageInputMonth" value="switchPageInputMonth" name="choicePageRadios" type="radio" class="displayNone" ${mySettings.myFavoriteView == "switchPageInputMonth" ? `checked` : ``} />
     <label for="choicePageInputMonth" class="bottomBtn purpleOnWhite">
       <i class="fa-solid fa-calendar-days"></i>
     </label>
-    <input id="choicePageInputWeek" name="choicePageRadios" type="radio" class="displayNone" ${mySettings.myFavoriteView == "switchPageInputWeek" ? `checked` : ``} />
+    <input id="choicePageInputWeek" value="switchPageInputWeek" name="choicePageRadios" type="radio" class="displayNone" ${mySettings.myFavoriteView == "switchPageInputWeek" ? `checked` : ``} />
     <label for="choicePageInputWeek" class="bottomBtn purpleOnWhite">
       <i class="fa-solid fa-calendar-week"></i>
     </label>
@@ -594,6 +603,13 @@ function resetCBC(){
       document.getElementById(previousPage).checked = true;
       document.getElementById(previousPage).dispatchEvent(pageEvent);
     });
+    let clockChangeListener = false;
+    document.querySelectorAll(".clocks").forEach(clock => {
+      clock.addEventListener("change", () =>{
+        clockChangeListener = true;
+      });
+    });
+
     settingsBtn.addEventListener("click", () => {
       mySettings.myTomorrow = `${timeInput.value}`;
       if(previousTomorrow !== mySettings.myTomorrow){
@@ -609,14 +625,8 @@ function resetCBC(){
         getWeeklyCalendar();
       };
 
-      mySettings.myFavoriteView = document.querySelector('input[name="choicePageRadios"]:checked').id;
-
-      let clockChangeListener = false;
-      document.querySelectorAll(".clocks").forEach(clock => {
-        clock.addEventListener("change", () =>{
-          clockChangeListener = true;
-        });
-      });
+      mySettings.myFavoriteView = document.querySelector('input[name="choicePageRadios"]:checked').value;
+      
       if(clockChangeListener){
         // document.querySelectorAll(".dayClocksDiv").forEach(div => {
         //   let thisCode = div.id.substring(0, 2);
@@ -642,8 +652,8 @@ function resetCBC(){
             run = true;
           };
         };
-        createBody(); //did not work at all!
-        getWeeklyCalendar();//did not work!
+        createBody(); //did not work at all! because that one is not created from the array
+        getWeeklyCalendar();
       };
       localStorage.mySettings = JSON.stringify(mySettings);
       // if(userConnected){
@@ -661,7 +671,12 @@ function resetCBC(){
 // *** CREATION
 
 function todoCreation(todo){
-  let togoList = getTogoList(todo);
+  let togoList;
+  if(search){
+    togoList = "searchFound";
+  } else{
+    togoList = getTogoList(todo);
+  };
   let numberedDays;
   let todayDate = getDateTimeFromString(getTodayDate(), mySettings.myTomorrow);
   if(todo.line == "doneDay" || togoList == "listOups"){
@@ -671,7 +686,7 @@ function todoCreation(todo){
   };
   if(togoList !== ""){ //what happens if one is stock/stored AND recurring/recurry?
     if(todo.stock){
-      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo(this, 'list', 'mod')" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo(this, 'list', 'mod')" ${todo.term == "showThing" ? "" : `style="color:${todo.color}; flex-shrink: 0;"`}>${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${todo.color};" />` : ``}<span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
     } else if(todo.line == "recurringDay"){
       let time = todo.recurrys[0].dalle ? todo.recurrys[0].dalle : mySettings.myTomorrow;
       let nextDate = getDateTimeFromString(todo.recurrys[0].date, time);
@@ -741,9 +756,8 @@ function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dal
     } else{
       togoList = "listTomorrow"; //whether it's todoDay or doneDay
       if((todo.term == "oneTime" || todo.term == "longTerm" || todo.term == "crazyShit" || todo.term == "sameHabit") && !todo.recurry){
-        if(document.querySelectorAll(`#copy${todo.id}`).length <= 1){// there could already be one, but it's gonna be removed soon anyway
+        // there could already be one, but it's gonna be removed soon anyway
           copyDoneTomorrow(todo);
-        };
       };
     };
     //we already know it's not a recurringDay, we just need to make sure: (term == oneTime || longTerm || crazyShit {Anything that usually shows in the lists... what about sameHabit? do they usually show in the lists...}) && !recurry ... then we make a copy of it! copy but don't push in listTasks and just add "copy" at the beginning of the id and add newTodo.copy = true
@@ -1222,7 +1236,9 @@ function sortItAll(){
         stop = false; 
         if(type == "text"){
           first = li[i].querySelector(".text").textContent;
+          first = first.startsWith("*") ? first.substring(1) : first;
           second = li[i + 1].querySelector(".text").textContent;
+          second = second.startsWith("*") ? second.substring(1) : second;
         } else if(type == "color"){
           first = li[i].querySelector(".text").style.color;
           second = li[i + 1].querySelector(".text").style.color;
@@ -1275,6 +1291,32 @@ function sortItAll(){
       previousYear = year;
     };
   });
+  //Recurring subLists
+  document.querySelectorAll("#listRecurring > h4.subList").forEach(h => {
+    h.remove();
+  });
+  let recuLis = Array.from(document.querySelectorAll("#listRecurring > li"));
+  for(let i = (recuLis.length - 1); i >= 0; i--){
+    let term = recuLis[i].dataset.term;
+    if(!document.getElementById(`recu${term}SubList`)){
+      recuLis[i].insertAdjacentHTML("beforebegin", `<h4 class="subList" id="recu${term}SubList">${term}</h4>`);
+    } else{
+      document.getElementById(`recu${term}SubList`).insertAdjacentElement("afterend", recuLis[i]);
+    };
+  };
+  //Storage subLists
+  document.querySelectorAll("#listStorage > h4.subList").forEach(h => {
+    h.remove();
+  });
+  let stockLis = Array.from(document.querySelectorAll("#listStorage > li"));
+  for(let i = (stockLis.length - 1); i >= 0; i--){
+    let term = stockLis[i].dataset.term;
+    if(!document.getElementById(`stock${term}SubList`)){
+      stockLis[i].insertAdjacentHTML("beforebegin", `<h4 class="subList" id="stock${term}SubList">${term}</h4>`);
+    } else{
+      document.getElementById(`stock${term}SubList`).insertAdjacentElement("afterend", stockLis[i]);
+    };
+  };
 };
 
 
@@ -1501,7 +1543,7 @@ window.smallCalendarChoice = smallCalendarChoice;
 
 function creatingCalendar(todo, home, classs){
   let rec = todo.line == "recurringDay" ? true : false;
-  let shw = todo.term == "showThing" || todo.term == "reminder" ? true : false;
+  let shw = (todo.term == "showThing" || todo.term == "reminder") && !todo.stock ? true : false;
   let date = todo.date ? todo.date : rec ? todo.dal : getTodayDate();
   
   let daysWeek = mySettings.myWeeksDayArray.map((day, idx) => {
@@ -1509,7 +1551,32 @@ function creatingCalendar(todo, home, classs){
     <label for="${day.nameNoAcc}" class="dayCircle">${day.letter}</label>`;
   }).join("");
 
-  let doneDayDiv = `<div id="doneDaySection" ${shw ? `class="displayNone"` : ``}><input class="myRadio" type="radio" id="doneDayInput" name="whatDay" value="doneDay" ${todo.line == "doneDay" ? `checked` : ``} />
+  let todoDayDiv = `<div id="todoDaySection" ${todo.stock ? `class="displayNone"` : ``}>
+  <input class="myRadio" type="radio" id="todoDayInput" name="whatDay" value="todoDay" ${todo.line == "todoDay" || (shw && todo.line !== "recurringDay") ? `checked` : ``} />
+  <label for="todoDayInput" id="todoDayInputLabel" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText todoDay">${shw ? `Happening Day` : `To-do Day`}</span><br /><span class="smallText">${shw ? `(the day this is all gonna go down)` : `(the day you want to do it)`}</span></p></label>
+  <div class="DaySection" id="oneDaySection">
+    <h5 class="taskInfoInput" style="margin-left: 0;">It's a one time thing</h5>
+    <div class="inDaySection" style="width: -webkit-fill-available; max-width: 200px;">
+      <input type="date" id="oneDayDateInput" class="centerDateInput" value="${date}" />
+      <input id="oneTuttoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.tutto ? `checked` : ``} />
+      <div class="calendarInsideMargin tuttoGiornoDiv">
+        <p style="margin: 0;">Tutto il giorno?!</p>
+        <label for="oneTuttoGiornoInput" class="slideZone">
+          <div class="slider">
+            <span class="si">Sì</span>
+            <span class="no">No</span>
+          </div>
+        </label>
+      </div>
+      <div class="noneTuttoGiornoDiv calendarInsideMargin">
+        <p><span>c'è un inizio?</span><input id="oneDayTimeDalleInput" type="time" class="dalle dalleTxt" value="${todo.dalle ? todo.dalle : ``}" /></p>
+        <p><span>c'è una fine?</span><input id="oneDayTimeAlleInput" type="time" class="alle alleTxt" value="${todo.alle ? todo.alle : ``}" /></p>
+      </div>
+    </div>
+  </div>
+</div>`;
+
+  let doneDayDiv = `<div id="doneDaySection" ${shw || todo.stock ? `class="displayNone"` : ``}><input class="myRadio" type="radio" id="doneDayInput" name="whatDay" value="doneDay" ${todo.line == "doneDay" ? `checked` : ``} />
   <label for="doneDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText doneDay">Done Day</span><br /><span class="smallText">(the day by which it has to have been done)</span></label></p></label>
   <div class="DaySection" id="lastDaySection">
     <h5 class="taskInfoInput" style="margin-left: 0;">It's a hell of a deadline</h5>
@@ -1532,98 +1599,70 @@ function creatingCalendar(todo, home, classs){
   </div>
   </div>`;
 
-  let recurringDayDiv = todo.recurry ? `` : `<input class="myRadio" type="radio" id="recurringDayInput" name="whatDay" value="recurringDay" ${rec ? `checked` : ``} />
-  <label for="recurringDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText recurringDay">Recurring Day</span><br /><span class="smallText">(let it come back on its own)</span></label></p></label>
-  <div class="DaySection" id="recurringDaySection">
-    <h5 class="taskInfoInput" style="margin-left: 0;">It's a recurring thing</h5>
-    <div class="inDaySection" style="width: -webkit-fill-available; max-width: 280px;">
-      <p class="calendarInsideMargin">Dal<input id="dalInput" type="date" style="margin: 0 10px;" value="${date}" /></p>
-      <input id="recuTuttoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.tutto ? `checked` : ``} />
-      <div class="calendarInsideMargin tuttoGiornoDiv">
-        <p style="margin: 0;">Tutto il giorno?!</p>
-        <label for="recuTuttoGiornoInput" class="slideZone">
-          <div class="slider">
-            <span class="si">Sì</span>
-            <span class="no">No</span>
+  let recurringDayDiv = `<div id="recurringDaySection" ${todo.recurry || todo.stock ? `class="displayNone"` : ``}>
+    <input class="myRadio" type="radio" id="recurringDayInput" name="whatDay" value="recurringDay" ${rec ? `checked` : ``} />
+    <label for="recurringDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText recurringDay">Recurring Day</span><br /><span class="smallText">(let it come back on its own)</span></label></p></label>
+    <div class="DaySection" id="recurryDaySection">
+      <h5 class="taskInfoInput" style="margin-left: 0;">It's a recurring thing</h5>
+      <div class="inDaySection" style="width: -webkit-fill-available; max-width: 280px;">
+        <p class="calendarInsideMargin">Dal<input id="dalInput" type="date" style="margin: 0 10px;" value="${date}" /></p>
+        <input id="recuTuttoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.tutto ? `checked` : ``} />
+        <div class="calendarInsideMargin tuttoGiornoDiv">
+          <p style="margin: 0;">Tutto il giorno?!</p>
+          <label for="recuTuttoGiornoInput" class="slideZone">
+            <div class="slider">
+              <span class="si">Sì</span>
+              <span class="no">No</span>
+            </div>
+          </label>
+        </div>
+        <div class="noneTuttoGiornoDiv calendarInsideMargin">
+          <p><span>c'è un inizio?</span><input id="recuTimeDalleInput" type="time" class="dalle dalleTxt" value="${todo.dalle ? todo.dalle : ``}" /></p>
+          <><>c'è una fine?</span><input id="recuTimeAlleInput" type="time" class="alle alleTxt" value="${todo.alle ? todo.alle : ``}" /></p>
+        </div>
+        <p class="calendarInsideMargin">Si ripete ogni<input id="ogniInput" type="number" style="width: 50px; margin: 0 10px;" value="${todo.ogni ? todo.ogni : ``}" />
+        <select id="timeVariationInput">
+          <option value="giorno" ${rec && todo.var == "giorno" ? `selected` : ``}>giorno</option>
+          <option value="settimana" ${rec && todo.var == "settimana" ? `selected` : ``}>settimana</option>
+          <option value="mese" ${rec && todo.var == "mese" ? `selected` : ``}>mese</option>
+          <option value="anno" ${rec && todo.var == "anno" ? `selected` : ``}>anno</option>
+        </select></p>
+        <div id="weekSection" class="calendarInsideMargin ${rec && todo.var == "settimana" ? `` : `displayNone`}" style="width: -webkit-fill-available;">
+          <p>Da ripetere il</p>
+          <div class="dayCircleWeek">
+            ${daysWeek}
           </div>
-        </label>
-      </div>
-      <div class="noneTuttoGiornoDiv calendarInsideMargin">
-        <p><span>c'è un inizio?</span><input id="recuTimeDalleInput" type="time" class="dalle dalleTxt" value="${todo.dalle ? todo.dalle : ``}" /></p>
-        <p><span>c'è una fine?</span><input id="recuTimeAlleInput" type="time" class="alle alleTxt" value="${todo.alle ? todo.alle : ``}" /></p>
-      </div>
-      <p class="calendarInsideMargin">Si ripete ogni<input id="ogniInput" type="number" style="width: 50px; margin: 0 10px;" value="${todo.ogni ? todo.ogni : ``}" />
-      <select id="timeVariationInput">
-        <option value="giorno" ${rec && todo.var == "giorno" ? `selected` : ``}>giorno</option>
-        <option value="settimana" ${rec && todo.var == "settimana" ? `selected` : ``}>settimana</option>
-        <option value="mese" ${rec && todo.var == "mese" ? `selected` : ``}>mese</option>
-        <option value="anno" ${rec && todo.var == "anno" ? `selected` : ``}>anno</option>
-      </select></p>
-      <div id="weekSection" class="calendarInsideMargin ${rec && todo.var == "settimana" ? `` : `displayNone`}" style="width: -webkit-fill-available;">
-        <p>Da ripetere il</p>
-        <div class="dayCircleWeek">
-          ${daysWeek}
+        </div>
+        <div id="monthSection" class="calendarInsideMargin ${rec && todo.var == "mese" ? `` : `displayNone`}">
+          <p>Da ripetere</p>
+          <input class="myRadio" type="radio" name="meseOptions" id="ogniXDate" ${rec && todo.var == "mese" && todo.meseOpt == "ogniXDate" ? `checked` : ``} value="ogniXDate" />
+          <label for="ogniXDate" style="display: block;"><span class="myRadio"></span><span id="ogniXDateText"></span></label>
+          <input class="myRadio" type="radio" name="meseOptions" id="ogniXDay" ${rec && todo.var == "mese" && todo.meseOpt == "ogniXDay" ? `checked` : ``} value="ogniXDay" />
+          <label for="ogniXDay"><span class="myRadio"></span><span id="ogniXDayText"></span></label>
+        </div>
+        <div class="calendarInsideMargin">
+          <p>Termina</p>
+          <input class="myRadio" type="radio" name="fineOptions" id="fineMaiInput" value="fineMai" ${!rec ? `checked` : todo.fineOpt == "fineMai" ? `checked` : ``} />
+          <label for="fineMaiInput" style="display: block;"><span class="myRadio"></span>Mai</label>
+          <input class="myRadio" type="radio" name="fineOptions" id="fineGiornoInput" value="fineGiorno" ${rec && todo.fineOpt == "fineGiorno" ? `checked` : ``} />
+          <label for="fineGiornoInput" style="display: block;"><span class="myRadio"></span>Il giorno<input id="fineDate" type="date" style="margin: 0 10px;" value="${rec && todo.fineOpt == "fineGiorno" ? todo.fine : ``}" /></label>
+          <input class="myRadio" type="radio" name="fineOptions" id="fineDopoInput" value="fineDopo" ${rec && todo.fineOpt == "fineDopo" ? `checked` : ``} />
+          <label for="fineDopoInput" style="display: block;"><span class="myRadio"></span>Dopo<input id="fineCount" type="number" style="width: 50px; margin: 0 10px;" value="${rec && todo.fineOpt == "fineDopo" ? todo.fineCount : ``}" />occorrenza</label>
         </div>
       </div>
-      <div id="monthSection" class="calendarInsideMargin ${rec && todo.var == "mese" ? `` : `displayNone`}">
-        <p>Da ripetere</p>
-        <input class="myRadio" type="radio" name="meseOptions" id="ogniXDate" ${rec && todo.var == "mese" && todo.meseOpt == "ogniXDate" ? `checked` : ``} value="ogniXDate" />
-        <label for="ogniXDate" style="display: block;"><span class="myRadio"></span><span id="ogniXDateText"></span></label>
-        <input class="myRadio" type="radio" name="meseOptions" id="ogniXDay" ${rec && todo.var == "mese" && todo.meseOpt == "ogniXDay" ? `checked` : ``} value="ogniXDay" />
-        <label for="ogniXDay"><span class="myRadio"></span><span id="ogniXDayText"></span></label>
-      </div>
-      <div class="calendarInsideMargin">
-        <p>Termina</p>
-        <input class="myRadio" type="radio" name="fineOptions" id="fineMaiInput" value="fineMai" ${!rec ? `checked` : todo.fineOpt == "fineMai" ? `checked` : ``} />
-        <label for="fineMaiInput" style="display: block;"><span class="myRadio"></span>Mai</label>
-        <input class="myRadio" type="radio" name="fineOptions" id="fineGiornoInput" value="fineGiorno" ${rec && todo.fineOpt == "fineGiorno" ? `checked` : ``} />
-        <label for="fineGiornoInput" style="display: block;"><span class="myRadio"></span>Il giorno<input id="fineDate" type="date" style="margin: 0 10px;" value="${rec && todo.fineOpt == "fineGiorno" ? todo.fine : ``}" /></label>
-        <input class="myRadio" type="radio" name="fineOptions" id="fineDopoInput" value="fineDopo" ${rec && todo.fineOpt == "fineDopo" ? `checked` : ``} />
-        <label for="fineDopoInput" style="display: block;"><span class="myRadio"></span>Dopo<input id="fineCount" type="number" style="width: 50px; margin: 0 10px;" value="${rec && todo.fineOpt == "fineDopo" ? todo.fineCount : ``}" />occorrenza</label>
-      </div>
     </div>
   </div>`;
 
-  let noDayDiv = `<div id="noDaySection" ${shw ? `class="displayNone"` : ``}><input class="myRadio" type="radio" id="noDayInput" name="whatDay" value="noDay" ${todo.line == "noDay" || todo.line == "" || !todo.line ? `checked` : ``} />
-  <label for="noDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText">No Day</span><br /><span class="smallText">(just go with the flow)</span></label></p></label></div>`;
-
-  let bufferDiv = `<div id="bufferSection" class="taskInfoInput ${shw ? `` : `displayNone`}" style="margin-top: 20px;">
-    <h5 class="taskInfoInput" style="margin-left: 0;">How long will that really take?</h5>
-    <div class="inDaySection" style="width: -webkit-fill-available; max-width: 200px;">
-      <p style="margin-top: 10px;"><span>Before: </span><input id="primaBuffer" type="time" step="900" value="${todo.prima ? todo.prima : `00:00`}" /></p>
-      <p><span>After: </span><input id="dopoBuffer" type="time" step="900" value="${todo.dopo ? todo.dopo : `00:00`}" /></p>
-    </div>
-  </div>`;
+  let noDayDiv = `<div id="noDaySection" ${shw ? `class="displayNone"` : ``}><input class="myRadio" type="radio" id="noDayInput" name="whatDay" value="noDay" ${todo.line == "noDay" || todo.line == "" || !todo.line || todo.stock ? `checked` : ``} />
+  <label for="noDayInput" id="noDayInputLabel" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText">No Day</span><br /><span class="smallText">${todo.stock ? `(let's put it away until we need it)` : `(just go with the flow)`}</span></label></p></label></div>`;
 
   let smallCalendar = `<div id="calendarDiv" class="${classs}" style="width:${newWidth}px;">
     ${classs == "onIcon" ? `<h5 class="taskInfoInput">Tell me when...</h5>` : ``}
     <div>
-      <input class="myRadio" type="radio" id="todoDayInput" name="whatDay" value="todoDay" ${todo.line == "todoDay" || (shw && todo.line !== "recurringDay") ? `checked` : ``} />
-      <label for="todoDayInput" id="todoDayInputLabel" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText todoDay">${shw ? `Happening Day` : `To-do Day`}</span><br /><span class="smallText">${shw ? `(the day this is all gonna go down)` : `(the day you want to do it)`}</span></p></label>
-      <div class="DaySection" id="oneDaySection">
-        <h5 class="taskInfoInput" style="margin-left: 0;">It's a one time thing</h5>
-        <div class="inDaySection" style="width: -webkit-fill-available; max-width: 200px;">
-          <input type="date" id="oneDayDateInput" class="centerDateInput" value="${date}" />
-          <input id="oneTuttoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.tutto ? `checked` : ``} />
-          <div class="calendarInsideMargin tuttoGiornoDiv">
-            <p style="margin: 0;">Tutto il giorno?!</p>
-            <label for="oneTuttoGiornoInput" class="slideZone">
-              <div class="slider">
-                <span class="si">Sì</span>
-                <span class="no">No</span>
-              </div>
-            </label>
-          </div>
-          <div class="noneTuttoGiornoDiv calendarInsideMargin">
-            <p><span>c'è un inizio?</span><input id="oneDayTimeDalleInput" type="time" class="dalle dalleTxt" value="${todo.dalle ? todo.dalle : ``}" /></p>
-            <p><span>c'è una fine?</span><input id="oneDayTimeAlleInput" type="time" class="alle alleTxt" value="${todo.alle ? todo.alle : ``}" /></p>
-          </div>
-        </div>
-      </div>
+      ${todoDayDiv}
       ${doneDayDiv}
       ${recurringDayDiv}
       ${noDayDiv}
-      ${bufferDiv}
     </div>
     ${classs == "onIcon" ? `<button id="saveTheDateBtn" class="calendarMargin">STD<br /><span class="smallText">(Save The Date)</span></button>` : ``}
   </div>`;
@@ -2184,8 +2223,6 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       todoIndex = listTasks.findIndex(todo => todo.id == parentId);
       todo = listTasks[todoIndex];
     };
-
-    parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
   };
   
 
@@ -2272,6 +2309,11 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
                 </div>
               </div> 
             </div>
+            <h5 class="taskInfoInput" style="margin-left: 0;">How long will that really take?</h5>
+            <div class="inDaySection" style="width: -webkit-fill-available; max-width: 200px;">
+              <p style="margin-top: 10px;"><span>Before: </span><input id="primaBuffer" type="time" step="900" value="${todo.prima ? todo.prima : `00:00`}" /></p>
+              <p><span>After: </span><input id="dopoBuffer" type="time" step="900" value="${todo.dopo ? todo.dopo : `00:00`}" /></p>
+            </div>
           </div>
         </div>
         <h5 class="taskInfoInput" style="margin-top: 20px;">Tell me when...</h5>
@@ -2288,6 +2330,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   let doneIt = document.querySelector("#doneIt");
   let copyIt = document.querySelector("#copyIt");
   let trashIt = document.querySelector("#trashIt");
+  let storeIt = document.querySelector("#storeIt");
   let taskTitle = document.querySelector("#taskTitle");
   let taskDetails = document.querySelector("#taskDetails");
   let SupClickScreen = document.querySelector("#SupClickScreen");
@@ -2390,40 +2433,88 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   let showTypeCreationConfirm = document.querySelector("#showTypeCreationConfirm");
 
   //Hiding lineOptions
+  let todoDaySection = document.querySelector("#todoDaySection");
   let doneDaySection = document.querySelector("#doneDaySection");
+  let recurringDaySection = document.querySelector("#recurringDaySection");
   let noDaySection = document.querySelector("#noDaySection");
-  let bufferSection = document.querySelector("#bufferSection");
-  document.querySelectorAll('input[name="termOptions"]').forEach(radio => {
-    radio.addEventListener("click", () => {
-      if(radio.checked && radio.value == "showThing"){
+  storeIt.addEventListener("click", () => {
+    let radio = document.querySelector('input[name="termOptions"]:checked').value;
+    if(storeIt.checked && !todo.stored){
+      setN();
+      if(radio == "showThing"){
         colorIt.classList.add("hidden");
         taskTitle.style.color = "darkslategrey";
-        doneDaySection.classList.add("displayNone");
-        noDaySection.classList.add("displayNone"); 
-        bufferSection.classList.remove("displayNone");       
-        if(todo.line !== "recurringDay"){
-          document.querySelector("#todoDayInput").checked = true;
-        };
-        document.querySelector("#todoDayInputLabel").innerHTML = `<p><span class="myRadio"></span><span class="normalText todoDay">Happening Day</span><br /><span class="smallText">(the day this is all gonna go down)</span></p>`;
-      } else if(radio.checked && radio.value == "reminder"){
-        doneDaySection.classList.add("displayNone");
-        noDaySection.classList.add("displayNone"); 
-        bufferSection.classList.add("displayNone");       
-        if(todo.line !== "recurringDay"){
-          document.querySelector("#todoDayInput").checked = true;
-        };
-        document.querySelector("#todoDayInputLabel").innerHTML = `<p><span class="myRadio"></span><span class="normalText todoDay">Happening Day</span><br /><span class="smallText">(the day this is all gonna go down)</span></p>`;
       } else{
         colorIt.classList.remove("hidden");
         taskTitle.style.color = newcolor ? newcolor : todo.color;
-        doneDaySection.classList.remove("displayNone");
-        noDaySection.classList.remove("displayNone"); 
-        bufferSection.classList.add("displayNone");       
-        document.querySelector(`input[name="whatDay"]#${todo.line}Input`).checked = true;
-        document.querySelector("#todoDayInputLabel").innerHTML = `<p><span class="myRadio"></span><span class="normalText todoDay">To-do Day</span><br /><span class="smallText">(the day you want to do it)</span></p>`;
+      };
+    } else if(radio == "showThing" || radio == "reminder"){
+      setTR();
+      if(radio == "showThing"){
+        colorIt.classList.add("hidden");
+        taskTitle.style.color = "darkslategrey";
+      } else if(radio == "reminder"){
+        colorIt.classList.remove("hidden");
+        taskTitle.style.color = newcolor ? newcolor : todo.color;
+      };
+    } else{
+      colorIt.classList.remove("hidden");
+      taskTitle.style.color = newcolor ? newcolor : todo.color;
+      setTRN();
+    };
+  });
+  
+  document.querySelectorAll('input[name="termOptions"]').forEach(radio => {
+    radio.addEventListener("click", () => {
+      if(radio.checked && storeIt.checked && !todo.stored){
+        colorIt.classList.remove("hidden");
+        taskTitle.style.color = newcolor ? newcolor : todo.color;
+        setN();
+      } else if(radio.checked && (radio.value == "showThing" || radio.value == "reminder") ){
+        setTR();
+        if(radio.value == "showThing"){
+          colorIt.classList.add("hidden");
+          taskTitle.style.color = "darkslategrey";
+        } else if(radio.value == "reminder"){
+          colorIt.classList.remove("hidden");
+          taskTitle.style.color = newcolor ? newcolor : todo.color;
+        };
+      } else{
+        colorIt.classList.remove("hidden");
+        taskTitle.style.color = newcolor ? newcolor : todo.color;
+        setTRN();
       };
     });
   });
+  function setTR(){
+    todoDaySection.classList.remove("displayNone");
+    doneDaySection.classList.add("displayNone");
+    recurringDaySection.classList.remove("displayNone");
+    noDaySection.classList.add("displayNone");
+    document.querySelector(`input[name="whatDay"]#${todo.line !== "recurringDay" ? "todoDay" : todo.line}Input`).checked = true;
+    document.querySelector("#todoDayInputLabel").innerHTML = `<p><span class="myRadio"></span><span class="normalText todoDay">Happening Day</span><br /><span class="smallText">(the day this is all gonna go down)</span></p>`;
+    document.querySelector("#noDayInputLabel span.smallText").innerText = `(just go with the flow)`;
+    taskInfoBtn.innerText = "Save";
+  };
+  function setN(){
+    todoDaySection.classList.add("displayNone");
+    doneDaySection.classList.add("displayNone");
+    recurringDaySection.classList.add("displayNone");
+    noDaySection.classList.remove("displayNone"); 
+    document.querySelector("#noDayInput").checked = true;
+    document.querySelector("#noDayInputLabel span.smallText").innerText = `(let's put it away until we need it)`;
+    taskInfoBtn.innerText = "Save & put it away";
+  };
+  function setTRN(){
+    todoDaySection.classList.remove("displayNone");
+    doneDaySection.classList.remove("displayNone");
+    recurringDaySection.classList.remove("displayNone");
+    noDaySection.classList.remove("displayNone"); 
+    document.querySelector(`input[name="whatDay"]#${todo.line}Input`).checked = true;
+    document.querySelector("#todoDayInputLabel").innerHTML = `<p><span class="myRadio"></span><span class="normalText todoDay">To-do Day</span><br /><span class="smallText">(the day you want to do it)</span></p>`;
+    document.querySelector("#noDayInputLabel span.smallText").innerText = `(just go with the flow)`;
+    taskInfoBtn.innerText = "Save";
+  };
 
   showTypeCreationInput.addEventListener("input", () => {
     newSTing = true;
@@ -2543,7 +2634,6 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       };
 
       if(!todo.recurry && todo.line !== "recurringDay"){
-        let storeIt = document.querySelector("#storeIt");
         if(!todo.stock && !todo.stored && storeIt.checked){
           stockCreaction(todo); //todo.stored = true; (has a model in storage) (included in stockCreation)
         };
@@ -2578,6 +2668,10 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       };
 
       togoList = getTogoList(todo);
+
+      if(where == "list"){
+        parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
+      };
 
       if(doneIt.checked){
         gotItDone(todo.id, "");
@@ -2730,41 +2824,28 @@ function getTodayDate(){
   let currentHour = String(date.getHours()).padStart(2, "0");
   let currentMinute = String(date.getMinutes()).padStart(2, "0");
   let currentTime = `${currentHour}:${currentMinute}`;
-  let currentDay = String(date.getDate()).padStart(2, "0");
-  currentDay = currentTime <= mySettings.myTomorrow ? String(currentDay - 1).padStart(2, "0") : currentDay;
-  let currentMonth = String(date.getMonth()+1).padStart(2, "0");
-  let currentYear = date.getFullYear();
-  let currentDate = `${currentYear}-${currentMonth}-${currentDay}`;
-  return currentDate;
+  let currentDay = currentTime <= mySettings.myTomorrow ? (date.getDate() - 1) : date.getDate();
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, "0")}-${String(currentDay).padStart(2, "0")}`;
 };
 
-function getTomorrowDate(){ //that doesn't work!!! (just if you don't need to consider the hour)
+function getTomorrowDate(){
   let date = new Date();
   date.setDate(date.getDate() + 1);
   let currentHour = String(date.getHours()).padStart(2, "0");
   let currentMinute = String(date.getMinutes()).padStart(2, "0");
   let currentTime = `${currentHour}:${currentMinute}`;
-  let currentDay = String(date.getDate()).padStart(2, "0");
-  currentDay = currentTime <= mySettings.myTomorrow ? String(currentDay - 1).padStart(2, "0") : currentDay;
-  let currentMonth = String(date.getMonth()+1).padStart(2, "0");
-  let currentYear = date.getFullYear();
-  let currentDate = `${currentYear}-${currentMonth}-${currentDay}`;
-  return currentDate;
+  let currentDay = currentTime <= mySettings.myTomorrow ? (date.getDate() - 1) : date.getDate();
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, "0")}-${String(currentDay).padStart(2, "0")}`;
 };
 
-function timeLimit(limit){ //That's a fucked up mess!!!!
+function timeLimit(limit){
   let nowDate = new Date();
   let currentHour = String(nowDate.getHours()).padStart(2, "0");
   let currentMinute = String(nowDate.getMinutes()).padStart(2, "0");
   let currentTime = `${currentHour}:${currentMinute}`;
-  let currentDay = nowDate.getDate();
-  currentDay = currentTime <= mySettings.myTomorrow ? (nowDate.getDate() - 1) : nowDate.getDate();
+  let currentDay = currentTime <= mySettings.myTomorrow ? (nowDate.getDate() - 1) : nowDate.getDate();
   let currentMonth = String(nowDate.getMonth()+1).padStart(2, "0");
   let currentYear = nowDate.getFullYear();
-  // let tomoDate = nowDate.setDate(nowDate.getDate() + 1);
-  // let tomoDay = currentTime <= mySettings.myTomorrow ? (tomoDate.getDate() - 1) : tomoDate.getDate();
-  // let afterDate = nowDate.setDate(nowDate.getDate() + 2);
-  // let afterDay = currentTime <= mySettings.myTomorrow ? (afterDate.getDate() - 1) : afterDate.getDate();
   nowDate.setDate(nowDate.getDate() + 1);
   let tomoDay = currentTime <= mySettings.myTomorrow ? (nowDate.getDate() - 1) : nowDate.getDate();
   nowDate.setDate(nowDate.getDate() + 1);
@@ -2782,27 +2863,6 @@ function timeLimit(limit){ //That's a fucked up mess!!!!
   return timeLimit;
 };
 
-function futureTimeLimit(date){
-  let nowDate = new Date();
-  let currentHour = String(nowDate.getHours()).padStart(2, "0");
-  let currentMinute = String(nowDate.getMinutes()).padStart(2, "0");
-  let currentTime = `${currentHour}:${currentMinute}`;
-  let currentDay = nowDate.getDate();
-  currentDay = currentTime <= mySettings.myTomorrow ? (nowDate.getDate() - 1) : nowDate.getDate();
-  let currentMonth = String(nowDate.getMonth()+1).padStart(2, "0");
-  let currentYear = nowDate.getFullYear();
-  let limitDay;
-  let modifiedTomorrow = mySettings.myTomorrow.replace(":", "-")
-  if(limit == "hierOggi"){
-    limitDay = currentDay;
-  } else if(limit == "oggiDemain"){
-    limitDay = String(currentDay + 1).padStart(2, "0");
-  } else if(limit == "demainApres"){
-    limitDay = String(currentDay + 2).padStart(2, "0");
-  };
-  let timeLimit = `${currentYear}-${currentMonth}-${limitDay}-${modifiedTomorrow}`;
-  return timeLimit;
-};
 
 function getLastWeekDate(){
   let date = new Date();
@@ -3009,7 +3069,9 @@ function updateMonth(){
   let monthlyFirst = document.querySelector("#monthlyFirst").dataset.wholedate;
   let monthlyLast = document.querySelector("#monthlyLast").dataset.wholedate;
   putShowsInMonth(monthlyFirst, monthlyLast);
-}
+};
+
+// *** WEEKLY CALENDAR
 
 function putDatesInWeek(date){
   let arrayDate = [];
@@ -3037,21 +3099,27 @@ function putDatesInWeek(date){
       d = d < 6 ? d + 1 : d = 0;
     });
   };
-  let today = new Date();
-  let dayIdx = today.getDay();
-  today = getStringFromDate(today);
+  let today = getTodayDate();
+  let dayIdx = meseDayICalc(today);
   const test = arrayDate.some(el => (el.full == today));
-  if(test){
-    let todayDay = `${mySettings.myWeeksDayArray[dayIdx].code}`;
-    let nextDayIdx = dayIdx == 6 ? 0 : dayIdx + 1;
-    let tomoDay = `${dayIdx == 6 ? `end` : mySettings.myWeeksDayArray[nextDayIdx].code}`;
+  if(test){   
+    let current = new Date();
+    let currentHour = current.getHours();
+    let currentMinute = current.getMinutes();
+    let currentTime = roundFifteenArea(currentHour, currentMinute);
+    let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
+    let todayDay = `${mySettings.myWeeksDayArray[idx].code}`;
     let todayArea;
+    let nowArea;
     if(today == arrayDate[arrayDate.length - 1].full){
-      todayArea = `<div class="todayArea" style="grid-area: row-00-00 / col-${mySettings.myWeeksDayArray[mySettings.myWeeksDayArray.length - 1].code} / row-end / col-end"></div>`;
+      todayArea = `<div class="todayArea" style="grid-row: row-00-00 / row-end; grid-column: col-${mySettings.myWeeksDayArray[mySettings.myWeeksDayArray.length - 1].code};"></div>`;
+      nowArea = `<div class="nowArea" style="grid-row: row-${currentTime}; grid-column: col-${mySettings.myWeeksDayArray[mySettings.myWeeksDayArray.length - 1].code};"></div>`;
     } else{
-      todayArea = `<div class="todayArea" style="grid-area: row-Day / col-${todayDay} / row-00-00 / col-${tomoDay}"></div>`;
+      todayArea = `<div class="todayArea" style="grid-row: row-Day / row-end; grid-column: col-${todayDay};"></div>`;
+      nowArea = `<div class="nowArea" style="grid-row: row-${currentTime}; grid-column: col-${todayDay};"></div>`;
     };    
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", todayArea);
+    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", nowArea);
   };
   updateSleepAreas();
 
@@ -3066,6 +3134,41 @@ function putDatesInWeek(date){
   document.querySelector("#weeklyYearSpan").innerHTML = `${DYear}${DYear !== SYear ? ` / ${SYear}` : ``}`;
   document.querySelector("#weeklyMonthSpan").innerHTML = `${DMonthName}${DMonthName !== SMonthName ? ` / ${SMonthName}` : ``}`;
   putShowsInWeek(Dday, Sday);
+};
+
+function roundFifteenTime(realTime){
+  let min = Number(realTime.substring(3));
+  let hour = Number(realTime.substring(0, 2));
+  if(min > 0 && min <= 7 ){
+    min = 0;
+  } else if(min >= 8 && min <= 22){
+    min = 15;
+  } else if(min >= 23 && min <= 37){
+    min = 30;
+  } else if(min >= 38 && min <= 52){
+    min = 45;
+  } else if(min >= 53 && min <= 59){
+    min = 0;
+    hour = hour <= 23 ? hour + 1 : 0;
+  } else{
+    min = min;
+  };
+  return `${String(hour).padStart(2, "0")}-${String(min).padStart(2, "0")}`;
+};
+
+function roundFifteenArea(hour, min){
+  if(min < 15 ){
+    min = 0;
+  } else if(min > 15 && min < 30){
+    min = 15;
+  } else if(min > 30 && min < 45){
+    min = 30;
+  } else if(min > 45){
+    min = 45;
+  } else{
+    min = min;
+  };
+  return `${String(hour).padStart(2, "0")}-${String(min).padStart(2, "0")}`;
 };
 
 function updateSleepAreas(){
@@ -3125,7 +3228,8 @@ function timeMath(one, math, two){
 
 function createWeeklyshow(show){
   let dayIdx = meseDayICalc(show.date);
-  let day = `${mySettings.myWeeksDayArray[dayIdx].code}`;  
+  let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
+  let day = `${mySettings.myWeeksDayArray[idx].code}`;  
   let div;
   let add;
   if(show.tutto || !show.dalle || show.dalle == ""){
@@ -3137,14 +3241,16 @@ function createWeeklyshow(show){
     let primaDiv = ``;
     let dopoDiv = ``;
     div = document.querySelector(".weeklyContainer");
-    let hourStart = show.dalle ? show.dalle.replace(":", "-") : "00-00";
-    let hourEnd = show.alle ? show.alle.replace(":", "-") : "end";
-    if(show.dalle && show.dalle !== "" && show.prima && show.prima !== "00:00"){
-      let prima = timeMath(show.dalle, "minus", show.prima);
+    let hourStart = roundFifteenTime(show.dalle);
+    let hourEnd = (show.alle && show.alle !== "00:00") ? roundFifteenTime(show.alle) : "end";
+    if(show.prima && show.prima !== "00:00"){
+      let prima = roundFifteenTime(show.prima);
+      prima = timeMath(hourStart, "minus", prima);
       primaDiv = `<div class="weeklyBuffer ${show.past ? "pastEvent" : ""}" style="grid-column:col-${day}; grid-row:row-${prima}/row-${hourStart};"></div>`;
     };
-    if(show.alle && show.alle !== "" && show.dopo && show.dopo !== "00:00"){
-      let dopo = timeMath(show.alle, "plus", show.dopo);
+    if(show.dopo && show.dopo !== "00:00"){
+      let dopo = roundFifteenTime(show.dopo);
+      dopo = timeMath(hourEnd, "plus", dopo);
       dopoDiv = `<div class="weeklyBuffer ${show.past ? "pastEvent" : ""}" style="grid-column:col-${day}; grid-row:row-${hourEnd}/row-${dopo};"></div>`;
     };
     add = `
@@ -3214,13 +3320,18 @@ function getWeeklyCalendar(){
 
   let date = new Date();
   let dayIdx = date.getDay();
-  date.setDate(date.getDate() - dayIdx);
+  let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
+  date.setDate(date.getDate() - idx);
   putDatesInWeek(date);
   
   document.querySelector("#weekBackward").addEventListener("click", () => {
     let todayAreaDiv = document.querySelector(".todayArea");
     if(todayAreaDiv){
       todayAreaDiv.remove();
+    };
+    let nowAreaDiv = document.querySelector(".nowArea");
+    if(nowAreaDiv){
+      nowAreaDiv.remove();
     };
     eraseWeek();
     let Dday = document.querySelector("#Dday").dataset.date;
@@ -3232,6 +3343,10 @@ function getWeeklyCalendar(){
     let todayAreaDiv = document.querySelector(".todayArea");
     if(todayAreaDiv){
       todayAreaDiv.remove();
+    };
+    let nowAreaDiv = document.querySelector(".nowArea");
+    if(nowAreaDiv){
+      nowAreaDiv.remove();
     };
     eraseWeek();
     let Sday = document.querySelector("#Sday").dataset.date;

@@ -231,6 +231,18 @@ input[type="radio"]{
 #switchMenuInput:checked ~ div#allPagesMenu{
   display: flex;
 }
+#otherPagesMenu{
+  position: absolute;
+  bottom: 0;
+  left: 40px;
+  height: 40px;
+  display: none;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+#switchMenuInput:checked ~ div#otherPagesMenu{
+  display: flex;
+}
 .bottomBtn{
   width: 35px;
   height: 35px;
@@ -605,6 +617,16 @@ li .textDiv{
   justify-content: space-between;
   align-items: center;
 }
+li .textDiv > hr{
+  width: 100%;
+  height: 0.5px;
+  border-top: 0.5px dotted;
+  border-bottom: none;
+  border-right: none;
+  border-left: none;
+  margin-left: 10px;
+  margin-right: -5px;
+}
 .numberedCal{
   position: relative;
   padding: 0;
@@ -732,7 +754,7 @@ input#todoDayInput:checked ~ div#oneDaySection{
 input#doneDayInput:checked ~ div#lastDaySection{
   display: flex;
 }
-input#recurringDayInput:checked ~ div#recurringDaySection{
+input#recurringDayInput:checked ~ div#recurryDaySection{
   display: flex;
 }
 .tuttoGiornoDiv{
@@ -1270,7 +1292,12 @@ hr.zoneHr{
 .todayArea{
   border: 2px solid rgba(64, 115, 243, 0.5);
   border-radius: 3px;
-  z-index: 2;
+  z-index: 1;
+}
+.nowArea{
+  /* border-top: 3px solid rgba(64, 115, 243, 0.5); */
+  background-color: rgba(64, 115, 243, 0.5);
+  z-index: 4;
 }
 .weeklyEvent{
   border: 1px solid darkslategrey;

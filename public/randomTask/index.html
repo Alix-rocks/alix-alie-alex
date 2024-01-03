@@ -28,6 +28,49 @@
     <div id="settingsDiv" class="DivScreen">
     </div>
   </div>
+
+  <!-- Search -->
+  <input id="switchPageInputSearch" name="switchPageRadios" type="radio" class="displayNone">
+  <div id="searchScreen" class="onePage displayNone">
+    <div id="searchDiv" class="DivScreen">
+      <h2>Search/filter</h2> 
+      <!-- with toggle arrow to hide the search stuff and show only the results -->
+      <p>Text: <input id="searchTask" type="text" /></p>
+      <p>Date: <input id="searchDate" type="date" /></p>
+      <p class="displayNone">Deadline: <input id="searchDeadline" type="date" /></p>
+      <p>Show: </p>
+      <p>Type: <select id="searchTerm">
+        <option value="reminder">Special day</option>
+        <option value="sameHabit">Same habit</option>
+        <option value="oneTime">One time thing</option>
+        <option value="longTerm">Long term shit</option>
+        <option value="crazyShit">Crazy idea</option>
+        <option value="showThing">Whole show</option>
+        </select>
+      </p>
+      <p>Tag: </p>
+      <button id="searchBtn">Search/Filter</button>
+      <ul id="searchFound"></ul>
+    </div>
+  </div>
+  <!-- Different fields:
+Text: myList.filter(todo => todo.task.includes(textInput)) (add some corrections like caps and accent)
+Sort-text
+Date: todo.date == dateInput
+(Add a search in all the recurrys too)
+Sort-date
+Deadline: todo.deadline == dateInput 
+(Add a search in all the recurrys too)?
+Sort-dalle (or full time(date+dalle)
+ShowType {select/option or homemade to get the right colors...}: todo.showType ==
+Sort-date or Sort-text
+Type{select/option: term}: todo.term
+Sort-date or Sort-text or Sort-color or Sort-showType(if showThing)
+Tag{homemade select/option: color}: todo.color
+Sort-color 
+Shows with todoCreation but togoList == "searchFound" (in an other page)
+Options for sorting 
+ -->
   
   <!-- Month -->
   <input id="switchPageInputMonth" name="switchPageRadios" type="radio" class="displayNone">
@@ -244,7 +287,7 @@
             <h5 class="topList">Don't worry, they'll be back...</h5>
             <span id="listRecurringChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
-          <ul id="listRecurring" class="listToggleList sortedList" data-sort="term"></ul>
+          <ul id="listRecurring" class="listToggleList sortedList" data-sort="text"></ul>
         </div>
       </section>
       <section id="storageSection">
@@ -303,8 +346,13 @@
       <label for="switchPageInputList"  data-page="switchPageInputList" class="bottomBtn menuLabel purpleOnWhite">
         <i class="fa-solid fa-list-check"></i>
       </label>
+    </div>
+    <div id="otherPagesMenu">
       <label for="switchPageInputSetting" class="bottomBtn menuLabel purpleOnWhite">
         <i class="fa-solid fa-cog"></i>
+      </label>
+      <label for="switchPageInputSearch" class="bottomBtn menuLabel purpleOnWhite">
+        <i class="fa-solid fa-magnifying-glass"></i>
       </label>
     </div>
   </div>

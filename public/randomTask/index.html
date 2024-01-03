@@ -32,26 +32,62 @@
   <!-- Search -->
   <input id="switchPageInputSearch" name="switchPageRadios" type="radio" class="displayNone">
   <div id="searchScreen" class="onePage displayNone">
-    <div id="searchDiv" class="DivScreen">
-      <h2>Search/filter</h2> 
-      <!-- with toggle arrow to hide the search stuff and show only the results -->
-      <p>Text: <input id="searchTask" type="text" /></p>
-      <p>Date: <input id="searchDate" type="date" /></p>
-      <p class="displayNone">Deadline: <input id="searchDeadline" type="date" /></p>
-      <p>Show: </p>
-      <p>Type: <select id="searchTerm">
-        <option value="reminder">Special day</option>
-        <option value="sameHabit">Same habit</option>
-        <option value="oneTime">One time thing</option>
-        <option value="longTerm">Long term shit</option>
-        <option value="crazyShit">Crazy idea</option>
-        <option value="showThing">Whole show</option>
-        </select>
-      </p>
-      <p>Tag: </p>
-      <button id="searchBtn">Search/Filter</button>
-      <ul id="searchFound"></ul>
+    <div id="searchDiv" style="text-align: left; padding: 15px; margin: auto; width: 90%;
+    max-width: 500px;">
+      <form id="searchForm" action="get">
+        <h2>Search/filter</h2> 
+        <!-- with toggle arrow to hide the search stuff and show only the results -->
+        <ul>
+          <li>
+            <label for="searchTask">Text: </label>
+            <input id="searchTask" type="text" />
+          </li>
+          <li>
+            <label for="searchDate">Date: </label>
+            <input id="searchDate" type="date" />
+          </li>
+          <li class="displayNone">
+            <label for="searchDeadline">Deadline: </label>
+            <input id="searchDeadline" type="date" />
+          </li>
+          <li>
+            <label for="searchShow">Show: </label>
+            <select id="searchShow"></select>
+          </li>
+          <li>
+            <label for="searchTerm">Type: </label>
+            <select id="searchTerm">
+              <option value="">any</option>
+              <option value="reminder">Reminder</option>
+              <option value="sameHabit">Same habit</option>
+              <option value="oneTime">One time thing</option>
+              <option value="longTerm">Long term shit</option>
+              <option value="crazyShit">Crazy idea</option>
+              <option value="showThing">Whole show</option>
+            </select>
+          </li>
+          <li>
+            <label for="searchTag">Tag: </label>
+            <select id="searchTag">
+              <option value="">any</option>
+              <option value="orange" class="orange">people</option>
+              <option value="red" class="red">urgent</option>
+              <option value="darkmagenta" class="darkmagenta">errand</option>
+              <option value="dodgerblue" class="dodgerblue">screen</option>
+              <option value="forestgreen" class="forestgreen">physic</option>
+              <option value="darkslategrey" class="darkslategrey">else</option>
+            </select>
+          </li>
+          <li>
+            <button id="searchBtn" type="submit">Search/Filter</button>
+          </li>
+          <li>
+            <button id="searchClear" class="ScreenBtn2" type="reset">Clear</button>
+          </li>
+        </ul>
+      </form>
     </div>
+    <ul id="searchFound"></ul>
   </div>
   <!-- Different fields:
 Text: myList.filter(todo => todo.task.includes(textInput)) (add some corrections like caps and accent)

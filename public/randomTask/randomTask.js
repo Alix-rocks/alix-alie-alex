@@ -50,7 +50,7 @@ onAuthStateChanged(auth,(user) => {
 
 
 // *** START
-let search = false;
+let searchSwitch = false;
 let listTasks = [];
 let listDones = [];
 let mySettings = {
@@ -152,6 +152,11 @@ const pageEvent = new Event("click");
         let previousPages = document.getElementsByClassName("bottomBtn menuLabel whiteOnPurple");
         previousPage = previousPages[0].dataset.page;
         settingsPage();
+      };
+      if(radio.id == "switchPageInputSearch"){
+        let previousPages = document.getElementsByClassName("bottomBtn menuLabel whiteOnPurple");
+        previousPage = previousPages[0].dataset.page;
+        searchShowType();
       };
       document.querySelector("#switchMenuInput").checked = false;
       document.querySelectorAll(".onePage").forEach(page => {
@@ -668,11 +673,142 @@ function resetCBC(){
   };
 // });
 
+// *** SEARCH
+
+function searchShowType(){
+  let optionShow = mySettings.myShowTypes.map((show, idx) => {
+    return `<option value="${show.name}" style="background-color:${show.colorBG}; color:${show.colorTX};">${show.name}</option>`
+  }).join("");
+  let all = `<option value="">any</option>${optionShow}`;
+  document.querySelector("#searchShow").insertAdjacentHTML("afterbegin", all);
+};
+
+function searchPage(){
+  document.querySelector("#searchForm").addEventListener("submit", (e) =>{
+    e.preventDefault();
+    let nope = false;
+    let searchTask = document.getElementById("searchTask");
+    let searchDate = document.getElementById("searchDate");
+    //let searchDeadline = document.getElementById("searchDeadline");
+    let searchShow = document.getElementById("searchShow");
+    let searchTerm = document.getElementById("searchTerm");
+    let searchTag = document.getElementById("searchTag");
+  
+    if(searchTask.value !== ""){
+      searchSwitch = true;
+      console.log(searchTask.value);
+      let resultTask = listTasks.filter(todo => todo.task.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').includes(searchTask.value.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '')));
+      if(resultTask.length == 0){
+        nope = true;
+        searchSwitch = false;
+      } else{
+        nope = false;
+        resultTask.forEach(todo => {
+          todoCreation(todo);
+        });
+        searchSwitch = false;
+      };
+    };
+    if(searchDate.value !== ""){
+      searchSwitch = true;
+      console.log(searchDate.value);
+      let resultDate = listTasks.filter(todo => todo.date == searchDate.value || todo.line == "recurringDay");
+      let count = 0;
+      if(resultDate.length == 0){
+        searchSwitch = false;
+      } else{
+        resultDate.forEach(todo => {
+          if(todo.line == "recurringDay"){
+            let recurrys = todo.recurrys.filter(recurry => recurry.date == searchDate.value);
+            if(recurrys.length == 0){
+            } else{
+              todoCreation(todo);
+              count++;
+              recurrys.forEach(recurry => {
+                todoCreation(recurry);
+                count++;
+              });
+            };
+          } else{
+            todoCreation(todo);
+            count++;
+          };
+        });
+        searchSwitch = false;
+      };
+      nope = count > 0 ? false : true;
+    };
+    if(searchShow.value !== ""){
+      searchSwitch = true;
+      console.log(searchShow.value);
+      let resultShow = listTasks.filter(todo => todo.term == "showThing" && todo.showType == searchShow.value);
+      if(resultShow.length == 0){
+        nope = true;
+        searchSwitch = false;
+      } else{
+        nope = false;
+        resultShow.forEach(todo => {
+          todoCreation(todo);
+        });
+        searchSwitch = false;
+      };
+    };
+    if(searchTerm.value !== ""){
+      searchSwitch = true;
+      console.log(searchTerm.value);
+      let resultTerm = listTasks.filter(todo => todo.term == searchTerm.value);
+      if(resultTerm.length == 0){
+        nope = true;
+        searchSwitch = false;
+      } else{
+        nope = false;
+        resultTerm.forEach(todo => {
+          todoCreation(todo);
+        });
+        searchSwitch = false;
+      };
+    };
+    if(searchTag.value !== ""){
+      searchSwitch = true;
+      console.log(searchTag.value);
+      let resultTag = listTasks.filter(todo => todo.color == searchTag.value);
+      if(resultTag.length == 0){
+        nope = true;
+        searchSwitch = false;
+      } else{
+        nope = false;
+        resultTag.forEach(todo => {
+          todoCreation(todo);
+        });
+        searchSwitch = false;
+      };
+    };
+
+
+    
+    
+    if(nope){
+      document.querySelector("#searchFound").insertAdjacentHTML("beforeend", `<h4>Nope...</h4>`);
+    };
+    searchSwitch = false;
+  });
+
+  document.querySelector("#searchClear").addEventListener("click", () => {
+    document.querySelector("#searchFound").innerHTML = ``;
+    nope = false;
+    searchSwitch = false;
+  });
+};
+
+searchPage();
+
+
+
 // *** CREATION
 
 function todoCreation(todo){
   let togoList;
-  if(search){
+  if(searchSwitch){
     togoList = "searchFound";
   } else{
     togoList = getTogoList(todo);
@@ -686,25 +822,25 @@ function todoCreation(todo){
   };
   if(togoList !== ""){ //what happens if one is stock/stored AND recurring/recurry?
     if(todo.stock){
-      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo(this, 'list', 'mod')" ${todo.term == "showThing" ? "" : `style="color:${todo.color}; flex-shrink: 0;"`}>${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${todo.color};" />` : ``}<span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" ${todo.term == "showThing" ? "" : `style="color:${todo.color}; flex-shrink: 0;"`}>${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${todo.color};" />` : ``}<span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
     } else if(todo.line == "recurringDay"){
       let time = todo.recurrys[0].dalle ? todo.recurrys[0].dalle : mySettings.myTomorrow;
       let nextDate = getDateTimeFromString(todo.recurrys[0].date, time);
       numberedDays = Math.floor(Math.abs(nextDate.getTime() - todayDate.getTime())/(1000 * 3600 * 24));
-      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo(this, 'list', 'mod')" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div>
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div>
       <div class="numberedCal" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.line}"></i><span style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG};` : ``}">${numberedDays}</span></div></li>`);
     } else if(todo.term == "reminder"){
       document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" class="reminderClass">
         <i class="typcn typcn-bell" style="font-size: 1em;"></i>
         <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" style="font-size: .8em;"></i>
-        <div class="textDiv"><span onclick="taskAddAllInfo(this, 'list', 'mod')" class="text" style="color:${todo.color}; font-size: 1em;">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" style="font-size: .8em;" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
+        <div class="textDiv"><span onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" class="text" style="color:${todo.color}; font-size: 1em;">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" style="font-size: .8em;" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
         <input type="time" class="displayNone"/></div>
       </li>`);
     } else {
       document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" ${todo.term == "showThing" ? `style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``}>
         <i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>
         <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
-        <div class="textDiv"><span onclick="taskAddAllInfo(this, 'list', 'mod')" class="text" ${todo.term == "showThing" ? `` : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
+        <div class="textDiv"><span onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" class="text" ${todo.term == "showThing" ? `` : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
         <input type="time" class="displayNone"/></div>
         <div class="numberedCal" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.line}"></i><span class="${todo.line == "doneDay" || togoList == "listOups" ? `` : `displayNone`}" style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG};` : ``}">${todo.line == "doneDay" || togoList == "listOups" ? numberedDays : ``}</span></div>
       </li>`);
@@ -712,7 +848,7 @@ function todoCreation(todo){
       //   <i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>
       //   <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
       //   ${todo.projet ? `<div class="projetOnglet" style="background-color:${todo.PColorBG}; color:${todo.PColorTX};">${todo.projetName}</div>` : ``}
-      //   <div class="textDiv"><span onclick="taskAddAllInfo(this, 'list')" class="text" ${todo.term == "showThing" ? `` : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
+      //   <div class="textDiv"><span onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" class="text" ${todo.term == "showThing" ? `` : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
       //   <input type="time" class="displayNone"/></div>
       //   
       //   <i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.line}" onclick="smallCalendarChoice(this)"></i>
@@ -2145,8 +2281,9 @@ let showTypeChoices = [{
   colorTX: "white"
 }];
 
-function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", "calMonthPage"
-  moving = false; //must stay false in month/week
+function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", "calMonthPage", "searchScreen"
+  //why == "new", "mod"
+  moving = false; //must stay false in month/week/search
   let div;
   let todo;
   let parents;
@@ -2190,7 +2327,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
     div = document.getElementById(where);
   } else{
     let parentId;
-    if(where == "list"){ //not in month/week
+    if(where == "list" || where == "searchScreen"){ //not in month/week
       div = thisOne.parentElement; 
       parent = div.parentElement; 
       // parentId = parent.id;
@@ -2238,7 +2375,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   } else{
     myShows = `<h6>pssst... You've got no types of show... yet</h6>`;
   };
-  let taskAllInfo = `<div id="taskInfo" style="width:${newWidth}px; ${where == "list" ? `top: 25px; left: -37px;` : `top: 10px; left: 10px;`}">
+  let taskAllInfo = `<div id="taskInfo" style="width:${newWidth}px; ${where == "list" || where == "searchScreen" ? `top: 25px; left: -37px;` : `top: 10px; left: 10px;`}">
     <div class="taskInfoWrapper">
       <div id="SupClickScreen" class="Screen displayNone"></div>
       <input id="doneIt" type="checkbox" class="cossin cornerItInput" />
@@ -2692,6 +2829,8 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
     updateWeek();
     updateMonth();
     
+    //for searchFound moving = false!
+    //
     if(where == "list" && togoList !== ""){
       moving = true;
       parents.forEach(parent => {

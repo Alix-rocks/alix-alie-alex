@@ -33,7 +33,7 @@ onAuthStateChanged(auth,(user) => {
     getCloudBC();
     getTasksSettings();
     getDones();
-    //settingsPage();
+    settingsPage();
     //getMines();
     // createBody();
     // getWeeklyCalendar();
@@ -54,6 +54,7 @@ let searchSwitch = false;
 let listTasks = [];
 let listDones = [];
 let mySettings = {
+  mySide: "light",
   myTomorrow: "03:00",
   myFavoriteView: "switchPageInputList",
   myFirstDayOfTheWeek: "domenica",
@@ -162,7 +163,9 @@ const pageEvent = new Event("click");
       document.querySelectorAll(".onePage").forEach(page => {
         page.classList.add("displayNone");
       });
-      radio.nextElementSibling.classList.remove("displayNone");
+      let wantedPage = radio.nextElementSibling;
+      wantedPage.classList.remove("displayNone");
+      document.querySelector("#cloudIt").className = `${wantedPage.dataset.cloudit}`;
       // window.scrollTo({ top: 0, behavior: 'smooth' });
       window.scrollTo({ top: 0 });
       document.querySelectorAll('input[name="switchPageRadios"]').forEach(radio => {
@@ -228,6 +231,17 @@ async function getTasksSettings() {
   document.getElementById("tomorrowsDateSpan").innerHTML = `(${tomorrowDate})`;
   document.getElementById(mySettings.myFavoriteView).checked = true;
   document.getElementById(mySettings.myFavoriteView).dispatchEvent(pageEvent);
+  if(mySettings.mySide == "light"){
+    document.getElementById("switchModeBall").className = "ballLight";
+    document.getElementById("switchModeBallUnder").className = "ballLight";
+    document.querySelector(':root').style.setProperty('--bg-color', '#F2F3F4');
+    document.querySelector(':root').style.setProperty('--tx-color', 'darkslategrey');
+  } else if(mySettings.mySide == "dark"){
+    document.getElementById("switchModeBall").className = "";
+    document.getElementById("switchModeBallUnder").className = "";
+    document.querySelector(':root').style.setProperty('--bg-color', 'rgb(7, 10, 10)');
+    document.querySelector(':root').style.setProperty('--tx-color', 'rgba(242, 243, 244, .8)');
+  };
   //listTasks
   if(localStorage.getItem("listTasks")){
     listTasks = JSON.parse(localStorage.listTasks);
@@ -315,7 +329,7 @@ function freeIn(){
     refreshDoneId();
   };
   updateArrowsColor();
-  //settingsPage();
+  settingsPage();
   logInScreen.classList.add("displayNone");
 };
 
@@ -468,7 +482,7 @@ function updateFromCloud(){
   getDones();
   createBody();
   getWeeklyCalendar();
-  //settingsPage();
+  settingsPage();
   clearStorageBtn.textContent = "Updated!";
   updateArrowsColor();
 };
@@ -555,6 +569,13 @@ function resetCBC(){
     <button id="clearStorageBtn" style="margin-top: 15px;">Update</button>
     <hr />
     <h2>Settings</h2>
+    <h3>What side are you on?</h3>
+    <div id="switchModeSlider">
+      <div id="switchModeDark" class="typcn typcn-weather-night"></div>
+      <div id="switchModeLight" class="typcn typcn-weather-sunny"></div>
+      <div id="switchModeBall" class="ballLight"></div>
+      <div id="switchModeBallUnder" class="ballLight"></div>
+    </div>
     <h3>What's the first thing you wanna see when you get here?</h3>
     <input id="choicePageInputList" value="switchPageInputList" name="choicePageRadios" type="radio" class="displayNone" ${mySettings.myFavoriteView == "switchPageInputList" ? `checked` : ``} />
     <label for="choicePageInputList" class="bottomBtn purpleOnWhite">
@@ -580,6 +601,8 @@ function resetCBC(){
     </div>
     <button id="settingsBtn" class="ScreenBtn1">yep <span class="typcn typcn-thumbs-up" style="padding: 0;"></span></button>
     <button id="cancelBtn" class="ScreenBtn2">Cancel</button>`;
+
+    let switchModeSlider = document.querySelector("#switchModeSlider");
     let timeInput = document.querySelector("#timeInput");
     let clearStorageBtn = document.querySelector("#clearStorageBtn");
     let exitX = document.querySelector("#exitX");
@@ -595,6 +618,36 @@ function resetCBC(){
       document.getElementById(mySettings.myFavoriteView).dispatchEvent(pageEvent);
     };
     let previousFirstDay = document.querySelector("#firstDayOfWeekInput").value;
+
+    if(mySettings.mySide == "light"){
+      document.getElementById("switchModeBall").className = "ballLight";
+      document.getElementById("switchModeBallUnder").className = "ballLight";
+      document.querySelector(':root').style.setProperty('--bg-color', '#F2F3F4');
+      document.querySelector(':root').style.setProperty('--tx-color', 'darkslategrey');
+    } else if(mySettings.mySide == "dark"){
+      document.getElementById("switchModeBall").className = "";
+      document.getElementById("switchModeBallUnder").className = "";
+      document.querySelector(':root').style.setProperty('--bg-color', 'rgb(7, 10, 10)');
+      document.querySelector(':root').style.setProperty('--tx-color', 'rgba(242, 243, 244, .8)');
+    };
+
+    switchModeSlider.addEventListener("click", () => {
+      document.getElementById("switchModeBall").classList.toggle("ballLight");
+      document.getElementById("switchModeBallUnder").classList.toggle("ballLight");
+      if(document.getElementById("switchModeBall").classList.contains("ballLight")){
+        document.querySelector(':root').style.setProperty('--bg-color', '#F2F3F4');
+        document.querySelector(':root').style.setProperty('--tx-color', 'darkslategrey');
+        document.querySelectorAll(".numberedCal").forEach(cal => {
+          cal.classList.remove("numberedCalDark");
+        });
+      } else{
+        document.querySelector(':root').style.setProperty('--bg-color', 'rgb(7, 10, 10)');
+        document.querySelector(':root').style.setProperty('--tx-color', 'rgba(242, 243, 244, .8)');
+        document.querySelectorAll(".numberedCal").forEach(cal => {
+          cal.classList.add("numberedCalDark");
+        });
+      };
+    });
 
     clearStorageBtn.addEventListener("click", updateFromCloud);
     exitX.addEventListener("click", () => {
@@ -631,6 +684,13 @@ function resetCBC(){
       };
 
       mySettings.myFavoriteView = document.querySelector('input[name="choicePageRadios"]:checked').value;
+      
+      if(document.getElementById("switchModeBall").classList.contains("ballLight")){
+        mySettings.mySide = "light";
+      } else {
+        mySettings.mySide = "dark";
+      };
+      
       
       if(clockChangeListener){
         // document.querySelectorAll(".dayClocksDiv").forEach(div => {
@@ -854,7 +914,7 @@ function todoCreation(todo){
       let nextDate = getDateTimeFromString(todo.recurrys[0].date, time);
       numberedDays = Math.floor(Math.abs(nextDate.getTime() - todayDate.getTime())/(1000 * 3600 * 24));
       document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div>
-      <div class="numberedCal" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.line}"></i><span style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG};` : ``}">${numberedDays}</span></div></li>`);
+      <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.line}"></i><span style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG};` : ``}">${numberedDays}</span></div></li>`);
     } else if(todo.term == "reminder"){
       document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" class="reminderClass">
         <i class="typcn typcn-bell" style="font-size: 1em;"></i>
@@ -868,7 +928,7 @@ function todoCreation(todo){
         <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
         <div class="textDiv"><span onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" class="text" ${todo.term == "showThing" ? `` : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
         <input type="time" class="displayNone"/></div>
-        <div class="numberedCal" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.line}"></i><span class="${todo.line == "doneDay" || togoList == "listOups" ? `` : `displayNone`}" style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG};` : ``}">${todo.line == "doneDay" || togoList == "listOups" ? numberedDays : ``}</span></div>
+        <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.line}"></i><span class="${todo.line == "doneDay" || togoList == "listOups" ? `` : `displayNone`}" style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG};` : ``}">${todo.line == "doneDay" || togoList == "listOups" ? numberedDays : ``}</span></div>
       </li>`);
       // document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.term == "showThing" ? `class="showLi" style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``} ${todo.projet ? `class="projetLi" style="outline-color: ${todo.PColorBG};"` : ``}>
       //   <i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>
@@ -3551,24 +3611,28 @@ function updateWeek(){
   putShowsInWeek(Dday, Sday);
 };
 
-function addNewWeekly(thisOne){
-  let rowNum = thisOne.style.gridRowStart;
-  let hourMath = ((rowNum - 5) / 4) + 3;
-  let hourNum = hourMath < 24 ? hourMath : hourMath - 24;
-  let rowhour = `${String(hourNum).padStart(2, "0")}:00`;
-  let colNum = thisOne.style.gridColumnStart;
-  let code = mySettings.myWeeksDayArray[colNum - 2].code;
-  let colEl = document.querySelector(`[data-code="${code}"]`);
-  let colDate = colEl.dataset.date;
-  // we need a date
-  console.log(colNum);
-  console.log(code);
-  console.log(colDate);
+// function addNewWeekly(thisOne){
+//   let rowNum = thisOne.style.gridRowStart;
+//   let hourMath = ((rowNum - 5) / 4) + 3;
+//   let hourNum = hourMath < 24 ? hourMath : hourMath - 24;
+//   let rowhour = `${String(hourNum).padStart(2, "0")}:00`;
+//   let colNum = thisOne.style.gridColumnStart;
+//   let code = mySettings.myWeeksDayArray[colNum - 2].code;
+//   let colEl = document.querySelector(`[data-code="${code}"]`);
+//   let colDate = colEl.dataset.date;
+//   // we need a date
+//   console.log(colNum);
+//   console.log(code);
+//   console.log(colDate);
+// };
+
+// window.addNewWeekly = addNewWeekly;
+
+window.onload = () => {
+  setTimeout(function() {
+    document.getElementById("loadingScreen").classList.replace("waitingScreen", "displayNone");
+  }, 1000);
 };
-
-window.addNewWeekly = addNewWeekly;
-
-
 
 
 

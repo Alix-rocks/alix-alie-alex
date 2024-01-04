@@ -20,18 +20,23 @@
 </head>
 
 <body>
-  
+  <div id="loadingScreen" class="waitingScreen">
+    <div>
+      <span class="typcn typcn-wine"></span>
+      <h6>Like an hourglass<br />but quicker</h6>
+    </div>
+  </div>
   
   <!-- Settings -->
   <input id="switchPageInputSetting" name="switchPageRadios" type="radio" class="displayNone">
-  <div id="settingsScreen" class="onePage displayNone">
+  <div id="settingsScreen" data-cloudit="cloudTop" class="onePage displayNone">
     <div id="settingsDiv" class="DivScreen">
     </div>
   </div>
 
   <!-- Search -->
   <input id="switchPageInputSearch" name="switchPageRadios" type="radio" class="displayNone">
-  <div id="searchScreen" class="onePage displayNone">
+  <div id="searchScreen" data-cloudit="cloudTop" class="onePage displayNone">
     <div id="searchDiv" style="text-align: left; padding: 15px; margin: auto; width: 90%;
     max-width: 500px;">
       <form id="searchForm" action="get">
@@ -140,7 +145,7 @@ Options for sorting
   
   <!-- Month -->
   <input id="switchPageInputMonth" name="switchPageRadios" type="radio" class="displayNone">
-  <div id="calMonthPage" class="wholeScreenCalendar onePage displayNone">
+  <div id="calMonthPage" data-cloudit="cloudBottom" class="wholeScreenCalendar onePage displayNone">
     <div class="monthlyWrapper">
       <table class="monthlyCalendar">
         <thead>
@@ -170,14 +175,14 @@ Options for sorting
 
   <!-- Week -->
   <input id="switchPageInputWeek" name="switchPageRadios" type="radio" class="displayNone">
-  <div id="calWeekPage" class="wholeScreenCalendar onePage displayNone">
+  <div id="calWeekPage" data-cloudit="cloudBottom" class="wholeScreenCalendar onePage displayNone">
     <div class="weeklyContainer">
     </div>
   </div>
 
   <!-- List -->
   <input id="switchPageInputList" name="switchPageRadios" type="radio" class="displayNone">
-  <div id="listPage" class="onePage">
+  <div id="listPage" data-cloudit="cloudTop" class="onePage">
     <div id="clickScreen" class="Screen displayNone"></div>
     <div id="logInScreen" class="Screen">
       <div id="logInDiv" class="DivScreen">
@@ -187,7 +192,6 @@ Options for sorting
         <button id="tryBtn" class="ScreenBtn2">Free Trial</button>
       </div>
     </div>
-    <button id="cloudIt"><span class="typcn typcn-cloud-storage-outline"></span></button>
     <div id="AlixTime">
       <a href="https://alix.rocks/time">
         <button><i class="fa-solid fa-spider"></i></button>
@@ -383,7 +387,7 @@ Options for sorting
     <h3 style="display: inline-block;">Done Zone</h3>
     <ul id="doneZone"></ul>
   </div>
-  <div id="toDoPage" class="onePage displayNone">
+  <div id="toDoPage" data-cloudit="noCloud" class="onePage displayNone">
     <h3>Fac là,<br />pour les 30 prochaines minutes,<br />tu vas...</h3>
     <p id="taskToDo"></p>
     <div id="moreInfoWhole" class="displayNone">
@@ -422,6 +426,7 @@ Options for sorting
       </label>
     </div>
   </div>
+  <button id="cloudIt"><span class="typcn typcn-cloud-storage-outline"></span></button>
   
 
 <script type="module" src="randomTask.js"></script>

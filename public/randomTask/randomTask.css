@@ -1,3 +1,7 @@
+:root{
+  --bg-color: #F2F3F4;
+  --tx-color: darkslategrey;
+}
 *{
   font-family: 'Nunito', sans-serif;
   
@@ -5,14 +9,50 @@
   user-select: none;
 }
 body{
+  color: var(--tx-color);
+  background-color: var(--bg-color);
+}
+
+#loadingScreen{
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 500;
+}
+.waitingScreen{
+  background-color: var(--bg-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.waitingScreen div{
+  text-align: center;
+}
+.waitingScreen span{
+  font-size: 50px;
+  line-height: 1em;
+}
+.waitingScreen h6{
+  margin-top: 0.5em;
+}
+
+input, select, textarea{
+  /* background-color: var(--bg-color);
+  color: var(--tx-color); */
+  background-color: rgba(242, 243, 244, .8);
   color: darkslategrey;
+}
+input[type="time"] > i{
+  color: var(--tx-color);
 }
 
 button {
-  border-top: 2px solid darkslategrey;
-  border-left: 2px solid darkslategrey;
-  border-right: 4px solid darkslategrey;
-  border-bottom: 4px solid darkslategrey;
+  border-top: 2px solid var(--tx-color);
+  border-left: 2px solid var(--tx-color);
+  border-right: 4px solid var(--tx-color);
+  border-bottom: 4px solid var(--tx-color);
   border-radius: 5px;
   padding: 5px 10px;
   width: fit-content;
@@ -29,14 +69,15 @@ button span:nth-of-type(2){
   padding-left: 5px;
 } */
 #addInput, #taskTitle, textarea{
-  border-top: 2px solid darkslategrey;
-  border-left: 2px solid darkslategrey;
-  border-right: 4px solid darkslategrey;
-  border-bottom: 4px solid darkslategrey;
+  border-top: 2px solid var(--tx-color);
+  border-left: 2px solid var(--tx-color);
+  border-right: 4px solid var(--tx-color);
+  border-bottom: 4px solid var(--tx-color);
   border-radius: 5px;
   padding: 5px 10px;
   width: fit-content;
-  color: darkslategrey;
+  color: var(--tx-color);
+  background-color: var(--bg-color);
   font-size: 1em;
   font-weight: 600;
   user-select: auto;
@@ -47,8 +88,8 @@ button span:nth-of-type(2){
   padding-left: 41px;
 }
 textarea::-webkit-resizer {
-  border: 2px solid darkslategrey;
-  outline: 4px solid darkslategrey;
+  border: 2px solid var(--tx-color);
+  outline: 4px solid var(--tx-color);
   border-radius: 2px 0 5px 0;
 }
 input[type="radio"]{
@@ -56,7 +97,7 @@ input[type="radio"]{
 }
 .Screen{
   display: flex;
-  background-color: white;
+  background-color: var(--bg-color);
   position: fixed;
   top: 0;
   left: 0;
@@ -76,6 +117,11 @@ input[type="radio"]{
 #settingsDiv{
   width: 90%;
   max-width: 500px;
+  margin-top: 55px;
+}
+#settingsDiv h3{
+  margin-block-start: 2em;
+  margin-block-end: 0.5em;
 }
 #logInDiv{
   width: 62%;
@@ -89,6 +135,57 @@ input[type="radio"]{
   line-height: 25px;
   font-weight: 700;
 }
+
+#switchModeSlider{
+  width:45px;
+  height: 22px;
+  padding: 0.5px;
+  border-radius: 50px; 
+  border:1.5px solid; 
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  margin: auto;
+}
+#switchModeBall{ 
+  height: 18px; 
+  width: 18px; 
+  margin: 0 1px 0 .5px;
+  border-radius: 50%; 
+  background: var(--tx-color); 
+  z-index: 10;
+  position: absolute; 
+  right: 0;
+}
+#switchModeBallUnder{
+  height: 18px; 
+  width: 18px; 
+  margin: 0 1px 0 .5px;
+  border-radius: 50%; 
+  background:var(--bg-color); 
+  z-index: 1;
+  position: absolute; 
+  right: 0;
+}
+.ballLight{
+  left: 0;
+}
+#switchModeDark{
+  opacity: .7;
+  margin: 0 -3px 0 0;
+  font-size: 21px;
+  line-height: .95;
+}
+#switchModeLight{
+  opacity: .7;
+  margin: 0 0 1px;
+  font-size: 19px;
+  line-height: 1;
+}
+
 #searchForm ul{
   list-style: none;
   padding: 0;
@@ -125,23 +222,36 @@ input[type="radio"]{
   margin: 25px auto 10px;
 }
 .ScreenBtn2{
-  border-top: 1px solid darkslategrey;
-  border-left: 1px solid darkslategrey;
-  border-right: 2px solid darkslategrey;
-  border-bottom: 2px solid darkslategrey;
+  border-top: 1px solid var(--tx-color);
+  border-left: 1px solid var(--tx-color);
+  border-right: 2px solid var(--tx-color);
+  border-bottom: 2px solid var(--tx-color);
   border-radius: 3px;
   padding: 3px 7px;
   font-size: .7em;
   font-weight: 500;
   background-color: rgba(211, 211, 211, .5);
+  color: var(--tx-color);
 }
 #cloudIt{
-  float: right;
-  margin-top: 0;
+  position: absolute;
+  margin: 0;
   font-size: 25px;
   line-height: 1em;
   padding: 2px 5px 2px 5px;
   background-color: rgba(237, 20, 61, 0);
+  color: var(--tx-color);
+}
+.cloudTop{
+  top: 8px;
+  right: 8px;
+}
+.cloudBottom{
+  bottom: 8px;
+  right: 8px;
+}
+.noCloud{
+  display: none;
 }
 #listPage{
   display: block;
@@ -160,10 +270,10 @@ input[type="radio"]{
   position: absolute;
   top: 0;
   right: 50px;
-  border-top: 1px solid darkslategrey;
-  border-left: 1px solid darkslategrey;
-  border-right: 2px solid darkslategrey;
-  border-bottom: 2px solid darkslategrey;
+  border-top: 1px solid var(--tx-color);
+  border-left: 1px solid var(--tx-color);
+  border-right: 2px solid var(--tx-color);
+  border-bottom: 2px solid var(--tx-color);
   border-radius: 3px;
   text-align: center;
   padding: 2px 3px;
@@ -185,7 +295,7 @@ input[type="radio"]{
 #AlixTime{
   right: 13px;
   padding: 5px 5px 0;
-  background-color: white;
+  background-color: var(--bg-color);
 }
 #AlixTime a{
   text-decoration: none;
@@ -269,7 +379,7 @@ input[type="radio"]{
   width: 35px;
   height: 35px;
   padding: 5px;
-  border: .5px solid darkslategrey;
+  border: .5px solid var(--tx-color);
   text-align: center;
   border-radius: 5px;
   display: inline-block;
@@ -290,10 +400,10 @@ input[type="radio"]{
   background-color: purple;
 }
 .whiteOnPurple i{
-  color: white;
+  color: var(--bg-color);
 }
 .purpleOnWhite{
-  background-color: white;
+  background-color: var(--bg-color);
 }
 .purpleOnWhite i{
   color: purple;
@@ -303,13 +413,13 @@ input[name="choicePageRadios"]:checked + label{
   background-color: purple;
 }
 input[name="choicePageRadios"]:checked + label i{
-  color: white;
+  color: var(--bg-color);
 }
 
 #taskInfo, #calendarDiv.onIcon, .reDateDiv{
-  color: darkslategrey;
-  background-color: white;
-  border: 2px solid darkslategrey;
+  color: var(--tx-color);
+  background-color: var(--bg-color);
+  border: 2px solid var(--tx-color);
   border-radius: 5px;
   position: absolute;
   z-index: 1000;
@@ -359,11 +469,11 @@ input[name="choicePageRadios"]:checked + label i{
   line-height: 22px;
   text-align: center;
   border-radius: 25px;
-  border: 2px solid darkslategrey;
-  color: darkslategrey;
+  border: 2px solid var(--tx-color);
+  color: var(--tx-color);
 }
 input[name="daysWeekChoice"]:checked + label.dayCircle{
-  background-color: darkslategrey;
+  background-color: var(--tx-color);
   color: white;
 }
 #saveTheDateBtn{
@@ -584,7 +694,7 @@ h4.subList{
   margin: auto;
   border-width: 1px 2px 3px;
   border-style: solid;
-  border-color: darkslategrey;
+  border-color: var(--tx-color);
   border-radius: 5px;
   text-align: left;
 }
@@ -667,10 +777,14 @@ li .textDiv > hr{
   font-size: 10px;
   font-weight: 800;
   line-height: 30px;
+  color: var(--tx-color);
   /* text-shadow: -1px -1px 0 #fff, 0 -1px 0 #fff, 1px -1px 0 #fff, 1px 0 0 #fff, 1px 1px 0 #fff, 0 1px 0 #fff, -1px 1px 0 #fff, -1px 0 0 #fff; */
   text-shadow: -0.75px -0.75px 0 #fff, 0 -0.75px 0 #fff, 0.75px -0.75px 0 #fff, 0.75px 0 0 #fff, 0.75px 0.75px 0 #fff, 0 0.75px 0 #fff, -0.75px 0.75px 0 #fff, -0.75px 0 0 #fff;
   /* text-shadow: -0.5px -0.5px .25px #fff, 0 -0.5px .25px #fff, 0.5px -0.5px .25px #fff, 0.5px 0 .25px #fff, 0.5px 0.5px .25px #fff, 0 0.5px .25px #fff, -0.5px 0.5px .25px #fff, -0.5px 0 .25px #fff; */
   /* text-shadow: -0.5px -0.5px 0 #fff, 0 -0.5px 0 #fff, 0.5px -0.5px 0 #fff, 0.5px  0   0 #fff, 0.5px  0.5px 0 #fff, 0    0.5px 0 #fff, -0.5px  0.5px 0 #fff, -0.5px  0   0 #fff; */
+}
+.numberedCalDark span{
+  text-shadow: -0.75px -0.75px 0 rgb(7, 10, 10), 0 -0.75px 0 rgb(7, 10, 10), 0.75px -0.75px 0 rgb(7, 10, 10), 0.75px 0 0 rgb(7, 10, 10), 0.75px 0.75px 0 rgb(7, 10, 10), 0 0.75px 0 rgb(7, 10, 10), -0.75px 0.75px 0 rgb(7, 10, 10), -0.75px 0 0 rgb(7, 10, 10);
 }
 
 
@@ -685,7 +799,7 @@ li .projetOnglet{
   position: absolute;
   top: -13px;
   left: 30px;
-  border: 0.5px solid darkslategrey;
+  border: 0.5px solid var(--tx-color);
   border-radius: 2px 8px 0 0;
   font-size: 10px;
   padding: 2px 5px 0 3px;
@@ -730,16 +844,16 @@ span.normalText{
   height: 15px;
   width: 15px;
   border-radius: 25px;
-  border: 1px solid darkslategrey;
+  border: 1px solid var(--tx-color);
 }
 /* input[name="whatDay"]:checked + label span.myRadio{ */
 input.myRadio:checked + label span.myRadio{
   height: 15px;
   width: 15px;
-  outline: 2px solid white;
+  outline: 2px solid var(--bg-color);
   outline-offset: -3px;
-  border: 2px solid darkslategrey;
-  background-color: darkslategrey;
+  border: 2px solid var(--tx-color);
+  background-color: var(--tx-color);
 }
 .todoDay{
   color: limegreen;
@@ -787,7 +901,7 @@ input#recurringDayInput:checked ~ div#recurryDaySection{
   width: 35px;
   height: 20px;
   border-radius: 25px;
-  border: solid thin darkslategrey;
+  border: solid thin var(--tx-color);
   background-color: lightgrey;
 }
 .slider{
@@ -795,8 +909,8 @@ input#recurringDayInput:checked ~ div#recurryDaySection{
   width: 18px;
   height: 18px;
   border-radius: 25px;
-  border: solid thin darkslategrey;
-  background-color: white;
+  border: solid thin var(--tx-color);
+  background-color: var(--bg-color);
 }
 .slider span{
   text-align: center;
@@ -835,8 +949,8 @@ input#recurringDayInput:checked ~ div#recurryDaySection{
 }
 
 .iconsPaletClass{
-  background-color: white;
-  border: 2px solid darkslategrey;
+  background-color: var(--bg-color);
+  border: 2px solid var(--tx-color);
   border-radius: 5px;
   position: absolute;
   z-index: 1500;
@@ -866,8 +980,8 @@ input[name="iconRadio"]:checked + label > div{
   opacity: .4;
 }
 #colorPalet{
-  background-color: white;
-  border: 2px solid darkslategrey;
+  background-color: var(--bg-color);
+  border: 2px solid var(--tx-color);
   border-radius: 5px;
   position: absolute;
   z-index: 1500;
@@ -904,9 +1018,11 @@ input[name="colorRadio"]:checked + label > div{
 }
 .orange{
   background-color: orange;
+  color: darkslategrey;
 }
 .red{
   background-color: red;
+  color: darkslategrey;
 }
 .darkmagenta{
   background-color: darkmagenta;
@@ -914,14 +1030,15 @@ input[name="colorRadio"]:checked + label > div{
 }
 .dodgerblue {
   background-color: dodgerblue;
+  color: darkslategrey;
 }
 .forestgreen{
   background-color: forestgreen;
   color: white;
 }
 .darkslategrey{
-  background-color: darkslategrey;
-  color: white;
+  background-color: var(--tx-color);
+  color: var(--bg-color);
 }
 .termLabel{
   display: block;
@@ -934,11 +1051,11 @@ input[name="colorRadio"]:checked + label > div{
 }
 .showLi{
   border-radius: 10px;
-  border: .5px solid darkslategrey;
+  border: .5px solid var(--tx-color);
 }
 .topListReminder{
   margin: 10px 0 5px;
-  border-bottom: .5px solid darkslategrey;
+  border-bottom: .5px solid var(--tx-color);
   padding: 2.5px 0;
 }
 .sameHabit .textDiv span.text{
@@ -1008,7 +1125,7 @@ input[name="showOptions"]:checked + label.showTypeLabel > i.showTick{
 }
 .showTypeCreationInside > input[type=text]{
   width: 100%;
-  border: .5px solid darkslategrey;
+  border: .5px solid var(--tx-color);
   border-radius: 10px;
   height: 22.5px;
   padding: 0 7px;
@@ -1030,9 +1147,9 @@ input[name="showOptions"]:checked + label.showTypeLabel > i.showTick{
   align-content: space-around;
   width: 165px;
   height: 120px;
-  border: 2px solid darkslategrey;
+  border: 2px solid var(--tx-color);
   border-radius: 5px;
-  background-color: white;
+  background-color: var(--bg-color);
   padding: 5px;
 }
 .showTypeIconsB{
@@ -1050,7 +1167,7 @@ input[name="showOptions"]:checked + label.showTypeLabel > i.showTick{
   height: 25px;
   border-radius: 25px;
   text-align: center;
-  border: .5px solid darkslategrey;
+  border: .5px solid var(--tx-color);
   margin: 3px;
 }
 .showTypeIconsC i{
@@ -1068,7 +1185,7 @@ input[name="showOptions"]:checked + label.showTypeLabel > i.showTick{
 .listToggleLabel{
   position: relative;
   display: block;
-  border-bottom: 1px dotted darkslategrey;
+  border-bottom: 1px dotted var(--tx-color);
   margin-bottom: 5px;
 }
 .listToggleChevron{
@@ -1129,7 +1246,7 @@ input[name="showOptions"]:checked + label.showTypeLabel > i.showTick{
   display: inline-block;
 }
 .sortDiv{
-  background-color: white;
+  background-color: var(--bg-color);
   display: flex;
   flex-flow: row nowrap;
   width: 0;
@@ -1145,7 +1262,7 @@ input[name="showOptions"]:checked + label.showTypeLabel > i.showTick{
   line-height: 25px;
   padding: 0;
   border: none;
-  background-color: white;
+  background-color: var(--bg-color);
 }
 .sortInput:checked ~ div.sortDiv{
   opacity: 1;
@@ -1215,7 +1332,7 @@ hr.zoneHr{
 }
 .monthlyCalendar button{
   padding: 0;
-  background-color: white;
+  background-color: var(--bg-color);
   border: none;
   line-height: 1em;
   width: -webkit-fill-available;
@@ -1258,7 +1375,7 @@ hr.zoneHr{
 .eventDiv{
   font-size: 10px;
   border-radius: 5px;
-  border: .5px solid darkslategrey;
+  border: .5px solid var(--tx-color);
   text-align: center;
   line-height: 1em;
   padding: 1px;
@@ -1267,7 +1384,7 @@ hr.zoneHr{
   background: rgba(30,144,255,.5);
 }
 .selectedKase{
-  outline: 2px solid darkslategrey;
+  outline: 2px solid var(--tx-color);
 }
 
 .weeklyContainer{
@@ -1298,7 +1415,7 @@ hr.zoneHr{
 }
 .weeklyBtn{
   padding: 0 5px;
-  background-color: white;
+  background-color: var(--bg-color);
   border: none;
   line-height: 1em;
   font-size: 20px;
@@ -1318,7 +1435,7 @@ hr.zoneHr{
   z-index: 4;
 }
 .weeklyEvent{
-  border: 1px solid darkslategrey;
+  border: 1px solid var(--tx-color);
   border-radius: 8px;
   z-index: 3;
   text-align: center;
@@ -1333,7 +1450,7 @@ hr.zoneHr{
   margin: 3px 0;
 }
 .weeklyBuffer{
-  border: 0.5px solid darkslategrey;
+  border: 0.5px solid var(--tx-color);
   border-radius: 5px;
   z-index: 3;
   background-color: rgba(47, 79, 79, .4);

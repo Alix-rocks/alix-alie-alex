@@ -286,6 +286,40 @@ input[type="radio"]{
   padding: 0;
   opacity: .8;
 }
+
+.proHelp{
+  padding: 15px;
+  margin: auto;
+  border-style: solid;
+  border-width: 2px 3px 3px 2px;
+  border-radius: 5px;
+  border-color: var(--tx-color);
+  color: var(--tx-color);
+  background-color: var(--bg-color);
+  position: absolute;
+  top: 25px;
+  z-index: 1000;
+  width: 100%;
+}
+.proHelp h3{
+  text-align: center;
+  margin-top: 0;
+}
+.proHelp h4{
+  text-align: left;
+  margin-block-start: 1.6em;
+  margin-block-end: .5em;
+  border-bottom: 1px solid var(--tx-color);
+}
+.proHelp p{
+  text-align: left;
+  margin-top: 0;
+}
+.proHelp button{
+  margin: auto;
+  display: flex;
+}
+
 #AlixTime{
   position: fixed;
   bottom: 10px;

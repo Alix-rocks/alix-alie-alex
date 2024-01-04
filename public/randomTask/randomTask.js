@@ -252,8 +252,14 @@ async function getTasksSettings() {
     localStorage.listTasks = JSON.stringify([]);
   };
   listTasks.forEach(todo => {
+    // if(todo.line == "doneDay"){
+    //   todo.deadline = todo.date;
+    //   todo.line = "noDay";
+    //   delete todo.date;
+    // };
     todoCreation(todo);
   });
+  // localStorage.listTasks = JSON.stringify(listTasks);
   updateArrowsColor();
   sortItAll();
 };
@@ -900,10 +906,14 @@ function todoCreation(todo){
   };
   let numberedDays;
   let todayDate = getDateTimeFromString(getTodayDate(), mySettings.myTomorrow);
-  //if(todo.deadline !== "" ....)
-  if(todo.line == "doneDay" || togoList == "listOups"){
+  if((todo.deadline && todo.deadline !== "") || togoList == "listOups"){
     let time = todo.dalle ? todo.dalle : mySettings.myTomorrow;
-    let doneDate = getDateTimeFromString(todo.date, time);
+    let doneDate;
+    if(todo.deadline && todo.deadline !== ""){
+      doneDate = getDateTimeFromString(todo.deadline, time);
+    } else if(togoList == "listOups"){
+      doneDate = getDateTimeFromString(todo.date, time);
+    };
     numberedDays = Math.floor((doneDate - todayDate)/(1000 * 3600 * 24));
   };
   if(togoList !== ""){ //what happens if one is stock/stored AND recurring/recurry?
@@ -914,7 +924,7 @@ function todoCreation(todo){
       let nextDate = getDateTimeFromString(todo.recurrys[0].date, time);
       numberedDays = Math.floor(Math.abs(nextDate.getTime() - todayDate.getTime())/(1000 * 3600 * 24));
       document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div>
-      <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.line}"></i><span style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG};` : ``}">${numberedDays}</span></div></li>`);
+      <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.dealine ? `doneDay` : todo.line}"></i><span style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG};` : ``}">${numberedDays}</span></div></li>`);
     } else if(todo.term == "reminder"){
       document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" class="reminderClass">
         <i class="typcn typcn-bell" style="font-size: 1em;"></i>
@@ -923,12 +933,27 @@ function todoCreation(todo){
         <input type="time" class="displayNone"/></div>
       </li>`);
     } else {
-      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" ${todo.term == "showThing" ? `style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``}>
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``} ${togoList == "listOups" && numberedDays < -5 ? `selectedTask` : ``}" ${todo.term == "showThing" ? `style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``}>
         <i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>
         <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
         <div class="textDiv"><span onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" class="text" ${todo.term == "showThing" ? `` : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
-        <input type="time" class="displayNone"/></div>
-        <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.line}"></i><span class="${todo.line == "doneDay" || togoList == "listOups" ? `` : `displayNone`}" style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG};` : ``}">${todo.line == "doneDay" || togoList == "listOups" ? numberedDays : ``}</span></div>
+        <input type="time" class="displayNone"/>
+        ${togoList == "listOups" && numberedDays < -5 ? `<div class="proHelp">
+        <h3>You have been procrastinating that one for ${Math.abs(numberedDays)} days...</h3>
+        <p>Why haven't you done it yet?</p> 
+        <p>Is it really worth doing? Why did you want to do it in the first place?</p>
+        <p>Was it and is it still realistic to want to do it?</p>
+    
+        <h4>If you really still want to do it:</h4>
+        <p>What is missing or what is unclear?</p>
+        <p>What do you need or what would help you start this task?</p>
+        <p>What's the very first 'next action'?</p>
+    
+        <h4>If you realize you don't actually want nor need to do it:</h4>
+        <p>Then do yourself a favor and just delete it!</p>
+        <button onclick="taskAddAllInfo(this, 'list', 'pro')">Yeah, thanks</button></div>` : ``}
+        </div>
+        <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.deadline ? `doneDay` : todo.line}"></i><span class="${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? `` : `displayNone`}" style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG};` : ``}">${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? numberedDays : ``}</span></div>
       </li>`);
       // document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.term == "showThing" ? `class="showLi" style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``} ${todo.projet ? `class="projetLi" style="outline-color: ${todo.PColorBG};"` : ``}>
       //   <i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>
@@ -1135,6 +1160,9 @@ addForm.addEventListener("submit", (e) => {
     localStorage.listTasks = JSON.stringify(listTasks);
     todoCreation(todo);
     updateCBC();
+    addForm.reset();
+  } else{
+    taskAddAllInfo("addForm", "listPage", "new");
     addForm.reset();
   };
 });
@@ -1798,28 +1826,28 @@ function creatingCalendar(todo, home, classs){
   </div>
 </div>`;
 
-  let doneDayDiv = `<div id="doneDaySection" ${shw || todo.stock ? `class="displayNone"` : ``}><input class="myRadio" type="radio" id="doneDayInput" name="whatDay" value="doneDay" ${todo.line == "doneDay" ? `checked` : ``} />
-  <label for="doneDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText doneDay">Done Day</span><br /><span class="smallText">(the day by which it has to have been done)</span></label></p></label>
-  <div class="DaySection" id="lastDaySection">
-    <h5 class="taskInfoInput" style="margin-left: 0;">It's a hell of a deadline</h5>
-    <div class="inDaySection" style="width: -webkit-fill-available; max-width: 280px;">
-      <input type="date" id="lastDayDateInput" class="centerDateInput" value="${date}" />
-      <input id="lastTuttoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.tutto ? `checked` : todo.tutto == false ? `` : `checked`} />
-      <div class="calendarInsideMargin tuttoGiornoDiv">
-        <p style="margin: 0;">A qualunque ora??!</p>
-        <label for="lastTuttoGiornoInput" class="slideZone">
-          <div class="slider">
-            <span class="si">Sì</span>
-            <span class="no">No</span>
-          </div>
-        </label>
-      </div>
-      <div class="noneTuttoGiornoDiv calendarInsideMargin">
-        <p><span>a che ora precisamente?</span><input id="lastDayTimeAlleInput" type="time" class="alle finaleTxt" value="${todo.alle ? todo.alle : ``}" /></p>
-      </div>
-    </div>
-  </div>
-  </div>`;
+  // let doneDayDiv = `<div id="doneDaySection" ${shw || todo.stock ? `class="displayNone"` : ``}><input class="myRadio" type="radio" id="doneDayInput" name="whatDay" value="doneDay" ${todo.line == "doneDay" ? `checked` : ``} />
+  // <label for="doneDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText doneDay">Done Day</span><br /><span class="smallText">(the day by which it has to have been done)</span></label></p></label>
+  // <div class="DaySection" id="lastDaySection">
+  //   <h5 class="taskInfoInput" style="margin-left: 0;">It's a hell of a deadline</h5>
+  //   <div class="inDaySection" style="width: -webkit-fill-available; max-width: 280px;">
+  //     <input type="date" id="lastDayDateInput" class="centerDateInput" value="${date}" />
+      // <input id="lastTuttoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.tutto ? `checked` : todo.tutto == false ? `` : `checked`} />
+      // <div class="calendarInsideMargin tuttoGiornoDiv">
+      //   <p style="margin: 0;">A qualunque ora??!</p>
+      //   <label for="lastTuttoGiornoInput" class="slideZone">
+      //     <div class="slider">
+      //       <span class="si">Sì</span>
+      //       <span class="no">No</span>
+      //     </div>
+      //   </label>
+      // </div>
+      // <div class="noneTuttoGiornoDiv calendarInsideMargin">
+      //   <p><span>a che ora precisamente?</span><input id="lastDayTimeAlleInput" type="time" class="alle finaleTxt" value="${todo.alle ? todo.alle : ``}" /></p>
+      // </div>
+  //   </div>
+  // </div>
+  // </div>`;
 
   let recurringDayDiv = `<div id="recurringDaySection" ${todo.recurry || todo.stock ? `class="displayNone"` : ``}>
     <input class="myRadio" type="radio" id="recurringDayInput" name="whatDay" value="recurringDay" ${rec ? `checked` : ``} />
@@ -1878,13 +1906,33 @@ function creatingCalendar(todo, home, classs){
   let noDayDiv = `<div id="noDaySection" ${shw ? `class="displayNone"` : ``}><input class="myRadio" type="radio" id="noDayInput" name="whatDay" value="noDay" ${todo.line == "noDay" || todo.line == "" || !todo.line || todo.stock ? `checked` : ``} />
   <label for="noDayInput" id="noDayInputLabel" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText">No Day</span><br /><span class="smallText">${todo.stock ? `(let's put it away until we need it)` : `(just go with the flow)`}</span></label></p></label></div>`;
 
+  let deadlineDiv = `<div class="calendarMargin${shw ? ` displayNone` : ``}">
+  <h5 style="margin-left: 0; margin-bottom: 0;">Is there a deadline?</h5>
+  <div class="inDaySection" style="width: -webkit-fill-available; max-width: 280px;">
+    <p style="margin-top: 10px;"><span>Deadline:  </span><input id="deadlineInput" type="date" value="${todo.deadline ? todo.deadline : ``}" /></p>
+    <input id="tuttoUltimoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.tutto ? `checked` : todo.tutto == false ? `` : `checked`} />
+    <div class="calendarInsideMargin tuttoGiornoDiv">
+      <p style="margin: 0;">A qualunque ora??!</p>
+      <label for="tuttoUltimoGiornoInput" class="slideZone">
+        <div class="slider">
+          <span class="si">Sì</span>
+          <span class="no">No</span>
+        </div>
+      </label>
+    </div>
+    <div class="noneTuttoGiornoDiv calendarInsideMargin">
+      <p><span>a che ora precisamente?</span><input id="lastDayTimeAlleInput" type="time" class="finoAlle finaleTxt" value="${todo.finoAlle ? todo.finoAlle : ``}" /></p>
+    </div>
+  </div>
+</div>`;
+
   let smallCalendar = `<div id="calendarDiv" class="${classs}" style="width:${newWidth}px;">
     ${classs == "onIcon" ? `<h5 class="taskInfoInput">Tell me when...</h5>` : ``}
     <div>
       ${todoDayDiv}
-      ${doneDayDiv}
       ${recurringDayDiv}
       ${noDayDiv}
+      ${deadlineDiv}
     </div>
     ${classs == "onIcon" ? `<button id="saveTheDateBtn" class="calendarMargin">STD<br /><span class="smallText">(Save The Date)</span></button>` : ``}
   </div>`;
@@ -2051,6 +2099,21 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
       // if(todo.line == "doneDay"){
       //   delete todo.recurry; //si tu delete recurry, il faut le sortir de todo.recurrys et le push dans listTasks!
       // }; S'il était recurry, il va se faire deleter son recurry après calendarsave anyway
+    };
+  };
+  let deadlineInput = document.querySelector("#deadlineInput");
+  if(deadlineInput.value){
+    todo.deadline = deadlineInput.value;
+    todo.tutto = document.querySelector('#tuttoUltimoGiornoInput').checked ? true : false;
+    if(!todo.tutto){
+      let finoAlle = document.querySelector('input[type="time"].finoAlle');
+      if(finoAlle && finoAlle.value){
+        todo.finoAlle = finoAlle.value;
+      } else{
+        delete todo.finoAlle;
+      };
+    } else{
+      delete todo.finoAlle;
     };
   };
 };
@@ -2424,10 +2487,27 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
     listTasks.push(todo);
     newWidth = Number(window.innerWidth - 20);
     div = document.getElementById(where);
+  } else if(thisOne == "addForm"){
+    todo = {
+      newShit: true,
+      id: crypto.randomUUID(),
+      color: "darkslategrey",
+      icon: "fa-solid fa-ban noIcon",
+      term: "oneTime",
+      line: "noDay"
+    };
+    listTasks.push(todo);
+    newWidth = Number(window.innerWidth - 16);
+    div = document.getElementById(where);
   } else{
     let parentId;
     if(where == "list" || where == "searchScreen"){ //not in month/week
-      div = thisOne.parentElement; 
+      if(why == "pro"){
+        div = thisOne.parentElement.parentElement; 
+        thisOne.parentElement.remove();
+      } else{
+        div = thisOne.parentElement;
+      } 
       parent = div.parentElement; 
       // parentId = parent.id;
       // if(parentId.startsWith("copy")){
@@ -2472,7 +2552,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   } else{
     myShows = `<h6>pssst... You've got no types of show... yet</h6>`;
   };
-  let taskAllInfo = `<div id="taskInfo" style="width:${newWidth}px; ${where == "list" || where == "searchScreen" ? `top: 25px; left: -37px;` : `top: 10px; left: 10px;`}">
+  let taskAllInfo = `<div id="taskInfo" style="width:${newWidth}px; ${where == "list" || where == "searchScreen" ? `top: 25px; left: -37px;` : thisOne == "addForm" ? `top: 0; left: 0;` : `top: 10px; left: 10px;`}">
     <div class="taskInfoWrapper">
       <div id="SupClickScreen" class="Screen displayNone"></div>
       <input id="doneIt" type="checkbox" class="cossin cornerItInput" />
@@ -2905,10 +2985,6 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
 
       togoList = getTogoList(todo);
 
-      if(where == "list"){
-        parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
-      };
-
       if(doneIt.checked){
         gotItDone(todo.id, "");
       } else{
@@ -2924,6 +3000,9 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         listTasks.splice(todoIndex, 1);
       };
     };
+    if(where == "list"){
+      parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
+    };
     localStorage.listTasks = JSON.stringify(listTasks);
     updateWeek();
     updateMonth();
@@ -2935,13 +3014,13 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       parents.forEach(parent => {
         parent.remove();
       });
-      //parent.remove(); // it wasn't complaining but that was still useless...
+      parent.remove(); // it wasn't complaining but that was still useless...
       clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
     } else if(where == "list" && togoList == ""){
       parents.forEach(parent => {
         parent.remove();
       });
-      //parent.remove(); // it wasn't complaining but that was still useless...
+      parent.remove(); // it wasn't complaining but that was still useless...
       clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
     } else{ //not in the list, so month/week
       moving = false;

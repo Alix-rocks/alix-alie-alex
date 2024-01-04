@@ -39,8 +39,20 @@
         <!-- with toggle arrow to hide the search stuff and show only the results -->
         <ul>
           <li>
+            <label for="searchTodo">Todo:</label>
+            <input id="searchTodo" type="checkbox" name="searchStatus">
+            <label for="searchDone">Done:</label>
+            <input id="searchDone" type="checkbox" name="searchStatus">
+          </li>
+          <li>
             <label for="searchTask">Text: </label>
             <input id="searchTask" type="text" />
+          </li>
+          <li>
+            <select name="andOr" id="andOrTaskDate">
+              <option value="or">OR</option>
+              <option value="and">AND</option>
+            </select>
           </li>
           <li>
             <label for="searchDate">Date: </label>
@@ -51,8 +63,20 @@
             <input id="searchDeadline" type="date" />
           </li>
           <li>
+            <select name="andOr" id="andOrDateShow">
+              <option value="or">OR</option>
+              <option value="and">AND</option>
+            </select>
+          </li>
+          <li>
             <label for="searchShow">Show: </label>
             <select id="searchShow"></select>
+          </li>
+          <li>
+            <select name="andOr" id="andOrShowTerm">
+              <option value="or">OR</option>
+              <option value="and">AND</option>
+            </select>
           </li>
           <li>
             <label for="searchTerm">Type: </label>
@@ -64,6 +88,12 @@
               <option value="longTerm">Long term shit</option>
               <option value="crazyShit">Crazy idea</option>
               <option value="showThing">Whole show</option>
+            </select>
+          </li>
+          <li>
+            <select name="andOr" id="andOrTermTag">
+              <option value="or">OR</option>
+              <option value="and">AND</option>
             </select>
           </li>
           <li>

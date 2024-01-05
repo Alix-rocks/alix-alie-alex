@@ -933,6 +933,7 @@ function todoCreation(todo){
         <input type="time" class="displayNone"/></div>
       </li>`);
     } else {
+      console.log(todo);
       document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``} ${togoList == "listOups" && numberedDays < -5 ? `selectedTask` : ``}" ${todo.term == "showThing" ? `style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``}>
         <i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>
         <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
@@ -2538,7 +2539,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       todo = listTasks[todoIndex];
     };
   };
-  
+  console.log(todo);
 
   let myShows;
   if(mySettings.myShowTypes.length > 0){
@@ -2914,6 +2915,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       if(taskDetails.value !== ""){
         todo.info = taskDetails.value;
       } else{
+        console.log("noInfo");
         delete todo.info;
       };
       todo.color = newcolor;
@@ -2940,16 +2942,23 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         todo.prima = primaBuffer.value ? primaBuffer.value : "00:00";
         todo.dopo = dopoBuffer.value ? dopoBuffer.value : "00:00";
       } else{
+        console.log("noShow");
         delete todo.showType;
         delete todo.STColorBG;
         delete todo.STColorTX;
       };
 
-      if(todo.newShit){//considérer juste un bouton "add" et directement avoir la fenêtre taskAddAllInfo (ça permet moins le capture tool effet, mais la création est plus rapide... Au pire, ça pourrait être un setting!)
+      if(todo.newShit){
+        console.log("newShit");
         delete todo.newShit;
       };
 
+      if(where == "list"){
+        parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
+      };
+
       if(!todo.recurry && todo.line !== "recurringDay"){
+        console.log("noRec");
         if(!todo.stock && !todo.stored && storeIt.checked){
           stockCreaction(todo); //todo.stored = true; (has a model in storage) (included in stockCreation)
         };
@@ -2984,10 +2993,11 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       };
 
       togoList = getTogoList(todo);
-
+      console.log(togoList);
       if(doneIt.checked){
         gotItDone(todo.id, "");
       } else{
+        console.log("todoCreation");
         todoCreation(todo); 
         sortItAll();
       };
@@ -2999,10 +3009,11 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       } else{
         listTasks.splice(todoIndex, 1);
       };
+      if(where == "list"){
+        parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
+      };
     };
-    if(where == "list"){
-      parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
-    };
+    
     localStorage.listTasks = JSON.stringify(listTasks);
     updateWeek();
     updateMonth();

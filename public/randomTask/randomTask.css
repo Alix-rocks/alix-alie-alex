@@ -241,6 +241,7 @@ input[type="radio"]{
   padding: 2px 5px 2px 5px;
   background-color: rgba(237, 20, 61, 0);
   color: var(--tx-color);
+  z-index: 10;
 }
 .cloudTop{
   top: 8px;

@@ -259,7 +259,7 @@ async function getTasksSettings() {
     // };
     todoCreation(todo);
   });
-  // localStorage.listTasks = JSON.stringify(listTasks);
+  //localStorage.listTasks = JSON.stringify(listTasks);
   updateArrowsColor();
   sortItAll();
 };
@@ -2122,20 +2122,26 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
 
 
 //todo.newShit => si présent et true, veut dire qu'il vient d'être créé (est deleted après)
+//todo.status => "todo" ou "done"
+//todo.doneDate => date (string) où ça a été coché fait
 //todo.id
 //todo.task
 //todo.info
 //todo.color
 //todo.icon
-//todo.term => "oneTime", "longTerm", "showThing" (event)
-//todo.showType => nom du showType (pas sûre que ça soit nécessaire)
+//todo.term => {task: "oneTime", "longTerm", "crazyShit"}, {event: "showThing"}, {habit: "sameHabit"}, {rappel: "reminder"}
+//todo.showType => nom du showType (pas sûre que ça soit nécessaire/c'est utile pour la recherche!)
 //todo.STColorBG => couleur du background du showType
 //todo.STColorTX => couleur du texte du showType
 //todo.date
-//todo.line => "todoDay", "doneDay", "recurringDay", "noDay"
+//todo.line => "todoDay", "recurringDay", "noDay" ("doneDay" ne sert qu'à mettre le calendrier rouge)
 //todo.tutto => true/false si ça dure toute la journée ou si on considère 'dalle' et 'alle'
+//todo.deadline => date (string) du deadline
+//todo.finoAlle => heure (string) du deadline
 //todo.dalle => time à laquelle ça commence aussi anciennement todo.time (pour les event)
 //todo.alle => time à laquelle ça fini
+//todo.prima => durée du buffer avant l'event
+//todo.dopo => durée du buffer après l'event
 //todo.stored => true/false (has a model in storage)
 //todo.stockId
 //todo.stock => true/false (is a model in storage)
@@ -2146,7 +2152,7 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
 //todo.daysWeek => [] : "domenica", "lunedi", "martedi", "mercoledi", "giovedi", "venerdi" or "sabato"
 //todo.meseOpt => option mois : "ogniXDate" or "ogniXDay"
 //todo.meseDate => jour du mois où ça revient (xx)
-//todo.meseDayN => numéro du day (1, 2, 3, ou 4)
+//todo.meseDayN => numéro du day (1e, 2e, 3e, ou 4e)
 //todo.meseDayI => index du day (0 = domenica, 1 = lunedi, 2 = martedi, etc)
 //todo.fineOpt => option quand ça fini: "fineMai", "fineGiorno" or "fineDopo"
 //todo.fine => jour que ça fini (date)

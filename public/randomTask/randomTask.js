@@ -2119,14 +2119,18 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
   // the 3 of them (noDay, todoDay and recurringDay) can have time and buffer
   let inDaySection = document.querySelector('input[name="whatDay"]:checked ~ div.DaySection > div.inDaySection');
   todo.tutto = inDaySection.querySelector('input[type="checkbox"].tuttoGiornoInput').checked ? true : false;
+  let primaBuffer = document.querySelector("#primaBuffer");
+  let dopoBuffer = document.querySelector("#dopoBuffer");
+  todo.prima = primaBuffer.value ? primaBuffer.value : "00:00";
+  todo.dopo = dopoBuffer.value ? dopoBuffer.value : "00:00";
   if(todo.tutto){
-    delete todo.prima;
+    //delete todo.prima; //otherwise, if it's stock, we loose all the buffers!
     delete todo.primaRow;
     delete todo.dalle;
     delete todo.dalleRow;
     delete todo.alle;
     delete todo.alleRow;
-    delete todo.dopo;
+    //delete todo.dopo; //otherwise, if it's stock, we loose all the buffers!
     delete todo.dopoRow;
   }
   if(!todo.tutto){
@@ -2143,10 +2147,6 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
     } else{
       delete todo.alle;
     };
-    let primaBuffer = document.querySelector("#primaBuffer");
-    let dopoBuffer = document.querySelector("#dopoBuffer");
-    todo.prima = primaBuffer.value ? primaBuffer.value : "00:00";
-    todo.dopo = dopoBuffer.value ? dopoBuffer.value : "00:00";
     todo.dalleRow = roundFifteenTime(todo.dalle); //returns time rounded to 15s with a - instead of a : (for the row-name in weekly)
     todo.alleRow = (todo.alle) ? roundFifteenTime(todo.alle) : "end";
     if(todo.prima && todo.prima !== "00:00"){

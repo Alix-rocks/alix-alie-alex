@@ -915,15 +915,15 @@ input.myRadio:checked + label span.myRadio{
   align-items: flex-start;
   padding: 0 10%;
 }
-input#todoDayInput:checked ~ div#oneDaySection{
+input[name="whatDay"]:checked ~ div.DaySection{
   display: flex;
 }
-input#doneDayInput:checked ~ div#lastDaySection{
+/* input#todoDayInput:checked ~ div#oneDaySection{
   display: flex;
 }
 input#recurringDayInput:checked ~ div#recurryDaySection{
   display: flex;
-}
+} */
 .tuttoGiornoDiv{
   display: flex;
   flex-flow: row nowrap;
@@ -1487,7 +1487,7 @@ hr.zoneHr{
 .weeklyBuffer{
   border: 0.5px solid var(--tx-color);
   border-radius: 5px;
-  z-index: 3;
+  z-index: 2;
   background-color: rgba(47, 79, 79, .4);
 }
 .weeklyAfterDateSpan{
@@ -1498,9 +1498,11 @@ hr.zoneHr{
 }
 
 .cossin{
-  width: 0.1px;
+  /* NOT WORKING! */
+  /* width: 0.1px;
   margin: -2px;
-  border: 0;
+  border: 0; */
+  display: none;
 }
 .displayNone{
   display: none!important;

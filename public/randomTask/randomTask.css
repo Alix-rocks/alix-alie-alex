@@ -1477,6 +1477,7 @@ hr.zoneHr{
   font-size: 12px;
   line-height: 12px;
   overflow: hidden;
+  position: relative;
 }
 .weeklyTutto{
   overflow: visible;

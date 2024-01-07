@@ -1962,7 +1962,7 @@ function creatingCalendar(todo, home, classs){
     </div>
   </div>`;
 
-  let deadlineDiv = `<div class="calendarMargin${shw ? ` displayNone` : ``}">
+  let deadlineDiv = `<div id="deadlineSection" class="calendarMargin${shw ? ` displayNone` : ``}">
   <h5 style="margin-left: 0; margin-bottom: 0;">Is there a deadline?</h5>
   <div class="inDaySection" style="width: -webkit-fill-available; max-width: 280px;">
     <p style="margin-top: 10px;"><span>Deadline:  </span><input id="deadlineInput" type="date" value="${todo.deadline ? todo.deadline : ``}" /></p>
@@ -2863,11 +2863,13 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   let todoDaySection = document.querySelector("#todoDaySection");
   let recurringDaySection = document.querySelector("#recurringDaySection");
   let noDaySection = document.querySelector("#noDaySection");
+  let deadlineSection = document.querySelector("#deadlineSection");
   if(!todo.recurry && todo.line !== "recurringDay"){
     storeIt.addEventListener("click", () => {
       let radio = document.querySelector('input[name="termOptions"]:checked').value;
       if(storeIt.checked && !todo.stored){
         setN();
+        document.querySelector("#busyInput").checked = todo.busy ? true : todo.busy == false ? false : true;
         if(radio == "showThing"){
           colorIt.classList.add("hidden");
           taskTitle.style.color = "darkslategrey";
@@ -2880,13 +2882,16 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         if(radio == "showThing"){
           colorIt.classList.add("hidden");
           taskTitle.style.color = "darkslategrey";
+          document.querySelector("#busyInput").checked = true;
         } else if(radio == "reminder"){
           colorIt.classList.remove("hidden");
           taskTitle.style.color = newcolor ? newcolor : todo.color;
+          document.querySelector("#busyInput").checked = false;
         };
       } else{
         colorIt.classList.remove("hidden");
         taskTitle.style.color = newcolor ? newcolor : todo.color;
+        document.querySelector("#busyInput").checked = todo.busy ? true : todo.busy == false ? false : true;
         setTRN();
       };
     });
@@ -2899,42 +2904,49 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         if(radio.value == "showThing"){
           colorIt.classList.add("hidden");
           taskTitle.style.color = "darkslategrey";
+          document.querySelector("#busyInput").checked = true;
         } else if(radio.value == "reminder"){
           colorIt.classList.remove("hidden");
           taskTitle.style.color = newcolor ? newcolor : todo.color;
+          document.querySelector("#busyInput").checked = false;
         };
       } else if(radio.checked && storeIt.checked && !todo.stored){
         colorIt.classList.remove("hidden");
         taskTitle.style.color = newcolor ? newcolor : todo.color;
+        document.querySelector("#busyInput").checked = todo.busy ? true : todo.busy == false ? false : true;
         setN();
       } else{
         colorIt.classList.remove("hidden");
         taskTitle.style.color = newcolor ? newcolor : todo.color;
+        document.querySelector("#busyInput").checked = todo.busy ? true : todo.busy == false ? false : true;
         setTRN();
       };
     });
   });
-  function setTR(){
+  function setTR(){ // A
     todoDaySection.classList.remove("displayNone");
     recurringDaySection.classList.remove("displayNone");
     noDaySection.classList.add("displayNone");
+    deadlineSection.classList.add("displayNone");
     document.querySelector(`input[name="whatDay"]#${todo.line !== "recurringDay" ? "todoDay" : todo.line}Input`).checked = true;
     document.querySelector("#todoDayInputLabel").innerHTML = `<p><span class="myRadio"></span><span class="normalText todoDay">Happening Day</span><br /><span class="smallText">(the day this is all gonna go down)</span></p>`;
     document.querySelector("#noDayInputLabel span.smallText").innerText = `(just go with the flow)`;
     taskInfoBtn.innerText = "Save";
   };
-  function setN(){
+  function setN(){ // B
     todoDaySection.classList.add("displayNone");
     recurringDaySection.classList.add("displayNone");
     noDaySection.classList.remove("displayNone"); 
+    deadlineSection.classList.add("displayNone");
     document.querySelector("#noDayInput").checked = true;
     document.querySelector("#noDayInputLabel span.smallText").innerText = `(let's put it away until we need it)`;
     taskInfoBtn.innerText = "Save & put it away";
   };
-  function setTRN(){
+  function setTRN(){ // C
     todoDaySection.classList.remove("displayNone");
     recurringDaySection.classList.remove("displayNone");
     noDaySection.classList.remove("displayNone"); 
+    deadlineSection.classList.remove("displayNone");
     document.querySelector(`input[name="whatDay"]#${todo.line}Input`).checked = true;
     document.querySelector("#todoDayInputLabel").innerHTML = `<p><span class="myRadio"></span><span class="normalText todoDay">To-do Day</span><br /><span class="smallText">(the day you want to do it)</span></p>`;
     document.querySelector("#noDayInputLabel span.smallText").innerText = `(just go with the flow)`;
@@ -3119,7 +3131,14 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
     
     //for searchFound moving = false!
     //
-    if(where == "list" && togoList !== ""){
+    if(where == "searchScreen"){
+      moving = false;
+      taskInfo.remove();
+    }
+    if(thisOne == "addForm"){
+      scrollToSection(togoList);
+      taskInfo.remove();
+    } else if(where == "list" && togoList !== ""){
       moving = true;
       parents.forEach(parent => {
         parent.remove();
@@ -3132,9 +3151,6 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       });
       parent.remove(); // it wasn't complaining but that was still useless...
       clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
-    } else if(thisOne == "addForm"){
-      scrollToSection(togoList);
-      taskInfo.remove();
     } else{ //not in the list, so month/week
       moving = false;
       taskInfo.remove();
@@ -3177,7 +3193,9 @@ function scrollToSection(list){
 };
 
 function clickHandlerAddOn(addOn, future, screen, listToGo){
-  parent.classList.remove("selectedTask");
+  if(screen == clickScreen){
+    parent.classList.remove("selectedTask");
+  };
   if(moving && screen == clickScreen){
     scrollToSection(listToGo);
     moving = false;
@@ -3666,7 +3684,7 @@ function createWeeklyshow(show){
   let add;
   if(show.tutto || !show.dalle || show.dalle == ""){
     div = document.querySelector(`[data-tutto="${day}"]`);
-    add = `<div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="taskAddAllInfo(this, 'calWeekPage', 'mod')" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `color:${show.color}; border:none;`}">
+    add = `<div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="taskAddAllInfo(this, 'calWeekPage', 'mod'); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `background-color: var(--bg-color); color:${show.color}; border:none;`}">
     ${show.task} <i class="IconI ${show.icon}"></i>
   </div>`;
   } else{
@@ -3682,7 +3700,7 @@ function createWeeklyshow(show){
     };
     add = `
     ${primaDiv}
-    <div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="taskAddAllInfo(this, 'calWeekPage', 'mod')" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `color:${show.color}; border:none;`}  grid-column:col-${day}; grid-row:row-${show.dalleRow}${show.term == "reminder" ? `` : `/row-${show.alleRow}`};">
+    <div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="taskAddAllInfo(this, 'calWeekPage', 'mod'); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `color:${show.color}; border:none;`}  grid-column:col-${day}; grid-row:row-${show.dalleRow}${show.term == "reminder" ? `` : `/row-${show.alleRow}`};">
       ${show.task}<br />
       <i class="IconI ${show.icon}"></i>
     </div>

@@ -603,7 +603,20 @@ h5.taskInfoInput{
 .showDiv{
   display: none;
 }
+.urgeDiv{
+  display: none;
+}
+#urgeInput{
+  width: 40px;
+  margin-left: 10px;
+}
 #showThing:checked ~ div.showDiv{
+  display: block;
+}
+#oneTime:checked ~ div.urgeDiv{
+  display: block;
+}
+#longTerm:checked ~ div.urgeDiv{
   display: block;
 }
 #taskInfoBtn{
@@ -790,7 +803,8 @@ li .textDiv > hr{
   margin-left: 10px;
   margin-right: -5px;
 }
-.numberedCal{
+
+.numberedCal, .urgeCheck{
   position: relative;
   padding: 0;
   width: 30px;
@@ -798,10 +812,21 @@ li .textDiv > hr{
   flex-shrink: 0;
   height: 30px;
 }
-.numberedCal i{
+.numberedCal i, .urgeCheck i{
   position: absolute;
   top: 0;
   left: 0;
+}
+.urgeCheck span{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 32px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 35px;
+  opacity: .7;
 }
 .numberedCal span{
   position: absolute;

@@ -253,7 +253,8 @@ async function getTasksSettings() {
   } else{
     localStorage.listTasks = JSON.stringify([]);
   };
-  colorUrges();
+  colorUrges("first");
+  localStorage.listTasks = JSON.stringify(listTasks);
   listTasks.forEach(todo => {
 //Modify all the event to busy
     // if(todo.term == "showThing"){todo.busy = true; busyZoneCreation(todo);};
@@ -325,7 +326,8 @@ function freeIn(){
   //listTasks
   if(localStorage.getItem("listTasks")){
     listTasks = JSON.parse(localStorage.listTasks);
-    colorUrges();
+    colorUrges("first");
+    localStorage.listTasks = JSON.stringify(listTasks);
     listTasks.forEach(todo => {
       todoCreation(todo);
     });
@@ -947,8 +949,8 @@ function todoCreation(todo){
       </li>`);
     } else {
       document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``} ${togoList == "listOups" && numberedDays < -5 ? `selectedTask` : ``}" ${todo.term == "showThing" ? `style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``}>
-        <div class="urgeCheck" style="color: ${todo.urge ? todo.urgeColor : ``}">
-          <i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>
+        <div class="urgeCheck" style="color: ${todo.urge ? todo.urgeColor : ``}" onclick="checkEvent(this)">
+          <i class="typcn typcn-media-stop-outline emptyCheck"></i>
           <span>${todo.urge ? todo.urgeNum : ``}</span>
         </div>
         <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
@@ -1044,9 +1046,12 @@ function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dal
   return togoList;
 };
 
-function colorUrges(){
+function colorUrges(when){
   let filteredUrges = listTasks.filter(todo => todo.urge == true);
-  if(filteredUrges.length > 1){
+  if(filteredUrges.length == 1){
+    filteredUrges[0].urgeNum = 1;
+    filteredUrges[0].urgeColor = "red";
+  } else if(filteredUrges.length > 1){
     let urges = filteredUrges.sort((u1, u2) => (u1.urgeNum < u2.urgeNum) ? -1 : (u1.urgeNum > u2.urgeNum) ? 1 : 0);
     let first = urges[0].urgeNum;
     let num = 1;
@@ -1061,12 +1066,17 @@ function colorUrges(){
       if(num <= 3){
         urges[i].urgeColor = "red";
       } else if(num > 3 && num <= 6){
-        urges[i].urgeColor = "orange";
+        urges[i].urgeColor = "#ff8400";
       } else if(num > 6 && num <= 9){
-        urges[i].urgeColor = "yellow";
+        urges[i].urgeColor = "#ffd000";
       } else{
         urges[i].urgeColor = "darkslategrey";
       };
+      console.log(urges[i]);
+      // if(when == "next"){
+      //   document.querySelector(`#${urges[i].id}`).style.color = urges[i].urgeColor;
+      //   //document.querySelector(`#${urges[i].id} > div.urgeCheck > span`).textContent = urges[i].urgeNum;
+      // };
     };
   };
 };
@@ -1392,7 +1402,8 @@ function gotItDone(nb, rec){ //nb = todo.id, rec = recurring Id (or "" if direct
   };
   
   localStorage.listTasks = JSON.stringify(listTasks);
-  colorUrges();
+  colorUrges("next");
+  localStorage.listTasks = JSON.stringify(listTasks);
   let donedDate = getTodayDate(); //return
   //let's just copy the whole thing! (with date and dalle and alle, etc, so that we can put them in the weekly! and so they can be tracked, etc) OR we keep them all in the listTask and just add a todo.status: todo/done and the doneDate: ""
   // let donedItem = { 
@@ -2166,30 +2177,31 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
     delete todo.alleRow;
     //delete todo.dopo; //otherwise, if it's stock, we loose all the buffers!
     delete todo.dopoRow;
-  }
-  if(!todo.tutto){
+  } else{
     let dalle = inDaySection.querySelector('input[type="time"].dalle');
-    if(dalle && dalle.value){
+    if(dalle && dalle.value !== ""){
       todo.dalle = dalle.value;
+      todo.dalleRow = roundFifteenTime(todo.dalle); //returns time rounded to 15s with a - instead of a : (for the row-name in weekly)
+      if(todo.prima && todo.prima !== "00:00"){
+        let prima = roundFifteenTime(todo.prima);
+        todo.primaRow = timeMath(todo.dalleRow, "minus", prima); //returns time rounded to 15s with a - instead of a : (for the row-name in weekly)
+      };
     } else{
       delete todo.dalle;
+      delete todo.dalleRow;
       todo.tutto = true;
     };
     let alle = inDaySection.querySelector('input[type="time"].alle');
-    if(alle && alle.value){
+    if(alle && alle.value !== ""){
       todo.alle = alle.value;
+      todo.alleRow = todo.alle ? roundFifteenTime(todo.alle) : "end";
+      if(todo.dopo && todo.dopo !== "00:00"){
+        let dopo = roundFifteenTime(todo.dopo);
+        todo.dopoRow = timeMath(todo.alleRow, "plus", dopo);
+      };
     } else{
       delete todo.alle;
-    };
-    todo.dalleRow = roundFifteenTime(todo.dalle); //returns time rounded to 15s with a - instead of a : (for the row-name in weekly)
-    todo.alleRow = (todo.alle) ? roundFifteenTime(todo.alle) : "end";
-    if(todo.prima && todo.prima !== "00:00"){
-      let prima = roundFifteenTime(todo.prima);
-      todo.primaRow = timeMath(todo.dalleRow, "minus", prima); //returns time rounded to 15s with a - instead of a : (for the row-name in weekly)
-    };
-    if(todo.dopo && todo.dopo !== "00:00"){
-      let dopo = roundFifteenTime(todo.dopo);
-      todo.dopoRow = timeMath(todo.alleRow, "plus", dopo);
+      delete todo.alleRow;
     };
   };
   
@@ -2753,7 +2765,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
           <div class="urgeDiv">
             <h5 style="margin: 5px 0 0 0;">How urgent is it?</h5>
             <div class="inDaySection" style="width: fit-content; margin-bottom: 10px;">
-              <p><label for="urgeInput" style="display:inline-block;">Priority:  </label><input id="urgeInput" type="number" value="${todo.urge ? todo.urgeNum : ``}" /></p>
+              <p><label for="urgeInput" style="display:inline-block;">Priority:  </label><input id="urgeInput" type="number" value="${(todo.term == "oneTime" || todo.term == "longTerm") && todo.urge ? todo.urgeNum : "0"}" /></p>
             </div>
           </div>
           <input class="myRadio" type="radio" name="termOptions" id="crazyShit" value="crazyShit" ${todo.term == "crazyShit" ? `checked` : ``} />
@@ -3078,14 +3090,14 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       } else{
         delete todo.info;
       };
-      if(urgeInput !== ""){
-        todo.urge = true;
-        todo.urgeNum = urgeInput.value;
-        colorUrges();
-      } else{
+      if((urgeInput.value == "" || urgeInput.value == 0) || (todo.term !== "oneTime" && todo.term !== "longTerm")){
         delete todo.urge;
         delete todo.urgeNum;
         delete todo.urgeColor;
+      } else if(urgeInput.value > 0 && (todo.term == "oneTime" || todo.term == "longTerm")){
+        todo.urge = true;
+        todo.urgeNum = urgeInput.value;
+        colorUrges("next");
       };
       todo.color = newcolor;
       todo.icon = newicon;
@@ -3637,6 +3649,7 @@ function putDatesInWeek(date){
 };
 
 function roundFifteenTime(realTime){
+  console.log(realTime);
   let min = Number(realTime.substring(3));
   let hour = Number(realTime.substring(0, 2));
   if(min > 0 && min <= 7 ){

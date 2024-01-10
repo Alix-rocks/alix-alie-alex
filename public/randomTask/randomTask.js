@@ -228,9 +228,11 @@ async function getTasksSettings() {
   //   localStorage.mySettings = JSON.stringify(mySettings);
   // };
   let todayDate = getTodayDate();
+  let todayDay = getDayNameFromString(todayDate);
   let tomorrowDate = getTomorrowDate();
-  document.getElementById("todaysDateSpan").innerHTML = `(${todayDate})`;
-  document.getElementById("tomorrowsDateSpan").innerHTML = `(${tomorrowDate})`;
+  let tomorrowDay = getDayNameFromString(tomorrowDate);
+  document.getElementById("todaysDateSpan").innerHTML = `(${todayDate}) ${todayDay}`;
+  document.getElementById("tomorrowsDateSpan").innerHTML = `(${tomorrowDate}) ${tomorrowDay}`;
   document.getElementById(mySettings.myFavoriteView).checked = true;
   document.getElementById(mySettings.myFavoriteView).dispatchEvent(pageEvent);
   if(mySettings.mySide == "light"){
@@ -693,9 +695,11 @@ function resetCBC(){
       mySettings.myTomorrow = `${timeInput.value}`;
       if(previousTomorrow !== mySettings.myTomorrow){
         let todayDate = getTodayDate();
+        let todayDay = getDayNameFromString(todayDate);
         let tomorrowDate = getTomorrowDate();
-        document.getElementById("todaysDateSpan").innerHTML = `(${todayDate})`;
-        document.getElementById("tomorrowsDateSpan").innerHTML = `(${tomorrowDate})`;
+        let tomorrowDay = getDayNameFromString(tomorrowDate);
+        document.getElementById("todaysDateSpan").innerHTML = `(${todayDate}) ${todayDay}`;
+        document.getElementById("tomorrowsDateSpan").innerHTML = `(${tomorrowDate}) ${tomorrowDay}`;
         listTasks.forEach(todo => {
           todoCreation(todo);
         });
@@ -2555,6 +2559,12 @@ function meseDayNCalc(date){
   };
   return dayC;
 };
+
+function getDayNameFromString(date){
+  let dayIdx = meseDayICalc(date);
+  let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
+  return `${mySettings.myWeeksDayArray[idx].name1Maj}`;
+}
 
 // *** DETAILS
 let showTypeChoices = [{

@@ -202,6 +202,7 @@ Options for sorting
     </div>
     <div id="todoZone">
       <form id="addForm">
+        <div class="underLining"></div>
         <input id="addInput" type="text" />
         <button id="addBtn" type="submit">add</button>
       </form>
@@ -253,6 +254,17 @@ Options for sorting
           </div>
         </div>
       </section> 
+      <section id="urgesSection" class="displayNone">
+        <input id="urgesInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="urgesInput">
+            <h3 class="topList"><span class="topListTitle" style="text-decoration-color: red;"><span style="color:red;">PRI</span><span style="color:#ff8400;">ORI</span><span style="color:#ffd000;">TY!</span></span></h3>
+            <h5 class="topList">Once these are done, then you can go play with the other ones!</h5>
+            <span id="listUrgesChevron" class="typcn typcn-chevron-right-outline listToggleChevron displayNone"></span>
+          </label>
+          <ul id="listUrges"></ul>
+        </div>
+      </section>
       <section id="wheneverSection">
         <input id="listInput" type="checkbox" class="cossin listToggleInput" />
         <div id="wheneverLists">

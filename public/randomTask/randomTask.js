@@ -238,12 +238,14 @@ async function getTasksSettings() {
   if(mySettings.mySide == "light"){
     document.getElementById("switchModeBall").className = "ballLight";
     document.getElementById("switchModeBallUnder").className = "ballLight";
-    document.querySelector(':root').style.setProperty('--bg-color', '#F2F3F4');
+    document.querySelector(':root').style.setProperty('--bg-color', 'rgb(242, 243, 244)');
+    document.querySelector(':root').style.setProperty('--bg-color-7', 'rgba(242, 243, 244, .7)');
     document.querySelector(':root').style.setProperty('--tx-color', 'darkslategrey');
   } else if(mySettings.mySide == "dark"){
     document.getElementById("switchModeBall").className = "";
     document.getElementById("switchModeBallUnder").className = "";
     document.querySelector(':root').style.setProperty('--bg-color', 'rgb(7, 10, 10)');
+    document.querySelector(':root').style.setProperty('--bg-color-7', 'rgba(7, 10, 10, .7)');
     document.querySelector(':root').style.setProperty('--tx-color', 'rgba(242, 243, 244, .8)');
   };
   //listTasks
@@ -533,25 +535,24 @@ function updateArrowsColor(){
       } else{
         section.querySelector("span.listToggleChevron").classList.remove("fullSection");
       };
-      if(section.id == "limboSection"){
+      if(section.id == "limboSection" || section.id == "urgesSection"){
         if(section.querySelectorAll("li").length == 1){
           section.classList.remove("displayNone");
           section.querySelector("label").classList.remove("listToggleLabel");
-          section.querySelector("#listLimboChevron").classList.add("displayNone");
-          section.querySelector("#listLimbo").classList.remove("listToggleList");
+          section.querySelector(".typcn-chevron-right-outline").classList.add("displayNone");
+          section.querySelector("ul").classList.remove("listToggleList");
         } else if(section.querySelectorAll("li").length > 1){
           section.classList.remove("displayNone");
           section.querySelector("label").classList.add("listToggleLabel");
-          section.querySelector("#listLimboChevron").classList.remove("displayNone");
-          section.querySelector("#listLimbo").classList.add("listToggleList");
+          section.querySelector(".typcn-chevron-right-outline").classList.remove("displayNone");
+          section.querySelector("ul").classList.add("listToggleList");
         } else if(section.querySelectorAll("li").length == 0){
           section.classList.add("displayNone");
           section.querySelector("label").classList.remove("listToggleLabel");
-          section.querySelector("#listLimboChevron").classList.add("displayNone");
-          section.querySelector("#listLimbo").classList.remove("listToggleList");
+          section.querySelector(".typcn-chevron-right-outline").classList.add("displayNone");
+          section.querySelector("ul").classList.remove("listToggleList");
         };
-      }
-      
+      }; 
     };
   });
 };
@@ -923,6 +924,10 @@ function todoCreation(todo){
   } else{
     togoList = getTogoList(todo);
   };
+  if(togoList == "listTomorrow" && (todo.term == "oneTime" || todo.term == "longTerm" || todo.term == "crazyShit" || todo.term == "sameHabit") && !todo.recurry && !todo.copy){
+    // there could already be one, but it's gonna be removed soon anyway
+      copyDoneTomorrow(todo);
+  };
   let numberedDays;
   let todayDate = getDateTimeFromString(getTodayDate(), mySettings.myTomorrow);
   if((todo.deadline && todo.deadline !== "") || togoList == "listOups"){
@@ -953,7 +958,7 @@ function todoCreation(todo){
       </li>`);
     } else {
       document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``} ${togoList == "listOups" && numberedDays < -5 ? `selectedTask` : ``}" ${todo.term == "showThing" ? `style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``}>
-        <div class="urgeCheck" style="color: ${todo.urge ? todo.urgeColor : ``}" onclick="checkEvent(this)">
+        <div class="urgeCheck" style="color: ${todo.urge ? todo.urgeColor : ``}" ${todo.urge ? `onclick="checkOrUrge(this)"` : `onclick="checkEvent(this, 'norm')"`}>
           <i class="typcn typcn-media-stop-outline emptyCheck"></i>
           <span>${todo.urge ? todo.urgeNum : ``}</span>
         </div>
@@ -990,7 +995,10 @@ function todoCreation(todo){
   };
 };
 
+
+
 function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dalle!
+  console.log(todo);
   let modifiedDalle = todo.dalle ? todo.dalle.replace(":", "-") : "5-00";
   let todoTime = `${todo.date}-${modifiedDalle}`;
   let hierOggiTime = timeLimit("hierOggi");
@@ -1006,28 +1014,37 @@ function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dal
     //recurryCreation(todo);
     recurryOuting(todo);
   } else if(todo.line == "noDay" || todo.copy){ // ( || copy ) //whenever //va inclure les deadline aussi puisqu'ils vont soient être noDay ou todoDay (ou recurringDay??)
-    if(todo.term == "oneTime"){
+    if(todo.urge){
+      togoList = "listUrges";
+    } else if(todo.term == "oneTime"){
       togoList = "listOne";
     } else if(todo.term == "crazyShit"){
       togoList = "listIdea";
     } else{
       togoList = "list";
     };
-  } else if((hierOggiTime < todoTime) && (todoTime < oggiDemainTime) && !todo.copy){ //it's a todoDay or a doneDay
+  } else if((hierOggiTime < todoTime) && (todoTime < oggiDemainTime)){ //it's a todoDay or a doneDay
     if(todo.term == "reminder"){
       togoList = "listTodayReminder";
     } else {
       togoList = "listToday";
     };
-  } else if((oggiDemainTime < todoTime) && (todoTime < demainApresTime) && !todo.copy){
+  } else if((oggiDemainTime < todoTime) && (todoTime < demainApresTime)){
     if(todo.term == "reminder"){
       togoList = "listTomorrowReminder";
     } else{
       togoList = "listTomorrow"; //whether it's todoDay or doneDay
-      if((todo.term == "oneTime" || todo.term == "longTerm" || todo.term == "crazyShit" || todo.term == "sameHabit") && !todo.recurry){
-        // there could already be one, but it's gonna be removed soon anyway
-          copyDoneTomorrow(todo);
-      };
+      // if(todo.copy){
+      //   if(todo.term == "oneTime"){
+      //     togoList = "listOne";
+      //   } else if(todo.term == "crazyShit"){
+      //     togoList = "listIdea";
+      //   } else{
+      //     togoList = "list";
+      //   };
+      // } else{
+      //   togoList = "listTomorrow"; //whether it's todoDay or doneDay
+      // };
     };
     //we already know it's not a recurringDay, we just need to make sure: (term == oneTime || longTerm || crazyShit {Anything that usually shows in the lists... what about sameHabit? do they usually show in the lists...}) && !recurry ... then we make a copy of it! copy but don't push in listTasks and just add "copy" at the beginning of the id and add newTodo.copy = true
   } else if(todo.term == "showThing" || todo.term == "reminder"){ //date is either before today or after tomorrow
@@ -1049,6 +1066,36 @@ function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dal
   };
   return togoList;
 };
+
+function checkOrUrge(thisOne){
+  clickScreen.classList.remove("displayNone");
+  let li = thisOne.parentElement;
+  let checkId = li.id;
+  let todo;
+  if(li.dataset.rec && li.dataset.rec !== "undefined"){
+    let recId = li.dataset.rec;
+    let recIndex = listTasks.findIndex(todo => todo.id == recId);
+    let todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == checkId);
+    todo = listTasks[recIndex].recurrys[todoIndex];
+  } else{
+    let todoIndex = listTasks.findIndex(todo => todo.id == checkId);
+    todo = listTasks[todoIndex];
+  };
+  thisOne.parentElement.insertAdjacentHTML("beforeend", `<div class="checkOrUrgeDiv">
+  <i class="typcn typcn-input-checked-outline" onclick="checkEvent(this, 'urge')"></i>
+  <input id="newUrgeNumInput" type="number" value="${todo.urgeNum}"/>
+  </div>`);
+  let checkOrUrgeDiv = document.querySelector(".checkOrUrgeDiv");
+  clickScreen.addEventListener("click", () => clickHandlerSmallAddOn(checkOrUrgeDiv, clickScreen));
+  let newUrgeNumInput = document.querySelector("#newUrgeNumInput");
+  newUrgeNumInput.addEventListener("change", () => {
+    todo.urgeNum = newUrgeNumInput.value;
+    checkOrUrgeDiv.remove();
+    colorUrges("next");
+    clickHandlerSmallAddOn(checkOrUrgeDiv, clickScreen);
+  });
+};
+window.checkOrUrge = checkOrUrge;
 
 function colorUrges(when){
   let filteredUrges = listTasks.filter(todo => todo.urge == true);
@@ -1076,11 +1123,11 @@ function colorUrges(when){
       } else{
         urges[i].urgeColor = "darkslategrey";
       };
-      console.log(urges[i]);
-      // if(when == "next"){
-      //   document.querySelector(`#${urges[i].id}`).style.color = urges[i].urgeColor;
-      //   //document.querySelector(`#${urges[i].id} > div.urgeCheck > span`).textContent = urges[i].urgeNum;
-      // };
+      if(when == "next"){
+        let li = document.getElementById(urges[i].id);
+        li.querySelector("div.urgeCheck").style.color = urges[i].urgeColor;
+        li.querySelector("div.urgeCheck > span").textContent = urges[i].urgeNum;
+      };
     };
   };
 };
@@ -1101,7 +1148,7 @@ function recurryOuting(todo){ //todo == le recurring (newtodo est le recurry/nor
   let recurry = todo.recurrys[idx];
   let dateTime = `${recurry.date}-${recurry.dalle ? recurry.dalle.replace(":", "-") : "5-00"}`;
   while (dateTime < demainApresTime){
-    if(dateTime < hierOggiTime){
+    if((dateTime < hierOggiTime && todo.term !== "sameHabit")){
       todo.recurrys.splice(idx, 1);
       //WOLA il faudrait aussi todo.listDates.splice(0, 1);
     } else{
@@ -1372,9 +1419,16 @@ doneNextBtn.addEventListener("click", () => {
   };
 });
 
-function checkEvent(emptyCheck){
-  let li = emptyCheck.parentElement;
-  let donedId = li.id;
+function checkEvent(emptyCheck, where){
+  let li;
+  let donedId;
+  if(where == "norm"){
+    li = emptyCheck.parentElement;
+    donedId = li.id;
+  } else if(where == "urge"){
+    li = emptyCheck.parentElement.parentElement;
+    donedId = li.id;
+  };
   if(li.dataset.rec && li.dataset.rec !== "undefined"){
     let rec = li.dataset.rec;
     gotItDone(donedId, rec);
@@ -2805,6 +2859,24 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
             
           </div>
         </div>
+        <h5 class="taskInfoInput" style="margin-top: 20px;">Tell me where...</h5>
+        <div class="inDaySection taskInfoInput" style="width: -webkit-fill-available; max-width: 280px;">
+          <input id="whereHomeInput" type="checkbox" class="tuttoGiornoInput cossin" ${(todo.where && todo.where == "home") ? `checked` : (todo.where && todo.where !== "home") ? `` : `checked`} />
+          <div class="calendarInsideMargin tuttoGiornoDiv" style="justify-content: flex-start;">
+            <label for="whereHomeInput" class="slideZone">
+              <div class="slider">
+                <span class="si">Sì</span>
+                <span class="no">No</span>
+              </div>
+            </label>
+            <p id="hshText" style="margin: 0 0 0 10px;">Home Sweet Home</p>
+          </div>
+          <div class="noneTuttoGiornoDiv calendarInsideMargin">
+            <label for="whereInput" style="display: block;">Destination:</label>
+            <textarea id="whereInput" style="width: 100%; margin-bottom: 10px;">${todo.where && todo.where !== "home" ? todo.where : ``}</textarea>
+            <p style="text-align:right; margin:0;"><button onclick="copyText()"><i class="fa-regular fa-clipboard"></i></button></p>
+          </div>
+        </div>
         <h5 class="taskInfoInput" style="margin-top: 20px;">Tell me when...</h5>
         <div id="calendarHome"></div>
       </div>
@@ -3109,6 +3181,9 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         todo.urgeNum = urgeInput.value;
         colorUrges("next");
       };
+      let whereCheck = document.querySelector("#whereHomeInput").checked ? true : false;
+      let whereText = document.querySelector("#whereInput");
+      todo.where = whereCheck ? "home" : whereText.value;
       todo.color = newcolor;
       todo.icon = newicon;
       todo.term = document.querySelector('input[name="termOptions"]:checked').value;
@@ -3234,6 +3309,13 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
 };
 window.taskAddAllInfo = taskAddAllInfo;
 
+window.copyText = copyText;
+
+function copyText(){
+  let text = document.querySelector("#whereInput").value;
+  navigator.clipboard.writeText(text);
+};
+
 function trashShowTypeEvent(thisOne){
   let div = thisOne.parentElement;
   let name = div.id.slice(3);
@@ -3280,6 +3362,12 @@ function clickHandlerAddOn(addOn, future, screen, listToGo){
   };
   screen.classList.add("displayNone");
   screen.removeEventListener("click", () => clickHandlerAddOn(addOn, future, screen, listToGo));
+};
+
+function clickHandlerSmallAddOn(addOn, screen){
+  addOn.remove();
+  screen.classList.add("displayNone");
+  screen.removeEventListener("click", () => clickHandlerSmallAddOn(addOn, screen));
 };
 
 // *** ICON

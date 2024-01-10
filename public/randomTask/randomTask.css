@@ -1,5 +1,6 @@
 :root{
   --bg-color: #F2F3F4;
+  --bg-color-7: rgb(242, 243, 244);
   --tx-color: darkslategrey;
 }
 *{
@@ -11,6 +12,10 @@
 body{
   color: var(--tx-color);
   background-color: var(--bg-color);
+}
+
+button:active{
+  outline: 1.5px solid rgba(50,205,50,.9);
 }
 
 #loadingScreen{
@@ -77,11 +82,21 @@ button span:nth-of-type(2){
   padding: 5px 10px;
   width: fit-content;
   color: var(--tx-color);
-  background-color: var(--bg-color);
+  background-color: var(--bg-color-7);
   font-size: 1em;
   font-weight: 600;
   user-select: auto;
 }
+.underLining{
+  height: 31.5px;
+  position: absolute;
+  border-right: 2px solid var(--tx-color);
+  width: 50px;
+  top: 2px;
+  left: 2px;
+  z-index: -1;
+}
+
 #taskTitle{
   margin:0;
   padding-right: 39px;
@@ -847,6 +862,29 @@ li .textDiv > hr{
   text-shadow: -0.75px -0.75px 0 rgb(7, 10, 10), 0 -0.75px 0 rgb(7, 10, 10), 0.75px -0.75px 0 rgb(7, 10, 10), 0.75px 0 0 rgb(7, 10, 10), 0.75px 0.75px 0 rgb(7, 10, 10), 0 0.75px 0 rgb(7, 10, 10), -0.75px 0.75px 0 rgb(7, 10, 10), -0.75px 0 0 rgb(7, 10, 10);
 }
 
+.checkOrUrgeDiv{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: fit-content;
+  border: 2px solid var(--tx-color);
+  background: var(--bg-color);
+  padding: 3px;
+  display: flex;
+  border-radius: 5px;
+  z-index: 550;
+}
+.checkOrUrgeDiv input{
+  width: 40px;
+  height: 25px;
+  margin-left: 5px;
+}
+.checkOrUrgeDiv i{
+  margin-left: -3px;
+  font-size: 1.8em;
+  line-height: 25px;
+  margin-bottom: -5px;
+}
 
 li .textDone{
   font-size: 20px;
@@ -1000,6 +1038,12 @@ input#recurringDayInput:checked ~ div#recurryDaySection{
 }
 .tuttoGiornoInput:checked ~ div.noneTuttoGiornoDiv{
   display: none;
+}
+p#hshText{
+  opacity: .6;
+}
+#whereHomeInput:checked ~ div.tuttoGiornoDiv > p#hshText{
+  opacity: 1;
 }
 .dalleTxt, .alleTxt, .finaleTxt{
   margin: 0 0 0 10px;

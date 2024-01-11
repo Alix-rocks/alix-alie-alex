@@ -618,7 +618,7 @@ h5.taskInfoInput{
 .showDiv{
   display: none;
 }
-.urgeDiv{
+.urgeDiv, .wholeProjetDiv, .partProjetDiv{
   display: none;
 }
 #urgeInput{
@@ -632,6 +632,12 @@ h5.taskInfoInput{
   display: block;
 }
 #longTerm:checked ~ div.urgeDiv{
+  display: block;
+}
+#wholeProjet:checked ~ div.wholeProjetDiv{
+  display: block;
+}
+#partProjet:checked ~ div.partProjetDiv{
   display: block;
 }
 #taskInfoBtn{
@@ -923,6 +929,11 @@ li .projetOnglet{
 span.smallText{
   font-size: 13px;
   padding: 0;
+}
+.otherSmallText{
+  margin-top: -3px;
+  display: block;
+  margin-bottom: 7px;
 }
 span.normalText{
   font-size: 18px;

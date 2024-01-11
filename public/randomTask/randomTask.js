@@ -213,7 +213,7 @@ function getCloudBC(){
 
 async function getTasksSettings() {
   const getTasks = await getDoc(doc(db, "randomTask", auth.currentUser.email));
-  console.log(getTasks.data().mySettings);
+  //console.log(getTasks.data().mySettings);
   //mySettings
   if(localStorage.getItem("mySettings")){
     mySettings = JSON.parse(localStorage.mySettings);
@@ -646,12 +646,14 @@ function resetCBC(){
     if(mySettings.mySide == "light"){
       document.getElementById("switchModeBall").className = "ballLight";
       document.getElementById("switchModeBallUnder").className = "ballLight";
-      document.querySelector(':root').style.setProperty('--bg-color', '#F2F3F4');
+      document.querySelector(':root').style.setProperty('--bg-color', 'rgb(242, 243, 244)');
+      document.querySelector(':root').style.setProperty('--bg-color-7', 'rgba(242, 243, 244, .7)');
       document.querySelector(':root').style.setProperty('--tx-color', 'darkslategrey');
     } else if(mySettings.mySide == "dark"){
       document.getElementById("switchModeBall").className = "";
       document.getElementById("switchModeBallUnder").className = "";
       document.querySelector(':root').style.setProperty('--bg-color', 'rgb(7, 10, 10)');
+      document.querySelector(':root').style.setProperty('--bg-color-7', 'rgba(7, 10, 10, .7)');
       document.querySelector(':root').style.setProperty('--tx-color', 'rgba(242, 243, 244, .8)');
     };
 
@@ -659,13 +661,15 @@ function resetCBC(){
       document.getElementById("switchModeBall").classList.toggle("ballLight");
       document.getElementById("switchModeBallUnder").classList.toggle("ballLight");
       if(document.getElementById("switchModeBall").classList.contains("ballLight")){
-        document.querySelector(':root').style.setProperty('--bg-color', '#F2F3F4');
+        document.querySelector(':root').style.setProperty('--bg-color', 'rgb(242, 243, 244)');
+        document.querySelector(':root').style.setProperty('--bg-color-7', 'rgba(242, 243, 244, .7)');
         document.querySelector(':root').style.setProperty('--tx-color', 'darkslategrey');
         document.querySelectorAll(".numberedCal").forEach(cal => {
           cal.classList.remove("numberedCalDark");
         });
       } else{
         document.querySelector(':root').style.setProperty('--bg-color', 'rgb(7, 10, 10)');
+        document.querySelector(':root').style.setProperty('--bg-color-7', 'rgba(7, 10, 10, .7)');
         document.querySelector(':root').style.setProperty('--tx-color', 'rgba(242, 243, 244, .8)');
         document.querySelectorAll(".numberedCal").forEach(cal => {
           cal.classList.add("numberedCalDark");
@@ -998,7 +1002,7 @@ function todoCreation(todo){
 
 
 function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dalle!
-  console.log(todo);
+  //console.log(todo);
   let modifiedDalle = todo.dalle ? todo.dalle.replace(":", "-") : "5-00";
   let todoTime = `${todo.date}-${modifiedDalle}`;
   let hierOggiTime = timeLimit("hierOggi");
@@ -1081,7 +1085,7 @@ function checkOrUrge(thisOne){
     let todoIndex = listTasks.findIndex(todo => todo.id == checkId);
     todo = listTasks[todoIndex];
   };
-  thisOne.parentElement.insertAdjacentHTML("beforeend", `<div class="checkOrUrgeDiv">
+  li.insertAdjacentHTML("beforeend", `<div class="checkOrUrgeDiv">
   <i class="typcn typcn-input-checked-outline" onclick="checkEvent(this, 'urge')"></i>
   <input id="newUrgeNumInput" type="number" value="${todo.urgeNum}"/>
   </div>`);
@@ -1089,7 +1093,17 @@ function checkOrUrge(thisOne){
   clickScreen.addEventListener("click", () => clickHandlerSmallAddOn(checkOrUrgeDiv, clickScreen));
   let newUrgeNumInput = document.querySelector("#newUrgeNumInput");
   newUrgeNumInput.addEventListener("change", () => {
-    todo.urgeNum = newUrgeNumInput.value;
+    if(newUrgeNumInput.value == 0){
+      delete todo.urge;
+      delete todo.urgeNum;
+      delete todo.urgeColor;
+      let urgeCheckDiv = li.querySelector("div.urgeCheck");
+      urgeCheckDiv.style.color = "darkslategrey";
+      urgeCheckDiv.querySelector("span").textContent = "";
+      urgeCheckDiv.setAttribute("onclick", "checkEvent(this, 'norm')");
+    } else{
+      todo.urgeNum = newUrgeNumInput.value;
+    };
     checkOrUrgeDiv.remove();
     colorUrges("next");
     clickHandlerSmallAddOn(checkOrUrgeDiv, clickScreen);
@@ -1244,9 +1258,23 @@ function donedDateCreation(donedDate){
   };
 };
 
+function getUnderLiningWidth(input){
+  let windowWidth = window.innerWidth;
+  let pagePadBor = 22;
+  let hourCol = 45;
+  let dayNumber = 7;
+  let eventBor = 2;
+  let magicNum = 19;
+  let padLeftPX = getComputedStyle(input).paddingLeft;
+  let padLeft = Number(padLeftPX.slice(0, -2));
+  let thisDiv = document.getElementById(`${input.id}-underLining`);
+  thisDiv.style.width = `${(((windowWidth - pagePadBor - hourCol)/dayNumber) - eventBor) + magicNum + padLeft}px`;
+};
 
 
 // *** ADD
+let addForm = document.querySelector("#addForm");
+getUnderLiningWidth(addInput);
 addForm.addEventListener("submit", (e) => {
   e.preventDefault();
   let newTask = addInput.value;
@@ -2779,6 +2807,17 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   } else{
     myShows = `<h6>pssst... You've got no types of show... yet</h6>`;
   };
+  let projetNamesChoice;
+  if(mySettings.myProjets && mySettings.myProjets.length > 0){
+    let projetNames = mySettings.myProjets.map(projet => {
+      return `<option style="background-color:${projet.colorBG}; color:${projet.colorTX};" value="${projet.nickname}">${projet.nickname}</option>`;
+    }).join("");
+    projetNamesChoice = `<select id="myProjetNames">
+    ${projetNames}
+  </select>`;
+  } else{
+    projetNamesChoice = `<h6>pssst... First, you've got to create a projet!</h6>`;
+  };
   let taskAllInfo = `<div id="taskInfo" style="width:${newWidth}px; ${where == "list" || where == "searchScreen" ? `top: 25px; left: -37px;` : thisOne == "addForm" ? `top: 0; left: 0;` : `top: 10px; left: 10px;`}">
     <div class="taskInfoWrapper">
       <div id="SupClickScreen" class="Screen displayNone"></div>
@@ -2807,7 +2846,33 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       </label>
       <h5 class="taskInfoInput" style="margin-top: 40px;">Tell me more...</h5>
       <div class="taskInfoInput relDiv">
+        <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Projet</h5>
+        <input class="myRadio" type="radio" name="projetOptions" id="wholeProjet" value="wholeProjet" ${todo.projet && todo.projet == "wholeProjet" ? `checked` : ``} />
+        <label for="wholeProjet" class="termLabel"><span class="myRadio"></span><span>It's a whole big thing</span><br />
+        <span class="smallText otherSmallText">with lots of little things in it</span></label>
+        <div class="wholeProjetDiv">
+          <h5 style="margin: 5px 0 0 0;">Let's give it a label</h5>
+          <div class="inDaySection" style="width: fit-content; margin-bottom: 10px;">
+            <p>Choose a color: </p>
+            <p>Choose a nickname: </p>
+          </div>
+        </div>
+        <input class="myRadio" type="radio" name="projetOptions" id="partProjet" value="partProjet" ${todo.projet && todo.projet == "partProjet" ? `checked` : ``} />
+        <label for="partProjet" class="termLabel"><span class="myRadio"></span><span>It's part of something bigger</span><br />
+        <span class="smallText otherSmallText">than itself</span></label>
+        <div class="partProjetDiv">
+          <h5 style="margin: 5px 0 0 0;">What projet is it a part of?</h5>
+          <div class="inDaySection" style="width: fit-content; margin-bottom: 10px;">
+            ${projetNamesChoice}
+          </div>
+        </div>
+        <input class="myRadio" type="radio" name="projetOptions" id="notProjet" value="notProjet" ${!todo.projet || todo.projet == "" || todo.projet == "notProjet" ? `checked` : ``} />
+        <label for="notProjet" class="termLabel"><span class="myRadio"></span><span>None of the above</span><br />
+        <span class="smallText otherSmallText">(it's just its own thing)</span></label>
+      </div>
+      <div class="taskInfoInput relDiv">
         <span id="iconIt" class="IconI ${todo.icon}"></span>
+        <div class="underLining" id="taskTitle-underLining"></div>
         <input type="text" id="taskTitle" class="taskInfoInput" style="color:${todo.term == "showThing" ? `darkslategrey` : todo.color};" value="${todo.task ? todo.task : ""}">
         <span id="colorIt" class="typcn typcn-tag tagSpan ${todo.term == "showThing" ? `hidden` : ``}" style="color:${todo.color};"></span>
       </div>
@@ -2893,6 +2958,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   let trashIt = document.querySelector("#trashIt");
   let storeIt = document.querySelector("#storeIt");
   let taskTitle = document.querySelector("#taskTitle");
+  getUnderLiningWidth(taskTitle);
   let taskDetails = document.querySelector("#taskDetails");
   let urgeInput = document.querySelector("#urgeInput");
   let SupClickScreen = document.querySelector("#SupClickScreen");
@@ -3747,7 +3813,7 @@ function putDatesInWeek(date){
 };
 
 function roundFifteenTime(realTime){
-  console.log(realTime);
+  //console.log(realTime);
   let min = Number(realTime.substring(3));
   let hour = Number(realTime.substring(0, 2));
   if(min > 0 && min <= 7 ){

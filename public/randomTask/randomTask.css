@@ -249,7 +249,6 @@ input[type="radio"]{
   color: var(--tx-color);
 }
 #cloudIt{
-  position: absolute;
   margin: 0;
   font-size: 25px;
   line-height: 1em;
@@ -259,10 +258,12 @@ input[type="radio"]{
   z-index: 10;
 }
 .cloudTop{
+  position: absolute;
   top: 8px;
   right: 8px;
 }
 .cloudBottom{
+  position: fixed;
   bottom: 8px;
   right: 8px;
 }
@@ -1288,6 +1289,20 @@ input[name="showOptions"]:checked + label.showTypeLabel > i.showTick{
 .showTypeIconsC i{
   font-size: 22px;
   line-height: 23px;
+}
+.projetColorsDiv{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  align-content: space-around;
+  width: 230px;
+  padding: 5px;
+}
+.projetColorsDiv i{
+  font-size: 1.7em;
+}
+.wholeProjetDiv p{
+  margin-bottom: 0;
 }
 .underh5{
   margin: 0;

@@ -530,11 +530,6 @@ function updateArrowsColor(){
   //update arrows color
   document.querySelectorAll("section").forEach(section => {
     if(section.querySelector("input.listToggleInput")){
-      if(section.querySelectorAll("li").length > 0){
-        section.querySelector("span.listToggleChevron").classList.add("fullSection");
-      } else{
-        section.querySelector("span.listToggleChevron").classList.remove("fullSection");
-      };
       if(section.id == "limboSection" || section.id == "urgesSection"){
         if(section.querySelectorAll("li").length == 1){
           section.classList.remove("displayNone");
@@ -553,6 +548,18 @@ function updateArrowsColor(){
           section.querySelector("ul").classList.remove("listToggleList");
         };
       }; 
+      if(section.querySelectorAll("li").length > 0){
+        section.querySelector("span.listToggleChevron").classList.add("fullSection");
+      } else{
+        section.querySelector("span.listToggleChevron").classList.remove("fullSection");
+      };
+      
+    } else if(section.id == "oupsSection"){
+      if(section.querySelectorAll("li").length > 0){
+        section.classList.remove("displayNone");
+      } else if(section.querySelectorAll("li").length == 0){
+        section.classList.add("displayNone");
+      };
     };
   });
 };
@@ -908,9 +915,13 @@ function searchPage(){
     searchSwitch = false;
   });
 
-  document.querySelector("#searchClear").addEventListener("click", () => {
+  document.querySelector("#searchClearFilters").addEventListener("click", () => {
+    //nope = false;
+    searchSwitch = false;
+  });
+  document.querySelector("#searchClearResults").addEventListener("click", () => {
     document.querySelector("#searchFound").innerHTML = ``;
-    nope = false;
+    //nope = false;
     searchSwitch = false;
   });
 };
@@ -1430,6 +1441,7 @@ doneNextBtn.addEventListener("click", () => {
     gotItDone(doneId, "");
   };
   doneLi.remove();
+  updateCBC();
   //gotItDone(doneId);
   wheneverList.splice(num, 1);
   if(wheneverList.length == 0){
@@ -1464,6 +1476,7 @@ function checkEvent(emptyCheck, where){
     gotItDone(donedId, "");
   };
   li.remove();
+  updateCBC();
 };
 window.checkEvent = checkEvent;
 
@@ -2344,7 +2357,7 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
   let deadlineInput = document.querySelector("#deadlineInput");
   if(deadlineInput.value){
     todo.deadline = deadlineInput.value;
-    todo.tutto = document.querySelector('#tuttoUltimoGiornoInput').checked ? true : false;
+    todo.dlTutto = document.querySelector('#tuttoUltimoGiornoInput').checked ? true : false;
     if(!todo.tutto){
       let finoAlle = document.querySelector('input[type="time"].finoAlle');
       if(finoAlle && finoAlle.value){
@@ -2355,6 +2368,10 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
     } else{
       delete todo.finoAlle;
     };
+  } else if(!deadlineInput.value || deadlineInput.value == ""){
+    delete todo.deadline;
+    delete todo.dlTutto;
+    delete todo.finoAlle;
   };
 };
 
@@ -2375,8 +2392,9 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
 //todo.date
 //todo.line => "todoDay", "recurringDay", "noDay" ("doneDay" ne sert qu'à mettre le calendrier rouge)
 //todo.tutto => true/false si ça dure toute la journée ou si on considère 'dalle' et 'alle'
-//todo.deadline => date (string) du deadline
-//todo.finoAlle => heure (string) du deadline
+//todo.deadline => date (string) du deadline (if no deadline, delete)
+//todo.dlTutto => true/false if deadline is all day or not (if no deadline, delete)
+//todo.finoAlle => heure (string) du deadline (if no deadline, delete)
 //todo.dalle => time à laquelle ça commence aussi anciennement todo.time (pour les event)
 //todo.dalleRow = "00-00" rounded to fifteen
 //todo.alle => time à laquelle ça fini
@@ -2406,6 +2424,7 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
 //todo.recurry => true/false means it's one occurence of a recurring (calendar icon purple) (anciennement "recurry" in todo.line)
 //todo.out => true (le <li> du recurry a été créé) / false ou inexistant (le <li> n'a pas encore été créé)
 //todo.recurring => aucune idée à quoi ça sert...
+//todo.projet => wholeProjet (projet) or partProjet (partie d'un projet) or (notProjet or "" or delete)
 
 
 // *** RECURRING
@@ -2807,6 +2826,11 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   } else{
     myShows = `<h6>pssst... You've got no types of show... yet</h6>`;
   };
+  //THEY SHOULD ALL BE RADIOS!
+  let Pcolors = showTypeChoices.map((icon, idx) => {
+    return `<div class="showTypeIconsB projetColorChoix" data-index="${idx}"><i class="fa-solid fa-folder-closed" style="color:${icon.colorBG};"></i></div>`;
+  }).join("");
+  let projetColorsChoice = `<div class="projetColorsDiv">${Pcolors}</div>`;
   let projetNamesChoice;
   if(mySettings.myProjets && mySettings.myProjets.length > 0){
     let projetNames = mySettings.myProjets.map(projet => {
@@ -2845,7 +2869,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         <i class="fa-solid fa-trash-can cornerItChecked"></i>
       </label>
       <h5 class="taskInfoInput" style="margin-top: 40px;">Tell me more...</h5>
-      <div class="taskInfoInput relDiv">
+      <div id="projetSection" class="taskInfoInput relDiv">
         <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Projet</h5>
         <input class="myRadio" type="radio" name="projetOptions" id="wholeProjet" value="wholeProjet" ${todo.projet && todo.projet == "wholeProjet" ? `checked` : ``} />
         <label for="wholeProjet" class="termLabel"><span class="myRadio"></span><span>It's a whole big thing</span><br />
@@ -2853,8 +2877,8 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         <div class="wholeProjetDiv">
           <h5 style="margin: 5px 0 0 0;">Let's give it a label</h5>
           <div class="inDaySection" style="width: fit-content; margin-bottom: 10px;">
-            <p>Choose a color: </p>
-            <p>Choose a nickname: </p>
+            <p>Choose a color: ${projetColorsChoice}</p>
+            <p>Choose a nickname: <input id="projetNickInput" type="text"/></p>
           </div>
         </div>
         <input class="myRadio" type="radio" name="projetOptions" id="partProjet" value="partProjet" ${todo.projet && todo.projet == "partProjet" ? `checked` : ``} />
@@ -2990,8 +3014,10 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       taskInfoBtn.innerText = "Trash it!";
       copyIt.checked = false;
       doneIt.checked = false;
+      document.querySelector("#projetSection").classList.add("displayNone");
     } else{
       taskInfoBtn.innerText = "Save";
+      document.querySelector("#projetSection").classList.remove("displayNone");
     };
   });
   copyIt.addEventListener("click", () => {
@@ -3003,6 +3029,16 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       taskInfoBtn.innerText = "Save";
     };
   });
+  // *** PROJET
+  let newProjetColorBG;
+  let newProjetColorTX;
+  //THEY SHOULD ALL BE RADIOS!
+  // document.querySelectorAll(".projetColorChoix").forEach(btn => {
+  //   btn.addEventListener("click", (e) => {
+  //     newProjetColorBG = showTypeChoices[e.currentTarget.dataset.index].colorBG ;
+  //     newProjetColorTX = showTypeChoices[e.currentTarget.dataset.index].colorTX;
+  //   });
+  // });
   // *** COLOR
   //const colorList = ["orange", "red", "darkmagenta", "dodgerblue", "forestgreen", "darkslategrey"];
   let newcolor = todo.color;
@@ -3216,7 +3252,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       addShowTypeDiv.insertAdjacentHTML("afterend", `<h5 class="underh5">Ci serve anche un color!</h5>`);
     };
   });
-  if(where == "list"){
+  if(where == "list" || where == "searchScreen"){
     clickScreen.addEventListener("click", () => clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList));
   };
   
@@ -3280,7 +3316,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         delete todo.newShit;
       };
 
-      if(where == "list"){
+      if(where == "list" || where == "searchScreen"){
         parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
       };
 
@@ -3333,7 +3369,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       } else{
         listTasks.splice(todoIndex, 1);
       };
-      if(where == "list"){
+      if(where == "list" || where == "searchScreen"){
         parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
       };
     };
@@ -3347,6 +3383,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
     if(where == "searchScreen"){
       moving = false;
       taskInfo.remove();
+      clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
     }
     if(thisOne == "addForm"){
       scrollToSection(togoList);

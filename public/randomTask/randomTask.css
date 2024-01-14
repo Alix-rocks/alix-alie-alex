@@ -24,7 +24,7 @@ button:active{
   height: 100vh;
   top: 0;
   left: 0;
-  z-index: 500;
+  z-index: 5000;
 }
 .waitingScreen{
   background-color: var(--bg-color);
@@ -635,10 +635,10 @@ h5.taskInfoInput{
 #longTerm:checked ~ div.urgeDiv{
   display: block;
 }
-#wholeProjet:checked ~ div.wholeProjetDiv{
+#wholeProjetInput:checked ~ div.wholeProjetDiv{
   display: block;
 }
-#partProjet:checked ~ div.partProjetDiv{
+#partProjetInput:checked ~ div.partProjetDiv{
   display: block;
 }
 #taskInfoBtn{
@@ -900,15 +900,18 @@ li .textDone{
   flex-grow: 1;
   margin: 0 7px;
 }
-li .projetOnglet{
+.projetOnglet, .projetLiOnglet{
   position: absolute;
   top: -13px;
-  left: 30px;
+  left: 5px;
   border: 0.5px solid var(--tx-color);
   border-radius: 2px 8px 0 0;
   font-size: 10px;
   padding: 2px 5px 0 3px;
   line-height: 1em;
+}
+.projetLiOnglet{
+  left: 30px;
 }
 .selectedTask{
   background-color: rgba(211, 211, 211, .5);
@@ -955,6 +958,12 @@ span.normalText{
   width: 15px;
   border-radius: 25px;
   border: 1px solid var(--tx-color);
+}
+.myRadioBox{
+  border-radius: 3px;
+}
+input.myRadio{
+  display: none;
 }
 /* input[name="whatDay"]:checked + label span.myRadio{ */
 input.myRadio:checked + label span.myRadio{
@@ -1278,6 +1287,9 @@ input[name="showOptions"]:checked + label.showTypeLabel > i.showTick{
 .showTypeIconsB:hover{
   background-color: rgba(47, 79, 79, .3);
 }
+input[name="projetColorChoices"]:checked + label{
+  background-color: rgba(47, 79, 79, .3);
+}
 .showTypeIconsC{
   width: 25px;
   height: 25px;
@@ -1302,7 +1314,7 @@ input[name="showOptions"]:checked + label.showTypeLabel > i.showTick{
   font-size: 1.7em;
 }
 .wholeProjetDiv p{
-  margin-bottom: 0;
+  margin: 0;
 }
 .underh5{
   margin: 0;

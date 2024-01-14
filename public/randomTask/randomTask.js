@@ -123,7 +123,8 @@ let mySettings = {
     clockIn: "10:00",
     clockOut: "02:00"
   }],
-  myShowTypes: []
+  myShowTypes: [],
+  myProjets: []
 };
 //localStorage.mySettings = JSON.stringify(mySettings);
 let cBC;
@@ -1000,7 +1001,7 @@ function todoCreation(todo){
       // document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.term == "showThing" ? `class="showLi" style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``} ${todo.projet ? `class="projetLi" style="outline-color: ${todo.PColorBG};"` : ``}>
       //   <i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>
       //   <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
-      //   ${todo.projet ? `<div class="projetOnglet" style="background-color:${todo.PColorBG}; color:${todo.PColorTX};">${todo.projetName}</div>` : ``}
+      //   ${todo.projet  && todo.projet == "wholeProjet" ? `<div class="projetLiOnglet" style="background-color:${todo.PColorBG}; color:${todo.PColorTX};">${todo.Pnickname}</div>` : ``}
       //   <div class="textDiv"><span onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" class="text" ${todo.term == "showThing" ? `` : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
       //   <input type="time" class="displayNone"/></div>
       //   
@@ -2425,6 +2426,15 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
 //todo.out => true (le <li> du recurry a été créé) / false ou inexistant (le <li> n'a pas encore été créé)
 //todo.recurring => aucune idée à quoi ça sert...
 //todo.projet => wholeProjet (projet) or partProjet (partie d'un projet) or (notProjet or "" or delete)
+//todo.PColorBG => couleur du background du projet label
+//todo.PColorTX => couleur du texte du projet label
+//todo.Pnickname => nickname du projet à mettre dans le label
+//mySettings.myProjets.nickname => nickname for the label
+//mySettings.myProjets.colorBG => background-color
+//mySettings.myProjets.colorTX => color (text)
+//mySettings.myShowTypes.name
+//mySettings.myShowTypes.colorBG => background-color
+//mySettings.myShowTypes.colorTX => color (text)
 
 
 // *** RECURRING
@@ -2826,17 +2836,19 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   } else{
     myShows = `<h6>pssst... You've got no types of show... yet</h6>`;
   };
-  //THEY SHOULD ALL BE RADIOS!
+
   let Pcolors = showTypeChoices.map((icon, idx) => {
-    return `<div class="showTypeIconsB projetColorChoix" data-index="${idx}"><i class="fa-solid fa-folder-closed" style="color:${icon.colorBG};"></i></div>`;
+    return `<input id="projetColor${idx}" type="radio" name="projetColorChoices" class="displayNone" value="${idx}" ${todo.PColorBG && todo.PColorBG == icon.colorBG ? "checked" : ""} /><label for="projetColor${idx}" class="showTypeIconsB projetColorChoix"><i class="fa-solid fa-folder-closed" style="color:${icon.colorBG};"></i></label>`;
   }).join("");
   let projetColorsChoice = `<div class="projetColorsDiv">${Pcolors}</div>`;
   let projetNamesChoice;
   if(mySettings.myProjets && mySettings.myProjets.length > 0){
-    let projetNames = mySettings.myProjets.map(projet => {
-      return `<option style="background-color:${projet.colorBG}; color:${projet.colorTX};" value="${projet.nickname}">${projet.nickname}</option>`;
+    console.log("more than 0 projet");
+    let projetNames = mySettings.myProjets.map((projet, idx) => {
+      return `<option style="background-color:${projet.colorBG}; color:${projet.colorTX};" value="${idx}" ${todo.Pnickname && todo.Pnickname == projet.nickname ? `selected` : ``}>${projet.nickname}</option>`;
     }).join("");
     projetNamesChoice = `<select id="myProjetNames">
+    <option value="null">Choose one</option>
     ${projetNames}
   </select>`;
   } else{
@@ -2871,30 +2883,32 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       <h5 class="taskInfoInput" style="margin-top: 40px;">Tell me more...</h5>
       <div id="projetSection" class="taskInfoInput relDiv">
         <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Projet</h5>
-        <input class="myRadio" type="radio" name="projetOptions" id="wholeProjet" value="wholeProjet" ${todo.projet && todo.projet == "wholeProjet" ? `checked` : ``} />
-        <label for="wholeProjet" class="termLabel"><span class="myRadio"></span><span>It's a whole big thing</span><br />
+        <input class="myRadio" type="checkbox" name="projetOptions" id="wholeProjetInput" value="wholeProjet" ${todo.projet && todo.projet == "wholeProjet" ? `checked` : ``} />
+        <label for="wholeProjetInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's a whole big thing</span><br />
         <span class="smallText otherSmallText">with lots of little things in it</span></label>
         <div class="wholeProjetDiv">
-          <h5 style="margin: 5px 0 0 0;">Let's give it a label</h5>
-          <div class="inDaySection" style="width: fit-content; margin-bottom: 10px;">
+          <h5 style="margin: 5px 0 0 0;">${todo.projet && todo.projet == "wholeProjet" ? `Wanna change the label?` : `Let's give it a label`}</h5>
+          <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
             <p>Choose a color: ${projetColorsChoice}</p>
-            <p>Choose a nickname: <input id="projetNickInput" type="text"/></p>
+            <p>Choose a nickname:</p>
+            <input id="projetNickInput" type="text" value="${todo.Pnickname ? todo.Pnickname : ""}"/>
           </div>
         </div>
-        <input class="myRadio" type="radio" name="projetOptions" id="partProjet" value="partProjet" ${todo.projet && todo.projet == "partProjet" ? `checked` : ``} />
-        <label for="partProjet" class="termLabel"><span class="myRadio"></span><span>It's part of something bigger</span><br />
+        <input class="myRadio" type="checkbox" name="projetOptions" id="partProjetInput" value="partProjet" ${todo.projet && todo.projet == "partProjet" ? `checked` : ``} />
+        <label for="partProjetInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's part of something bigger</span><br />
         <span class="smallText otherSmallText">than itself</span></label>
         <div class="partProjetDiv">
           <h5 style="margin: 5px 0 0 0;">What projet is it a part of?</h5>
-          <div class="inDaySection" style="width: fit-content; margin-bottom: 10px;">
+          <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
             ${projetNamesChoice}
           </div>
         </div>
-        <input class="myRadio" type="radio" name="projetOptions" id="notProjet" value="notProjet" ${!todo.projet || todo.projet == "" || todo.projet == "notProjet" ? `checked` : ``} />
-        <label for="notProjet" class="termLabel"><span class="myRadio"></span><span>None of the above</span><br />
+        <input class="myRadio" type="radio" name="projetOptions" id="notProjetInput" value="notProjet" ${!todo.projet || todo.projet == "" || todo.projet == "notProjet" ? `checked` : ``} />
+        <label for="notProjetInput" class="termLabel"><span class="myRadio"></span><span>None of the above</span><br />
         <span class="smallText otherSmallText">(it's just its own thing)</span></label>
       </div>
       <div class="taskInfoInput relDiv">
+        ${todo.projet && todo.projet !== "notProjet" ? `<div class="projetOnglet" style="background-color:${todo.PColorBG}; color:${todo.PColorTX};">${todo.Pnickname}</div>` : ``}
         <span id="iconIt" class="IconI ${todo.icon}"></span>
         <div class="underLining" id="taskTitle-underLining"></div>
         <input type="text" id="taskTitle" class="taskInfoInput" style="color:${todo.term == "showThing" ? `darkslategrey` : todo.color};" value="${todo.task ? todo.task : ""}">
@@ -3032,13 +3046,76 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   // *** PROJET
   let newProjetColorBG;
   let newProjetColorTX;
-  //THEY SHOULD ALL BE RADIOS!
-  // document.querySelectorAll(".projetColorChoix").forEach(btn => {
-  //   btn.addEventListener("click", (e) => {
-  //     newProjetColorBG = showTypeChoices[e.currentTarget.dataset.index].colorBG ;
-  //     newProjetColorTX = showTypeChoices[e.currentTarget.dataset.index].colorTX;
-  //   });
-  // });
+  let newProjetNickname;
+  let myProjet;
+  document.querySelectorAll('input[name="projetColorChoices"]').forEach(radio => {
+    radio.addEventListener("click", () => {
+      newProjetColorBG = showTypeChoices[radio.value].colorBG;
+      newProjetColorTX = showTypeChoices[radio.value].colorTX;
+      if(!document.querySelector(".projetOnglet")){
+        taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${newProjetColorBG}; color:${newProjetColorTX};">${newProjetNickname ? newProjetNickname : "Projet"}</div>`);
+      } else{
+        document.querySelector(".projetOnglet").style.backgroundColor = newProjetColorBG;
+        document.querySelector(".projetOnglet").style.color = newProjetColorTX;
+      };
+    });
+  });
+  let projetNickInput = document.querySelector("#projetNickInput");
+  projetNickInput.addEventListener("change", () => {
+    //make sure that nickname doesn't already exist! There can be only one of each!!
+    newProjetNickname = projetNickInput.value;
+    if(!document.querySelector(".projetOnglet")){
+      taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${newProjetColorBG ? newProjetColorBG : "var(--bg-color)"}; color:${newProjetColorTX ? newProjetColorTX : "var(--tx-color)"};">${newProjetNickname !== "" ? newProjetNickname : "Projet"}</div>`);
+    } else{
+      document.querySelector(".projetOnglet").textContent = newProjetNickname !== "" ? newProjetNickname : "Projet";
+    };
+  });
+  if(mySettings.myProjets && mySettings.myProjets.length > 0){
+    let myProjetNames = document.querySelector("#myProjetNames");
+    myProjetNames.addEventListener("change", () => {
+      if(myProjetNames.value !== "null"){
+        myProjet = mySettings.myProjets[myProjetNames.value];
+        if(!document.querySelector(".projetOnglet")){
+          taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${myProjet.colorBG}; color:${myProjet.colorTX};">${myProjet.nickname}</div>`);
+        } else{
+          document.querySelector(".projetOnglet").style.backgroundColor = myProjet.colorBG;
+          document.querySelector(".projetOnglet").style.color = myProjet.colorTX;
+          document.querySelector(".projetOnglet").textContent = myProjet.nickname;
+        };
+      };
+    });
+  };
+  document.querySelectorAll('input[name="projetOptions"]').forEach(projet => {
+    projet.addEventListener("click", () => {
+      if(projet.value == "wholeProjet"){
+        document.querySelector("#notProjetInput").checked = false;
+        if(!document.querySelector(".projetOnglet")){
+          taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${newProjetColorBG ? newProjetColorBG : "var(--bg-color)"}; color:${newProjetColorTX ? newProjetColorTX : "var(--tx-color)"};">${newProjetNickname ? newProjetNickname : "Projet"}</div>`);
+        } else{
+          document.querySelector(".projetOnglet").style.backgroundColor = newProjetColorBG ? newProjetColorBG : "var(--bg-color)";
+          document.querySelector(".projetOnglet").style.color = newProjetColorTX ? newProjetColorTX : "var(--tx-color)";
+          document.querySelector(".projetOnglet").textContent = newProjetNickname ? newProjetNickname : "Projet";
+        };
+      } else if(projet.value == "partProjet"){
+        document.querySelector("#notProjetInput").checked = false;
+        if(!document.querySelector(".projetOnglet")){
+          taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${myProjet ? myProjet.colorBG : "var(--bg-color)"}; color:${myProjet ? myProjet.colorTX : "var(--tx-color)"};">${myProjet ? myProjet.nickname : "Projet"}</div>`);
+        } else{
+          document.querySelector(".projetOnglet").style.backgroundColor = myProjet ? myProjet.colorBG : "var(--bg-color)";
+          document.querySelector(".projetOnglet").style.color = myProjet ? myProjet.colorTX : "var(--tx-color)";
+          document.querySelector(".projetOnglet").textContent = myProjet ? myProjet.nickname : "Projet";
+        };
+      } else if(projet.value == "notProjet"){
+        document.querySelector("#wholeProjetInput").checked = false;
+        document.querySelector("#partProjetInput").checked = false;
+        if(document.querySelector(".projetOnglet")){
+          document.querySelector(".projetOnglet").remove();
+        };
+      };
+    });
+  });
+  
+  
   // *** COLOR
   //const colorList = ["orange", "red", "darkmagenta", "dodgerblue", "forestgreen", "darkslategrey"];
   let newcolor = todo.color;
@@ -3268,12 +3345,61 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         showTypeCreationConfirm.style.color = "red";
         newSTing = false;
       };
+      todo.projet  = document.querySelector('input[name="projetOptions"]:checked').value;
+      if(todo.projet == "wholeProjet"){
+        todo.PColorBG = newProjetColorBG ? newProjetColorBG : todo.PColorBG ? todo.PColorBG : "";
+        todo.PColorTX = newProjetColorTX ? newProjetColorTX : todo.PColorTX ? todo.PColorTX : "";
+        todo.Pnickname = newProjetNickname ? newProjetNickname : todo.Pnickname ? todo.Pnickname : "";
+        if(todo.PColorBG == "" || todo.PColorTX == "" || todo.Pnickname == ""){
+          console.log("should stop");
+          e.preventDefault();//This is not working
+          e.currentTarget.insertAdjacentHTML("beforebegin", `<h5>Something's missing...</h5>`);
+        } else{
+          if(mySettings.myProjets && mySettings.myProjets.length > 0){
+            let indexP = mySettings.myProjets.findIndex(projet => projet.nickname == todo.Pnickname);
+            if(indexP && indexP >= 0){
+              console.log("already existed");
+              mySettings.myProjets[indexP].colorBG = todo.PColorBG;
+              mySettings.myProjets[indexP].colorTX = todo.PColorTX;
+            } else{
+              console.log("didn't exist");
+              let myNewProjet = {
+                nickname: todo.Pnickname,
+                colorBG: todo.PColorBG,
+                colorTX: todo.PColorTX
+              };
+              mySettings.myProjets.push(myNewProjet);
+            };
+          } else{
+            console.log("the whole thing didn't exist");
+            let myNewProjet = {
+              nickname: todo.Pnickname,
+              colorBG: todo.PColorBG,
+              colorTX: todo.PColorTX
+            };
+            mySettings.myProjets.push(myNewProjet);
+            console.log(mySettings);
+          };
+          localStorage.mySettings = JSON.stringify(mySettings);
+        };
+      } else if(todo.projet == "partProjet"){
+        todo.PColorBG = myProjet.colorBG;
+        todo.PColorTX = myProjet.colorTX;
+        todo.Pnickname = myProjet.nickname;
+      } else if(todo.projet == "notProjet"){
+        delete todo.PColorBG;
+        delete todo.PColorTX;
+        delete todo.Pnickname;
+      };
+  
       todo.task = taskTitle.value.startsWith("*") ? taskTitle.value.substring(1) : taskTitle.value;
+
       if(taskDetails.value !== ""){
         todo.info = taskDetails.value;
       } else{
         delete todo.info;
       };
+
       if((urgeInput.value == "" || urgeInput.value == 0) || (todo.term !== "oneTime" && todo.term !== "longTerm")){
         delete todo.urge;
         delete todo.urgeNum;
@@ -3283,11 +3409,14 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         todo.urgeNum = urgeInput.value;
         colorUrges("next");
       };
+
       let whereCheck = document.querySelector("#whereHomeInput").checked ? true : false;
       let whereText = document.querySelector("#whereInput");
       todo.where = whereCheck ? "home" : whereText.value;
+
       todo.color = newcolor;
       todo.icon = newicon;
+
       todo.term = document.querySelector('input[name="termOptions"]:checked').value;
       if(todo.term == "showThing"){
         let chosen = false;
@@ -3364,6 +3493,12 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       
       
     } else if(trashIt.checked){
+      //ALSO TRASH THE PROJET IN MYPROJETS!
+      if(todo.projet == "wholeProjet"){
+        let indexP = mySettings.myProjets.findIndex(projet => projet.nickname == todo.Pnickname);
+        mySettings.myProjets.splice(indexP, 1);
+        localStorage.mySettings = JSON.stringify(mySettings);
+      } //Are partProjets in the wholeProjet or not?!
       if(todo.recurry && todo.recId){
         listTasks[recIndex].recurrys.splice(todoIndex, 1);
       } else{
@@ -3385,8 +3520,11 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       taskInfo.remove();
       clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
     }
-    if(thisOne == "addForm"){
+    console.log(togoList);
+    if(thisOne == "addForm" && togoList !== ""){
       scrollToSection(togoList);
+      taskInfo.remove();
+    } else if(thisOne == "addForm" && togoList == ""){
       taskInfo.remove();
     } else if(where == "list" && togoList !== ""){
       moving = true;
@@ -3948,7 +4086,7 @@ function createWeeklyshow(show){
   let add;
   if(show.tutto || !show.dalle || show.dalle == ""){
     div = document.querySelector(`[data-tutto="${day}"]`);
-    add = `<div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="taskAddAllInfo(this, 'calWeekPage', 'mod'); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `background-color: var(--bg-color); color:${show.color}; border:none;`}">
+    add = `<div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="taskAddAllInfo(this, 'calWeekPage', 'mod'); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `background-color: var(--bg-color); color:${show.color}; border:none;`}">${show.info ? `*` : ``}
     ${show.task} <i class="IconI ${show.icon}"></i>
   </div>`;
   } else{
@@ -3965,7 +4103,7 @@ function createWeeklyshow(show){
     add = `
     ${primaDiv}
     <div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="taskAddAllInfo(this, 'calWeekPage', 'mod'); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `color:${show.color}; border:none;`}  grid-column:col-${day}; grid-row:row-${show.dalleRow}${show.term == "reminder" ? `` : `/row-${show.alleRow}`};">
-      ${show.task}<br />
+    ${show.info ? `*` : ``}${show.task}<br />
       <i class="IconI ${show.icon}"></i>
     </div>
     ${dopoDiv}
@@ -4126,8 +4264,11 @@ function updateWeek(){
 window.onload = () => {
   setTimeout(function() {
     document.getElementById("loadingScreen").classList.replace("waitingScreen", "displayNone");
-  }, 1000);
+  }, 500);
 };
+// window.onload = () => {
+//   document.getElementById("loadingScreen").classList.replace("waitingScreen", "displayNone");
+// };
 
 function busyZoneCreation(todo){
   //don't forget to add the sleepAreas and mealAreas too, in the scheduling weekly

@@ -2881,34 +2881,8 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         <i class="fa-solid fa-trash-can cornerItChecked"></i>
       </label>
       <h5 class="taskInfoInput" style="margin-top: 40px;">Tell me more...</h5>
-      <div id="projetSection" class="taskInfoInput relDiv">
-        <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Projet</h5>
-        <input class="myRadio" type="checkbox" name="projetOptions" id="wholeProjetInput" value="wholeProjet" ${todo.projet && todo.projet == "wholeProjet" ? `checked` : ``} />
-        <label for="wholeProjetInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's a whole big thing</span><br />
-        <span class="smallText otherSmallText">with lots of little things in it</span></label>
-        <div class="wholeProjetDiv">
-          <h5 style="margin: 5px 0 0 0;">${todo.projet && todo.projet == "wholeProjet" ? `Wanna change the label?` : `Let's give it a label`}</h5>
-          <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
-            <p>Choose a color: ${projetColorsChoice}</p>
-            <p>Choose a nickname:</p>
-            <input id="projetNickInput" type="text" value="${todo.Pnickname ? todo.Pnickname : ""}"/>
-          </div>
-        </div>
-        <input class="myRadio" type="checkbox" name="projetOptions" id="partProjetInput" value="partProjet" ${todo.projet && todo.projet == "partProjet" ? `checked` : ``} />
-        <label for="partProjetInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's part of something bigger</span><br />
-        <span class="smallText otherSmallText">than itself</span></label>
-        <div class="partProjetDiv">
-          <h5 style="margin: 5px 0 0 0;">What projet is it a part of?</h5>
-          <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
-            ${projetNamesChoice}
-          </div>
-        </div>
-        <input class="myRadio" type="radio" name="projetOptions" id="notProjetInput" value="notProjet" ${!todo.projet || todo.projet == "" || todo.projet == "notProjet" ? `checked` : ``} />
-        <label for="notProjetInput" class="termLabel"><span class="myRadio"></span><span>None of the above</span><br />
-        <span class="smallText otherSmallText">(it's just its own thing)</span></label>
-      </div>
       <div class="taskInfoInput relDiv">
-        ${todo.projet && todo.projet !== "notProjet" ? `<div class="projetOnglet" style="background-color:${todo.PColorBG}; color:${todo.PColorTX};">${todo.Pnickname}</div>` : ``}
+        ${todo.wholeProjet || todo.partProjet ? `<div class="projetOnglet" style="background-color:${todo.PColorBG}; color:${todo.PColorTX};">${todo.Pnickname}</div>` : ``}
         <span id="iconIt" class="IconI ${todo.icon}"></span>
         <div class="underLining" id="taskTitle-underLining"></div>
         <input type="text" id="taskTitle" class="taskInfoInput" style="color:${todo.term == "showThing" ? `darkslategrey` : todo.color};" value="${todo.task ? todo.task : ""}">
@@ -2918,7 +2892,28 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         <textarea id="taskDetails" class="taskInfoInput">${todo.info ? todo.info : ""}</textarea>
         <h5 class="taskInfoInput">Tell me what...</h5>
         <div class="taskInfoInput relDiv">
-        <h5 class="taskInfoSubTitle" style="margin: 0;">Reminder</h5>
+          <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Projet</h5>
+          <input class="myRadio" type="checkbox" name="projetOptions" id="wholeProjetInput" value="wholeProjet" ${todo.wholeProjet ? `checked` : ``} />
+          <label for="wholeProjetInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's a whole big thing</span><br />
+          <span class="smallText otherSmallText">with lots of little things in it</span></label>
+          <div class="wholeProjetDiv">
+            <h5 style="margin: 5px 0 0 0;">${todo.wholeProjet ? `Wanna change the label?` : `Let's give it a label`}</h5>
+            <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
+              <p>Choose a color: ${projetColorsChoice}</p>
+              <p>Choose a nickname:</p>
+              <input id="projetNickInput" type="text" value="${todo.Pnickname ? todo.Pnickname : ""}"/>
+            </div>
+          </div>
+          <input class="myRadio" type="checkbox" name="projetOptions" id="partProjetInput" value="partProjet" ${todo.partProjet ? `checked` : ``} />
+          <label for="partProjetInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's part of something bigger</span><br />
+          <span class="smallText otherSmallText">than itself</span></label>
+          <div class="partProjetDiv">
+            <h5 style="margin: 5px 0 0 0;">What projet is it a part of?</h5>
+            <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
+              ${projetNamesChoice}
+            </div>
+          </div>
+          <h5 class="taskInfoSubTitle" style="margin: 0;">Reminder</h5>
           <input class="myRadio" type="radio" name="termOptions" id="reminder" value="reminder" ${todo.term == "reminder" ? `checked` : ``} />
           <label for="reminder" class="termLabel"><span class="myRadio"></span><span>It's such a special day...</span></label>
           <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Habit</h5>
@@ -2987,6 +2982,9 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       <button class="ScreenBtn2" id="taskCancelBtn">Cancel</button>
     </div>
   </div>`;
+  //<input class="myRadio" type="radio" name="projetOptions" id="notProjetInput" value="notProjet" ${!todo.wholeProjet && !todo.partProjet ? `checked` : ``} />
+  //<label for="notProjetInput" class="termLabel"><span class="myRadio"></span><span>None of the above</span><br />
+  //  <span class="smallText otherSmallText">(it's just its own thing)</span></label>
   div.insertAdjacentHTML("beforeend", taskAllInfo); //different in month/week 
   let calendarHome = document.querySelector("#calendarHome");
   creatingCalendar(todo, calendarHome, "inHome");

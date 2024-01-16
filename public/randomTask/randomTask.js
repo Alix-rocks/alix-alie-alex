@@ -631,7 +631,7 @@ function resetCBC(){
     <div class="clockingDiv">
       ${clockingOptions}
     </div>
-    <button id="settingsBtn" class="ScreenBtn1">yep <span class="typcn typcn-thumbs-up" style="padding: 0;"></span></button>
+    <button id="settingsBtn" class="ScreenBtn1">yep <span class="typcn typcn-thumbs-up" style="padding: 0;font-size: 1em;"></span></button>
     <button id="cancelBtn" class="ScreenBtn2">Cancel</button>`;
 
     let switchModeSlider = document.querySelector("#switchModeSlider");
@@ -2890,8 +2890,13 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       </div>
       <div id="trashedArea">
         <textarea id="taskDetails" class="taskInfoInput">${todo.info ? todo.info : ""}</textarea>
-        <h5 class="taskInfoInput">Tell me what...</h5>
-        <div class="taskInfoInput relDiv">
+        <input id="tellWhatInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="tellWhatInput" class="listToggleLabel taskInfoSectionLabel">
+            <h5 class="topList">Tell me what...</h5>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <div class="listToggleList taskInfoInput relDiv">
           <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Projet</h5>
           <input class="myRadio" type="checkbox" name="projetOptions" id="wholeProjetInput" value="wholeProjet" ${todo.wholeProjet ? `checked` : ``} />
           <label for="wholeProjetInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's a whole big thing</span><br />
@@ -2956,27 +2961,44 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
             </div>
             
           </div>
+          </div>
         </div>
-        <h5 class="taskInfoInput" style="margin-top: 20px;">Tell me where...</h5>
-        <div class="inDaySection taskInfoInput" style="width: -webkit-fill-available; max-width: 280px;">
-          <input id="whereHomeInput" type="checkbox" class="tuttoGiornoInput cossin" ${(todo.where && todo.where == "home") ? `checked` : (todo.where && todo.where !== "home") ? `` : `checked`} />
-          <div class="calendarInsideMargin tuttoGiornoDiv" style="justify-content: flex-start;">
-            <label for="whereHomeInput" class="slideZone">
-              <div class="slider">
-                <span class="si">Sì</span>
-                <span class="no">No</span>
+        <input id="tellWhereInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="tellWhereInput" class="listToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
+            <h5 class="topList">Tell me where...</h5>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <div class="listToggleList taskInfoInput relDiv">
+            <div class="inDaySection taskInfoInput" style="width: -webkit-fill-available; max-width: 280px;">
+              <input id="whereHomeInput" type="checkbox" class="tuttoGiornoInput cossin" ${(todo.where && todo.where == "home") ? `checked` : (todo.where && todo.where !== "home") ? `` : `checked`} />
+              <div class="calendarInsideMargin tuttoGiornoDiv" style="justify-content: flex-start;">
+                <label for="whereHomeInput" class="slideZone">
+                  <div class="slider">
+                    <span class="si">Sì</span>
+                    <span class="no">No</span>
+                  </div>
+                </label>
+                <p id="hshText" style="margin: 0 0 0 10px;">Home Sweet Home</p>
               </div>
-            </label>
-            <p id="hshText" style="margin: 0 0 0 10px;">Home Sweet Home</p>
-          </div>
-          <div class="noneTuttoGiornoDiv calendarInsideMargin">
-            <label for="whereInput" style="display: block;">Destination:</label>
-            <textarea id="whereInput" style="width: 100%; margin-bottom: 10px;">${todo.where && todo.where !== "home" ? todo.where : ``}</textarea>
-            <p style="text-align:right; margin:0;"><button onclick="copyText()"><i class="fa-regular fa-clipboard"></i></button></p>
+              <div class="noneTuttoGiornoDiv calendarInsideMargin">
+                <label for="whereInput" style="display: block;">Destination:</label>
+                <textarea id="whereInput" style="width: 100%; margin-bottom: 10px;">${todo.where && todo.where !== "home" ? todo.where : ``}</textarea>
+                <p style="text-align:right; margin:0;"><button onclick="copyText()"><i class="fa-regular fa-clipboard"></i></button></p>
+              </div>
+            </div>
           </div>
         </div>
-        <h5 class="taskInfoInput" style="margin-top: 20px;">Tell me when...</h5>
-        <div id="calendarHome"></div>
+        <input id="tellWhenInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="tellWhenInput" class="listToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
+            <h5 class="topList">Tell me when...</h5>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <div class="listToggleList relDiv">
+            <div id="calendarHome"></div>
+          </div>
+        </div>
       </div>
       <button id="taskInfoBtn">Save</button>
       <button class="ScreenBtn2" id="taskCancelBtn">Cancel</button>
@@ -3343,52 +3365,52 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         showTypeCreationConfirm.style.color = "red";
         newSTing = false;
       };
-      todo.projet  = document.querySelector('input[name="projetOptions"]:checked').value;
-      if(todo.projet == "wholeProjet"){
-        todo.PColorBG = newProjetColorBG ? newProjetColorBG : todo.PColorBG ? todo.PColorBG : "";
-        todo.PColorTX = newProjetColorTX ? newProjetColorTX : todo.PColorTX ? todo.PColorTX : "";
-        todo.Pnickname = newProjetNickname ? newProjetNickname : todo.Pnickname ? todo.Pnickname : "";
-        if(todo.PColorBG == "" || todo.PColorTX == "" || todo.Pnickname == ""){
-          console.log("should stop");
-          e.preventDefault();//This is not working
-          e.currentTarget.insertAdjacentHTML("beforebegin", `<h5>Something's missing...</h5>`);
-        } else{
-          if(mySettings.myProjets && mySettings.myProjets.length > 0){
-            let indexP = mySettings.myProjets.findIndex(projet => projet.nickname == todo.Pnickname);
-            if(indexP && indexP >= 0){
-              console.log("already existed");
-              mySettings.myProjets[indexP].colorBG = todo.PColorBG;
-              mySettings.myProjets[indexP].colorTX = todo.PColorTX;
-            } else{
-              console.log("didn't exist");
-              let myNewProjet = {
-                nickname: todo.Pnickname,
-                colorBG: todo.PColorBG,
-                colorTX: todo.PColorTX
-              };
-              mySettings.myProjets.push(myNewProjet);
-            };
-          } else{
-            console.log("the whole thing didn't exist");
-            let myNewProjet = {
-              nickname: todo.Pnickname,
-              colorBG: todo.PColorBG,
-              colorTX: todo.PColorTX
-            };
-            mySettings.myProjets.push(myNewProjet);
-            console.log(mySettings);
-          };
-          localStorage.mySettings = JSON.stringify(mySettings);
-        };
-      } else if(todo.projet == "partProjet"){
-        todo.PColorBG = myProjet.colorBG;
-        todo.PColorTX = myProjet.colorTX;
-        todo.Pnickname = myProjet.nickname;
-      } else if(todo.projet == "notProjet"){
-        delete todo.PColorBG;
-        delete todo.PColorTX;
-        delete todo.Pnickname;
-      };
+      // todo.projet  = document.querySelector('input[name="projetOptions"]:checked').value;
+      // if(todo.projet == "wholeProjet"){
+      //   todo.PColorBG = newProjetColorBG ? newProjetColorBG : todo.PColorBG ? todo.PColorBG : "";
+      //   todo.PColorTX = newProjetColorTX ? newProjetColorTX : todo.PColorTX ? todo.PColorTX : "";
+      //   todo.Pnickname = newProjetNickname ? newProjetNickname : todo.Pnickname ? todo.Pnickname : "";
+      //   if(todo.PColorBG == "" || todo.PColorTX == "" || todo.Pnickname == ""){
+      //     console.log("should stop");
+      //     e.preventDefault();//This is not working
+      //     e.currentTarget.insertAdjacentHTML("beforebegin", `<h5>Something's missing...</h5>`);
+      //   } else{
+      //     if(mySettings.myProjets && mySettings.myProjets.length > 0){
+      //       let indexP = mySettings.myProjets.findIndex(projet => projet.nickname == todo.Pnickname);
+      //       if(indexP && indexP >= 0){
+      //         console.log("already existed");
+      //         mySettings.myProjets[indexP].colorBG = todo.PColorBG;
+      //         mySettings.myProjets[indexP].colorTX = todo.PColorTX;
+      //       } else{
+      //         console.log("didn't exist");
+      //         let myNewProjet = {
+      //           nickname: todo.Pnickname,
+      //           colorBG: todo.PColorBG,
+      //           colorTX: todo.PColorTX
+      //         };
+      //         mySettings.myProjets.push(myNewProjet);
+      //       };
+      //     } else{
+      //       console.log("the whole thing didn't exist");
+      //       let myNewProjet = {
+      //         nickname: todo.Pnickname,
+      //         colorBG: todo.PColorBG,
+      //         colorTX: todo.PColorTX
+      //       };
+      //       mySettings.myProjets.push(myNewProjet);
+      //       console.log(mySettings);
+      //     };
+      //     localStorage.mySettings = JSON.stringify(mySettings);
+      //   };
+      // } else if(todo.projet == "partProjet"){
+      //   todo.PColorBG = myProjet.colorBG;
+      //   todo.PColorTX = myProjet.colorTX;
+      //   todo.Pnickname = myProjet.nickname;
+      // } else if(todo.projet == "notProjet"){
+      //   delete todo.PColorBG;
+      //   delete todo.PColorTX;
+      //   delete todo.Pnickname;
+      // };
   
       todo.task = taskTitle.value.startsWith("*") ? taskTitle.value.substring(1) : taskTitle.value;
 
@@ -3511,14 +3533,12 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
     updateWeek();
     updateMonth();
     
-    //for searchFound moving = false!
-    //
     if(where == "searchScreen"){
       moving = false;
       taskInfo.remove();
       clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
     }
-    console.log(togoList);
+    //console.log(togoList);
     if(thisOne == "addForm" && togoList !== ""){
       scrollToSection(togoList);
       taskInfo.remove();

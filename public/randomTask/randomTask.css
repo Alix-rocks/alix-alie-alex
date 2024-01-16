@@ -703,20 +703,17 @@ h5.taskInfoInput{
   overflow: hidden;
 }
 
-h3.topList{
+.topList{
   margin: 0;
 }
-h3.topList span.topListTitle{
+.topList span.topListTitle{
   text-decoration: underline;
 }
-h3.topList span.topListDate{
+.topList span.topListDate{
   text-decoration: none;
   font-size: .8em;
 }
-h5.topList{
-  margin: 0;
-}
-h4.subList{
+.subList{
   color: slategrey;
   width: 100%;
   border-bottom: 1px dotted slategrey;
@@ -795,7 +792,10 @@ li i{
   text-align: center;
   flex-shrink: 0;
 }
-li .typcn, #taskInfo .typcn{
+/* li .typcn, #taskInfo .typcn{
+  font-size: 1.5em;
+} */
+.typcn{
   font-size: 1.5em;
 }
 li .emptyCheck{
@@ -1365,6 +1365,15 @@ input[name="projetColorChoices"]:checked + label{
   visibility: visible;
   min-height: fit-content;
   height: fit-content;
+}
+.taskInfoSectionLabel{
+  padding: 0 10px;
+}
+.taskInfoSectionLabel > .listToggleChevron{
+  font-size: 1.3em;
+  line-height: 1em;
+  opacity: 1;
+  right: 5px;
 }
 .sortWhole{
   position: absolute;

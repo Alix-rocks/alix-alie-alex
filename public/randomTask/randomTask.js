@@ -1841,12 +1841,16 @@ function timeItEvent(thisOne){
   };
   input.classList.remove("displayNone");
   input.addEventListener("change", () => {
-    todo.dalle = input.value;
-    li.setAttribute("data-time", input.value);
     if(!input.value){
       thisOne.innerHTML = `<i class="fa-regular fa-clock"></i>`;
+      delete todo.dalle;
+      delete todo.dalleRow;
+      li.setAttribute("data-time", "");
     } else if(input.value){
       thisOne.textContent = input.value;
+      todo.dalle = input.value;
+      todo.dalleRow = roundFifteenTime(todo.dalle);
+      li.setAttribute("data-time", input.value);
     };
     thisOne.classList.remove("displayNone");
     input.classList.add("displayNone");
@@ -3472,17 +3476,19 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         delete todo.STColorTX;
       };
 
-      if(todo.newShit){
-        delete todo.newShit;
-      };
-
       if(where == "list" || where == "searchScreen"){
         parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
       };
 
       if(!todo.recurry && todo.line !== "recurringDay"){
         if(!todo.stock && !todo.stored && storeIt.checked){
-          stockCreaction(todo); //todo.stored = true; (has a model in storage) (included in stockCreation)
+          if(why == "new" || todo.newShit){ //inclus addform
+            //todo.line = "noDay"; le calendarSave est juste après
+            todo.stock = true; //is in storage
+            todo.storedId = []; //pour ses futurs copies stored
+          } else{
+            stockCreaction(todo); //todo.stored = true; (has a model in storage) (included in stockCreation)
+          };
         };
         if(todo.stock && !storeIt.checked){
           trashStock(todo.id);
@@ -3492,6 +3498,9 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         };
       };
   
+      if(todo.newShit){
+        delete todo.newShit;
+      };
       
 
       calendarSave(todo); // s'il était un recurringDay, les recurrys ont tous été recréés à son image... FUCK (pas ceux qui étaient déjà out!)! ... à moins que... il en cré de nouveaux!! car dans todoCreation, tu passe par togoList et ça fait recurryOuting... et les nouveaux recurry seront pas encore "out", fac ils vont être créés... alors il faudrait juste se débarasser des anciens! ça pourrait être dans clearRecurringData...

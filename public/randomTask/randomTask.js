@@ -958,22 +958,22 @@ function todoCreation(todo){
   };
   if(togoList !== ""){ //what happens if one is stock/stored AND recurring/recurry?
     if(todo.stock){
-      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" ${todo.term == "showThing" ? "" : `style="color:${todo.color}; flex-shrink: 0;"`}>${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${todo.color};" />` : ``}<span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : todo.term == "sameHabit" ? `sameHabit` : todo.term == "reminder" ? `reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" ${todo.term == "showThing" ? "" : `style="color:${todo.color}; flex-shrink: 0;"`}>${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${todo.color};" />` : ``}<span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
     } else if(todo.line == "recurringDay"){
       let time = todo.recurrys[0].dalle ? todo.recurrys[0].dalle : mySettings.myTomorrow;
       let nextDate = getDateTimeFromString(todo.recurrys[0].date, time);
       numberedDays = Math.floor(Math.abs(nextDate.getTime() - todayDate.getTime())/(1000 * 3600 * 24));
-      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div>
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : todo.term == "sameHabit" ? `sameHabit` : todo.term == "reminder" ? `reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div>
       <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.dealine ? `doneDay` : todo.line}"></i><span style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${numberedDays}</span></div></li>`);
     } else if(todo.term == "reminder"){
-      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" class="reminderClass">
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" ${todo.recurry ? `data-rec="${todo.recId}"` : ``} data-order="${todo.order ? todo.order : ""}" class="reminderClass">
         <i class="typcn typcn-bell" style="font-size: 1em;"></i>
         <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" style="font-size: .8em;"></i>
         <div class="textDiv"><span onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" class="text" style="color:${todo.color}; font-size: 1em;">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" style="font-size: .8em;" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
         <input type="time" class="displayNone"/></div>
       </li>`);
     } else {
-      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="${todo.term == "showThing" ? `showLi` : ``} ${todo.term == "sameHabit" ? `sameHabit` : ``} ${togoList == "listOups" && numberedDays < -5 ? `selectedTask` : ``}" ${todo.term == "showThing" ? `style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``}>
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="${todo.term == "showThing" ? `showLi` : todo.term == "sameHabit" ? `sameHabit` : ``} ${togoList == "listOups" && numberedDays < -5 ? `selectedTask` : ``}" ${todo.term == "showThing" ? `style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``}>
         <div class="urgeCheck" style="color: ${todo.urge ? todo.urgeColor : ``}" ${todo.urge ? `onclick="checkOrUrge(this)"` : `onclick="checkEvent(this, 'norm')"`}>
           <i class="typcn typcn-media-stop-outline emptyCheck"></i>
           <span>${todo.urge ? todo.urgeNum : ``}</span>
@@ -1180,7 +1180,7 @@ function recurryOuting(todo){ //todo == le recurring (newtodo est le recurry/nor
     } else{
       if(!document.getElementById(recurry.id)){
         todoCreation(recurry);
-        recurry.out = true;
+        recurry.out = true; // out, mais encore dans les recurrys; pas dans listTasks...
         //WOLA what about todo.listDates.splice(0, 1);
         //WOLA attention, quand tu sort un recurry (parce que modifié), il faudrait-y pas que tu enlève la date aussi de listDates?
         idx++;
@@ -1345,8 +1345,10 @@ function recycleEvent(recycle){ //from Done
 window.recycleEvent = recycleEvent;
 
 function stockCreaction(todo){ 
+  clearRecurringData(todo);
   let newTodo = JSON.parse(JSON.stringify(todo));
   newTodo.id = crypto.randomUUID();
+  delete newTodo.date;
   newTodo.line = "noDay";
   newTodo.stock = true; //is in storage
   newTodo.storedId = [todo.id];
@@ -1376,11 +1378,13 @@ function reuseItEvent(thisOne){ //from Stock
   listTasks.push(newTodo);
   reuse.storedId.push(newTodo.id);
   localStorage.listTasks = JSON.stringify(listTasks);
-  todoCreation(newTodo);
-  sortItAll();
-  document.querySelector("#listInput").checked = true;
-  document.querySelector("#wheneverLists").scrollIntoView();
-  updateCBC();
+  //would be better if we just open the taskInfo...
+  taskAddAllInfo(newTodo.id, "listPage", "stock");
+  // todoCreation(newTodo);
+  // sortItAll();
+  // document.querySelector("#listInput").checked = true;
+  // document.querySelector("#wheneverLists").scrollIntoView();
+  // updateCBC();
 };
 window.reuseItEvent = reuseItEvent;
 
@@ -2717,7 +2721,7 @@ let showTypeChoices = [{
 }];
 
 function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", "calMonthPage", "searchScreen"
-  //why == "new", "mod"
+  //why == "new", "mod", "pro", "stock"
   moving = false; //must stay false in month/week/search
   let div;
   let todo;
@@ -2784,6 +2788,13 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
     listTasks.push(todo);
     newWidth = Number(window.innerWidth - 16);
     div = document.getElementById(where);
+  } else if(why == "stock"){
+    newWidth = Number(window.innerWidth - 16);
+    div = document.getElementById(where);
+    todoIndex = listTasks.findIndex(todo => todo.id == thisOne);
+    todo = listTasks[todoIndex];
+    console.log(todo);
+    div.scrollIntoView(); 
   } else{
     let parentId;
     if(where == "list" || where == "searchScreen"){ //not in month/week
@@ -2823,7 +2834,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       todo = listTasks[todoIndex];
     };
   };
-
+  console.log(todo);
   let myShows;
   if(mySettings.myShowTypes.length > 0){
     myShows = mySettings.myShowTypes.map((myShowType, idx) => {
@@ -2854,7 +2865,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   } else{
     projetNamesChoice = `<h6>pssst... First, you've got to create a projet!</h6>`;
   };
-  let taskAllInfo = `<div id="taskInfo" style="width:${newWidth}px; ${where == "list" || where == "searchScreen" ? `top: 25px; left: -37px;` : thisOne == "addForm" ? `top: 0; left: 0;` : `top: 10px; left: 10px;`}">
+  let taskAllInfo = `<div id="taskInfo" style="width:${newWidth}px; ${where == "list" || where == "searchScreen" ? `top: 25px; left: -37px;` : (thisOne == "addForm" || why == "stock") ? `top: 0; left: 0;` : `top: 10px; left: 10px;`}">
     <div class="taskInfoWrapper">
       <div id="SupClickScreen" class="Screen displayNone"></div>
       <input id="doneIt" type="checkbox" class="cossin cornerItInput" />
@@ -3485,7 +3496,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
 
       calendarSave(todo); // s'il était un recurringDay, les recurrys ont tous été recréés à son image... FUCK (pas ceux qui étaient déjà out!)! ... à moins que... il en cré de nouveaux!! car dans todoCreation, tu passe par togoList et ça fait recurryOuting... et les nouveaux recurry seront pas encore "out", fac ils vont être créés... alors il faudrait juste se débarasser des anciens! ça pourrait être dans clearRecurringData...
       //parent is global (no need for parent since todoCreation)
-      if(why !== "new" && parent.dataset.rec && parent.dataset.rec !== "undefined"){
+      if(why !== "new" && why !== "stock" && parent.dataset.rec && parent.dataset.rec !== "undefined"){
         let oldRecurry = listTasks[recIndex].recurrys.splice(todoIndex, 1);
         todo = oldRecurry[0];
         delete todo.recurry;
@@ -3539,10 +3550,10 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
     }
     //console.log(togoList);
-    if(thisOne == "addForm" && togoList !== ""){
+    if((thisOne == "addForm" || why == "stock") && togoList !== ""){
       scrollToSection(togoList);
       taskInfo.remove();
-    } else if(thisOne == "addForm" && togoList == ""){
+    } else if((thisOne == "addForm" || why == "stock") && togoList == ""){
       taskInfo.remove();
     } else if(where == "list" && togoList !== ""){
       moving = true;
@@ -4054,7 +4065,7 @@ function updateSleepAreas(){
 };
 
 function putShowsInWeek(Dday, Sday){
-  let shows = listTasks.filter((todo) => (todo.term == "showThing" || todo.term == "reminder"));
+  let shows = listTasks.filter((todo) => ((todo.term == "showThing" || todo.term == "reminder") && todo.line !== "noDay")); //on enlève "noDay" ou on aurait pu enlever todo.stock == true
   shows.map(show => {
     if(show.line == "recurringDay"){ 
       show.recurrys.map(recurry => {

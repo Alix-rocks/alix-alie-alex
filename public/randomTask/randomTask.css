@@ -545,6 +545,11 @@ h5.taskInfoInput{
   text-decoration-line: underline;
   text-decoration-style: dotted;
 }
+.tellYou{
+  font-size: .7em;
+  opacity: .7;
+  margin-left: 7px;
+}
 .cornerItLabel{
   position: absolute;
   top: 5px;
@@ -832,7 +837,12 @@ li .textDiv > hr{
   width: 30px;
   text-align: center;
   flex-shrink: 0;
-  height: 30px;
+}
+.numberedCal{
+  height: 27px;
+}
+.urgeCheck{
+  height: 33px;
 }
 .numberedCal i, .urgeCheck i{
   position: absolute;
@@ -1327,13 +1337,13 @@ input[name="projetColorChoices"]:checked + label{
   margin: 5px 0 0 0;
   font-weight: 500;
 }
-.listToggleLabel{
+.listToggleLabel, .taskToggleLabel{
   position: relative;
   display: block;
   border-bottom: 1px dotted var(--tx-color);
   margin-bottom: 5px;
 }
-.listToggleChevron{
+.listToggleChevron, .taskToggleChevron{
   position: absolute;
   right: 0;
   top: 0;
@@ -1349,7 +1359,7 @@ input[name="projetColorChoices"]:checked + label{
   font-size: 20px;
   line-height: 20px;
 }
-.listToggleList{
+.listToggleList, .taskToggleList{
   opacity: 0;
   visibility: hidden;
   height: 0;
@@ -1360,10 +1370,12 @@ input[name="projetColorChoices"]:checked + label{
   flex-wrap: nowrap;
   align-items: center;
 }
-.listToggleInput:checked + div .listToggleLabel .listToggleChevron{
+.listToggleInput:checked + div .listToggleLabel .listToggleChevron, 
+.taskToggleInput:checked + div .taskToggleLabel .taskToggleChevron{
   transform: rotate(-90deg);
 }
-.listToggleInput:checked + div .listToggleList{
+.listToggleInput:checked + div .listToggleList, 
+.taskToggleInput:checked + div .taskToggleList{
   opacity: 1;
   visibility: visible;
   min-height: fit-content;
@@ -1372,7 +1384,7 @@ input[name="projetColorChoices"]:checked + label{
 .taskInfoSectionLabel{
   padding: 0 10px;
 }
-.taskInfoSectionLabel > .listToggleChevron{
+.taskInfoSectionLabel > .taskToggleChevron{
   font-size: 1.3em;
   line-height: 1em;
   opacity: 1;

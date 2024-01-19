@@ -531,7 +531,7 @@ function updateArrowsColor(){
   //update arrows color
   document.querySelectorAll("section").forEach(section => {
     if(section.querySelector("input.listToggleInput")){
-      if(section.id == "limboSection" || section.id == "urgesSection"){
+      if(section.id == "limboSection"){
         if(section.querySelectorAll("li").length == 1){
           section.classList.remove("displayNone");
           section.querySelector("label").classList.remove("listToggleLabel");
@@ -555,7 +555,7 @@ function updateArrowsColor(){
         section.querySelector("span.listToggleChevron").classList.remove("fullSection");
       };
       
-    } else if(section.id == "oupsSection"){
+    } else if(section.id == "oupsSection" || section.id == "urgesSection"){
       if(section.querySelectorAll("li").length > 0){
         section.classList.remove("displayNone");
       } else if(section.querySelectorAll("li").length == 0){
@@ -1104,17 +1104,18 @@ function checkOrUrge(thisOne){
   let checkOrUrgeDiv = document.querySelector(".checkOrUrgeDiv");
   clickScreen.addEventListener("click", () => clickHandlerSmallAddOn(checkOrUrgeDiv, clickScreen));
   let newUrgeNumInput = document.querySelector("#newUrgeNumInput");
+  let urgeCheckDiv = li.querySelector("div.urgeCheck");
   newUrgeNumInput.addEventListener("change", () => {
     if(newUrgeNumInput.value == 0){
       delete todo.urge;
       delete todo.urgeNum;
       delete todo.urgeColor;
-      let urgeCheckDiv = li.querySelector("div.urgeCheck");
       urgeCheckDiv.style.color = "darkslategrey";
       urgeCheckDiv.querySelector("span").textContent = "";
       urgeCheckDiv.setAttribute("onclick", "checkEvent(this, 'norm')");
     } else{
       todo.urgeNum = newUrgeNumInput.value;
+      urgeCheckDiv.querySelector("span").textContent = newUrgeNumInput.value;
     };
     checkOrUrgeDiv.remove();
     colorUrges("next");
@@ -1155,6 +1156,7 @@ function colorUrges(when){
         li.querySelector("div.urgeCheck > span").textContent = urges[i].urgeNum;
       };
     };
+    sortIt("urge", "listUrges");
   };
 };
 
@@ -1657,6 +1659,9 @@ function sortItAll(){
         } else if(type == "term"){
           first = li[i].dataset.term;
           second = li[i + 1].dataset.term;
+        } else if(type == "urge"){
+          first = li[i].querySelector("div.urgeCheck > span").textContent;
+          second = li[i + 1].querySelector("div.urgeCheck > span").textContent;
         } else if(type == "order"){
           first = li[i].dataset.order;
           second = li[i + 1].dataset.order;
@@ -1753,6 +1758,9 @@ function sortIt(type, listName) {
       } else if(type == "order"){
         first = li[i].dataset.order;
         second = li[i + 1].dataset.order;
+      } else if(type == "urge"){
+        first = li[i].querySelector("div.urgeCheck > span").textContent;
+        second = li[i + 1].querySelector("div.urgeCheck > span").textContent;
       } else if(type == "time"){
         first = `${li[i].dataset.date}-${li[i].dataset.time.replace(":", "-")}`;
         second = `${li[i + 1].dataset.date}-${li[i + 1].dataset.time.replace(":", "-")}`;
@@ -2905,13 +2913,13 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       </div>
       <div id="trashedArea">
         <textarea id="taskDetails" class="taskInfoInput">${todo.info ? todo.info : ""}</textarea>
-        <input id="tellWhatInput" type="checkbox" class="cossin listToggleInput" />
+        <input id="tellWhatInput" type="checkbox" class="cossin taskToggleInput" />
         <div>
-          <label for="tellWhatInput" class="listToggleLabel taskInfoSectionLabel">
-            <h5 class="topList">Tell me what...</h5>
-            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          <label for="tellWhatInput" class="taskToggleLabel taskInfoSectionLabel">
+            <h5 class="topList">Tell me what...<span class="tellYou">(${todo.term})</span></h5>
+            <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
           </label>
-          <div class="listToggleList taskInfoInput relDiv">
+          <div class="taskToggleList taskInfoInput relDiv">
           <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Projet</h5>
           <input class="myRadio" type="checkbox" name="projetOptions" id="wholeProjetInput" value="wholeProjet" ${todo.wholeProjet ? `checked` : ``} />
           <label for="wholeProjetInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's a whole big thing</span><br />
@@ -2978,13 +2986,13 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
           </div>
           </div>
         </div>
-        <input id="tellWhereInput" type="checkbox" class="cossin listToggleInput" />
+        <input id="tellWhereInput" type="checkbox" class="cossin taskToggleInput" />
         <div>
-          <label for="tellWhereInput" class="listToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
-            <h5 class="topList">Tell me where...</h5>
-            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          <label for="tellWhereInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
+            <h5 class="topList">Tell me where...<span class="tellYou">${todo.where == "(home)" ? "home" : "(somewhere)"}</span></h5>
+            <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
           </label>
-          <div class="listToggleList taskInfoInput relDiv">
+          <div class="taskToggleList taskInfoInput relDiv">
             <div class="inDaySection taskInfoInput" style="width: -webkit-fill-available; max-width: 280px;">
               <input id="whereHomeInput" type="checkbox" class="tuttoGiornoInput cossin" ${(todo.where && todo.where == "home") ? `checked` : (todo.where && todo.where !== "home") ? `` : `checked`} />
               <div class="calendarInsideMargin tuttoGiornoDiv" style="justify-content: flex-start;">
@@ -3004,13 +3012,13 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
             </div>
           </div>
         </div>
-        <input id="tellWhenInput" type="checkbox" class="cossin listToggleInput" />
+        <input id="tellWhenInput" type="checkbox" class="cossin taskToggleInput" />
         <div>
-          <label for="tellWhenInput" class="listToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
-            <h5 class="topList">Tell me when...</h5>
-            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          <label for="tellWhenInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
+            <h5 class="topList">Tell me when...<span class="tellYou">(${todo.line}${todo.date ? ` ${todo.date}` : ``})</span></h5>
+            <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
           </label>
-          <div class="listToggleList relDiv">
+          <div class="taskToggleList relDiv">
             <div id="calendarHome"></div>
           </div>
         </div>
@@ -3063,10 +3071,8 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       taskInfoBtn.innerText = "Trash it!";
       copyIt.checked = false;
       doneIt.checked = false;
-      document.querySelector("#projetSection").classList.add("displayNone");
     } else{
       taskInfoBtn.innerText = "Save";
-      document.querySelector("#projetSection").classList.remove("displayNone");
     };
   });
   copyIt.addEventListener("click", () => {
@@ -3123,7 +3129,6 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   document.querySelectorAll('input[name="projetOptions"]').forEach(projet => {
     projet.addEventListener("click", () => {
       if(projet.value == "wholeProjet"){
-        document.querySelector("#notProjetInput").checked = false;
         if(!document.querySelector(".projetOnglet")){
           taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${newProjetColorBG ? newProjetColorBG : "var(--bg-color)"}; color:${newProjetColorTX ? newProjetColorTX : "var(--tx-color)"};">${newProjetNickname ? newProjetNickname : "Projet"}</div>`);
         } else{
@@ -3132,19 +3137,12 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
           document.querySelector(".projetOnglet").textContent = newProjetNickname ? newProjetNickname : "Projet";
         };
       } else if(projet.value == "partProjet"){
-        document.querySelector("#notProjetInput").checked = false;
         if(!document.querySelector(".projetOnglet")){
           taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${myProjet ? myProjet.colorBG : "var(--bg-color)"}; color:${myProjet ? myProjet.colorTX : "var(--tx-color)"};">${myProjet ? myProjet.nickname : "Projet"}</div>`);
         } else{
           document.querySelector(".projetOnglet").style.backgroundColor = myProjet ? myProjet.colorBG : "var(--bg-color)";
           document.querySelector(".projetOnglet").style.color = myProjet ? myProjet.colorTX : "var(--tx-color)";
           document.querySelector(".projetOnglet").textContent = myProjet ? myProjet.nickname : "Projet";
-        };
-      } else if(projet.value == "notProjet"){
-        document.querySelector("#wholeProjetInput").checked = false;
-        document.querySelector("#partProjetInput").checked = false;
-        if(document.querySelector(".projetOnglet")){
-          document.querySelector(".projetOnglet").remove();
         };
       };
     });
@@ -4319,7 +4317,7 @@ function busyZoneCreation(todo){
   let start;
   let end;
   if(show.tutto || !show.dalle || show.dalle == ""){
-    if(mySettings.offAreas = true){
+    if(mySettings.offAreas == true){
       start = roundFifteenTime(mySettings.myWeeksDayArray[idx].clockIn);
       end = roundFifteenTime(mySettings.myWeeksDayArray[idx].clockOut);
     } else{
@@ -4329,7 +4327,7 @@ function busyZoneCreation(todo){
   } else{
     let prima = "";
     let hourStart = roundFifteenTime(show.dalle);
-    let hourEnd = show.alle ? roundFifteenTime(show.alle) : "end";
+    let hourEnd = show.alle ? roundFifteenTime(show.alle) : mySettings.offAreas == true ? roundFifteenTime(mySettings.myWeeksDayArray[idx].clockOut) : "end";
     let dopo = "";
     if(show.prima && show.prima !== "00:00"){
       prima = roundFifteenTime(show.prima);
@@ -4349,6 +4347,15 @@ function busyZoneCreation(todo){
     end: end
   }; // then all we have to do is make sure the date is in that particular showing week and we add the div to the weekly! It should go straight in the right column and rows
   myBusies.push(busy);
+  //filter myBusies by col, then sort by start
+  // for(i = 0; i < myBFS.lenght; i++){
+    // let breakStart = myBFS[i].end;
+    // let breakEnd = myBFS[i + 1].start;
+    // timeMath(breakEnd, "minus", breakStart);
+    // if(breakEnd - breakStart > buffer + event + buffer){
+      // creation
+    //}
+  //}
 };
 
 

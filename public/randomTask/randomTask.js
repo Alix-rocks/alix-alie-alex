@@ -1034,6 +1034,8 @@ function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dal
       togoList = "listUrges";
     } else if(todo.term == "oneTime"){
       togoList = "listOne";
+    } else if(todo.term == "nextThing"){
+      togoList = "listNext";
     } else if(todo.term == "crazyShit"){
       togoList = "listIdea";
     } else{
@@ -1071,6 +1073,8 @@ function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dal
     if(todo.line == "doneDay"){
       if(todo.term == "oneTime"){
         togoList = "listOne";
+      } else if(todo.term == "nextThing"){
+        togoList = "listNext";
       } else if(todo.term == "crazyShit"){
         togoList = "listIdea";
       } else{
@@ -2958,6 +2962,8 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
               <p><label for="urgeInput" style="display:inline-block;">Priority:  </label><input id="urgeInput" type="number" value="${(todo.term == "oneTime" || todo.term == "longTerm") && todo.urge ? todo.urgeNum : "0"}" /></p>
             </div>
           </div>
+          <input class="myRadio" type="radio" name="termOptions" id="nextThing" value="nextThing" ${todo.term == "nextThing" ? `checked` : ``} />
+          <label for="nextThing" class="termLabel"><span class="myRadio"></span><span>It's what I'm gonna do next</span></label>
           <input class="myRadio" type="radio" name="termOptions" id="crazyShit" value="crazyShit" ${todo.term == "crazyShit" ? `checked` : ``} />
           <label for="crazyShit" class="termLabel"><span class="myRadio"></span><span>It's just a <em>maybe-one-day-probably-never</em> kinda crazy idea</span></label>
           <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Event</h5>
@@ -2989,7 +2995,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         <input id="tellWhereInput" type="checkbox" class="cossin taskToggleInput" />
         <div>
           <label for="tellWhereInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
-            <h5 class="topList">Tell me where...<span class="tellYou">${todo.where == "(home)" ? "home" : "(somewhere)"}</span></h5>
+            <h5 class="topList">Tell me where...<span class="tellYou">${todo.where == "home" || !todo.where ? "(home)" : "(somewhere)"}</span></h5>
             <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
           </label>
           <div class="taskToggleList taskInfoInput relDiv">

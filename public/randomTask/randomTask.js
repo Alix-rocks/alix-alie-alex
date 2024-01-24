@@ -249,6 +249,26 @@ async function getTasksSettings() {
     document.querySelector(':root').style.setProperty('--bg-color-7', 'rgba(7, 10, 10, .7)');
     document.querySelector(':root').style.setProperty('--tx-color', 'rgba(242, 243, 244, .8)');
   };
+  myBusies = [];
+  mySettings.myWeeksDayArray.forEach(day => {
+    let busyIn = {
+      type: "sempre", //"sempre" if appears at each week, like sleep and meal
+      col: day.code,
+      start: "00-00",
+      end: roundFifteenTime(day.clockIn)
+    };
+    myBusies.push(busyIn);
+    if(!(day.clockOut > "00:00" && day.clockOut < mySettings.myTomorrow)){
+      console.log(day.clockOut);
+      let busyOut = {
+        type: "sempre",
+        col: day.code,
+        start: roundFifteenTime(day.clockOut),
+        end: "end"
+      };
+      myBusies.push(busyOut);
+    };
+  });
   //listTasks
   if(localStorage.getItem("listTasks")){
     listTasks = JSON.parse(localStorage.listTasks);
@@ -260,9 +280,14 @@ async function getTasksSettings() {
   };
   colorUrges("first");
   localStorage.listTasks = JSON.stringify(listTasks);
+  
   listTasks.forEach(todo => {
 //Modify all the event to busy
-    // if(todo.term == "showThing"){todo.busy = true; busyZoneCreation(todo);};
+    if(todo.term == "showThing" && todo.line !== "recurringDay" && todo.line !== "noDay"){
+      busyZoneCreation(todo);
+    } else if(todo.term == "showThing" && todo.line == "recurringDay"){
+      todo.recurrys.forEach(recurry => busyZoneCreation(recurry));
+    };
 
     // if(todo.line == "doneDay"){
     //   todo.deadline = todo.date;
@@ -272,15 +297,14 @@ async function getTasksSettings() {
     todoCreation(todo);
   });
   //localStorage.listTasks = JSON.stringify(listTasks);
+  localStorage.myBusies = JSON.stringify(myBusies);
   updateArrowsColor();
   sortItAll();
 };
 //{collection} randomTask
   //{document} email
-    //{collection} mySchedulingApp
-      //{document} mySchedule
-        //{field} myOffAreas: {myWeeksDayArray} (clocks)
-        //{field} myBusies: [{date:_, col:_, start:_, end:_}, {}] (busy)
+    //{collection} mySchedule
+      //{document} myBusies: [{type:_(sempre/once), date:_, col:_, start:_, end:_}, {}] (busy)
 
 async function getDones(){
   const getDones = await getDocs(collection(db, "randomTask", auth.currentUser.email, "myListDones"));
@@ -456,6 +480,19 @@ async function saveToCloud(){
       mySettings: mySettings
     });
   }; 
+  myBusies = JSON.parse(localStorage.myBusies);
+  const docRefBusies = doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies");
+  const docSnapBusies = await getDoc(docRefBusies);
+  if (docSnapBusies.exists()){
+    batch.update(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.update or await updateDoc
+      myBusies: myBusies
+    });
+  } else{
+    batch.set(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.set or await setDoc
+      myBusies: myBusies
+    });
+  }; 
+
   listDones = JSON.parse(localStorage.listDones);
   const docRefDones = collection(db, "randomTask", auth.currentUser.email, "myListDones");
   const docSnapDones = await getDocs(docRefDones);
@@ -502,6 +539,7 @@ function updateFromCloud(){
   listTasks = [];
   listDones = [];
   wheneverList = [];
+  myBusies = [];
   resetModif();
   resetCBC();
   getTasksSettings();
@@ -1195,24 +1233,36 @@ function recurryOuting(todo){ //todo == le recurring (newtodo est le recurry/nor
       };
     };
     
-    
-    // if(todo.fineOpt == "fineMai" && todo.listDates.length == 1){
-    //   let newDate = date.setDate(date.getDate() + 1);//doesn't work! si c'est chaque année au 29 nov, là tu vas être au 30 nov... mais tu veux pas non plus, en avoir deux pour la même date (le dernier ici et le premier nouveau...) À moins qu'on ne fasse pas le dernier...
-    //   if(todo.var == "giorno" || todo.var == "anno"){
-    //     ogniOgni(todo, date);
-    //   } else if(todo.var == "settimana"){
-    //     ogniSettimana(todo, date);
-    //   } else if(todo.var == "mese"){
-    //     if(todo.meseOpt == "ogniXDate"){
-    //       ogniOgni(todo, date);
-    //     } else if(todo.meseOpt == "ogniXDay"){
-    //       ogniMeseDay(todo, date);
-    //     };
-    //   };
-    // };
-    
     recurry = todo.recurrys[idx];//Vu qu'on splice pas, on utilise idx qui ++; donc on met out = true pour savoir que le li a déjà été créé pour pas en recréé un à chaque refresh
-    dateTime = `${recurry.date}-${recurry.dalle ? recurry.dalle.replace(":", "-") : "5-00"}`;
+    if(!recurry){
+      console.log("oups!");
+      console.log(todo);
+      if(todo.fineOpt == "fineMai"){
+        todo.dal = todo.listDates[listDates.length - 1];
+        let newDate = getDateFromString(todo.dal);
+        if(todo.var == "giorno"){
+          ogniOgni(todo, newDate);
+        } else if(todo.var == "settimana"){
+          ogniSettimana(todo, newDate);
+        } else if(todo.var == "mese"){
+          if(todo.meseOpt == "ogniXDate"){
+            ogniOgni(todo, newDate);
+          } else if(todo.meseOpt == "ogniXDay"){
+            ogniMeseDay(todo, newDate);
+          };
+        } else if(todo.var == "anno"){
+            ogniOgni(todo, newDate);
+        };
+        idx = 0;
+        recurry = todo.recurrys[idx];
+        dateTime = `${recurry.date}-${recurry.dalle ? recurry.dalle.replace(":", "-") : "5-00"}`;
+      } else{
+        alert(`${todo.task} is over!`);
+        break;
+      };
+    } else{
+      dateTime = `${recurry.date}-${recurry.dalle ? recurry.dalle.replace(":", "-") : "5-00"}`;
+    };
   };
   localStorage.listTasks = JSON.stringify(listTasks);
 };
@@ -2328,6 +2378,7 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
 
   todo.busy = document.querySelector("#busyInput").checked ? true : false;
   if(todo.busy){
+    busyZoneCreation(todo);
     //busyZoneCreation(todo); with primaRow and dopoRow already calculated, it'll be even easier both for busy that for show in weekly!
   };
 
@@ -4312,11 +4363,14 @@ window.onload = () => {
 //   document.getElementById("loadingScreen").classList.replace("waitingScreen", "displayNone");
 // };
 
-function busyZoneCreation(todo){
+
+function busyZoneCreation(show){
   //don't forget to add the sleepAreas and mealAreas too, in the scheduling weekly
 
   //we'll need the day (column) too (NO! because the column can change with the settings.. no? or maybe not...)
-  let dayIdx = meseDayICalc(todo.date);
+
+  console.log(show);
+  let dayIdx = meseDayICalc(show.date);
   let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
   let day = `${mySettings.myWeeksDayArray[idx].code}`;  
   //if tutto... do we start after the sleepArea or the whole column with myTomorrow?
@@ -4327,7 +4381,7 @@ function busyZoneCreation(todo){
       start = roundFifteenTime(mySettings.myWeeksDayArray[idx].clockIn);
       end = roundFifteenTime(mySettings.myWeeksDayArray[idx].clockOut);
     } else{
-      start = mySettings.myTomorrow;
+      start = "00-00";
       end = "end";
     };
   } else{
@@ -4344,15 +4398,17 @@ function busyZoneCreation(todo){
       dopo = timeMath(hourEnd, "plus", dopo);
     };
     start = prima !== "" ? prima : hourStart;
-    end = dopo !== "" ? dopo : hourEnd;
+    end = dopo !== "" ? dopo == "00-00" ? "end" : dopo : hourEnd == "00-00" ? "end" : hourEnd;
   };
   let busy = {
-    date: todo.date,
+    type: "once", //"sempre" if appears at each week, like sleep and meal
+    date: show.date,
     col: day,
     start: start,
     end: end
   }; // then all we have to do is make sure the date is in that particular showing week and we add the div to the weekly! It should go straight in the right column and rows
   myBusies.push(busy);
+
   //filter myBusies by col, then sort by start
   // for(i = 0; i < myBFS.lenght; i++){
     // let breakStart = myBFS[i].end;
@@ -4363,7 +4419,7 @@ function busyZoneCreation(todo){
     //}
   //}
 };
-
+//localStorage.myBusies = JSON.stringify(myBusies);
 
 
 

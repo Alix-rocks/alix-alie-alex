@@ -250,25 +250,25 @@ async function getTasksSettings() {
     document.querySelector(':root').style.setProperty('--tx-color', 'rgba(242, 243, 244, .8)');
   };
   myBusies = [];
-  mySettings.myWeeksDayArray.forEach(day => {
-    let busyIn = {
-      type: "sempre", //"sempre" if appears at each week, like sleep and meal
-      col: day.code,
-      start: "00-00",
-      end: roundFifteenTime(day.clockIn)
-    };
-    myBusies.push(busyIn);
-    if(!(day.clockOut > "00:00" && day.clockOut < mySettings.myTomorrow)){
-      console.log(day.clockOut);
-      let busyOut = {
-        type: "sempre",
-        col: day.code,
-        start: roundFifteenTime(day.clockOut),
-        end: "end"
-      };
-      myBusies.push(busyOut);
-    };
-  });
+  // mySettings.myWeeksDayArray.forEach(day => {
+  //   let busyIn = {
+  //     type: "sempre", //"sempre" if appears at each week, like sleep and meal
+  //     col: day.code,
+  //     start: "00-00",
+  //     end: roundFifteenTime(day.clockIn)
+  //   };
+  //   myBusies.push(busyIn);
+  //   if(!(day.clockOut > "00:00" && day.clockOut < mySettings.myTomorrow)){
+  //     console.log(day.clockOut);
+  //     let busyOut = {
+  //       type: "sempre",
+  //       col: day.code,
+  //       start: roundFifteenTime(day.clockOut),
+  //       end: "end"
+  //     };
+  //     myBusies.push(busyOut);
+  //   };
+  // });
   //listTasks
   if(localStorage.getItem("listTasks")){
     listTasks = JSON.parse(localStorage.listTasks);
@@ -283,11 +283,11 @@ async function getTasksSettings() {
   
   listTasks.forEach(todo => {
 //Modify all the event to busy
-    if(todo.term == "showThing" && todo.line !== "recurringDay" && todo.line !== "noDay"){
-      busyZoneCreation(todo);
-    } else if(todo.term == "showThing" && todo.line == "recurringDay"){
-      todo.recurrys.forEach(recurry => busyZoneCreation(recurry));
-    };
+    // if(todo.term == "showThing" && todo.line !== "recurringDay" && todo.line !== "noDay"){
+    //   busyZoneCreation(todo);
+    // } else if(todo.term == "showThing" && todo.line == "recurringDay"){
+    //   todo.recurrys.forEach(recurry => busyZoneCreation(recurry));
+    // };
 
     // if(todo.line == "doneDay"){
     //   todo.deadline = todo.date;
@@ -2377,9 +2377,8 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
   
 
   todo.busy = document.querySelector("#busyInput").checked ? true : false;
-  if(todo.busy){
-    busyZoneCreation(todo);
-    //busyZoneCreation(todo); with primaRow and dopoRow already calculated, it'll be even easier both for busy that for show in weekly!
+  if(todo.busy){ //first, you need to put this AFTER the todo.date has been established, second, you should only do this if... (you know what, busy shouldn't be checked by default (unless it's a show))
+    //busyZoneCreation(todo);
   };
 
   if(todo.line == "noDay"){

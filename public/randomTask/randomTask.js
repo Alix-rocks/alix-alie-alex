@@ -2164,7 +2164,7 @@ function creatingCalendar(todo, home, classs){
   let busyDiv = `<div id="busySection" class="calendarMargin" style="margin-top:20px;">
     <h5 class="taskInfoInput" style="margin-left: 0;">Shall we consider you unavailable?</h5>
     <div class="inDaySection" style="width: -webkit-fill-available; max-width: 200px;">
-      <input id="busyInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.busy ? `checked` : todo.busy == false ? `` : `checked`} />
+      <input id="busyInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.busy || todo.term == "showThing" ? `checked` : ``} />
       <div class="calendarInsideMargin tuttoGiornoDiv">
         <p style="margin: 0;">Busy busy!</p>
         <label for="busyInput" class="slideZone">
@@ -2931,6 +2931,13 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   } else{
     projetNamesChoice = `<h6>pssst... First, you've got to create a projet!</h6>`;
   };
+  let miniList;
+  if(todo.term == "miniList"){
+    let list = todo.miniList.map(mini => { //find a way to order them...
+      return `<li>${mini.name}</li>`; //with a checkbox/input and label/name that will get crossed if mini.checked == true
+    }).join("");
+    miniList = `<ul>${list}</ul>`;
+  }
   let taskAllInfo = `<div id="taskInfo" style="width:${newWidth}px; ${where == "list" || where == "searchScreen" ? `top: 25px; left: -37px;` : (thisOne == "addForm" || why == "stock") ? `top: 0; left: 0;` : `top: 10px; left: 10px;`}">
     <div class="taskInfoWrapper">
       <div id="SupClickScreen" class="Screen displayNone"></div>
@@ -2957,7 +2964,6 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         <i class="fa-regular fa-trash-can cornerItUnChecked"></i>
         <i class="fa-solid fa-trash-can cornerItChecked"></i>
       </label>
-      <h5 class="taskInfoInput" style="margin-top: 40px;">Tell me more...</h5>
       <div class="taskInfoInput relDiv">
         ${todo.wholeProjet || todo.partProjet ? `<div class="projetOnglet" style="background-color:${todo.PColorBG}; color:${todo.PColorTX};">${todo.Pnickname}</div>` : ``}
         <span id="iconIt" class="IconI ${todo.icon}"></span>
@@ -2966,11 +2972,20 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         <span id="colorIt" class="typcn typcn-tag tagSpan ${todo.term == "showThing" ? `hidden` : ``}" style="color:${todo.color};"></span>
       </div>
       <div id="trashedArea">
-        <textarea id="taskDetails" class="taskInfoInput">${todo.info ? todo.info : ""}</textarea>
+        <input id="tellMoreInput" type="checkbox" class="cossin taskToggleInput" />
+        <div>
+          <label for="tellMoreInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 10px;">
+            <h5 class="topList">Tell me more...</h5>
+            <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
+          </label>
+          <div class="taskToggleList relDiv">
+            <textarea id="taskDetails" class="taskInfoInput">${todo.info ? todo.info : ""}</textarea>
+          </div>
+        </div>
         <input id="tellWhatInput" type="checkbox" class="cossin taskToggleInput" />
         <div>
-          <label for="tellWhatInput" class="taskToggleLabel taskInfoSectionLabel">
-            <h5 class="topList">Tell me what...<span class="tellYou">(${todo.term})</span></h5>
+          <label for="tellWhatInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
+            <h5 class="topList">Tell me what...<span class="tellYou">(<span id="tellYouTermProjet">${todo.wholeProjet || todo.partProjet ? `Projet - ` : ``}</span><span id="tellYouTerm">${todo.term}</span><span id="tellYouShowType">${todo.term == "showThing" ? ` - ${todo.showType ? todo.showType : mySettings.myShowTypes[0].name}` : ``}</span>)</span></h5>
             <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
           </label>
           <div class="taskToggleList taskInfoInput relDiv">
@@ -3040,6 +3055,9 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
             </div>
             
           </div>
+          <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">List</h5>
+          <input class="myRadio" type="radio" name="termOptions" id="miniList" value="miniList" ${todo.term == "miniList" ? `checked` : ``} />
+          <label for="miniList" class="termLabel"><span class="myRadio"></span><span>It's a list...</span></label>
           </div>
         </div>
         <input id="tellWhereInput" type="checkbox" class="cossin taskToggleInput" />
@@ -3105,6 +3123,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   let iconsPalet = document.querySelector("#iconsPalet");
   let taskInfoBtn = document.querySelector("#taskInfoBtn");
   let taskCancelBtn = document.querySelector("#taskCancelBtn");
+  let busyInput = document.querySelector("#taskCancelBtn");
   taskCancelBtn.addEventListener("click", () => {
     if(where == "list"){
       moving = true;
@@ -3272,29 +3291,30 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       let radio = document.querySelector('input[name="termOptions"]:checked').value;
       if(storeIt.checked && !todo.stored){
         setN();
-        document.querySelector("#busyInput").checked = todo.busy ? true : todo.busy == false ? false : true;
         if(radio == "showThing"){
           colorIt.classList.add("hidden");
           taskTitle.style.color = "darkslategrey";
+          busyInput.checked = todo.busy ? true : todo.busy == false ? false : true;
         } else{
           colorIt.classList.remove("hidden");
           taskTitle.style.color = newcolor ? newcolor : todo.color;
+          busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
         };
       } else if(radio == "showThing" || radio == "reminder"){
         setTR();
         if(radio == "showThing"){
           colorIt.classList.add("hidden");
           taskTitle.style.color = "darkslategrey";
-          document.querySelector("#busyInput").checked = true;
+          busyInput.checked = todo.busy ? true : todo.busy == false ? false : true;
         } else if(radio == "reminder"){
           colorIt.classList.remove("hidden");
           taskTitle.style.color = newcolor ? newcolor : todo.color;
-          document.querySelector("#busyInput").checked = false;
+          busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
         };
       } else{
         colorIt.classList.remove("hidden");
         taskTitle.style.color = newcolor ? newcolor : todo.color;
-        document.querySelector("#busyInput").checked = todo.busy ? true : todo.busy == false ? false : true;
+        busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
         setTRN();
       };
     });
@@ -3302,26 +3322,28 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   
   document.querySelectorAll('input[name="termOptions"]').forEach(radio => {
     radio.addEventListener("click", () => {
+      let tellYouTerm = document.querySelector("#tellYouTerm");
+      tellYouTerm.innerText = radio.value;
       if(radio.checked && (radio.value == "showThing" || radio.value == "reminder")){
         setTR();
         if(radio.value == "showThing"){
           colorIt.classList.add("hidden");
           taskTitle.style.color = "darkslategrey";
-          document.querySelector("#busyInput").checked = true;
+          busyInput.checked = todo.busy ? true : todo.busy == false ? false : true;
         } else if(radio.value == "reminder"){
           colorIt.classList.remove("hidden");
           taskTitle.style.color = newcolor ? newcolor : todo.color;
-          document.querySelector("#busyInput").checked = false;
+          busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
         };
       } else if(radio.checked && storeIt.checked && !todo.stored){
         colorIt.classList.remove("hidden");
         taskTitle.style.color = newcolor ? newcolor : todo.color;
-        document.querySelector("#busyInput").checked = todo.busy ? true : todo.busy == false ? false : true;
+        busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
         setN();
       } else{
         colorIt.classList.remove("hidden");
         taskTitle.style.color = newcolor ? newcolor : todo.color;
-        document.querySelector("#busyInput").checked = todo.busy ? true : todo.busy == false ? false : true;
+        busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
         setTRN();
       };
     });
@@ -3386,6 +3408,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   showTypeCreationConfirm.addEventListener("click", (e) => {
     showTypeCreationConfirm.style.color = "darkslategrey";
     if(newSTColor && showTypeCreationInput.value){
+      document.querySelector("#tellYouShowType").innerText = ` - ${showTypeCreationInput.value}`;
       let showType = {
         name: showTypeCreationInput.value,
         colorBG: newSTColorBG,
@@ -3418,6 +3441,12 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       addShowTypeDiv.insertAdjacentHTML("afterend", `<h5 class="underh5">Ci serve anche un color!</h5>`);
     };
   });
+  document.querySelectorAll('input[name="showOptions"]').forEach(radio => {
+    radio.addEventListener("click", () => {
+      document.querySelector("#tellYouShowType").innerText = ` - ${radio.value}`;
+    });
+  });
+
   if(where == "list" || where == "searchScreen"){
     clickScreen.addEventListener("click", () => clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList));
   };
@@ -3763,46 +3792,48 @@ window.iconChoice = iconChoice;
 
 // *** DATE
 function getTodayDate(){
-  let date = new Date();
-  let currentHour = String(date.getHours()).padStart(2, "0");
-  let currentMinute = String(date.getMinutes()).padStart(2, "0");
+  let todayDate = new Date();
+  let yesterDate = new Date();
+  yesterDate.setDate(yesterDate.getDate() - 1);
+  let currentHour = String(todayDate.getHours()).padStart(2, "0");
+  let currentMinute = String(todayDate.getMinutes()).padStart(2, "0");
   let currentTime = `${currentHour}:${currentMinute}`;
-  let currentDay = currentTime <= mySettings.myTomorrow ? (date.getDate() - 1) : date.getDate();
-  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, "0")}-${String(currentDay).padStart(2, "0")}`;
+  let date = currentTime <= mySettings.myTomorrow ? yesterDate : todayDate;
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 };
 
 function getTomorrowDate(){
-  let date = new Date();
-  date.setDate(date.getDate() + 1);
-  let currentHour = String(date.getHours()).padStart(2, "0");
-  let currentMinute = String(date.getMinutes()).padStart(2, "0");
+  let todayDate = new Date();
+  let tomoDate = new Date();
+  tomoDate.setDate(tomoDate.getDate() + 1);
+  let currentHour = String(todayDate.getHours()).padStart(2, "0");
+  let currentMinute = String(todayDate.getMinutes()).padStart(2, "0");
   let currentTime = `${currentHour}:${currentMinute}`;
-  let currentDay = currentTime <= mySettings.myTomorrow ? (date.getDate() - 1) : date.getDate();
-  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, "0")}-${String(currentDay).padStart(2, "0")}`;
+  let date = currentTime <= mySettings.myTomorrow ? todayDate : tomoDate;
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 };
 
 function timeLimit(limit){
   let nowDate = new Date();
+  let yesterDate = new Date();
+  yesterDate.setDate(yesterDate.getDate() - 1);
+  let tomoDate = new Date();
+  tomoDate.setDate(tomoDate.getDate() + 1);
+  let afterDate = new Date();
+  afterDate.setDate(afterDate.getDate() + 2);
   let currentHour = String(nowDate.getHours()).padStart(2, "0");
   let currentMinute = String(nowDate.getMinutes()).padStart(2, "0");
   let currentTime = `${currentHour}:${currentMinute}`;
-  let currentDay = currentTime <= mySettings.myTomorrow ? (nowDate.getDate() - 1) : nowDate.getDate();
-  let currentMonth = String(nowDate.getMonth()+1).padStart(2, "0");
-  let currentYear = nowDate.getFullYear();
-  nowDate.setDate(nowDate.getDate() + 1);
-  let tomoDay = currentTime <= mySettings.myTomorrow ? (nowDate.getDate() - 1) : nowDate.getDate();
-  nowDate.setDate(nowDate.getDate() + 1);
-  let afterDay = currentTime <= mySettings.myTomorrow ? (nowDate.getDate() - 1) : nowDate.getDate();
-  let limitDay;
+  let limitDate;
   let modifiedTomorrow = mySettings.myTomorrow.replace(":", "-")
   if(limit == "hierOggi"){
-    limitDay = String(currentDay).padStart(2, "0");
+    limitDate = currentTime <= mySettings.myTomorrow ? yesterDate : nowDate;
   } else if(limit == "oggiDemain"){
-    limitDay = String(tomoDay).padStart(2, "0");
+    limitDate = currentTime <= mySettings.myTomorrow ? nowDate : tomoDate;
   } else if(limit == "demainApres"){
-    limitDay = String(afterDay).padStart(2, "0");
+    limitDate = currentTime <= mySettings.myTomorrow ? tomoDate : afterDate;
   };
-  let timeLimit = `${currentYear}-${currentMonth}-${limitDay}-${modifiedTomorrow}`;
+  let timeLimit = `${limitDate.getFullYear()}-${String(limitDate.getMonth()+1).padStart(2, "0")}-${String(limitDate.getDate()).padStart(2, "0")}-${modifiedTomorrow}`;
   return timeLimit;
 };
 
@@ -4079,7 +4110,7 @@ function putDatesInWeek(date){
   putShowsInWeek(Dday, Sday);
 };
 
-function roundFifteenTime(realTime){
+function roundFifteenTime(realTime){ //if realTime < myTomorrow && finalTime == myTomorrow then return "end"
   //console.log(realTime);
   let min = Number(realTime.substring(3));
   let hour = Number(realTime.substring(0, 2));

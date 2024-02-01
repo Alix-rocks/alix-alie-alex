@@ -363,7 +363,19 @@ Options for sorting
           </td>
         </tr>
       </table>
-      
+      <section id="waitSection">
+        <input id="waitInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="waitInput" class="listToggleLabel">
+            <h3 class="topList"><span class="topListTitle" style="text-decoration-color: rgb(100, 122, 122); color:rgb(100, 122, 122);">WAITING</span></h3>
+            <h5 class="topList">Wait for it...</h5>
+            <span id="listWaitChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <div class="listToggleList">
+            <ul id="listWait" class="sortedList" data-sort="color"></ul>
+          </div>
+        </div>
+      </section>
       <section id="scheduledSection">
         <input id="scheduledInput" type="checkbox" class="cossin listToggleInput" />
         <div>
@@ -377,17 +389,6 @@ Options for sorting
           </div>
         </div>
       </section>
-      <section id="recurringSection">
-        <input id="recurringInput" type="checkbox" class="cossin listToggleInput" />
-        <div>
-          <label for="recurringInput" class="listToggleLabel">
-            <h3 class="topList"><span class="topListTitle">Recurring</span></h3>
-            <h5 class="topList">Don't worry, they'll be back...</h5>
-            <span id="listRecurringChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
-          </label>
-          <ul id="listRecurring" class="listToggleList sortedList" data-sort="text"></ul>
-        </div>
-      </section>
       <section id="storageSection">
         <input id="storageInput" type="checkbox" class="cossin listToggleInput" />
         <div id="storageList">
@@ -399,11 +400,22 @@ Options for sorting
           <ul id="listStorage" class="listToggleList sortedList" data-sort="text"></ul>
         </div>
       </section>
+      <section id="recurringSection">
+        <input id="recurringInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="recurringInput" class="listToggleLabel">
+            <h3 class="topList"><span class="topListTitle">Recurring</span></h3>
+            <h5 class="topList">Don't worry, they'll be back...</h5>
+            <span id="listRecurringChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <ul id="listRecurring" class="listToggleList sortedList" data-sort="text"></ul>
+        </div>
+      </section>
       <section id="ideaSection">
         <input id="ideaInput" type="checkbox" class="cossin listToggleInput" />
         <div id="ideaList">
           <label for="ideaInput" class="listToggleLabel">
-            <h3 class="topList"><span class="topListTitle">Random Ideas</span></h3>
+            <h3 class="topList"><span class="topListTitle" style="text-decoration-color: rgb(239, 125, 144); color:rgb(239, 125, 144);">Random Ideas</span></h3>
             <h5 class="topList">It's a <em>maybe-one-day-probably-never</em> kinda thing...</h5>
             <span id="listIdeaChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>

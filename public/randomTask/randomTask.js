@@ -1076,6 +1076,8 @@ function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dal
       togoList = "listNext";
     } else if(todo.term == "crazyShit"){
       togoList = "listIdea";
+    } else if(todo.term == "waitForIt"){
+      togoList = "listWait";
     } else{
       togoList = "list";
     };
@@ -1115,6 +1117,8 @@ function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dal
         togoList = "listNext";
       } else if(todo.term == "crazyShit"){
         togoList = "listIdea";
+      } else if(todo.term == "waitForIt"){
+        togoList = "listWait";
       } else{
         togoList = "list";
       };
@@ -3015,25 +3019,27 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
           <label for="reminder" class="termLabel"><span class="myRadio"></span><span>It's such a special day...</span></label>
           <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Habit</h5>
           <input class="myRadio" type="radio" name="termOptions" id="sameHabit" value="sameHabit" ${todo.term == "sameHabit" ? `checked` : ``} />
-          <label for="sameHabit" class="termLabel"><span class="myRadio"></span><span>It's always the same thing...</span></label>
+          <label for="sameHabit" class="termLabel"><span class="myRadio"></span><span style="opacity:.6;font-size:14px;">It's always the same thing...</span></label>
           <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Task</h5>
           <input class="myRadio" type="radio" name="termOptions" id="oneTime" value="oneTime" ${todo.term == "oneTime" ? `checked` : ``} />
-          <label for="oneTime" class="termLabel"><span class="myRadio"></span><span>It's a one time thing</span></label>
+          <label for="oneTime" class="termLabel"><span class="myRadio"></span><span style="color:midnightblue;">It's a one time thing</span></label>
           <input class="myRadio" type="radio" name="termOptions" id="longTerm" value="longTerm" ${todo.term == "longTerm" ? `checked` : ``} />
-          <label for="longTerm" class="termLabel"><span class="myRadio"></span><span>It's a long term shit</span></label>
+          <label for="longTerm" class="termLabel"><span class="myRadio"></span><span style="color:midnightblue;">It's a long term shit</span></label>
           <div class="urgeDiv">
             <h5 style="margin: 5px 0 0 0;">How urgent is it?</h5>
             <div class="inDaySection" style="width: fit-content; margin-bottom: 10px;">
-              <p><label for="urgeInput" style="display:inline-block;">Priority:  </label><input id="urgeInput" type="number" value="${(todo.term == "oneTime" || todo.term == "longTerm") && todo.urge ? todo.urgeNum : "0"}" /></p>
+              <p><label for="urgeInput" style="display:inline-block;"><span style="color:red;">Pri</span><span style="color:#ff8400;">ori</span><span style="color:#ffd000;">ty:</span>  </label><input id="urgeInput" type="number" value="${(todo.term == "oneTime" || todo.term == "longTerm") && todo.urge ? todo.urgeNum : "0"}" /></p>
             </div>
           </div>
           <input class="myRadio" type="radio" name="termOptions" id="nextThing" value="nextThing" ${todo.term == "nextThing" ? `checked` : ``} />
-          <label for="nextThing" class="termLabel"><span class="myRadio"></span><span>It's what I'm gonna do next</span></label>
+          <label for="nextThing" class="termLabel"><span class="myRadio"></span><span style="color:darkgreen;">It's what I'm gonna do next</span></label>
+          <input class="myRadio" type="radio" name="termOptions" id="waitForIt" value="waitForIt" ${todo.term == "waitForIt" ? `checked` : ``} />
+          <label for="waitForIt" class="termLabel"><span class="myRadio"></span><span style="color:rgb(100, 122, 122);">It's what I've been waiting for</span></label>
           <input class="myRadio" type="radio" name="termOptions" id="crazyShit" value="crazyShit" ${todo.term == "crazyShit" ? `checked` : ``} />
-          <label for="crazyShit" class="termLabel"><span class="myRadio"></span><span>It's just a <em>maybe-one-day-probably-never</em> kinda crazy idea</span></label>
+          <label for="crazyShit" class="termLabel"><span class="myRadio"></span><span style="color:rgb(239, 125, 144);">It's just a <em>maybe-one-day-probably-never</em> kinda crazy idea</span></label>
           <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Event</h5>
           <input class="myRadio" type="radio" name="termOptions" id="showThing" value="showThing" ${todo.term == "showThing" ? `checked` : ``} />
-          <label for="showThing" class="termLabel"><span class="myRadio"></span><span>It's a whole show!</span></label>
+          <label for="showThing" class="termLabel"><span class="myRadio"></span><span style="border-radius: 10px; border: 0.5px solid var(--tx-color); padding: 0 7px;">It's a whole show!</span></label>
           <div class="showDiv">
             <h5 class="taskInfoInput" style="margin-left: 0;">What kinda show is that?</h5>
             <div class="inDaySection">
@@ -4052,7 +4058,7 @@ function putDatesInWeek(date){
   for(let d = 0; d < 8; d++){
     let thisDate = {
       date: String(date.getDate()),
-      full: getStringFromDate(date)
+      full: getStringFromDate(date) //maybe also get one with myTomorrow dateTime so that we can make sure the events between 00:00 and myTomorrow are in the right week/col
     };
     arrayDate.push(thisDate);
     date.setDate(date.getDate() + 1);
@@ -4097,8 +4103,8 @@ function putDatesInWeek(date){
   };
   updateSleepAreas();
 
-  let Dday = arrayDate[0].full;
-  let Sday = arrayDate[arrayDate.length - 2].full;
+  let Dday = arrayDate[0].full; 
+  let Sday = arrayDate[arrayDate.length - 2].full;//maybe use the one with myTomorrow dateTime so that we can make sure the events between 00:00 and myTomorrow are in the right week/col
   let Ddate = getDateFromString(Dday);
   let Sdate = getDateFromString(Sday);
   let DYear = Ddate.getFullYear();
@@ -4160,7 +4166,7 @@ function updateSleepAreas(){
 
 function putShowsInWeek(Dday, Sday){
   let shows = listTasks.filter((todo) => ((todo.term == "showThing" || todo.term == "reminder") && todo.line !== "noDay")); //on enlève "noDay" ou on aurait pu enlever todo.stock == true
-  shows.map(show => {
+  shows.map(show => { //WATCH OUT: if between 00:00 and myTomorrow, it would be yesterday's date so maybe not that week!!
     if(show.line == "recurringDay"){ 
       show.recurrys.map(recurry => {
       if(Dday <= recurry.date && recurry.date <= Sday){//takes only the ones that should show up this week
@@ -4202,7 +4208,7 @@ function timeMath(one, math, two){
 };
 
 function createWeeklyshow(show){
-  let dayIdx = meseDayICalc(show.date);
+  let dayIdx = meseDayICalc(show.date); //if between 00:00 and myTomorrow, it should be yesterday's date!
   let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
   let day = `${mySettings.myWeeksDayArray[idx].code}`;  
   let div;

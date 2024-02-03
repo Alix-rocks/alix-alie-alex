@@ -996,18 +996,18 @@ function todoCreation(todo){
   };
   if(togoList !== ""){ //what happens if one is stock/stored AND recurring/recurry?
     if(todo.stock){
-      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : todo.term == "sameHabit" ? `sameHabit` : todo.term == "reminder" ? `reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" ${todo.term == "showThing" ? "" : `style="color:${todo.color}; flex-shrink: 0;"`}>${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${todo.color};" />` : ``}<span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : todo.term == "sameHabit" ? `sameHabit` : todo.term == "reminder" ? `reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${todo.color}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${todo.color};" />` : ``}<span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
     } else if(todo.line == "recurringDay"){
       let time = todo.recurrys[0].dalle ? todo.recurrys[0].dalle : mySettings.myTomorrow;
       let nextDate = getDateTimeFromString(todo.recurrys[0].date, time);
       numberedDays = Math.floor(Math.abs(nextDate.getTime() - todayDate.getTime())/(1000 * 3600 * 24));
-      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : todo.term == "sameHabit" ? `sameHabit` : todo.term == "reminder" ? `reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" ${todo.term == "showThing" ? "" : `style="color:${todo.color};"`}>${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div>
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : todo.term == "sameHabit" ? `sameHabit` : todo.term == "reminder" ? `reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${todo.color};`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div>
       <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.dealine ? `doneDay` : todo.line}"></i><span style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${numberedDays}</span></div></li>`);
     } else if(todo.term == "reminder"){
       document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" ${todo.recurry ? `data-rec="${todo.recId}"` : ``} data-order="${todo.order ? todo.order : ""}" class="reminderClass">
         <i class="typcn typcn-bell" style="font-size: 1em;"></i>
         <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" style="font-size: .8em;"></i>
-        <div class="textDiv"><span onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" class="text" style="color:${todo.color}; font-size: 1em;">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" style="font-size: .8em;" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
+        <div class="textDiv"><span onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px; ` : ``}color:${todo.color}; font-size: 1em;">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" style="font-size: .8em;" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
         <input type="time" class="displayNone"/></div>
       </li>`);
     } else {
@@ -1017,7 +1017,7 @@ function todoCreation(todo){
           <span>${todo.urge ? todo.urgeNum : ``}</span>
         </div>
         <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
-        <div class="textDiv"><span onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" class="text" ${todo.term == "showThing" ? `` : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
+        <div class="textDiv"><span onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? `` : ` color:${todo.color};`}">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
         <input type="time" class="displayNone"/>
         ${togoList == "listOups" && numberedDays < -5 ? `<div class="proHelp">
         <h3>You have been procrastinating that one for ${Math.abs(numberedDays)} days...</h3>
@@ -2936,12 +2936,28 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
     projetNamesChoice = `<h6>pssst... First, you've got to create a projet!</h6>`;
   };
   let miniList;
-  if(todo.term == "miniList"){
-    let list = todo.miniList.map(mini => { //find a way to order them...
-      return `<li>${mini.name}</li>`; //with a checkbox/input and label/name that will get crossed if mini.checked == true
+  if(todo.miniList && todo.miniList.length > 0){
+    miniList = todo.miniList.map((mini, idx) => { //find a way to order them...
+      return `<li class="miniLi">
+        <input id="miniCheck${idx}" type="checkbox" class="listCheckInput" ${mini.checked ? `checked` : ``} />
+        <label for="miniCheck${idx}">
+          <i class="typcn typcn-media-stop-outline miniUnChecked"></i>
+          <i class="typcn typcn-input-checked miniChecked"></i>
+        </label>
+        <input type="text" class="listNameInput" value="${mini.name}" />
+        <input id="miniOpt${idx}" type="checkbox" class="miniOptInput" />
+        <div class="miniOptDiv">
+        <i onclick="moveMiniDown(this)" class="typcn typcn-arrow-down-outline miniArrow"></i>
+        <i onclick="moveMiniUp(this)" class="typcn typcn-arrow-up-outline miniArrow"></i>
+        </div>
+        <label for="miniOpt${idx}" class="miniOptLabel">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </label>
+      </li>`; //with a checkbox/input and label/name that will get crossed if mini.checked == true
     }).join("");
-    miniList = `<ul>${list}</ul>`;
-  }
+  } else{
+    miniList = `<h6 id="miniListEmpty" style="margin:0;">There's nothing here, yet...</h6>`;
+  };
   let taskAllInfo = `<div id="taskInfo" style="width:${newWidth}px; ${where == "list" || where == "searchScreen" ? `top: 25px; left: -37px;` : (thisOne == "addForm" || why == "stock") ? `top: 0; left: 0;` : `top: 10px; left: 10px;`}">
     <div class="taskInfoWrapper">
       <div id="SupClickScreen" class="Screen displayNone"></div>
@@ -2979,7 +2995,24 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         <input id="tellMoreInput" type="checkbox" class="cossin taskToggleInput" />
         <div>
           <label for="tellMoreInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 10px;">
-            <h5 class="topList">Tell me more...</h5>
+            <h5 class="topList">Tell me more...<span class="tellYou" id="tellYouMore">${todo.miniList ? `(...)` : ``}</span></h5>
+            <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
+          </label>
+          <div id="miniListDiv" class="taskToggleList taskInfoInput">
+            <ul>
+              ${miniList}
+              <li id="addMiniListLi" style="margin: 15px 0 20px;}">
+                <input type="text" id="addMiniListInput" class="listNameInput" style="border: 0.5px solid var(--tx-color); border-radius: 5px; padding: 0 7px;" placeholder="one more" />
+                <button class="iconOnlyBtn" id="addMiniListBtn" style="margin-left: 5px;"><span class="typcn typcn-plus"></span></button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <input id="tellWhyInput" type="checkbox" class="cossin taskToggleInput" />
+        <div>
+          <label for="tellWhyInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 10px;">
+            <h5 class="topList">Tell me why...<span class="tellYou" id="tellYouWhy">${todo.info ? `(because)` : ``}</span></h5>
             <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
           </label>
           <div class="taskToggleList relDiv">
@@ -3061,15 +3094,12 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
             </div>
             
           </div>
-          <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">List</h5>
-          <input class="myRadio" type="radio" name="termOptions" id="miniList" value="miniList" ${todo.term == "miniList" ? `checked` : ``} />
-          <label for="miniList" class="termLabel"><span class="myRadio"></span><span>It's a list...</span></label>
           </div>
         </div>
         <input id="tellWhereInput" type="checkbox" class="cossin taskToggleInput" />
         <div>
           <label for="tellWhereInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
-            <h5 class="topList">Tell me where...<span class="tellYou">${todo.where == "home" || !todo.where ? "(home)" : "(somewhere)"}</span></h5>
+            <h5 class="topList">Tell me where...<span class="tellYou" id="tellYouWhere">${todo.where == "home" || !todo.where ? "(home)" : "(somewhere)"}</span></h5>
             <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
           </label>
           <div class="taskToggleList taskInfoInput relDiv">
@@ -3120,8 +3150,10 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   let storeIt = document.querySelector("#storeIt");
   let taskTitle = document.querySelector("#taskTitle");
   getUnderLiningWidth(taskTitle);
+  let miniListDiv = document.querySelector("#miniListDiv");
   let taskDetails = document.querySelector("#taskDetails");
   let urgeInput = document.querySelector("#urgeInput");
+  let whereCheck = document.querySelector("#whereHomeInput");
   let SupClickScreen = document.querySelector("#SupClickScreen");
   let colorIt = document.querySelector("#colorIt");
   let colorPalet = document.querySelector("#colorPalet");
@@ -3165,6 +3197,61 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       taskInfoBtn.innerText = "Save";
     };
   });
+  // taskDetails.addEventListener("change", () => {
+  //   document.querySelector("#tellYouMore").innerText = taskDetails.value == "" ? "" : "(because)";
+  // });
+  taskDetails.addEventListener("change", () => {
+    document.querySelector("#tellYouWhy").innerText = taskDetails.value == "" ? "" : "(because)";
+  });
+  whereCheck.addEventListener("click", () => {
+    document.querySelector("#tellYouWhere").innerText = whereCheck.checked ? "(home)" : "(somewhere)";
+  });
+
+  // *** LIST
+  //more with SHOW 
+  let idxMini = -1;
+  //should be a form (so that you can do ENTER)
+  miniListDiv.querySelector("#addMiniListBtn").addEventListener("click", () => {
+    let newMini = miniListDiv.querySelector("#addMiniListInput").value;
+    if(newMini){
+      if(miniListDiv.querySelector("#miniListEmpty")){
+        miniListDiv.querySelector("#miniListEmpty").remove();
+        document.querySelector("#tellYouMore").innerText = "(...)";
+      };
+      idxMini = todo.miniList ? todo.miniList.length : idxMini++;
+      miniListDiv.querySelector("#addMiniListLi").insertAdjacentHTML("beforebegin", `<li class="miniLi">
+        <input id="${newMini}${idxMini}" type="checkbox" class="listCheckInput" />
+        <label for="${newMini}${idxMini}">
+          <i class="typcn typcn-media-stop-outline miniUnChecked"></i>
+          <i class="typcn typcn-input-checked miniChecked"></i>
+        </label>
+        <input type="text" class="listNameInput" value="${newMini}" />
+        <i onclick="moveMiniDown(this)" class="typcn typcn-arrow-down-outline miniArrow"></i>
+        <i onclick="moveMiniUp(this)" class="typcn typcn-arrow-up-outline miniArrow"></i>
+      </li>`);
+      miniListDiv.querySelector("#addMiniListInput").value = "";
+    };
+  });
+  //When you do the erase function, make sur that if it's the last one: #tellYouMore.innerText = ""
+  //if they're all checked: #tellYouMore.innerText = "(all good!)"
+  function moveMiniDown(thisOne){
+    let li = thisOne.parentElement;
+    let liNext = li.nextElementSibling;
+    if(liNext && liNext.id !== "addMiniListLi"){
+      liNext.insertAdjacentElement("afterend", li);
+    };
+    
+  };
+  window.moveMiniDown = moveMiniDown;
+  function moveMiniUp(thisOne){
+    let li = thisOne.parentElement;
+    let liPrev = li.previousElementSibling;
+    if(liPrev){
+      liPrev.insertAdjacentElement("beforebegin", li);
+    };
+  };
+  window.moveMiniUp = moveMiniUp;
+
   // *** PROJET
   let newProjetColorBG;
   let newProjetColorTX;
@@ -3328,9 +3415,8 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   
   document.querySelectorAll('input[name="termOptions"]').forEach(radio => {
     radio.addEventListener("click", () => {
-      let tellYouTerm = document.querySelector("#tellYouTerm");
-      tellYouTerm.innerText = radio.value;
-      if(radio.checked && (radio.value == "showThing" || radio.value == "reminder")){
+      document.querySelector("#tellYouTerm").innerText = radio.value;
+      if(radio.value == "showThing" || radio.value == "reminder"){
         setTR();
         if(radio.value == "showThing"){
           colorIt.classList.add("hidden");
@@ -3341,16 +3427,15 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
           taskTitle.style.color = newcolor ? newcolor : todo.color;
           busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
         };
-      } else if(radio.checked && storeIt.checked && !todo.stored){
-        colorIt.classList.remove("hidden");
-        taskTitle.style.color = newcolor ? newcolor : todo.color;
-        busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
-        setN();
       } else{
         colorIt.classList.remove("hidden");
         taskTitle.style.color = newcolor ? newcolor : todo.color;
         busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
-        setTRN();
+        if(storeIt.checked && !todo.stored){
+          setN();
+        } else{
+          setTRN();
+        };
       };
     });
   });
@@ -3534,7 +3619,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         colorUrges("next");
       };
 
-      let whereCheck = document.querySelector("#whereHomeInput").checked ? true : false;
+      whereCheck.checked ? true : false;
       let whereText = document.querySelector("#whereInput");
       todo.where = whereCheck ? "home" : whereText.value;
 
@@ -3563,6 +3648,18 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         delete todo.showType;
         delete todo.STColorBG;
         delete todo.STColorTX;
+      };
+
+      if(miniListDiv.querySelector(".miniLi")){
+        todo.miniList = Array.from(miniListDiv.querySelectorAll(".miniLi")).map((li) => {
+          return {
+            name: li.querySelector(".listNameInput").value,
+            checked: li.querySelector(".listCheckInput").checked ? true : false
+          }
+        });
+        console.log(todo.miniList);
+      } else{
+        delete todo.miniList;
       };
 
       if(where == "list" || where == "searchScreen"){

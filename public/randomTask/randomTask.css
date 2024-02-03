@@ -248,6 +248,7 @@ input[type="radio"]{
   background-color: rgba(211, 211, 211, .5);
   color: var(--tx-color);
 }
+
 #cloudIt{
   margin: 0;
   font-size: 25px;
@@ -1396,6 +1397,68 @@ input[name="projetColorChoices"]:checked + label{
   opacity: 1;
   right: 5px;
 }
+
+.iconOnlyBtn{
+  border: none;
+  background-color: var(--bg-color);
+  padding: 0;
+  line-height: 1;
+}
+.listNameInput{
+  border: none;
+  background-color: var(--bg-color);
+  width: -webkit-fill-available;
+  line-height: 24px;
+}
+.listCheckInput{
+  display: none;
+}
+.miniUnChecked{
+  display: block;
+  width: fit-content;
+  font-size: 1.7em;
+  height: 26px;
+}
+.miniChecked{
+  display: none;
+  width: fit-content;
+  margin-left: 2px;
+  margin-right: 2px;
+}
+.listCheckInput:checked + label > .miniUnChecked{
+  display: none;
+}
+.listCheckInput:checked + label > .miniChecked{
+  display: block;
+}
+.listCheckInput:checked ~ .listNameInput{
+  opacity: .6;
+  text-decoration: line-through;
+}
+.miniLi > .listNameInput{
+  font-size: 1em;
+  font-weight: 500;
+}
+.miniLi > .miniArrow{
+  font-size: 1.4em;
+  width: fit-content;
+}
+.miniOptInput{
+  display: none;
+}
+.miniOptDiv{
+  display: none;
+}
+.miniOptInput:checked + .miniOptDiv{
+  display: block;
+}
+.miniOptLabel{
+  opacity: 1;
+}
+.miniOptInput:checked ~ .miniOptLabel{
+  opacity: .6;
+}
+
 .sortWhole{
   position: absolute;
   bottom: 0;

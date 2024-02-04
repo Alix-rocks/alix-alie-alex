@@ -1443,6 +1443,17 @@ input[name="projetColorChoices"]:checked + label{
   font-size: 1.4em;
   width: fit-content;
 }
+.miniLi.miniTitle > .listNameInput{
+  text-decoration: underline;
+  opacity: 1;
+  font-weight: 700;
+}
+.miniLi.miniTitle > .listCheckLabel{
+  display: none;
+}
+.miniLi.miniTitle > div.miniOptDiv > .typcn-arrow-repeat{
+  opacity: .6;
+}
 .miniOptInput{
   display: none;
 }
@@ -1450,13 +1461,24 @@ input[name="projetColorChoices"]:checked + label{
   display: none;
 }
 .miniOptInput:checked + .miniOptDiv{
-  display: block;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 27px;
+  background-color: var(--bg-color);
+  border: 3px solid var(--bg-color);
 }
 .miniOptLabel{
   opacity: 1;
 }
 .miniOptInput:checked ~ .miniOptLabel{
   opacity: .6;
+}
+.miniTypeLabel{
+  opacity: .6;
+}
+input[name="miniType"]:checked + .miniTypeLabel{
+  opacity: 1;
 }
 
 .sortWhole{

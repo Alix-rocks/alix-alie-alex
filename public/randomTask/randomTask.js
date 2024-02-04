@@ -1699,7 +1699,7 @@ function sortItAll(){
     run = true; 
     while (run) { 
       run = false; 
-      li = list.getElementsByTagName("li"); 
+      li = list.getElementsByTagName("li"); //except those in miniList (and projet)
       // Loop traversing through all the list items 
       for (i = 0; i < (li.length - 1); i++) { 
         stop = false; 
@@ -2938,20 +2938,22 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   let miniList;
   if(todo.miniList && todo.miniList.length > 0){
     miniList = todo.miniList.map((mini, idx) => { //find a way to order them...
-      return `<li class="miniLi">
-        <input id="miniCheck${idx}" type="checkbox" class="listCheckInput" ${mini.checked ? `checked` : ``} />
-        <label for="miniCheck${idx}">
+      return `<li class="miniLi${mini.type == "title" ? ` miniTitle` : ``}">
+        <input id="miniCheck${idx}" type="checkbox" class="listCheckInput" ${mini.checked ? `checked` : ``} onclick="checkTest()" />
+        <label class="listCheckLabel" for="miniCheck${idx}">
           <i class="typcn typcn-media-stop-outline miniUnChecked"></i>
           <i class="typcn typcn-input-checked miniChecked"></i>
         </label>
         <input type="text" class="listNameInput" value="${mini.name}" />
         <input id="miniOpt${idx}" type="checkbox" class="miniOptInput" />
         <div class="miniOptDiv">
+        <i onclick="switchMiniType(this)" class="typcn typcn-arrow-repeat"></i>
+        <i onclick="trashMini(this)" class="typcn typcn-trash"></i>
         <i onclick="moveMiniDown(this)" class="typcn typcn-arrow-down-outline miniArrow"></i>
         <i onclick="moveMiniUp(this)" class="typcn typcn-arrow-up-outline miniArrow"></i>
         </div>
         <label for="miniOpt${idx}" class="miniOptLabel">
-          <i class="fa-solid fa-ellipsis-vertical"></i>
+          <i class="fa-solid fa-ellipsis-vertical" style="width:23px;"></i>
         </label>
       </li>`; //with a checkbox/input and label/name that will get crossed if mini.checked == true
     }).join("");
@@ -3209,6 +3211,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
 
   // *** LIST
   //more with SHOW 
+  checkTest();
   let idxMini = -1;
   //should be a form (so that you can do ENTER)
   miniListDiv.querySelector("#addMiniListBtn").addEventListener("click", () => {
@@ -3220,31 +3223,63 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       };
       idxMini = todo.miniList ? todo.miniList.length : idxMini++;
       miniListDiv.querySelector("#addMiniListLi").insertAdjacentHTML("beforebegin", `<li class="miniLi">
-        <input id="${newMini}${idxMini}" type="checkbox" class="listCheckInput" />
-        <label for="${newMini}${idxMini}">
+        <input id="miniCheck${idxMini}" type="checkbox" class="listCheckInput" onclick="checkTest()" />
+        <label class="listCheckLabel" for="miniCheck${idxMini}">
           <i class="typcn typcn-media-stop-outline miniUnChecked"></i>
           <i class="typcn typcn-input-checked miniChecked"></i>
         </label>
         <input type="text" class="listNameInput" value="${newMini}" />
+        <input id="miniOpt${idxMini}" type="checkbox" class="miniOptInput" />
+        <div class="miniOptDiv">
+        <i onclick="switchMiniType(this)" class="typcn typcn-arrow-repeat"></i>
+        <i onclick="trashMini(this)" class="typcn typcn-trash"></i>
         <i onclick="moveMiniDown(this)" class="typcn typcn-arrow-down-outline miniArrow"></i>
         <i onclick="moveMiniUp(this)" class="typcn typcn-arrow-up-outline miniArrow"></i>
+        </div>
+        <label for="miniOpt${idxMini}" class="miniOptLabel">
+          <i class="fa-solid fa-ellipsis-vertical" style="width:23px;"></i>
+        </label>
       </li>`);
       miniListDiv.querySelector("#addMiniListInput").value = "";
+      checkTest();
     };
   });
   //When you do the erase function, make sur that if it's the last one: #tellYouMore.innerText = ""
   //if they're all checked: #tellYouMore.innerText = "(all good!)"
+  function checkTest(){
+    let miniTot = 0;
+    let miniTodo = 0;
+    let good = 0;
+    //querySelectorAll('.miniLi:not(.miniTitle)')
+    miniListDiv.querySelectorAll('.miniLi').forEach(mini => {
+      miniTot++;
+      miniTodo = !mini.classList.contains("miniTitle") ? miniTodo + 1 : miniTodo;
+      good = mini.querySelector(".listCheckInput").checked ? good + 1 : good;
+    });
+    document.querySelector("#tellYouMore").innerText = miniTot == 0 ? "" : miniTodo == good ? "(all good!)" : "(...)";
+  };
+  window.checkTest = checkTest;
+  function switchMiniType(thisOne){
+    let li = thisOne.parentElement.parentElement;
+    li.classList.toggle("miniTitle");
+    checkTest();
+  };
+  window.switchMiniType = switchMiniType;
+  function trashMini(thisOne){
+    thisOne.parentElement.parentElement.remove();
+    checkTest();
+  };
+  window.trashMini = trashMini;
   function moveMiniDown(thisOne){
-    let li = thisOne.parentElement;
+    let li = thisOne.parentElement.parentElement;
     let liNext = li.nextElementSibling;
     if(liNext && liNext.id !== "addMiniListLi"){
       liNext.insertAdjacentElement("afterend", li);
     };
-    
   };
   window.moveMiniDown = moveMiniDown;
   function moveMiniUp(thisOne){
-    let li = thisOne.parentElement;
+    let li = thisOne.parentElement.parentElement;
     let liPrev = li.previousElementSibling;
     if(liPrev){
       liPrev.insertAdjacentElement("beforebegin", li);
@@ -3654,8 +3689,9 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         todo.miniList = Array.from(miniListDiv.querySelectorAll(".miniLi")).map((li) => {
           return {
             name: li.querySelector(".listNameInput").value,
+            type: li.classList.contains("miniTitle") ? "title" : "item",
             checked: li.querySelector(".listCheckInput").checked ? true : false
-          }
+          };
         });
         console.log(todo.miniList);
       } else{
@@ -3714,7 +3750,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         gotItDone(todo.id, "");
       } else{
         todoCreation(todo); 
-        sortItAll();
+        // sortItAll();
       };
       
       
@@ -3748,6 +3784,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
     if((thisOne == "addForm" || why == "stock") && togoList !== ""){
       scrollToSection(togoList);
       taskInfo.remove();
+      sortItAll();
     } else if((thisOne == "addForm" || why == "stock") && togoList == ""){
       taskInfo.remove();
     } else if(where == "list" && togoList !== ""){
@@ -3757,6 +3794,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       });
       parent.remove(); // it wasn't complaining but that was still useless...
       clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
+      sortItAll();
     } else if(where == "list" && togoList == ""){
       parents.forEach(parent => {
         parent.remove();

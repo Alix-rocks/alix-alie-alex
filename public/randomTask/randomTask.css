@@ -1398,6 +1398,13 @@ input[name="projetColorChoices"]:checked + label{
   right: 5px;
 }
 
+#addMiniForm{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
 .iconOnlyBtn{
   border: none;
   background-color: var(--bg-color);
@@ -1479,6 +1486,16 @@ input[name="projetColorChoices"]:checked + label{
 }
 input[name="miniType"]:checked + .miniTypeLabel{
   opacity: 1;
+}
+.hiddenEye:after {
+  content: '';
+  height: 24px;
+  border-left: 3px solid var(--tx-color);
+  border-radius: 5px;
+  position: absolute;
+  transform: rotate(45deg);
+  left: 12px;
+  top: 4px;
 }
 
 .sortWhole{

@@ -3004,8 +3004,11 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
             <ul>
               ${miniList}
               <li id="addMiniListLi" style="margin: 15px 0 20px;}">
-                <input type="text" id="addMiniListInput" class="listNameInput" style="border: 0.5px solid var(--tx-color); border-radius: 5px; padding: 0 7px;" placeholder="one more" />
-                <button class="iconOnlyBtn" id="addMiniListBtn" style="margin-left: 5px;"><span class="typcn typcn-plus"></span></button>
+                <button class="iconOnlyBtn" id="hideMiniBtn" style="margin-right: 5px;"><span class="typcn typcn-eye-outline" style="font-size:1.7em"></span></button>
+                <form id="addMiniForm">
+                  <input type="text" id="addMiniListInput" class="listNameInput" style="border: 0.5px solid var(--tx-color); border-radius: 5px; padding: 0 7px;" placeholder="one more" />
+                  <button type="submit" class="iconOnlyBtn" id="addMiniListBtn" style="margin-left: 5px;"><span class="typcn typcn-plus"></span></button>
+                </form>
               </li>
             </ul>
           </div>
@@ -3028,7 +3031,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
             <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
           </label>
           <div class="taskToggleList taskInfoInput relDiv">
-          <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Projet</h5>
+          <!-- <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Projet</h5>
           <input class="myRadio" type="checkbox" name="projetOptions" id="wholeProjetInput" value="wholeProjet" ${todo.wholeProjet ? `checked` : ``} />
           <label for="wholeProjetInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's a whole big thing</span><br />
           <span class="smallText otherSmallText">with lots of little things in it</span></label>
@@ -3048,7 +3051,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
             <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
               ${projetNamesChoice}
             </div>
-          </div>
+          </div> -->
           <h5 class="taskInfoSubTitle" style="margin: 0;">Reminder</h5>
           <input class="myRadio" type="radio" name="termOptions" id="reminder" value="reminder" ${todo.term == "reminder" ? `checked` : ``} />
           <label for="reminder" class="termLabel"><span class="myRadio"></span><span>It's such a special day...</span></label>
@@ -3212,16 +3215,27 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   // *** LIST
   //more with SHOW 
   checkTest();
-  let idxMini = -1;
+  miniListDiv.querySelector("#hideMiniBtn").addEventListener("click", (e) => {
+    e.target.classList.toggle("hiddenEye");
+    miniListDiv.querySelectorAll(".miniLi > .listCheckInput:checked").forEach(check => {
+      if(e.target.classList.contains("hiddenEye")){
+        check.parentElement.classList.add("displayNone");
+      } else{
+        check.parentElement.classList.remove("displayNone");
+      };
+    });
+  });
+  let idxMini = todo.miniList ? todo.miniList.length : 0;
   //should be a form (so that you can do ENTER)
-  miniListDiv.querySelector("#addMiniListBtn").addEventListener("click", () => {
+  let addMiniForm = miniListDiv.querySelector("#addMiniForm");
+  addMiniForm.addEventListener("submit", (e) => {
+    e.preventDefault();
     let newMini = miniListDiv.querySelector("#addMiniListInput").value;
     if(newMini){
       if(miniListDiv.querySelector("#miniListEmpty")){
         miniListDiv.querySelector("#miniListEmpty").remove();
         document.querySelector("#tellYouMore").innerText = "(...)";
       };
-      idxMini = todo.miniList ? todo.miniList.length : idxMini++;
       miniListDiv.querySelector("#addMiniListLi").insertAdjacentHTML("beforebegin", `<li class="miniLi">
         <input id="miniCheck${idxMini}" type="checkbox" class="listCheckInput" onclick="checkTest()" />
         <label class="listCheckLabel" for="miniCheck${idxMini}">
@@ -3242,7 +3256,9 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       </li>`);
       miniListDiv.querySelector("#addMiniListInput").value = "";
       checkTest();
+      idxMini++;
     };
+    addMiniForm.reset();
   });
   //When you do the erase function, make sur that if it's the last one: #tellYouMore.innerText = ""
   //if they're all checked: #tellYouMore.innerText = "(all good!)"
@@ -3275,6 +3291,9 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
     let liNext = li.nextElementSibling;
     if(liNext && liNext.id !== "addMiniListLi"){
       liNext.insertAdjacentElement("afterend", li);
+    } else{
+      let firstOne = li.parentElement.firstElementChild;
+      firstOne.insertAdjacentElement("beforebegin", li);
     };
   };
   window.moveMiniDown = moveMiniDown;
@@ -3283,73 +3302,76 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
     let liPrev = li.previousElementSibling;
     if(liPrev){
       liPrev.insertAdjacentElement("beforebegin", li);
+    } else{
+      let addOne = miniListDiv.querySelector("#addMiniListLi");
+      addOne.insertAdjacentElement("beforebegin", li);
     };
   };
   window.moveMiniUp = moveMiniUp;
 
   // *** PROJET
-  let newProjetColorBG;
-  let newProjetColorTX;
-  let newProjetNickname;
-  let myProjet;
-  document.querySelectorAll('input[name="projetColorChoices"]').forEach(radio => {
-    radio.addEventListener("click", () => {
-      newProjetColorBG = showTypeChoices[radio.value].colorBG;
-      newProjetColorTX = showTypeChoices[radio.value].colorTX;
-      if(!document.querySelector(".projetOnglet")){
-        taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${newProjetColorBG}; color:${newProjetColorTX};">${newProjetNickname ? newProjetNickname : "Projet"}</div>`);
-      } else{
-        document.querySelector(".projetOnglet").style.backgroundColor = newProjetColorBG;
-        document.querySelector(".projetOnglet").style.color = newProjetColorTX;
-      };
-    });
-  });
-  let projetNickInput = document.querySelector("#projetNickInput");
-  projetNickInput.addEventListener("change", () => {
-    //make sure that nickname doesn't already exist! There can be only one of each!!
-    newProjetNickname = projetNickInput.value;
-    if(!document.querySelector(".projetOnglet")){
-      taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${newProjetColorBG ? newProjetColorBG : "var(--bg-color)"}; color:${newProjetColorTX ? newProjetColorTX : "var(--tx-color)"};">${newProjetNickname !== "" ? newProjetNickname : "Projet"}</div>`);
-    } else{
-      document.querySelector(".projetOnglet").textContent = newProjetNickname !== "" ? newProjetNickname : "Projet";
-    };
-  });
-  if(mySettings.myProjets && mySettings.myProjets.length > 0){
-    let myProjetNames = document.querySelector("#myProjetNames");
-    myProjetNames.addEventListener("change", () => {
-      if(myProjetNames.value !== "null"){
-        myProjet = mySettings.myProjets[myProjetNames.value];
-        if(!document.querySelector(".projetOnglet")){
-          taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${myProjet.colorBG}; color:${myProjet.colorTX};">${myProjet.nickname}</div>`);
-        } else{
-          document.querySelector(".projetOnglet").style.backgroundColor = myProjet.colorBG;
-          document.querySelector(".projetOnglet").style.color = myProjet.colorTX;
-          document.querySelector(".projetOnglet").textContent = myProjet.nickname;
-        };
-      };
-    });
-  };
-  document.querySelectorAll('input[name="projetOptions"]').forEach(projet => {
-    projet.addEventListener("click", () => {
-      if(projet.value == "wholeProjet"){
-        if(!document.querySelector(".projetOnglet")){
-          taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${newProjetColorBG ? newProjetColorBG : "var(--bg-color)"}; color:${newProjetColorTX ? newProjetColorTX : "var(--tx-color)"};">${newProjetNickname ? newProjetNickname : "Projet"}</div>`);
-        } else{
-          document.querySelector(".projetOnglet").style.backgroundColor = newProjetColorBG ? newProjetColorBG : "var(--bg-color)";
-          document.querySelector(".projetOnglet").style.color = newProjetColorTX ? newProjetColorTX : "var(--tx-color)";
-          document.querySelector(".projetOnglet").textContent = newProjetNickname ? newProjetNickname : "Projet";
-        };
-      } else if(projet.value == "partProjet"){
-        if(!document.querySelector(".projetOnglet")){
-          taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${myProjet ? myProjet.colorBG : "var(--bg-color)"}; color:${myProjet ? myProjet.colorTX : "var(--tx-color)"};">${myProjet ? myProjet.nickname : "Projet"}</div>`);
-        } else{
-          document.querySelector(".projetOnglet").style.backgroundColor = myProjet ? myProjet.colorBG : "var(--bg-color)";
-          document.querySelector(".projetOnglet").style.color = myProjet ? myProjet.colorTX : "var(--tx-color)";
-          document.querySelector(".projetOnglet").textContent = myProjet ? myProjet.nickname : "Projet";
-        };
-      };
-    });
-  });
+  // let newProjetColorBG;
+  // let newProjetColorTX;
+  // let newProjetNickname;
+  // let myProjet;
+  // document.querySelectorAll('input[name="projetColorChoices"]').forEach(radio => {
+  //   radio.addEventListener("click", () => {
+  //     newProjetColorBG = showTypeChoices[radio.value].colorBG;
+  //     newProjetColorTX = showTypeChoices[radio.value].colorTX;
+  //     if(!document.querySelector(".projetOnglet")){
+  //       taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${newProjetColorBG}; color:${newProjetColorTX};">${newProjetNickname ? newProjetNickname : "Projet"}</div>`);
+  //     } else{
+  //       document.querySelector(".projetOnglet").style.backgroundColor = newProjetColorBG;
+  //       document.querySelector(".projetOnglet").style.color = newProjetColorTX;
+  //     };
+  //   });
+  // });
+  // let projetNickInput = document.querySelector("#projetNickInput");
+  // projetNickInput.addEventListener("change", () => {
+  //   //make sure that nickname doesn't already exist! There can be only one of each!!
+  //   newProjetNickname = projetNickInput.value;
+  //   if(!document.querySelector(".projetOnglet")){
+  //     taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${newProjetColorBG ? newProjetColorBG : "var(--bg-color)"}; color:${newProjetColorTX ? newProjetColorTX : "var(--tx-color)"};">${newProjetNickname !== "" ? newProjetNickname : "Projet"}</div>`);
+  //   } else{
+  //     document.querySelector(".projetOnglet").textContent = newProjetNickname !== "" ? newProjetNickname : "Projet";
+  //   };
+  // });
+  // if(mySettings.myProjets && mySettings.myProjets.length > 0){
+  //   let myProjetNames = document.querySelector("#myProjetNames");
+  //   myProjetNames.addEventListener("change", () => {
+  //     if(myProjetNames.value !== "null"){
+  //       myProjet = mySettings.myProjets[myProjetNames.value];
+  //       if(!document.querySelector(".projetOnglet")){
+  //         taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${myProjet.colorBG}; color:${myProjet.colorTX};">${myProjet.nickname}</div>`);
+  //       } else{
+  //         document.querySelector(".projetOnglet").style.backgroundColor = myProjet.colorBG;
+  //         document.querySelector(".projetOnglet").style.color = myProjet.colorTX;
+  //         document.querySelector(".projetOnglet").textContent = myProjet.nickname;
+  //       };
+  //     };
+  //   });
+  // };
+  // document.querySelectorAll('input[name="projetOptions"]').forEach(projet => {
+  //   projet.addEventListener("click", () => {
+  //     if(projet.value == "wholeProjet"){
+  //       if(!document.querySelector(".projetOnglet")){
+  //         taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${newProjetColorBG ? newProjetColorBG : "var(--bg-color)"}; color:${newProjetColorTX ? newProjetColorTX : "var(--tx-color)"};">${newProjetNickname ? newProjetNickname : "Projet"}</div>`);
+  //       } else{
+  //         document.querySelector(".projetOnglet").style.backgroundColor = newProjetColorBG ? newProjetColorBG : "var(--bg-color)";
+  //         document.querySelector(".projetOnglet").style.color = newProjetColorTX ? newProjetColorTX : "var(--tx-color)";
+  //         document.querySelector(".projetOnglet").textContent = newProjetNickname ? newProjetNickname : "Projet";
+  //       };
+  //     } else if(projet.value == "partProjet"){
+  //       if(!document.querySelector(".projetOnglet")){
+  //         taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${myProjet ? myProjet.colorBG : "var(--bg-color)"}; color:${myProjet ? myProjet.colorTX : "var(--tx-color)"};">${myProjet ? myProjet.nickname : "Projet"}</div>`);
+  //       } else{
+  //         document.querySelector(".projetOnglet").style.backgroundColor = myProjet ? myProjet.colorBG : "var(--bg-color)";
+  //         document.querySelector(".projetOnglet").style.color = myProjet ? myProjet.colorTX : "var(--tx-color)";
+  //         document.querySelector(".projetOnglet").textContent = myProjet ? myProjet.nickname : "Projet";
+  //       };
+  //     };
+  //   });
+  // });
   
   
   // *** COLOR
@@ -3784,7 +3806,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
     if((thisOne == "addForm" || why == "stock") && togoList !== ""){
       scrollToSection(togoList);
       taskInfo.remove();
-      sortItAll();
+      sortItAll(); //faire un sortIt(togoList) pour réduire le travail
     } else if((thisOne == "addForm" || why == "stock") && togoList == ""){
       taskInfo.remove();
     } else if(where == "list" && togoList !== ""){
@@ -3805,6 +3827,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       moving = false;
       taskInfo.remove();
     };
+    updateArrowsColor();
     updateCBC();
     console.log(todo);
   });

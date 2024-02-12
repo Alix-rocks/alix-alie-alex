@@ -235,25 +235,37 @@ Options for sorting
         <ul id="listOups"></ul>
       </section>
       <section id="swipingSection">
-        <div class="sectionSwipeWhole">
-          <input type="checkbox" id="swipeInput" class="swipingInput cossin">
+        <!-- <div class="sectionSwipeWhole"> -->
+          <!-- <input type="checkbox" id="swipeInput" class="swipingInput cossin">
           <label for="swipeInput" class="swipeLabel">
             <i class="typcn typcn-chevron-right swipeChevron"></i>
-          </label>
-          <div class="todayDiv">
-            <h3 class="topList"><span class="topListTitle">Today's fun</span> <span class="topListDate" id="todaysDateSpan"></span></h3>
+          </label> -->
+          
+          <div id="todayDiv">
+            <div id="swipeBtns" class="nextOnly">
+              <button id="swipePrevBtn" class="iconOnlyBtn">
+                <i class="typcn typcn-chevron-left swipeChevron"></i>
+              </button>
+              <button id="swipeTodayBtn" class="iconOnlyBtn" style="margin: 0 2px; width: 24px;">
+                <i class="fa-solid fa-calendar-day swipeChevron"></i>
+              </button>
+              <button id="swipeNextBtn" class="iconOnlyBtn">
+                <i class="typcn typcn-chevron-right swipeChevron"></i>
+              </button>
+            </div>
+            <h3 class="topList"><span id="todaysTitle" class="topListTitle">Today's fun</span> <span class="topListDate">(<span id="todaysDateSpan"></span>) <span id="todaysDaySpan"></span></span></h3>
             <ul class="topListReminder" id="listTodayReminder"></ul>
-            <h5 class="topList">What shall be done today...</h5>
+            <h5 id="todaysUnderTitle" class="topList">What shall be done today...</h5>
             <ul id="listToday" class="sortedList" data-sort="time"></ul>
           </div>
           
-          <div class="tomorrowDiv">
+          <!-- <div class="tomorrowDiv">
             <h3 class="topList"><span class="topListTitle">Tomorrow's plan</span> <span class="topListDate" id="tomorrowsDateSpan"></span></h3>
             <ul class="topListReminder" id="listTomorrowReminder"></ul>
             <h5 class="topList">Plan for the worst, aim for the best...</h5>
             <ul id="listTomorrow" class="sortedList" data-sort="time"></ul>
-          </div>
-        </div>
+          </div> -->
+        <!-- </div> -->
       </section> 
       <section id="urgesSection" class="displayNone">
         <!-- <input id="urgesInput" type="checkbox" class="cossin listToggleInput" /> -->

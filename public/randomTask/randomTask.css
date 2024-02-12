@@ -651,7 +651,7 @@ h5.taskInfoInput{
 #taskInfoBtn{
   margin: 10px 0;
 }
-.sectionSwipeWhole{
+/* .sectionSwipeWhole{
   display: flex;
   flex-flow: row nowrap;
   height: fit-content;
@@ -660,17 +660,18 @@ h5.taskInfoInput{
 }
 .tomorrowDiv, .todayDiv{
   flex-grow: 1;
-}
-.todayDiv{
+} */
+#todayDiv{
   width: 100%;
   height: fit-content;
   overflow: visible;
+  position: relative;
 }
-.tomorrowDiv{
+/* .tomorrowDiv{
   width: 0;
   height: 0;
   overflow: hidden;
-}
+} */
 /* .swipeContainer{
   position: relative;
   overflow: hidden;
@@ -686,17 +687,25 @@ h5.taskInfoInput{
   top: 0;
   left: 100%;
 } */
-.swipeLabel{
+/* .swipeLabel{
   position: absolute;
   top: 0;
   right: 0;
+} */
+#swipeBtns{
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+}
+#swipeBtns.nextOnly > #swipePrevBtn, #swipeBtns.nextOnly > #swipeTodayBtn{
+  opacity: 0;
+  visibility: hidden;
 }
 .swipeChevron{
-  display: inline-block;
-  font-size: 30px;
   line-height: 30px;
 }
-#swipeInput:checked + .swipeLabel > .swipeChevron{
+/* #swipeInput:checked + .swipeLabel > .swipeChevron{
   transform: rotate(180deg);
 }
 #swipeInput:checked ~ div.tomorrowDiv{
@@ -708,7 +717,7 @@ h5.taskInfoInput{
   width: 0;
   height: 0;
   overflow: hidden;
-}
+} */
 
 .topList{
   margin: 0;

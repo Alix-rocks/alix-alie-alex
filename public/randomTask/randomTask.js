@@ -128,6 +128,43 @@ let mySettings = {
 };
 //localStorage.mySettings = JSON.stringify(mySettings);
 let cBC;
+let colorsList = [{ //showTypeChoices
+  colorBG: "white", //white
+  colorTX: "darkslategrey"
+}, {
+  colorBG: "darkslategrey", //black
+  colorTX: "white"
+}, {
+  colorBG: "#7F7F7F", //grey
+  colorTX: "white"
+}, {
+  colorBG: "goldenrod", //yellow
+  colorTX: "darkslategrey"
+}, {
+  colorBG: "#D5792B", //orange
+  colorTX: "darkslategrey"
+}, {
+  colorBG: "crimson", //red
+  colorTX: "white"
+}, {
+  colorBG: "#C54776", //pink
+  colorTX: "white"
+}, {
+  colorBG: "darkmagenta", //magenta
+  colorTX: "white"
+}, {
+  colorBG: "#895DBC", //mauve
+  colorTX: "white"
+}, {
+  colorBG: "#2E7BCD", //bleue
+  colorTX: "white"
+}, {
+  colorBG: "#06a9a9", //bleu-vert
+  colorTX: "darkslategrey"
+}, {
+  colorBG: "#3B9869", //green
+  colorTX: "white"
+}];
 let icons = ["fa-solid fa-comments", "fa-solid fa-lightbulb", "fa-solid fa-dollar-sign", "fa-solid fa-spider", "fa-solid fa-gavel", "fa-solid fa-couch", "fa-solid fa-head-side-virus", "fa-solid fa-screwdriver-wrench", "fa-solid fa-universal-access", "fa-solid fa-droplet", "fa-solid fa-code", "fa-solid fa-poo", "fa-solid fa-globe", "fa-solid fa-briefcase", "fa-solid fa-brain", "fa-solid fa-champagne-glasses", "fa-solid fa-seedling", "fa-solid fa-utensils", "fa-solid fa-heart-pulse", "fa-solid fa-sun", "fa-solid fa-broom", "fa-solid fa-people-group", "fa-solid fa-bullhorn", "fa-solid fa-magnifying-glass", "fa-solid fa-heart", "fa-solid fa-cake-candles", "fa-regular fa-hourglass-half", "fa-solid fa-road", "fa-solid fa-envelopes-bulk", "fa-solid fa-person-chalkboard", "fa-regular fa-face-grin-stars", "fa-regular fa-face-grin-hearts", "fa-regular fa-face-grin-squint", "fa-regular fa-face-smile-wink", "fa-regular fa-face-meh-blank", "fa-regular fa-face-flushed", "fa-regular fa-face-grimace", "fa-regular fa-face-rolling-eyes", "fa-regular fa-face-grin-beam-sweat", "fa-regular fa-face-surprise", "fa-regular fa-face-frown-open", "fa-regular fa-face-frown", "fa-regular fa-face-sad-tear", "fa-regular fa-face-tired", "fa-regular fa-face-sad-cry", "fa-regular fa-face-dizzy", "fa-regular fa-face-angry", "fa-solid fa-ban noIcon"];
 
 (() => {
@@ -228,12 +265,9 @@ async function getTasksSettings() {
   //   mySettings.myShowTypes = getTasks.data().mySettings.myShowTypes;
   //   localStorage.mySettings = JSON.stringify(mySettings);
   // };
-  let todayDate = getTodayDate();
-  let todayDay = getDayNameFromString(todayDate);
-  let tomorrowDate = getTomorrowDate();
-  let tomorrowDay = getDayNameFromString(tomorrowDate);
-  document.getElementById("todaysDateSpan").innerHTML = `(${todayDate}) ${todayDay}`;
-  document.getElementById("tomorrowsDateSpan").innerHTML = `(${tomorrowDate}) ${tomorrowDay}`;
+  document.getElementById("todaysDateSpan").innerHTML = getTodayDateString();
+  document.getElementById("todaysDaySpan").innerHTML = getDayNameFromString(getTodayDateString());
+
   document.getElementById(mySettings.myFavoriteView).checked = true;
   document.getElementById(mySettings.myFavoriteView).dispatchEvent(pageEvent);
   if(mySettings.mySide == "light"){
@@ -745,12 +779,8 @@ function resetCBC(){
     settingsBtn.addEventListener("click", () => {
       mySettings.myTomorrow = `${timeInput.value}`;
       if(previousTomorrow !== mySettings.myTomorrow){
-        let todayDate = getTodayDate();
-        let todayDay = getDayNameFromString(todayDate);
-        let tomorrowDate = getTomorrowDate();
-        let tomorrowDay = getDayNameFromString(tomorrowDate);
-        document.getElementById("todaysDateSpan").innerHTML = `(${todayDate}) ${todayDay}`;
-        document.getElementById("tomorrowsDateSpan").innerHTML = `(${tomorrowDate}) ${tomorrowDay}`;
+        document.getElementById("todaysDateSpan").innerHTML = getTodayDateString();
+        document.getElementById("todaysDaySpan").innerHTML = getDayNameFromString(getTodayDateString());
         listTasks.forEach(todo => {
           todoCreation(todo);
         });
@@ -967,29 +997,131 @@ function searchPage(){
 
 searchPage();
 
+let thatDaySwitch = false;
+let thatdayDate;
+let thatdayTime;
+let thatnextdayTime;
+let todayDiv = document.querySelector("#todayDiv");
 
+todayDiv.querySelector("#swipeTodayBtn").addEventListener("click", () => { //back to today
+  thatDaySwitch = true;
+  
+  thatdayDate = getTodayDateString();
+  thatdayTime = `${thatdayDate}-${mySettings.myTomorrow.replace(":", "-")}`;
+  thatnextdayTime = `${getNextDateStringFromString(thatdayDate)}-${mySettings.myTomorrow.replace(":", "-")}`;
+
+  todayDiv.querySelector("#todaysTitle").innerText = "Today's fun";
+  todayDiv.querySelector("#todaysUnderTitle").innerText = "What shall be done today...";
+  todayDiv.querySelector("#swipeBtns").classList.add("nextOnly");
+
+  addThatdayTodos(); //sorts it too
+  
+  thatDaySwitch = false;
+});
+todayDiv.querySelector("#swipeNextBtn").addEventListener("click", () => { //one day forward
+  thatDaySwitch = true;
+  let thebeforedayDate = todayDiv.querySelector("#todaysDateSpan").innerText;
+  thatdayDate = getNextDateStringFromString(thebeforedayDate);
+  thatdayTime = `${thatdayDate}-${mySettings.myTomorrow.replace(":", "-")}`;
+  thatnextdayTime = `${getNextDateStringFromString(thatdayDate)}-${mySettings.myTomorrow.replace(":", "-")}`;
+
+  if(thebeforedayDate == getTodayDateString()){
+    todayDiv.querySelector("#todaysTitle").innerText = "Tomorrow's plan";
+  } else{
+    todayDiv.querySelector("#todaysTitle").innerText = "That day's plan";
+  };
+  todayDiv.querySelector("#todaysUnderTitle").innerText = "Plan for the worst, aim for the best...";
+  todayDiv.querySelector("#swipeBtns").classList.remove("nextOnly");
+
+  addThatdayTodos(); //sorts it too
+  
+  thatDaySwitch = false;
+});
+todayDiv.querySelector("#swipePrevBtn").addEventListener("click", () => { //one day backward
+  thatDaySwitch = true;
+  let thebeforedayDate = todayDiv.querySelector("#todaysDateSpan").innerText;
+  thatdayDate = getPrevDateStringFromString(thebeforedayDate);
+  thatdayTime = `${thatdayDate}-${mySettings.myTomorrow.replace(":", "-")}`;
+  thatnextdayTime = `${thebeforedayDate}-${mySettings.myTomorrow.replace(":", "-")}`;
+  if(thatdayDate == getTodayDateString()){
+    todayDiv.querySelector("#todaysTitle").innerText = "Today's fun";
+    todayDiv.querySelector("#todaysUnderTitle").innerText = "What shall be done today...";
+    todayDiv.querySelector("#swipeBtns").classList.add("nextOnly");
+  } else{
+    if(thatdayDate == getTomorrowDateSring()){
+      todayDiv.querySelector("#todaysTitle").innerText = "Tomorrow's plan";
+    } else{
+      todayDiv.querySelector("#todaysTitle").innerText = "That day's plan";
+    };
+    todayDiv.querySelector("#todaysUnderTitle").innerText = "Plan for the worst, aim for the best...";
+  };
+  
+  addThatdayTodos(); //sorts it too
+  
+  thatDaySwitch = false;
+});
+
+function addThatdayTodos(){
+  todayDiv.querySelector("#listToday").innerHTML = ``;
+  todayDiv.querySelector("#listTodayReminder").innerHTML = ``;
+  todayDiv.querySelector("#todaysDateSpan").innerText = thatdayDate;
+  todayDiv.querySelector("#todaysDaySpan").innerText = getDayNameFromString(thatdayDate);
+  listTasks.forEach(todo => {
+    let todoDateTime;
+    let todoDeadlineTime;
+    if(todo.deadline && todo.deadline !== todo.date){ // && todo.status == "todo"
+      let modifiedDalle = todo.finoAlle ? todo.finoAlle.replace(":", "-") : "5-00";
+      todoDeadlineTime = `${todo.deadline}-${modifiedDalle}`;
+    };
+    if(todo.date){ // && todo.status == "todo"
+      let modifiedDalle = todo.dalle ? todo.dalle.replace(":", "-") : "5-00";
+      todoDateTime = `${todo.date}-${modifiedDalle}`;
+    } else if(todo.line == "recurringDay"){
+      todo.recurrys.forEach(recurry => {
+        let modifiedDalle = recurry.dalle ? recurry.dalle.replace(":", "-") : "5-00";
+        let todoTime = `${recurry.date}-${modifiedDalle}`;
+        if((thatdayTime < todoTime) && (todoTime < thatnextdayTime) || (thatdayTime < todoDeadlineTime) && (todoDeadlineTime < thatnextdayTime)){
+          todoCreation(recurry);
+        };
+      });
+    };
+    if((thatdayTime < todoDateTime) && (todoDateTime < thatnextdayTime) || (thatdayTime < todoDeadlineTime) && (todoDeadlineTime < thatnextdayTime)){
+      todoCreation(todo);
+    };
+  });
+  sortIt("time", "listToday");
+};
 
 // *** CREATION
 
 function todoCreation(todo){
   let togoList;
+  let numberedDays;
+  let todayDate = getDateTimeFromString(getTodayDateString(), mySettings.myTomorrow);
   if(searchSwitch){
     togoList = "searchFound";
+  } else if(thatDaySwitch){
+    todayDate = getDateTimeFromString(thatdayDate, mySettings.myTomorrow);
+    if(todo.term == "reminder"){
+      togoList = "listTodayReminder";
+    } else {
+      togoList = "listToday";
+    };
   } else{
     togoList = getTogoList(todo);
   };
-  if(togoList == "listTomorrow" && (todo.term == "oneTime" || todo.term == "longTerm" || todo.term == "crazyShit" || todo.term == "sameHabit") && !todo.recurry && !todo.copy){
-    // there could already be one, but it's gonna be removed soon anyway
-      copyDoneTomorrow(todo);
-  };
-  let numberedDays;
-  let todayDate = getDateTimeFromString(getTodayDate(), mySettings.myTomorrow);
+  // if(togoList == "listTomorrow" && (todo.term == "oneTime" || todo.term == "longTerm" || todo.term == "crazyShit" || todo.term == "sameHabit") && !todo.recurry && !todo.copy){//what about next and waiting?
+  //   // there could already be one, but it's gonna be removed soon anyway
+  //     copyDoneTomorrow(todo);
+  // };
+  
   if((todo.deadline && todo.deadline !== "") || togoList == "listOups"){
-    let time = todo.dalle ? todo.dalle : mySettings.myTomorrow;
     let doneDate;
     if(todo.deadline && todo.deadline !== ""){
+      let time = todo.finoAlle ? todo.finoAlle : mySettings.myTomorrow;
       doneDate = getDateTimeFromString(todo.deadline, time);
     } else if(togoList == "listOups"){
+      let time = todo.dalle ? todo.dalle : mySettings.myTomorrow;
       doneDate = getDateTimeFromString(todo.date, time);
     };
     numberedDays = Math.floor((doneDate - todayDate)/(1000 * 3600 * 24));
@@ -1049,14 +1181,22 @@ function todoCreation(todo){
 };
 
 
-
-function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dalle!
+let hierOggiTime = timeLimit("hierOggi");
+let oggiDemainTime = timeLimit("oggiDemain");
+let demainApresTime = timeLimit("demainApres");
+function getTogoList(todo){ 
   //console.log(todo);
-  let modifiedDalle = todo.dalle ? todo.dalle.replace(":", "-") : "5-00";
-  let todoTime = `${todo.date}-${modifiedDalle}`;
-  let hierOggiTime = timeLimit("hierOggi");
-  let oggiDemainTime = timeLimit("oggiDemain");
-  let demainApresTime = timeLimit("demainApres");
+  let todoDateTime;
+  let todoDeadlineTime;
+  if(todo.deadline && todo.deadline !== todo.date){
+    let modifiedDalle = todo.finoAlle ? todo.finoAlle.replace(":", "-") : "5-00";
+    todoDeadlineTime = `${todo.deadline}-${modifiedDalle}`;
+  };
+  if(todo.date){
+    let modifiedDalle = todo.dalle ? todo.dalle.replace(":", "-") : "5-00";
+    todoDateTime = `${todo.date}-${modifiedDalle}`;
+  };
+
   let togoList;
   if(todo.newShit){
     togoList = "listLimbo";
@@ -1066,7 +1206,25 @@ function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dal
     togoList = "listRecurring";
     //recurryCreation(todo);
     recurryOuting(todo);
-  } else if(todo.line == "noDay" || todo.copy){ // ( || copy ) //whenever //va inclure les deadline aussi puisqu'ils vont soient être noDay ou todoDay (ou recurringDay??)
+  } else if((todoDateTime < hierOggiTime) || (todoDeadlineTime < hierOggiTime)){
+    if(todo.term == "showThing" || todo.term == "reminder"){ //date or deadline is before today
+      togoList = "";
+    } else{
+      togoList = "listOups";
+    };
+  } else if(((hierOggiTime < todoDateTime) && (todoDateTime < oggiDemainTime)) || ((hierOggiTime < todoDeadlineTime) && (todoDeadlineTime < oggiDemainTime))){ //date or deadline is today
+    if(todo.term == "reminder"){
+      togoList = "listTodayReminder";
+    } else {
+      togoList = "listToday";
+    };
+  } else if(todoDateTime > oggiDemainTime){
+    if(todo.term == "showThing" || todo.term == "reminder"){ //date is after today
+    togoList = "";
+    } else{
+      togoList = "listScheduled";
+    };
+  } else{ // no date or deadline is after today
     if(todo.urge){
       togoList = "listUrges";
     } else if(todo.term == "oneTime"){
@@ -1080,50 +1238,6 @@ function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dal
     } else{
       togoList = "list";
     };
-  } else if((hierOggiTime < todoTime) && (todoTime < oggiDemainTime)){ //it's a todoDay or a doneDay
-    if(todo.term == "reminder"){
-      togoList = "listTodayReminder";
-    } else {
-      togoList = "listToday";
-    };
-  } else if((oggiDemainTime < todoTime) && (todoTime < demainApresTime)){
-    if(todo.term == "reminder"){
-      togoList = "listTomorrowReminder";
-    } else{
-      togoList = "listTomorrow"; //whether it's todoDay or doneDay
-      // if(todo.copy){
-      //   if(todo.term == "oneTime"){
-      //     togoList = "listOne";
-      //   } else if(todo.term == "crazyShit"){
-      //     togoList = "listIdea";
-      //   } else{
-      //     togoList = "list";
-      //   };
-      // } else{
-      //   togoList = "listTomorrow"; //whether it's todoDay or doneDay
-      // };
-    };
-    //we already know it's not a recurringDay, we just need to make sure: (term == oneTime || longTerm || crazyShit {Anything that usually shows in the lists... what about sameHabit? do they usually show in the lists...}) && !recurry ... then we make a copy of it! copy but don't push in listTasks and just add "copy" at the beginning of the id and add newTodo.copy = true
-  } else if(todo.term == "showThing" || todo.term == "reminder"){ //date is either before today or after tomorrow
-    togoList = "";
-  } else if(todoTime < hierOggiTime){
-    togoList = "listOups";
-  } else if(todoTime > demainApresTime){ //we might need to revisit that part once we separate DoneDay
-    if(todo.line == "doneDay"){
-      if(todo.term == "oneTime"){
-        togoList = "listOne";
-      } else if(todo.term == "nextThing"){
-        togoList = "listNext";
-      } else if(todo.term == "crazyShit"){
-        togoList = "listIdea";
-      } else if(todo.term == "waitForIt"){
-        togoList = "listWait";
-      } else{
-        togoList = "list";
-      };
-    } else{
-      togoList = "listScheduled";
-    };
   };
   return togoList;
 };
@@ -1131,7 +1245,8 @@ function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dal
 function checkOrUrge(thisOne){
   clickScreen.classList.remove("displayNone");
   let li = thisOne.parentElement;
-  let checkId = li.id.startsWith("copy") ? li.id.substring(4) : li.id;
+  // let checkId = li.id.startsWith("copy") ? li.id.substring(4) : li.id;
+  let checkId = li.id;
   let todo;
   if(li.dataset.rec && li.dataset.rec !== "undefined"){
     let recId = li.dataset.rec;
@@ -1211,22 +1326,22 @@ function colorUrges(when){
   };
 };
 
-function copyDoneTomorrow(todo){
-  let newTodo = JSON.parse(JSON.stringify(todo));
-  newTodo.id = `copy${todo.id}`;
-  newTodo.copy = true;
-  todoCreation(newTodo);
-};
+// function copyDoneTomorrow(todo){
+//   let newTodo = JSON.parse(JSON.stringify(todo));
+//   newTodo.id = `copy${todo.id}`;
+//   newTodo.copy = true;
+//   todoCreation(newTodo);
+// };
 
 function recurryOuting(todo){ //todo == le recurring (newtodo est le recurry/normal qui est pris de l'array d'objet todo.recurrys)
   
   //First let's make sure there are still dates in listDates, if it's fineMai; otherwise calculate more, but not from dal, from last date + 1
-  let hierOggiTime = timeLimit("hierOggi");
-  let demainApresTime = timeLimit("demainApres");
+  // let hierOggiTime = timeLimit("hierOggi");
+  // let demainApresTime = timeLimit("demainApres");
   let idx = 0;
   let recurry = todo.recurrys[idx];
   let dateTime = `${recurry.date}-${recurry.dalle ? recurry.dalle.replace(":", "-") : "5-00"}`;
-  while (dateTime < demainApresTime){
+  while (dateTime < oggiDemainTime){
     if((dateTime < hierOggiTime && todo.term !== "sameHabit")){
       todo.recurrys.splice(idx, 1);
       //WOLA il faudrait aussi todo.listDates.splice(0, 1);
@@ -1318,7 +1433,7 @@ function donedCreation(donedDate, doned){
 };
 
 function donedDateCreation(donedDate){
-  let today = getTodayDate();
+  let today = getTodayDateString();
   if(!document.getElementById(donedDate)){
     let donedUlP = document.createElement("p");
     donedUlP.setAttribute("id", donedDate + "p");
@@ -1531,14 +1646,14 @@ doneNextBtn.addEventListener("click", () => {
 
 function checkEvent(emptyCheck, where){
   let li;
-  let donedId;
   if(where == "norm"){
     li = emptyCheck.parentElement;
-    donedId = li.id.startsWith("copy") ? li.id.substring(4) : li.id;
+    // donedId = li.id.startsWith("copy") ? li.id.substring(4) : li.id;
   } else if(where == "urge"){
     li = emptyCheck.parentElement.parentElement;
-    donedId = li.id.startsWith("copy") ? li.id.substring(4) : li.id;
+    // donedId = li.id.startsWith("copy") ? li.id.substring(4) : li.id;
   };
+  let donedId = li.id;
   if(li.dataset.rec && li.dataset.rec !== "undefined"){
     let rec = li.dataset.rec;
     gotItDone(donedId, rec);
@@ -1573,7 +1688,7 @@ function gotItDone(nb, rec){ //nb = todo.id, rec = recurring Id (or "" if direct
   localStorage.listTasks = JSON.stringify(listTasks);
   colorUrges("next");
   localStorage.listTasks = JSON.stringify(listTasks);
-  let donedDate = getTodayDate(); //return
+  let donedDate = getTodayDateString(); //return
   //let's just copy the whole thing! (with date and dalle and alle, etc, so that we can put them in the weekly! and so they can be tracked, etc) OR we keep them all in the listTask and just add a todo.status: todo/done and the doneDate: ""
   // let donedItem = { 
   //   task: doned.task,
@@ -1709,9 +1824,9 @@ function sortItAll(){
       for (i = 0; i < (li.length - 1); i++) { 
         stop = false; 
         if(type == "text"){
-          first = li[i].querySelector(".text").textContent;
+          first = li[i].querySelector(".text").textContent.toLowerCase();
           first = first.startsWith("*") ? first.substring(1) : first;
-          second = li[i + 1].querySelector(".text").textContent;
+          second = li[i + 1].querySelector(".text").textContent.toLowerCase();
           second = second.startsWith("*") ? second.substring(1) : second;
         } else if(type == "color"){
           first = li[i].querySelector(".text").style.color;
@@ -1849,7 +1964,7 @@ let wheneverList = [];
 let listPage = document.querySelector("#listPage");
 let toDoPage = document.querySelector("#toDoPage");
 shuffleBtn.addEventListener("click", () => {
-  let todayDate = getTodayDate(); //that might not work getTodayTime()
+  let todayDate = getTodayDateString(); //that might not work getTodayTime()
   wheneverList = listTasks.filter(task => ((!task.date || task.date == "" || task.date <= todayDate) && (task.line !== "recurringDay" && !task.stock)) || (task.date > todayDate && task.line == "doneDay")); 
   //WOLA il faudrait ajouter les recurry...
   for (let i = wheneverList.length - 1; i > 0; i--) { 
@@ -1976,7 +2091,8 @@ function smallCalendarChoice(thisOne){
   let todo;
   let recIndex;
   let todoIndex;
-  let parentId = parent.id.startsWith("copy") ? parent.id.substring(4) : parent.id;
+  // let parentId = parent.id.startsWith("copy") ? parent.id.substring(4) : parent.id;
+  let parentId = parent.id;
   if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
     let rec = parent.dataset.rec;
     recIndex = listTasks.findIndex(todo => todo.id == rec);
@@ -2030,7 +2146,7 @@ window.smallCalendarChoice = smallCalendarChoice;
 function creatingCalendar(todo, home, classs){
   let rec = todo.line == "recurringDay" ? true : false;
   let shw = (todo.term == "showThing" || todo.term == "reminder") && !todo.stock ? true : false;
-  let date = todo.date ? todo.date : rec ? todo.dal : getTodayDate();
+  let date = todo.date ? todo.date : rec ? todo.dal : getTodayDateString();
   
   let daysWeek = mySettings.myWeeksDayArray.map((day, idx) => {
     return `<input type="checkbox" name="daysWeekChoice" class="cossin" id="${day.nameNoAcc}" value="${idx}" ${(rec && todo.var == "settimana" && todo.daysWeek && todo.daysWeek.includes(day.nameNoAcc)) ? `checked` : meseDayICalc(date) == idx ? `checked` : ``} />
@@ -2732,6 +2848,19 @@ function getDateTimeFromString(date, time){
   let dalMn = time.substring(3);
   return new Date(dalA, dalM - 1, dalG, dalH, dalMn);
 };
+
+function getNextDateStringFromString(dateString){
+  let date = getDateFromString(dateString);
+  date.setDate(date.getDate() + 1);
+  return getStringFromDate(date);
+};
+
+function getPrevDateStringFromString(dateString){
+  let date = getDateFromString(dateString);
+  date.setDate(date.getDate() - 1);
+  return getStringFromDate(date);
+};
+
 function meseDateCalc(date){
   return date.slice(8, 10);
 };
@@ -2762,43 +2891,6 @@ function getDayNameFromString(date){
 }
 
 // *** DETAILS
-let colorsList = [{ //showTypeChoices
-  colorBG: "white", //white
-  colorTX: "darkslategrey"
-}, {
-  colorBG: "darkslategrey", //black
-  colorTX: "white"
-}, {
-  colorBG: "#7F7F7F", //grey
-  colorTX: "white"
-}, {
-  colorBG: "goldenrod", //yellow
-  colorTX: "darkslategrey"
-}, {
-  colorBG: "#D5792B", //orange
-  colorTX: "darkslategrey"
-}, {
-  colorBG: "crimson", //red
-  colorTX: "white"
-}, {
-  colorBG: "#C54776", //pink
-  colorTX: "white"
-}, {
-  colorBG: "darkmagenta", //magenta
-  colorTX: "white"
-}, {
-  colorBG: "#895DBC", //mauve
-  colorTX: "white"
-}, {
-  colorBG: "#2E7BCD", //bleue
-  colorTX: "white"
-}, {
-  colorBG: "#06a9a9", //bleu-vert
-  colorTX: "darkslategrey"
-}, {
-  colorBG: "#3B9869", //green
-  colorTX: "white"
-}];
 
 function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", "calMonthPage", "searchScreen"
   //why == "new", "mod", "pro", "stock"
@@ -2889,7 +2981,8 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       // if(parentId.startsWith("copy")){
       //   parentId = parentId.substring(4);
       // };
-      parentId = parent.id.startsWith("copy") ? parent.id.substring(4) : parent.id;
+      // parentId = parent.id.startsWith("copy") ? parent.id.substring(4) : parent.id;
+      parentId = parent.id;
       togoList = parent.parentElement.id; 
       parent.classList.add("selectedTask");
       parent.scrollIntoView(); 
@@ -4066,7 +4159,8 @@ function iconChoice(thisOne){
   parent = iconTag.parentElement;
   parent.classList.add("selectedTask");
   let li = iconTag.parentElement; //li and parent are the same!!!
-  let liId = li.id.startsWith("copy") ? li.id.substring(4) : li.id
+  // let liId = li.id.startsWith("copy") ? li.id.substring(4) : li.id;
+  let liId = li.id;
   let todo;
   let recIndex;
   let todoIndex;
@@ -4119,7 +4213,7 @@ function iconChoice(thisOne){
 window.iconChoice = iconChoice;
 
 // *** DATE
-function getTodayDate(){
+function getTodayDateString(){
   let todayDate = new Date();
   let yesterDate = new Date();
   yesterDate.setDate(yesterDate.getDate() - 1);
@@ -4127,10 +4221,11 @@ function getTodayDate(){
   let currentMinute = String(todayDate.getMinutes()).padStart(2, "0");
   let currentTime = `${currentHour}:${currentMinute}`;
   let date = currentTime <= mySettings.myTomorrow ? yesterDate : todayDate;
-  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  // return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  return getStringFromDate(date);
 };
 
-function getTomorrowDate(){
+function getTomorrowDateSring(){
   let todayDate = new Date();
   let tomoDate = new Date();
   tomoDate.setDate(tomoDate.getDate() + 1);
@@ -4138,7 +4233,8 @@ function getTomorrowDate(){
   let currentMinute = String(todayDate.getMinutes()).padStart(2, "0");
   let currentTime = `${currentHour}:${currentMinute}`;
   let date = currentTime <= mySettings.myTomorrow ? todayDate : tomoDate;
-  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  // return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  return getStringFromDate(date);
 };
 
 function timeLimit(limit){
@@ -4161,7 +4257,8 @@ function timeLimit(limit){
   } else if(limit == "demainApres"){
     limitDate = currentTime <= mySettings.myTomorrow ? tomoDate : afterDate;
   };
-  let timeLimit = `${limitDate.getFullYear()}-${String(limitDate.getMonth()+1).padStart(2, "0")}-${String(limitDate.getDate()).padStart(2, "0")}-${modifiedTomorrow}`;
+  // let timeLimit = `${limitDate.getFullYear()}-${String(limitDate.getMonth()+1).padStart(2, "0")}-${String(limitDate.getDate()).padStart(2, "0")}-${modifiedTomorrow}`;
+  let timeLimit = `${getStringFromDate(limitDate)}-${modifiedTomorrow}`;
   return timeLimit;
 };
 
@@ -4401,7 +4498,7 @@ function putDatesInWeek(date){
       d = d < 6 ? d + 1 : d = 0;
     });
   };
-  let today = getTodayDate();
+  let today = getTodayDateString();
   let dayIdx = meseDayICalc(today);
   const test = arrayDate.some(el => (el.full == today));
   if(test){   

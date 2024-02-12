@@ -101,6 +101,7 @@ button span:nth-of-type(2){
   margin:0;
   padding-right: 39px;
   padding-left: 41px;
+  border-radius: 3px 5px 5px 5px;
 }
 textarea::-webkit-resizer {
   border: 2px solid var(--tx-color);
@@ -789,6 +790,7 @@ ul{
   justify-content: space-between;
   align-items: center;
   border-radius: 15px;
+  margin-left: -5px;
 }
 
 li i{
@@ -899,7 +901,6 @@ li .textDiv > hr{
 }
 .checkOrUrgeDiv i{
   margin-left: -3px;
-  font-size: 1.8em;
   line-height: 25px;
   margin-bottom: -5px;
 }
@@ -922,13 +923,47 @@ li .textDone{
   line-height: 1em;
 }
 .projetLiOnglet{
-  left: 30px;
+  left: -0.5px;;
+}
+.labelOnglet{
+  height: 32px;
+  border: 0.5px solid var(--tx-color);
+  border-radius: 0 2px 8px 0;
+  font-size: 8px;
+  padding: 2px 1px 5px 1px;
+  overflow: hidden;
+  line-height: 1em;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(-180deg);
+}
+/* Clickable */
+/* .labelLiOnglet{
+  margin-left: 5px;
+  margin-right: 5px;
+} */
+/* If not clickable: */
+.labelLiOnglet{
+  margin-right: -5px;
+  flex-shrink: 0;
+}
+.noLabel{
+  width: 6px;
+  flex-shrink: 0;
+}
+/* .noLabel{
+  width: 21px;
+} */
+.labelTaskOnglet{
+  position: absolute;
+  top: 0;
+  left: -8px;
 }
 .selectedTask{
   background-color: rgba(211, 211, 211, .5);
 }
 #todoZone li.projetLi{
-  border-radius: 2px 8px 0 2px;
+  border-radius: 0 8px 0 2px;
   margin-top: 13px;
   outline: 4px solid;
   outline-offset: -4px;
@@ -1084,7 +1119,8 @@ p#hshText{
   color: red;
 }
 
-.iconsPaletClass{
+
+.iconsPaletClass, .labelPaletClass{
   background-color: var(--bg-color);
   border: 2px solid var(--tx-color);
   border-radius: 5px;
@@ -1098,6 +1134,20 @@ p#hshText{
   align-content: space-between;
   width: 220px;
   padding: 5px;
+}
+.labelPaletClass{
+  border-radius: 0 5px 5px 5px;
+  width: 150px;
+  top: 84px;
+  left: 10px;
+  flex-direction: column;
+  align-items: center;
+}
+.labelPaletClass > div{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 .inTaskDiv{
   top: 64px;
@@ -1188,6 +1238,10 @@ input[name="colorRadio"]:checked + label > div{
 .showLi{
   border-radius: 10px;
   border: .5px solid var(--tx-color);
+}
+.showLiLabel{
+  border-radius: 50px 15px 15px 50px;
+  border-left: none;
 }
 .topListReminder{
   margin: 10px 0 5px;
@@ -1301,7 +1355,7 @@ input[name="showOptions"]:checked + label.showTypeLabel > i.showTick{
 .showTypeIconsB:hover{
   background-color: rgba(47, 79, 79, .3);
 }
-input[name="projetColorChoices"]:checked + label{
+input[name="projetColorChoices"]:checked + label, input[name="labelColorChoices"]:checked + label{
   background-color: rgba(47, 79, 79, .3);
 }
 .showTypeIconsC{

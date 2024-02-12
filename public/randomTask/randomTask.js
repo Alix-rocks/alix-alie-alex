@@ -128,7 +128,7 @@ let mySettings = {
 };
 //localStorage.mySettings = JSON.stringify(mySettings);
 let cBC;
-let icons = ["fa-solid fa-comments", "fa-solid fa-lightbulb", "fa-solid fa-dollar-sign", "fa-solid fa-spider", "fa-solid fa-gavel", "fa-solid fa-couch", "fa-solid fa-head-side-virus", "fa-solid fa-screwdriver-wrench", "fa-solid fa-universal-access", "fa-solid fa-droplet", "fa-solid fa-code", "fa-solid fa-poo", "fa-solid fa-globe", "fa-solid fa-briefcase", "fa-solid fa-brain", "fa-solid fa-champagne-glasses", "fa-solid fa-seedling", "fa-solid fa-utensils", "fa-solid fa-heart-pulse", "fa-solid fa-sun", "fa-solid fa-broom", "fa-solid fa-people-group", "fa-solid fa-bullhorn", "fa-solid fa-magnifying-glass", "fa-solid fa-heart", "fa-solid fa-cake-candles", "fa-regular fa-hourglass-half", "fa-solid fa-road", "fa-regular fa-face-grin-stars", "fa-regular fa-face-grin-hearts", "fa-regular fa-face-grin-squint", "fa-regular fa-face-smile-wink", "fa-regular fa-face-meh-blank", "fa-regular fa-face-flushed", "fa-regular fa-face-grimace", "fa-regular fa-face-rolling-eyes", "fa-regular fa-face-grin-beam-sweat", "fa-regular fa-face-surprise", "fa-regular fa-face-frown-open", "fa-regular fa-face-frown", "fa-regular fa-face-sad-tear", "fa-regular fa-face-tired", "fa-regular fa-face-sad-cry", "fa-regular fa-face-dizzy", "fa-regular fa-face-angry", "fa-solid fa-ban noIcon"];
+let icons = ["fa-solid fa-comments", "fa-solid fa-lightbulb", "fa-solid fa-dollar-sign", "fa-solid fa-spider", "fa-solid fa-gavel", "fa-solid fa-couch", "fa-solid fa-head-side-virus", "fa-solid fa-screwdriver-wrench", "fa-solid fa-universal-access", "fa-solid fa-droplet", "fa-solid fa-code", "fa-solid fa-poo", "fa-solid fa-globe", "fa-solid fa-briefcase", "fa-solid fa-brain", "fa-solid fa-champagne-glasses", "fa-solid fa-seedling", "fa-solid fa-utensils", "fa-solid fa-heart-pulse", "fa-solid fa-sun", "fa-solid fa-broom", "fa-solid fa-people-group", "fa-solid fa-bullhorn", "fa-solid fa-magnifying-glass", "fa-solid fa-heart", "fa-solid fa-cake-candles", "fa-regular fa-hourglass-half", "fa-solid fa-road", "fa-solid fa-envelopes-bulk", "fa-solid fa-person-chalkboard", "fa-regular fa-face-grin-stars", "fa-regular fa-face-grin-hearts", "fa-regular fa-face-grin-squint", "fa-regular fa-face-smile-wink", "fa-regular fa-face-meh-blank", "fa-regular fa-face-flushed", "fa-regular fa-face-grimace", "fa-regular fa-face-rolling-eyes", "fa-regular fa-face-grin-beam-sweat", "fa-regular fa-face-surprise", "fa-regular fa-face-frown-open", "fa-regular fa-face-frown", "fa-regular fa-face-sad-tear", "fa-regular fa-face-tired", "fa-regular fa-face-sad-cry", "fa-regular fa-face-dizzy", "fa-regular fa-face-angry", "fa-solid fa-ban noIcon"];
 
 (() => {
   let iconsAll = icons.map(icon => {
@@ -996,12 +996,18 @@ function todoCreation(todo){
   };
   if(togoList !== ""){ //what happens if one is stock/stored AND recurring/recurry?
     if(todo.stock){
-      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : todo.term == "sameHabit" ? `sameHabit` : todo.term == "reminder" ? `reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${todo.color}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${todo.color};" />` : ``}<span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? todo.label ? `showLiLabel` : `showLi` : todo.term == "sameHabit" ? `sameHabit` : todo.term == "reminder" ? `reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
+      ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
+      <i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${todo.color}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${todo.color};" />` : ``}<span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="reuseItEvent(this)"></i></li>`);
     } else if(todo.line == "recurringDay"){
       let time = todo.recurrys[0].dalle ? todo.recurrys[0].dalle : mySettings.myTomorrow;
       let nextDate = getDateTimeFromString(todo.recurrys[0].date, time);
       numberedDays = Math.floor(Math.abs(nextDate.getTime() - todayDate.getTime())/(1000 * 3600 * 24));
-      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? `showLi` : todo.term == "sameHabit" ? `sameHabit` : todo.term == "reminder" ? `reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}"><i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${todo.color};`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div>
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" data-time="${todo.dalle ? todo.dalle : ""}" class="${todo.term == "showThing" ? todo.label ? `showLiLabel` : `showLi` : todo.term == "sameHabit" ? `sameHabit` : todo.term == "reminder" ? `reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
+      ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
+      <i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i>
+      <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
+      <div class="textDiv"><span class="text" onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${todo.color};`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div>
       <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.dealine ? `doneDay` : todo.line}"></i><span style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${numberedDays}</span></div></li>`);
     } else if(todo.term == "reminder"){
       document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" ${todo.recurry ? `data-rec="${todo.recId}"` : ``} data-order="${todo.order ? todo.order : ""}" class="reminderClass">
@@ -1011,12 +1017,14 @@ function todoCreation(todo){
         <input type="time" class="displayNone"/></div>
       </li>`);
     } else {
-      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="${todo.term == "showThing" ? `showLi` : todo.term == "sameHabit" ? `sameHabit` : ``} ${togoList == "listOups" && numberedDays < -5 ? `selectedTask` : ``}" ${todo.term == "showThing" ? `style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``}>
-        <div class="urgeCheck" style="color: ${todo.urge ? todo.urgeColor : ``}" ${todo.urge ? `onclick="checkOrUrge(this)"` : `onclick="checkEvent(this, 'norm')"`}>
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="${todo.term == "showThing" ? todo.label ? `showLiLabel` : `showLi` : todo.term == "sameHabit" ? `sameHabit` : ``}${todo.wholeProjet ? ` projetLi` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}${todo.wholeProjet ? `outline-color: ${todo.PColorBG};` : ``}">
+        ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
+        <div class="urgeCheck" style="color: ${todo.urge ? todo.urgeColor : ``}" ${todo.urge || todo.label ? `onclick="checkOrUrge(this)"` : `onclick="checkEvent(this, 'norm')"`}>
           <i class="typcn typcn-media-stop-outline emptyCheck"></i>
           <span>${todo.urge ? todo.urgeNum : ``}</span>
         </div>
         <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
+        ${todo.wholeProjet ? `<div class="projetLiOnglet" style="background-color:${todo.PColorBG}; border: 0.5px solid ${todo.PColorBG}; color:${todo.PColorTX};">${todo.Pnickname}</div>` : ``}
         <div class="textDiv"><span onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? `` : ` color:${todo.color};`}">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
         <input type="time" class="displayNone"/>
         ${togoList == "listOups" && numberedDays < -5 ? `<div class="proHelp">
@@ -1036,15 +1044,6 @@ function todoCreation(todo){
         </div>
         <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.deadline ? `doneDay` : todo.line}"></i><span class="${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? `` : `displayNone`}" style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? numberedDays : ``}</span></div>
       </li>`);
-      // document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-date="${todo.date}" data-time="${todo.dalle ? todo.dalle : ""}" data-order="${todo.order ? todo.order : ""}" ${todo.term == "showThing" ? `class="showLi" style="background-color: ${todo.STColorBG}; color: ${todo.STColorTX};"` : ``} ${todo.projet ? `class="projetLi" style="outline-color: ${todo.PColorBG};"` : ``}>
-      //   <i class="typcn typcn-media-stop-outline emptyCheck" onclick="checkEvent(this)"></i>
-      //   <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
-      //   ${todo.projet  && todo.projet == "wholeProjet" ? `<div class="projetLiOnglet" style="background-color:${todo.PColorBG}; color:${todo.PColorTX};">${todo.Pnickname}</div>` : ``}
-      //   <div class="textDiv"><span onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'list', 'mod')`}" class="text" ${todo.term == "showThing" ? `` : `style="color:${todo.color};"`}>${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
-      //   <input type="time" class="displayNone"/></div>
-      //   
-      //   <i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.line}" onclick="smallCalendarChoice(this)"></i>
-      // </li>`);
     };
   };
 };
@@ -1132,7 +1131,7 @@ function getTogoList(todo){ //todo.date doesn't work anymore! we need date + dal
 function checkOrUrge(thisOne){
   clickScreen.classList.remove("displayNone");
   let li = thisOne.parentElement;
-  let checkId = li.id;
+  let checkId = li.id.startsWith("copy") ? li.id.substring(4) : li.id;
   let todo;
   if(li.dataset.rec && li.dataset.rec !== "undefined"){
     let recId = li.dataset.rec;
@@ -1143,30 +1142,36 @@ function checkOrUrge(thisOne){
     let todoIndex = listTasks.findIndex(todo => todo.id == checkId);
     todo = listTasks[todoIndex];
   };
+  console.log(todo);
   li.insertAdjacentHTML("beforeend", `<div class="checkOrUrgeDiv">
-  <i class="typcn typcn-input-checked-outline" onclick="checkEvent(this, 'urge')"></i>
-  <input id="newUrgeNumInput" type="number" value="${todo.urgeNum}"/>
-  </div>`);
+  ${todo.label ? `<i class="fa-solid fa-pen-ruler" style="font-size: 1.2em;color:${colorsList[todo.LColor].colorBG};"></i>` : ``}
+  <i class="typcn typcn-input-checked-outline" style="font-size: 1.8em;color:var(--tx-color);" onclick="checkEvent(this, 'urge')"></i>
+  ${todo.urge ? `<input id="newUrgeNumInput" type="number" value="${todo.urgeNum}"/>
+  </div>` : ``}`);
   let checkOrUrgeDiv = document.querySelector(".checkOrUrgeDiv");
   clickScreen.addEventListener("click", () => clickHandlerSmallAddOn(checkOrUrgeDiv, clickScreen));
-  let newUrgeNumInput = document.querySelector("#newUrgeNumInput");
   let urgeCheckDiv = li.querySelector("div.urgeCheck");
-  newUrgeNumInput.addEventListener("change", () => {
-    if(newUrgeNumInput.value == 0){
-      delete todo.urge;
-      delete todo.urgeNum;
-      delete todo.urgeColor;
-      urgeCheckDiv.style.color = "darkslategrey";
-      urgeCheckDiv.querySelector("span").textContent = "";
-      urgeCheckDiv.setAttribute("onclick", "checkEvent(this, 'norm')");
-    } else{
-      todo.urgeNum = newUrgeNumInput.value;
-      urgeCheckDiv.querySelector("span").textContent = newUrgeNumInput.value;
-    };
-    checkOrUrgeDiv.remove();
-    colorUrges("next");
-    clickHandlerSmallAddOn(checkOrUrgeDiv, clickScreen);
-  });
+  if(todo.urge){
+    let newUrgeNumInput = document.querySelector("#newUrgeNumInput");
+    newUrgeNumInput.addEventListener("change", () => {
+      if(newUrgeNumInput.value == 0){
+        delete todo.urge;
+        delete todo.urgeNum;
+        delete todo.urgeColor;
+        urgeCheckDiv.style.color = "darkslategrey";
+        urgeCheckDiv.querySelector("span").textContent = "";
+        urgeCheckDiv.setAttribute("onclick", "checkEvent(this, 'norm')");
+      } else{
+        todo.urgeNum = newUrgeNumInput.value;
+        urgeCheckDiv.querySelector("span").textContent = newUrgeNumInput.value;
+      };
+      localStorage.listTasks = JSON.stringify(listTasks);
+      checkOrUrgeDiv.remove();
+      colorUrges("next");
+      updateCBC();
+      clickHandlerSmallAddOn(checkOrUrgeDiv, clickScreen);
+    });
+  };
 };
 window.checkOrUrge = checkOrUrge;
 
@@ -1529,10 +1534,10 @@ function checkEvent(emptyCheck, where){
   let donedId;
   if(where == "norm"){
     li = emptyCheck.parentElement;
-    donedId = li.id;
+    donedId = li.id.startsWith("copy") ? li.id.substring(4) : li.id;
   } else if(where == "urge"){
     li = emptyCheck.parentElement.parentElement;
-    donedId = li.id;
+    donedId = li.id.startsWith("copy") ? li.id.substring(4) : li.id;
   };
   if(li.dataset.rec && li.dataset.rec !== "undefined"){
     let rec = li.dataset.rec;
@@ -1800,7 +1805,8 @@ function sortIt(type, listName) {
   run = true; 
   while (run) { 
     run = false; 
-    li = list.getElementsByTagName("li"); 
+    // li = list.getElementsByTagName("li"); 
+    li = list.querySelectorAll("li:not(.allMiniLi)"); 
     // Loop traversing through all the list items 
     for (i = 0; i < (li.length - 1); i++) { 
       stop = false; 
@@ -2499,6 +2505,10 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
 //todo.recurry => true/false means it's one occurence of a recurring (calendar icon purple) (anciennement "recurry" in todo.line)
 //todo.out => true (le <li> du recurry a été créé) / false ou inexistant (le <li> n'a pas encore été créé)
 //todo.recurring => aucune idée à quoi ça sert...
+//todo.label
+//todo.LName
+//todo.LColorTX
+//todo.LColorBG
 //todo.projet => wholeProjet (projet) or partProjet (partie d'un projet) or (notProjet or "" or delete)
 //todo.PColorBG => couleur du background du projet label
 //todo.PColorTX => couleur du texte du projet label
@@ -2752,7 +2762,7 @@ function getDayNameFromString(date){
 }
 
 // *** DETAILS
-let showTypeChoices = [{
+let colorsList = [{ //showTypeChoices
   colorBG: "white", //white
   colorTX: "darkslategrey"
 }, {
@@ -2912,13 +2922,13 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         <input class="showInput" type="radio" name="showOptions" id="${myShowType.name}Show" value="${myShowType.name}" ${(todo.term == "showThing" && todo.showType == myShowType.name) ? `checked` : (!todo.showType || todo.showType == "") && idx == 0 ? `checked` :  ``} />
         <label for="${myShowType.name}Show" class="showLi showTypeLabel" style="background-color:${myShowType.colorBG};color:${myShowType.colorTX};">${myShowType.name}<i class="typcn typcn-tick showTick"></i></label>
         <i class="typcn typcn-trash" onclick="trashShowTypeEvent(this)"></i>
-      </div>`;
+      </div>`; //colorsList[myShowType.color].colorTX
     }).join("");
   } else{
     myShows = `<h6>pssst... You've got no types of show... yet</h6>`;
   };
 
-  let Pcolors = showTypeChoices.map((icon, idx) => {
+  let Pcolors = colorsList.map((icon, idx) => {
     return `<input id="projetColor${idx}" type="radio" name="projetColorChoices" class="displayNone" value="${idx}" ${todo.PColorBG && todo.PColorBG == icon.colorBG ? "checked" : ""} /><label for="projetColor${idx}" class="showTypeIconsB projetColorChoix"><i class="fa-solid fa-folder-closed" style="color:${icon.colorBG};"></i></label>`;
   }).join("");
   let projetColorsChoice = `<div class="projetColorsDiv">${Pcolors}</div>`;
@@ -2933,12 +2943,12 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
     ${projetNames}
   </select>`;
   } else{
-    projetNamesChoice = `<h6>pssst... First, you've got to create a projet!</h6>`;
+    projetNamesChoice = `<h6 style="margin: 0;">pssst... First, you've got to create a projet!</h6>`;
   };
   let miniList;
   if(todo.miniList && todo.miniList.length > 0){
-    miniList = todo.miniList.map((mini, idx) => { //find a way to order them...
-      return `<li class="miniLi${mini.type == "title" ? ` miniTitle` : ``}">
+    miniList = todo.miniList.map((mini, idx) => {
+      return `<li class="allMiniLi miniLi${mini.type == "title" ? ` miniTitle` : ``}">
         <input id="miniCheck${idx}" type="checkbox" class="listCheckInput" ${mini.checked ? `checked` : ``} onclick="checkTest()" />
         <label class="listCheckLabel" for="miniCheck${idx}">
           <i class="typcn typcn-media-stop-outline miniUnChecked"></i>
@@ -2989,6 +2999,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       <div class="taskInfoInput relDiv">
         ${todo.wholeProjet || todo.partProjet ? `<div class="projetOnglet" style="background-color:${todo.PColorBG}; color:${todo.PColorTX};">${todo.Pnickname}</div>` : ``}
         <span id="iconIt" class="IconI ${todo.icon}"></span>
+        <div id="labelIt" class="labelOnglet labelTaskOnglet" style="left:-10px; top:2px; background-color:${todo.LColor ? colorsList[todo.LColor].colorBG : "initial"}; color:${todo.LColor ? colorsList[todo.LColor].colorTX : "inherit"};">${todo.LName ? todo.LName : "Label"}</div>
         <div class="underLining" id="taskTitle-underLining"></div>
         <input type="text" id="taskTitle" class="taskInfoInput" style="color:${todo.term == "showThing" ? `darkslategrey` : todo.color};" value="${todo.task ? todo.task : ""}">
         <span id="colorIt" class="typcn typcn-tag tagSpan ${todo.term == "showThing" ? `hidden` : ``}" style="color:${todo.color};"></span>
@@ -3003,7 +3014,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
           <div id="miniListDiv" class="taskToggleList taskInfoInput">
             <ul>
               ${miniList}
-              <li id="addMiniListLi" style="margin: 15px 0 20px;}">
+              <li class="allMiniLi" id="addMiniListLi" style="margin: 15px 0 20px;}">
                 <button class="iconOnlyBtn" id="hideMiniBtn" style="margin-right: 5px;"><span class="typcn typcn-eye-outline" style="font-size:1.7em"></span></button>
                 <form id="addMiniForm">
                   <input type="text" id="addMiniListInput" class="listNameInput" style="border: 0.5px solid var(--tx-color); border-radius: 5px; padding: 0 7px;" placeholder="one more" />
@@ -3027,11 +3038,11 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         <input id="tellWhatInput" type="checkbox" class="cossin taskToggleInput" />
         <div>
           <label for="tellWhatInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
-            <h5 class="topList">Tell me what...<span class="tellYou">(<span id="tellYouTermProjet">${todo.wholeProjet || todo.partProjet ? `Projet - ` : ``}</span><span id="tellYouTerm">${todo.term}</span><span id="tellYouShowType">${todo.term == "showThing" ? ` - ${todo.showType ? todo.showType : mySettings.myShowTypes[0].name}` : ``}</span>)</span></h5>
+            <h5 class="topList">Tell me what...<span class="tellYou">(<span id="tellYouTermProjet">${todo.wholeProjet || todo.partProjet ? `Projet - ` : ``}</span><span id="tellYouTerm">${todo.term}</span><span id="tellYouShowType">${todo.term == "showThing" ? ` - ${todo.showType ? todo.showType : mySettings.myShowTypes[0].name}` : ``}</span><span id="tellYouUrge">${todo.urge ? ` - Priority: ${todo.urgeNum}` : ``}</span>)</span></h5>
             <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
           </label>
           <div class="taskToggleList taskInfoInput relDiv">
-          <!-- <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Projet</h5>
+          <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Projet</h5>
           <input class="myRadio" type="checkbox" name="projetOptions" id="wholeProjetInput" value="wholeProjet" ${todo.wholeProjet ? `checked` : ``} />
           <label for="wholeProjetInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's a whole big thing</span><br />
           <span class="smallText otherSmallText">with lots of little things in it</span></label>
@@ -3051,7 +3062,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
             <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
               ${projetNamesChoice}
             </div>
-          </div> -->
+          </div>
           <h5 class="taskInfoSubTitle" style="margin: 0;">Reminder</h5>
           <input class="myRadio" type="radio" name="termOptions" id="reminder" value="reminder" ${todo.term == "reminder" ? `checked` : ``} />
           <label for="reminder" class="termLabel"><span class="myRadio"></span><span>It's such a special day...</span></label>
@@ -3162,6 +3173,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   let SupClickScreen = document.querySelector("#SupClickScreen");
   let colorIt = document.querySelector("#colorIt");
   let colorPalet = document.querySelector("#colorPalet");
+  let labelIt = document.querySelector("#labelIt");
   let iconIt = document.querySelector("#iconIt");
   let iconsPalet = document.querySelector("#iconsPalet");
   let taskInfoBtn = document.querySelector("#taskInfoBtn");
@@ -3211,6 +3223,9 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   whereCheck.addEventListener("click", () => {
     document.querySelector("#tellYouWhere").innerText = whereCheck.checked ? "(home)" : "(somewhere)";
   });
+  urgeInput.addEventListener("change", () => {
+    document.querySelector("#tellYouUrge").innerText = urgeInput.value > 0 ? ` - Priority: ${urgeInput.value}` : ``;
+  });
 
   // *** LIST
   //more with SHOW 
@@ -3226,7 +3241,6 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
     });
   });
   let idxMini = todo.miniList ? todo.miniList.length : 0;
-  //should be a form (so that you can do ENTER)
   let addMiniForm = miniListDiv.querySelector("#addMiniForm");
   addMiniForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -3236,7 +3250,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         miniListDiv.querySelector("#miniListEmpty").remove();
         document.querySelector("#tellYouMore").innerText = "(...)";
       };
-      miniListDiv.querySelector("#addMiniListLi").insertAdjacentHTML("beforebegin", `<li class="miniLi">
+      miniListDiv.querySelector("#addMiniListLi").insertAdjacentHTML("beforebegin", `<li class="allMiniLi miniLi">
         <input id="miniCheck${idxMini}" type="checkbox" class="listCheckInput" onclick="checkTest()" />
         <label class="listCheckLabel" for="miniCheck${idxMini}">
           <i class="typcn typcn-media-stop-outline miniUnChecked"></i>
@@ -3260,8 +3274,6 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
     };
     addMiniForm.reset();
   });
-  //When you do the erase function, make sur that if it's the last one: #tellYouMore.innerText = ""
-  //if they're all checked: #tellYouMore.innerText = "(all good!)"
   function checkTest(){
     let miniTot = 0;
     let miniTodo = 0;
@@ -3310,47 +3322,47 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   window.moveMiniUp = moveMiniUp;
 
   // *** PROJET
-  // let newProjetColorBG;
-  // let newProjetColorTX;
-  // let newProjetNickname;
-  // let myProjet;
-  // document.querySelectorAll('input[name="projetColorChoices"]').forEach(radio => {
-  //   radio.addEventListener("click", () => {
-  //     newProjetColorBG = showTypeChoices[radio.value].colorBG;
-  //     newProjetColorTX = showTypeChoices[radio.value].colorTX;
-  //     if(!document.querySelector(".projetOnglet")){
-  //       taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${newProjetColorBG}; color:${newProjetColorTX};">${newProjetNickname ? newProjetNickname : "Projet"}</div>`);
-  //     } else{
-  //       document.querySelector(".projetOnglet").style.backgroundColor = newProjetColorBG;
-  //       document.querySelector(".projetOnglet").style.color = newProjetColorTX;
-  //     };
-  //   });
-  // });
-  // let projetNickInput = document.querySelector("#projetNickInput");
-  // projetNickInput.addEventListener("change", () => {
-  //   //make sure that nickname doesn't already exist! There can be only one of each!!
-  //   newProjetNickname = projetNickInput.value;
-  //   if(!document.querySelector(".projetOnglet")){
-  //     taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${newProjetColorBG ? newProjetColorBG : "var(--bg-color)"}; color:${newProjetColorTX ? newProjetColorTX : "var(--tx-color)"};">${newProjetNickname !== "" ? newProjetNickname : "Projet"}</div>`);
-  //   } else{
-  //     document.querySelector(".projetOnglet").textContent = newProjetNickname !== "" ? newProjetNickname : "Projet";
-  //   };
-  // });
-  // if(mySettings.myProjets && mySettings.myProjets.length > 0){
-  //   let myProjetNames = document.querySelector("#myProjetNames");
-  //   myProjetNames.addEventListener("change", () => {
-  //     if(myProjetNames.value !== "null"){
-  //       myProjet = mySettings.myProjets[myProjetNames.value];
-  //       if(!document.querySelector(".projetOnglet")){
-  //         taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${myProjet.colorBG}; color:${myProjet.colorTX};">${myProjet.nickname}</div>`);
-  //       } else{
-  //         document.querySelector(".projetOnglet").style.backgroundColor = myProjet.colorBG;
-  //         document.querySelector(".projetOnglet").style.color = myProjet.colorTX;
-  //         document.querySelector(".projetOnglet").textContent = myProjet.nickname;
-  //       };
-  //     };
-  //   });
-  // };
+  let newProjetColorBG;
+  let newProjetColorTX;
+  let newProjetNickname;
+  let myProjet;
+  document.querySelectorAll('input[name="projetColorChoices"]').forEach(radio => {
+    radio.addEventListener("click", () => {
+      newProjetColorBG = colorsList[radio.value].colorBG;
+      newProjetColorTX = colorsList[radio.value].colorTX;
+      if(!document.querySelector(".projetOnglet")){
+        taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${newProjetColorBG}; color:${newProjetColorTX};">${newProjetNickname ? newProjetNickname : "Projet"}</div>`);
+      } else{
+        document.querySelector(".projetOnglet").style.backgroundColor = newProjetColorBG;
+        document.querySelector(".projetOnglet").style.color = newProjetColorTX;
+      };
+    });
+  });
+  let projetNickInput = document.querySelector("#projetNickInput");
+  projetNickInput.addEventListener("change", () => {
+    //make sure that nickname doesn't already exist! There can be only one of each!!
+    newProjetNickname = projetNickInput.value;
+    if(!document.querySelector(".projetOnglet")){
+      taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${newProjetColorBG ? newProjetColorBG : "var(--bg-color)"}; color:${newProjetColorTX ? newProjetColorTX : "var(--tx-color)"};">${newProjetNickname !== "" ? newProjetNickname : "Projet"}</div>`);
+    } else{
+      document.querySelector(".projetOnglet").textContent = newProjetNickname !== "" ? newProjetNickname : "Projet";
+    };
+  });
+  if(mySettings.myProjets && mySettings.myProjets.length > 0){
+    let myProjetNames = document.querySelector("#myProjetNames");
+    myProjetNames.addEventListener("change", () => {
+      if(myProjetNames.value !== "null"){
+        myProjet = mySettings.myProjets[myProjetNames.value];
+        if(!document.querySelector(".projetOnglet")){
+          taskTitle.insertAdjacentHTML("beforebegin", `<div class="projetOnglet" style="background-color:${myProjet.colorBG}; color:${myProjet.colorTX};">${myProjet.nickname}</div>`);
+        } else{
+          document.querySelector(".projetOnglet").style.backgroundColor = myProjet.colorBG;
+          document.querySelector(".projetOnglet").style.color = myProjet.colorTX;
+          document.querySelector(".projetOnglet").textContent = myProjet.nickname;
+        };
+      };
+    });
+  };
   // document.querySelectorAll('input[name="projetOptions"]').forEach(projet => {
   //   projet.addEventListener("click", () => {
   //     if(projet.value == "wholeProjet"){
@@ -3420,12 +3432,74 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
     });
     SupClickScreen.addEventListener("click", () => clickHandlerAddOn(iconsPalet, "keep", SupClickScreen, "nowhere"));
   });
+
+  //LABEL
+  let newlabelName = todo.label ? todo.LName : "";
+  let newlabelColor = todo.label ? todo.LColor : "";
+  labelIt.addEventListener("click", () => {
+    let labelNamesChoice;
+    if(mySettings.myLabels && mySettings.myLabels.length > 0){
+      let labelNames = mySettings.myLabels.map((label, idx) => {
+        return `<option style="background-color:${colorsList[label.color].colorBG}; color:${colorsList[label.color].colorTX};" value="${idx}" ${todo.LName && todo.LName == label.name ? `selected` : ``}>${label.name}</option>`;
+      }).join("");
+      labelNamesChoice = `<h5 style="margin: 10px 0 5px; align-self: flex-start;">Choose one: <select id="myLabelNames">
+      <option value="null">none</option>
+      ${labelNames}
+    </select></h5>`;
+    } else{
+      labelNamesChoice = ``;
+    };
+    
+    let Lcolors = colorsList.map((icon, idx) => {
+      return `<input id="labelColor${idx}" type="radio" name="labelColorChoices" class="displayNone" value="${idx}" /><label for="labelColor${idx}" class="showTypeIconsB labelColorChoix"><i class="fa-solid fa-pen-ruler" style="color:${icon.colorBG};"></i></label>`;
+    }).join("");
+    let labelPalet = `<div id="labelPalet" class="labelPaletClass">
+    <h5 style="margin:0; text-decoration:underline;">Let's put a label on it!</h5>
+    ${labelNamesChoice}
+    <h5 style="margin: 15px 0 0; align-self: flex-start;">Create one: <input id="labelNameInput" type="text" style="width: 50px;margin:auto;" placeholder="Label"/></h5>
+    <div>${Lcolors}</div>
+    </div>`;
+    taskInfo.insertAdjacentHTML("beforeend", labelPalet);
+    SupClickScreen.classList.remove("displayNone");
+    labelPalet = document.querySelector("#labelPalet");
+    if(mySettings.myLabels && mySettings.myLabels.length > 0){
+      document.querySelector("#myLabelNames").addEventListener("change", (e) => {
+        console.log(e.target.value);
+        if(e.target.value == "null"){
+          newlabelColor = "";
+          newlabelName = "";
+          labelIt.style.backgroundColor = "var(--bg-color)";
+          labelIt.style.color = "var(--tx-color)";
+          labelIt.innerText = "Label";
+        } else{
+          let label = mySettings.myLabels[e.target.value];
+          newlabelColor = label.color;
+          labelIt.style.backgroundColor = colorsList[label.color].colorBG;
+          labelIt.style.color = colorsList[label.color].colorTX;
+          newlabelName = labelIt.innerText = label.name;
+        };
+      });
+    };
+    document.querySelectorAll("input[name='labelColorChoices']").forEach(radio => {
+      radio.addEventListener("click", () => {
+        newlabelColor = radio.value; //index of colorList
+        labelIt.style.backgroundColor = colorsList[newlabelColor].colorBG;
+        labelIt.style.color = colorsList[newlabelColor].colorTX;
+      // clickHandlerAddOn(labelPalet, "trash", SupClickScreen, "nowhere");
+      });
+    });
+    document.querySelector("#labelNameInput").addEventListener("change", (e) => {
+      newlabelName = labelIt.innerText = e.currentTarget.value;
+    });
+    SupClickScreen.addEventListener("click", () => clickHandlerAddOn(labelPalet, "trash", SupClickScreen, "nowhere"));
+  });
   
   //SHOW TYPE
   let showTypeIcons = false;
   let newSTColor = false;
   let newSTColorBG;
   let newSTColorTX;
+  let newSTColorIdx;
   let newSTing = false;
   let myShowDiv = document.querySelector("#myShowDiv");
   let showTypeCreationInput = document.querySelector("#showTypeCreationInput");
@@ -3534,14 +3608,15 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       document.querySelector(".showTypeIconsDiv").remove();
       showTypeIcons = false;
     } else{
-      let STicons = showTypeChoices.map((icon, idx) => {
+      let STicons = colorsList.map((icon, idx) => {
         return `<div class="showTypeIconsB" data-index="${idx}"><div class="showTypeIconsC" style="background-color:${icon.colorBG};"><i class="typcn typcn-tick-outline" style="color:${icon.colorTX};"></i></div></div>`;
       }).join("");
       document.querySelector(".showTypeCreationInside").insertAdjacentHTML("beforeend", `<div class="showTypeIconsDiv">${STicons}</div>`);
       document.querySelectorAll(".showTypeIconsB").forEach(btn => {
         btn.addEventListener("click", (e) => {
-          newSTColorBG = showTypeChoices[e.currentTarget.dataset.index].colorBG ;
-          newSTColorTX = showTypeChoices[e.currentTarget.dataset.index].colorTX;
+          newSTColorIdx = e.currentTarget.dataset.index;
+          newSTColorBG = colorsList[e.currentTarget.dataset.index].colorBG ;
+          newSTColorTX = colorsList[e.currentTarget.dataset.index].colorTX;
           showTypeCreationInput.style.backgroundColor = newSTColorBG;
           showTypeCreationInput.style.color = newSTColorTX;
           newSTColor = true;
@@ -3560,7 +3635,8 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       let showType = {
         name: showTypeCreationInput.value,
         colorBG: newSTColorBG,
-        colorTX: newSTColorTX
+        colorTX: newSTColorTX,
+        color: newSTColorIdx
       };
       mySettings.myShowTypes.push(showType);
       if(mySettings.myShowTypes.length == 1){
@@ -3568,9 +3644,9 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       };
       myShowDiv.insertAdjacentHTML("beforeend", `<div class="showTypeLabelDiv" id="div${showType.name}">
         <input class="showInput" type="radio" name="showOptions" id="${showType.name}Show" value="${showType.name}" ${mySettings.myShowTypes.length == 1 ? `checked` : ``} />
-        <label for="${showType.name}Show" class="showLi showTypeLabel" style="background-color:${showType.colorBG};color:${showType.colorTX};">${showType.name}<i class="typcn typcn-tick showTick"></i></label>
+        <label for="${showType.name}Show" class="showLi showTypeLabel" style="background-color:${colorsList[showType.color].colorBG};color:${colorsList[showType.color].colorTX};">${showType.name}<i class="typcn typcn-tick showTick"></i></label>
         <i class="typcn typcn-trash" onclick="trashShowTypeEvent(this)"></i>
-      </div>`);
+      </div>`);//colorsList[showType.color].colorTX
       
       localStorage.mySettings = JSON.stringify(mySettings);
       document.querySelectorAll(".underh5").forEach(h => {
@@ -3611,6 +3687,63 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         showTypeCreationConfirm.style.color = "red";
         newSTing = false;
       };
+      
+      if(document.querySelector('#wholeProjetInput').checked){
+        todo.wholeProjet = true
+        todo.PColorBG = newProjetColorBG ? newProjetColorBG : todo.PColorBG ? todo.PColorBG : "";
+        todo.PColorTX = newProjetColorTX ? newProjetColorTX : todo.PColorTX ? todo.PColorTX : "";
+        todo.Pnickname = newProjetNickname ? newProjetNickname : todo.Pnickname ? todo.Pnickname : "";
+        if(todo.PColorBG == "" || todo.PColorTX == "" || todo.Pnickname == ""){
+          console.log("should stop");
+          e.preventDefault();//This is not working
+          e.currentTarget.insertAdjacentHTML("beforebegin", `<h5>Something's missing...</h5>`);
+        } else{
+          if(mySettings.myProjets && mySettings.myProjets.length > 0){
+            let indexP = mySettings.myProjets.findIndex(projet => projet.nickname == todo.Pnickname);
+            if(indexP && indexP >= 0){
+              console.log("already existed");
+              mySettings.myProjets[indexP].colorBG = todo.PColorBG;
+              mySettings.myProjets[indexP].colorTX = todo.PColorTX;
+            } else{
+              console.log("didn't exist");
+              let myNewProjet = {
+                nickname: todo.Pnickname,
+                colorBG: todo.PColorBG,
+                colorTX: todo.PColorTX
+              };
+              mySettings.myProjets.push(myNewProjet);
+            };
+          } else{
+            console.log("the whole thing didn't exist");
+            let myNewProjet = {
+              nickname: todo.Pnickname,
+              colorBG: todo.PColorBG,
+              colorTX: todo.PColorTX
+            };
+            if(!mySettings.myProjets){
+              mySettings.myProjets = [];
+              mySettings.myProjets.push(myNewProjet);
+            } else{
+              mySettings.myProjets.push(myNewProjet);
+            };
+            
+            console.log(mySettings);
+          };
+          localStorage.mySettings = JSON.stringify(mySettings);
+        };
+      } else {
+        delete todo.wholeProjet;
+        delete todo.PColorBG;
+        delete todo.PColorTX;
+        delete todo.Pnickname;
+      };
+      
+      // if(todo.projet == "partProjet"){
+      //   todo.PColorBG = myProjet.colorBG;
+      //   todo.PColorTX = myProjet.colorTX;
+      //   todo.Pnickname = myProjet.nickname;
+      // }
+
       // todo.projet  = document.querySelector('input[name="projetOptions"]:checked').value;
       // if(todo.projet == "wholeProjet"){
       //   todo.PColorBG = newProjetColorBG ? newProjetColorBG : todo.PColorBG ? todo.PColorBG : "";
@@ -3658,6 +3791,34 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       //   delete todo.Pnickname;
       // };
   
+      if(newlabelName !== "" && newlabelColor !== ""){
+        todo.label = true;
+        todo.LName = newlabelName;
+        todo.LColor = newlabelColor;
+ 
+        let newLabel = {
+          name: newlabelName,
+          color: newlabelColor
+        };
+        if(!mySettings.myLabels){
+          mySettings.myLabels = [];
+          mySettings.myLabels.push(newLabel);
+        } else if(mySettings.myLabels && mySettings.myLabels.length > 0){
+          let thisLabelIdx = mySettings.myLabels.findIndex(label => label.name == newlabelName);
+          if(thisLabelIdx == -1){
+            mySettings.myLabels.push(newLabel);
+          } else{
+            mySettings.myLabels[thisLabelIdx] = newLabel;
+          };
+        };
+        localStorage.mySettings = JSON.stringify(mySettings);
+      } else{
+        delete todo.label;
+        delete todo.LName;
+        delete todo.LColor;
+      };
+      
+
       todo.task = taskTitle.value.startsWith("*") ? taskTitle.value.substring(1) : taskTitle.value;
 
       if(taskDetails.value !== ""){
@@ -3678,7 +3839,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
 
       whereCheck.checked ? true : false;
       let whereText = document.querySelector("#whereInput");
-      todo.where = whereCheck ? "home" : whereText.value;
+      todo.where = whereCheck.checked ? "home" : whereText.value;
 
       todo.color = newcolor;
       todo.icon = newicon;
@@ -3692,6 +3853,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
             let indexST = mySettings.myShowTypes.findIndex(show => show.name == todo.showType);
             todo.STColorBG = mySettings.myShowTypes[indexST].colorBG;
             todo.STColorTX = mySettings.myShowTypes[indexST].colorTX;
+            todo.STColor = indexST;
             chosen = true;
           };
         });
@@ -3705,6 +3867,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
         delete todo.showType;
         delete todo.STColorBG;
         delete todo.STColorTX;
+        delete todo.STColor;
       };
 
       if(miniListDiv.querySelector(".miniLi")){
@@ -3903,16 +4066,17 @@ function iconChoice(thisOne){
   parent = iconTag.parentElement;
   parent.classList.add("selectedTask");
   let li = iconTag.parentElement; //li and parent are the same!!!
+  let liId = li.id.startsWith("copy") ? li.id.substring(4) : li.id
   let todo;
   let recIndex;
   let todoIndex;
   if(li.dataset.rec && li.dataset.rec !== "undefined"){ // have a function to do that, that will return the todo. because with project, you'll have the same math to do
     let rec = li.dataset.rec;
     recIndex = listTasks.findIndex(todo => todo.id == rec);
-    todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == li.id);
+    todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == liId);
     todo = listTasks[recIndex].recurrys[todoIndex];
   } else{
-    todoIndex = listTasks.findIndex(todo => todo.id == li.id);
+    todoIndex = listTasks.findIndex(todo => todo.id == liId);
     todo = listTasks[todoIndex];
   };
   iconTag.insertAdjacentElement("afterend", iconsPalet);

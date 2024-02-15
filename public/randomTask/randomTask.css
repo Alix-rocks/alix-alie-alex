@@ -1561,7 +1561,7 @@ input[name="miniType"]:checked + .miniTypeLabel{
   top: 4px;
 }
 
-.sortWhole{
+.sortlistWhole{
   position: absolute;
   bottom: 0;
   right: 0;
@@ -1570,19 +1570,24 @@ input[name="miniType"]:checked + .miniTypeLabel{
   flex-wrap: nowrap;
   margin-bottom: 1px;
   overflow: hidden;
+  height: 25px;
 }
-.sortLabel{
-  padding: 0 5px;
-  line-height: 25px;
+.sortlistLabel{
+  line-height: 1.5em;
+  padding-right: 6.5px;
 }
-.sortLabel i{
-  color: slategrey;
+
+.noH4SubList{
+  height: 30px;
 }
-.sortChevron{
-  font-size: 10px;
-  display: inline-block;
+.noH4SubListClosed{
+  height: 15px;
 }
-.sortDiv{
+.noH4SubListClosed > div > .sortlistLabel{
+  line-height: 2.5em;
+}
+
+.sortlistDiv{
   background-color: var(--bg-color);
   display: flex;
   flex-flow: row nowrap;
@@ -1592,7 +1597,7 @@ input[name="miniType"]:checked + .miniTypeLabel{
   height: 0;
   
 }
-.sortDiv button{
+.sortlistDiv i{
   width: 30px;
   height: 25px;
   text-align: center;
@@ -1600,16 +1605,34 @@ input[name="miniType"]:checked + .miniTypeLabel{
   padding: 0;
   border: none;
   background-color: var(--bg-color);
+  color: slategrey;
 }
-.sortInput:checked ~ div.sortDiv{
+.sortingTag{
+  font-size: 1.3em;
+  display: block;
+}
+i.chosenSort{
+  color: var(--tx-color);
+}
+.sortlistInput:checked + div.sortlistDiv{
   opacity: 1;
   visibility: visible;
   min-height: fit-content;
   height: fit-content;
   width: fit-content;
 }
-.sortInput:checked ~ label > i.sortChevron{
-  transform: rotate(180deg);
+i.sortUnchecked{
+  display: inline-block;
+  color: slategrey;
+}
+i.sortChecked{
+  display: none;
+}
+.sortlistInput:checked ~ label.sortlistLabel > i.sortUnchecked{
+  display: none;
+}
+.sortlistInput:checked ~ label.sortlistLabel > i.sortChecked{
+  display: inline-block;
 }
 
 .fullSection{

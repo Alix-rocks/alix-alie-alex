@@ -124,7 +124,8 @@ let mySettings = {
     clockOut: "02:00"
   }],
   myShowTypes: [],
-  myProjets: []
+  myProjets: [],
+  mySorting: []
 };
 //localStorage.mySettings = JSON.stringify(mySettings);
 let cBC;
@@ -165,6 +166,7 @@ let colorsList = [{ //showTypeChoices
   colorBG: "#3B9869", //green
   colorTX: "white"
 }];
+let switchSortArray = ["fa-solid fa-arrow-right-arrow-left fa-rotate-90", "fa-solid fa-pen-ruler", "fa-solid fa-hashtag", "fa-regular fa-hourglass-half", "typcn typcn-tag sortingTag", "fa-solid fa-arrow-down-a-z", "fa-solid fa-icons"];
 let icons = ["fa-solid fa-comments", "fa-solid fa-lightbulb", "fa-solid fa-dollar-sign", "fa-solid fa-spider", "fa-solid fa-gavel", "fa-solid fa-couch", "fa-solid fa-head-side-virus", "fa-solid fa-screwdriver-wrench", "fa-solid fa-universal-access", "fa-solid fa-droplet", "fa-solid fa-code", "fa-solid fa-poo", "fa-solid fa-globe", "fa-solid fa-briefcase", "fa-solid fa-brain", "fa-solid fa-champagne-glasses", "fa-solid fa-seedling", "fa-solid fa-utensils", "fa-solid fa-heart-pulse", "fa-solid fa-sun", "fa-solid fa-broom", "fa-solid fa-people-group", "fa-solid fa-bullhorn", "fa-solid fa-magnifying-glass", "fa-solid fa-heart", "fa-solid fa-cake-candles", "fa-regular fa-hourglass-half", "fa-solid fa-road", "fa-solid fa-envelopes-bulk", "fa-solid fa-person-chalkboard", "fa-regular fa-face-grin-stars", "fa-regular fa-face-grin-hearts", "fa-regular fa-face-grin-squint", "fa-regular fa-face-smile-wink", "fa-regular fa-face-meh-blank", "fa-regular fa-face-flushed", "fa-regular fa-face-grimace", "fa-regular fa-face-rolling-eyes", "fa-regular fa-face-grin-beam-sweat", "fa-regular fa-face-surprise", "fa-regular fa-face-frown-open", "fa-regular fa-face-frown", "fa-regular fa-face-sad-tear", "fa-regular fa-face-tired", "fa-regular fa-face-sad-cry", "fa-regular fa-face-dizzy", "fa-regular fa-face-angry", "fa-solid fa-ban noIcon"];
 
 (() => {
@@ -333,7 +335,23 @@ async function getTasksSettings() {
   //localStorage.listTasks = JSON.stringify(listTasks);
   localStorage.myBusies = JSON.stringify(myBusies);
   updateArrowsColor();
-  sortItAll();
+  // those that have an array, in mySettings.mySorting could have the class sortedList remove and so not be considered by sortItAll()
+  if(mySettings.mySorting){
+    mySettings.mySorting.forEach((mySort, idx) => {
+      document.getElementById(mySort.list).classList.remove("sortedList");
+      let div = document.querySelector("#sort" + mySort.list + " + div.sortlistDiv");
+      let i = 0;
+      div.querySelectorAll("button > i").forEach(icon => {
+        icon.className = mySort.sort[i];
+        icon.style.color = mySort.sort[i] == switchSortArray[0] ? "slategrey" : "var(--tx-color)" ;
+        i++;
+      });
+
+      sortItWell(idx);
+    });
+  };
+  
+  sortItAll(); //for the lists that don't have a mySettings.mySorting
 };
 //{collection} randomTask
   //{document} email
@@ -1089,7 +1107,7 @@ function addThatdayTodos(){
       todoCreation(todo);
     };
   });
-  sortIt("time", "listToday");
+  sortIt("datetime", "listToday");
 };
 
 // *** CREATION
@@ -1174,7 +1192,10 @@ function todoCreation(todo){
         <p>Then do yourself a favor and just delete it!</p>
         <button onclick="taskAddAllInfo(this, 'list', 'pro')">Yeah, thanks</button></div>` : ``}
         </div>
-        <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.deadline ? `doneDay` : todo.line}"></i><span class="${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? `` : `displayNone`}" style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? numberedDays : ``}</span></div>
+        <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)">
+          <i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.deadline ? `doneDay` : todo.line}"></i>
+          <span class="${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? `` : `displayNone`}" style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? numberedDays : ``}</span>
+        </div>
       </li>`);
     };
   };
@@ -1498,22 +1519,12 @@ function recycleEvent(recycle){ //from Done
   for (const i in listDones) {
     if (listDones[i].date == recycleDate) {
       let doned = listDones[i].list[recycleId];
-      let todo = {
-        id: crypto.randomUUID(),
-        task: doned.task,
-        icon: doned.icon,
-        color: doned.color,
-        info: doned.info,
-        term: doned.term,
-        line: "noDay"
-      };
-      if(todo.term == "showThing"){
-        todo.showType = doned.showType;
-        todo.STColorBG = doned.STColorBG;
-        todo.STColorTX = doned.STColorTX;
-      };
+      let todo = JSON.parse(JSON.stringify(doned));
+      todo.id = crypto.randomUUID();
+      todo.line = "noDay";
       listTasks.push(todo);
       localStorage.listTasks = JSON.stringify(listTasks);
+      //maybe we could do like in reuseItEvent and open taskInfo instead...
       todoCreation(todo);
       sortItAll();
       updateCBC();
@@ -1819,11 +1830,15 @@ function sortItAll(){
     run = true; 
     while (run) { 
       run = false; 
-      li = list.getElementsByTagName("li"); //except those in miniList (and projet)
+      // li = list.getElementsByTagName("li"); //except those in miniList (and projet)
+      li = list.querySelectorAll("li:not(.allMiniLi)");
       // Loop traversing through all the list items 
       for (i = 0; i < (li.length - 1); i++) { 
         stop = false; 
-        if(type == "text"){
+        if(type == "label"){
+          first = li[i].querySelector(".labelOnglet") ? li[i].querySelector(".labelOnglet").textContent : Infinity;
+          second = li[i + 1].querySelector(".labelOnglet") ? li[i + 1].querySelector(".labelOnglet").textContent : Infinity;
+        } else if(type == "text"){
           first = li[i].querySelector(".text").textContent.toLowerCase();
           first = first.startsWith("*") ? first.substring(1) : first;
           second = li[i + 1].querySelector(".text").textContent.toLowerCase();
@@ -1840,10 +1855,7 @@ function sortItAll(){
         } else if(type == "urge"){
           first = li[i].querySelector("div.urgeCheck > span").textContent;
           second = li[i + 1].querySelector("div.urgeCheck > span").textContent;
-        } else if(type == "order"){
-          first = li[i].dataset.order;
-          second = li[i + 1].dataset.order;
-        } else if(type == "time"){
+        } else if(type == "datetime"){
           first = `${li[i].dataset.date}-${li[i].dataset.time.replace(":", "-")}`;
           second = `${li[i + 1].dataset.date}-${li[i + 1].dataset.time.replace(":", "-")}`;
         };
@@ -1867,6 +1879,9 @@ function sortItAll(){
   document.querySelectorAll("#listScheduled > h4.subList").forEach(h => {
     h.remove();
   });
+  // document.querySelectorAll("#listScheduled > div.subListDiv").forEach(h => {
+  //   h.remove();
+  // });
   document.querySelectorAll("#listScheduled > li").forEach(li => {
     let date = li.dataset.date;
     year = date.substring(0, 4);
@@ -1876,6 +1891,22 @@ function sortItAll(){
     let finalMonthName = monthName.charAt(0).toUpperCase() + monthName.slice(1);
     if(previousMonth < month){
       li.insertAdjacentHTML("beforebegin", `<h4 class="subList">${finalMonthName} ${year}</h4>`);
+    //   li.insertAdjacentHTML("beforebegin", `<div class="relDiv subListDiv">
+    //   <h4 class="subList">${finalMonthName} ${year}</h4>
+    //   <div class="sortlistWhole">
+    //     <input id="sortlistScheduled${finalMonthName}${year}" class="sortlistInput cossin" type="checkbox" />
+    //     <div class="sortlistDiv">
+    //       <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+    //       <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+    //       <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+    //       <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+    //     </div>
+    //     <label for="sortlistScheduled${finalMonthName}${year}" class="sortlistLabel">
+    //       <i class="fa-solid fa-ellipsis sortUnchecked"></i>
+    //       <i class="typcn typcn-tick sortChecked"></i>
+    //     </label>
+    //   </div>
+    // </div>`);
       previousMonth = month;
     } else if(previousMonth > month){
       li.insertAdjacentHTML("beforebegin", `<h4 class="subList">${finalMonthName} ${year}</h4>`);
@@ -1925,9 +1956,14 @@ function sortIt(type, listName) {
     // Loop traversing through all the list items 
     for (i = 0; i < (li.length - 1); i++) { 
       stop = false; 
-      if(type == "text"){
-        first = li[i].querySelector(".text").textContent;
-        second = li[i + 1].querySelector(".text").textContent;
+      if(type == "label"){
+        first = li[i].querySelector(".labelOnglet") ? li[i].querySelector(".labelOnglet").textContent.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '') : "|";
+        second = li[i + 1].querySelector(".labelOnglet") ? li[i + 1].querySelector(".labelOnglet").textContent.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '') : "|";
+      } else if(type == "text"){
+        first = li[i].querySelector(".text").textContent.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+          first = first.startsWith("*") ? first.substring(1) : first;
+          second = li[i + 1].querySelector(".text").textContent.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+          second = second.startsWith("*") ? second.substring(1) : second;
       } else if(type == "color"){
         first = li[i].querySelector(".text").style.color;
         second = li[i + 1].querySelector(".text").style.color;
@@ -1940,9 +1976,13 @@ function sortIt(type, listName) {
       } else if(type == "urge"){
         first = li[i].querySelector("div.urgeCheck > span").textContent;
         second = li[i + 1].querySelector("div.urgeCheck > span").textContent;
-      } else if(type == "time"){
+      } else if(type == "datetime"){
         first = `${li[i].dataset.date}-${li[i].dataset.time.replace(":", "-")}`;
         second = `${li[i + 1].dataset.date}-${li[i + 1].dataset.time.replace(":", "-")}`;
+      } else if(type == "deadline"){
+        first = li[i].querySelector("div.numberedCal > span").textContent ? Number(li[i].querySelector("div.numberedCal > span").textContent) : Infinity;
+        console.log(first);
+        second = li[i + 1].querySelector("div.numberedCal > span").textContent ? Number(li[i + 1].querySelector("div.numberedCal > span").textContent) : Infinity;
       };
       if (first > second){ 
         stop = true; 
@@ -1956,8 +1996,165 @@ function sortIt(type, listName) {
     }; 
   }; 
 }; 
+window.sortIt = sortIt;
 
 
+
+document.querySelectorAll(".switchSortBtn").forEach(btn => {
+  let sortIndex = 0;
+  btn.addEventListener("click", () => {
+    sortIndex++;
+    sortIndex = sortIndex == switchSortArray.length ? 0 : sortIndex;
+    let icon = btn.querySelector("i");
+    icon.className = switchSortArray[sortIndex];
+    icon.style.color = sortIndex > 0 ? "var(--tx-color)" : "slategrey";
+  });
+});
+document.querySelectorAll(".sortlistInput").forEach(check => {
+  check.addEventListener("click", () => {
+    let div = check.parentElement.parentElement;
+    if(div.classList.contains("noH4SubList")){
+      div.classList.toggle("noH4SubListClosed");
+    };
+    let listName = check.id.substring(4);
+    let sortArray = [];
+    if(!check.checked){
+      check.parentElement.querySelectorAll("button > i").forEach(i => {
+        sortArray.push(i.className);
+      });
+      if(!sortArray.every((i) => i == "fa-solid fa-arrow-right-arrow-left fa-rotate-90")){
+        let sortIndex;
+        if(!mySettings.mySorting){
+          mySettings.mySorting = [];
+          let newSort = {
+            list: listName,
+            sort: sortArray
+          };
+          sortIndex = mySettings.mySorting.push(newSort) - 1;
+          localStorage.mySettings = JSON.stringify(mySettings);
+          updateCBC();
+        } else if(mySettings.mySorting){
+          let listIdx = mySettings.mySorting.findIndex(sort => sort.list == listName);
+          if(listIdx == -1){
+            let newSort = {
+              list: listName,
+              sort: sortArray
+            };
+            sortIndex = mySettings.mySorting.push(newSort) - 1;
+            localStorage.mySettings = JSON.stringify(mySettings);
+            updateCBC();
+          } else if(JSON.stringify(mySettings.mySorting[listIdx].sort) !== JSON.stringify(sortArray)){
+            mySettings.mySorting[listIdx].sort = sortArray;
+            localStorage.mySettings = JSON.stringify(mySettings);
+            updateCBC();
+            sortIndex = listIdx;
+          } else{
+            sortIndex = listIdx;
+          };
+        };
+        sortItWell(sortIndex);
+      } else if(mySettings.mySorting){ // c'est tous des arrows donc on annule le sort (donc on reviens au sort par default)
+        let listIdx = mySettings.mySorting.findIndex(sort => sort.list == listName);
+        if(listIdx !== -1){
+          mySettings.mySorting.splice(listIdx);
+          localStorage.mySettings = JSON.stringify(mySettings);
+          let li = document.getElementById(listName);
+          li.classList.add("sortedList");
+          let type = li.dataset.sort;
+          updateCBC();
+          sortIt(type, listName);
+        };
+      };
+    };
+  });
+});
+
+function sortItWell(sortIndex){
+  let list = document.getElementById(mySettings.mySorting[sortIndex].list);
+  let ul = Array.from(list.querySelectorAll("li:not(.allMiniLi)"));
+  let ulIdx = ul.map(li => {
+    return li.id;
+  });
+  let todos = listTasks.filter(todo => ulIdx.includes(todo.id));
+  
+  let todoToSort = todos.map(todo => {
+    return {
+      id: todo.id,
+      one: translateArray(mySettings.mySorting[sortIndex].sort[0]),
+      two: translateArray(mySettings.mySorting[sortIndex].sort[1]),
+      three: translateArray(mySettings.mySorting[sortIndex].sort[2]),
+      four: translateArray(mySettings.mySorting[sortIndex].sort[3])
+    };
+    function translateArray(sort){
+      let type;
+      if(sort == "fa-solid fa-pen-ruler"){
+        type = todo.LName ? todo.LName.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '') : "|";
+      } else if(sort == "fa-solid fa-hashtag"){
+        type = todo.term;
+      }  else if(sort == "fa-regular fa-hourglass-half"){
+        type = todo.deadline ? Number(todo.deadline.replaceAll("-", "")) : Infinity;
+      } else if(sort == "typcn typcn-tag sortingTag"){
+        type = todo.color;
+      } else if(sort == "fa-solid fa-arrow-down-a-z"){
+        type = todo.task.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+      } else if(sort == "fa-solid fa-icons"){
+        type = todo.icon;
+      } else if(sort == ""){
+        type = todo.date; //for schedule...
+      } else if(sort == "fa-solid fa-arrow-right-arrow-left fa-rotate-90"){
+        type = "none";
+      };
+      return type;
+    };
+  });
+
+  let sortedTodos = todoToSort.sort((t1, t2) => 
+  (t1.one < t2.one) ? -1 : (t1.one > t2.one) ? 1 : (t1.one == t2.one) ? (t1.two < t2.two) ? -1 : (t1.two > t2.two) ? 1 : (t1.two == t2.two) ? (t1.three < t2.three) ? -1 : (t1.three > t2.three) ? 1 : (t1.three == t2.three) ? (t1.four < t2.four) ? -1 : (t1.four > t2.four) ? 1 : 0 : 0 : 0 : 0);
+
+  for(let i = sortedTodos.length - 1; i > -1; i--){
+    let li = document.getElementById(sortedTodos[i].id);
+    // if(i == sortedTodos.length - 1){
+    //   list.prepend(`<h4 class="subList">${translateTerm(one)}</h4>`);
+    // };
+    list.prepend(li);
+    // if(i !== 0 && sortedTodos[i].one !== sortedTodos[i + 1].one){
+    //   list.prepend(`<h4 class="subList">${translateTerm(one)}</h4>`);// one of i + 1 (or, use [i - 1], then you can use the one of i) (en plus, juste (one), ça marchera pas; ça va prendre sortedTodos[i].one, genre!)
+    // };
+  };
+
+  // color ex: blue = screen (need translate)
+  // date ex: février 2024 (schedule) (need calcul)
+  // label ex: Calia (LName)
+  // term ex: oneTime (todo.term) or The one time thingies (with translate)
+  // showTypes?
+
+  function translateTerm(term){
+    switch(term){
+      case "Enter":
+        return "";
+      case "Space":
+        return "";
+      case "ArrowLeft":
+        return "";
+      case "ArrowUp":
+        return "";
+      case "ArrowRight":
+        return "";
+      case "ArrowDown":
+        return "";
+      default:
+        console.log(evt.code);
+        break;
+    }
+  };
+};
+window.sortItWell = sortItWell;
+
+function sortItAllWell(){
+  for(let i = 0; i < mySettings.mySorting.length; i++){
+    sortItWell(i);
+  };
+};
 
 // *** SHUFFLE
 let wheneverList = [];
@@ -2042,7 +2239,7 @@ function timeItEvent(thisOne){
     thisOne.classList.remove("displayNone");
     input.classList.add("displayNone");
     if(list == "listToday" || list == "listTomorrow"){
-      sortIt("time", list);
+      sortIt("datetime", list);
     };
     if(li.dataset.rec && li.dataset.rec !== "undefined"){
       delete li.dataset.rec;

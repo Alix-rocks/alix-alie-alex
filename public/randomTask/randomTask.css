@@ -108,6 +108,18 @@ textarea::-webkit-resizer {
   outline: 4px solid var(--tx-color);
   border-radius: 2px 0 5px 0;
 }
+.switchDisplayUnChecked{
+  display: inline-block;
+}
+.switchDisplayChecked{
+  display: none;
+}
+.switchDisplayInput:checked + label > .switchDisplayUnChecked{
+  display: none;
+}
+.switchDisplayInput:checked + label > .switchDisplayChecked{
+  display: inline-block;
+}
 input[type="radio"]{
   display: none;
 }
@@ -487,9 +499,7 @@ input[name="choicePageRadios"]:checked + label i{
   align-items: center;
   padding: 40px 0 10px 0;
 }
-#taskDetails{
-  height: 105px;
-}
+
 
 .onIcon{
   top: 27px;
@@ -542,6 +552,13 @@ input[name="daysWeekChoice"]:checked + label.dayCircle{
 }
 h5.taskInfoInput{
   margin-bottom: 0;
+}
+.taskDetails{
+  height: 105px;
+  margin-bottom: 0;
+}
+.taskDetailsFullHeight{
+  height: 62vh;
 }
 .taskInfoSubTitle{
   text-decoration-line: underline;

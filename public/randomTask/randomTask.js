@@ -3321,8 +3321,13 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
             <h5 class="topList">Tell me why...<span class="tellYou" id="tellYouWhy">${todo.info ? `(because)` : ``}</span></h5>
             <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
           </label>
-          <div class="taskToggleList relDiv">
-            <textarea id="taskDetails" class="taskInfoInput">${todo.info ? todo.info : ""}</textarea>
+          <div class="taskToggleList relDiv" style="margin-bottom: 25px;">
+            <textarea id="taskDetails" class="taskInfoInput taskDetails">${todo.info ? todo.info : ""}</textarea>
+            <input id="switchTextareaSize" type="checkbox" class="switchDisplayInput cossin" />
+            <label for="switchTextareaSize" style="float: right; margin-right: 15px; margin-top: -5px;">
+              <i class="typcn typcn-plus switchDisplayUnChecked"></i>
+              <i class="typcn typcn-minus switchDisplayChecked"></i>
+            </label>
           </div>
         </div>
         <input id="tellWhatInput" type="checkbox" class="cossin taskToggleInput" />
@@ -3355,7 +3360,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
           </div>
           <h5 class="taskInfoSubTitle" style="margin: 0;">Reminder</h5>
           <input class="myRadio" type="radio" name="termOptions" id="reminder" value="reminder" ${todo.term == "reminder" ? `checked` : ``} />
-          <label for="reminder" class="termLabel"><span class="myRadio"></span><span>It's such a special day...</span></label>
+          <label for="reminder" class="termLabel"><span class="myRadio"></span><span style="font-size:14px;">It's such a special day...</span></label>
           <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Habit</h5>
           <input class="myRadio" type="radio" name="termOptions" id="sameHabit" value="sameHabit" ${todo.term == "sameHabit" ? `checked` : ``} />
           <label for="sameHabit" class="termLabel"><span class="myRadio"></span><span style="opacity:.6;font-size:14px;">It's always the same thing...</span></label>
@@ -3458,6 +3463,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   getUnderLiningWidth(taskTitle);
   let miniListDiv = document.querySelector("#miniListDiv");
   let taskDetails = document.querySelector("#taskDetails");
+  let switchTextareaSize = document.querySelector("#switchTextareaSize");
   let urgeInput = document.querySelector("#urgeInput");
   let whereCheck = document.querySelector("#whereHomeInput");
   let SupClickScreen = document.querySelector("#SupClickScreen");
@@ -3504,9 +3510,9 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       taskInfoBtn.innerText = "Save";
     };
   });
-  // taskDetails.addEventListener("change", () => {
-  //   document.querySelector("#tellYouMore").innerText = taskDetails.value == "" ? "" : "(because)";
-  // });
+  switchTextareaSize.addEventListener("click", () => {
+    taskDetails.classList.toggle("taskDetailsFullHeight");
+  })
   taskDetails.addEventListener("change", () => {
     document.querySelector("#tellYouWhy").innerText = taskDetails.value == "" ? "" : "(because)";
   });

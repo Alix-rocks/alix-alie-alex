@@ -1567,7 +1567,7 @@ input[name="projetColorChoices"]:checked + label, input[name="labelColorChoices"
 input[name="miniType"]:checked + .miniTypeLabel{
   opacity: 1;
 }
-.hiddenEye:after {
+/* .hiddenEye:after {
   content: '';
   height: 24px;
   border-left: 3px solid var(--tx-color);
@@ -1576,6 +1576,16 @@ input[name="miniType"]:checked + .miniTypeLabel{
   transform: rotate(45deg);
   left: 12px;
   top: 4px;
+} */
+#hideMiniInput:checked + label > span::after{
+  content: '';
+  height: 24px;
+  border-left: 3px solid var(--tx-color);
+  border-radius: 5px;
+  position: absolute;
+  transform: rotate(45deg);
+  left: 12.5px;
+  top: 8.5px;
 }
 
 .sortlistWhole{

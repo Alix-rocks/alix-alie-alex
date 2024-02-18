@@ -1402,7 +1402,7 @@ function recurryOuting(todo){ //todo == le recurring (newtodo est le recurry/nor
         recurry = todo.recurrys[idx];
         dateTime = `${recurry.date}-${recurry.dalle ? recurry.dalle.replace(":", "-") : "5-00"}`;
       } else{
-        alert(`${todo.task} is over!`);
+        //alert(`${todo.task} is over!`);
         break;
       };
     } else{
@@ -2780,6 +2780,11 @@ function calendarSave(todo){ // no need to work on the parent! because todoCreat
 //todo.color
 //todo.icon
 //todo.term => {task: "oneTime", "longTerm", "crazyShit"}, {event: "showThing"}, {habit: "sameHabit"}, {rappel: "reminder"}
+//todo.urge
+//todo.urgeNum
+//todo.urgeColor
+//todo.miniList
+//todo.miniHide //the checked must be hidden if true
 //todo.showType => nom du showType (pas sûre que ça soit nécessaire/c'est utile pour la recherche!)
 //todo.STColorBG => couleur du background du showType
 //todo.STColorTX => couleur du texte du showType
@@ -3238,7 +3243,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   let miniList;
   if(todo.miniList && todo.miniList.length > 0){
     miniList = todo.miniList.map((mini, idx) => {
-      return `<li class="allMiniLi miniLi${mini.type == "title" ? ` miniTitle` : ``}">
+      return `<li class="allMiniLi miniLi${mini.type == "title" ? ` miniTitle` : ``}${todo.miniHide && mini.checked ? ` displayNone` : ``}">
         <input id="miniCheck${idx}" type="checkbox" class="listCheckInput" ${mini.checked ? `checked` : ``} onclick="checkTest()" />
         <label class="listCheckLabel" for="miniCheck${idx}">
           <i class="typcn typcn-media-stop-outline miniUnChecked"></i>
@@ -3305,7 +3310,11 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
             <ul>
               ${miniList}
               <li class="allMiniLi" id="addMiniListLi" style="margin: 15px 0 20px;}">
-                <button class="iconOnlyBtn" id="hideMiniBtn" style="margin-right: 5px;"><span class="typcn typcn-eye-outline" style="font-size:1.7em"></span></button>
+                <input id="hideMiniInput" type="checkbox" class="cossin" ${todo.miniHide ? `checked ` : ``}/>
+                <label for="hideMiniInput" style="margin-right: 5px;">
+                  <span class="typcn typcn-eye-outline" style="font-size:1.7em"></span>
+                </label>
+                <!-- <button class="iconOnlyBtn" id="hideMiniInput" style="margin-right: 5px;"><span class="typcn typcn-eye-outline" style="font-size:1.7em"></span></button> -->
                 <form id="addMiniForm">
                   <input type="text" id="addMiniListInput" class="listNameInput" style="border: 0.5px solid var(--tx-color); border-radius: 5px; padding: 0 7px;" placeholder="one more" />
                   <button type="submit" class="iconOnlyBtn" id="addMiniListBtn" style="margin-left: 5px;"><span class="typcn typcn-plus"></span></button>
@@ -3526,15 +3535,27 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
   // *** LIST
   //more with SHOW 
   checkTest();
-  miniListDiv.querySelector("#hideMiniBtn").addEventListener("click", (e) => {
-    e.target.classList.toggle("hiddenEye");
-    miniListDiv.querySelectorAll(".miniLi > .listCheckInput:checked").forEach(check => {
-      if(e.target.classList.contains("hiddenEye")){
+  // miniListDiv.querySelector("#hideMiniBtn").addEventListener("click", (e) => {
+  //   e.target.classList.toggle("hiddenEye");
+  //   miniListDiv.querySelectorAll(".miniLi > .listCheckInput:checked").forEach(check => {
+  //     if(e.target.classList.contains("hiddenEye")){
+  //       check.parentElement.classList.add("displayNone");
+  //     } else{
+  //       check.parentElement.classList.remove("displayNone");
+  //     };
+  //   });
+  // });
+  let hideMiniInput = miniListDiv.querySelector("#hideMiniInput");
+  hideMiniInput.addEventListener("click", (e) => {
+    if(hideMiniInput.checked){
+      miniListDiv.querySelectorAll(".miniLi > .listCheckInput:checked").forEach(check => {
         check.parentElement.classList.add("displayNone");
-      } else{
+      });
+    } else{
+      miniListDiv.querySelectorAll(".miniLi > .listCheckInput:checked").forEach(check => {
         check.parentElement.classList.remove("displayNone");
-      };
-    });
+      });
+    };
   });
   let idxMini = todo.miniList ? todo.miniList.length : 0;
   let addMiniForm = miniListDiv.querySelector("#addMiniForm");
@@ -4175,8 +4196,10 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
           };
         });
         console.log(todo.miniList);
+        todo.miniHide = hideMiniInput.checked ? true : false;
       } else{
         delete todo.miniList;
+        delete todo.miniHide;
       };
 
       if(where == "list" || where == "searchScreen"){
@@ -4260,12 +4283,31 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       moving = false;
       taskInfo.remove();
       clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
-    }
+      if(mySettings.mySorting){
+        let listIdx = mySettings.mySorting.findIndex(sort => sort.list == togoList);
+        if(listIdx !== -1){
+          sortItWell(listIdx);
+        } else{
+          sortItAll(); //or sortIt(togoList)
+        };
+      } else{
+        sortItAll();
+      };
+    };
     //console.log(togoList);
     if((thisOne == "addForm" || why == "stock") && togoList !== ""){
       scrollToSection(togoList);
       taskInfo.remove();
-      sortItAll(); //faire un sortIt(togoList) pour réduire le travail
+      if(mySettings.mySorting){
+        let listIdx = mySettings.mySorting.findIndex(sort => sort.list == togoList);
+        if(listIdx !== -1){
+          sortItWell(listIdx);
+        } else{
+          sortItAll();
+        };
+      } else{
+        sortItAll(); //faire un sortIt(togoList) pour réduire le travail
+      };
     } else if((thisOne == "addForm" || why == "stock") && togoList == ""){
       taskInfo.remove();
     } else if(where == "list" && togoList !== ""){
@@ -4275,7 +4317,16 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
       });
       parent.remove(); // it wasn't complaining but that was still useless...
       clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
-      sortItAll();
+      if(mySettings.mySorting){
+        let listIdx = mySettings.mySorting.findIndex(sort => sort.list == togoList);
+        if(listIdx !== -1){
+          sortItWell(listIdx);
+        } else{
+          sortItAll();
+        };
+      } else{
+        sortItAll();
+      };
     } else if(where == "list" && togoList == ""){
       parents.forEach(parent => {
         parent.remove();
@@ -4285,6 +4336,16 @@ function taskAddAllInfo(thisOne, where, why){ //where == "list", "calWeekPage", 
     } else{ //not in the list, so month/week
       moving = false;
       taskInfo.remove();
+      if(mySettings.mySorting){
+        let listIdx = mySettings.mySorting.findIndex(sort => sort.list == togoList);
+        if(listIdx !== -1){
+          sortItWell(listIdx);
+        } else{
+          sortItAll();
+        };
+      } else{
+        sortItAll();
+      };
     };
     updateArrowsColor();
     updateCBC();

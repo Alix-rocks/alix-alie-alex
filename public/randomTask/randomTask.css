@@ -558,7 +558,7 @@ h5.taskInfoInput{
   margin-bottom: 0;
 }
 .taskDetailsFullHeight{
-  height: 62vh;
+  height: 50.64vh;
 }
 .taskInfoSubTitle{
   text-decoration-line: underline;
@@ -815,8 +815,11 @@ ul{
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
+  margin-left: 8px;
   border-radius: 15px;
-  margin-left: -5px;
+  border-style: solid;
+  border-width: 0 3.5px 0 2px;
+  border-color: transparent;
 }
 
 li i{
@@ -938,19 +941,22 @@ li .textDone{
   flex-grow: 1;
   margin: 0 7px;
 }
-.projetOnglet, .projetLiOnglet{
+.ProjetLiOngletDiv{
+  display: flex;
   position: absolute;
-  top: -13px;
-  left: 5px;
+  top: -15.5px;
+  left: 30px;
+  z-index: -1;
+}
+.projetOnglet, .projetLiOnglet{
   border: 0.5px solid var(--tx-color);
   border-radius: 2px 8px 0 0;
   font-size: 10px;
   padding: 2px 5px 0 3px;
   line-height: 1em;
+  border-bottom: none;
 }
-.projetLiOnglet{
-  left: -0.5px;;
-}
+
 .labelOnglet{
   height: 32px;
   border: 0.5px solid var(--tx-color);
@@ -970,12 +976,15 @@ li .textDone{
 } */
 /* If not clickable: */
 .labelLiOnglet{
-  margin-right: -5px;
-  flex-shrink: 0;
+  /* margin-right: -5px;
+  flex-shrink: 0; */
+  position: absolute;
+  left: -13px;
 }
 .noLabel{
-  width: 6px;
-  flex-shrink: 0;
+  /* width: 6px;
+  flex-shrink: 0; */
+  display: none;
 }
 /* .noLabel{
   width: 21px;
@@ -989,10 +998,13 @@ li .textDone{
   background-color: rgba(211, 211, 211, .5);
 }
 #todoZone li.projetLi{
-  border-radius: 0 8px 0 2px;
+  border-radius: 5px 8px 0 2px;
   margin-top: 13px;
-  outline: 4px solid;
-  outline-offset: -4px;
+  outline: 6px solid;
+  outline-offset: -8px;
+  margin-left: 8px;
+  border-style: solid;
+  border-width: 3.5px 3.5px 3.5px 2px;
 }
 .whatDayLabel{
   display: block;
@@ -1526,10 +1538,14 @@ input[name="projetColorChoices"]:checked + label, input[name="labelColorChoices"
   font-size: 1em;
   font-weight: 500;
 }
-.miniLi > .miniArrow{
+/* .miniLi > .miniArrow{
   font-size: 1.4em;
   width: fit-content;
 }
+.miniLi > .miniPalette{
+  font-size: 1.7em;
+  width: fit-content;
+} */
 .miniLi.miniTitle > .listNameInput{
   text-decoration: underline;
   opacity: 1;

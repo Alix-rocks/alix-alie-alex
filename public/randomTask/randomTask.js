@@ -1750,9 +1750,11 @@ function gotItDone(nb, rec){ //nb = todo.id, rec = recurring Id (or "" if direct
   } else{
     let donedTaskIndex = listTasks.findIndex(todo => todo.id == nb);
     if(listTasks[donedTaskIndex].stored == true){
+      // console.log(listTasks[donedTaskIndex]);
       let donedTaskId = listTasks[donedTaskIndex].id;
       let stockId = listTasks[donedTaskIndex].stockId;
       let stockIndex = listTasks.findIndex(todo => todo.id == stockId);
+      // console.log(listTasks[stockIndex]);
       listTasks[stockIndex].storedId = listTasks[stockIndex].storedId.filter(id => id !== donedTaskId);
     };
     let donedTaskSplice = listTasks.splice(donedTaskIndex, 1);

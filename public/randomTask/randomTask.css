@@ -1248,6 +1248,10 @@ input[name="colorRadio"]:checked + label > div{
   background-color: red;
   color: darkslategrey;
 }
+.mediumpurple{
+  background-color: mediumpurple;
+  color: darkslategrey;
+}
 .darkmagenta{
   background-color: darkmagenta;
   color: white;

@@ -324,6 +324,7 @@ async function getTasksSettings() {
 
   if(!mySettings.myBaseColors){
     mySettings.myBaseColors = baseColors;
+    localStorage.mySettings = JSON.stringify(mySettings);
   };
   //création de colorPalet based on myBaseColors
   let colors = mySettings.myBaseColors.map((color, idx) => {

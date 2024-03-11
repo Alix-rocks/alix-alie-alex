@@ -114,13 +114,13 @@
           <li>
             <label for="searchTag">Tag: </label>
             <select id="searchTag">
-              <option value="">any</option>
+              <!-- <option value="">any</option>
               <option value="orange" class="orange">people</option>
               <option value="red" class="red">urgent</option>
               <option value="darkmagenta" class="darkmagenta">errand</option>
               <option value="dodgerblue" class="dodgerblue">screen</option>
               <option value="forestgreen" class="forestgreen">physic</option>
-              <option value="darkslategrey" class="darkslategrey">else</option>
+              <option value="darkslategrey" class="darkslategrey">else</option> -->
             </select>
           </li>
           <li>
@@ -275,7 +275,7 @@ Options for sorting
             <h5 class="topList">Once these are done, then you can go play with the other ones!</h5>
             <!-- <span id="listUrgesChevron" class="typcn typcn-chevron-right-outline listToggleChevron displayNone"></span> -->
           <!-- </label> -->
-          <ul id="listUrges" class="sortedList" data-sort="urge"></ul>
+          <ul id="topPriorityList" class="sortedList" data-sort="urge"></ul>
         </div>
       </section>
       <section id="nextSection">
@@ -290,20 +290,20 @@ Options for sorting
             <div class="relDiv noH4SubList noH4SubListClosed">
               <!-- <h4 class="subList"></h4> -->
               <div class="sortlistWhole">
-                <input id="sortlistNext" class="sortlistInput cossin" type="checkbox" />
+                <input id="sortnextThingList" class="sortlistInput cossin" type="checkbox" />
                 <div class="sortlistDiv">
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
                 </div>
-                <label for="sortlistNext" class="sortlistLabel">
+                <label for="sortnextThingList" class="sortlistLabel">
                   <i class="fa-solid fa-ellipsis sortUnchecked"></i>
                   <i class="typcn typcn-tick sortChecked"></i>
                 </label>
               </div>
             </div> 
-            <ul id="listNext" class="sortedList" data-sort="color"></ul>
+            <ul id="nextThingList" class="sortedList" data-sort="color"></ul>
           </div>
         </div>
       </section>
@@ -319,42 +319,37 @@ Options for sorting
             <div class="relDiv">
               <h4 class="subList">The long term shit</h4>
               <div class="sortlistWhole">
-                <input id="sortlist" class="sortlistInput cossin" type="checkbox" />
+                <input id="sortlongTermList" class="sortlistInput cossin" type="checkbox" />
                 <div class="sortlistDiv">
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
-                  <!-- <i onclick="sortIt('label', 'list')" class="fa-solid fa-pen-ruler"></i> -->
-                  <!-- <i onclick="sortItWell('list')" class="fa-solid fa-pen-ruler"></i>
-                  <i onclick="sortIt('text', 'list')" class="fa-solid fa-arrow-down-a-z"></i>
-                  <i onclick="sortIt('color', 'list')" class="typcn typcn-tag sortingTag"></i>
-                  <i onclick="sortIt('deadline', 'list')" class="fa-regular fa-hourglass-half"></i> -->
                 </div>
-                <label for="sortlist" class="sortlistLabel">
+                <label for="sortlongTermList" class="sortlistLabel">
                   <i class="fa-solid fa-ellipsis sortUnchecked"></i>
                   <i class="typcn typcn-tick sortChecked"></i>
                 </label>
               </div>
             </div>
-            <ul id="list" class="sortedList" data-sort="color"></ul>
+            <ul id="longTermList" class="sortedList" data-sort="color"></ul>
             <div class="relDiv">
               <h4 class="subList">The one time thingies</h4>
               <div class="sortlistWhole">
-                <input id="sortlistOne" class="sortlistInput cossin" type="checkbox" />
+                <input id="sortoneTimeList" class="sortlistInput cossin" type="checkbox" />
                 <div class="sortlistDiv">
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
                 </div>
-                <label for="sortlistOne" class="sortlistLabel">
+                <label for="sortoneTimeList" class="sortlistLabel">
                   <i class="fa-solid fa-ellipsis sortUnchecked"></i>
                   <i class="typcn typcn-tick sortChecked"></i>
                 </label>
               </div>
             </div> 
-            <ul id="listOne" class="sortedList" data-sort="color"></ul>
+            <ul id="oneTimeList" class="sortedList" data-sort="color"></ul>
             <button id="shuffleBtn">Shuffle it!</button>
             <h5 class="sousBtn">Tell me what to do!</h5>
           </div>
@@ -370,7 +365,8 @@ Options for sorting
             </details> -->
 
       <div id="iconsPalet" class="iconsPaletClass displayNone"></div>
-      <table id="colorPalet" class="displayNone">
+      <div id="colorPalet" class="colorPaletClass displayNone"></div>
+      <!-- <table id="colorPalet" class="displayNone">
         <tr class="colorTr">
           <td class="colorTd">
             <input type="radio" id="orangeRadio" name="colorRadio" value="orange" />
@@ -384,7 +380,7 @@ Options for sorting
             <input type="radio" id="mediumpurpleRadio" name="colorRadio" value="mediumpurple" />
             <label for="mediumpurpleRadio">
               <div>
-                <div class="colorDiv mediumpurple">Cell</div>
+                <div class="colorDiv mediumpurple">cell</div>
               </div>
             </label>
           </td>
@@ -425,10 +421,39 @@ Options for sorting
             </label>
           </td>
         </tr>
-      </table>
+      </table> -->
       <!-- <div id="labelPalet">
         <i class="fa-solid fa-pen-ruler"></i>
       </div> -->
+      <section id="alwaysSection">
+        <input id="alwaysInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="alwaysInput" class="listToggleLabel">
+            <h3 class="topList"><span class="topListTitle" style="text-decoration-color: goldenrod; color:goldenrod;">ALWAYS</span></h3>
+            <h5 class="topList">Forever and ever...</h5>
+            <span id="listAlwaysChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <div class="listToggleList">
+            <div class="relDiv noH4SubList noH4SubListClosed">
+              <!-- <h4 class="subList"></h4> -->
+              <div class="sortlistWhole">
+                <input id="sortalwaysHereList" class="sortlistInput cossin" type="checkbox" />
+                <div class="sortlistDiv">
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                </div>
+                <label for="sortalwaysHereList" class="sortlistLabel">
+                  <i class="fa-solid fa-ellipsis sortUnchecked"></i>
+                  <i class="typcn typcn-tick sortChecked"></i>
+                </label>
+              </div>
+            </div> 
+            <ul id="alwaysHereList" class="sortedList" data-sort="color"></ul>
+          </div>
+        </div>
+      </section>
       <section id="waitSection">
         <input id="waitInput" type="checkbox" class="cossin listToggleInput" />
         <div>
@@ -441,20 +466,20 @@ Options for sorting
             <div class="relDiv noH4SubList noH4SubListClosed">
               <!-- <h4 class="subList"></h4> -->
               <div class="sortlistWhole">
-                <input id="sortlistWait" class="sortlistInput cossin" type="checkbox" />
+                <input id="sortwaitForItList" class="sortlistInput cossin" type="checkbox" />
                 <div class="sortlistDiv">
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
                 </div>
-                <label for="sortlistWait" class="sortlistLabel">
+                <label for="sortwaitForItList" class="sortlistLabel">
                   <i class="fa-solid fa-ellipsis sortUnchecked"></i>
                   <i class="typcn typcn-tick sortChecked"></i>
                 </label>
               </div>
             </div> 
-            <ul id="listWait" class="sortedList" data-sort="color"></ul>
+            <ul id="waitForItList" class="sortedList" data-sort="color"></ul>
           </div>
         </div>
       </section>
@@ -505,20 +530,20 @@ Options for sorting
             <div class="relDiv noH4SubList noH4SubListClosed">
               <!-- <h4 class="subList"></h4> -->
               <div class="sortlistWhole">
-                <input id="sortlistIdea" class="sortlistInput cossin" type="checkbox" />
+                <input id="sortcrazyShitList" class="sortlistInput cossin" type="checkbox" />
                 <div class="sortlistDiv">
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
                   <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
                 </div>
-                <label for="sortlistIdea" class="sortlistLabel">
+                <label for="sortcrazyShitList" class="sortlistLabel">
                   <i class="fa-solid fa-ellipsis sortUnchecked"></i>
                   <i class="typcn typcn-tick sortChecked"></i>
                 </label>
               </div>
             </div> 
-            <ul id="listIdea" class="sortedList" data-sort="text"></ul>
+            <ul id="crazyShitList" class="sortedList" data-sort="text"></ul>
           </div>
         </div>
       </section>

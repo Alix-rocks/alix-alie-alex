@@ -56,6 +56,10 @@ onAuthStateChanged(auth,(user) => {
 // *** START
 let searchSwitch = false;
 let projectSwitch = false;
+//let myList = [];
+// let myDones2023 = [];
+// let myDones202401 = [];
+// let myDones202402 = [];
 let listTasks = [];
 let listDones = [];
 let myBusies = [];
@@ -405,7 +409,11 @@ async function getTasksSettings() {
     //   todo.line = "noDay";
     //   delete todo.date;
     // };
-
+    // if(todo.line !== "recurringDay"){
+      // todo.status = "todo";
+      // myList.push(todo);
+    // };
+    
     if(!todo.pPosition || (todo.pPosition && todo.pPosition == "out")){
       //change all the todo.color for the index value in baseColors
       // let idxColor = mySettings.myBaseColors.findIndex(color => color.colorBG == todo.color);
@@ -427,8 +435,9 @@ async function getTasksSettings() {
       todoCreation(todo);
     };
   });
+  //localStorage.myList = JSON.stringify(myList);
   localStorage.listTasks = JSON.stringify(listTasks);
-  localStorage.myBusies = JSON.stringify(myBusies);
+  //localStorage.myBusies = JSON.stringify(myBusies);
   updateArrowsColor();
   // those that have an array, in mySettings.mySorting could have the class sortedList remove and so not be considered by sortItAll()
   if(mySettings.mySorting){
@@ -461,10 +470,34 @@ async function getDones(){
     listDones = JSON.parse(localStorage.listDones);
   } else if(getDones){
     getDones.forEach((donedDate) => {
+      // let theDate = donedDate.id;
+      // donedDate.data().dones.forEach(done => {
+      //   let idxColor = mySettings.myBaseColors.findIndex(color => color.colorBG == done.color);
+      //   done.color = String(idxColor);
+      //   done.doneDate = theDate;
+      //   done.status = "done";
+      //   if(theDate < "2024-01-01"){
+      //     myDones2023.push(done);
+      //   } else if(theDate >= "2024-01-01" && theDate <= "2024-01-31"){
+      //     myDones202401.push(done);
+      //   } else if(theDate >= "2024-02-01" && theDate <= "2024-02-29"){
+      //     myDones202402.push(done);
+      //   } else{
+      //     myList.push(done);
+      //   };
+        
+      // });
       let mydate = donedDate.id;
       let mylist = donedDate.data().dones;
       listDones.push({date: mydate, list: mylist});
     });//listDones.push({...donedDate.data().dones, date: mydate});
+    // console.log(myList);
+    // localStorage.myDones2023 = JSON.stringify(myDones2023);
+    // localStorage.myDones202401 = JSON.stringify(myDones202401);
+    // localStorage.myDones202402 = JSON.stringify(myDones202402);
+    // localStorage.myList = JSON.stringify(myList);
+    // let myListJSON = JSON.stringify(myList);
+    // console.log(myListJSON.length * 8);
     localStorageDones("first");
   };
   let sortedListDones = listDones.sort((d1, d2) => (d1.date > d2.date) ? 1 : (d1.date < d2.date) ? -1 : 0);
@@ -473,8 +506,11 @@ async function getDones(){
       let donedDate = doned.date;
       donedDateCreation(donedDate);
       doned.list.forEach(tidoned => {
-        // let idxColor = mySettings.myBaseColors.findIndex(color => color.colorBG == tidoned.color);
-        // tidoned.color = String(idxColor);
+        if(tidoned.color && tidoned.color.length > 2){
+          let idxColor = mySettings.myBaseColors.findIndex(color => color.colorBG == tidoned.color);
+          tidoned.color = String(idxColor);
+        };
+        
         donedCreation(donedDate, tidoned);
       });
     };
@@ -494,6 +530,7 @@ function freeIn(){
   };
   if(!mySettings.myBaseColors){
     mySettings.myBaseColors = baseColors;
+    localStorage.mySettings = JSON.stringify(mySettings);
   };
   //création de colorPalet based on myBaseColors
   let colors = mySettings.myBaseColors.map((color, idx) => {
@@ -610,6 +647,8 @@ function resetModif(){
 
 async function saveToCloud(){
   const batch = writeBatch(db);
+  // myList = JSON.parse(localStorage.myList);
+  // myDones2023 = JSON.parse(localStorage.myDones2023);
   listTasks = JSON.parse(localStorage.listTasks);
   mySettings = JSON.parse(localStorage.mySettings);
   const docRefTasks = doc(db, "randomTask", auth.currentUser.email);
@@ -617,27 +656,35 @@ async function saveToCloud(){
   
   if (docSnapTasks.exists()){
     batch.update(doc(db, "randomTask", auth.currentUser.email), { // or batch.update or await updateDoc
+      // myDones2023: myDones2023
+      // myDones202401: myDones202401,
+      // myDones202402: myDones202402
+      // myList: myList
       listTasks: listTasks,
       mySettings: mySettings //on a tu besoin de le mettre là, si il se sauve à chaque fois qu'on save les setting?... showtype vs settings...
     });
   } else{
     batch.set(doc(db, "randomTask", auth.currentUser.email), { // or batch.set or await setDoc
+      // myDones2023: myDones2023
+      // myDones202401: myDones202401,
+      // myDones202402: myDones202402
+      // myList: myList
       listTasks: listTasks,
       mySettings: mySettings
     });
   }; 
-  myBusies = JSON.parse(localStorage.myBusies);
-  const docRefBusies = doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies");
-  const docSnapBusies = await getDoc(docRefBusies);
-  if (docSnapBusies.exists()){
-    batch.update(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.update or await updateDoc
-      myBusies: myBusies
-    });
-  } else{
-    batch.set(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.set or await setDoc
-      myBusies: myBusies
-    });
-  }; 
+  // myBusies = JSON.parse(localStorage.myBusies);
+  // const docRefBusies = doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies");
+  // const docSnapBusies = await getDoc(docRefBusies);
+  // if (docSnapBusies.exists()){
+  //   batch.update(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.update or await updateDoc
+  //     myBusies: myBusies
+  //   });
+  // } else{
+  //   batch.set(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.set or await setDoc
+  //     myBusies: myBusies
+  //   });
+  // }; 
 
   listDones = JSON.parse(localStorage.listDones);
   const docRefDones = collection(db, "randomTask", auth.currentUser.email, "myListDones");
@@ -5300,78 +5347,78 @@ function busyZoneCreation(show){
 
 
 
-function onLongPress(element, list, callback) {
-  let timer;
-  let wholeList;
-  let siblings;
-  // element.addEventListener('touchstart', (e) => { 
-  //   timer = setTimeout(() => {
-  //     timer = null;
-  //     element.classList.add("dragging");
-  //     console.log(element);
-  //     wholeList = document.querySelector("#" + list);
-  //     siblings = [...wholeList.querySelectorAll("li:not(.dragging)")];
-  //     console.log(siblings);
-  //     callback(e, list);
-  //   }, 500);
-  // });
-  element.addEventListener('dragstart', (e) => { 
-      element.classList.add("dragging");
-      console.log(element);
-      wholeList = document.querySelector("#" + list);
-      siblings = [...wholeList.querySelectorAll("li:not(.dragging)")];
-      console.log(siblings);
-      //callback(e);
-  });
-  function cancel(e) {
-    clearTimeout(timer);
-    e.currentTarget.classList.remove("dragging");
-    setNewOrder(list);
-  };
-  function drapDropIt(e){
-    e.preventDefault();
-    // let wholeList = document.querySelector("#" + list);
-    //const draggingLi = document.querySelector(".dragging");
-    // let siblings = [...wholeList.querySelectorAll("li:not(.dragging)")];
-    console.log(siblings);
-    let nextSibling = siblings.find(sibling => {
-      if (e.clientX) {
-        //if mouse
-        return e.clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
-      } else {
-        //if touch
-        return e.changedTouches[0].clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
-      };
-    });
-    //nextSibling.insertAdjacentElement("beforebegin", element);
-    wholeList.insertBefore(element, nextSibling);
-  };
-  element.addEventListener('touchmove', (e) => {
-    drapDropIt(e);
-  });
-  element.addEventListener('dragover', (e) => {
-    drapDropIt(e);
-  });
-  element.addEventListener('touchend', (e) => {
-    cancel(e);
-  });
-  element.addEventListener('dragend', (e) => {
-    cancel(e);
-  });
-  element.addEventListener('drop', (e) => {
-    cancel(e);
-  });
-};
+// function onLongPress(element, list, callback) {
+//   let timer;
+//   let wholeList;
+//   let siblings;
+//   // element.addEventListener('touchstart', (e) => { 
+//   //   timer = setTimeout(() => {
+//   //     timer = null;
+//   //     element.classList.add("dragging");
+//   //     console.log(element);
+//   //     wholeList = document.querySelector("#" + list);
+//   //     siblings = [...wholeList.querySelectorAll("li:not(.dragging)")];
+//   //     console.log(siblings);
+//   //     callback(e, list);
+//   //   }, 500);
+//   // });
+//   element.addEventListener('dragstart', (e) => { 
+//       element.classList.add("dragging");
+//       console.log(element);
+//       wholeList = document.querySelector("#" + list);
+//       siblings = [...wholeList.querySelectorAll("li:not(.dragging)")];
+//       console.log(siblings);
+//       //callback(e);
+//   });
+//   function cancel(e) {
+//     clearTimeout(timer);
+//     e.currentTarget.classList.remove("dragging");
+//     setNewOrder(list);
+//   };
+//   function drapDropIt(e){
+//     e.preventDefault();
+//     // let wholeList = document.querySelector("#" + list);
+//     //const draggingLi = document.querySelector(".dragging");
+//     // let siblings = [...wholeList.querySelectorAll("li:not(.dragging)")];
+//     console.log(siblings);
+//     let nextSibling = siblings.find(sibling => {
+//       if (e.clientX) {
+//         //if mouse
+//         return e.clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
+//       } else {
+//         //if touch
+//         return e.changedTouches[0].clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
+//       };
+//     });
+//     //nextSibling.insertAdjacentElement("beforebegin", element);
+//     wholeList.insertBefore(element, nextSibling);
+//   };
+//   element.addEventListener('touchmove', (e) => {
+//     drapDropIt(e);
+//   });
+//   element.addEventListener('dragover', (e) => {
+//     drapDropIt(e);
+//   });
+//   element.addEventListener('touchend', (e) => {
+//     cancel(e);
+//   });
+//   element.addEventListener('dragend', (e) => {
+//     cancel(e);
+//   });
+//   element.addEventListener('drop', (e) => {
+//     cancel(e);
+//   });
+// };
 
-function setNewOrder(list){
-  let n = 1;
-  document.querySelectorAll("#" + list + " > li").forEach(li => {
-    li.setAttribute("data-order", n);
-    let todoIndex = listTasks.findIndex(el => el.id == li.id);
-    let todo = listTasks[todoIndex];
-    todo.order = n;
-    n++;
-  });
-  localStorage.listTasks = JSON.stringify(listTasks);
-  updateCBC();
-};
+// function setNewOrder(list){
+//   let n = 1;
+//   document.querySelectorAll("#" + list + " > li").forEach(li => {
+//     li.setAttribute("data-order", n);
+//     let todoIndex = listTasks.findIndex(el => el.id == li.id);
+//     let todo = listTasks[todoIndex];
+//     todo.order = n;
+//     n++;
+//   });
+//   localStorage.listTasks = JSON.stringify(listTasks);
+//   updateCBC();
+// };

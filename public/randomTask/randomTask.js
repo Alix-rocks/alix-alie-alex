@@ -3,8 +3,9 @@
   //Also, change (in firestore) the names of the lists in mySorting (or create new ones and delete the old ones in firestore)
 
 import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
-import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+import { getAuth, signOut, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
 import { app, analytics, db, auth, provider } from "../myFirebase.js";
+import trans from "../trans.js";
 auth.languageCode = 'fr';
 
 getRedirectResult(auth)
@@ -49,6 +50,16 @@ onAuthStateChanged(auth,(user) => {
     cloudIt.classList.add("displayNone");
   };
 });
+
+function logOut(){
+  signOut(auth).then(() => {
+    // Sign-out successful.
+    location.reload();
+  }).catch((error) => {
+    // An error happened.
+  });
+};
+window.logOut = logOut;
 
 
 
@@ -863,7 +874,8 @@ function resetCBC(){
       ${clockingOptions}
     </div>
     <button id="settingsBtn" class="ScreenBtn1">yep <span class="typcn typcn-thumbs-up" style="padding: 0;font-size: 1em;"></span></button>
-    <button id="cancelBtn" class="ScreenBtn2">Cancel</button>`;
+    <button id="cancelBtn" class="ScreenBtn2">Cancel</button>
+    <button id="logOutBtn" onclick="logOut()" class="ScreenBtn1" style="margin-right: 0; margin-bottom: 0; border-radius: 15px; font-size: .8em;">I'm out! <i class="fa-solid fa-person-through-window" style="display: block; margin-top: 3px;"></i></button>`;
 
     let switchModeSlider = document.querySelector("#switchModeSlider");
     let timeInput = document.querySelector("#timeInput");
@@ -1661,7 +1673,7 @@ addForm.addEventListener("submit", (e) => {
     updateCBC();
     addForm.reset();
   } else{
-    taskAddAllInfo("addForm", "todoZone", "new");
+    taskAddAllInfo("addForm", "todoZone", "new"); //taskAddAllInfo(null, "todoZone", "new");
     addForm.reset();
   };
 });
@@ -2298,7 +2310,7 @@ let toDoPage = document.querySelector("#toDoPage");
 shuffleBtn.addEventListener("click", () => {
   let todayDate = getTodayDateString(); //that might not work getTodayTime()
   // wheneverList = listTasks.filter(task => ((!task.date || task.date == "" || task.date <= todayDate) && (task.line !== "recurringDay" && !task.stock)) || (task.date > todayDate && task.line == "doneDay")); 
-  wheneverList = listTasks.filter(task => (task.term == "oneTime" || task.term == "longTerm" || task.term == "alwaysHere")); 
+  wheneverList = listTasks.filter(task => (task.term == "oneTime" || task.term == "longTerm" || task.term == "alwaysHere") && !task.stock && task.line !== "recurringDay"); 
   //WOLA il faudrait ajouter les recurry... et enlever les random... Bref, juste priority, today et whenever? ou juste whenever vu que le boutton est dans whenever...
   for (let i = wheneverList.length - 1; i > 0; i--) { 
     const j = Math.floor(Math.random() * (i + 1)); 
@@ -3472,7 +3484,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "todoZone", "calWeekPag
         <input id="tellWhatInput" type="checkbox" class="cossin taskToggleInput" />
         <div>
           <label for="tellWhatInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
-            <h5 class="topList">Tell me what...<span class="tellYou">(<span id="tellYouTermProject">${todo.wholeProject || todo.partProject ? `Project - ` : ``}</span><span id="tellYouTerm">${todo.term}</span><span id="tellYouShowType">${todo.term == "showThing" ? ` - ${todo.showType ? todo.showType : mySettings.myShowTypes[0].name}` : ``}</span><span id="tellYouUrge">${todo.urge ? ` - Priority: ${todo.urgeNum}` : ``}</span>)</span></h5>
+            <h5 class="topList">Tell me what...<span class="tellYou">(<span id="tellYouTermProject">${todo.wholeProject || todo.partProject ? `Project - ` : ``}</span><span id="tellYouTerm">${t(todo.term)}</span><span id="tellYouShowType">${todo.term == "showThing" ? ` - ${todo.showType ? todo.showType : mySettings.myShowTypes[0].name}` : ``}</span><span id="tellYouUrge">${todo.urge ? ` - Priority: ${todo.urgeNum}` : ``}</span>)</span></h5>
             <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
           </label>
           <div class="taskToggleList taskInfoInput relDiv">
@@ -3612,7 +3624,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "todoZone", "calWeekPag
         <input id="tellWhenInput" type="checkbox" class="cossin taskToggleInput" />
         <div>
           <label for="tellWhenInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
-            <h5 class="topList">Tell me when...<span class="tellYou">(${todo.line}${todo.date ? ` ${todo.date}` : ``})</span></h5>
+            <h5 class="topList">Tell me when...<span class="tellYou">(<span id="tellYouWhen">${t(todo.line)}</span><span id="tellYouDay">${todo.date ? ` ${todo.date}` : ``}</span>)</span></h5>
             <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
           </label>
           <div class="taskToggleList relDiv">
@@ -3630,6 +3642,20 @@ function taskAddAllInfo(thisOne, where, why){ //where == "todoZone", "calWeekPag
   div.insertAdjacentHTML("beforeend", taskAllInfo); //different in month/week 
   let calendarHome = document.querySelector("#calendarHome");
   creatingCalendar(todo, calendarHome, "inHome");
+  let calendarDiv = document.querySelector("#calendarDiv");
+  calendarDiv.querySelectorAll('input[name="whatDay"]').forEach(radio => {
+    radio.addEventListener("click", () => {
+      document.querySelector("#tellYouWhen").innerText = t(radio.value);
+      if(radio.value == "todoDay"){
+        document.querySelector("#tellYouDay").innerText = ` ${document.querySelector("#oneDayDateInput").value}`;
+      } else{
+        document.querySelector("#tellYouDay").innerText = ``;
+      };
+    });
+  });
+  calendarDiv.querySelector("#oneDayDateInput").addEventListener("change", (e) => {
+    document.querySelector("#tellYouDay").innerText = ` ${e.target.value}`;
+  });
   let taskInfo = document.querySelector("#taskInfo");
   let doneIt = document.querySelector("#doneIt");
   let copyIt = document.querySelector("#copyIt");
@@ -4051,7 +4077,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "todoZone", "calWeekPag
   
   document.querySelectorAll('input[name="termOptions"]').forEach(radio => {
     radio.addEventListener("click", () => {
-      document.querySelector("#tellYouTerm").innerText = radio.value;
+      document.querySelector("#tellYouTerm").innerText = t(radio.value);
       if(radio.value == "showThing" || radio.value == "reminder"){
         setTR();
         if(radio.value == "showThing"){
@@ -4080,6 +4106,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "todoZone", "calWeekPag
       };
     });
   });
+  
   function setTR(){ // A
     todoDaySection.classList.remove("displayNone");
     recurringDaySection.classList.remove("displayNone");
@@ -4556,6 +4583,10 @@ function taskAddAllInfo(thisOne, where, why){ //where == "todoZone", "calWeekPag
 };
 window.taskAddAllInfo = taskAddAllInfo;
 
+function t(key){
+  return trans.randomTask[key]?.or ?? key; // regarde si randomTask[key] existe, si oui retourne .or, si non retourne key
+};
+
 window.copyText = copyText;
 
 function copyText(){
@@ -4747,7 +4778,7 @@ let monthName = date.toLocaleString('it-IT', { month: 'long' }).toLocaleUpperCas
 let todayWholeDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(todayDate).padStart(2, "0")}`
 
 function putShowsInMonth(monthlyFirst, monthlyLast){
-  let filteredShows = listTasks.filter((todo) => todo.term == "showThing");
+  let filteredShows = listTasks.filter((todo) => todo.term == "showThing" || todo.term == "reminder");
   let shows = [];
   filteredShows.forEach(show => {
     if(show.line == "recurringDay"){
@@ -4771,10 +4802,16 @@ function putShowsInMonth(monthlyFirst, monthlyLast){
     });
   });
   
-  let sortedShows = shows.sort((s1, s2) => (s1.date < s2.date) ? -1 : (s1.date > s2.date) ? 1 : (s1.date == s2.date) ? (s1.dalle < s2.dalle) ? -1 : (s1.dalle > s2.dalle) ? 1 : 0 : 0);
+  let sortedShows = shows.sort((s1, s2) => (s1.date < s2.date) ? -1 : (s1.date > s2.date) ? 1 : (s1.date == s2.date) ? (s1.term < s2.term) ? -1 : (s1.term > s2.term) ? 1 : (s1.term == s2.term) ? (s1.dalle < s2.dalle) ? -1 : (s1.dalle > s2.dalle) ? 1 : 0 : 0 : 0);
   shows = sortedShows;
+  let today = getTodayDateString();
   shows.forEach(show => {
-    let eventDiv = `<div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} data-showType="${show.showType}" ${!show.past ? `onclick="taskAddAllInfo(this, 'calMonthPage', 'mod')"` : ``} class="eventDiv ${show.past ? "pastEvent" : ""}" style="background-color:${show.STColorBG}; color:${show.STColorTX};">${show.task}</div>`;
+    let eventDiv;
+    if(show.term == "showThing"){
+      eventDiv = `<div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} data-showType="${show.showType}" ${!show.past ? `onclick="taskAddAllInfo(this, 'calMonthPage', 'mod')"` : ``} class="eventDiv ${show.past ? "pastEvent" : ""}" style="background-color:${show.STColorBG}; color:${show.STColorTX};">${show.task}</div>`;
+    } else if(show.term == "reminder"){
+      eventDiv = `<div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${!show.past ? `onclick="taskAddAllInfo(this, 'calMonthPage', 'mod')"` : ``} class="eventDiv ${show.date < today ? "pastEvent" : ""}" style="color:${mySettings.myBaseColors[show.color].colorBG};">${show.task}</div>`;
+    };
     let kase = document.querySelector("[data-wholedate='" + show.date + "']");
     if(kase){
       kase.insertAdjacentHTML("beforeend", eventDiv);

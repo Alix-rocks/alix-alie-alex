@@ -1185,6 +1185,9 @@ p#hshText{
   width: 220px;
   padding: 5px;
 }
+.iconsPaletClass i{
+  color: var(--tx-color);
+}
 .labelPaletClass{
   border-radius: 0 5px 5px 5px;
   width: 150px;

@@ -460,7 +460,14 @@ async function getTasksSettings() {
   //localStorage.myBusies = JSON.stringify(myBusies);
   updateArrowsColor();
   // those that have an array, in mySettings.mySorting could have the class sortedList remove and so not be considered by sortItAll()
-  if(mySettings.mySorting){
+  if(mySettings.mySorting){ //cleaning justInCase
+    for(let i = mySettings.mySorting.length - 1; i >= 0; i--){
+      let list = document.getElementById(mySettings.mySorting[i].list);
+      if(!list){
+        mySettings.mySorting.splice(i, 1);
+      };
+    };
+    localStorage.mySettings = JSON.stringify(mySettings);
     mySettings.mySorting.forEach((mySort, idx) => {
       let liste = document.getElementById(mySort.list);
       if(liste){
@@ -1998,8 +2005,10 @@ function gotItDone(nb, rec){ //nb = todo.id, rec = recurring Id (or "" if direct
       let donedTaskId = listTasks[donedTaskIndex].id;
       let stockId = listTasks[donedTaskIndex].stockId;
       let stockIndex = listTasks.findIndex(todo => todo.id == stockId);
-      // console.log(listTasks[stockIndex]);
-      listTasks[stockIndex].storedId = listTasks[stockIndex].storedId.filter(id => id !== donedTaskId);
+      console.log(stockIndex);
+      if(stockIndex !== -1){
+        listTasks[stockIndex].storedId = listTasks[stockIndex].storedId.filter(id => id !== donedTaskId);
+      }; //else, means the stock has been erased without erasing its stored...
     };
 
     let donedTaskSplice = listTasks.splice(donedTaskIndex, 1);
@@ -2123,20 +2132,20 @@ function refreshDoneId(){
 // *** SORT
 
 function howToSortIt(listName){
-  let li;
+  let ul; // or check if ul has the class "sortedList" ...
   let type;
   if(mySettings.mySorting){
     let listIdx = mySettings.mySorting.findIndex(sort => sort.list == listName);
     if(listIdx !== -1){
       sortItWell(listIdx);
     } else{
-      li = document.getElementById(listName);
-      type = li.dataset.sort;
+      ul = document.getElementById(listName);
+      type = ul.dataset.sort;
       sortIt(type, listName);
     };
   } else{
-    li = document.getElementById(listName);
-    type = li.dataset.sort;
+    ul = document.getElementById(listName);
+    type = ul.dataset.sort;
     sortIt(type, listName);
   };
 };
@@ -2475,9 +2484,17 @@ function sortItWell(sortIndex){
 window.sortItWell = sortItWell;
 
 function sortItAllWell(){
-  for(let i = 0; i < mySettings.mySorting.length; i++){
-    sortItWell(i);
+  if(mySettings.mySorting){
+    for(let i = mySettings.mySorting.length - 1; i >= 0; i--){
+      let list = document.getElementById(mySettings.mySorting[i].list);
+      if(!list){ //cleaning justInCase
+        mySettings.mySorting.splice(i, 1);
+      } else{
+        sortItWell(i);
+      };
+    };
   };
+  sortItAll(); //for the lists that don't have a mySettings.mySorting (or all of them if there isn't any mySettings.mySorting)
 };
 
 // *** SHUFFLE
@@ -2596,8 +2613,7 @@ let parent;
 
 let clickScreen = document.querySelector("#clickScreen");
 let newWidth;
-function smallCalendarChoice(thisOne){
-  //thisOne = taskToDate est l'icon calendar
+function smallCalendarChoice(thisOne){//thisOne = taskToDate est l'icon calendar
   moving = false;
   parent = thisOne.parentElement;
   let togoList = parent.parentElement.id;
@@ -2654,7 +2670,7 @@ function smallCalendarChoice(thisOne){
     todoCreation(todo);
 
     localStorage.listTasks = JSON.stringify(listTasks);
-    sortItAll();
+    sortItAllWell();
     updateCBC();
     clickHandlerAddOn(calendarDiv, "trash", clickScreen, togoList);
   });
@@ -3388,6 +3404,280 @@ function getDayNameFromString(date){
 let newlabelName = "";
 let newlabelColor = "";
 
+// to go to taskAddAllInfo
+function toTIdeTZaP(thisOne){ // de TodoZone à Procrastinator
+  //moving = false; //must stay false in month/week/search
+  let div;
+  let todo;
+  let parents;
+  let togoList;
+  let recIndex;
+  let todoIndex;
+  div = thisOne.parentElement.parentElement; 
+  thisOne.parentElement.remove();
+  parent = div.parentElement; 
+  let parentId = parent.id;
+  togoList = parent.parentElement.id; 
+  parent.classList.add("selectedTask");
+  parent.scrollIntoView(); 
+  let width = getComputedStyle(div).width; 
+  let num = width.slice(0, -2); 
+  newWidth = Number(num) + 44; 
+  clickScreen.classList.remove("displayNone");
+  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+    let rec = parent.dataset.rec;
+    recIndex = listTasks.findIndex(todo => todo.id == rec);
+    todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == parentId);
+    todo = listTasks[recIndex].recurrys[todoIndex];
+  } else{
+    todoIndex = listTasks.findIndex(todo => todo.id == parentId);
+    todo = listTasks[todoIndex];
+  }; 
+};
+function toTIdeTZaN(thisOne){ // de TodoZone à New (addForm)
+  //moving = false; //must stay false in month/week/search
+  let div;
+  let todo;
+  let parents;
+  let togoList;
+  let recIndex;
+  let todoIndex;
+  todo = {
+    newShit: true,
+    id: crypto.randomUUID(),
+    color: "0",
+    icon: "fa-solid fa-ban noIcon",
+    term: "oneTime",
+    line: "noDay"
+  };
+  listTasks.push(todo);
+  newWidth = Number(window.innerWidth - 16);
+  div = document.getElementById(where);
+};
+function toTIdeTZaM(thisOne){ // de TodoZone à Modification
+  //moving = false; //must stay false in month/week/search
+  let div;
+  let todo;
+  let parents;
+  let togoList;
+  let recIndex;
+  let todoIndex;
+  div = thisOne.parentElement;
+  parent = div.parentElement; 
+  let parentId = parent.id;
+  togoList = parent.parentElement.id; 
+  parent.classList.add("selectedTask");
+  parent.scrollIntoView(); 
+  let width = getComputedStyle(div).width; 
+  let num = width.slice(0, -2); 
+  newWidth = Number(num) + 44; 
+  clickScreen.classList.remove("displayNone"); 
+  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+    let rec = parent.dataset.rec;
+    recIndex = listTasks.findIndex(todo => todo.id == rec);
+    todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == parentId);
+    todo = listTasks[recIndex].recurrys[todoIndex];
+  } else{
+    todoIndex = listTasks.findIndex(todo => todo.id == parentId);
+    todo = listTasks[todoIndex];
+  };
+};
+function toTIdeTZaS(thisOne){ // de TodoZone à Stock reusage
+  //moving = false; //must stay false in month/week/search
+  let div;
+  let todo;
+  let parents;
+  let togoList;
+  let recIndex;
+  let todoIndex;
+  let reuseLi = thisOne.parentElement;
+  let reuseId = reuseLi.id;
+  let reuseIndex = listTasks.findIndex(todo => todo.id == reuseId);
+  let reuse = listTasks[reuseIndex];
+  todo = JSON.parse(JSON.stringify(reuse));
+  todo.id = crypto.randomUUID();
+  todo.stored = true;
+  todo.stockId = reuse.id;
+  todo.line = "todoDay";
+  todo.date = getTodayDateString();
+  delete todo.stock;
+  delete todo.storedId;
+  listTasks.push(todo);
+  reuse.storedId.push(todo.id);
+  newWidth = Number(window.innerWidth - 16);
+  div = document.getElementById(where);
+  console.log(todo);
+  div.scrollIntoView(); // WHY?!?!?!
+};
+function toTIdeSSaM(thisOne){ // de SearchScreen à Modification
+  moving = false; //must stay false in month/week/search
+  let div;
+  let todo;
+  let parents;
+  let togoList;
+  let recIndex;
+  let todoIndex;
+  div = thisOne.parentElement;
+  parent = div.parentElement; 
+  let parentId = parent.id;
+  togoList = parent.parentElement.id; 
+  parent.classList.add("selectedTask");
+  parent.scrollIntoView(); 
+  let width = getComputedStyle(div).width; 
+  let num = width.slice(0, -2); 
+  newWidth = Number(num) + 44; 
+  clickScreen.classList.remove("displayNone"); 
+  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+    let rec = parent.dataset.rec;
+    recIndex = listTasks.findIndex(todo => todo.id == rec);
+    todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == parentId);
+    todo = listTasks[recIndex].recurrys[todoIndex];
+  } else{
+    todoIndex = listTasks.findIndex(todo => todo.id == parentId);
+    todo = listTasks[todoIndex];
+  };
+};
+function toTIdeSSaS(thisOne){ // de SearchScreen à Stock reusage
+  moving = false; //must stay false in month/week/search
+  let div;
+  let todo;
+  let parents;
+  let togoList;
+  let recIndex;
+  let todoIndex;
+  let reuseLi = thisOne.parentElement;
+  let reuseId = reuseLi.id;
+  let reuseIndex = listTasks.findIndex(todo => todo.id == reuseId);
+  let reuse = listTasks[reuseIndex];
+  todo = JSON.parse(JSON.stringify(reuse));
+  todo.id = crypto.randomUUID();
+  todo.stored = true;
+  todo.stockId = reuse.id;
+  todo.line = "todoDay";
+  todo.date = getTodayDateString();
+  delete todo.stock;
+  delete todo.storedId;
+  listTasks.push(todo);
+  reuse.storedId.push(todo.id);
+  newWidth = Number(window.innerWidth - 16);
+  div = document.getElementById(where);
+  console.log(todo);
+  div.scrollIntoView(); // WHY?!?!?!
+};
+function toTIdeCMaN(thisOne){ // de CalMonthPage à New
+  moving = false; //must stay false in month/week/search
+  let div;
+  let todo;
+  let parents;
+  let togoList;
+  let recIndex;
+  let todoIndex;
+  let kaseDate = thisOne.parentElement.dataset.wholedate;
+  todo = {
+    newShit: true,
+    id: crypto.randomUUID(),
+    color: "0",
+    icon: "fa-solid fa-ban noIcon",
+    term: "showThing",
+    line: "todoDay",
+    tutto: true,
+    date: kaseDate
+  };
+  listTasks.push(todo); 
+  /** @todo That's why we have a new todo in the list even if we cancel! */
+  newWidth = Number(window.innerWidth - 20);
+  div = document.getElementById(where);
+};
+function toTIdeCMaM(thisOne){ // de CalMonthPage à Modification
+  moving = false; //must stay false in month/week/search
+  let div;
+  let todo;
+  let parents;
+  let togoList;
+  let recIndex;
+  let todoIndex;
+  newWidth = Number(window.innerWidth - 20);
+  div = document.getElementById(where);
+  parent = thisOne;
+  let parentId = parent.dataset.id;
+  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+    let rec = parent.dataset.rec;
+    recIndex = listTasks.findIndex(todo => todo.id == rec);
+    todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == parentId);
+    todo = listTasks[recIndex].recurrys[todoIndex];
+  } else{
+    todoIndex = listTasks.findIndex(todo => todo.id == parentId);
+    todo = listTasks[todoIndex];
+  };
+};
+function toTIdeCMaS(thisOne){ // de CalMonthPage à Stock reusage
+
+};
+function toTIdeCWaN(thisOne){ // de CalWeekPage à New
+  moving = false; //must stay false in month/week/search
+  let div;
+  let todo;
+  let parents;
+  let togoList;
+  let recIndex;
+  let todoIndex;
+  let colNum = thisOne.style.gridColumnStart;
+  let code = mySettings.myWeeksDayArray[colNum - 2].code;
+  let colEl = document.querySelector(`[data-code="${code}"]`);
+  let colDate = colEl.dataset.date;
+  todo = {
+    newShit: true,
+    id: crypto.randomUUID(),
+    color: "0",
+    icon: "fa-solid fa-ban noIcon",
+    term: "showThing",
+    line: "todoDay",
+    date: colDate
+  };
+  let rowNum = thisOne.style.gridRowStart;
+  if(rowNum == 4){
+    todo.tutto = true;
+  } else{
+    let hourMath = ((rowNum - 5) / 4) + 3;
+    let hourNum = hourMath < 24 ? hourMath : hourMath - 24;
+    let rowHour = `${String(hourNum).padStart(2, "0")}:00`;
+    let hourEndMath = hourMath + 1;
+    let hourEndNum = hourEndMath < 24 ? hourEndMath : hourEndMath - 24;
+    let rowHourEnd = `${String(hourEndNum).padStart(2, "0")}:00`;
+    todo.dalle = rowHour;
+    todo.alle = rowHourEnd;
+    todo.tutto = false;
+  };
+  listTasks.push(todo);
+  newWidth = Number(window.innerWidth - 20);
+  div = document.getElementById(where);
+};
+function toTIdeCWaM(thisOne){ // de CalWeekPage à Modification
+  moving = false; //must stay false in month/week/search
+  let div;
+  let todo;
+  let parents;
+  let togoList;
+  let recIndex;
+  let todoIndex;
+  newWidth = Number(window.innerWidth - 20);
+  div = document.getElementById(where);
+  parent = thisOne;
+  let parentId = parent.dataset.id;
+  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+    let rec = parent.dataset.rec;
+    recIndex = listTasks.findIndex(todo => todo.id == rec);
+    todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == parentId);
+    todo = listTasks[recIndex].recurrys[todoIndex];
+  } else{
+    todoIndex = listTasks.findIndex(todo => todo.id == parentId);
+    todo = listTasks[todoIndex];
+  };
+};
+function toTIdeCWaS(thisOne){ // de CalWeekPage à Stock reusage
+
+};
+
 function taskAddAllInfo(thisOne, where, why){ //where == "todoZone", "calWeekPage", "calMonthPage", "searchScreen"
   //why == "new", "mod", "pro", "stock"
   moving = false; //must stay false in month/week/search
@@ -3851,6 +4141,8 @@ function taskAddAllInfo(thisOne, where, why){ //where == "todoZone", "calWeekPag
   let SupClickScreen = document.querySelector("#SupClickScreen");
   let colorIt = document.querySelector("#colorIt");
   let colorPalet = document.querySelector("#colorPalet");
+
+  // *** LABEL
   let labelIt = document.querySelector("#labelIt");
   // newlabelName = todo.label ? todo.LName : "";
   // newlabelColor = todo.label ? todo.LColor : "";
@@ -3884,6 +4176,9 @@ function taskAddAllInfo(thisOne, where, why){ //where == "todoZone", "calWeekPag
     } else{
       taskInfo.remove();
     };
+    /* if(why == "new"){ // "stock" too, maybe?
+        find the todoIndex that you don't have yet and then splice it!
+      } */
   });
   doneIt.addEventListener("click", () => {
     if(doneIt.checked){
@@ -4154,67 +4449,6 @@ function taskAddAllInfo(thisOne, where, why){ //where == "todoZone", "calWeekPag
     });
     SupClickScreen.addEventListener("click", () => clickHandlerAddOn(iconsPalet, "keep", SupClickScreen, "nowhere"));
   });
-
-  //LABEL
-  // let newlabelName = todo.label ? todo.LName : "";
-  // let newlabelColor = todo.label ? todo.LColor : "";
-  // labelIt.addEventListener("click", () => {
-  //   let labelNamesChoice;
-  //   if(mySettings.myLabels && mySettings.myLabels.length > 0){
-  //     let labelNames = mySettings.myLabels.map((label, idx) => {
-  //       return `<option style="background-color:${colorsList[label.color].colorBG}; color:${colorsList[label.color].colorTX};" value="${idx}" ${todo.LName && todo.LName == label.name ? `selected` : ``}>${label.name}</option>`;
-  //     }).join("");
-  //     labelNamesChoice = `<h5 style="margin: 10px 0 5px; align-self: flex-start;">Choose one: <select id="myLabelNames">
-  //     <option value="null">none</option>
-  //     ${labelNames}
-  //   </select></h5>`;
-  //   } else{
-  //     labelNamesChoice = ``;
-  //   };
-    
-  //   let Lcolors = colorsList.map((icon, idx) => {
-  //     return `<input id="labelColor${idx}" type="radio" name="labelColorChoices" class="displayNone" value="${idx}" /><label for="labelColor${idx}" class="showTypeIconsB labelColorChoix"><i class="fa-solid fa-pen-ruler" style="color:${icon.colorBG};"></i></label>`;
-  //   }).join("");
-  //   let labelPalet = `<div id="labelPalet" class="labelPaletClass">
-  //   <h5 style="margin:0; text-decoration:underline;">Let's put a label on it!</h5>
-  //   ${labelNamesChoice}
-  //   <h5 style="margin: 15px 0 0; align-self: flex-start;">Create one: <input id="labelNameInput" type="text" style="width: 50px;margin:auto;" placeholder="Label"/></h5>
-  //   <div>${Lcolors}</div>
-  //   </div>`;
-  //   taskInfo.insertAdjacentHTML("beforeend", labelPalet);
-  //   SupClickScreen.classList.remove("displayNone");
-  //   labelPalet = document.querySelector("#labelPalet");
-  //   if(mySettings.myLabels && mySettings.myLabels.length > 0){
-  //     document.querySelector("#myLabelNames").addEventListener("change", (e) => {
-  //       console.log(e.target.value);
-  //       if(e.target.value == "null"){
-  //         newlabelColor = "";
-  //         newlabelName = "";
-  //         labelIt.style.backgroundColor = "var(--bg-color)";
-  //         labelIt.style.color = "var(--tx-color)";
-  //         labelIt.innerText = "Label";
-  //       } else{
-  //         let label = mySettings.myLabels[e.target.value];
-  //         newlabelColor = label.color;
-  //         labelIt.style.backgroundColor = colorsList[label.color].colorBG;
-  //         labelIt.style.color = colorsList[label.color].colorTX;
-  //         newlabelName = labelIt.innerText = label.name;
-  //         clickHandlerAddOn(labelPalet, "trash", SupClickScreen, "nowhere");
-  //       };
-  //     });
-  //   };
-  //   document.querySelectorAll("input[name='labelColorChoices']").forEach(radio => {
-  //     radio.addEventListener("click", () => {
-  //       newlabelColor = radio.value; //index of colorList
-  //       labelIt.style.backgroundColor = colorsList[newlabelColor].colorBG;
-  //       labelIt.style.color = colorsList[newlabelColor].colorTX;
-  //     });
-  //   });
-  //   document.querySelector("#labelNameInput").addEventListener("change", (e) => {
-  //     newlabelName = labelIt.innerText = e.currentTarget.value;
-  //   });
-  //   SupClickScreen.addEventListener("click", () => clickHandlerAddOn(labelPalet, "trash", SupClickScreen, "nowhere"));
-  // });
   
   //SHOW TYPE
   let showTypeIcons = false;
@@ -4666,7 +4900,6 @@ function taskAddAllInfo(thisOne, where, why){ //where == "todoZone", "calWeekPag
         };
       } else{
         todoCreation(todo); 
-        // sortItAll();
       };
       
       
@@ -4686,12 +4919,14 @@ function taskAddAllInfo(thisOne, where, why){ //where == "todoZone", "calWeekPag
         let todoIdx = stock.storedId.indexOf(todo.id);
         stock.storedId.splice(todoIdx, 1);
         console.log(stock);
+      } else if(why == "new"){ // "stock" too, maybe?
+        //find the todoIndex that you don't have yet and then splice it!
       } else{
         listTasks.splice(todoIndex, 1);
       };
       if(where == "todoZone" || where == "searchScreen"){
         parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
-      };
+      }; //we don't need parents anymore since there are no more copy! (except in the swipingDay Section if it's the date the todo is...)
     };
     
     localStorage.listTasks = JSON.stringify(listTasks);
@@ -4702,13 +4937,13 @@ function taskAddAllInfo(thisOne, where, why){ //where == "todoZone", "calWeekPag
       moving = false;
       taskInfo.remove();
       clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
-      howToSortIt(togoList);
+      howToSortIt(togoList); //only if there's a togoList!
     };
     //console.log(togoList);
     if((thisOne == "addForm" || why == "stock") && togoList !== ""){
       scrollToSection(togoList);
       taskInfo.remove();
-      howToSortIt(togoList);
+      howToSortIt(togoList); //only if there's a togoList!
     } else if((thisOne == "addForm" || why == "stock") && togoList == ""){
       taskInfo.remove();
     } else if(where == "todoZone" && togoList !== ""){
@@ -4718,7 +4953,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "todoZone", "calWeekPag
       });
       parent.remove(); // it wasn't complaining but that was still useless...
       clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
-      howToSortIt(togoList);
+      howToSortIt(togoList); //only if there's a togoList!
     } else if(where == "todoZone" && togoList == ""){
       parents.forEach(parent => {
         parent.remove();
@@ -4728,7 +4963,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "todoZone", "calWeekPag
     } else{ //not in the list, so month/week
       moving = false;
       taskInfo.remove();
-      howToSortIt(togoList);
+      sortItAllWell();
     };
     updateArrowsColor();
     updateCBC();

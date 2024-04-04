@@ -91,8 +91,8 @@ let mySettings = {
     nameNoAcc: "domenica",
     letter: "D",
     code: "D0",
-    clockIn: "10:00",
-    clockOut: "02:00"
+    clockIn: "10:00", // meIn (for me), businessIn (for Calia), socialIn (for friends)
+    clockOut: "02:00" // meOut (for me), businessOut (for Calia), socialOut (for friends)
   }, {
     day: 1,
     name0Maj: "lunedì",
@@ -383,13 +383,13 @@ async function getTasksSettings() {
   if(mySettings.myLabels && mySettings.myLabels.length > 0){
     myLabelsGeneralChoice();
   };
-  myBusies = [];
+  // myBusies = [];
   // mySettings.myWeeksDayArray.forEach(day => {
   //   let busyIn = {
   //     type: "sempre", //"sempre" if appears at each week, like sleep and meal
   //     col: day.code,
   //     start: "00-00",
-  //     end: roundFifteenTime(day.clockIn)
+  //     end: roundFifteenTime(day.clockIn) //that would be for the pre-morning sleep
   //   };
   //   myBusies.push(busyIn);
   //   if(!(day.clockOut > "00:00" && day.clockOut < mySettings.myTomorrow)){
@@ -417,13 +417,8 @@ async function getTasksSettings() {
   localStorage.listTasks = JSON.stringify(listTasks);
   
   listTasks.forEach(todo => {
-//Modify all the event to busy
-    // if(todo.term == "showThing" && todo.line !== "recurringDay" && todo.line !== "noDay"){
-    //   busyZoneCreation(todo);
-    // } else if(todo.term == "showThing" && todo.line == "recurringDay"){
-    //   todo.recurrys.forEach(recurry => busyZoneCreation(recurry));
-    // };
 
+//other modifications...
     // if(todo.line == "doneDay"){
     //   todo.deadline = todo.date;
     //   todo.line = "noDay";
@@ -490,6 +485,49 @@ async function getTasksSettings() {
   //{document} email
     //{collection} mySchedule
       //{document} myBusies: [{type:_(sempre/once), date:_, col:_, start:_, end:_}, {}] (busy)
+
+/* 
+mySchedule = {
+  weeksDayArray = [{
+    day: 0,
+    name: "dimanche",
+    letter: "D",
+    code: "D0",
+    socialIn: "11-00",
+    socialOut: "23-00"
+  }, {
+    day: 1,
+    name: "lundi",
+    letter: "L",
+    code: "L1"
+  }, {
+    day: 2,
+    name: "mardi",
+    letter: "M",
+    code: "M2"
+  }, {
+    day: 3,
+    name: "mercredi",
+    letter: "M",
+    code: "M3"
+  }, {
+    day: 4,
+    name: "jeudi",
+    letter: "J",
+    code: "G4"
+  }, {
+    day: 5,
+    name: "vendredi",
+    letter: "V",
+    code: "V5"
+  }, {
+    day: 6,
+    name: "samedi",
+    letter: "S",
+    code: "S6"
+  }]
+}
+*/
 
 function myLabelsGeneralChoice(){
   let labelDivs = mySettings.myLabels.map((label, idx) => {
@@ -769,18 +807,28 @@ async function saveToCloud(){
       mySettings: mySettings
     });
   }; 
-  // myBusies = JSON.parse(localStorage.myBusies);
-  // const docRefBusies = doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies");
-  // const docSnapBusies = await getDoc(docRefBusies);
-  // if (docSnapBusies.exists()){
-  //   batch.update(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.update or await updateDoc
-  //     myBusies: myBusies
-  //   });
-  // } else{
-  //   batch.set(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.set or await setDoc
-  //     myBusies: myBusies
-  //   });
-  // }; 
+
+  myBusies = [];
+  listTasks.forEach(todo => {
+    //Modify all the event to busy
+    if(todo.term == "showThing" && todo.line == "todoDay" && todo.showType !== "Cancelled"){
+      busyZoneCreation(todo);
+    } else if(todo.term == "showThing" && todo.line == "recurringDay"){
+      todo.recurrys.forEach(recurry => busyZoneCreation(recurry));
+    };
+  });
+  //myBusies = JSON.parse(localStorage.myBusies);
+  const docRefBusies = doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies");
+  const docSnapBusies = await getDoc(docRefBusies);
+  if (docSnapBusies.exists()){
+    batch.update(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.update or await updateDoc
+      myBusies: myBusies
+    });
+  } else{
+    batch.set(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.set or await setDoc
+      myBusies: myBusies
+    });
+  }; 
 
   listDones = JSON.parse(localStorage.listDones);
   const docRefDones = collection(db, "randomTask", auth.currentUser.email, "myListDones");
@@ -828,7 +876,7 @@ function updateFromCloud(){
   listTasks = [];
   listDones = [];
   wheneverList = [];
-  myBusies = [];
+  // myBusies = [];
   resetModif();
   resetCBC();
   getTasksSettings();
@@ -3401,6 +3449,17 @@ function getDayNameFromString(date){
 
 // *** DETAILS
 
+let newLabel = {
+  color : "",
+  name : ""
+};
+console.log(JSON.stringify(newLabel));
+function newLabelReset(){
+  newLabel = {
+    color : "",
+    name : ""
+  };
+};
 let newlabelName = "";
 let newlabelColor = "";
 
@@ -4144,8 +4203,9 @@ function taskAddAllInfo(thisOne, where, why){ //where == "todoZone", "calWeekPag
 
   // *** LABEL
   let labelIt = document.querySelector("#labelIt");
-  // newlabelName = todo.label ? todo.LName : "";
-  // newlabelColor = todo.label ? todo.LColor : "";
+  newLabelReset();
+  newlabelName = todo.label ? todo.LName : "";
+  newlabelColor = todo.label ? todo.LColor : "";
   let options = {
     where: taskInfo,
     labelDiv: labelIt,
@@ -4753,34 +4813,20 @@ function taskAddAllInfo(thisOne, where, why){ //where == "todoZone", "calWeekPag
       //   delete todo.Pnickname;
       // };
   
-      /* if(newlabelName !== "" && newlabelColor !== ""){
-        todo.label = true;
-        todo.LName = newlabelName;
-        todo.LColor = newlabelColor;
- 
-        let newLabel = {
-          name: newlabelName,
-          color: newlabelColor
-        };
-        if(!mySettings.myLabels){
-          mySettings.myLabels = [];
-          mySettings.myLabels.push(newLabel);
-        } else if(mySettings.myLabels && mySettings.myLabels.length > 0){
-          let thisLabelIdx = mySettings.myLabels.findIndex(label => label.name == newlabelName);
-          if(thisLabelIdx == -1){
-            mySettings.myLabels.push(newLabel);
-          } else{
-            mySettings.myLabels[thisLabelIdx] = newLabel;
-          };
-        };
-        localStorage.mySettings = JSON.stringify(mySettings);
-      } else{
-        delete todo.label;
-        delete todo.LName;
-        delete todo.LColor;
-      }; */
+      // save Label
+      if(JSON.stringify(newLabel) !== '{"color":"","name":""}'){
+        saveNewLabel();
+        applyLabel(todo, newLabel.color, newLabel.name);
+        newLabelReset();
+      } else if(newlabelName == "" && newlabelColor == ""){
+        removeLabel(todo);
+      } else if(newlabelName !== "" && newlabelColor !== ""){
+        applyLabel(todo, newlabelColor, newlabelName);
+        newlabelColor = "";
+        newlabelName = "";
+      };
       
-
+      
       todo.task = taskTitle.value.startsWith("*") ? taskTitle.value.substring(1) : taskTitle.value;
 
       if(taskDetails.value !== ""){
@@ -5098,35 +5144,6 @@ function iconChoice(thisOne){
 window.iconChoice = iconChoice;
 
 // *** LABEL
-// function labelChoice(thisOne){ // from checkOrUrge/the little label in the li (not in taskInfo)
-//   console.log("labelChoice");
-//   parent.scrollIntoView();
-//   //clickScreen.classList.remove("displayNone");
-//   // ==> we need a different clickScreen because that one is for the checkOrUrge!
-//   let todo;
-//   let recIndex;
-//   let todoIndex;
-//   let parentId = parent.id;
-//   if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
-//     let rec = parent.dataset.rec;
-//     recIndex = listTasks.findIndex(todo => todo.id == rec);
-//     todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == parentId);
-//     todo = listTasks[recIndex].recurrys[todoIndex];
-//   } else{
-//     todoIndex = listTasks.findIndex(todo => todo.id == parentId);
-//     todo = listTasks[todoIndex];
-//   };
-//   let labelDiv = parent.querySelector(".labelLiOnglet");
-//   let options = {
-//     icon: thisOne,
-//     where: thisOne.parentElement,
-//     labelDiv: labelDiv,
-//     screen: clickScreen,
-//     myLabels: mySettings.myLabels && mySettings.myLabels.length > 0 ? true : false
-//   };
-//   creatingLabelPanel(todo, options);
-// };
-// window.labelChoice = labelChoice;
 
 function creatingLabelPanel(todo, options){ //création du paneau et 
   console.log(options);
@@ -5137,9 +5154,9 @@ function creatingLabelPanel(todo, options){ //création du paneau et
     screen (SupClickScreen (taskInfo) or clickScreen (checkOrUrge)), 
     myLabels (true (mySettings.myLabels && mySettings.myLabels.length > 0) or false),
   } */
-  newlabelColor = "";
-  newlabelName = "";
-  
+
+  newLabelReset();
+
   // Création du panneau
   let labelNamesChoice;
   if(options.myLabels){
@@ -5169,8 +5186,8 @@ function creatingLabelPanel(todo, options){ //création du paneau et
       <div class="taskToggleList"style="display: flex; flex-direction: column; align-items: center; width: -webkit-fill-available;">
         <h5 style="margin: 15px 0 0; align-self: flex-start;">Name: <input id="labelNameInput" type="text" style="width: 50px;margin:auto;" placeholder="Label"/></h5>
         <div>${Lcolors}</div>
-        <button id="createLabelBtn" style="margin: 10px auto; font-size: .8em; opacity: .5;">Create new label</button>
-        <button id="createLabelCancelBtn" class="ScreenBtn2">Cancel</button>
+        ${options.icon ? `<button id="createLabelBtn" style="margin: 10px auto; font-size: .8em; opacity: .5;">Create & apply new label</button>
+        <button id="createLabelCancelBtn" class="ScreenBtn2">Cancel</button>` : ``}
       </div>
     </div>
   </div>`;
@@ -5180,99 +5197,110 @@ function creatingLabelPanel(todo, options){ //création du paneau et
   options.screen.classList.remove("displayNone");
   labelPalet = document.querySelector("#labelPalet");
 
+  let createLabelBtn;
+  let createLabelCancelBtn;
+  if(options.icon){
+    createLabelBtn = document.querySelector("#createLabelBtn");
+    createLabelCancelBtn = document.querySelector("#createLabelCancelBtn");
+    newlabelName = "";
+    newlabelColor = "";
+  };
+
   if(options.myLabels){
     document.querySelector("#myLabelNames").addEventListener("change", (e) => {
-      console.log(e.target.value);
       if(e.target.value == "null"){
+        newLabelReset();
         newlabelColor = "";
         newlabelName = "";
         options.labelDiv.style.backgroundColor = "var(--bg-color)";
         options.labelDiv.style.color = "var(--tx-color)";
         options.labelDiv.innerText = "Label";
-        removeLabelAndLabel(todo);
         if(options.icon){
+          removeLabel(todo);
+          localStorage.listTasks = JSON.stringify(listTasks);
+          updateCBC();
           options.icon.style.color = "var(--tx-color)";
+          parent.querySelector(".labelLiOnglet").remove();
           howToSortIt(parent.parentElement.id);
         };
-        localStorage.listTasks = JSON.stringify(listTasks);
         clickHandlerAddOn(labelPalet, "trash", options.screen, "nowhere");
       } else{
         let label = mySettings.myLabels[e.target.value];
+        newlabelColor = label.color;
+        newlabelName = label.name;
         options.labelDiv.style.backgroundColor = colorsList[label.color].colorBG;
         options.labelDiv.style.color = colorsList[label.color].colorTX;
         options.labelDiv.innerText = label.name;
-        applyLabel(todo, label.color, label.name);
-        localStorage.listTasks = JSON.stringify(listTasks);
-        updateCBC();
         if(options.icon){
+          applyLabel(todo, label.color, label.name);
+          localStorage.listTasks = JSON.stringify(listTasks);
+          updateCBC();
           options.icon.style.color = colorsList[label.color].colorBG;
           howToSortIt(parent.parentElement.id);
+          newLabelReset();
+          newlabelColor = "";
+          newlabelName = "";
         };
+        clickHandlerAddOn(labelPalet, "trash", options.screen, "nowhere");
+      };
+    });
+  };
+  
+  document.querySelectorAll("input[name='labelColorChoices']").forEach(radio => {
+    radio.addEventListener("click", () => {
+      //newlabelColor = radio.value; 
+      newLabel.color = radio.value; //index of colorList
+      console.log(newLabel);
+      if(options.icon && newLabel.color !== "" && newLabel.name !== ""){
+        createLabelBtn.style.opacity = "1";
+      };
+      options.labelDiv.style.backgroundColor = colorsList[newLabel.color].colorBG;
+      options.labelDiv.style.color = colorsList[newLabel.color].colorTX;
+      options.icon ? options.icon.style.color = colorsList[newLabel.color].colorBG : null;
+    });
+  });
+  document.querySelector("#labelNameInput").addEventListener("change", (e) => {
+    newLabel.name = options.labelDiv.innerText = e.currentTarget.value;
+    if(options.icon && newLabel.color !== "" && newLabel.name !== ""){
+      createLabelBtn.style.opacity = "1";
+    };
+  });
+  if(options.icon){
+    // create Label Btn
+    createLabelBtn.addEventListener("click", () => {
+      if(createLabelBtn.style.opacity == "1"){
+        saveNewLabel();
+        applyLabel(todo, newLabel.color, newLabel.name);
+        localStorage.listTasks = JSON.stringify(listTasks);
+        options.icon.style.color = colorsList[newLabel.color].colorBG;
+        howToSortIt(parent.parentElement.id);
+        newLabelReset();
         newlabelColor = "";
         newlabelName = "";
         clickHandlerAddOn(labelPalet, "trash", options.screen, "nowhere");
       };
     });
-  };
-  let createLabelBtn = document.querySelector("#createLabelBtn");
-  let createLabelCancelBtn = document.querySelector("#createLabelCancelBtn");
-  document.querySelectorAll("input[name='labelColorChoices']").forEach(radio => {
-    radio.addEventListener("click", () => {
-      newlabelColor = radio.value; //index of colorList
-      if(newlabelColor !== "" &&  newlabelName !== ""){
-        createLabelBtn.style.opacity = "1";
-      };
-      options.labelDiv.style.backgroundColor = colorsList[newlabelColor].colorBG;
-      options.labelDiv.style.color = colorsList[newlabelColor].colorTX;
-      options.icon ? options.icon.style.color = colorsList[newlabelColor].colorBG : null;
-    });
-  });
-  document.querySelector("#labelNameInput").addEventListener("change", (e) => {
-    newlabelName = options.labelDiv.innerText = e.currentTarget.value;
-    if(newlabelColor !== "" &&  newlabelName !== ""){
-      createLabelBtn.style.opacity = "1";
-    };
-  });
-  // create Label Btn
-  createLabelBtn.addEventListener("click", () => {
-    if(createLabelBtn.style.opacity == "1"){
-      console.log("yay!");
-      saveNewLabel(newlabelColor, newlabelName);
-      applyLabel(todo, newlabelColor, newlabelName);
-      localStorage.listTasks = JSON.stringify(listTasks);
-      if(options.icon){
-        options.icon.style.color = colorsList[newlabelColor].colorBG;
-        howToSortIt(parent.parentElement.id);
-      };
+    // cancel btn
+    createLabelCancelBtn.addEventListener("click", () => {
+      options.labelDiv.style.backgroundColor = colorsList[todo.LColor].colorBG;
+      options.labelDiv.style.color = colorsList[todo.LColor].colorTX;
+      options.icon.style.color = colorsList[todo.LColor].colorBG;
+      options.labelDiv.innerText = todo.LName;
+      newLabelReset();
       newlabelColor = "";
       newlabelName = "";
       clickHandlerAddOn(labelPalet, "trash", options.screen, "nowhere");
-    };
-  });
-  // cancel btn
-  createLabelCancelBtn.addEventListener("click", () => {
-    options.labelDiv.style.backgroundColor = colorsList[todo.LColor].colorBG;
-    options.labelDiv.style.color = colorsList[todo.LColor].colorTX;
-    options.icon ? options.icon.style.color = colorsList[todo.LColor].colorBG : null;
-    options.labelDiv.innerText = todo.LName;
-    newlabelColor = "";
-    newlabelName = "";
-    clickHandlerAddOn(labelPalet, "trash", options.screen, "nowhere");
-  });
-  // ==> add sorting of the list everytime you change the label! (parent.parentElement etc to get the list)
+    });
+  };
   options.screen.addEventListener("click", () => clickHandlerAddOn(labelPalet, "trash", options.screen, "nowhere"));
 };
 
-function saveNewLabel(newlabelColor, newlabelName){
-  let newLabel = {
-    name: newlabelName,
-    color: newlabelColor
-  };
+function saveNewLabel(){
   if(!mySettings.myLabels){
     mySettings.myLabels = [];
     mySettings.myLabels.push(newLabel);
   } else if(mySettings.myLabels && mySettings.myLabels.length > 0){
-    let thisLabelIdx = mySettings.myLabels.findIndex(label => label.name == newlabelName);
+    let thisLabelIdx = mySettings.myLabels.findIndex(label => label.name == newLabel.name);
     if(thisLabelIdx == -1){
       mySettings.myLabels.push(newLabel);
     } else{
@@ -5289,11 +5317,10 @@ function applyLabel(todo, newlabelColor, newlabelName){
   todo.LName = newlabelName;
   todo.LColor = newlabelColor;
 };
-function removeLabelAndLabel(todo){
+function removeLabel(todo){
   delete todo.label;
   delete todo.LName;
   delete todo.LColor;
-  parent.querySelector(".labelLiOnglet").remove();
 };
 
 // *** DATE
@@ -5909,7 +5936,7 @@ window.onload = () => {
 // };
 
 
-function busyZoneCreation(show){
+/* function busyZoneCreation(show){ //first try
   //don't forget to add the sleepAreas and mealAreas too, in the scheduling weekly
 
   //we'll need the day (column) too (NO! because the column can change with the settings.. no? or maybe not...)
@@ -5919,12 +5946,17 @@ function busyZoneCreation(show){
   let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
   let day = `${mySettings.myWeeksDayArray[idx].code}`;  
   //if tutto... do we start after the sleepArea or the whole column with myTomorrow?
+  let myClockIn = roundFifteenTime(mySettings.myWeeksDayArray[idx].clockIn); // returns 10-00
+  let myClockOut = roundFifteenTime(mySettings.myWeeksDayArray[idx].clockOut); // returns 02-00
+  let clockIn = myClockIn;
+  let clockOut = myClockOut < mySettings.myTomorrow.replace(":", "-") ? "end" : myClockOut;
+  // clockIn et clockOut vont toujours être plus grand que 00-00! Ça prend la date aussi! dans les show.dalle et show.alle et donc à considérer dans weekly too!
   let start;
   let end;
   if(show.tutto || !show.dalle || show.dalle == ""){
     if(mySettings.offAreas == true){
-      start = roundFifteenTime(mySettings.myWeeksDayArray[idx].clockIn);
-      end = roundFifteenTime(mySettings.myWeeksDayArray[idx].clockOut);
+      start = clockIn;
+      end = clockOut;
     } else{
       start = "00-00";
       end = "end";
@@ -5932,7 +5964,7 @@ function busyZoneCreation(show){
   } else{
     let prima = "";
     let hourStart = roundFifteenTime(show.dalle);
-    let hourEnd = show.alle ? roundFifteenTime(show.alle) : mySettings.offAreas == true ? roundFifteenTime(mySettings.myWeeksDayArray[idx].clockOut) : "end";
+    let hourEnd = show.alle ? roundFifteenTime(show.alle) : mySettings.offAreas == true ? clockOut : "end";
     let dopo = "";
     if(show.prima && show.prima !== "00:00"){
       prima = roundFifteenTime(show.prima);
@@ -5963,9 +5995,31 @@ function busyZoneCreation(show){
       // creation
     //}
   //}
-};
+}; */
 //localStorage.myBusies = JSON.stringify(myBusies);
 
+function busyZoneCreation(show){
+  let dayIdx = meseDayICalc(show.date);
+  let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
+  let day = `${mySettings.myWeeksDayArray[idx].code}`;  
+  let start = show.primaRow ? show.primaRow : show.dalleRow;
+  start = start < "11-00" ? "11-00" : start;
+  let end = show.dopoRow ? show.dopoRow : show.alleRow;
+  end = end < mySettings.myTomorrow.replace(":", "-") ? "end" : end;
+  let meal = (show.showType !== "Calia" && show.prima >= "03:00") ? true : false;
+  
+
+  let busy = {
+    type: "once", //"sempre" if appears at each week, like sleep and meal
+    date: show.date,
+    col: day,
+    start: start,
+    end: end,
+    meal: meal
+  }; // then all we have to do is make sure the date is in that particular showing week and we add the div to the weekly! It should go straight in the right column and rows
+  myBusies.push(busy);
+
+};
 
 
 

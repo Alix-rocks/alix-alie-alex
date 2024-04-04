@@ -46,14 +46,16 @@ let weeksDayArray = [{
 async function getMyBusies() {
   // const getBusies = await getDoc(doc(db, "randomTask", myEmail));
   const getBusies = await getDoc(doc(db, "randomTask", myEmail, "mySchedule", "myBusies"));
-  if(localStorage.getItem("myBusies")){
+  /* if(localStorage.getItem("myBusies")){
     myBusies = JSON.parse(localStorage.myBusies);
-  } else if(getBusies.exists() && getBusies.data().myBusies){
+  } else  */
+  if(getBusies.exists() && getBusies.data().myBusies){
     myBusies = getBusies.data().myBusies;
-    localStorage.myBusies = JSON.stringify(myBusies);
-  } else{
-    localStorage.myBusies = JSON.stringify([]);
+    //localStorage.myBusies = JSON.stringify(myBusies);
   };
+  /*  else{
+    localStorage.myBusies = JSON.stringify([]);
+  }; */
   // if(localStorage.getItem("mySettings")){
   //   mySettings = JSON.parse(localStorage.mySettings);
   // } else if(getBusies.exists() && getBusies.data().mySettings){
@@ -62,8 +64,8 @@ async function getMyBusies() {
   // } else{
   //   localStorage.mySettings = JSON.stringify(mySettings);
   // };
-  myBusies = JSON.parse(localStorage.myBusies);
-  console.log(myBusies);
+  // myBusies = JSON.parse(localStorage.myBusies);
+  // console.log(myBusies);
   getWeeklyCalendar();
 };
 
@@ -370,3 +372,23 @@ function roundFifteenArea(hour, min){
   return `${String(hour).padStart(2, "0")}-${String(min).padStart(2, "0")}`;
 };
 
+
+
+/* Form
+Date full (mercredi, le 5 mars 2024)
+De: (hour of the selected item) (can be changed between the the row-end of the previous event and 1 hour before the row-start of the next event)
+À: (1 hour later) (can be changed between 1 hour after the row-end of the previous event and the row-start of the next event)
+Name
+Pronoun
+Email or phone number or Messenger name
+What would you like us to be doing during that time?
+Where shall we mee?
+  online Messenger
+  online Google Meet
+  in person
+    any preferences?
+  somewhere else:
+
+Please consider prep & travel times as well as meals
+
+*/

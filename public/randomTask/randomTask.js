@@ -817,7 +817,6 @@ async function saveToCloud(){
       todo.recurrys.forEach(recurry => busyZoneCreation(recurry));
     };
   });
-  //myBusies = JSON.parse(localStorage.myBusies);
   const docRefBusies = doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies");
   const docSnapBusies = await getDoc(docRefBusies);
   if (docSnapBusies.exists()){

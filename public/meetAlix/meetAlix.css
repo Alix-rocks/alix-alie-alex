@@ -28,8 +28,6 @@ button:active{
 .weeklyItem{
   border: 0.5px solid rgba(47, 79, 79, .3);
   border-radius: 2px;
-  width: -webkit-fill-available;
-  height: -webkit-fill-available;
   z-index: 1;
   font-size: 12px;
   text-align: center;

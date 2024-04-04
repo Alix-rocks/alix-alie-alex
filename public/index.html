@@ -2649,8 +2649,10 @@
         document.getElementById('casa').classList.remove("yesCasaFoot");
         document.getElementById("backTopButton").classList.remove("yesCasaFoot");
       } else{
-      // To remove the "/"
+      // To remove the first "/"
       currentState = currentState.slice(1);
+      // To remove the last "/" if there's one
+      currentState = currentState[currentState.length - 1] == "/" ? currentState.slice(0, - 1) : currentState;
       // To create an initial state in the history
       history.replaceState(currentState, currentState);
       };

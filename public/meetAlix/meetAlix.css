@@ -1,5 +1,6 @@
 :root{
   --bg-color: #F2F3F4;
+  --bg-color-7: rgb(242, 243, 244);
   --tx-color: darkslategrey;
 }
 *{
@@ -15,6 +16,88 @@ body{
 button:active{
   /* outline: 5.5px solid rgba(50,205,50,.9); */
   background-color: rgba(50,205,50,.2);
+}
+
+form{
+  border: 2px solid var(--tx-color);
+  border-radius: 10px;
+  width: 90vw;
+  height: fit-content;
+  padding: 10px;
+  /* margin: auto; useless if position absolute */
+  position: absolute;
+  top: 15px;
+  background-color: var(--bg-color-7);
+  z-index: 20;
+  left: calc(10vw / 2);
+}
+form input, form select, form textarea{
+  background-color: var(--bg-color-7);
+  color: var(--tx-color);
+}
+form h2{
+  text-align: center;
+}
+form h3{
+  margin-bottom: 0;
+}
+form h6{
+  margin-top: 0;
+}
+form h3 + p{
+  margin-top: 0;
+}
+form p{
+  line-height: 1.2em;
+  margin-bottom: .2em;
+}
+form button{
+  display: flex;
+  margin-top: 1em;
+  border-top: 2px solid var(--tx-color);
+  border-left: 2px solid var(--tx-color);
+  border-right: 4px solid var(--tx-color);
+  border-bottom: 4px solid var(--tx-color);
+  border-radius: 5px;
+  padding: 5px 10px;
+  width: fit-content;
+  color: var(--tx-color);
+  text-align: center;
+  font-size: 1em;
+  font-weight: 600;
+  background-color: lightgrey;
+}
+#cancelBtn{
+  border-top: 1px solid var(--tx-color);
+  border-left: 1px solid var(--tx-color);
+  border-right: 2px solid var(--tx-color);
+  border-bottom: 2px solid var(--tx-color);
+  border-radius: 3px;
+  padding: 3px 7px;
+  font-size: .7em;
+  font-weight: 500;
+  background-color: rgba(211, 211, 211, .5);
+  color: var(--tx-color);
+}
+.myRadio{
+  padding: 0;
+  margin-right: 5px;
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  border-radius: 25px;
+  border: 1px solid var(--tx-color);
+}
+input.myRadio{
+  display: none;
+}
+input.myRadio:checked + label span.myRadio{
+  height: 15px;
+  width: 15px;
+  outline: 2px solid var(--bg-color);
+  outline-offset: -3px;
+  border: 2px solid var(--tx-color);
+  background-color: var(--tx-color);
 }
 
 .weeklyContainer{

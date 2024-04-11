@@ -22,6 +22,39 @@
 <body>
   <div class="weeklyContainer">
   </div>
+  <form id="addMeForm" action="get">
+    <h2>Wanna meet?</h2>
+    <h3>When?</h3>
+    <p>Date: <strong><span id="dateComplete">mercredi, le 5 mars 2024</span></strong></p>
+    <h6>You want a different date? Then click "oups!" and try again!</h6>
+    <p>From: <input id="dalleTime" type="time" /></p>
+    <p>To: <input id="alleTime" type="time" /></p>
+    <h6>Please consider meal, prep & travel times</h6>
+    <h3>Who are you?</h3>
+    <p>Your name: <input id="nameInput" type="text" /></p>
+    <p>Your contact info (one is enough):<br/>
+      email: <input id="emailInput" type="text" /><br/>
+      cell: <input id="cellInput" type="text" /><br/>
+      nickname on Messenger: <input id="messNameInput" type="text" /></p>
+    <h3>Where?</h3>
+    <p>online:</p>
+    <input id="messInput" class="myRadio" name="whereRadios" type="radio" value="mess" />
+    <label for="messInput" class="whereLabel"><span class="myRadio"></span>Messenger</label><br/>
+    <input id="meetInput" class="myRadio" name="whereRadios" type="radio" value="meet" />
+    <label for="meetInput" class="whereLabel"><span class="myRadio"></span>Google Meet</label>
+    <p>offline?!</p>
+    <input id="realInput" class="myRadio" name="whereRadios" type="radio" value="real" />
+    <label for="realInput" class="whereLabel"><span class="myRadio"></span>In person</label>
+    <p>Any preferences as to where?<br/>
+      <textarea name="where" id="whereRealInput" cols="30" rows="10"></textarea>
+    </p>
+    <h3>Why?!</h3>
+    <p>What would you like us to do? Anything I should know, prepare for or worry about?<br/>
+      <textarea name="why" id="whyInput" cols="30" rows="10"></textarea>
+    </p>
+    <button id="bookBtn" type="submit">Book it!</button>
+    <button id="cancelBtn" type="reset">oups!</button>
+  </form>
   <script type="module" src="meetAlix.js"></script>
 </body>
 </html>

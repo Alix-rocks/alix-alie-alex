@@ -104,11 +104,11 @@ button span:nth-of-type(2){
   padding-left: 41px;
   border-radius: 3px 5px 5px 5px;
 }
-textarea::-webkit-resizer {
+/* textarea::-webkit-resizer {
   border: 2px solid var(--tx-color);
   outline: 4px solid var(--tx-color);
   border-radius: 2px 0 5px 0;
-}
+} */
 .switchDisplayUnChecked{
   display: inline-block;
 }

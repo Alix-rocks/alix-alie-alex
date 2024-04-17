@@ -1,0 +1,43 @@
+:root{
+  --bg-color: #F2F3F4;
+  --tx-color: darkslategrey;
+}
+*{
+  font-family: 'Nunito', sans-serif;
+  box-sizing: border-box;
+  user-select: none;
+}
+body{
+  color: var(--tx-color);
+  background-color: var(--bg-color);
+}
+input, select, textarea{
+  background-color: rgba(242, 243, 244, .8);
+  color: darkslategrey;
+}
+button {
+  border-top: 2px solid var(--tx-color);
+  border-left: 2px solid var(--tx-color);
+  border-right: 4px solid var(--tx-color);
+  border-bottom: 4px solid var(--tx-color);
+  border-radius: 5px;
+  padding: 5px 10px;
+  width: fit-content;
+  color: var(--tx-color);
+  text-align: center;
+  font-size: 1em;
+  font-weight: 600;
+  background-color: lightgrey;
+}
+#cloudIt{
+  margin: 0;
+  font-size: 25px;
+  line-height: 1em;
+  padding: 2px 5px 2px 5px;
+  background-color: rgba(237, 20, 61, 0);
+  color: var(--tx-color);
+  z-index: 10;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}

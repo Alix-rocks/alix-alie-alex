@@ -59,6 +59,7 @@ onAuthStateChanged(auth,(user) => {
 function logOut(){
   signOut(auth).then(() => {
     // Sign-out successful.
+    localStorage.clear();
     location.reload();
   }).catch((error) => {
     // An error happened.
@@ -783,7 +784,33 @@ async function saveToCloud(){
   const batch = writeBatch(db);
   // myList = JSON.parse(localStorage.myList);
   // myDones2023 = JSON.parse(localStorage.myDones2023);
+
   listTasks = JSON.parse(localStorage.listTasks);
+
+  /* //Get a modif() like the dones to reduce the number of termListe
+  let terms = listTasks.map(a => a.term);
+  const uniqueSet = Array.from(new Set(terms));
+  console.log(uniqueSet);
+  
+  const docRefTodos = collection(db, "randomTask", auth.currentUser.email, "myListTodos");
+  const docSnapTodos = await getDocs(docRefTodos);
+  
+  uniqueSet.map(termListe => {
+    let todos = listTasks.filter((td) => td.term == termListe);
+    if(docSnapTodos[termListe]){
+      batch.update(doc(db, "randomTask", auth.currentUser.email, "myListTodos", termListe), {
+        todos: todos
+      });
+    } else{
+      batch.set(doc(db, "randomTask", auth.currentUser.email, "myListTodos", termListe), {
+        todos: todos
+      });
+    };
+  }); */   
+
+
+
+  //listTasks = JSON.parse(localStorage.listTasks);
   mySettings = JSON.parse(localStorage.mySettings);
   const docRefTasks = doc(db, "randomTask", auth.currentUser.email);
   const docSnapTasks = await getDoc(docRefTasks);
@@ -1403,59 +1430,74 @@ function addThatdayTodos(){
 };
 
 // Une fonction pour recurring: tu y donnes un todo et une date (date et Time déjà en string?) et ça te dit si t'as un recurry ou pas ce jour là (return true or false). if false then use todo.listDates
-function recurryOrNot(todo, thatDate){
+//de listTask à todoCreation: on fait juste if(todo.lastOutDate < thatDate && !todo.recDatesOut.contains(thatDate)){recurryOrNot(todo, thatDate);}; (if todo.lastOutDate == thatDate then it's already in listTask!)
+//dans la swipingSection, on le fait direct recurryOrNot(todo, thatDate)
+//dans le monthly calendar, 
+//dans le weekly calendar, 
+function recurryOrNot(todo, thatDate){ //thatDate is string
   let recurry;
-  if(todo.fineOpt == "fineMai"){
-    if(todo.ogni == 1){
-      if(todo.var == "giorno"){
-        recurry = true;
-      } else if(todo.var == "settimana"){
-        let name = "name of the day of thatDate"; //use a function to find the name of the day
-        recurry = todo.daysWeek.contains(name) ? true : false;
-      } else if(todo.var == "mese" && todo.meseOpt == "ogniXDate"){
-        let date = "jour of thatDate";
-        recurry = todo.meseDate == date ? true : false;
-        //check if the date is the same (the 15th vs the 15th, then true)
-      } else if(todo.var == "mese" && todo.meseOpt == "ogniXDay"){
-        let day = "number of the day of thatDate"; //use a function to find the number of the day
-        if(day !== todo.meseDayI){
-          recurry = false;
-        } else{
-          //maybe use the old function? basically, find the first day of the month and count how many we are and if it's the same as todo.meseDayN; if so, then true
+  //first, check if thatDate is not aleady in todo.datesOut (array of all the recurrys that have been outed into listTasks, y compris dans le futur!)
+  if(todo.recDatesOut.contains(thatDate)){ //pourrait être fait AVANT de lancer la fonction recurryOrNot...
+    recurry = false;
+  } else{
+    if(todo.fineOpt == "fineMai"){
+      if(todo.ogni == 1){
+        if(todo.var == "giorno"){
+          recurry = true;
+        } else if(todo.var == "settimana"){
+          let name = getDayNameFromString(thatDate); //use the function to find the name of the day
+          recurry = todo.daysWeek.contains(name) ? true : false;
+        } else if(todo.var == "mese" && todo.meseOpt == "ogniXDate"){
+          let date = meseDateCalc(thatDate);
+          recurry = todo.meseDate == date ? true : false;
+          //check if the date is the same (the 15th vs the 15th, then true)
+        } else if(todo.var == "mese" && todo.meseOpt == "ogniXDay"){
+          let day = meseDayICalc(thatDate); //use the function to find the number of the day
+          if(day !== todo.meseDayI){
+            recurry = false;
+          } else{
+            let num = meseDayNCalc(thatDate);
+            recurry = todo.meseDayN == num ? true : false;
+            //maybe use the old function? basically, find the first day of the month and count how many we are and if it's the same as todo.meseDayN; if so, then true
+          };
+        } else if(todo.var == "anno"){
+          let thatMonthDate = thatDate.slice(6, 10); //month and date of thatDate
+          let todoMonthDate = todo.dal.slice(6, 10); //month and date of recurring
+          recurry = thatMonthDate == todoMonthDate ? true : false; //check if it's the same month and date
         };
-      } else if(todo.var == "anno"){
-        let month = "mois of thatDate"; //month of thatDate
-        let monthDal = "mois of todo.dal"; //month of recurring
-        if(month == monthDal){ //check if it's the same month
-          let date = "jour of thatDate"; //date of thatDate
-          let dateDal = "jour of todo.dal"; //date of recurring
-          recurry = date == dateDal ? true : false; //check if it's the same date
-        } else{
-          recurry = false;
-        };
-      };
-    } else{
-      //we could calculated most of them from the lastOutDate with the functions we used to use:
-        // giorno, anno, mese/ogniXDate (ceux-là sont vraiment simple à faire en fait)
-      if(todo.var == "giorno"){
-
-      } else if(todo.var == "mese" && todo.meseOpt == "ogniXDate"){
-
-      } else if(todo.var == "anno"){
-
       } else{
-        //for the other ones, we could have a todo.listDates for, let's say, 6 months? ... we still need to update it after 6 months or when the calendar goes too far...
+        //we could calculated most of them from the lastOutDate with the functions we used to use:
+          // giorno, anno, mese/ogniXDate (ceux-là sont vraiment simple à faire en fait)
+        if(todo.var == "giorno"){
+          todo.lastOutDate.setDate(todo.lastOutDate.getDate() + todo.ogni);
+          recurry = todo.lastOutDate == thatDate ? true : false;
+        } else if(todo.var == "mese" && todo.meseOpt == "ogniXDate"){
+          todo.lastOutDate.setMonth(todo.lastOutDate.getMonth() + todo.ogni);
+          recurry = todo.lastOutDate == thatDate ? true : false;
+        } else if(todo.var == "anno"){
+          todo.lastOutDate.setFullYear(todo.lastOutDate.getFullYear() + todo.ogni);
+          recurry = todo.lastOutDate == thatDate ? true : false;
+        } else{
+          //for the other ones, we could have a todo.listDates for, let's say, 6 months? ... we still need to update it after 6 months or when the calendar goes too far...
+          //todo.var == "settimana" 
+          //todo.var == "mese" && todo.meseOpt == "ogniXDay"
+
+          //What about, for weekly/monthly, we use the old fx but with a start date (D0/1) and an end date (S6/31), that way we don't need to count for each day, just once every time we click back or forth
+            //if fineGiorno or fineDopo, you can get the todo.fine; then just check if the end date (S6/31) is before the todo.fine otherwise, the end date is todo.fine
+        };
       };
+    } else{ //fineGiorno or fineDopo
+      //eux devraient avoir une todo.listDates et on fait juste vérifier si la date est dedans (donc on splice la date à chaque fois qu'on la crée ou juste quand on la modifie/done?)
     };
-  } else{ //fineGiorno or fineDopo
-    //eux devraient avoir une todo.listDates et on fait juste vérifier si la date est dedans
   };
+  
+  
   return recurry;
 };
 
   
 
-// *** CREATION
+// MARK: CREATION
 
 function todoCreation(todo){
   let togoList;
@@ -2017,6 +2059,7 @@ function checkEvent(emptyCheck, where){
   let donedId = li.id;
   if(li.dataset.rec && li.dataset.rec !== "undefined"){
     let rec = li.dataset.rec;
+    //doneAction(li); // need to wait until animation is over before moving on to the next (gotItDone and remove) (use metro app animation)
     gotItDone(donedId, rec);
     li.remove();
   } else if(li.dataset.always){
@@ -2029,6 +2072,11 @@ function checkEvent(emptyCheck, where){
   updateCBC();
 };
 window.checkEvent = checkEvent;
+
+function doneAction(li){
+  li.insertAdjacentHTML("beforeend", `<div class="doneAction"><div class="doneActionTopOpct"></div><div class="doneActionBtmLine"></div></div>`);
+  /* the div would have two layers, the under one would be a horizontal line like the trashline in time app and the top one would be gradient of transparent on the right and opaque (bg-color) on the left. The whole thing would move from left to right until the whole li seems to have disapeared */
+};
 
 
 function gotItDone(nb, rec){ //nb = todo.id, rec = recurring Id (or "" if directly in listTasks)
@@ -3910,7 +3958,7 @@ function taskAddAllInfo(thisOne, where, why){ //where == "todoZone", "calWeekPag
         <label for="miniOpt${idx}" class="miniOptLabel">
           <i class="fa-solid fa-ellipsis-vertical" style="width:23px;"></i>
         </label>
-      </li>`; //with a checkbox/input and label/name that will get crossed if mini.checked == true
+      </li>`;
     }).join("");
   } else{
     miniList = `<h6 id="miniListEmpty" style="margin:0;">There's nothing here, yet...</h6>`;

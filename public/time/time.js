@@ -34,9 +34,11 @@ function logIn(){
 };
 //window.logIn = logIn;
 
+let eMail;
 onAuthStateChanged(auth,(user) => {
   if(user){
-    console.log(user);
+    eMail = String(auth.currentUser.email);
+    console.log(eMail);
     //document.getElementById("displayName").innerText = " " + user.displayName + ",";
     document.getElementById("scheduleTimeWhole").classList.replace("popupBackDG", "displayNone");
     document.getElementById("scheduleTime").innerHTML = ``;
@@ -61,7 +63,9 @@ let myScheduleList = [];
 
 async function getPlans() {
   //console.log(auth.currentUser.email);
-  const getPlans = await getDocs(collection(db, "plan", auth.currentUser.email, "myPlans"));
+  const plansQuery = collection(db, "plan", eMail, "myPlans");
+  console.log(plansQuery);
+  const getPlans = await getDocs(plansQuery);
   // const getPlans = await getDocs(query(collection(db, "plan", auth.currentUser.email), where("owner", "==", auth.currentUser.email)));
   myScheduleList = [];
   getPlans.forEach(doc => {
@@ -103,10 +107,10 @@ async function getDefaultSchedule(){
   // defaultSchedule.forEach((doc) => {
   //   steps = doc.data();
   // })
-  const defaultSchedule = await getDocs(query(collection(db, "plan", auth.currentUser.email, "myPlans"), where("ordre", "==", 0)));
+  const defaultSchedule = await getDocs(query(collection(db, "plan", eMail, "myPlans"), where("ordre", "==", 0)));
   defaultSchedule.forEach((doc) => {
     steps = doc.data();
-  })
+  });
   displaySteps();
 };
 // getDefaultSchedule();
@@ -167,7 +171,7 @@ function displayPlans() {
 
 async function getSchedule(id){
   //console.log(id);
-  const schedule = await getDoc(doc(db, "plan", auth.currentUser.email, "myPlans", id));
+  const schedule = await getDoc(doc(db, "plan", eMail, "myPlans", id));
   steps = schedule.data();
   displaySteps();
 };
@@ -186,7 +190,7 @@ function getMaxPlans() {
 async function saveIt() {
   updateSteps();
   let destination = document.getElementById("nameToSave").value;
-  const docRef = doc(db, "plan", auth.currentUser.email, "myPlans", destination);
+  const docRef = doc(db, "plan", eMail, "myPlans", destination);
   const docSnap = await getDoc(docRef);
   if (docSnap.exists()) {
     document.getElementById("scheduleTimeWhole").classList.replace("displayNone", "popupBackDG");
@@ -209,7 +213,7 @@ async function saveIt() {
       saveOptSaveAsBtn.addEventListener("click", saveOptSaveAs);
       saveOptReplaceBtn.addEventListener("click", saveOptReplace);
   } else{
-   await setDoc(doc(db, "plan", auth.currentUser.email, "myPlans", destination), {
+   await setDoc(doc(db, "plan", eMail, "myPlans", destination), {
       ...steps,
       ordre: (getMaxPlans() + 1)
     });
@@ -225,14 +229,14 @@ async function saveIt() {
 async function trashSchedules(){
   //console.log(trashedSchedules);
   for (const trashedSchedule of trashedSchedules) {
-    await deleteDoc(doc(db, "plan", auth.currentUser.email, "myPlans", trashedSchedule.id));
+    await deleteDoc(doc(db, "plan", eMail, "myPlans", trashedSchedule.id));
   };
 };
 //window.trashSchedules = trashSchedules;
 
 async function orderSchedules(){
   for (const list of myScheduleList){
-    await updateDoc(doc(db, "plan", auth.currentUser.email, "myPlans", list.id), {
+    await updateDoc(doc(db, "plan", eMail, "myPlans", list.id), {
       ordre: list.ordre
     });
   };
@@ -548,7 +552,7 @@ function saveOptSaveAs(){
 
 async function saveOptReplace(){
   let destination = document.getElementById("nameToSave").value;
-  await updateDoc(doc(db, "plan", auth.currentUser.email, "myPlans", destination), {
+  await updateDoc(doc(db, "plan", eMail, "myPlans", destination), {
     ...steps
   });  
   getPlans();

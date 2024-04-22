@@ -2,7 +2,7 @@
   --bg-color: #F2F3F4;
   --tx-color: darkslategrey;
 }
-*{
+*{  
   font-family: 'Nunito', sans-serif;
   box-sizing: border-box;
   user-select: none;
@@ -16,10 +16,9 @@ input, select, textarea{
   color: darkslategrey;
 }
 button {
-  border-top: 2px solid var(--tx-color);
-  border-left: 2px solid var(--tx-color);
-  border-right: 4px solid var(--tx-color);
-  border-bottom: 4px solid var(--tx-color);
+  border-color: var(--tx-color);
+  border-style: solid;
+  border-width: 2px 4px 4px 2px;
   border-radius: 5px;
   padding: 5px 10px;
   width: fit-content;
@@ -29,7 +28,7 @@ button {
   font-weight: 600;
   background-color: lightgrey;
 }
-#cloudIt{
+.cloudIt{
   margin: 0;
   font-size: 25px;
   line-height: 1em;
@@ -40,4 +39,23 @@ button {
   position: absolute;
   top: 8px;
   right: 8px;
+}
+#shitShow{
+  width: 62vw;
+  max-width: 250px;
+  margin: 10vh auto;
+  border-color: var(--tx-color);
+  border-style: solid;
+  border-width: 2px 4px 4px 2px;
+  border-radius: 5px;
+  padding: 5px 10px;
+  height: 62vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.hidden{
+  opacity: 0;
+  visibility: hidden;
 }

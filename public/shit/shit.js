@@ -3,17 +3,46 @@ import { app, analytics, db, auth, provider } from "../myFirebase.js";
 
 const cloudIt = document.querySelector("#cloudIt");
 let listeMemes = [];
-let listeTags = [];
-let newListeTexts = [];
-if(localStorage.getItem("newListeTexts")){
-  newListeTexts = JSON.parse(localStorage.newListeTexts);
-};
-localStorage.newListeTexts = JSON.stringify(newListeTexts);
-let newListeImages = [];
-if(localStorage.getItem("newListeImages")){
-  newListeImages = JSON.parse(localStorage.newListeImages);
-};
-localStorage.newListeImages = JSON.stringify(newListeImages);
+let listeTags = [
+  {
+    num: "00",
+    tag: "LOL",
+    type: "mood"
+  }, {
+    num: "01",
+    tag: "Relationships",
+    type: "theme"
+  }, {
+    num: "02",
+    tag: "Old age",
+    type: "theme"
+  }, {
+    num: "03",
+    tag: "Anti-social",
+    type: "theme"
+  }, {
+    num: "04",
+    tag: "Coffee",
+    type: "theme"
+  }, {
+    num: "05",
+    tag: "Deep",
+    type: "mood"
+  }, {
+    num: "06",
+    tag: "Psycho",
+    type: "mood"
+  }];
+//let newListeTexts = [];
+//if(localStorage.getItem("newListeTexts")){
+  //newListeTexts = JSON.parse(localStorage.newListeTexts);
+//};
+//localStorage.newListeTexts = JSON.stringify(newListeTexts);
+//let newListeImages = [];
+//if(localStorage.getItem("newListeImages")){
+  //newListeImages = JSON.parse(localStorage.newListeImages);
+//};
+//localStorage.newListeImages = JSON.stringify(newListeImages);
 let toUL;
 if (localStorage.getItem("toUL")) {
   toUL = localStorage.toUL;
@@ -26,16 +55,25 @@ if (localStorage.getItem("toUL")) {
 
 
 async function getListes() {  
-  const getMeme = await getDoc(doc(db, "shit", "meme"));  
-  if(getMeme.exists()){    
+  const getMeme = await getDoc(doc(db, "shit", "meme"));
+  if(localStorage.getItem("listeMemes")){
+    listeMemes = JSON.parse(localStorage.listeMemes);
+  } else if(getMeme.exists()){    
     let listeTexts = getMeme.data().listeTexts;    
     let listeImages = getMeme.data().listeImages;    
-    listeTags = getMeme.data().listeTags;    
-    listeMemes = [...listeTexts, ...listeImages];    
-    showON();    
-    createForm("new")  
-    
+    listeMemes = [...listeTexts, ...listeImages];
   };
+  localStorage.listeMemes = JSON.stringify(listeMemes);
+  
+  //if (localStorage.getItem("listeTags")) {
+    //listeTags = JSON.parse(localStorage.listeTags);
+  //} else if (getMeme.exists()) {
+    //listeTags = getMeme.data().listeTags;
+  //};
+  localStorage.listeTags = JSON.stringify(listeTags);
+    
+  showON();    
+  createForm("new");
   
 };
 getListes();
@@ -44,12 +82,22 @@ async function saveListes(){
   let listeTexts = [];  
   let listeImages = [];  
   listeMemes.map(meme => {    
-    if(meme.type == "text"){      
+    if(meme.type == "T"){      
       listeTexts.push(meme);    
-    } else if(meme.type == "image"){      
+    } else if(meme.type == "I"){      
       listeImages.push(meme);    
     };  
-  });  //What if we modify listeMemes?!  newListeTexts = JSON.parse(localStorage.newListeTexts);  console.log(newListeTexts);  //newListeImages = JSON.parse(localStorage.newListeImages);  //listeTexts.concat(newListeTexts);  let listeTextsWhole = [...listeTexts, ...newListeTexts];  console.log(listeTextsWhole);  listeImages.concat(newListeImages);  const docRef = doc(db, "shit", "meme");  const docSnap = await getDoc(docRef);  if (docSnap.exists()){    await updateDoc(doc(db, "shit", "meme"), {      listeTexts: listeTextsWhole,      listeImages: listeImages,      listeTags: listeTags    });        resettoUL();  };
+  });  //What if we modify listeMemes?!  newListeTexts = JSON.parse(localStorage.newListeTexts);  console.log(newListeTexts);  //newListeImages = JSON.parse(localStorage.newListeImages);  //listeTexts.concat(newListeTexts);  let listeTextsWhole = [...listeTexts, ...newListeTexts];  console.log(listeTextsWhole);  listeImages.concat(newListeImages);  
+  const docRef = doc(db, "shit", "meme");  
+  const docSnap = await getDoc(docRef);  
+  if (docSnap.exists()){    
+    await updateDoc(doc(db, "shit", "meme"), {      
+      listeTexts: listeTexts,      
+      listeImages: listeImages,      
+      listeTags: listeTags    
+    });        
+    resettoUL();
+  };
 };
 cloudIt.addEventListener("click", saveListes);
 function updatetoUL(){  
@@ -67,36 +115,44 @@ let shitID = "";
 function showON(){  
   console.log(listeMemes);  
   let randyMemes = RandArray(listeMemes);  
-  let shitShow = document.querySelector("#shitShow");    
-  shitShow.innerHTML = "Let's see what we've got for you today..."  
-  let idR = 0;  
-  console.log(idR);  
-  const pervBtn = document.querySelector("#pervBtn");  
-  pervBtn.classList.add("hidden");  
+  const shitShow = document.querySelector("#shitShow");    
+  let idR = -1;
+  const pervBtn = document.querySelector("#pervBtn");
+  const nextBtn = document.querySelector("#nextBtn");
+  const modBtn = document.querySelector("#modBtn");
+  function state(){
+    if(idR == 0){
+      pervBtn.classList.add("hidden");
+      nextBtn.classList.remove("hidden");
+      modBtn.classList.remove("hidden");
+    } else if (idR > 0 && idR < randyMemes.length - 1) {
+      pervBtn.classList.remove("hidden");
+      nextBtn.classList.remove("hidden");
+      modBtn.classList.remove("hidden");
+    } else if (idR == randyMemes.length - 1) {
+      pervBtn.classList.remove("hidden");
+      nextBtn.classList.add("hidden");
+      modBtn.classList.remove("hidden");
+    } else if(idR == randyMemes.length){
+      idR = -1;
+      pervBtn.classList.add("hidden");
+      nextBtn.classList.add("hidden");
+      modBtn.classList.add("hidden");
+    };
+    shitShow.innerHTML = idR == -1 ? "It's over!" : listeMemes[randyMemes[idR]].meme;
+    shitID = listeMemes[randyMemes[idR]].id;
+  };
+    
   pervBtn.addEventListener("click", () => {    
-    nextBtn.classList.remove("hidden");    
-    idR--;    
-    if(idR == 0){      
-      pervBtn.classList.add("hidden");    
-    };        
-    console.log(idR);    
-    shitShow.innerHTML = listeMemes[randyMemes[idR]].meme;    
-    shitID = listeMemes[randyMemes[idR]].id;  
-    
+    idR--;
+    state();
   });  
-  const nextBtn = document.querySelector("#nextBtn");  
+    
   nextBtn.addEventListener("click", () => {    
-    pervBtn.classList.remove("hidden");    
-    idR++;    
-    if(idR == randyMemes.length - 1){      
-      nextBtn.classList.add("hidden");    
-    };        
-    console.log(idR);    
-    shitShow.innerHTML = listeMemes[randyMemes[idR]].meme;    
-    shitID = listeMemes[randyMemes[idR]].id;  
-    
+    idR++;
+    state();
   });  
-  const modBtn = document.querySelector("#modBtn");  
+    
   modBtn.addEventListener("click", () => {    
     createForm("mod");  
   });
@@ -106,45 +162,47 @@ function createForm(why) {
   if(why == "new"){    
     shit = {      
       id: crypto.randomUUID(),      
-      type: "text",      
+      type: "T", // "T" = text. "I" = image      
       meme: "",      
-      tags: [] //index of tag in listeTags (non, won't work if we modify them) 
-      //font: ""    
+      tags: [] //tag.num of tag in listeTags (non, won't work if we modify them) 
+      //font: "" //font.num of listeFonts    
       };  
   } else{    
     let shitIdx = listeMemes.findIndex(meme => meme.id == shitID);    
     shit = listeMemes[shitIdx];  
-  };  
-  let tagsList = listeTags.map((tag, idx) => {    
-    return `<input id="tag${idx}" class="cossin" name="tags" type="checkbox" value="${idx}" ${shit.tags.includes(idx) ? `checked` : ``}/>      
-    <label for="tag${idx}" class="tagLabel">${tag}</label>`  
+  };
+  let meme = shit.meme.replace('<br>', /\n/g);
+  let tagsList = listeTags.map((tag, idx) => {
+    return `<input id="tag${idx}" class="cossin" name="tags" type="checkbox" value="${tag.num}" ${shit.tags.includes(tag.num) ? `checked` : ``}/>      
+    <label for="tag${idx}" class="tagLabel">${tag.tag}</label>`  
   }).join("");  
-  let form = `<h2 style="text-align:center;">${why == "new" ? `Add your own shit to the pile` : `So that wasn't good enough?!`}</h2>    
+  let form = `<h2 style="text-align:center;">${why == "new" ? `Add your own shit to the pile` : `So that wasn't good enough for ya?!`}</h2>    
   <form id="shitForm">      
-  <div>        
-  <label>Meme:</label>        
-  <textarea id="quote" autocomplete="off">${shit.meme}</textarea>      
-  </div>      
-  <div>        
-  <label>Tags:</label>        
-  <div class="tagsListWhole">          
-  <input id="tagsListInput" class="cossin" name="addTheme" type="checkbox"/>          
-  <label for="tagsListInput" class="tagsListLabel">Tags<span class="typcn typcn-chevron-right dropchevron"></span></label>          
-  <div id="tagsListDrop">            
-  ${tagsList}          
-  </div>        
-  </div>      
-  </div>      
-  ${why == "mod" ? `<button id="saveBtn" type="submit">Come on, save it!</button>      
-  <button id="trashBtn" type="reset">Trash that!</button>` :       
-  `<button id="submitBtn" type="submit">Come on, add it!</button>      
-  <button id="resetBtn" type="reset">Nevermind</button>`}    
+    <div>        
+      <label>Meme:</label>        
+      <textarea id="quote" autocomplete="off">${meme}</textarea>      
+    </div>      
+    <div>        
+      <label>Tags:</label>        
+      <div class="tagsListWhole">          
+        <input id="tagsListInput" class="cossin" name="addTheme" type="checkbox"/>          
+        <label for="tagsListInput" class="tagsListLabel">Tags<span class="typcn typcn-chevron-right dropchevron"></span></label>          
+        <div id="tagsListDrop">            
+          ${tagsList}          
+        </div>        
+      </div>      
+    </div>      
+    ${why == "mod" ? `<button id="saveBtn" type="submit">Come on, save it!</button>      
+    <button id="trashBtn" type="reset">Trash that!</button>` :       
+    `<button id="submitBtn" type="submit">Come on, add it!</button>      
+    <button id="resetBtn" type="reset">Nevermind</button>`}    
   </form>`;  
   document.querySelector("#shitForm").innerHTML = form;    
   function getShitTags() {    
     let shitTags = [];    
     document.getElementsByName("tags").forEach(tag => {      
-      if(tag.checked){        
+      if(tag.checked){
+        //let tagIdx = listeTags.findIndex(lt => lt.num == tag.value);
         shitTags.push(tag.value);      
       };    
     });    
@@ -155,8 +213,8 @@ function createForm(why) {
       e.preventDefault();      
       shit.tags = getShitTags();      
       shit.meme = document.querySelector("#quote").value.replace(/\n/g, '<br>');      
-      newListeTexts.push(shit);      
-      localStorage.newListeTexts = JSON.stringify(newListeTexts);      
+      listeMemes.push(shit);      
+      localStorage.listeMemes = JSON.stringify(listeMemes);      
       updatetoUL();    
     });    
     document.querySelector("#resetBtn").addEventListener("click", () => {
@@ -166,8 +224,7 @@ function createForm(why) {
       e.preventDefault();      
       listeMemes[shitIdx].tags = getShitTags();      
       listeMemes[shitIdx].meme = document.querySelector("#quote").value.replace(/\n/g, '<br>');            
-      //localStorage.newListeTexts = JSON.stringify(newListeTexts);      
-      updatetoUL();    
+      localStorage.listeMemes = JSON.stringify(listeMemes);       updatetoUL();    
     });    
     document.querySelector("#trashBtn").addEventListener("click", () => {        
       

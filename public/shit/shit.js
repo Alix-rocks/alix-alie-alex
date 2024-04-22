@@ -32,6 +32,10 @@ let listeTags = [
     num: "06",
     tag: "Psycho",
     type: "mood"
+  }, {
+    num: "07",
+    tag: "Self-loving",
+    type: "theme"
   }];
 //let newListeTexts = [];
 //if(localStorage.getItem("newListeTexts")){
@@ -139,7 +143,7 @@ function showON(){
       nextBtn.classList.add("hidden");
       modBtn.classList.add("hidden");
     };
-    shitShow.innerHTML = idR == -1 ? "It's over!" : listeMemes[randyMemes[idR]].meme;
+    shitShow.innerHTML = idR == -1 ? "It's over!" : listeMemes[randyMemes[idR]].meme.replace(/\n/g, '<br>');
     shitID = listeMemes[randyMemes[idR]].id;
   };
     
@@ -159,6 +163,7 @@ function showON(){
 };//non, you have to create a new form otherwise submit will just create a new one instead of modify it.
 function createForm(why) {  
   let shit = {};  
+  let shitIdx;
   if(why == "new"){    
     shit = {      
       id: crypto.randomUUID(),      
@@ -168,28 +173,27 @@ function createForm(why) {
       //font: "" //font.num of listeFonts    
       };  
   } else{    
-    let shitIdx = listeMemes.findIndex(meme => meme.id == shitID);    
+    shitIdx = listeMemes.findIndex(meme => meme.id == shitID);    
     shit = listeMemes[shitIdx];  
   };
-  let meme = shit.meme.replace('<br>', /\n/g);
   let tagsList = listeTags.map((tag, idx) => {
-    return `<input id="tag${idx}" class="cossin" name="tags" type="checkbox" value="${tag.num}" ${shit.tags.includes(tag.num) ? `checked` : ``}/>      
-    <label for="tag${idx}" class="tagLabel">${tag.tag}</label>`  
+    return `<li><input id="tag${idx}" class="cossin" name="tags" type="checkbox" value="${tag.num}" ${shit.tags.includes(tag.num) ? `checked` : ``}/>      
+    <label for="tag${idx}" class="tagLabel">${tag.tag}</label></li>`  
   }).join("");  
   let form = `<h2 style="text-align:center;">${why == "new" ? `Add your own shit to the pile` : `So that wasn't good enough for ya?!`}</h2>    
   <form id="shitForm">      
     <div>        
       <label>Meme:</label>        
-      <textarea id="quote" autocomplete="off">${meme}</textarea>      
+      <textarea id="quote" autocomplete="off">${shit.meme}</textarea>      
     </div>      
     <div>        
       <label>Tags:</label>        
       <div class="tagsListWhole">          
-        <input id="tagsListInput" class="cossin" name="addTheme" type="checkbox"/>          
-        <label for="tagsListInput" class="tagsListLabel">Tags<span class="typcn typcn-chevron-right dropchevron"></span></label>          
-        <div id="tagsListDrop">            
+        <!-- <input id="tagsListInput" class="cossin" name="addTheme" type="checkbox"/>          
+        <label for="tagsListInput" class="tagsListLabel">Tags<span class="typcn typcn-chevron-right dropchevron"></span></label> -->        
+        <ul class="tagsListDrop">            
           ${tagsList}          
-        </div>        
+        </ul>        
       </div>      
     </div>      
     ${why == "mod" ? `<button id="saveBtn" type="submit">Come on, save it!</button>      
@@ -197,39 +201,39 @@ function createForm(why) {
     `<button id="submitBtn" type="submit">Come on, add it!</button>      
     <button id="resetBtn" type="reset">Nevermind</button>`}    
   </form>`;  
-  document.querySelector("#shitForm").innerHTML = form;    
+  let shitForm = document.querySelector("#shitForm");
+  shitForm.innerHTML = form;    
   function getShitTags() {    
     let shitTags = [];    
     document.getElementsByName("tags").forEach(tag => {      
       if(tag.checked){
-        //let tagIdx = listeTags.findIndex(lt => lt.num == tag.value);
         shitTags.push(tag.value);      
       };    
     });    
     return shitTags;  
   };  
-  if(why == "new"){    
-    document.querySelector("#submitBtn").addEventListener("click", (e) => {      
-      e.preventDefault();      
-      shit.tags = getShitTags();      
-      shit.meme = document.querySelector("#quote").value.replace(/\n/g, '<br>');      
-      listeMemes.push(shit);      
+     
+  shitForm.addEventListener("submit", (e) => {   
+    e.preventDefault();
+    if(why == "new"){
+      listeMemes.push(shit);
+      shitIdx = listeMemes.findIndex(meme => meme.id == shit.id);
+    };    
+    listeMemes[shitIdx].tags = getShitTags();      
+    listeMemes[shitIdx].meme = document.querySelector("#quote").value; 
+    localStorage.listeMemes = JSON.stringify(listeMemes);      
+    updatetoUL(); 
+    shitForm.reset();   
+  });    
+
+  shitForm.addEventListener("reset", () => {        
+    if(why == "mod"){
+      listeMemes.splice(shitIdx, 1);
       localStorage.listeMemes = JSON.stringify(listeMemes);      
-      updatetoUL();    
-    });    
-    document.querySelector("#resetBtn").addEventListener("click", () => {
-      });  
-  } else{    
-    document.querySelector("#saveBtn").addEventListener("click", (e) => {      
-      e.preventDefault();      
-      listeMemes[shitIdx].tags = getShitTags();      
-      listeMemes[shitIdx].meme = document.querySelector("#quote").value.replace(/\n/g, '<br>');            
-      localStorage.listeMemes = JSON.stringify(listeMemes);       updatetoUL();    
-    });    
-    document.querySelector("#trashBtn").addEventListener("click", () => {        
-      
-    });  
-  };
+      updatetoUL();
+      shitForm.reset();
+    };
+  });  
 };
 
 // To add your own shitconst addYOSForm = document.querySelector('#addYOS')addYOSForm.addEventListener('submit', (e) => {  e.preventDefault();  //let finalList = []  //var markedCheckbox = document.getElementsByName('theme');  //for (var checkbox of markedCheckbox) {    //if (checkbox.checked) {      //finalList.push(checkbox.value);    //}  //}

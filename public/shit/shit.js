@@ -60,9 +60,10 @@ if (localStorage.getItem("toUL")) {
 
 async function getListes() {  
   const getMeme = await getDoc(doc(db, "shit", "meme"));
-  if(localStorage.getItem("listeMemes")){
-    listeMemes = JSON.parse(localStorage.listeMemes);
-  } else if(getMeme.exists()){    
+  //if(localStorage.getItem("listeMemes")){
+    //listeMemes = JSON.parse(localStorage.listeMemes);
+  //} else 
+  if(getMeme.exists()){    
     let listeTexts = getMeme.data().listeTexts;    
     let listeImages = getMeme.data().listeImages;    
     listeMemes = [...listeTexts, ...listeImages];
@@ -190,9 +191,10 @@ function createForm(why) {
       <label>Tags:</label>        
       <div class="tagsListWhole">          
         <!-- <input id="tagsListInput" class="cossin" name="addTheme" type="checkbox"/>          
-        <label for="tagsListInput" class="tagsListLabel">Tags<span class="typcn typcn-chevron-right dropchevron"></span></label> -->        
+        <label for="tagsListInput" class="tagsListLabel">Tags<i class="typcn typcn-chevron-right dropchevron"></i></label> -->        
         <ul class="tagsListDrop">            
-          ${tagsList}          
+          ${tagsList}
+          <li><input id="plusTagInput" type="text"><button id="plusTagBtn" class="btnIcon"><i class="typcn typcn-plus"></i></button></li>
         </ul>        
       </div>      
     </div>      
@@ -202,7 +204,19 @@ function createForm(why) {
     <button id="resetBtn" type="reset">Nevermind</button>`}    
   </form>`;  
   let shitForm = document.querySelector("#shitForm");
-  shitForm.innerHTML = form;    
+  shitForm.innerHTML = form;  
+  const plusTagBtn = document.querySelector("#plusTagBtn");
+  const plusTagInput = document.querySelector("#plusTagInput");
+  plusTagBtn.addEventListener("click", () => {
+    let maxNum = listeTags.sort((a,b)=>b.num-a.num)[0].num; 
+    let newTag = {
+      num: maxNum,
+      tag: plusTagInput.value
+    };
+    listeTags.push(newTag);
+    localStorage.listeTags = JSON.stringify(listeTags);
+    updatetoUL();
+  });
   function getShitTags() {    
     let shitTags = [];    
     document.getElementsByName("tags").forEach(tag => {      

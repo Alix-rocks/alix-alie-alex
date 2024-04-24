@@ -86,3 +86,7 @@ button {
   list-style-type: none;
   margin-top: 0;
 }
+.btnIcon{
+  border: none;
+  background-color: var(--bg-color);
+}

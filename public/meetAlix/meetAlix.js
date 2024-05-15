@@ -215,7 +215,7 @@ function putDatesInWeek(date){
   //updateSleepAreas();
 
 // MARK: unknownDate
-  let unknownStartDate = "2024-05-12";
+  let unknownStartDate = "2024-06-15";
   let unknownArea;
   console.log(arrayDate);
   const unknownTestIn = arrayDate.some(el => (el.full == unknownStartDate));

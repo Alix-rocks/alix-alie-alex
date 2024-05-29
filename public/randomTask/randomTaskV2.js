@@ -429,18 +429,6 @@ async function getTasksSettings() {
       // todo.status = "todo";
       // myList.push(todo);
     // };
-
-    //Change all the todo.recurry in todo.recurryDates
-    // if(todo.line == "recurringDay"){
-    //   //console.log(todo);
-    //   todo.recurryDates = todo.recurrys.map(recurry => {
-    //     return recurry.date;
-    //   });
-    //   delete todo.recurrys;
-    //   delete todo.listDates;
-    //   //console.log(todo.recurryDates.length);
-    // };
-    
     
     if(!todo.pPosition || (todo.pPosition && todo.pPosition == "out")){
       //change all the todo.color for the index value in baseColors
@@ -460,9 +448,6 @@ async function getTasksSettings() {
       // if(todo.urge){
       //   todo.term = "topPriority";
       // };
-
-      
-
       todoCreation(todo);
     };
   });
@@ -856,18 +841,7 @@ async function saveToCloud(){
     if(todo.term == "showThing" && todo.line == "todoDay" && todo.showType !== "Cancelled"){
       busyZoneCreation(todo);
     } else if(todo.term == "showThing" && todo.line == "recurringDay"){
-      todo.recurryDates.forEach(recurryDate => {
-        let tempRecurry = {
-          date: recurryDate,
-          primaRow: todo.primaRow,
-          dalleRow: todo.dalleRow,
-          dopoRow: todo.dopoRow,
-          alleRow: todo.alleRow,
-          showType: todo.showType,
-          showPrima: todo.showPrima
-        };
-        busyZoneCreation(tempRecurry)
-      });
+      todo.recurrys.forEach(recurry => busyZoneCreation(recurry));
     };
   });
   const docRefBusies = doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies");
@@ -1266,15 +1240,15 @@ function searchPage(){
       } else{
         resultDate.forEach(todo => {
           if(todo.line == "recurringDay"){
-            let recurryDates = todo.recurryDates.filter(recurryDate => recurryDate == searchDate.value);
-            if(recurryDates.length == 0){
+            let recurrys = todo.recurrys.filter(recurry => recurry.date == searchDate.value);
+            if(recurrys.length == 0){
             } else{
               todoCreation(todo);
               console.log(todo);
               count++;
-              recurryDates.forEach(recurryDate => {
-                recurryDateToTodoCreation(todo, recurryDate, "in");
-                console.log(recurryDate);
+              recurrys.forEach(recurry => {
+                todoCreation(recurry);
+                console.log(recurry);
                 count++;
               });
             };
@@ -1440,11 +1414,11 @@ function addThatdayTodos(){
       let modifiedDalle = todo.dalle ? todo.dalle.replace(":", "-") : "5-00";
       todoDateTime = `${todo.date}-${modifiedDalle}`;
     } else if(todo.line == "recurringDay"){
-      todo.recurryDates.forEach(recurryDate => {
-        let modifiedDalle = todo.dalle ? todo.dalle.replace(":", "-") : "5-00";
-        let todoTime = `${recurryDate}-${modifiedDalle}`;
+      todo.recurrys.forEach(recurry => {
+        let modifiedDalle = recurry.dalle ? recurry.dalle.replace(":", "-") : "5-00";
+        let todoTime = `${recurry.date}-${modifiedDalle}`;
         if((thatdayTime < todoTime) && (todoTime < thatnextdayTime) || (thatdayTime < todoDeadlineTime) && (todoDeadlineTime < thatnextdayTime)){
-          recurryDateToTodoCreation(todo, recurryDate, "in");
+          todoCreation(recurry);
         };
       });
     };
@@ -1455,32 +1429,75 @@ function addThatdayTodos(){
   sortIt("datetime", "listToday");
 };
 
+// Une fonction pour recurring: tu y donnes un todo et une date (date et Time déjà en string?) et ça te dit si t'as un recurry ou pas ce jour là (return true or false). if false then use todo.listDates
+//de listTask à todoCreation: on fait juste if(todo.lastOutDate < thatDate && !todo.recDatesOut.contains(thatDate)){recurryOrNot(todo, thatDate);}; (if todo.lastOutDate == thatDate then it's already in listTask!)
+//dans la swipingSection, on le fait direct recurryOrNot(todo, thatDate)
+//dans le monthly calendar, on devrait avoir une autre version de cette fonction et calculer du premier jour (xxxx-xx-01) au dernier (xxxx-xx-31)
+//dans le weekly calendar, on devrait avoir une autre version de cette fonction et calculer du premier jour (xxxx-xx-01) au dernier (xxxx-xx-07)
+function recurryOrNot(todo, thatDate){ //thatDate is string (should it include the time too? nah...)
+  let recurry;
+  //first, check if thatDate is not aleady in todo.datesOut (array of all the recurrys that have been outed into listTasks, y compris dans le futur!)
+  if(todo.recDatesOut.contains(thatDate)){ //pourrait être fait AVANT de lancer la fonction recurryOrNot...
+    recurry = false;
+  } else{
+    if(todo.fineOpt == "fineMai"){
+      if(todo.ogni == 1){
+        if(todo.var == "giorno"){
+          recurry = true;
+        } else if(todo.var == "settimana"){
+          let name = getDayNameFromString(thatDate); // gets the name of the day
+          recurry = todo.daysWeek.contains(name) ? true : false;
+        } else if(todo.var == "mese" && todo.meseOpt == "ogniXDate"){
+          let date = meseDateCalc(thatDate); // gets the last two chiffre in the date
+          recurry = todo.meseDate == date ? true : false;
+          //check if the date is the same (the 15th vs the 15th, then true)
+        } else if(todo.var == "mese" && todo.meseOpt == "ogniXDay"){
+          let day = meseDayICalc(thatDate); // gets the number (index) of the day (0 for Dom, 1 for lun, 2 for mar, etc)
+          if(day !== todo.meseDayI){
+            recurry = false;
+          } else{
+            let num = meseDayNCalc(thatDate); // gets the combientième jour c'est; genre le 3e jeudi du mois
+            recurry = todo.meseDayN == num ? true : false;
+          };
+        } else if(todo.var == "anno"){
+          let thatMonthDate = thatDate.slice(6, 10); //month and date of thatDate
+          let todoMonthDate = todo.dal.slice(6, 10); //month and date of recurring
+          recurry = thatMonthDate == todoMonthDate ? true : false; //check if it's the same month and date
+        };
+      } else{
+        //we could calculated most of them from the lastOutDate with the functions we used to use:
+          // giorno, anno, mese/ogniXDate (ceux-là sont vraiment simple à faire en fait)
+        if(todo.var == "giorno"){ // but how do we get the lastOutDate?! NONONOONON ça marche pas ça! parce que si y'a un jour où je vais pas du tout sur l'appli, ça va tout fucké!! C'est mieux de repartir du début et voir si aujourd'hui tombe pile!
+          todo.lastOutDate.setDate(todo.lastOutDate.getDate() + todo.ogni);
+          recurry = todo.lastOutDate == thatDate ? true : false;
+        } else if(todo.var == "mese" && todo.meseOpt == "ogniXDate"){
+          todo.lastOutDate.setMonth(todo.lastOutDate.getMonth() + todo.ogni);
+          recurry = todo.lastOutDate == thatDate ? true : false;
+        } else if(todo.var == "anno"){
+          todo.lastOutDate.setFullYear(todo.lastOutDate.getFullYear() + todo.ogni);
+          recurry = todo.lastOutDate == thatDate ? true : false;
+        } else{
+          //for the other ones, we could have a todo.listDates for, let's say, 6 months? ... we still need to update it after 6 months or when the calendar goes too far...
+          //todo.var == "settimana" 
+          //todo.var == "mese" && todo.meseOpt == "ogniXDay"
 
+          //What about, for weekly/monthly, we use the old fx but with a start date (D0/1) and an end date (S6/31), that way we don't need to count for each day, just once every time we click back or forth
+            //if fineGiorno or fineDopo, you can get the todo.fine; then just check if the end date (S6/31) is before the todo.fine otherwise, the end date is todo.fine
+        };
+      };
+    } else{ //fineGiorno or fineDopo
+      //eux devraient avoir une todo.listDates et on fait juste vérifier si la date est dedans (donc on splice la date à chaque fois qu'on la crée ou juste quand on la modifie/done?)
+    };
+  };
+  
+  
+  return recurry; //if recurry == true then make a copy (do we take it out automatically or just if modified?)    If modified, then push it in listTasks AND add the date in the recDatesOut array    Maybe we take it out only if it's today. (that way, we're saving for all refresh on that day! and it becomes our lastOutDate)  
+  // we need to clean up the recDatesOut from all the ones that have been done and/or are pasted (do we want the option to let them add up? reminders should stay!! but in the listTasks or in the listDones?! In the listDones since it's lighter; that means we need to "getItDone" 'automatically' at the end of the day...)
+};
 
   
 
 // MARK: CREATION
-
-function recurryDateToTodoCreation(todo, recurryDate, fate){ //todo == the todo that todo.line == "recurryngDay"; recurryDate == date to create (from todo.recurryDates); fate == "out" (if needs to be pushed in listTasks, becoming a new todo, and the recurryDate taken out of recurryDates) OR "in" (if it's just temporary and the recurryDate shall stay in recurryDates; we're not creating a new todo)
-  let recurry = JSON.parse(JSON.stringify(todo));
-  clearRecurringData(recurry);
-  recurry.id = crypto.randomUUID();
-  recurry.line = "todoDay";
-  recurry.date = recurryDate;
-  recurry.recurry = true;
-  recurry.recId = todo.id;
-  
-  todoCreation(recurry);
-  if(fate == "out"){ // to remove the recurryDate from todo.recurryDates AND pushing the new recurry in listTasks
-    todo.recurryDates = todo.recurryDates.filter(rD => rD !== recurryDate);
-    delete recurry.recurry;
-    delete recurry.recId;
-    //il devient un todo normal!
-    listTasks.push(recurry);
-    localStorage.listTasks = JSON.stringify(listTasks);
-  };
-  
-};
 
 function todoCreation(todo){
   let togoList;
@@ -1490,7 +1507,7 @@ function todoCreation(todo){
     togoList = "projectUl"; // s'assurer de tous les créer: todo "in" et "out" et term=="wholeProject" aussi!
   } else if(searchSwitch){
     togoList = "searchFound";
-  } else if(thatDaySwitch){ // ajuster plus haut pour s'assurer de ce qu'on envoie ici (recurry au lieu de recurryDate)
+  } else if(thatDaySwitch){
     todayDate = getDateTimeFromString(thatdayDate, mySettings.myTomorrow);
     if(todo.term == "reminder"){
       togoList = "listTodayReminder";
@@ -1513,80 +1530,76 @@ function todoCreation(todo){
     numberedDays = Math.floor((doneDate - todayDate)/(1000 * 3600 * 24));
   };
   if(togoList !== ""){ //what happens if one is stock/stored AND recurring/recurry?
-    if(document.getElementById(togoList)){  
-      if(todo.stock){
-        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.dalle ? `data-time="${todo.dalle}"` : ``}" class="${todo.term == "showThing" ? todo.label ? `showLiLabel` : `showLi` : todo.term == "sameHabit" ? `sameHabit` : todo.term == "reminder" ? `reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
-        ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
-        <i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="${searchSwitch ? `toTIdeSSaM(this)` : `toTIdeTZaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${mySettings.myBaseColors[todo.color].colorBG};" />` : ``}<span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="${searchSwitch ? `toTIdeSSaS(this)` : `toTIdeTZaS(this)`}"></i></li>`);
-      } else if(todo.line == "recurringDay"){
-        let time = todo.dalle ? todo.dalle : mySettings.myTomorrow;
-        let nextDate = getDateTimeFromString(todo.recurryDates[0], time);
-        numberedDays = Math.floor(Math.abs(nextDate.getTime() - todayDate.getTime())/(1000 * 3600 * 24));
-        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.dalle ? `data-time="${todo.dalle}"` : ``}" class="${todo.term == "showThing" ? todo.label ? `showLiLabel` : `showLi` : todo.term == "sameHabit" ? `sameHabit` : todo.term == "reminder" ? `reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
-        ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
-        <i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i>
-        <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
-        <div class="textDiv"><span class="text" onclick="${searchSwitch ? `toTIdeSSaM(this)` : `toTIdeTZaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG};`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div>
-        <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.dealine ? `doneDay` : todo.line}"></i><span style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${numberedDays}</span></div></li>`);
-      } else if(todo.term == "reminder"){
-        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" ${todo.date ? `data-date="${todo.date}"` : ``} ${todo.dalle ? `data-time="${todo.dalle}"` : ``} ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="reminderClass">
-          <i class="typcn typcn-bell" style="font-size: 1em;"></i>
-          <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" style="font-size: .8em;"></i>
-          <div class="textDiv"><span onclick="${searchSwitch ? `toTIdeSSaM(this)` : `toTIdeTZaM(this)`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px; ` : ``}color:${mySettings.myBaseColors[todo.color].colorBG}; font-size: 1em;">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" style="font-size: .8em;" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
-          <input type="time" class="displayNone"/></div>
-        </li>`);
-      } else { // if(projectSwitch && todo.term == "wholeProject"){}
-        let pOngletsDiv = ``;
-        let pColor = 0;
-        // if (!projectSwitch && todo.pParents && todo.pParents.length > 0) {
-        //   console.log(todo);
-        //   let pOngletsDivLabels = todo.pParents.map(label => {
-        //     let todoId = listTasks.findIndex(todo => todo.id == label);
-        //     let todo = listTasks[todoId];
-            
-        //     return `<div class="projectLiOnglet" style="background-color:${colorsList[todo.pColor].colorBG};color:${colorsList[todo.pColor].colorTX};">${todo.pNick}</div>`;
-        //   }).join("");
-        //   pOngletsDiv = `<div class="ProjectLiOngletDiv">${pOngletsDivLabels}</div>`;
-        //   let lastParent = todo.pParents[todo.pParents.length - 1]
-        //   pColor = listTasks[listTasks.findIndex(todo => todo.id == lastParent)].pColor;
-        //   console.log(pColor);
-        // };
-        if(todo.pPosition == "out"){
-          console.log(todo);
-        };
-        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" ${todo.date ? `data-date="${todo.date}"` : ``} ${todo.dalle ? `data-time="${todo.dalle}"` : ``} ${todo.recurry ? `data-rec="${todo.recId}"` : ``} ${todo.term == "alwaysHere" ? `data-always="here"` : ``} class="${todo.term == "showThing" ? todo.label ? `showLiLabel` : `showLi` : todo.term == "sameHabit" ? `sameHabit` : ``}${todo.pPosition == "out" ? ` projectLi` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}${todo.pPosition == "out" ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : ``}">
-          ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
-          ${pOngletsDiv}
-          <div class="urgeCheck" style="color: ${todo.urge ? todo.urgeColor : ``}" ${todo.urge || todo.label ? `onclick="checkOrUrge(this)"` : `onclick="checkEvent(this, 'norm')"`}>
-            <i class="typcn typcn-media-stop-outline emptyCheck"></i>
-            <span>${todo.urge ? todo.urgeNum : ``}</span>
-          </div>
-          <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
-          <div class="textDiv"><span onclick="${searchSwitch ? `toTIdeSSaM(this)` : `toTIdeTZaM(this)`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? `` : ` color:${mySettings.myBaseColors[todo.color].colorBG};`}">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
-          <input type="time" class="displayNone"/>
-          ${togoList == "listOups" && numberedDays < -5 ? `<div class="proHelp">
-          <h3>You have been procrastinating that one for ${Math.abs(numberedDays)} days...</h3>
-          <p>Why haven't you done it yet?</p> 
-          <p>Is it really worth doing? Why did you want to do it in the first place?</p>
-          <p>Was it and is it still realistic to want to do it?</p>
-      
-          <h4>If you really still want to do it:</h4>
-          <p>What is missing or what is unclear?</p>
-          <p>What do you need or what would help you start this task?</p>
-          <p>What's the very first 'next action'?</p>
-      
-          <h4>If you realize you don't actually want nor need to do it:</h4>
-          <p>Then do yourself a favor and just delete it!</p>
-          <button onclick="toTIdeTZaP(this)">Yeah, thanks</button></div>` : ``}
-          </div>
-          <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)">
-            <i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.deadline ? `doneDay` : todo.line}"></i>
-            <span class="${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? `` : `displayNone`}" style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? numberedDays : ``}</span>
-          </div>
-        </li>`);
+    if(todo.stock){
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.dalle ? `data-time="${todo.dalle}"` : ``}" class="${todo.term == "showThing" ? todo.label ? `showLiLabel` : `showLi` : todo.term == "sameHabit" ? `sameHabit` : todo.term == "reminder" ? `reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
+      ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
+      <i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'todoZone', 'mod')`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${mySettings.myBaseColors[todo.color].colorBG};" />` : ``}<span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'stock')` : `(this, 'todoZone', 'stock')`}"></i></li>`);
+    } else if(todo.line == "recurringDay"){
+      let time = todo.recurrys[0].dalle ? todo.recurrys[0].dalle : mySettings.myTomorrow;
+      let nextDate = getDateTimeFromString(todo.recurrys[0].date, time);
+      numberedDays = Math.floor(Math.abs(nextDate.getTime() - todayDate.getTime())/(1000 * 3600 * 24));
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.dalle ? `data-time="${todo.dalle}"` : ``}" class="${todo.term == "showThing" ? todo.label ? `showLiLabel` : `showLi` : todo.term == "sameHabit" ? `sameHabit` : todo.term == "reminder" ? `reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
+      ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
+      <i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i>
+      <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
+      <div class="textDiv"><span class="text" onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'todoZone', 'mod')`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG};`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div>
+      <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.dealine ? `doneDay` : todo.line}"></i><span style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${numberedDays}</span></div></li>`);
+    } else if(todo.term == "reminder"){
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" ${todo.date ? `data-date="${todo.date}"` : ``} ${todo.dalle ? `data-time="${todo.dalle}"` : ``} ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="reminderClass">
+        <i class="typcn typcn-bell" style="font-size: 1em;"></i>
+        <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" style="font-size: .8em;"></i>
+        <div class="textDiv"><span onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'todoZone', 'mod')`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px; ` : ``}color:${mySettings.myBaseColors[todo.color].colorBG}; font-size: 1em;">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" style="font-size: .8em;" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
+        <input type="time" class="displayNone"/></div>
+      </li>`);
+    } else { // if(projectSwitch && todo.term == "wholeProject"){}
+      let pOngletsDiv = ``;
+      let pColor = 0;
+      // if (!projectSwitch && todo.pParents && todo.pParents.length > 0) {
+      //   console.log(todo);
+      //   let pOngletsDivLabels = todo.pParents.map(label => {
+      //     let todoId = listTasks.findIndex(todo => todo.id == label);
+      //     let todo = listTasks[todoId];
+          
+      //     return `<div class="projectLiOnglet" style="background-color:${colorsList[todo.pColor].colorBG};color:${colorsList[todo.pColor].colorTX};">${todo.pNick}</div>`;
+      //   }).join("");
+      //   pOngletsDiv = `<div class="ProjectLiOngletDiv">${pOngletsDivLabels}</div>`;
+      //   let lastParent = todo.pParents[todo.pParents.length - 1]
+      //   pColor = listTasks[listTasks.findIndex(todo => todo.id == lastParent)].pColor;
+      //   console.log(pColor);
+      // };
+      if(todo.pPosition == "out"){
+        console.log(todo);
       };
-    } else if(!document.getElementById(togoList)){
-      alert(`Oups! "${todo.task}" doesn't have anywhere to go!`);
+      document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" ${todo.date ? `data-date="${todo.date}"` : ``} ${todo.dalle ? `data-time="${todo.dalle}"` : ``} ${todo.recurry ? `data-rec="${todo.recId}"` : ``} ${todo.term == "alwaysHere" ? `data-always="here"` : ``} class="${todo.term == "showThing" ? todo.label ? `showLiLabel` : `showLi` : todo.term == "sameHabit" ? `sameHabit` : ``}${todo.pPosition == "out" ? ` projectLi` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}${todo.pPosition == "out" ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : ``}">
+        ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
+        ${pOngletsDiv}
+        <div class="urgeCheck" style="color: ${todo.urge ? todo.urgeColor : ``}" ${todo.urge || todo.label ? `onclick="checkOrUrge(this)"` : `onclick="checkEvent(this, 'norm')"`}>
+          <i class="typcn typcn-media-stop-outline emptyCheck"></i>
+          <span>${todo.urge ? todo.urgeNum : ``}</span>
+        </div>
+        <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
+        <div class="textDiv"><span onclick="taskAddAllInfo${searchSwitch ? `(this, 'searchScreen', 'mod')` : `(this, 'todoZone', 'mod')`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? `` : ` color:${mySettings.myBaseColors[todo.color].colorBG};`}">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
+        <input type="time" class="displayNone"/>
+        ${togoList == "listOups" && numberedDays < -5 ? `<div class="proHelp">
+        <h3>You have been procrastinating that one for ${Math.abs(numberedDays)} days...</h3>
+        <p>Why haven't you done it yet?</p> 
+        <p>Is it really worth doing? Why did you want to do it in the first place?</p>
+        <p>Was it and is it still realistic to want to do it?</p>
+    
+        <h4>If you really still want to do it:</h4>
+        <p>What is missing or what is unclear?</p>
+        <p>What do you need or what would help you start this task?</p>
+        <p>What's the very first 'next action'?</p>
+    
+        <h4>If you realize you don't actually want nor need to do it:</h4>
+        <p>Then do yourself a favor and just delete it!</p>
+        <button onclick="taskAddAllInfo(this, 'todoZone', 'pro')">Yeah, thanks</button></div>` : ``}
+        </div>
+        <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)">
+          <i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.deadline ? `doneDay` : todo.line}"></i>
+          <span class="${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? `` : `displayNone`}" style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? numberedDays : ``}</span>
+        </div>
+      </li>`);
     };
   };
 };
@@ -1614,25 +1627,20 @@ function getTogoList(todo){
   } else if(todo.stock){
     togoList = "listStorage";
   } else if(todo.line == "recurringDay"){
-    if(todo.recurryDates.length == 0){
-      if(todo.fineOpt == "fineMai"){
-        alert(todo.task + " doesn't have any dates anymore (but should)!");
-        togoList = "listRecurring";
-      } else{
-        console.log(todo);
-        alert(todo.task + ", C'est finnnniiiiiiii!!!");
-        //if "ok" then erase:
-        // let todoIndex = listTasks.findIndex(tod => tod.id == todo.id);
-        // listTasks.splice(todoIndex, 1);
-        // localStorage.listTasks = JSON.stringify(listTasks);
-        togoList = "";
-      };
-    } else if(todo.recurryDates.length == 1 && todo.fineOpt == "fineMai"){
-      let date = getDateFromString(todo.recurryDates[0]);
-      sendRecurringToGetRecurryDates(todo, date);
+    if(!todo.recurrys[0]){ //if there's no more recurrys, then we don't need the recurring in the recurring list either
+      console.log("nomore!");
+      console.log(todo);
+      let todoIndex = listTasks.findIndex(tod => tod.id == todo.id);
+      console.log(todoIndex);
+      listTasks.splice(todoIndex, 1);
+      localStorage.listTasks = JSON.stringify(listTasks);
+      togoList = "";
+      //console.log("nomore!");
+    } else{
+      togoList = "listRecurring";
+      //recurryCreation(todo);
+      recurryOuting(todo); //that sends the recurring to create the necessary recurrys, but the recurring will still end up in todoCreation to be created for the recurring list! So if there is no more recurrys or if the last date is past, we need to stop it here instead of in the recurryOuting
     };
-    togoList = "listRecurring";
-    recurryCreation(todo);
   } else if((todoDateTime < hierOggiTime) || (todoDeadlineTime < hierOggiTime)){
     if(todo.term == "showThing" || todo.term == "reminder"){ //date or deadline is before today
       togoList = "";
@@ -1755,58 +1763,108 @@ function colorUrges(when){
   };
 };
 
-function recurryCreation(todo){
+
+function recurryOuting(todo){ //todo == le recurring (newtodo est le recurry/normal qui est pris de l'array d'objet todo.recurrys)
+  
+  //First let's make sure there are still dates in listDates, if it's fineMai; otherwise calculate more, but not from dal, from last date + 1
+  // let hierOggiTime = timeLimit("hierOggi");
+  // let demainApresTime = timeLimit("demainApres");
   let idx = 0;
-  let dateTime = `${todo.recurryDates[idx]}-${todo.dalle ? todo.dalle.replace(":", "-") : "5-00"}`;
-  //console.log(todo.recurryDates[idx]);
-  if(todo.recPileUP == true){
-    while(dateTime < oggiDemainTime){
-      let recurryDate = todo.recurryDates[idx];
-      recurryDateToTodoCreation(todo, recurryDate, "out");
-      dateTime = `${todo.recurryDates[idx]}-${todo.dalle ? todo.dalle.replace(":", "-") : "5-00"}`;
-    };
+  let recurry = todo.recurrys[idx];
+  if(!recurry){
+    console.log("no reccury!");
+    let todoIndex = listTasks.findIndex(todo => todo.id == todo.id);
+    listTasks.splice(todoIndex, 1);
   } else{
-    while(dateTime < oggiDemainTime){
-      if(dateTime < hierOggiTime){
-        todo.recurryDates.splice(idx, 1);
-        dateTime = `${todo.recurryDates[idx]}-${todo.dalle ? todo.dalle.replace(":", "-") : "5-00"}`;
+    let dateTime = `${recurry.date}-${recurry.dalle ? recurry.dalle.replace(":", "-") : "5-00"}`; //when recurring doesnt have any recurry anymore, it blocked here first (that I fixed... but the other line still blocks)
+    
+    while (dateTime < oggiDemainTime){
+      if((dateTime < hierOggiTime && todo.term !== "sameHabit")){
+        todo.recurrys.splice(idx, 1);
+        //WOLA il faudrait aussi todo.listDates.splice(0, 1);
       } else{
-        let recurryDate = todo.recurryDates[idx];
-        recurryDateToTodoCreation(todo, recurryDate, "in");
-        idx++;
-        dateTime = `${todo.recurryDates[idx]}-${todo.dalle ? todo.dalle.replace(":", "-") : "5-00"}`;
-      };  
+        if(!document.getElementById(recurry.id)){
+          todoCreation(recurry);
+          recurry.out = true; // out, mais encore dans les recurrys; pas dans listTasks...
+          //WOLA what about todo.listDates.splice(0, 1);
+          //WOLA attention, quand tu sort un recurry (parce que modifié), il faudrait-y pas que tu enlève la date aussi de listDates?
+          idx++;
+        } else{
+          idx++;
+        };
+      };
+      
+      recurry = todo.recurrys[idx];//Vu qu'on splice pas, on utilise idx qui ++; donc on met out = true pour savoir que le li a déjà été créé pour pas en recréé un à chaque refresh... oui, mais... quand tu fais un refresh, tu les recré tous anyway... non? Donc t'as pas besoin d'un out... Sauf si tu save le recurring une deuxième fois, là est-ce que les anciens vont rester ou pas? (voir clearRecurring...)
+      if(!recurry){
+        //console.log("oups!");
+        console.log(todo);
+        if(todo.fineOpt == "fineMai"){
+          todo.dal = todo.listDates[todo.listDates.length - 1];
+          let newDate = getDateFromString(todo.dal);
+          if(todo.var == "giorno"){
+            ogniOgni(todo, newDate);
+          } else if(todo.var == "settimana"){
+            ogniSettimana(todo, newDate);
+          } else if(todo.var == "mese"){
+            if(todo.meseOpt == "ogniXDate"){
+              ogniOgni(todo, newDate);
+            } else if(todo.meseOpt == "ogniXDay"){
+              ogniMeseDay(todo, newDate);
+            };
+          } else if(todo.var == "anno"){
+              ogniOgni(todo, newDate);
+          };
+          idx = 0;
+          recurry = todo.recurrys[idx];
+          dateTime = `${recurry.date}-${recurry.dalle ? recurry.dalle.replace(":", "-") : "5-00"}`;
+        } else{
+          //alert(`${todo.task} is over!`);
+          break;
+        };
+      } else{
+        dateTime = `${recurry.date}-${recurry.dalle ? recurry.dalle.replace(":", "-") : "5-00"}`;
+      };
     };
   };
+  localStorage.listTasks = JSON.stringify(listTasks);
 };
 
-function sendRecurringToGetRecurryDates(todo, date){
-  if(todo.var == "giorno"){
-    ogniOgni(todo, date);
-  } else if(todo.var == "settimana"){
-    let daysWeek = [];
-    inDaySection.querySelectorAll('input[name="daysWeekChoice"]').forEach(choice => {
-      if(choice.checked == true){
-        daysWeek.push(choice.value);
-      };
-    });
-    todo.daysWeek = daysWeek;
-    ogniSettimana(todo, date);
-  } else if(todo.var == "mese"){
-    todo.meseOpt = inDaySection.querySelector('input[name="meseOptions"]:checked').value;
-    if(todo.meseOpt == "ogniXDate"){
-      todo.meseDate = meseDateCalc(todo.dal);
-      ogniOgni(todo, date);
-    } else if(todo.meseOpt == "ogniXDay"){
-      todo.meseDayN = meseDayNCalc(todo.dal);
-      todo.meseDayI = meseDayICalc(todo.dal);
-      ogniMeseDay(todo, date);
-    };
-  } else if(todo.var == "anno"){
-      ogniOgni(todo, date);
-  };
-}
-
+// function recurryCreation(todo){ //todo == le recurring (newtodo est le recurry/normal qui est créé)
+//   //First let's make sure there are still dates in listDates, if it's fineMai; otherwise calculate more, but not from dal, from last date + 1
+//   let hierOggiTime = timeLimit("hierOggi");
+//   let demainApresTime = timeLimit("demainApres");
+//   let dateTime = `${todo.listDates[0]}-${todo.dalle ? todo.dalle.replace(":", "-") : "5-00"}`;
+//   while ((hierOggiTime < dateTime) && (dateTime < demainApresTime)){
+//     let date = todo.listDates[0];
+//     //
+//     let newTodo = JSON.parse(JSON.stringify(todo));
+//     clearRecurringData(newTodo);
+//     newTodo.id = crypto.randomUUID();
+//     newTodo.date = date;
+//     newTodo.line = "todoDay";
+//     newTodo.recurry = true;
+//     listTasks.push(newTodo);
+//     if(todo.fineOpt == "fineMai" && todo.listDates.length == 1){
+//       let newDate = date.setDate(date.getDate() + 1);//doesn't work! si c'est chaque année au 29 nov, là tu vas être au 30 nov... mais tu veux pas non plus, en avoir deux pour la même date (le dernier ici et le premier nouveau...) À moins qu'on ne fasse pas le dernier...
+//       if(todo.var == "giorno" || todo.var == "anno"){
+//         ogniOgni(todo, date);
+//       } else if(todo.var == "settimana"){
+//         ogniSettimana(todo, date);
+//       } else if(todo.var == "mese"){
+//         if(todo.meseOpt == "ogniXDate"){
+//           ogniOgni(todo, date);
+//         } else if(todo.meseOpt == "ogniXDay"){
+//           ogniMeseDay(todo, date);
+//         };
+//       };
+//     };
+//     todo.listDates.splice(0, 1);
+//     localStorage.listTasks = JSON.stringify(listTasks);
+//     todoCreation(newTodo);
+//     updateCBC();
+//     dateTime = `${todo.listDates[0]}-${todo.dalle ? todo.dalle.replace(":", "-") : "5-00"}`;
+//   };
+// };
 
 function donedCreation(donedDate, doned){
   document.getElementById(donedDate).insertAdjacentHTML("beforeend", `<li ${doned.term == "showThing" ? `class="showLi" style="background-color: ${doned.STColorBG}; color: ${doned.STColorTX};"` : ``}><i class="typcn typcn-tick"></i><span class="textDone" ${doned.term == "showThing" ? `` : `style="color:${mySettings.myBaseColors[doned.color].colorBG};"`}>${doned.task}</span><i class="typcn typcn-trash" onclick="trashDoneEvent(this)"></i><i class="fa-regular fa-calendar-xmark" onclick="reDateEvent(this)"></i><i class="typcn typcn-arrow-sync" onclick="recycleEvent(this)"></i></li>`);
@@ -1866,7 +1924,7 @@ addForm.addEventListener("submit", (e) => {
     updateCBC();
     addForm.reset();
   } else{
-    toTIdeTZaN();
+    taskAddAllInfo("addForm", "todoZone", "new"); //taskAddAllInfo(null, "todoZone", "new");
     addForm.reset();
   };
 });
@@ -2643,57 +2701,51 @@ function timeItEvent(thisOne){
 };
 window.timeItEvent = timeItEvent;
 
-// MARK: CALENDAR
+// *** SAVE THE DATE
 let moving = false;
 let parent;
-let changeRecurryDates = false;
 
 
 let clickScreen = document.querySelector("#clickScreen");
-
+let newWidth;
 function smallCalendarChoice(thisOne){//thisOne = taskToDate est l'icon calendar
   moving = false;
   parent = thisOne.parentElement;
-  let recurryIsIt = parent.dataset.rec && parent.dataset.rec !== "undefined" ? true : false;
+  let togoList = parent.parentElement.id;
   parent.classList.add("selectedTask");
   parent.scrollIntoView();
-  let togoList = parent.parentElement.id;
   clickScreen.classList.remove("displayNone");
+  let div = parent.querySelector(".textDiv");
+  let width = getComputedStyle(div).width;
+  let num = width.slice(0, -2);
+  newWidth = Number(num) + 44;
   let todo;
-  let todoIndex;
   let recIndex;
-  if(recurryIsIt){
-    recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
-    let recurring = listTasks[recIndex];
-    todo = JSON.parse(JSON.stringify(recurring));
-    clearRecurringData(todo);
-    todo.id = crypto.randomUUID();
-    todo.line = "todoDay";
-    todo.date = parent.dataset.date;
-    todo.recurry = true;
-    todo.recId = parent.dataset.rec;
+  let todoIndex;
+  // let parentId = parent.id.startsWith("copy") ? parent.id.substring(4) : parent.id;
+  let parentId = parent.id;
+  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+    let rec = parent.dataset.rec;
+    recIndex = listTasks.findIndex(todo => todo.id == rec);
+    todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == parentId);
+    todo = listTasks[recIndex].recurrys[todoIndex];
   } else{
-    todoIndex = listTasks.findIndex(td => td.id == parent.id);
+    todoIndex = listTasks.findIndex(todo => todo.id == parentId);
     todo = listTasks[todoIndex];
   };
   let parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
-  if(parents.length == 0){
-    parents.push(parent);
-  };
   creatingCalendar(todo, thisOne, "onIcon");
   let calendarDiv = document.querySelector("#calendarDiv");
   clickScreen.addEventListener("click", () => clickHandlerAddOn(calendarDiv, "trash", clickScreen, togoList));
   document.querySelector("#saveTheDateBtn").addEventListener("click", () => {
     let previousList = parent.parentElement.id;
-    calendarSave(todo); //
-    if(recurryIsIt){
-      let recIndex = listTasks.findIndex(td => td.id == todo.recId);
-      let recurring = listTasks[recIndex];
-      recurring.recurryDates = recurring.recurryDates.filter(rD => rD !== todo.date); // donc la date du todo est enlevée des recurryDates de son recurringDay
-      delete todo.recurry;
-      delete todo.recId; //et todo redevient un todo normal!
-      listTasks.push(todo);// et le todo est maintenant dans la listTask!
-      //parent.remove();
+    calendarSave(todo); //WOLA Doesn't work... at least for recurring...
+    if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+      let oldRecurry = listTasks[recIndex].recurrys.splice(todoIndex, 1);
+      delete oldRecurry[0].recurry;
+      delete oldRecurry[0].out;
+      delete oldRecurry[0].recId;
+      listTasks.push(oldRecurry[0]);
     };
     if(todo.newShit){
       delete todo.newShit;
@@ -2706,7 +2758,7 @@ function smallCalendarChoice(thisOne){//thisOne = taskToDate est l'icon calendar
         moving = true;
       };
     };
-    parents.forEach(parent => {
+    parents.forEach(parent => { // we probably don't need parents anymore since there aren't any "copy" anymore...
       parent.remove();
     });
     //parent.remove();
@@ -2722,32 +2774,23 @@ function smallCalendarChoice(thisOne){//thisOne = taskToDate est l'icon calendar
 
 window.smallCalendarChoice = smallCalendarChoice;
 
-
-
 function creatingCalendar(todo, home, classs){
-  let newWidth;
-  if(classs == "onIcon"){
-    let div = parent.querySelector(".textDiv");
-    let width = getComputedStyle(div).width;
-    let num = width.slice(0, -2);
-    newWidth = Number(num) + 44;
-  };
   let rec = todo.line == "recurringDay" ? true : false;
   let shw = (todo.term == "showThing" || todo.term == "reminder") && !todo.stock ? true : false;
   let date = todo.date ? todo.date : rec ? todo.dal : getTodayDateString();
   
   let daysWeek = mySettings.myWeeksDayArray.map((day, idx) => {
-    return `<input type="checkbox" name="daysWeekChoice" class="cossin changeRecurryDates" id="${day.nameNoAcc}" value="${idx}" ${(rec && todo.var == "settimana" && todo.daysWeek && todo.daysWeek.includes(day.nameNoAcc)) ? `checked` : meseDayICalc(date) == idx ? `checked` : ``} />
+    return `<input type="checkbox" name="daysWeekChoice" class="cossin" id="${day.nameNoAcc}" value="${idx}" ${(rec && todo.var == "settimana" && todo.daysWeek && todo.daysWeek.includes(day.nameNoAcc)) ? `checked` : meseDayICalc(date) == idx ? `checked` : ``} />
     <label for="${day.nameNoAcc}" class="dayCircle">${day.letter}</label>`;
   }).join("");
 
   let todoDayDiv = `<div id="todoDaySection" ${todo.stock ? `class="displayNone"` : ``}>
-  <input class="myRadio changeRecurryDates" type="radio" id="todoDayInput" name="whatDay" value="todoDay" ${todo.line == "todoDay" || (shw && todo.line !== "recurringDay") ? `checked` : ``} />
+  <input class="myRadio" type="radio" id="todoDayInput" name="whatDay" value="todoDay" ${todo.line == "todoDay" || (shw && todo.line !== "recurringDay") ? `checked` : ``} />
   <label for="todoDayInput" id="todoDayInputLabel" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText todoDay">${shw ? `Happening Day` : `To-do Day`}</span><br /><span class="smallText">${shw ? `(the day this is all gonna go down)` : `(the day you want to do it)`}</span></p></label>
   <div class="DaySection" id="oneDaySection">
     <h5 class="taskInfoInput" style="margin-left: 0;">It's a one time thing</h5>
     <div class="inDaySection" style="width: -webkit-fill-available; max-width: 200px;">
-      <input type="date" id="oneDayDateInput" class="centerDateInput changeRecurryDates" value="${date}" />
+      <input type="date" id="oneDayDateInput" class="centerDateInput" value="${date}" />
       <input id="oneTuttoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.tutto ? `checked` : todo.tutto == false ? `` : `checked`} />
       <div class="calendarInsideMargin tuttoGiornoDiv">
         <p style="margin: 0;">Tutto il giorno?!</p>
@@ -2767,12 +2810,12 @@ function creatingCalendar(todo, home, classs){
 </div>`;
 
   let recurringDayDiv = `<div id="recurringDaySection" ${todo.recurry || todo.stock ? `class="displayNone"` : ``}>
-    <input class="myRadio changeRecurryDates" type="radio" id="recurringDayInput" name="whatDay" value="recurringDay" ${rec ? `checked` : ``} />
+    <input class="myRadio" type="radio" id="recurringDayInput" name="whatDay" value="recurringDay" ${rec ? `checked` : ``} />
     <label for="recurringDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText recurringDay">Recurring Day</span><br /><span class="smallText">(let it come back on its own)</span></label></p></label>
     <div class="DaySection" id="recurryDaySection">
       <h5 class="taskInfoInput" style="margin-left: 0;">It's a recurring thing</h5>
       <div class="inDaySection" style="width: -webkit-fill-available; max-width: 280px;">
-        <p class="calendarInsideMargin">Dal<input id="dalInput" type="date" class="changeRecurryDates" style="margin: 0 10px;" value="${date}" /></p>
+        <p class="calendarInsideMargin">Dal<input id="dalInput" type="date" style="margin: 0 10px;" value="${date}" /></p>
         <input id="recuTuttoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.tutto ? `checked` : todo.tutto == false ? `` : `checked`} />
         <div class="calendarInsideMargin tuttoGiornoDiv">
           <p style="margin: 0;">Tutto il giorno?!</p>
@@ -2787,8 +2830,8 @@ function creatingCalendar(todo, home, classs){
           <p><span>c'è un inizio?</span><input id="recuTimeDalleInput" type="time" class="dalle dalleTxt" value="${todo.dalle ? todo.dalle : ``}" /></p>
           <p><span>c'è una fine?</span><input id="recuTimeAlleInput" type="time" class="alle alleTxt" value="${todo.alle ? todo.alle : ``}" /></p>
         </div>
-        <p class="calendarInsideMargin">Si ripete ogni<input id="ogniInput" type="number" class="changeRecurryDates" style="width: 50px; margin: 0 10px;" value="${todo.ogni ? todo.ogni : ``}" />
-        <select id="timeVariationInput" class="changeRecurryDates">
+        <p class="calendarInsideMargin">Si ripete ogni<input id="ogniInput" type="number" style="width: 50px; margin: 0 10px;" value="${todo.ogni ? todo.ogni : ``}" />
+        <select id="timeVariationInput">
           <option value="giorno" ${rec && todo.var == "giorno" ? `selected` : ``}>giorno</option>
           <option value="settimana" ${rec && todo.var == "settimana" ? `selected` : ``}>settimana</option>
           <option value="mese" ${rec && todo.var == "mese" ? `selected` : ``}>mese</option>
@@ -2802,36 +2845,26 @@ function creatingCalendar(todo, home, classs){
         </div>
         <div id="monthSection" class="calendarInsideMargin ${rec && todo.var == "mese" ? `` : `displayNone`}">
           <p>Da ripetere</p>
-          <input class="myRadio changeRecurryDates" type="radio" name="meseOptions" id="ogniXDate" ${rec && todo.var == "mese" && todo.meseOpt == "ogniXDate" ? `checked` : ``} value="ogniXDate" />
+          <input class="myRadio" type="radio" name="meseOptions" id="ogniXDate" ${rec && todo.var == "mese" && todo.meseOpt == "ogniXDate" ? `checked` : ``} value="ogniXDate" />
           <label for="ogniXDate" style="display: block;"><span class="myRadio"></span><span id="ogniXDateText"></span></label>
-          <input class="myRadio changeRecurryDates" type="radio" name="meseOptions" id="ogniXDay" ${rec && todo.var == "mese" && todo.meseOpt == "ogniXDay" ? `checked` : ``} value="ogniXDay" />
+          <input class="myRadio" type="radio" name="meseOptions" id="ogniXDay" ${rec && todo.var == "mese" && todo.meseOpt == "ogniXDay" ? `checked` : ``} value="ogniXDay" />
           <label for="ogniXDay"><span class="myRadio"></span><span id="ogniXDayText"></span></label>
         </div>
         <div class="calendarInsideMargin">
           <p>Termina</p>
-          <input class="myRadio changeRecurryDates" type="radio" name="fineOptions" id="fineMaiInput" value="fineMai" ${!rec ? `checked` : todo.fineOpt == "fineMai" ? `checked` : ``} />
+          <input class="myRadio" type="radio" name="fineOptions" id="fineMaiInput" value="fineMai" ${!rec ? `checked` : todo.fineOpt == "fineMai" ? `checked` : ``} />
           <label for="fineMaiInput" style="display: block;"><span class="myRadio"></span>Mai</label>
-          <input class="myRadio changeRecurryDates" type="radio" name="fineOptions" id="fineGiornoInput" value="fineGiorno" ${rec && todo.fineOpt == "fineGiorno" ? `checked` : ``} />
-          <label for="fineGiornoInput" style="display: block;"><span class="myRadio"></span>Il giorno<input id="fineDate" type="date" class="changeRecurryDates" style="margin: 0 10px;" value="${rec && todo.fineOpt == "fineGiorno" ? todo.fine : ``}" /></label>
-          <input class="myRadio changeRecurryDates" type="radio" name="fineOptions" id="fineDopoInput" value="fineDopo" ${rec && todo.fineOpt == "fineDopo" ? `checked` : ``} />
-          <label for="fineDopoInput" style="display: block;"><span class="myRadio"></span>Dopo<input id="fineCount" type="number" class="changeRecurryDates" style="width: 50px; margin: 0 10px;" value="${rec && todo.fineOpt == "fineDopo" ? todo.fineCount : ``}" />occorrenza</label>
-        </div>
-        <input id="pileUpInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.recPileUP == true ? `checked` : todo.recPileUP == false ? `` : ``} />
-        <div class="calendarInsideMargin tuttoGiornoDiv">
-          <p style="margin: 0;">Should they pile up?</p>
-          <label for="pileUpInput" class="slideZone">
-            <div class="slider">
-              <span class="si">Sì</span>
-              <span class="no">No</span>
-            </div>
-          </label>
+          <input class="myRadio" type="radio" name="fineOptions" id="fineGiornoInput" value="fineGiorno" ${rec && todo.fineOpt == "fineGiorno" ? `checked` : ``} />
+          <label for="fineGiornoInput" style="display: block;"><span class="myRadio"></span>Il giorno<input id="fineDate" type="date" style="margin: 0 10px;" value="${rec && todo.fineOpt == "fineGiorno" ? todo.fine : ``}" /></label>
+          <input class="myRadio" type="radio" name="fineOptions" id="fineDopoInput" value="fineDopo" ${rec && todo.fineOpt == "fineDopo" ? `checked` : ``} />
+          <label for="fineDopoInput" style="display: block;"><span class="myRadio"></span>Dopo<input id="fineCount" type="number" style="width: 50px; margin: 0 10px;" value="${rec && todo.fineOpt == "fineDopo" ? todo.fineCount : ``}" />occorrenza</label>
         </div>
       </div>
     </div>
   </div>`;
 
   let noDayDiv = `<div id="noDaySection" ${shw ? `class="displayNone"` : ``}>
-    <input class="myRadio changeRecurryDates" type="radio" id="noDayInput" name="whatDay" value="noDay" ${todo.line == "noDay" || todo.line == "" || !todo.line || todo.stock ? `checked` : ``} />
+    <input class="myRadio" type="radio" id="noDayInput" name="whatDay" value="noDay" ${todo.line == "noDay" || todo.line == "" || !todo.line || todo.stock ? `checked` : ``} />
     <label for="noDayInput" id="noDayInputLabel" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText">No Day</span><br /><span class="smallText">${todo.stock ? `(let's put it away until we need it)` : `(just go with the flow)`}</span></label></p></label>
     <div class="DaySection" id="noDaySection">
       <h5 class="taskInfoInput" style="margin-left: 0;">Even if you don't know when that'll be...</h5>
@@ -2900,17 +2933,14 @@ function creatingCalendar(todo, home, classs){
   </div>
 </div>`;
 
-  let smallCalendar = `<div id="calendarDiv" class="${classs}"${classs == "onIcon" ? ` style="width:${newWidth}px;"` : ``}>
+  let smallCalendar = `<div id="calendarDiv" class="${classs}" style="width:${newWidth}px;">
     ${classs == "onIcon" ? `<h5 class="taskInfoInput">Tell me when...</h5>` : ``}
     <div>
       ${todoDayDiv}
       ${recurringDayDiv}
       ${noDayDiv}
-      <hr class="calendarhr"/>
       ${bufferDiv}
-      <hr class="calendarhr"/>
       ${busyDiv}
-      <hr class="calendarhr"/>
       ${deadlineDiv}
     </div>
     ${classs == "onIcon" ? `<button id="saveTheDateBtn" class="calendarMargin">STD<br /><span class="smallText">(Save The Date)</span></button>` : ``}
@@ -2989,12 +3019,7 @@ function creatingCalendar(todo, home, classs){
     } else{
       document.querySelector("#deadlineWithDate").classList.add("displayNone");
     }
-  });
-  document.querySelectorAll(".changeRecurryDates").forEach(input => {
-    input.addEventListener("change", () => {
-      changeRecurryDates = true;
-    });
-  });
+  })
 };
 
 function clearRecurringData(todo){
@@ -3010,8 +3035,6 @@ function clearRecurringData(todo){
   delete todo.fine;
   delete todo.fineCount;
   delete todo.listDates;
-  delete todo.recurryDates;
-  delete todo.recPileUP;
   if(todo.recurrys){
     todo.recurrys.forEach(recurry => {
       if(recurry.out){
@@ -3022,10 +3045,10 @@ function clearRecurringData(todo){
     });
     delete todo.recurrys;
   };
-  //Don't delete todo.recurry nor todo.recId
 };
 
-function calendarSave(todo){ //
+function calendarSave(todo){ // no need to work on the parent! because todoCreation!! (ben, juste dans taskInfo, pas si c'est l'icon dans le li...)
+  clearRecurringData(todo);
   todo.line = document.querySelector('input[name="whatDay"]:checked').value;
   // the 3 of them (noDay, todoDay and recurringDay) can have time and buffer
   let inDaySection = document.querySelector('input[name="whatDay"]:checked ~ div.DaySection > div.inDaySection');
@@ -3071,19 +3094,17 @@ function calendarSave(todo){ //
     };
   };
   
+
   todo.busy = document.querySelector("#busyInput").checked ? true : false;
   if(todo.busy){ //first, you need to put this AFTER the todo.date has been established, second, you should only do this if... (you know what, busy shouldn't be checked by default (unless it's a show))
     //busyZoneCreation(todo);
   };
 
   if(todo.line == "noDay"){
-    clearRecurringData(todo);
     delete todo.date; //there could still be a dalle, alle and tutto
  //if it was a recurry, it's gonna be arranged after calendarSave (delete of the recurry)
-  } else if(todo.line == "recurringDay" && changeRecurryDates == true){
-    clearRecurringData(todo);
+  } else if(todo.line == "recurringDay"){
     delete todo.date;
-    todo.recPileUP = inDaySection.querySelector("#pileUpInput").value;
     todo.dal = inDaySection.querySelector("#dalInput").value;
     todo.ogni = inDaySection.querySelector("#ogniInput").value;
     todo.var = inDaySection.querySelector("#timeVariationInput").value; 
@@ -3092,15 +3113,36 @@ function calendarSave(todo){ //
       todo.fine = inDaySection.querySelector("#fineDate").value;
     } else if(todo.fineOpt == "fineDopo"){
       todo.fineCount = inDaySection.querySelector("#fineCount").value;
+      //CALCULATE THE DATE FOR TODO.FINE!
     };
     let date = getDateFromString(todo.dal);
-    sendRecurringToGetRecurryDates(todo, date);
-    // recurryDateToTodoCreation(todo, recurryDate, "out"); ??
+    if(todo.var == "giorno"){
+      ogniOgniFine(todo, date);
+    } else if(todo.var == "settimana"){
+      let daysWeek = [];
+      inDaySection.querySelectorAll('input[name="daysWeekChoice"]').forEach(choice => {
+        if(choice.checked == true){
+          daysWeek.push(choice.value);
+        };
+      });
+      todo.daysWeek = daysWeek;
+      ogniSettimanaFine(todo, date);
+    } else if(todo.var == "mese"){
+      todo.meseOpt = inDaySection.querySelector('input[name="meseOptions"]:checked').value;
+      if(todo.meseOpt == "ogniXDate"){
+        todo.meseDate = meseDateCalc(todo.dal);
+        ogniOgniFine(todo, date);
+      } else if(todo.meseOpt == "ogniXDay"){
+        todo.meseDayN = meseDayNCalc(todo.dal);
+        todo.meseDayI = meseDayICalc(todo.dal);
+        ogniMeseDayFine(todo, date);
+      };
+    } else if(todo.var == "anno"){
+      ogniOgniFine(todo, date);
+    };
     // recurryCreation(todo);
-    //recurryOuting(todo);
-    //PAS BESOIN DE LE CRÉÉ CAR ÇA VA SE FAIRE APRÈS (smallCalendar AND taskInfo)
+    recurryOuting(todo);
   } else if(todo.line == "todoDay"){
-    clearRecurringData(todo);
     todo.date = inDaySection.querySelector('input[type="date"].centerDateInput').value;
   };
   let deadlineInput = document.querySelector("#deadlineInput");
@@ -3122,12 +3164,11 @@ function calendarSave(todo){ //
     delete todo.dlTutto;
     delete todo.finoAlle;
   };
-  changeRecurryDates = false;
 };
 
 
-// MARK: KEY/VALUES
-/* 
+
+/* ALL THE KEY/VALUES
 todo.newShit => si présent et true, veut dire qu'il vient d'être créé (est deleted après)
 todo.status => "todo" ou "done"
 todo.doneDate => date (string) où ça a été coché fait
@@ -3179,14 +3220,12 @@ todo.meseDayI => index du day (0 = domenica, 1 = lunedi, 2 = martedi, etc)
 todo.fineOpt => option quand ça fini: "fineMai", "fineGiorno" or "fineDopo"
 todo.fine => jour que ça fini (date)
 todo.fineCount => nombre d'occurences après lesquelles ça fini
-todo.recurryDates =  [] array of the dates (previously called listDates)
-xxx todo.listDates = []
-xxx todo.recurrys = [{}] array de tout les recurry (object) créés à partir de la listDates
-todo.recId = id du todo qui est le recurring (l'original) (pour les recurry qui n'ont pas encore été pushed in listTasks seulement, pour qu'on puisse enlever sa date dans l'array recurryDate... non, let's keep the recId even after its been pushed in listTasks, in case one day we want to offer l'option "modify them all" or something like that) 
-todo.recurry => true/false means it's one occurence of a recurring (calendar icon purple and cycle icon in taskInfo) (whether it's out in listTasks or not)
-On sait si le <li> doit être dans les recurring ou dans les autres listes (donc présent dans listTasks) grâce à todo.line == "recurringDay" ou else
-xxx todo.out => (isn't used) true (le <li> du recurry a été créé) / false ou inexistant (le <li> n'a pas encore été créé)
-xxx todo.recurring => aucune idée à quoi ça sert...
+todo.listDates = []
+todo.recurrys = [{}] array de tout les recurry (object) créés à partir de la listDates
+todo.recId = (pour les recurry seulement) id du todo qui est le recurring (l'original)
+todo.recurry => true/false means it's one occurence of a recurring (calendar icon purple) (anciennement "recurry" in todo.line)
+todo.out => true (le <li> du recurry a été créé) / false ou inexistant (le <li> n'a pas encore été créé)
+todo.recurring => aucune idée à quoi ça sert...
 todo.label => true/false
 todo.LName => string
 todo.LColor => index of colorsList
@@ -3213,6 +3252,27 @@ function getStringFromDate(date){
   return currentFullDate;
 };
 
+//WE STILL NEED THESE TO CALCULATE TODO.FINE IF TODO.FINEOPT == "FINEDODO" (WITH TODO.FINECOUNT)
+//date = getDateFromString(todo.dal)
+function ogniOgniFine(todo, date){ // To find todo.fine if todo.fineOpt == "fineDopo"
+  let start = 1;
+  let stop = Number(todo.fineCount);
+  while (start <= stop){
+    if(start == stop){
+      todo.fine = getStringFromDate(date);
+      console.log(todo.fine);
+    };
+    if(todo.var == "giorno"){
+      date.setDate(date.getDate() + Number(todo.ogni));
+    } else if(todo.var == "mese"){
+      date.setMonth(date.getMonth() + Number(todo.ogni));
+    } else if(todo.var == "anno"){
+      date.setFullYear(date.getFullYear() + Number(todo.ogni));
+    };
+    start++;
+  };
+};
+
 function ogniOgni(todo, date){ //For ogni X days/month(on Y date)/year until fine o dopo Y occorrenza o 50 se mai
   let start;
   let stop;
@@ -3221,17 +3281,10 @@ function ogniOgni(todo, date){ //For ogni X days/month(on Y date)/year until fin
   if(todo.fineOpt == "fineGiorno"){
     start = date;
     stop = getDateFromString(todo.fine);
-  } else if(todo.fineOpt == "fineDopo"){
+  } else if(todo.fineOpt == "fineDopo" || todo.fineOpt == "fineMai"){
     start = 1;
-    stop = Number(todo.fineCount);
+    stop = todo.fineCount ? Number(todo.fineCount) : 50;
     count = true;
-  } else if(todo.fineOpt == "fineMai" && todo.var == "anno"){
-    start = 1;
-    stop = 3;
-    count = true;
-  } else{
-    start = date;
-    stop = getDateFromString("2024-11-30");
   };  
   while (start <= stop){
     let Sdate = getStringFromDate(date);
@@ -3250,8 +3303,34 @@ function ogniOgni(todo, date){ //For ogni X days/month(on Y date)/year until fin
       start = date;
     };
   };
-  todo.recurryDates = pruning(todo, listDates);
-  console.log(todo.recurryDates);
+  listDates = pruning(todo, listDates);
+  todo.listDates = listDates;
+  allRecurrysCreation(todo);
+};
+
+//date = getDateFromString(todo.dal)
+function ogniSettimanaFine(todo, date){ // To find todo.fine if todo.fineOpt == "fineDopo"
+  let start = 1;
+  let stop = Number(todo.fineCount);
+  let days = todo.daysWeek;
+  let nw = 0; 
+  while (start <= stop){
+    if(start == stop){
+      todo.fine = getStringFromDate(date);
+      console.log(todo.fine);
+    };
+    if(nw == 0 && days.includes(String(date.getDay()))){
+      start++;
+    };
+    if(date.getDay() == 6){ //if == 1 nm => nm++ (mais le mettre avant pour que le 1 soit considéré...)
+      nw++;
+    };
+    if(nw == Number(todo.ogni)){
+      nw = 0;
+    };
+    date.setDate(date.getDate() + 1);
+//REVOIR LA BOUCLE PARCE QUE ÇA MARCHE PAS...    
+  };
 };
 
 function ogniSettimana(todo, date){
@@ -3264,17 +3343,10 @@ function ogniSettimana(todo, date){
   if(todo.fineOpt == "fineGiorno"){
     start = date;
     stop = getDateFromString(todo.fine);
-  } else if(todo.fineOpt == "fineDopo"){
+  } else if(todo.fineOpt == "fineDopo" || todo.fineOpt == "fineMai"){
     start = 1;
-    stop = Number(todo.fineCount);
+    stop = todo.fineCount ? Number(todo.fineCount) : 50;
     count = true;
-  } else if(todo.fineOpt == "fineMai" && todo.var == "anno"){
-    start = 1;
-    stop = 3;
-    count = true;
-  } else{
-    start = date;
-    stop = getDateFromString("2024-11-30");
   }; 
   while (start <= stop){
     if(nw == 0 && days.includes(String(date.getDay()))){
@@ -3295,11 +3367,13 @@ function ogniSettimana(todo, date){
       start = date;
     };
   };
-  todo.recurryDates = pruning(todo, listDates);
-  console.log(todo.recurryDates);
+  listDates = pruning(todo, listDates);
+  todo.listDates = listDates;
+  allRecurrysCreation(todo);
 };
 
-function ogniMeseDay(todo, date){ //For ogni X month on Y° day until fine o dopo Y occorrenza o 50 se mai
+//date = getDateFromString(todo.dal)
+function ogniMeseDayFine(todo, date){ //For ogni X month on Y° day => To find todo.fine if todo.fineOpt == "fineDopo"
   //todo.meseDayN c'est le combientième du mois
   //todo.meseDayI l'index dans le array des jours de la semaine 
   let start;
@@ -3312,17 +3386,10 @@ function ogniMeseDay(todo, date){ //For ogni X month on Y° day until fine o dop
   if(todo.fineOpt == "fineGiorno"){
     start = date;
     stop = getDateFromString(todo.fine);
-  } else if(todo.fineOpt == "fineDopo"){
+  } else if(todo.fineOpt == "fineDopo" || todo.fineOpt == "fineMai"){
     start = 1;
-    stop = Number(todo.fineCount);
+    stop = todo.fineCount ? Number(todo.fineCount) : 50;
     count = true;
-  } else if(todo.fineOpt == "fineMai" && todo.var == "anno"){
-    start = 1;
-    stop = 3;
-    count = true;
-  } else{
-    start = date;
-    stop = getDateFromString("2024-11-30");
   }; 
   while (start <= stop){
     endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
@@ -3361,8 +3428,70 @@ function ogniMeseDay(todo, date){ //For ogni X month on Y° day until fine o dop
       start = date;
     };
   };
-  todo.recurryDates = pruning(todo, listDates);
-  console.log(todo.recurryDates);
+  listDates = pruning(todo, listDates);
+  todo.listDates = listDates;
+  allRecurrysCreation(todo);
+};
+
+
+function ogniMeseDay(todo, date){ //For ogni X month on Y° day until fine o dopo Y occorrenza o 50 se mai
+  //todo.meseDayN c'est le combientième du mois
+  //todo.meseDayI l'index dans le array des jours de la semaine 
+  let start;
+  let stop;
+  let listDates = [];
+  let count = false;
+  let nd = Number(todo.meseDayN);
+  let nm = 0;
+  let endOfMonth;
+  if(todo.fineOpt == "fineGiorno"){
+    start = date;
+    stop = getDateFromString(todo.fine);
+  } else if(todo.fineOpt == "fineDopo" || todo.fineOpt == "fineMai"){
+    start = 1;
+    stop = todo.fineCount ? Number(todo.fineCount) : 50;
+    count = true;
+  }; 
+  while (start <= stop){
+    endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    if(nd == Number(todo.meseDayN) && String(date.getDay()) == Number(todo.meseDayI) && nm == 0){
+      let Sdate = getStringFromDate(date);
+      listDates.push(Sdate);
+      if(count){
+        start++;
+      };
+      nd = 1;
+      date.setMonth(date.getMonth() + 1);
+      date.setDate(0);
+      nm++;
+    };
+    if(nd == Number(todo.meseDayN) && String(date.getDay()) == Number(todo.meseDayI) && nm !== 0){
+      nd = 1;
+      date.setMonth(date.getMonth() + 1);
+      date.setDate(0);
+      nm++;
+    };
+    if(String(date.getDay()) == Number(todo.meseDayI)){
+      nd++;
+    };
+    if(nm == Number(todo.ogni)){
+      nm = 0;
+    };
+    if(getStringFromDate(date) == getStringFromDate(endOfMonth)){
+      nd = 1;
+      nm++;
+    };
+    if(nd > 6){
+      start = stop + 1;
+    };
+    date.setDate(date.getDate() + 1);
+    if(!count){
+      start = date;
+    };
+  };
+  listDates = pruning(todo, listDates);
+  todo.listDates = listDates;
+  allRecurrysCreation(todo);
 };
 
 
@@ -3490,56 +3619,45 @@ function newLabelReset(){
 let newlabelName = "";
 let newlabelColor = "";
 
-// MARK: TODO List
-/*
-2. Revoir les calculs de ogni settimana (j'suis pas sure si ça marche bien ou pas)
-3. if fineMai and recurryDates.length == 0 then alert and check if you can use alert "ok" to do erase and "cancel" to open taskInfo with the todo that is about to be erased!!) 
-9. dans les calendar, faire un équivalent de recurryDateToTodoCreation ("in")
-...Si on met les recurry dans les search results, le toTIdeSSaM() est déjà arrangé pour recevoir les recurry!
-*/
-
-// MARK: ToGoToTI + RÉFLEXTION
-//Il va falloir en faire d'autres pour (ou trouver un moyen de gérer) les recurry, parce qu'ils vont être why=="mod" mais s'ils ne sont pas out (dans listTasks), ils n'auront pas de todoIndex! 
-//Aussi, pourquoi le recurry garde recId alors que le recurringDay n'a pas les recurryId?! 
-// :: Et si, quand on sort et push un recurry dans listTasks, et si il devenait un todo complètement normal (no recurry, no recId, etc), genre qu'il pourrait devenir stock, un nouveau recurringDay ou n'importe quoi d'autre!
-//Aussi, chaque fois qu'on sauve un recurringDay, la recurryDates se refait à neuf... donc on va se ramasser avec des doubles les jours où on avait sorti le recurry :: Quand on va avoir réglé le problème de la création de nouveaux recurryDates au fur et à mesure que le temps passe, on pourrait simplement faire que la liste recurryDates ne se refasse pas à nouveau à chaque save de calendar! (Il va falloir faire la distinction entre save TaskInfo et save Calendar, parce que si c'est Calendar alors là oui, il va probablement falloir refaire les recurryDates...) (au début, par contre, ça va être nécessaire de tous les faire au moins une fois, histoire d'avoir les bons nombres de recurryDates et de "recommencer" comme du monde) (de toutes façons, à chaque fois qu'on va outer un recurry, on va copier le recurringDay (donc sa nouvelle version si on l'a modifié) Autrement dit, chaque fois que tu modifie le recurringDay, c'est clair que les futurs recurry vont être modifiés) IL FAUT JUSTE FAIRE LA DISTINCTION SI LE RECURRING DANS CALENDAR VA AVOIR ÉTÉ CHANGÉ (si je change de ogni 2 settimana à ogni 1 settimana, il faut que la liste recurryDates se refasse à nouveau, mais sinon non!)
-//parent is global but we still have to give it a value (we might need to rethink parent being global when we want multiple clickscreens...)
-//We don't need recIndex anymore since we only use recurryDates!
-//Don't push the new ones in listTasks until they save it (that way, cancel is really just taskInfo.remove())
-//Parents are only necessairy if we're working on a todo that is in the swiping section (for example, you would have the one on wednesday and the one in scheduled) or if in search, we add the results of different searches together and a todo comes up more than once
-//todoIndex... we could not add it to infos since we only need it if we trash it! (and if it was a recurry (not pushed in listTask yet, so no index), then we'll need to remove the date in recurryDates)
-
-
-
 // to go to taskAddAllInfo
 function toTIdeTZaP(thisOne){ // de TodoZone à Procrastinator
-  let div = thisOne.parentElement.parentElement; 
+  //moving = false; //must stay false in month/week/search
+  let div;
+  let todo;
+  let parents;
+  let togoList;
+  let recIndex;
+  let todoIndex;
+  div = thisOne.parentElement.parentElement; 
   thisOne.parentElement.remove();
-  parent = div.parentElement;
+  parent = div.parentElement; 
+  let parentId = parent.id;
+  togoList = parent.parentElement.id; 
   parent.classList.add("selectedTask");
   parent.scrollIntoView(); 
-  let togoList = parent.parentElement.id;
-  let todoIndex = listTasks.findIndex(td => td.id == parent.id);
-  let todo = listTasks[todoIndex];
   let width = getComputedStyle(div).width; 
   let num = width.slice(0, -2); 
-  let newWidth = Number(num) + 44; 
-  clickScreen.classList.remove("displayNone"); 
-  let infos = {
-    todo: todo,
-    where: "todoZone",
-    why: "mod",
-    div: div,
-    newWidth: newWidth,
-    togoList: togoList,
-    todoIndex: todoIndex
-  };
-  taskAddAllInfo(infos);
+  newWidth = Number(num) + 44; 
+  clickScreen.classList.remove("displayNone");
+  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+    let rec = parent.dataset.rec;
+    recIndex = listTasks.findIndex(todo => todo.id == rec);
+    todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == parentId);
+    todo = listTasks[recIndex].recurrys[todoIndex];
+  } else{
+    todoIndex = listTasks.findIndex(todo => todo.id == parentId);
+    todo = listTasks[todoIndex];
+  }; 
 };
-window.toTIdeTZaP = toTIdeTZaP;
-
-function toTIdeTZaN(){ // de TodoZone à New (addForm but without the addInput.value, so when you directly click the add button (if you write an addInput.value, it directly goes to todoCreation, then after that you can click on it to go to taskInfo, in which case, it's a toTIdeTZaM))
-  let todo = {
+function toTIdeTZaN(thisOne){ // de TodoZone à New (addForm)
+  //moving = false; //must stay false in month/week/search
+  let div;
+  let todo;
+  let parents;
+  let togoList;
+  let recIndex;
+  let todoIndex;
+  todo = {
     newShit: true,
     id: crypto.randomUUID(),
     color: "0",
@@ -3547,70 +3665,51 @@ function toTIdeTZaN(){ // de TodoZone à New (addForm but without the addInput.v
     term: "oneTime",
     line: "noDay"
   };
-  //let newWidth = Number(window.innerWidth - 16);
-  let div = document.getElementById("todoZone");
-  let infos = {
-    todo: todo,
-    where: "todoZone",
-    why: "new",
-    div: div,
-    newWidth: ""
-  };
-  taskAddAllInfo(infos);
+  listTasks.push(todo);
+  newWidth = Number(window.innerWidth - 16);
+  div = document.getElementById(where);
 };
-
 function toTIdeTZaM(thisOne){ // de TodoZone à Modification
-  // special case for recurry that haven't been pushed to listTasks yet and thus don't have a todoIndex... And will only have one once and if they have been saved!
-  let div= thisOne.parentElement;
-  parent = div.parentElement;
-  let recurryIsIt = parent.dataset.rec && parent.dataset.rec !== "undefined" ? true : false;
+  //moving = false; //must stay false in month/week/search
+  let div;
+  let todo;
+  let parents;
+  let togoList;
+  let recIndex;
+  let todoIndex;
+  div = thisOne.parentElement;
+  parent = div.parentElement; 
+  let parentId = parent.id;
+  togoList = parent.parentElement.id; 
   parent.classList.add("selectedTask");
   parent.scrollIntoView(); 
-  let togoList = parent.parentElement.id;
-  let todo;
-  let todoIndex;
-  let recIndex;
-  if(recurryIsIt){
-    recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
-    let recurring = listTasks[recIndex];
-    todo = JSON.parse(JSON.stringify(recurring));
-    clearRecurringData(todo);
-    todo.id = crypto.randomUUID();
-    todo.line = "todoDay";
-    todo.date = parent.dataset.date;
-    todo.recurry = true;
-    todo.recId = parent.dataset.rec;
-  } else{
-    todoIndex = listTasks.findIndex(td => td.id == parent.id);
-    todo = listTasks[todoIndex];
-  };
   let width = getComputedStyle(div).width; 
   let num = width.slice(0, -2); 
-  let newWidth = Number(num) + 44; 
+  newWidth = Number(num) + 44; 
   clickScreen.classList.remove("displayNone"); 
-  let infos = {
-    todo: todo,
-    where: "todoZone",
-    why: "mod",
-    div: div,
-    newWidth: newWidth,
-    togoList: togoList
-  };
-  if(recurryIsIt){
-    infos.recIndex = recIndex;
+  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+    let rec = parent.dataset.rec;
+    recIndex = listTasks.findIndex(todo => todo.id == rec);
+    todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == parentId);
+    todo = listTasks[recIndex].recurrys[todoIndex];
   } else{
-    infos.todoIndex = todoIndex;
+    todoIndex = listTasks.findIndex(todo => todo.id == parentId);
+    todo = listTasks[todoIndex];
   };
-  taskAddAllInfo(infos);
 };
-window.toTIdeTZaM = toTIdeTZaM;
-
 function toTIdeTZaS(thisOne){ // de TodoZone à Stock reusage
+  //moving = false; //must stay false in month/week/search
+  let div;
+  let todo;
+  let parents;
+  let togoList;
+  let recIndex;
+  let todoIndex;
   let reuseLi = thisOne.parentElement;
   let reuseId = reuseLi.id;
   let reuseIndex = listTasks.findIndex(todo => todo.id == reuseId);
   let reuse = listTasks[reuseIndex];
-  let todo = JSON.parse(JSON.stringify(reuse));
+  todo = JSON.parse(JSON.stringify(reuse));
   todo.id = crypto.randomUUID();
   todo.stored = true;
   todo.stockId = reuse.id;
@@ -3618,75 +3717,54 @@ function toTIdeTZaS(thisOne){ // de TodoZone à Stock reusage
   todo.date = getTodayDateString();
   delete todo.stock;
   delete todo.storedId;
-  //let newWidth = Number(window.innerWidth - 16);
-  let div = document.getElementById("todoZone");
-  div.scrollIntoView();
-  clickScreen.classList.remove("displayNone"); 
-  let infos = {
-    todo: todo,
-    where: "todoZone",
-    why: "stock",
-    div: div,
-    newWidth: "",
-    reuse: reuse
-  };
-  taskAddAllInfo(infos);
+  listTasks.push(todo);
+  reuse.storedId.push(todo.id);
+  newWidth = Number(window.innerWidth - 16);
+  div = document.getElementById(where);
+  console.log(todo);
+  div.scrollIntoView(); // WHY?!?!?!
 };
-window.toTIdeTZaS = toTIdeTZaS;
-
 function toTIdeSSaM(thisOne){ // de SearchScreen à Modification
   moving = false; //must stay false in month/week/search
-  let div= thisOne.parentElement;
-  parent = div.parentElement;
-  let recurryIsIt = parent.dataset.rec && parent.dataset.rec !== "undefined" ? true : false;
+  let div;
+  let todo;
+  let parents;
+  let togoList;
+  let recIndex;
+  let todoIndex;
+  div = thisOne.parentElement;
+  parent = div.parentElement; 
+  let parentId = parent.id;
+  togoList = parent.parentElement.id; 
   parent.classList.add("selectedTask");
   parent.scrollIntoView(); 
-  let togoList = parent.parentElement.id;
-  let todo;
-  let todoIndex;
-  let recIndex;
-  if(recurryIsIt){
-    recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
-    let recurring = listTasks[recIndex];
-    todo = JSON.parse(JSON.stringify(recurring));
-    clearRecurringData(todo);
-    todo.id = crypto.randomUUID();
-    todo.line = "todoDay";
-    todo.date = parent.dataset.date;
-    todo.recurry = true;
-    todo.recId = parent.dataset.rec;
-  } else{
-    todoIndex = listTasks.findIndex(td => td.id == parent.id);
-    todo = listTasks[todoIndex];
-  };
   let width = getComputedStyle(div).width; 
   let num = width.slice(0, -2); 
-  let newWidth = Number(num) + 44; 
+  newWidth = Number(num) + 44; 
   clickScreen.classList.remove("displayNone"); 
-  let infos = {
-    todo: todo,
-    where: "searchScreen",
-    why: "mod",
-    div: div,
-    newWidth: newWidth,
-    togoList: togoList,
-  };
-  if(recurryIsIt){
-    infos.recIndex = recIndex;
+  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+    let rec = parent.dataset.rec;
+    recIndex = listTasks.findIndex(todo => todo.id == rec);
+    todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == parentId);
+    todo = listTasks[recIndex].recurrys[todoIndex];
   } else{
-    infos.todoIndex = todoIndex;
+    todoIndex = listTasks.findIndex(todo => todo.id == parentId);
+    todo = listTasks[todoIndex];
   };
-  taskAddAllInfo(infos);
 };
-window.toTIdeSSaM = toTIdeSSaM;
-
 function toTIdeSSaS(thisOne){ // de SearchScreen à Stock reusage
   moving = false; //must stay false in month/week/search
+  let div;
+  let todo;
+  let parents;
+  let togoList;
+  let recIndex;
+  let todoIndex;
   let reuseLi = thisOne.parentElement;
   let reuseId = reuseLi.id;
   let reuseIndex = listTasks.findIndex(todo => todo.id == reuseId);
   let reuse = listTasks[reuseIndex];
-  let todo = JSON.parse(JSON.stringify(reuse));
+  todo = JSON.parse(JSON.stringify(reuse));
   todo.id = crypto.randomUUID();
   todo.stored = true;
   todo.stockId = reuse.id;
@@ -3694,26 +3772,23 @@ function toTIdeSSaS(thisOne){ // de SearchScreen à Stock reusage
   todo.date = getTodayDateString();
   delete todo.stock;
   delete todo.storedId;
-  //let newWidth = Number(window.innerWidth - 16);
-  let div = document.getElementById("searchScreen");
-  div.scrollIntoView();
-  clickScreen.classList.remove("displayNone"); 
-  let infos = {
-    todo: todo,
-    where: "searchScreen",
-    why: "stock",
-    div: div,
-    newWidth: "",
-    reuse: reuse
-  };
-  taskAddAllInfo(infos);
+  listTasks.push(todo);
+  reuse.storedId.push(todo.id);
+  newWidth = Number(window.innerWidth - 16);
+  div = document.getElementById(where);
+  console.log(todo);
+  div.scrollIntoView(); // WHY?!?!?!
 };
-window.toTIdeSSaS = toTIdeSSaS;
-
 function toTIdeCMaN(thisOne){ // de CalMonthPage à New
   moving = false; //must stay false in month/week/search
+  let div;
+  let todo;
+  let parents;
+  let togoList;
+  let recIndex;
+  let todoIndex;
   let kaseDate = thisOne.parentElement.dataset.wholedate;
-  let todo = {
+  todo = {
     newShit: true,
     id: crypto.randomUUID(),
     color: "0",
@@ -3723,68 +3798,49 @@ function toTIdeCMaN(thisOne){ // de CalMonthPage à New
     tutto: true,
     date: kaseDate
   };
-  let newWidth = Number(window.innerWidth - 20);
-  let div = document.getElementById("calMonthPage");
-  let infos = {
-    todo: todo,
-    where: "calMonthPage",
-    why: "new",
-    div: div,
-    newWidth: newWidth
-  };
-  taskAddAllInfo(infos);
+  listTasks.push(todo); 
+  /** @todo That's why we have a new todo in the list even if we cancel! */
+  newWidth = Number(window.innerWidth - 20);
+  div = document.getElementById(where);
 };
-window.toTIdeCMaN = toTIdeCMaN;
-
 function toTIdeCMaM(thisOne){ // de CalMonthPage à Modification
   moving = false; //must stay false in month/week/search
-  parent = thisOne;
-  let recurryIsIt = parent.dataset.rec && parent.dataset.rec !== "undefined" ? true : false;
-  let kase = parent.parentElement; 
+  let div;
   let todo;
-  let todoIndex;
+  let parents;
+  let togoList;
   let recIndex;
-  if(recurryIsIt){
-    recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
-    let recurring = listTasks[recIndex];
-    todo = JSON.parse(JSON.stringify(recurring));
-    clearRecurringData(todo);
-    todo.id = crypto.randomUUID();
-    todo.line = "todoDay";
-    todo.date = kase.dataset.wholedate;
-    todo.recurry = true;
-    todo.recId = parent.dataset.rec;
+  let todoIndex;
+  newWidth = Number(window.innerWidth - 20);
+  div = document.getElementById(where);
+  parent = thisOne;
+  let parentId = parent.dataset.id;
+  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+    let rec = parent.dataset.rec;
+    recIndex = listTasks.findIndex(todo => todo.id == rec);
+    todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == parentId);
+    todo = listTasks[recIndex].recurrys[todoIndex];
   } else{
-    todoIndex = listTasks.findIndex(td => td.id == parent.dataset.id);
+    todoIndex = listTasks.findIndex(todo => todo.id == parentId);
     todo = listTasks[todoIndex];
   };
-  let newWidth = Number(window.innerWidth - 20); 
-  let div = document.getElementById("calMonthPage");
-  let infos = {
-    todo: todo,
-    where: "calMonthPage",
-    why: "mod",
-    div: div,
-    newWidth: newWidth,
-  };
-  if(recurryIsIt){
-    infos.recIndex = recIndex;
-  } else{
-    infos.todoIndex = todoIndex;
-  };
-  taskAddAllInfo(infos);
 };
-window.toTIdeCMaM = toTIdeCMaM;
-
 function toTIdeCMaS(thisOne){ // de CalMonthPage à Stock reusage
+
 };
 function toTIdeCWaN(thisOne){ // de CalWeekPage à New
   moving = false; //must stay false in month/week/search
+  let div;
+  let todo;
+  let parents;
+  let togoList;
+  let recIndex;
+  let todoIndex;
   let colNum = thisOne.style.gridColumnStart;
   let code = mySettings.myWeeksDayArray[colNum - 2].code;
   let colEl = document.querySelector(`[data-code="${code}"]`);
   let colDate = colEl.dataset.date;
-  let todo = {
+  todo = {
     newShit: true,
     id: crypto.randomUUID(),
     color: "0",
@@ -3807,71 +3863,158 @@ function toTIdeCWaN(thisOne){ // de CalWeekPage à New
     todo.alle = rowHourEnd;
     todo.tutto = false;
   };
-  let newWidth = Number(window.innerWidth - 20);
-  let div = document.getElementById("calWeekPage");
-  let infos = {
-    todo: todo,
-    where: "calWeekPage",
-    why: "new",
-    div: div,
-    newWidth: newWidth
-  };
-  taskAddAllInfo(infos);
+  listTasks.push(todo);
+  newWidth = Number(window.innerWidth - 20);
+  div = document.getElementById(where);
 };
-window.toTIdeCWaN = toTIdeCWaN;
-
 function toTIdeCWaM(thisOne){ // de CalWeekPage à Modification
   moving = false; //must stay false in month/week/search
-  parent = thisOne; 
-  let recurryIsIt = parent.dataset.rec && parent.dataset.rec !== "undefined" ? true : false;
+  let div;
   let todo;
-  let todoIndex;
+  let parents;
+  let togoList;
   let recIndex;
-  if(recurryIsIt){
-    recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
-    let recurring = listTasks[recIndex];
-    todo = JSON.parse(JSON.stringify(recurring));
-    clearRecurringData(todo);
-    todo.id = crypto.randomUUID();
-    todo.line = "todoDay";
-    todo.date = parent.dataset.date;
-    todo.recurry = true;
-    todo.recId = parent.dataset.rec;
+  let todoIndex;
+  newWidth = Number(window.innerWidth - 20);
+  div = document.getElementById(where);
+  parent = thisOne;
+  let parentId = parent.dataset.id;
+  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+    let rec = parent.dataset.rec;
+    recIndex = listTasks.findIndex(todo => todo.id == rec);
+    todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == parentId);
+    todo = listTasks[recIndex].recurrys[todoIndex];
   } else{
-    todoIndex = listTasks.findIndex(td => td.id == parent.dataset.id);
+    todoIndex = listTasks.findIndex(todo => todo.id == parentId);
     todo = listTasks[todoIndex];
   };
-  let newWidth = Number(window.innerWidth - 20); 
-  let div = document.getElementById("calWeekPage");
-  let infos = {
-    todo: todo,
-    where: "calWeekPage",
-    why: "mod",
-    div: div,
-    newWidth: newWidth,
-  };
-  if(recurryIsIt){
-    infos.recIndex = recIndex;
-  } else{
-    infos.todoIndex = todoIndex;
-  };
-  taskAddAllInfo(infos);
 };
-window.toTIdeCWaM = toTIdeCWaM;
-
 function toTIdeCWaS(thisOne){ // de CalWeekPage à Stock reusage
+
 };
 
-// MARK: TASKINFO
-function taskAddAllInfo(infos){
+function taskAddAllInfo(thisOne, where, why){ //where == "todoZone", "calWeekPage", "calMonthPage", "searchScreen"
+  //why == "new", "mod", "pro", "stock"
+  moving = false; //must stay false in month/week/search
+  let div;
+  let todo;
   let parents;
-  let todo = infos.todo;
-  let where = infos.where;//where == "todoZone", "calWeekPage", "calMonthPage", "searchScreen"
-  let why = infos.why;//why == "new", "mod", "pro", "stock"
-  let div = infos.div;
-  let togoList = infos.togoList;
-  let newWidth = infos.newWidth;
- 
+  let togoList;
+  let recIndex;
+  let todoIndex;
+  // NOPE!! chaque day in month et chaque item in weekly va avoir son onclick et on va aller en chercher la date et l'heure et mettre ça dans le nouveau todo!
+  if(why == "new" && where == "calWeekPage"){ //in month/weekly creation of a new one
+    let colNum = thisOne.style.gridColumnStart;
+    let code = mySettings.myWeeksDayArray[colNum - 2].code;
+    let colEl = document.querySelector(`[data-code="${code}"]`);
+    let colDate = colEl.dataset.date;
+    todo = {
+      newShit: true,
+      id: crypto.randomUUID(),
+      color: "0",
+      icon: "fa-solid fa-ban noIcon",
+      term: "showThing",
+      line: "todoDay",
+      date: colDate
+    };
+    let rowNum = thisOne.style.gridRowStart;
+    if(rowNum == 4){
+      todo.tutto = true;
+    } else{
+      let hourMath = ((rowNum - 5) / 4) + 3;
+      let hourNum = hourMath < 24 ? hourMath : hourMath - 24;
+      let rowHour = `${String(hourNum).padStart(2, "0")}:00`;
+      let hourEndMath = hourMath + 1;
+      let hourEndNum = hourEndMath < 24 ? hourEndMath : hourEndMath - 24;
+      let rowHourEnd = `${String(hourEndNum).padStart(2, "0")}:00`;
+      todo.dalle = rowHour;
+      todo.alle = rowHourEnd;
+      todo.tutto = false;
+    };
+    listTasks.push(todo);
+    newWidth = Number(window.innerWidth - 20);
+    div = document.getElementById(where);
+  } else if(why == "new" && where == "calMonthPage"){
+    let kaseDate = thisOne.parentElement.dataset.wholedate;
+    todo = {
+      newShit: true,
+      id: crypto.randomUUID(),
+      color: "0",
+      icon: "fa-solid fa-ban noIcon",
+      term: "showThing",
+      line: "todoDay",
+      tutto: true,
+      date: kaseDate
+    };
+    listTasks.push(todo);
+    newWidth = Number(window.innerWidth - 20);
+    div = document.getElementById(where);
+  } else if(thisOne == "addForm"){
+    todo = {
+      newShit: true,
+      id: crypto.randomUUID(),
+      color: "0",
+      icon: "fa-solid fa-ban noIcon",
+      term: "oneTime",
+      line: "noDay"
+    };
+    listTasks.push(todo);
+    newWidth = Number(window.innerWidth - 16);
+    div = document.getElementById(where);
+  } else if(why == "stock"){
+    let reuseLi = thisOne.parentElement;
+    let reuseId = reuseLi.id;
+    let reuseIndex = listTasks.findIndex(todo => todo.id == reuseId);
+    let reuse = listTasks[reuseIndex];
+    todo = JSON.parse(JSON.stringify(reuse));
+    todo.id = crypto.randomUUID();
+    todo.stored = true;
+    todo.stockId = reuse.id;
+    todo.line = "todoDay";
+    todo.date = getTodayDateString();
+    delete todo.stock;
+    delete todo.storedId;
+    listTasks.push(todo);
+    reuse.storedId.push(todo.id);
+    newWidth = Number(window.innerWidth - 16);
+    div = document.getElementById(where);
+    console.log(todo);
+    div.scrollIntoView(); 
+  } else{
+    let parentId;
+    if(where == "todoZone" || where == "searchScreen"){ //not in month/week
+      if(why == "pro"){
+        div = thisOne.parentElement.parentElement; 
+        thisOne.parentElement.remove();
+      } else{
+        div = thisOne.parentElement;
+      }; 
+      parent = div.parentElement; 
+      parentId = parent.id;
+      togoList = parent.parentElement.id; 
+      parent.classList.add("selectedTask");
+      parent.scrollIntoView(); 
+      let width = getComputedStyle(div).width; 
+      let num = width.slice(0, -2); 
+      newWidth = Number(num) + 44; 
+      clickScreen.classList.remove("displayNone"); 
+    } else{ //in month/week
+      newWidth = Number(window.innerWidth - 20);
+      div = document.getElementById(where);
+      parent = thisOne;
+      parentId = parent.dataset.id;
+    };
+    
+    if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+      let rec = parent.dataset.rec;
+      recIndex = listTasks.findIndex(todo => todo.id == rec);
+      todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == parentId);
+      todo = listTasks[recIndex].recurrys[todoIndex];
+    } else{
+      todoIndex = listTasks.findIndex(todo => todo.id == parentId);
+      todo = listTasks[todoIndex];
+    };
+  };
   console.log(todo);
   let myShows;
   if(mySettings.myShowTypes.length > 0){
@@ -3947,7 +4090,7 @@ function taskAddAllInfo(infos){
     projectHow = ``;
   };
 //taskInfoProject similar to projectLi
-  let taskAllInfo = `<div id="taskInfo" class="taskInfoClass${todo.term == "wholeProject" ? ` taskInfoProject` : ``}" style="${newWidth !== "" ? `width:${newWidth}px; ` : ``}${(where == "todoZone" || where == "searchScreen") ? (why == "new" || why == "stock") ? `top: 0; left: 0;` : `top: 25px; left: -37px;` : `top: 10px; left: 10px;`}${todo.term == "wholeProject" ? `border-color:${colorsList[pColor].colorBG}; outline-color: ${colorsList[pColor].colorBG5};` : ``}">
+  let taskAllInfo = `<div id="taskInfo" class="taskInfoClass${todo.term == "wholeProject" ? ` taskInfoProject` : ``}" style="width:${newWidth}px; ${(where == "todoZone" || where == "searchScreen") ? (thisOne == "addForm" || why == "stock") ? `top: 0; left: 0;` : `top: 25px; left: -37px;` : `top: 10px; left: 10px;`}${todo.term == "wholeProject" ? `border-color:${colorsList[pColor].colorBG}; outline-color: ${colorsList[pColor].colorBG5};` : ``}">
     <div class="taskInfoWrapper">
       <div id="SupClickScreen" class="Screen displayNone"></div>
       <input id="doneIt" type="checkbox" class="cossin cornerItInput" />
@@ -3971,7 +4114,7 @@ function taskAddAllInfo(infos){
         <i class="fa-solid fa-copy cornerItChecked"></i>
       </label>
       <input id="trashIt" type="checkbox" class="cossin cornerItInput" />
-      <label for="trashIt" class="trashItLabel cornerItLabel${(why == "new" || why == "stock") ? ` hidden` : ``}">
+      <label for="trashIt" class="trashItLabel cornerItLabel">
         <i class="fa-regular fa-trash-can cornerItUnChecked"></i>
         <i class="fa-solid fa-trash-can cornerItChecked"></i>
       </label>
@@ -4050,7 +4193,7 @@ function taskAddAllInfo(infos){
             <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
               ${projectNamesChoice}
             </div>
-          </div>
+          </div>-->
 
           <h5 class="taskInfoSubTitle" style="margin: 0;">Project</h5>
           <input class="myRadio" type="radio" name="termOptions" id="wholeProject" value="wholeProject" ${todo.term == "wholeProject" ? `checked` : ``} />
@@ -4072,7 +4215,7 @@ function taskAddAllInfo(infos){
             <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
               ${projectNamesChoice}
             </div>
-          </div>-->
+          </div>
 
           <h5 class="taskInfoSubTitle" style="margin: 0;">Reminder</h5>
           <input class="myRadio" type="radio" name="termOptions" id="reminder" value="reminder" ${todo.term == "reminder" ? `checked` : ``} />
@@ -4093,23 +4236,23 @@ function taskAddAllInfo(infos){
             </div>
           </div>
 
-          <input class="myRadio" type="radio" name="termOptions" id="nextThing" value="nextThing" ${todo.term == "nextThing" ? `checked` : ``} />
-          <label for="nextThing" class="termLabel"><span class="myRadio"></span><span style="color:darkgreen;">It's what I'm gonna do next</span></label>
-
-          <input class="myRadio" type="radio" name="termOptions" id="longTerm" value="longTerm" ${todo.term == "longTerm" ? `checked` : ``} />
-          <label for="longTerm" class="termLabel"><span class="myRadio"></span><span style="color:midnightblue;">It's a whenever kinda long term shit</span></label>
-
           <input class="myRadio" type="radio" name="termOptions" id="oneTime" value="oneTime" ${todo.term == "oneTime" ? `checked` : ``} />
           <label for="oneTime" class="termLabel"><span class="myRadio"></span><span style="color:midnightblue;">It's a whenever kinda one time thing</span></label>
           
-          <input class="myRadio" type="radio" name="termOptions" id="alwaysHere" value="alwaysHere" ${todo.term == "alwaysHere" ? `checked` : ``} />
-          <label for="alwaysHere" class="termLabel"><span class="myRadio"></span><span style="color:goldenrod;">Forever, forever ever?!</span></label>
+          <input class="myRadio" type="radio" name="termOptions" id="longTerm" value="longTerm" ${todo.term == "longTerm" ? `checked` : ``} />
+          <label for="longTerm" class="termLabel"><span class="myRadio"></span><span style="color:midnightblue;">It's a whenever kinda long term shit</span></label>
+          
+          <input class="myRadio" type="radio" name="termOptions" id="nextThing" value="nextThing" ${todo.term == "nextThing" ? `checked` : ``} />
+          <label for="nextThing" class="termLabel"><span class="myRadio"></span><span style="color:darkgreen;">It's what I'm gonna do next</span></label>
           
           <input class="myRadio" type="radio" name="termOptions" id="waitForIt" value="waitForIt" ${todo.term == "waitForIt" ? `checked` : ``} />
           <label for="waitForIt" class="termLabel"><span class="myRadio"></span><span style="color:rgb(100, 122, 122);">It's what I've been waiting for</span></label>
           
           <input class="myRadio" type="radio" name="termOptions" id="crazyShit" value="crazyShit" ${todo.term == "crazyShit" ? `checked` : ``} />
           <label for="crazyShit" class="termLabel"><span class="myRadio"></span><span style="color:rgb(239, 125, 144);">It's just a <em>maybe-one-day-probably-never</em> kinda crazy idea</span></label>
+
+          <input class="myRadio" type="radio" name="termOptions" id="alwaysHere" value="alwaysHere" ${todo.term == "alwaysHere" ? `checked` : ``} />
+          <label for="alwaysHere" class="termLabel"><span class="myRadio"></span><span style="color:goldenrod;">Forever, forever ever?!</span></label>
           
           <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Event</h5>
           <input class="myRadio" type="radio" name="termOptions" id="showThing" value="showThing" ${todo.term == "showThing" ? `checked` : ``} />
@@ -4243,13 +4386,15 @@ function taskAddAllInfo(infos){
     projectSwitch = false;
   };
   taskCancelBtn.addEventListener("click", () => {
-    if(where == "todoZone" && why !== "stock" && why !== "new"){
+    if(where == "todoZone" && why !== "stock" && why !== "addForm"){
       moving = true;
       clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
     } else{
       taskInfo.remove();
-      //add scrollbackToTop!
     };
+    /* if(why == "new"){ // "stock" too, maybe?
+        find the todoIndex that you don't have yet and then splice it!
+      } */
   });
   doneIt.addEventListener("click", () => {
     if(doneIt.checked){
@@ -4846,6 +4991,16 @@ function taskAddAllInfo(infos){
         delete todo.info;
       };
 
+      if((urgeInput.value == "" || urgeInput.value == 0) || todo.term !== "topPriority"){
+        delete todo.urge;
+        delete todo.urgeNum;
+        delete todo.urgeColor;
+      } else if(urgeInput.value > 0 && todo.term == "topPriority"){
+        todo.urge = true;
+        todo.urgeNum = urgeInput.value;
+        colorUrges("next");
+      };
+
       let whereText = document.querySelector("#whereInput");
       todo.where = whereCheck.checked ? "home" : whereText.value !== "" ? whereText.value : "not home";
 
@@ -4877,16 +5032,6 @@ function taskAddAllInfo(infos){
         delete todo.STColor;
       };
 
-      if((urgeInput.value == "" || urgeInput.value == 0) || todo.term !== "topPriority"){
-        delete todo.urge;
-        delete todo.urgeNum;
-        delete todo.urgeColor;
-      } else if(urgeInput.value > 0 && todo.term == "topPriority"){
-        todo.urge = true;
-        todo.urgeNum = urgeInput.value;
-        colorUrges("next");
-      };
-
       if(miniListDiv.querySelector(".miniLi")){
         todo.miniList = Array.from(miniListDiv.querySelectorAll(".miniLi")).map((li) => {
           return {
@@ -4906,7 +5051,6 @@ function taskAddAllInfo(infos){
       if(where == "todoZone" || where == "searchScreen"){
         parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
       };
-      //Since there are no more copy, we don't need that anymore (except in the swipingDay Section if it's the date the todo is...)
 
       if(!todo.recurry && todo.line !== "recurringDay"){
         if(!todo.stock && !todo.stored && storeIt.checked){
@@ -4928,26 +5072,18 @@ function taskAddAllInfo(infos){
       };
       
 
-      calendarSave(todo); // 
+      calendarSave(todo); // s'il était un recurringDay, les recurrys ont tous été recréés à son image... FUCK (pas ceux qui étaient déjà out!)! ... à moins que... il en cré de nouveaux!! car dans todoCreation, tu passe par togoList et ça fait recurryOuting... et les nouveaux recurry seront pas encore "out", fac ils vont être créés... alors il faudrait juste se débarasser des anciens! ça pourrait être dans clearRecurringData...
       //parent is global (no need for parent since todoCreation)
-      if(todo.recurry == true){
-        //we could add an alert saying that if you save it, it's gonna become a whole thing on itself in the big list
-        let recurring = listTasks[infos.recIndex];
-        recurring.recurryDates = recurring.recurryDates.filter(rD => rD !== todo.date); // donc la date du todo est enlevée des recurryDates de son recurringDay
+      if(why !== "new" && why !== "stock" && parent.dataset.rec && parent.dataset.rec !== "undefined"){
+        let oldRecurry = listTasks[recIndex].recurrys.splice(todoIndex, 1);
+        todo = oldRecurry[0];
         delete todo.recurry;
-        delete todo.recId; //et todo redevient un todo normal!
-        listTasks.push(todo); // et le todo est maintenant dans la listTask!
-      };
+        delete todo.out;
+        delete todo.recId;
+        listTasks.push(todo);
+      }; //donc le todo est sorti de son recurring et pushed dans listTasks
 
       //WOLA si todo était stored ou stock et là devient reccuringDay?!
-
-      if(why == "new"){
-        listTasks.push(todo);
-      };
-      if(why == "stock"){
-        infos.reuse.storedId.push(todo.id);
-        listTasks.push(todo);
-      };
 
       if(copyIt.checked){ //WOLA! Si c'est stock, il faut enlever les storedId! Si c'est reccuring...
         let newTodo = JSON.parse(JSON.stringify(todo));
@@ -4975,10 +5111,9 @@ function taskAddAllInfo(infos){
         let indexP = mySettings.myProjects.findIndex(project => project.nickname == todo.Pnickname);
         mySettings.myProjects.splice(indexP, 1);
         localStorage.mySettings = JSON.stringify(mySettings);
-      }; //Are partProjects in the wholeProject or not?!
-      if(todo.recurry == true){ //the parent will be removed, but we need to remove the date in the recurring.recurryDates
-        let recurring = listTasks[infos.recIndex];
-        recurring.recurryDates = recurring.recurryDates.filter(rD => rD !== todo.date); // donc la date du todo est enlevée des recurryDates de son recurringDay        
+      } //Are partProjects in the wholeProject or not?!
+      if(todo.recurry && todo.recId){
+        listTasks[recIndex].recurrys.splice(todoIndex, 1);
       } else if(todo.stored){
         let stockIdx = listTasks.findIndex(toDo => toDo.id == todo.stockId);
         let stock = listTasks[stockIdx];
@@ -4986,11 +5121,10 @@ function taskAddAllInfo(infos){
         let todoIdx = stock.storedId.indexOf(todo.id);
         stock.storedId.splice(todoIdx, 1);
         console.log(stock);
-        listTasks.splice(infos.todoIndex, 1);
       } else if(why == "new"){ // "stock" too, maybe?
-        //nothing to do, the todo doesn't exist yet in the listTasks
+        //find the todoIndex that you don't have yet and then splice it!
       } else{
-        listTasks.splice(infos.todoIndex, 1);
+        listTasks.splice(todoIndex, 1);
       };
       if(where == "todoZone" || where == "searchScreen"){
         parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
@@ -5000,7 +5134,7 @@ function taskAddAllInfo(infos){
     localStorage.listTasks = JSON.stringify(listTasks);
     updateWeek();
     updateMonth();
-    // A REVOIR!!
+    
     if(where == "searchScreen"){
       moving = false;
       taskInfo.remove();
@@ -5008,11 +5142,11 @@ function taskAddAllInfo(infos){
       howToSortIt(togoList); //only if there's a togoList!
     };
     //console.log(togoList);
-    if((why == "new" || why == "stock") && togoList !== ""){
+    if((thisOne == "addForm" || why == "stock") && togoList !== ""){
       scrollToSection(togoList);
       taskInfo.remove();
       howToSortIt(togoList); //only if there's a togoList!
-    } else if((why == "new" || why == "stock") && togoList == ""){
+    } else if((thisOne == "addForm" || why == "stock") && togoList == ""){
       taskInfo.remove();
     } else if(where == "todoZone" && togoList !== ""){
       moving = true;
@@ -5406,7 +5540,7 @@ function getLastWeekDate(){
   return lastWeekDate;
 };
 
-// MARK: MONTHLY CALENDAR
+// *** MONTHLY CALENDAR
 
 let date = new Date();
 let todayDate = date.getDate();
@@ -5420,15 +5554,8 @@ function putShowsInMonth(monthlyFirst, monthlyLast){
   let shows = [];
   filteredShows.forEach(show => {
     if(show.line == "recurringDay"){
-      show.recurryDates.forEach(recurryDate => {
-        if(monthlyFirst <= recurryDate && recurryDate <= monthlyLast){
-          let recurry = JSON.parse(JSON.stringify(show));
-          clearRecurringData(recurry);
-          recurry.id = crypto.randomUUID();
-          recurry.date = recurryDate;
-          recurry.line = "todoDay";
-          recurry.recurry = true;
-          recurry.recId = show.id;
+      show.recurrys.forEach(recurry => {
+        if(monthlyFirst <= recurry.date && recurry.date <= monthlyLast){
           shows.push(recurry);
         };
       });
@@ -5448,15 +5575,14 @@ function putShowsInMonth(monthlyFirst, monthlyLast){
   });
   
   let sortedShows = shows.sort((s1, s2) => (s1.date < s2.date) ? -1 : (s1.date > s2.date) ? 1 : (s1.date == s2.date) ? (s1.term < s2.term) ? -1 : (s1.term > s2.term) ? 1 : (s1.term == s2.term) ? (s1.dalle < s2.dalle) ? -1 : (s1.dalle > s2.dalle) ? 1 : 0 : 0 : 0);
-  //On n'a probablement pas besoin de les classer par date (juste par dalle) parce que de toutes façons, pour chacun, on cherche la bonne case en fonction de sa date. On veut juste mettre le plus tôt avant le plus tard, donc juste classé par dalle, ça pourrait être assez... et term... pour mettre les reminder en haut... (à moins qu'on fasse kase.insertAdjacentHTML("afterbegin", eventDiv); pour les reminder...)
   shows = sortedShows;
   let today = getTodayDateString();
   shows.forEach(show => {
     let eventDiv;
     if(show.term == "showThing"){
-      eventDiv = `<div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} data-showType="${show.showType}" ${!show.past ? `onclick="toTIdeCMaM(this)"` : ``} class="eventDiv ${show.past ? "pastEvent" : ""}" style="background-color:${show.STColorBG}; color:${show.STColorTX};">${show.task}</div>`;
+      eventDiv = `<div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} data-showType="${show.showType}" ${!show.past ? `onclick="taskAddAllInfo(this, 'calMonthPage', 'mod')"` : ``} class="eventDiv ${show.past ? "pastEvent" : ""}" style="background-color:${show.STColorBG}; color:${show.STColorTX};">${show.task}</div>`;
     } else if(show.term == "reminder"){
-      eventDiv = `<div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${!show.past ? `onclick="toTIdeCMaM(this)"` : ``} class="eventDiv ${show.date < today ? "pastEvent" : ""}" style="color:${mySettings.myBaseColors[show.color].colorBG};">${show.task}</div>`;
+      eventDiv = `<div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${!show.past ? `onclick="taskAddAllInfo(this, 'calMonthPage', 'mod')"` : ``} class="eventDiv ${show.date < today ? "pastEvent" : ""}" style="color:${mySettings.myBaseColors[show.color].colorBG};">${show.task}</div>`;
     };
     let kase = document.querySelector("[data-wholedate='" + show.date + "']");
     if(kase){
@@ -5483,7 +5609,7 @@ function createBody(){
   for(let i = 0; i < 6; i++){
     let tds = [];
     for(let j = 0; j < 7; j++){
-      let td = `<td ${i == 0 && j == 0 ? `id="monthlyFirst"` : i == 5 && j == 6 ? `id="monthlyLast"` : ``}><div class="circle"></div><span class="typcn typcn-plus addEvent displayNone" onclick="toTIdeCMaN(this)"></span></td>`;
+      let td = `<td ${i == 0 && j == 0 ? `id="monthlyFirst"` : i == 5 && j == 6 ? `id="monthlyLast"` : ``}><div class="circle"></div><span class="typcn typcn-plus addEvent displayNone" onclick="taskAddAllInfo(this, 'calMonthPage', 'new')"></span></td>`;
       tds.push(td);
     };
     let tdsF = tds.join("");
@@ -5617,7 +5743,7 @@ function updateMonth(){
   putShowsInMonth(monthlyFirst, monthlyLast);
 };
 
-// MARK: WEEKLY CALENDAR
+// *** WEEKLY CALENDAR
 
 function putDatesInWeek(date){
   let arrayDate = [];
@@ -5734,17 +5860,10 @@ function putShowsInWeek(Dday, Sday){
   let shows = listTasks.filter((todo) => ((todo.term == "showThing" || todo.term == "reminder") && todo.line !== "noDay")); //on enlève "noDay" ou on aurait pu enlever todo.stock == true
   shows.map(show => { //WATCH OUT: if between 00:00 and myTomorrow, it would be yesterday's date so maybe not that week!!
     if(show.line == "recurringDay"){ 
-      show.recurryDates.map(recurryDate => {
-        if(Dday <= recurryDate && recurryDate <= Sday){//takes only the ones that should show up this week
-          let recurry = JSON.parse(JSON.stringify(show));
-          clearRecurringData(recurry);
-          recurry.id = crypto.randomUUID();
-          recurry.date = recurryDate;
-          recurry.line = "todoDay";
-          recurry.recurry = true;
-          recurry.recId = show.id;
-          createWeeklyshow(recurry);
-        };
+      show.recurrys.map(recurry => {
+      if(Dday <= recurry.date && recurry.date <= Sday){//takes only the ones that should show up this week
+        createWeeklyshow(recurry);
+      };
       })
     } else if(Dday <= show.date && show.date <= Sday){//takes only the ones that should show up this week
       createWeeklyshow(show);
@@ -5788,7 +5907,7 @@ function createWeeklyshow(show){
   let add;
   if(show.tutto || !show.dalle || show.dalle == ""){
     div = document.querySelector(`[data-tutto="${day}"]`);
-    add = `<div data-id="${show.id}" data-date="${show.date}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="toTIdeCWaM(this); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `background-color: var(--bg-color); color:${show.color}; border:none; border-radius: 0;`}">${show.info ? `*` : ``}
+    add = `<div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="taskAddAllInfo(this, 'calWeekPage', 'mod'); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `background-color: var(--bg-color); color:${show.color}; border:none; border-radius: 0;`}">${show.info ? `*` : ``}
     ${show.task} <i class="IconI ${show.icon}"></i>
   </div>`; //add underline if miniList
   } else{
@@ -5804,7 +5923,7 @@ function createWeeklyshow(show){
     };
     add = `
     ${primaDiv}
-    <div data-id="${show.id}" data-date="${show.date}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="toTIdeCWaM(this); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `color:${show.color}; border:none;`}  grid-column:col-${day}; grid-row:row-${show.dalleRow}${show.term == "reminder" ? `` : `/row-${show.alleRow}`};">
+    <div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="taskAddAllInfo(this, 'calWeekPage', 'mod'); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `color:${show.color}; border:none;`}  grid-column:col-${day}; grid-row:row-${show.dalleRow}${show.term == "reminder" ? `` : `/row-${show.alleRow}`};">
     ${show.info ? `*` : ``}${show.task}<br />
       <i class="IconI ${show.icon}"></i>
     </div>
@@ -5828,7 +5947,7 @@ function createWeeklyshow(show){
     // };
     // add = `
     // ${primaDiv}
-    // <div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="toTIdeCWaM(this)" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `color:${show.color}; border:none;`}  grid-column:col-${day}; grid-row:row-${hourStart}${show.term == "reminder" ? `` : `/row-${hourEnd}`};">
+    // <div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="taskAddAllInfo(this, 'calWeekPage', 'mod')" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `color:${show.color}; border:none;`}  grid-column:col-${day}; grid-row:row-${hourStart}${show.term == "reminder" ? `` : `/row-${hourEnd}`};">
     //   ${show.task}<br />
     //   <i class="IconI ${show.icon}"></i>
     // </div>
@@ -5848,12 +5967,12 @@ function getWeeklyCalendar(){
   for(let c = 1; c < 9; c++){
     let arrayC = [];
     let rowDay = `<div ${c == 2 ? `id="Dday"` : c == 8 ? `id="Sday"` : ``} class="weeklyItem" style="grid-column:${c}; grid-row:3; font-size:14px; font-weight:600; line-height: calc(((92vh / 29) * 1.5) / 2); border-radius:2px 2px 0 0; border-bottom:1px solid rgba(47, 79, 79, .5);${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}"${c > 1 ? ` data-code="${mySettings.myWeeksDayArray[c - 2].code}">${mySettings.myWeeksDayArray[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : `>`}</div>`; //shall we add the date as an id, as a data-date or as an area?
-    let rowTutto = `<div class="weeklyItem weeklyTutto" ${c > 1 ? `onclick="toTIdeCWaN(this)"` : ``} ${c > 1 ? `data-tutto="${mySettings.myWeeksDayArray[c - 2].code}"` : ``} style="grid-column:${c}; grid-row:4; border-bottom: 1px solid rgba(47, 79, 79, .5);"></div>`;
+    let rowTutto = `<div class="weeklyItem weeklyTutto" ${c > 1 ? `onclick="taskAddAllInfo(this, 'calWeekPage', 'new')"` : ``} ${c > 1 ? `data-tutto="${mySettings.myWeeksDayArray[c - 2].code}"` : ``} style="grid-column:${c}; grid-row:4; border-bottom: 1px solid rgba(47, 79, 79, .5);"></div>`;
     arrayC.push(rowDay);
     arrayC.push(rowTutto);
     let line = 5;
     for(let r = 1; r < 25; r++){
-      let item = `<div class="weeklyItem" ${c > 1 ? `onclick="toTIdeCWaN(this)"` : ``} style="grid-column:${c}; grid-row:${line} / ${line + 4};${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""} ${myDay == 23 ? " border-bottom:2px solid rgba(47, 79, 79, .8);" : ""}">${c == 1 ? `${String(myDay).padStart(2, "0")}:00` : ``}${mySettings.myTomorrow !== "00:00" && myDay == 0 && c > 1 ? `<span class="weeklyAfterDateSpan"></span>` : ``}</div>`;
+      let item = `<div class="weeklyItem" ${c > 1 ? `onclick="taskAddAllInfo(this, 'calWeekPage', 'new')"` : ``} style="grid-column:${c}; grid-row:${line} / ${line + 4};${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""} ${myDay == 23 ? " border-bottom:2px solid rgba(47, 79, 79, .8);" : ""}">${c == 1 ? `${String(myDay).padStart(2, "0")}:00` : ``}${mySettings.myTomorrow !== "00:00" && myDay == 0 && c > 1 ? `<span class="weeklyAfterDateSpan"></span>` : ``}</div>`;
       arrayC.push(item);
       line += 4;
       myDay == 23 ? myDay = 0 : myDay++;

@@ -321,13 +321,13 @@ input[type="radio"]{
 
 #labelSelectionDiv{
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   flex-wrap: nowrap;
   width: fit-content;
-  position: absolute;
-  top: 3px;
-  right: 55px;
-  z-index: 9;
+  right: 75px;
+  position: fixed;
+  bottom: 15px;
+  z-index: 400;
 }
 .labelLabel{
   border: 1px solid var(--tx-color);
@@ -776,6 +776,7 @@ h5.taskInfoInput{
   top: 0;
   right: 0;
   display: flex;
+  background-color: var(--bg-color);
 }
 #swipeBtns.nextOnly > #swipePrevBtn, #swipeBtns.nextOnly > #swipeTodayBtn{
   opacity: 0;
@@ -1096,6 +1097,9 @@ span.normalText{
 .calendarInsideMargin{
   margin: 10px 0;
 }
+.calendarhr{
+  margin: 20px 20px 0;
+}
 .myRadio{
   padding: 0;
   margin-right: 5px;
@@ -1144,6 +1148,9 @@ input.myRadio:checked + label span.myRadio{
   flex-flow: column nowrap; 
   align-items: flex-start;
   padding: 0 10%;
+}
+.DaySection p{
+  margin-bottom: .3em;
 }
 input[name="whatDay"]:checked ~ div.DaySection{
   display: flex;

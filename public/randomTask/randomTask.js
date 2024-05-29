@@ -3080,25 +3080,28 @@ function calendarSave(todo){ //
     clearRecurringData(todo);
     delete todo.date; //there could still be a dalle, alle and tutto
  //if it was a recurry, it's gonna be arranged after calendarSave (delete of the recurry)
-  } else if(todo.line == "recurringDay" && changeRecurryDates == true){
-    clearRecurringData(todo);
-    delete todo.date;
-    todo.recPileUP = inDaySection.querySelector("#pileUpInput").value;
-    todo.dal = inDaySection.querySelector("#dalInput").value;
-    todo.ogni = inDaySection.querySelector("#ogniInput").value;
-    todo.var = inDaySection.querySelector("#timeVariationInput").value; 
-    todo.fineOpt = inDaySection.querySelector('input[name="fineOptions"]:checked').value;
-    if(todo.fineOpt == "fineGiorno"){
-      todo.fine = inDaySection.querySelector("#fineDate").value;
-    } else if(todo.fineOpt == "fineDopo"){
-      todo.fineCount = inDaySection.querySelector("#fineCount").value;
+  } else if(todo.line == "recurringDay"){
+    if(changeRecurryDates == true){
+      clearRecurringData(todo);
+      delete todo.date;
+      todo.dal = inDaySection.querySelector("#dalInput").value;
+      todo.ogni = inDaySection.querySelector("#ogniInput").value;
+      todo.var = inDaySection.querySelector("#timeVariationInput").value; 
+      todo.fineOpt = inDaySection.querySelector('input[name="fineOptions"]:checked').value;
+      if(todo.fineOpt == "fineGiorno"){
+        todo.fine = inDaySection.querySelector("#fineDate").value;
+      } else if(todo.fineOpt == "fineDopo"){
+        todo.fineCount = inDaySection.querySelector("#fineCount").value;
+      };
+      let date = getDateFromString(todo.dal);
+      sendRecurringToGetRecurryDates(todo, date);
+      // recurryDateToTodoCreation(todo, recurryDate, "out"); ??
+      // recurryCreation(todo);
+      //recurryOuting(todo);
+      //PAS BESOIN DE LE CRÉÉ CAR ÇA VA SE FAIRE APRÈS (smallCalendar AND taskInfo)
+    } else{
+      todo.recPileUP = document.querySelector("#pileUpInput").checked ? true : false;
     };
-    let date = getDateFromString(todo.dal);
-    sendRecurringToGetRecurryDates(todo, date);
-    // recurryDateToTodoCreation(todo, recurryDate, "out"); ??
-    // recurryCreation(todo);
-    //recurryOuting(todo);
-    //PAS BESOIN DE LE CRÉÉ CAR ÇA VA SE FAIRE APRÈS (smallCalendar AND taskInfo)
   } else if(todo.line == "todoDay"){
     clearRecurringData(todo);
     todo.date = inDaySection.querySelector('input[type="date"].centerDateInput').value;
@@ -3136,7 +3139,7 @@ todo.task
 todo.info
 todo.color => number (index in mySettings.myBaseColors)
 todo.icon
-todo.term => {project: "wholeProject"}, {task: "oneTime", "longTerm", "nextThing", "waitForIt", "alwaysHere", "crazyShit"}, {event: "showThing"}, {habit: "sameHabit"}, {rappel: "reminder"}
+todo.term => {project: "wholeProject"}, {rappel: "reminder"}, {habit: "sameHabit"}, {task: "topPriority", "nextThing", "longTerm", "oneTime", "alwaysHere", "waitForIt", "thinkBoutIt", "crazyShit"}, {event: "showThing"}
 todo.urge
 todo.urgeNum
 todo.urgeColor
@@ -3492,6 +3495,7 @@ let newlabelColor = "";
 
 // MARK: TODO List
 /*
+1. Revoir gotItDone pour Recurry!
 2. Revoir les calculs de ogni settimana (j'suis pas sure si ça marche bien ou pas)
 3. if fineMai and recurryDates.length == 0 then alert and check if you can use alert "ok" to do erase and "cancel" to open taskInfo with the todo that is about to be erased!!) 
 9. dans les calendar, faire un équivalent de recurryDateToTodoCreation ("in")
@@ -3513,26 +3517,47 @@ let newlabelColor = "";
 
 // to go to taskAddAllInfo
 function toTIdeTZaP(thisOne){ // de TodoZone à Procrastinator
-  let div = thisOne.parentElement.parentElement; 
-  thisOne.parentElement.remove();
-  parent = div.parentElement;
+    //moving = false; //must stay false in month/week/search
+  let div = thisOne.parentElement.parentElement;
+  parent = div.parentElement; 
+  let recurryIsIt = parent.dataset.rec && parent.dataset.rec !== "undefined" ? true : false;
   parent.classList.add("selectedTask");
   parent.scrollIntoView(); 
   let togoList = parent.parentElement.id;
-  let todoIndex = listTasks.findIndex(td => td.id == parent.id);
-  let todo = listTasks[todoIndex];
+  let todo;  
+  let todoIndex; 
+  let recIndex;
+  if(recurryIsIt){
+    recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
+    let recurring = listTasks[recIndex];
+    todo = JSON.parse(JSON.stringify(recurring));
+    clearRecurringData(todo);
+    todo.id = crypto.randomUUID();
+    todo.line = "todoDay";
+    todo.date = parent.dataset.date;
+    todo.recurry = true;
+    todo.recId = parent.dataset.rec;
+  } else{
+    todoIndex = listTasks.findIndex(td => td.id == parent.id);
+    todo = listTasks[todoIndex];
+  };
   let width = getComputedStyle(div).width; 
   let num = width.slice(0, -2); 
   let newWidth = Number(num) + 44; 
-  clickScreen.classList.remove("displayNone"); 
+  clickScreen.classList.remove("displayNone");
+  thisOne.parentElement.remove();
   let infos = {
     todo: todo,
     where: "todoZone",
     why: "mod",
     div: div,
     newWidth: newWidth,
-    togoList: togoList,
-    todoIndex: todoIndex
+    togoList: togoList
+  };
+  if(recurryIsIt){
+    infos.recIndex = recIndex;
+  } else{
+    infos.todoIndex = todoIndex;
   };
   taskAddAllInfo(infos);
 };
@@ -3560,7 +3585,6 @@ function toTIdeTZaN(){ // de TodoZone à New (addForm but without the addInput.v
 };
 
 function toTIdeTZaM(thisOne){ // de TodoZone à Modification
-  // special case for recurry that haven't been pushed to listTasks yet and thus don't have a todoIndex... And will only have one once and if they have been saved!
   let div= thisOne.parentElement;
   parent = div.parentElement;
   let recurryIsIt = parent.dataset.rec && parent.dataset.rec !== "undefined" ? true : false;
@@ -4030,50 +4054,50 @@ function taskAddAllInfo(infos){
             <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
           </label>
           <div class="taskToggleList taskInfoInput relDiv">
-          <!-- <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Project</h5>
-          <input class="myRadio" type="checkbox" name="projectOptions" id="wholeProjectInput" value="wholeProject" ${todo.wholeProject ? `checked` : ``} />
-          <label for="wholeProjectInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's a whole big thing</span><br />
-          <span class="smallText otherSmallText">with lots of little things in it</span></label>
-          <div class="wholeProjectDiv">
-            <h5 style="margin: 5px 0 0 0;">${todo.wholeProject ? `Wanna change the label?` : `Let's give it a label`}</h5>
-            <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
-              <p>Choose a color: ${projectColorsChoice}</p>
-              <p>Choose a nickname:</p>
-              <input id="projectNickInput" type="text" value="${todo.Pnickname ? todo.Pnickname : ""}"/>
+            <!-- <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Project</h5>
+            <input class="myRadio" type="checkbox" name="projectOptions" id="wholeProjectInput" value="wholeProject" ${todo.wholeProject ? `checked` : ``} />
+            <label for="wholeProjectInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's a whole big thing</span><br />
+            <span class="smallText otherSmallText">with lots of little things in it</span></label>
+            <div class="wholeProjectDiv">
+              <h5 style="margin: 5px 0 0 0;">${todo.wholeProject ? `Wanna change the label?` : `Let's give it a label`}</h5>
+              <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
+                <p>Choose a color: ${projectColorsChoice}</p>
+                <p>Choose a nickname:</p>
+                <input id="projectNickInput" type="text" value="${todo.Pnickname ? todo.Pnickname : ""}"/>
+              </div>
+            </div>
+            <input class="myRadio" type="checkbox" name="projectOptions" id="partProjectInput" value="partProject" ${todo.partProject ? `checked` : ``} />
+            <label for="partProjectInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's part of something bigger</span><br />
+            <span class="smallText otherSmallText">than itself</span></label>
+            <div class="partProjectDiv">
+              <h5 style="margin: 5px 0 0 0;">What project is it a part of?</h5>
+              <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
+                ${projectNamesChoice}
+              </div>
+            </div>-->
+          <div class="hidden" style="height: 0;">
+            <h5 class="taskInfoSubTitle" style="margin: 0;">Project</h5>
+            <input class="myRadio" type="radio" name="termOptions" id="wholeProject" value="wholeProject" ${todo.term == "wholeProject" ? `checked` : ``} />
+            <label for="wholeProject" class="termLabel"><span class="myRadio"></span>It's a whole big thing<br />
+            <span class="smallText otherSmallText">with lots of little things in it</span></label>
+            <div class="wholeProjectDiv">
+              <h5 style="margin: 5px 0 0 0;">${todo.wholeProject ? `Wanna change the label?` : `Let's make it a tab`}</h5>
+              <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
+                <p>Choose a color: ${projectColorsChoice}</p>
+                <p>Choose a nickname:</p>
+                <input id="projectNickInput" type="text" value="${todo.Pnickname ? todo.Pnickname : ""}"/>
+              </div>
+            </div>
+            <input class="myRadio" type="checkbox" name="projectOptions" id="partProjectInput" value="partProject" ${todo.pParents && todo.pParents.length > 0 ? `checked` : ``} />
+            <label for="partProjectInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's part of something bigger</span><br />
+            <span class="smallText otherSmallText">than itself</span></label>
+            <div class="partProjectDiv">
+              <h5 style="margin: 5px 0 0 0;">What project is it a part of?</h5>
+              <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
+                ${projectNamesChoice}
+              </div>
             </div>
           </div>
-          <input class="myRadio" type="checkbox" name="projectOptions" id="partProjectInput" value="partProject" ${todo.partProject ? `checked` : ``} />
-          <label for="partProjectInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's part of something bigger</span><br />
-          <span class="smallText otherSmallText">than itself</span></label>
-          <div class="partProjectDiv">
-            <h5 style="margin: 5px 0 0 0;">What project is it a part of?</h5>
-            <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
-              ${projectNamesChoice}
-            </div>
-          </div>
-
-          <h5 class="taskInfoSubTitle" style="margin: 0;">Project</h5>
-          <input class="myRadio" type="radio" name="termOptions" id="wholeProject" value="wholeProject" ${todo.term == "wholeProject" ? `checked` : ``} />
-          <label for="wholeProject" class="termLabel"><span class="myRadio"></span>It's a whole big thing<br />
-          <span class="smallText otherSmallText">with lots of little things in it</span></label>
-          <div class="wholeProjectDiv">
-            <h5 style="margin: 5px 0 0 0;">${todo.wholeProject ? `Wanna change the label?` : `Let's make it a tab`}</h5>
-            <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
-              <p>Choose a color: ${projectColorsChoice}</p>
-              <p>Choose a nickname:</p>
-              <input id="projectNickInput" type="text" value="${todo.Pnickname ? todo.Pnickname : ""}"/>
-            </div>
-          </div>
-          <input class="myRadio" type="checkbox" name="projectOptions" id="partProjectInput" value="partProject" ${todo.pParents && todo.pParents.length > 0 ? `checked` : ``} />
-          <label for="partProjectInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's part of something bigger</span><br />
-          <span class="smallText otherSmallText">than itself</span></label>
-          <div class="partProjectDiv">
-            <h5 style="margin: 5px 0 0 0;">What project is it a part of?</h5>
-            <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
-              ${projectNamesChoice}
-            </div>
-          </div>-->
-
           <h5 class="taskInfoSubTitle" style="margin: 0;">Reminder</h5>
           <input class="myRadio" type="radio" name="termOptions" id="reminder" value="reminder" ${todo.term == "reminder" ? `checked` : ``} />
           <label for="reminder" class="termLabel"><span class="myRadio"></span><span style="font-size:14px;">It's such a special day...</span></label>
@@ -4107,6 +4131,9 @@ function taskAddAllInfo(infos){
           
           <input class="myRadio" type="radio" name="termOptions" id="waitForIt" value="waitForIt" ${todo.term == "waitForIt" ? `checked` : ``} />
           <label for="waitForIt" class="termLabel"><span class="myRadio"></span><span style="color:rgb(100, 122, 122);">It's what I've been waiting for</span></label>
+
+          <input class="myRadio" type="radio" name="termOptions" id="thinkBoutIt" value="thinkBoutIt" ${todo.term == "thinkBoutIt" ? `checked` : ``} />
+          <label for="thinkBoutIt" class="termLabel"><span class="myRadio"></span><span style="color:rgb(100, 122, 122);">It's what I need to think about</span></label>
           
           <input class="myRadio" type="radio" name="termOptions" id="crazyShit" value="crazyShit" ${todo.term == "crazyShit" ? `checked` : ``} />
           <label for="crazyShit" class="termLabel"><span class="myRadio"></span><span style="color:rgb(239, 125, 144);">It's just a <em>maybe-one-day-probably-never</em> kinda crazy idea</span></label>
@@ -4709,7 +4736,7 @@ function taskAddAllInfo(infos){
   };
   
 
-  //SAVE BUTTON
+  // MARK: SAVE BUTTON
   taskInfoBtn.addEventListener("click", (e) => { //add a stop if it's recurry to let them know that if they save it, it'll change it and isolate it... or we just don't care and they'll just have to figure that out on their own?
     if(!trashIt.checked){
       if(newSTing){

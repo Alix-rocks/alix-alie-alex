@@ -376,65 +376,6 @@ Options for sorting
       <!-- MARK: PALETS -->
       <div id="iconsPalet" class="iconsPaletClass displayNone"></div>
       <div id="colorPalet" class="colorPaletClass displayNone"></div>
-      <!-- <table id="colorPalet" class="displayNone">
-        <tr class="colorTr">
-          <td class="colorTd">
-            <input type="radio" id="orangeRadio" name="colorRadio" value="orange" />
-            <label for="orangeRadio">
-              <div>
-                <div class="colorDiv orange">people</div>
-              </div>
-            </label>
-          </td>
-          <td class="colorTd">
-            <input type="radio" id="mediumpurpleRadio" name="colorRadio" value="mediumpurple" />
-            <label for="mediumpurpleRadio">
-              <div>
-                <div class="colorDiv mediumpurple">cell</div>
-              </div>
-            </label>
-          </td>
-        </tr>
-        <tr class="colorTr">
-          <td class="colorTd">
-            <input type="radio" id="darkmagentaRadio" name="colorRadio" value="darkmagenta" />
-            <label for="darkmagentaRadio">
-              <div>
-                <div class="colorDiv darkmagenta">errand</div>
-              </div>
-            </label>
-          </td>
-          <td class="colorTd">
-            <input type="radio" id="dodgerblueRadio" name="colorRadio" value="dodgerblue" />
-            <label for="dodgerblueRadio">
-              <div>
-                <div class="colorDiv dodgerblue">screen</div>
-              </div>
-            </label>
-          </td>
-        </tr>
-        <tr class="colorTr">
-          <td class="colorTd">
-            <input type="radio" id="forestgreenRadio" name="colorRadio" value="forestgreen" />
-            <label for="forestgreenRadio">
-              <div>
-                  <div class="colorDiv forestgreen">physic</div>
-              </div>
-            </label>
-          </td>
-          <td class="colorTd">
-            <input type="radio" id="darkslategreyRadio" name="colorRadio" value="darkslategrey"/>
-            <label for="darkslategreyRadio">
-              <div>
-                <div class="colorDiv darkslategrey">else</div>
-              </div>
-            </label>
-          </td>
-        </tr>
-      </table> -->
-      <!-- <div id="labelPalet">
-        <i class="fa-solid fa-pen-ruler"></i>
-      </div> -->
       <!-- MARK: ALWAYS -->
       <section id="alwaysSection">
         <input id="alwaysInput" type="checkbox" class="cossin listToggleInput" />
@@ -495,6 +436,66 @@ Options for sorting
           </div>
         </div>
       </section>
+      <!-- MARK: THINK -->
+      <section id="thinkSection">
+        <input id="thinkInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="thinkInput" class="listToggleLabel">
+            <h3 class="topList"><span class="topListTitle" style="text-decoration-color: rgb(100, 122, 122); color:rgb(100, 122, 122);">THINKING</span></h3>
+            <h5 class="topList">Thinking about it...</h5>
+            <span id="listThinkChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <div class="listToggleList">
+            <div class="relDiv noH4SubList noH4SubListClosed">
+              <!-- <h4 class="subList"></h4> -->
+              <div class="sortlistWhole">
+                <input id="sortthinkBoutItList" class="sortlistInput cossin" type="checkbox" />
+                <div class="sortlistDiv">
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                </div>
+                <label for="sortthinkBoutItList" class="sortlistLabel">
+                  <i class="fa-solid fa-ellipsis sortUnchecked"></i>
+                  <i class="typcn typcn-tick sortChecked"></i>
+                </label>
+              </div>
+            </div> 
+            <ul id="thinkBoutItList" class="sortedList" data-sort="color"></ul>
+          </div>
+        </div>
+      </section>
+      <!-- MARK: RANDOM IDEAS -->
+      <section id="ideaSection">
+        <input id="ideaInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="ideaInput" class="listToggleLabel">
+            <h3 class="topList"><span class="topListTitle" style="text-decoration-color: rgb(239, 125, 144); color:rgb(239, 125, 144);">Random Ideas</span></h3>
+            <h5 class="topList">It's a <em>maybe-one-day-probably-never</em> kinda thing...</h5>
+            <span id="listIdeaChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <div class="listToggleList">
+            <div class="relDiv noH4SubList noH4SubListClosed">
+              <!-- <h4 class="subList"></h4> -->
+              <div class="sortlistWhole">
+                <input id="sortcrazyShitList" class="sortlistInput cossin" type="checkbox" />
+                <div class="sortlistDiv">
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                </div>
+                <label for="sortcrazyShitList" class="sortlistLabel">
+                  <i class="fa-solid fa-ellipsis sortUnchecked"></i>
+                  <i class="typcn typcn-tick sortChecked"></i>
+                </label>
+              </div>
+            </div> 
+            <ul id="crazyShitList" class="sortedList" data-sort="text"></ul>
+          </div>
+        </div>
+      </section>
       <!-- MARK: SCHEDULED -->
       <section id="scheduledSection">
         <input id="scheduledInput" type="checkbox" class="cossin listToggleInput" />
@@ -531,36 +532,6 @@ Options for sorting
             <span id="listRecurringChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
           <ul id="listRecurring" class="listToggleList sortedList" data-sort="text"></ul>
-        </div>
-      </section>
-      <!-- MARK: RANDOM IDEAS -->
-      <section id="ideaSection">
-        <input id="ideaInput" type="checkbox" class="cossin listToggleInput" />
-        <div>
-          <label for="ideaInput" class="listToggleLabel">
-            <h3 class="topList"><span class="topListTitle" style="text-decoration-color: rgb(239, 125, 144); color:rgb(239, 125, 144);">Random Ideas</span></h3>
-            <h5 class="topList">It's a <em>maybe-one-day-probably-never</em> kinda thing...</h5>
-            <span id="listIdeaChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
-          </label>
-          <div class="listToggleList">
-            <div class="relDiv noH4SubList noH4SubListClosed">
-              <!-- <h4 class="subList"></h4> -->
-              <div class="sortlistWhole">
-                <input id="sortcrazyShitList" class="sortlistInput cossin" type="checkbox" />
-                <div class="sortlistDiv">
-                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
-                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
-                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
-                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
-                </div>
-                <label for="sortcrazyShitList" class="sortlistLabel">
-                  <i class="fa-solid fa-ellipsis sortUnchecked"></i>
-                  <i class="typcn typcn-tick sortChecked"></i>
-                </label>
-              </div>
-            </div> 
-            <ul id="crazyShitList" class="sortedList" data-sort="text"></ul>
-          </div>
         </div>
       </section>
     </div>

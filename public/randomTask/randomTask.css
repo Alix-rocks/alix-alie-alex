@@ -81,7 +81,7 @@ button span:nth-of-type(2){
   border-bottom: 4px solid var(--tx-color);
   border-radius: 5px;
   padding: 5px 10px;
-  width: fit-content;
+  /* width: fit-content; */
   color: var(--tx-color);
   background-color: var(--bg-color-7);
   font-size: 1em;
@@ -1952,6 +1952,40 @@ hr.zoneHr{
 }
 .pastEvent{
   opacity: .4;
+}
+
+#addingZone{
+  width: calc(100vw - (2 * 42px) - (4 * 8px));
+  /* (100vw - (2 * 42px (cloudBtn)) - (2 * 8px (margins)) - (2 * 8px (space between))) */
+  display: flex;
+  margin-bottom: 15px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+#addForm{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  width: -webkit-fill-available;
+}
+#addForm #addInput{
+  width: 0;
+  flex-grow: 1;
+}
+#addingZone button{
+  padding: 3px;
+  line-height: 1em;
+  margin-left: 8px;
+}
+
+#allStore{
+  top: 0px;
+  left: -8px;
+  right: -8px;
+  padding: 10px 10px 0 5px;
 }
 
 .cossin{

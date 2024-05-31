@@ -206,11 +206,15 @@ Options for sorting
     <div id="labelSelectionDiv">
     </div>
     <div id="todoZone">
-      <form id="addForm" style="margin-bottom: 15px;">
-        <div class="underLining" id="addInput-underLining"></div>
-        <input id="addInput" type="text" />
-        <button id="addBtn" type="submit">add</button>
-      </form>
+      <div id="addingZone">
+        <form id="addForm">
+          <div class="underLining" id="addInput-underLining"></div>
+          <input id="addInput" type="text" />
+          <button id="addBtn" type="submit"><span class="typcn typcn-plus"></span></button>
+        </form>
+        <button id="getStorageBtn" onclick="getStorage()"><span class="typcn typcn-shopping-bag"></span></button>
+      </div>
+      
       <!-- <section id="limboSection" class="displayNone">
         <input id="limboInput" type="checkbox" class="cossin listToggleInput" />
         <div>

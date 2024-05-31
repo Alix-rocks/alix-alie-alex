@@ -326,6 +326,7 @@ function getCloudBC(){
   };
 };
 
+// MARK: getTasksSettings
 async function getTasksSettings() {
   const getTasks = await getDoc(doc(db, "randomTask", auth.currentUser.email));
   //console.log(getTasks.data().mySettings);
@@ -439,6 +440,13 @@ async function getTasksSettings() {
     //   delete todo.recurrys;
     //   delete todo.listDates;
     //   //console.log(todo.recurryDates.length);
+    // };
+
+    //Recalculate all the recurryDates
+    // if(todo.line == "recurringDay"){
+    //   let date = getDateFromString(todo.dal);
+    //   sendRecurringBackToGetRecurryDates(todo, date);
+    //   console.log(todo);
     // };
     
     
@@ -1461,15 +1469,41 @@ function addThatdayTodos(){
 
 // MARK: CREATION
 
-function recurryDateToTodoCreation(todo, recurryDate, fate){ //todo == the todo that todo.line == "recurryngDay"; recurryDate == date to create (from todo.recurryDates); fate == "out" (if needs to be pushed in listTasks, becoming a new todo, and the recurryDate taken out of recurryDates) OR "in" (if it's just temporary and the recurryDate shall stay in recurryDates; we're not creating a new todo)
+function getTodoFromLi(li) {
+  let todo;
+  if(li.dataset.rec && li.dataset.rec !== "undefined"){
+    let recIndex = listTasks.findIndex(td => td.id == li.dataset.rec);
+    let recurring = listTasks[recIndex];
+    todo = getWholeRecurry(recurring, li.dataset.date, li.dataset.rec);
+  } else{
+    let todoIndex = listTasks.findIndex(todo => todo.id == li.id);
+    todo = listTasks[todoIndex];
+  };
+  return todo;
+};
+
+function getWholeRecurry(todo, date, recId){
   let recurry = JSON.parse(JSON.stringify(todo));
   clearRecurringData(recurry);
   recurry.id = crypto.randomUUID();
   recurry.line = "todoDay";
-  recurry.date = recurryDate;
+  recurry.date = date;
   recurry.recurry = true;
-  recurry.recId = todo.id;
-  
+  recurry.recId = recId;
+  return recurry;
+};
+
+function recurryDateToTodoCreation(todo, recurryDate, fate){ //todo == the todo that todo.line == "recurryngDay"; recurryDate == date to create (from todo.recurryDates); fate == "out" (if needs to be pushed in listTasks, becoming a new todo, and the recurryDate taken out of recurryDates) OR "in" (if it's just temporary and the recurryDate shall stay in recurryDates; we're not creating a new todo)
+
+  let recurry = getWholeRecurry(todo, recurryDate, todo.id);
+  // let recurry = JSON.parse(JSON.stringify(todo));
+  // clearRecurringData(recurry);
+  // recurry.id = crypto.randomUUID();
+  // recurry.line = "todoDay";
+  // recurry.date = recurryDate;
+  // recurry.recurry = true;
+  // recurry.recId = todo.id;
+    
   todoCreation(recurry);
   if(fate == "out"){ // to remove the recurryDate from todo.recurryDates AND pushing the new recurry in listTasks
     todo.recurryDates = todo.recurryDates.filter(rD => rD !== recurryDate);
@@ -1497,6 +1531,8 @@ function todoCreation(todo){
     } else {
       togoList = "listToday";
     };
+  } else if(storageSwitch){
+    togoList = "allStoreList";
   } else{
     togoList = getTogoList(todo);
   };
@@ -1629,7 +1665,7 @@ function getTogoList(todo){
       };
     } else if(todo.recurryDates.length == 1 && todo.fineOpt == "fineMai"){
       let date = getDateFromString(todo.recurryDates[0]);
-      sendRecurringToGetRecurryDates(todo, date);
+      sendRecurringBackToGetRecurryDates(todo, date);
     };
     togoList = "listRecurring";
     recurryCreation(todo);
@@ -1780,32 +1816,21 @@ function recurryCreation(todo){
   };
 };
 
-function sendRecurringToGetRecurryDates(todo, date){
+function sendRecurringBackToGetRecurryDates(todo, date){
   if(todo.var == "giorno"){
     ogniOgni(todo, date);
   } else if(todo.var == "settimana"){
-    let daysWeek = [];
-    inDaySection.querySelectorAll('input[name="daysWeekChoice"]').forEach(choice => {
-      if(choice.checked == true){
-        daysWeek.push(choice.value);
-      };
-    });
-    todo.daysWeek = daysWeek;
     ogniSettimana(todo, date);
   } else if(todo.var == "mese"){
-    todo.meseOpt = inDaySection.querySelector('input[name="meseOptions"]:checked').value;
     if(todo.meseOpt == "ogniXDate"){
-      todo.meseDate = meseDateCalc(todo.dal);
       ogniOgni(todo, date);
     } else if(todo.meseOpt == "ogniXDay"){
-      todo.meseDayN = meseDayNCalc(todo.dal);
-      todo.meseDayI = meseDayICalc(todo.dal);
       ogniMeseDay(todo, date);
     };
   } else if(todo.var == "anno"){
       ogniOgni(todo, date);
   };
-}
+};
 
 
 function donedCreation(donedDate, doned){
@@ -1870,6 +1895,37 @@ addForm.addEventListener("submit", (e) => {
     addForm.reset();
   };
 });
+
+let storageSwitch = false;
+
+function getStorage(){
+  console.log("oups");
+  storageSwitch = true;
+  document.querySelector("#todoZone").insertAdjacentHTML("beforeend", `<div id="allStore" class="taskInfoClass">
+    <h3 class="topList"><span class="topListTitle">Storage</span></h3>
+    <h5 class="topList">Recycling is good...</h5>
+    <hr/>
+    <ul id="allStoreList"></ul>
+  </div>`);
+  listTasks.forEach(todo => {
+    if(todo.stock){
+      todoCreation(todo);
+    };
+  });
+  storageSwitch = false;
+  sortIt("text", "allStoreList");
+  let stockLis = Array.from(document.querySelectorAll("#allStoreList > li"));
+  console.log(stockLis);
+  for(let i = (stockLis.length - 1); i >= 0; i--){
+    let term = stockLis[i].dataset.term;
+    if(!document.getElementById(`allStock${term}SubList`)){
+      stockLis[i].insertAdjacentHTML("beforebegin", `<h4 class="subList" id="allStock${term}SubList">${term}</h4>`);
+    } else{
+      document.getElementById(`allStock${term}SubList`).insertAdjacentElement("afterend", stockLis[i]);
+    };
+  };
+};
+window.getStorage = getStorage;
 
 function recycleEvent(recycle){ //from Done
   let recycleLi = recycle.parentElement;
@@ -1966,15 +2022,12 @@ let num = 0;
 doneNextBtn.addEventListener("click", () => {
   let doneId = wheneverList[num].id;
   let doneLi = document.getElementById(doneId);
-  if(doneLi.dataset.rec && doneLi.dataset.rec !== "undefined"){
-    let rec = doneLi.dataset.rec;
-    gotItDone(doneId, rec);
-  } else{
-    gotItDone(doneId, "");
+  let doned = getTodoFromLi(doneLi);
+  if(!doneLi.dataset.always){
+    doneLi.remove();
   };
-  doneLi.remove();
+  gotItDone(doned);
   updateCBC();
-  //gotItDone(doneId);
   wheneverList.splice(num, 1);
   if(wheneverList.length == 0){
     taskToDo.innerText = "aller t'reposer!";
@@ -1998,19 +2051,12 @@ function checkEvent(emptyCheck, where){
   } else if(where == "urge"){
     li = emptyCheck.parentElement.parentElement;
   };
-  let donedId = li.id;
-  if(li.dataset.rec && li.dataset.rec !== "undefined"){
-    let rec = li.dataset.rec;
-    //doneAction(li); // need to wait until animation is over before moving on to the next (gotItDone and remove) (use metro app animation)
-    gotItDone(donedId, rec);
-    li.remove();
-  } else if(li.dataset.always){
-    gotItDone(donedId, "here");
-    // no   li.remove();
-  } else{
-    gotItDone(donedId, "");
+  let doned = getTodoFromLi(li);
+  if(!li.dataset.always){
     li.remove();
   };
+  gotItDone(doned);
+  //doneAction(li); // need to wait until animation is over before moving on to the next (gotItDone and remove) (use metro app animation)
   updateCBC();
 };
 window.checkEvent = checkEvent;
@@ -2020,45 +2066,35 @@ function doneAction(li){
   /* the div would have two layers, the under one would be a horizontal line like the trashline in time app and the top one would be gradient of transparent on the right and opaque (bg-color) on the left. The whole thing would move from left to right until the whole li seems to have disapeared */
 };
 
+function getRecurryDateOut(todo){ //pour enlever la date d'un recurry de la list recurryDate de son recurring (ne delete pas todo.recurry et todo.recId)
+  let recIndex = listTasks.findIndex(td => td.id == todo.recId);
+  let recurring = listTasks[recIndex];
+  recurring.recurryDates = recurring.recurryDates.filter(rD => rD !== todo.date);
+};
 
-function gotItDone(nb, rec){ //nb = todo.id, rec = recurring Id (or "" if directly in listTasks)
-  let doned;
-  if(rec !== "" && rec !== "here"){ //it's a recurry! and rec is its recurring id
-    let recurringIndex = listTasks.findIndex(todo => todo.id == rec);
-    let donedTaskIndex = listTasks[recurringIndex].recurrys.findIndex(todo => todo.id == nb);
-    let donedTaskSplice = listTasks[recurringIndex].recurrys.splice(donedTaskIndex, 1);
-    doned = donedTaskSplice[0];
-    if(doned.urge){
-      colorUrges("next");
-    };    
-    localStorage.listTasks = JSON.stringify(listTasks);
-  } else if(rec == "here"){ //it's an alwaysHere
-    let donedTaskIndex = listTasks.findIndex(todo => todo.id == nb);
-    doned = listTasks[donedTaskIndex];
+function gotItDone(doned){ //doned is either the todo per se or a fake todo created for the recurry
+  let donedItem;
+  if(doned.recurry){
+    getRecurryDateOut(doned); //removes the date from the recurryDates of its recurring
+    donedItem = doned;
   } else{
-    let donedTaskIndex = listTasks.findIndex(todo => todo.id == nb);
-    if(listTasks[donedTaskIndex].stored == true){
-      // console.log(listTasks[donedTaskIndex]);
-      let donedTaskId = listTasks[donedTaskIndex].id;
-      let stockId = listTasks[donedTaskIndex].stockId;
-      let stockIndex = listTasks.findIndex(todo => todo.id == stockId);
-      console.log(stockIndex);
+    if(doned.stored){
+      let stockIndex = listTasks.findIndex(todo => todo.id == doned.stockId);
       if(stockIndex !== -1){
-        listTasks[stockIndex].storedId = listTasks[stockIndex].storedId.filter(id => id !== donedTaskId);
+        listTasks[stockIndex].storedId = listTasks[stockIndex].storedId.filter(id => id !== doned.id);
       }; //else, means the stock has been erased without erasing its stored...
     };
-
-    let donedTaskSplice = listTasks.splice(donedTaskIndex, 1);
-    doned = donedTaskSplice[0];
-    if(doned.urge){
-      colorUrges("next");
-    };    
-    localStorage.listTasks = JSON.stringify(listTasks);
+    let donedIndex = listTasks.findIndex(todo => todo.id == doned.id);
+    let donedSplice = listTasks.splice(donedIndex, 1);
+    donedItem = donedSplice[0];
   };
-  
+  if(doned.urge){
+    colorUrges("next");
+  };    
+  localStorage.listTasks = JSON.stringify(listTasks);
+
   let donedDate = getTodayDateString(); //return
-  let donedItem = JSON.parse(JSON.stringify(doned)); //we copy the doned
-  donedItem.id = crypto.randomUUID();
+  
   let dateFound = false;
   for (const i in listDones) {
     if (listDones[i].date == donedDate) {
@@ -2166,7 +2202,7 @@ function refreshDoneId(){
   });
 };
 
-// *** SORT
+// MARK: SORT
 
 function howToSortIt(listName){
   let ul; // or check if ul has the class "sortedList" ...
@@ -2665,13 +2701,14 @@ function smallCalendarChoice(thisOne){//thisOne = taskToDate est l'icon calendar
   if(recurryIsIt){
     recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
     let recurring = listTasks[recIndex];
-    todo = JSON.parse(JSON.stringify(recurring));
-    clearRecurringData(todo);
-    todo.id = crypto.randomUUID();
-    todo.line = "todoDay";
-    todo.date = parent.dataset.date;
-    todo.recurry = true;
-    todo.recId = parent.dataset.rec;
+    todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
+    // todo = JSON.parse(JSON.stringify(recurring));
+    // clearRecurringData(todo);
+    // todo.id = crypto.randomUUID();
+    // todo.line = "todoDay";
+    // todo.date = parent.dataset.date;
+    // todo.recurry = true;
+    // todo.recId = parent.dataset.rec;
   } else{
     todoIndex = listTasks.findIndex(td => td.id == parent.id);
     todo = listTasks[todoIndex];
@@ -2685,16 +2722,14 @@ function smallCalendarChoice(thisOne){//thisOne = taskToDate est l'icon calendar
   clickScreen.addEventListener("click", () => clickHandlerAddOn(calendarDiv, "trash", clickScreen, togoList));
   document.querySelector("#saveTheDateBtn").addEventListener("click", () => {
     let previousList = parent.parentElement.id;
-    calendarSave(todo); //
     if(recurryIsIt){
-      let recIndex = listTasks.findIndex(td => td.id == todo.recId);
-      let recurring = listTasks[recIndex];
-      recurring.recurryDates = recurring.recurryDates.filter(rD => rD !== todo.date); // donc la date du todo est enlevée des recurryDates de son recurringDay
+      getRecurryDateOut(todo); // donc la date du todo est enlevée des recurryDates de son recurringDay
       delete todo.recurry;
       delete todo.recId; //et todo redevient un todo normal!
       listTasks.push(todo);// et le todo est maintenant dans la listTask!
       //parent.remove();
     };
+    calendarSave(todo); //
     if(todo.newShit){
       delete todo.newShit;
     };
@@ -3085,6 +3120,7 @@ function calendarSave(todo){ //
       clearRecurringData(todo);
       delete todo.date;
       todo.dal = inDaySection.querySelector("#dalInput").value;
+      let date = getDateFromString(todo.dal);
       todo.ogni = inDaySection.querySelector("#ogniInput").value;
       todo.var = inDaySection.querySelector("#timeVariationInput").value; 
       todo.fineOpt = inDaySection.querySelector('input[name="fineOptions"]:checked').value;
@@ -3093,8 +3129,30 @@ function calendarSave(todo){ //
       } else if(todo.fineOpt == "fineDopo"){
         todo.fineCount = inDaySection.querySelector("#fineCount").value;
       };
-      let date = getDateFromString(todo.dal);
-      sendRecurringToGetRecurryDates(todo, date);
+      if(todo.var == "giorno"){
+        ogniOgni(todo, date);
+      } else if(todo.var == "settimana"){
+        inDaySection.querySelectorAll('input[name="daysWeekChoice"]').forEach(choice => {
+          if(choice.checked == true){
+            todo.daysWeek.push(choice.value);
+          };
+        });
+        ogniSettimana(todo, date);
+      } else if(todo.var == "mese"){
+        todo.meseOpt = inDaySection.querySelector('input[name="meseOptions"]:checked').value;
+        if(todo.meseOpt == "ogniXDate"){
+          todo.meseDate = meseDateCalc(todo.dal);
+          ogniOgni(todo, date);
+        } else if(todo.meseOpt == "ogniXDay"){
+          todo.meseDayN = meseDayNCalc(todo.dal);
+          todo.meseDayI = meseDayICalc(todo.dal);
+          ogniMeseDay(todo, date);
+        };
+      } else if(todo.var == "anno"){
+          ogniOgni(todo, date);
+      };
+      
+      //sendRecurringToGetRecurryDates(todo, date);
       // recurryDateToTodoCreation(todo, recurryDate, "out"); ??
       // recurryCreation(todo);
       //recurryOuting(todo);
@@ -3385,18 +3443,6 @@ function pruning(todo, listDates){
   return listDates;
 };
 
-function allRecurrysCreation(todo){
-  todo.recurrys = todo.listDates.map(date => {
-    let newTodo = JSON.parse(JSON.stringify(todo));
-    clearRecurringData(newTodo);
-    newTodo.id = crypto.randomUUID();
-    newTodo.date = date;
-    newTodo.line = "todoDay";
-    newTodo.recurry = true;
-    newTodo.recId = todo.id;
-    return newTodo;
-  });
-};
 
 function weekCalculate(date){
   let dayI = meseDayICalc(date);
@@ -3495,7 +3541,6 @@ let newlabelColor = "";
 
 // MARK: TODO List
 /*
-1. Revoir gotItDone pour Recurry!
 2. Revoir les calculs de ogni settimana (j'suis pas sure si ça marche bien ou pas)
 3. if fineMai and recurryDates.length == 0 then alert and check if you can use alert "ok" to do erase and "cancel" to open taskInfo with the todo that is about to be erased!!) 
 9. dans les calendar, faire un équivalent de recurryDateToTodoCreation ("in")
@@ -3503,13 +3548,9 @@ let newlabelColor = "";
 */
 
 // MARK: ToGoToTI + RÉFLEXTION
-//Il va falloir en faire d'autres pour (ou trouver un moyen de gérer) les recurry, parce qu'ils vont être why=="mod" mais s'ils ne sont pas out (dans listTasks), ils n'auront pas de todoIndex! 
-//Aussi, pourquoi le recurry garde recId alors que le recurringDay n'a pas les recurryId?! 
-// :: Et si, quand on sort et push un recurry dans listTasks, et si il devenait un todo complètement normal (no recurry, no recId, etc), genre qu'il pourrait devenir stock, un nouveau recurringDay ou n'importe quoi d'autre!
 //Aussi, chaque fois qu'on sauve un recurringDay, la recurryDates se refait à neuf... donc on va se ramasser avec des doubles les jours où on avait sorti le recurry :: Quand on va avoir réglé le problème de la création de nouveaux recurryDates au fur et à mesure que le temps passe, on pourrait simplement faire que la liste recurryDates ne se refasse pas à nouveau à chaque save de calendar! (Il va falloir faire la distinction entre save TaskInfo et save Calendar, parce que si c'est Calendar alors là oui, il va probablement falloir refaire les recurryDates...) (au début, par contre, ça va être nécessaire de tous les faire au moins une fois, histoire d'avoir les bons nombres de recurryDates et de "recommencer" comme du monde) (de toutes façons, à chaque fois qu'on va outer un recurry, on va copier le recurringDay (donc sa nouvelle version si on l'a modifié) Autrement dit, chaque fois que tu modifie le recurringDay, c'est clair que les futurs recurry vont être modifiés) IL FAUT JUSTE FAIRE LA DISTINCTION SI LE RECURRING DANS CALENDAR VA AVOIR ÉTÉ CHANGÉ (si je change de ogni 2 settimana à ogni 1 settimana, il faut que la liste recurryDates se refasse à nouveau, mais sinon non!)
 //parent is global but we still have to give it a value (we might need to rethink parent being global when we want multiple clickscreens...)
-//We don't need recIndex anymore since we only use recurryDates!
-//Don't push the new ones in listTasks until they save it (that way, cancel is really just taskInfo.remove())
+
 //Parents are only necessairy if we're working on a todo that is in the swiping section (for example, you would have the one on wednesday and the one in scheduled) or if in search, we add the results of different searches together and a todo comes up more than once
 //todoIndex... we could not add it to infos since we only need it if we trash it! (and if it was a recurry (not pushed in listTask yet, so no index), then we'll need to remove the date in recurryDates)
 
@@ -3530,13 +3571,14 @@ function toTIdeTZaP(thisOne){ // de TodoZone à Procrastinator
   if(recurryIsIt){
     recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
     let recurring = listTasks[recIndex];
-    todo = JSON.parse(JSON.stringify(recurring));
-    clearRecurringData(todo);
-    todo.id = crypto.randomUUID();
-    todo.line = "todoDay";
-    todo.date = parent.dataset.date;
-    todo.recurry = true;
-    todo.recId = parent.dataset.rec;
+    todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
+    // todo = JSON.parse(JSON.stringify(recurring));
+    // clearRecurringData(todo);
+    // todo.id = crypto.randomUUID();
+    // todo.line = "todoDay";
+    // todo.date = parent.dataset.date;
+    // todo.recurry = true;
+    // todo.recId = parent.dataset.rec;
   } else{
     todoIndex = listTasks.findIndex(td => td.id == parent.id);
     todo = listTasks[todoIndex];
@@ -3597,13 +3639,14 @@ function toTIdeTZaM(thisOne){ // de TodoZone à Modification
   if(recurryIsIt){
     recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
     let recurring = listTasks[recIndex];
-    todo = JSON.parse(JSON.stringify(recurring));
-    clearRecurringData(todo);
-    todo.id = crypto.randomUUID();
-    todo.line = "todoDay";
-    todo.date = parent.dataset.date;
-    todo.recurry = true;
-    todo.recId = parent.dataset.rec;
+    todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
+    // todo = JSON.parse(JSON.stringify(recurring));
+    // clearRecurringData(todo);
+    // todo.id = crypto.randomUUID();
+    // todo.line = "todoDay";
+    // todo.date = parent.dataset.date;
+    // todo.recurry = true;
+    // todo.recId = parent.dataset.rec;
   } else{
     todoIndex = listTasks.findIndex(td => td.id == parent.id);
     todo = listTasks[todoIndex];
@@ -3672,13 +3715,14 @@ function toTIdeSSaM(thisOne){ // de SearchScreen à Modification
   if(recurryIsIt){
     recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
     let recurring = listTasks[recIndex];
-    todo = JSON.parse(JSON.stringify(recurring));
-    clearRecurringData(todo);
-    todo.id = crypto.randomUUID();
-    todo.line = "todoDay";
-    todo.date = parent.dataset.date;
-    todo.recurry = true;
-    todo.recId = parent.dataset.rec;
+    todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
+    // todo = JSON.parse(JSON.stringify(recurring));
+    // clearRecurringData(todo);
+    // todo.id = crypto.randomUUID();
+    // todo.line = "todoDay";
+    // todo.date = parent.dataset.date;
+    // todo.recurry = true;
+    // todo.recId = parent.dataset.rec;
   } else{
     todoIndex = listTasks.findIndex(td => td.id == parent.id);
     todo = listTasks[todoIndex];
@@ -3771,13 +3815,14 @@ function toTIdeCMaM(thisOne){ // de CalMonthPage à Modification
   if(recurryIsIt){
     recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
     let recurring = listTasks[recIndex];
-    todo = JSON.parse(JSON.stringify(recurring));
-    clearRecurringData(todo);
-    todo.id = crypto.randomUUID();
-    todo.line = "todoDay";
-    todo.date = kase.dataset.wholedate;
-    todo.recurry = true;
-    todo.recId = parent.dataset.rec;
+    todo = getWholeRecurry(recurring, kase.dataset.wholedate, parent.dataset.rec);
+    // todo = JSON.parse(JSON.stringify(recurring));
+    // clearRecurringData(todo);
+    // todo.id = crypto.randomUUID();
+    // todo.line = "todoDay";
+    // todo.date = kase.dataset.wholedate;
+    // todo.recurry = true;
+    // todo.recId = parent.dataset.rec;
   } else{
     todoIndex = listTasks.findIndex(td => td.id == parent.dataset.id);
     todo = listTasks[todoIndex];
@@ -3854,13 +3899,14 @@ function toTIdeCWaM(thisOne){ // de CalWeekPage à Modification
   if(recurryIsIt){
     recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
     let recurring = listTasks[recIndex];
-    todo = JSON.parse(JSON.stringify(recurring));
-    clearRecurringData(todo);
-    todo.id = crypto.randomUUID();
-    todo.line = "todoDay";
-    todo.date = parent.dataset.date;
-    todo.recurry = true;
-    todo.recId = parent.dataset.rec;
+    todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
+    // todo = JSON.parse(JSON.stringify(recurring));
+    // clearRecurringData(todo);
+    // todo.id = crypto.randomUUID();
+    // todo.line = "todoDay";
+    // todo.date = parent.dataset.date;
+    // todo.recurry = true;
+    // todo.recId = parent.dataset.rec;
   } else{
     todoIndex = listTasks.findIndex(td => td.id == parent.dataset.id);
     todo = listTasks[todoIndex];
@@ -4955,16 +5001,16 @@ function taskAddAllInfo(infos){
       };
       
 
-      calendarSave(todo); // 
+      
       //parent is global (no need for parent since todoCreation)
       if(todo.recurry == true){
         //we could add an alert saying that if you save it, it's gonna become a whole thing on itself in the big list
-        let recurring = listTasks[infos.recIndex];
-        recurring.recurryDates = recurring.recurryDates.filter(rD => rD !== todo.date); // donc la date du todo est enlevée des recurryDates de son recurringDay
+        getRecurryDateOut(todo); // donc la date (originale (vu qu'on met calendarSave APRÈS)) du todo est enlevée des recurryDates de son recurringDay
         delete todo.recurry;
         delete todo.recId; //et todo redevient un todo normal!
         listTasks.push(todo); // et le todo est maintenant dans la listTask!
       };
+      calendarSave(todo); // 
 
       //WOLA si todo était stored ou stock et là devient reccuringDay?!
 
@@ -4986,14 +5032,10 @@ function taskAddAllInfo(infos){
       togoList = getTogoList(todo);
       if(doneIt.checked){
         if(todo.term == "alwaysHere"){
-          gotItDone(todo.id, "here");
           todoCreation(todo);
-        } else{
-          gotItDone(todo.id, "");
         };
-      } else{
-        todoCreation(todo); 
-      };
+        gotItDone(todo); 
+      }; // the li.remove comes later but parents or parent need to have been established before (i.e. do create parents after by looking for li with the todo.id, otherwise you will have erased to new one too!)
       
       
     } else if(trashIt.checked){
@@ -5004,8 +5046,7 @@ function taskAddAllInfo(infos){
         localStorage.mySettings = JSON.stringify(mySettings);
       }; //Are partProjects in the wholeProject or not?!
       if(todo.recurry == true){ //the parent will be removed, but we need to remove the date in the recurring.recurryDates
-        let recurring = listTasks[infos.recIndex];
-        recurring.recurryDates = recurring.recurryDates.filter(rD => rD !== todo.date); // donc la date du todo est enlevée des recurryDates de son recurringDay        
+        getRecurryDateOut(todo); // donc la date du todo est enlevée des recurryDates de son recurringDay        
       } else if(todo.stored){
         let stockIdx = listTasks.findIndex(toDo => toDo.id == todo.stockId);
         let stock = listTasks[stockIdx];
@@ -5449,13 +5490,14 @@ function putShowsInMonth(monthlyFirst, monthlyLast){
     if(show.line == "recurringDay"){
       show.recurryDates.forEach(recurryDate => {
         if(monthlyFirst <= recurryDate && recurryDate <= monthlyLast){
-          let recurry = JSON.parse(JSON.stringify(show));
-          clearRecurringData(recurry);
-          recurry.id = crypto.randomUUID();
-          recurry.date = recurryDate;
-          recurry.line = "todoDay";
-          recurry.recurry = true;
-          recurry.recId = show.id;
+          let recurry = getWholeRecurry(show, recurryDate, show.id);
+          // let recurry = JSON.parse(JSON.stringify(show));
+          // clearRecurringData(recurry);
+          // recurry.id = crypto.randomUUID();
+          // recurry.date = recurryDate;
+          // recurry.line = "todoDay";
+          // recurry.recurry = true;
+          // recurry.recId = show.id;
           shows.push(recurry);
         };
       });
@@ -5763,13 +5805,14 @@ function putShowsInWeek(Dday, Sday){
     if(show.line == "recurringDay"){ 
       show.recurryDates.map(recurryDate => {
         if(Dday <= recurryDate && recurryDate <= Sday){//takes only the ones that should show up this week
-          let recurry = JSON.parse(JSON.stringify(show));
-          clearRecurringData(recurry);
-          recurry.id = crypto.randomUUID();
-          recurry.date = recurryDate;
-          recurry.line = "todoDay";
-          recurry.recurry = true;
-          recurry.recId = show.id;
+          let recurry = getWholeRecurry(show, recurryDate, show.id);
+          // let recurry = JSON.parse(JSON.stringify(show));
+          // clearRecurringData(recurry);
+          // recurry.id = crypto.randomUUID();
+          // recurry.date = recurryDate;
+          // recurry.line = "todoDay";
+          // recurry.recurry = true;
+          // recurry.recId = show.id;
           createWeeklyshow(recurry);
         };
       })

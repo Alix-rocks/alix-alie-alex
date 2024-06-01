@@ -103,6 +103,8 @@ button span:nth-of-type(2){
   padding-right: 39px;
   padding-left: 41px;
   border-radius: 3px 5px 5px 5px;
+  width: -webkit-fill-available!important;
+  text-align: left;
 }
 /* textarea::-webkit-resizer {
   border: 2px solid var(--tx-color);
@@ -156,7 +158,7 @@ input[type="radio"]{
   width: 62%;
   z-index: 2200;
 }
-#exitX{
+#exitX, .exitX{
   position: absolute;
   top: 5px;
   right: 7px;
@@ -1975,7 +1977,7 @@ hr.zoneHr{
   width: 0;
   flex-grow: 1;
 }
-#addingZone button{
+.addBtns{
   padding: 3px;
   line-height: 1em;
   margin-left: 8px;
@@ -1986,6 +1988,19 @@ hr.zoneHr{
   left: -8px;
   right: -8px;
   padding: 10px 10px 0 5px;
+}
+
+.calendarStockVersion{
+  display: flex; 
+  justify-content: space-between; 
+  flex-flow: row nowrap;
+}
+.calendarStockVersion #taskTitle{
+  width: 0;
+  flex-grow: 1;
+}
+.calendarStockVersion .tagSpan{
+  right: 54px;
 }
 
 .cossin{

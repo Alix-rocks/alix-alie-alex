@@ -446,7 +446,6 @@ async function getTasksSettings() {
     // if(todo.line == "recurringDay"){
     //   let date = getDateFromString(todo.dal);
     //   sendRecurringBackToGetRecurryDates(todo, date);
-    //   console.log(todo);
     // };
     
     
@@ -1553,7 +1552,7 @@ function todoCreation(todo){
       if(todo.stock){
         document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.dalle ? `data-time="${todo.dalle}"` : ``}" class="${todo.term == "showThing" ? todo.label ? `showLiLabel` : `showLi` : todo.term == "sameHabit" ? `sameHabit` : todo.term == "reminder" ? `reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
         ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
-        <i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="${searchSwitch ? `toTIdeSSaM(this)` : `toTIdeTZaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${mySettings.myBaseColors[todo.color].colorBG};" />` : ``}<span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="${searchSwitch ? `toTIdeSSaS(this)` : `toTIdeTZaS(this)`}"></i></li>`);
+        <i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="${searchSwitch ? `toTIdeSSaM(this)` : storageSwitch ? `toTIdeASaM(this)` : `toTIdeTZaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${mySettings.myBaseColors[todo.color].colorBG};" />` : ``}<span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="${searchSwitch ? `toTIdeSSaS(this)` : calendarStock ? `toTIdeCCaNS(this)` : `toTIdeTZaS(this)`}"></i></li>`);
       } else if(todo.line == "recurringDay"){
         let time = todo.dalle ? todo.dalle : mySettings.myTomorrow;
         let nextDate = getDateTimeFromString(todo.recurryDates[0], time);
@@ -1648,7 +1647,7 @@ function getTogoList(todo){
   if(todo.newShit){
     togoList = "listLimbo";
   } else if(todo.stock){
-    togoList = "listStorage";
+    togoList = "";
   } else if(todo.line == "recurringDay"){
     if(todo.recurryDates.length == 0){
       if(todo.fineOpt == "fineMai"){
@@ -1899,14 +1898,17 @@ addForm.addEventListener("submit", (e) => {
 let storageSwitch = false;
 
 function getStorage(){
-  console.log("oups");
   storageSwitch = true;
-  document.querySelector("#todoZone").insertAdjacentHTML("beforeend", `<div id="allStore" class="taskInfoClass">
+  document.body.insertAdjacentHTML("beforeend", `<div id="allStore" class="taskInfoClass">
+    <span id="exitXallStore" class="exitX">x</span>
     <h3 class="topList"><span class="topListTitle">Storage</span></h3>
     <h5 class="topList">Recycling is good...</h5>
-    <hr/>
+    <hr style="margin-top: 0;"/>
     <ul id="allStoreList"></ul>
   </div>`);
+  document.querySelector("#exitXallStore").addEventListener("click", () => {
+    document.querySelector("#allStore").remove();
+  });
   listTasks.forEach(todo => {
     if(todo.stock){
       todoCreation(todo);
@@ -1915,7 +1917,6 @@ function getStorage(){
   storageSwitch = false;
   sortIt("text", "allStoreList");
   let stockLis = Array.from(document.querySelectorAll("#allStoreList > li"));
-  console.log(stockLis);
   for(let i = (stockLis.length - 1); i >= 0; i--){
     let term = stockLis[i].dataset.term;
     if(!document.getElementById(`allStock${term}SubList`)){
@@ -3541,6 +3542,8 @@ let newlabelColor = "";
 
 // MARK: TODO List
 /*
+1. Revoir le CSS pour que les li soient beaux même dans le body et considérer afficher allStore dans le body à chaque fois? (peut-être même taskInfo aussi, vu que des fois, c'est la seule chose qui change d'un toTI à l'autre!)
+
 2. Revoir les calculs de ogni settimana (j'suis pas sure si ça marche bien ou pas)
 3. if fineMai and recurryDates.length == 0 then alert and check if you can use alert "ok" to do erase and "cancel" to open taskInfo with the todo that is about to be erased!!) 
 9. dans les calendar, faire un équivalent de recurryDateToTodoCreation ("in")
@@ -3701,6 +3704,30 @@ function toTIdeTZaS(thisOne){ // de TodoZone à Stock reusage
 };
 window.toTIdeTZaS = toTIdeTZaS;
 
+function toTIdeASaM(thisOne){ // de AllStorage à Modification
+  moving = false;
+  let div= thisOne.parentElement;
+  parent = div.parentElement;
+  parent.classList.add("selectedTask");
+  parent.scrollIntoView(); 
+  let todoIndex = listTasks.findIndex(td => td.id == parent.id);
+  let todo = listTasks[todoIndex];
+  let width = getComputedStyle(div).width; 
+  let num = width.slice(0, -2); 
+  let newWidth = Number(num) + 44; 
+  clickScreen.classList.remove("displayNone"); 
+  let infos = {
+    todo: todo,
+    where: "allStorage",
+    why: "mod",
+    div: div,
+    newWidth: newWidth,
+    todoIndex: todoIndex
+  };
+  taskAddAllInfo(infos);
+};
+window.toTIdeASaM = toTIdeASaM;
+
 function toTIdeSSaM(thisOne){ // de SearchScreen à Modification
   moving = false; //must stay false in month/week/search
   let div= thisOne.parentElement;
@@ -3778,10 +3805,14 @@ function toTIdeSSaS(thisOne){ // de SearchScreen à Stock reusage
 };
 window.toTIdeSSaS = toTIdeSSaS;
 
+let calendarStock = false;
+let newTodoStockFromCal = {};
+
 function toTIdeCMaN(thisOne){ // de CalMonthPage à New
   moving = false; //must stay false in month/week/search
+  calendarStock = true;
   let kaseDate = thisOne.parentElement.dataset.wholedate;
-  let todo = {
+  let todo = newTodoStockFromCal = {
     newShit: true,
     id: crypto.randomUUID(),
     color: "0",
@@ -3849,6 +3880,7 @@ function toTIdeCMaS(thisOne){ // de CalMonthPage à Stock reusage
 };
 function toTIdeCWaN(thisOne){ // de CalWeekPage à New
   moving = false; //must stay false in month/week/search
+  calendarStock = true;
   let colNum = thisOne.style.gridColumnStart;
   let code = mySettings.myWeeksDayArray[colNum - 2].code;
   let colEl = document.querySelector(`[data-code="${code}"]`);
@@ -3876,6 +3908,7 @@ function toTIdeCWaN(thisOne){ // de CalWeekPage à New
     todo.alle = rowHourEnd;
     todo.tutto = false;
   };
+  newTodoStockFromCal = todo;
   let newWidth = Number(window.innerWidth - 20);
   let div = document.getElementById("calWeekPage");
   let infos = {
@@ -3915,7 +3948,7 @@ function toTIdeCWaM(thisOne){ // de CalWeekPage à Modification
   let div = document.getElementById("calWeekPage");
   let infos = {
     todo: todo,
-    where: "calWeekPage",
+    where: "", // we don't even use it!
     why: "mod",
     div: div,
     newWidth: newWidth,
@@ -3932,11 +3965,46 @@ window.toTIdeCWaM = toTIdeCWaM;
 function toTIdeCWaS(thisOne){ // de CalWeekPage à Stock reusage
 };
 
+function toTIdeCCaNS(thisOne){ //de calendar (month || weekly) à Stock reusage à partir de New (calendarStock)
+  moving = false; //must stay false in month/week/search
+  document.querySelector("#taskInfo").remove();
+  document.querySelector("#allStore").remove();
+  let reuseLi = thisOne.parentElement;
+  let reuseId = reuseLi.id;
+  let reuseIndex = listTasks.findIndex(todo => todo.id == reuseId);
+  let reuse = listTasks[reuseIndex];
+  let todo = JSON.parse(JSON.stringify(reuse));
+  let newTodo = newTodoStockFromCal;
+  //Now we compare the todo with the newTodo
+  todo.date = newTodo.date;
+  todo.dalle = todo.dalle ? todo.dalle : newTodo.dalle;
+  todo.alle = todo.alle ? todo.alle : newTodo.alle;
+  todo.tutto = todo.dalle ? false : true;
+  todo.stored = true;
+  todo.stockId = reuse.id;
+  todo.line = "todoDay";
+  delete todo.stock;
+  delete todo.storedId;
+  //let newWidth = Number(window.innerWidth - 16);
+  let div = document.body;
+  clickScreen.classList.remove("displayNone"); 
+  let infos = {
+    todo: todo,
+    where: "",
+    why: "stock",
+    div: div,
+    newWidth: "",
+    reuse: reuse
+  };
+  taskAddAllInfo(infos);
+};
+window.toTIdeCCaNS = toTIdeCCaNS;
+
 // MARK: TASKINFO
 function taskAddAllInfo(infos){
   let parents;
   let todo = infos.todo;
-  let where = infos.where;//where == "todoZone", "calWeekPage", "calMonthPage", "searchScreen"
+  let where = infos.where;//where == "todoZone", "calWeekPage", "calMonthPage", "searchScreen", "allStorage"
   let why = infos.why;//why == "new", "mod", "pro", "stock"
   let div = infos.div;
   let togoList = infos.togoList;
@@ -4017,7 +4085,7 @@ function taskAddAllInfo(infos){
     projectHow = ``;
   };
 //taskInfoProject similar to projectLi
-  let taskAllInfo = `<div id="taskInfo" class="taskInfoClass${todo.term == "wholeProject" ? ` taskInfoProject` : ``}" style="${newWidth !== "" ? `width:${newWidth}px; ` : ``}${(where == "todoZone" || where == "searchScreen") ? (why == "new" || why == "stock") ? `top: 0; left: 0;` : `top: 25px; left: -37px;` : `top: 10px; left: 10px;`}${todo.term == "wholeProject" ? `border-color:${colorsList[pColor].colorBG}; outline-color: ${colorsList[pColor].colorBG5};` : ``}">
+  let taskAllInfo = `<div id="taskInfo" class="taskInfoClass${todo.term == "wholeProject" ? ` taskInfoProject` : ``}" style="${newWidth !== "" ? `width:${newWidth}px; ` : ``}${(where == "todoZone" || where == "searchScreen" || where == "allStorage") ? (why == "new" || why == "stock") ? `top: 0; left: 0;` : `top: 25px; left: -37px;` : `top: 10px; left: 10px;`}${todo.term == "wholeProject" ? `border-color:${colorsList[pColor].colorBG}; outline-color: ${colorsList[pColor].colorBG5};` : ``}">
     <div class="taskInfoWrapper">
       <div id="SupClickScreen" class="Screen displayNone"></div>
       <input id="doneIt" type="checkbox" class="cossin cornerItInput" />
@@ -4045,13 +4113,14 @@ function taskAddAllInfo(infos){
         <i class="fa-regular fa-trash-can cornerItUnChecked"></i>
         <i class="fa-solid fa-trash-can cornerItChecked"></i>
       </label>
-      <div class="taskInfoInput relDiv">
+      <div class="taskInfoInput relDiv${calendarStock ? ` calendarStockVersion` : ``}">
         ${todo.pParents && todo.pParents.length > 0 ? `<div class="projectOnglet" style="background-color:${todo.PColorBG}; color:${todo.PColorTX};">${todo.Pnickname}</div>` : ``}
         <span id="iconIt" class="IconI ${todo.icon}"></span>
         <div id="labelIt" class="labelOnglet labelTaskOnglet" style="left:-10px; top:2px; background-color:${todo.LColor ? colorsList[todo.LColor].colorBG : "initial"}; color:${todo.LColor ? colorsList[todo.LColor].colorTX : "inherit"};">${todo.LName ? todo.LName : "Label"}</div>
         <div class="underLining" id="taskTitle-underLining"></div>
-        <input type="text" id="taskTitle" class="taskInfoInput" style="color:${todo.term == "showThing" ? mySettings.myBaseColors[0].colorBG : mySettings.myBaseColors[todo.color].colorBG};" value="${todo.task ? todo.task : ""}">
+        <input type="text" id="taskTitle" style="color:${todo.term == "showThing" ? mySettings.myBaseColors[0].colorBG : mySettings.myBaseColors[todo.color].colorBG};" value="${todo.task ? todo.task : ""}">
         <span id="colorIt" class="typcn typcn-tag tagSpan ${todo.term == "showThing" ? `hidden` : ``}" style="color:${mySettings.myBaseColors[todo.color].colorBG};"></span>
+        ${calendarStock ? `<button class="addBtns" onclick="getStorage()"><span class="typcn typcn-shopping-bag"></span></button>` : ``}
       </div>
       <div id="trashedArea">
         <input id="tellWhyInput" type="checkbox" class="cossin taskToggleInput" />
@@ -4976,7 +5045,7 @@ function taskAddAllInfo(infos){
         delete todo.miniHide;
       };
 
-      if(where == "todoZone" || where == "searchScreen"){
+      if(where == "todoZone" || where == "searchScreen" || where == "allStorage"){
         parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
       };
       //Since there are no more copy, we don't need that anymore (except in the swipingDay Section if it's the date the todo is...)
@@ -5060,7 +5129,7 @@ function taskAddAllInfo(infos){
       } else{
         listTasks.splice(infos.todoIndex, 1);
       };
-      if(where == "todoZone" || where == "searchScreen"){
+      if(where == "todoZone" || where == "searchScreen" || where == "allStorage"){
         parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
       }; //we don't need parents anymore since there are no more copy! (except in the swipingDay Section if it's the date the todo is...)
     };
@@ -5069,7 +5138,7 @@ function taskAddAllInfo(infos){
     updateWeek();
     updateMonth();
     // A REVOIR!!
-    if(where == "searchScreen"){
+    if(where == "searchScreen" || where == "allStorage"){
       moving = false;
       taskInfo.remove();
       clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);

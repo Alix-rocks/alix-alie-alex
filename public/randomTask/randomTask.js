@@ -1550,14 +1550,14 @@ function todoCreation(todo){
   if(togoList !== ""){ //what happens if one is stock/stored AND recurring/recurry?
     if(document.getElementById(togoList)){  
       if(todo.stock){
-        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.dalle ? `data-time="${todo.dalle}"` : ``}" class="${todo.term == "showThing" ? todo.label ? `showLiLabel` : `showLi` : todo.term == "sameHabit" ? `sameHabit` : todo.term == "reminder" ? `reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
+        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.dalle ? `data-time="${todo.dalle}"` : ``}" class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : todo.term == "reminder" ? ` reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
         ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
         <i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="${searchSwitch ? `toTIdeSSaM(this)` : storageSwitch ? `toTIdeASaM(this)` : `toTIdeTZaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${mySettings.myBaseColors[todo.color].colorBG};" />` : ``}<span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div><i class="fa-solid fa-recycle" onclick="${searchSwitch ? `toTIdeSSaS(this)` : calendarStock ? `toTIdeCCaNS(this)` : `toTIdeTZaS(this)`}"></i></li>`);
       } else if(todo.line == "recurringDay"){
         let time = todo.dalle ? todo.dalle : mySettings.myTomorrow;
         let nextDate = getDateTimeFromString(todo.recurryDates[0], time);
         numberedDays = Math.floor(Math.abs(nextDate.getTime() - todayDate.getTime())/(1000 * 3600 * 24));
-        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.dalle ? `data-time="${todo.dalle}"` : ``}" class="${todo.term == "showThing" ? todo.label ? `showLiLabel` : `showLi` : todo.term == "sameHabit" ? `sameHabit` : todo.term == "reminder" ? `reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
+        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.dalle ? `data-time="${todo.dalle}"` : ``}" class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : todo.term == "reminder" ? ` reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
         ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
         <i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i>
         <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
@@ -1589,7 +1589,7 @@ function todoCreation(todo){
         if(todo.pPosition == "out"){
           console.log(todo);
         };
-        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" ${todo.date ? `data-date="${todo.date}"` : ``} ${todo.dalle ? `data-time="${todo.dalle}"` : ``} ${todo.recurry ? `data-rec="${todo.recId}"` : ``} ${todo.term == "alwaysHere" ? `data-always="here"` : ``} class="${todo.term == "showThing" ? todo.label ? `showLiLabel` : `showLi` : todo.term == "sameHabit" ? `sameHabit` : ``}${todo.pPosition == "out" ? ` projectLi` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}${todo.pPosition == "out" ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : ``}">
+        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" ${todo.date ? `data-date="${todo.date}"` : ``} ${todo.dalle ? `data-time="${todo.dalle}"` : ``} ${todo.recurry ? `data-rec="${todo.recId}"` : ``} ${todo.term == "alwaysHere" ? `data-always="here"` : ``} class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : ``}${todo.pPosition == "out" ? ` projectLi` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}${todo.pPosition == "out" ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : ``}">
           ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
           ${pOngletsDiv}
           <div class="urgeCheck" style="color: ${todo.urge ? todo.urgeColor : ``}" ${todo.urge || todo.label ? `onclick="checkOrUrge(this)"` : `onclick="checkEvent(this, 'norm')"`}>
@@ -1699,10 +1699,9 @@ function checkOrUrge(thisOne){
   let checkId = parent.id;
   let todo;
   if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
-    let recId = parent.dataset.rec;
-    let recIndex = listTasks.findIndex(todo => todo.id == recId);
-    let todoIndex = listTasks[recIndex].recurrys.findIndex(todo => todo.id == checkId);
-    todo = listTasks[recIndex].recurrys[todoIndex];
+    let recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
+    let recurring = listTasks[recIndex];
+    todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
   } else{
     let todoIndex = listTasks.findIndex(todo => todo.id == checkId);
     todo = listTasks[todoIndex];
@@ -3542,7 +3541,9 @@ let newlabelColor = "";
 
 // MARK: TODO List
 /*
-1. Revoir le CSS pour que les li soient beaux même dans le body et considérer afficher allStore dans le body à chaque fois? (peut-être même taskInfo aussi, vu que des fois, c'est la seule chose qui change d'un toTI à l'autre!)
+1. Gérer le clickscreen (voir si on peut en créer un pour chaque niveau)
+2. Revoir la sortie de taskInfo!
+1. considérer afficher allStore dans le body à chaque fois? (peut-être même taskInfo aussi, vu que des fois, c'est la seule chose qui change d'un toTI à l'autre!)
 
 2. Revoir les calculs de ogni settimana (j'suis pas sure si ça marche bien ou pas)
 3. if fineMai and recurryDates.length == 0 then alert and check if you can use alert "ok" to do erase and "cancel" to open taskInfo with the todo that is about to be erased!!) 
@@ -3586,9 +3587,9 @@ function toTIdeTZaP(thisOne){ // de TodoZone à Procrastinator
     todoIndex = listTasks.findIndex(td => td.id == parent.id);
     todo = listTasks[todoIndex];
   };
-  let width = getComputedStyle(div).width; 
-  let num = width.slice(0, -2); 
-  let newWidth = Number(num) + 44; 
+  // let width = getComputedStyle(div).width; 
+  // let num = width.slice(0, -2); 
+  // let newWidth = Number(num) + 44; 
   clickScreen.classList.remove("displayNone");
   thisOne.parentElement.remove();
   let infos = {
@@ -3596,7 +3597,7 @@ function toTIdeTZaP(thisOne){ // de TodoZone à Procrastinator
     where: "todoZone",
     why: "mod",
     div: div,
-    newWidth: newWidth,
+    // newWidth: newWidth,
     togoList: togoList
   };
   if(recurryIsIt){
@@ -3618,13 +3619,12 @@ function toTIdeTZaN(){ // de TodoZone à New (addForm but without the addInput.v
     line: "noDay"
   };
   //let newWidth = Number(window.innerWidth - 16);
-  let div = document.getElementById("todoZone");
+  let div = document.body;
   let infos = {
     todo: todo,
     where: "todoZone",
     why: "new",
-    div: div,
-    newWidth: ""
+    div: div
   };
   taskAddAllInfo(infos);
 };
@@ -3654,16 +3654,15 @@ function toTIdeTZaM(thisOne){ // de TodoZone à Modification
     todoIndex = listTasks.findIndex(td => td.id == parent.id);
     todo = listTasks[todoIndex];
   };
-  let width = getComputedStyle(div).width; 
-  let num = width.slice(0, -2); 
-  let newWidth = Number(num) + 44; 
+  // let width = getComputedStyle(div).width; 
+  // let num = width.slice(0, -2); 
+  // let newWidth = Number(num) + 44; 
   clickScreen.classList.remove("displayNone"); 
   let infos = {
     todo: todo,
     where: "todoZone",
     why: "mod",
     div: div,
-    newWidth: newWidth,
     togoList: togoList
   };
   if(recurryIsIt){
@@ -3689,7 +3688,7 @@ function toTIdeTZaS(thisOne){ // de TodoZone à Stock reusage
   delete todo.stock;
   delete todo.storedId;
   //let newWidth = Number(window.innerWidth - 16);
-  let div = document.getElementById("todoZone");
+  let div = document.body;
   div.scrollIntoView();
   clickScreen.classList.remove("displayNone"); 
   let infos = {
@@ -3697,7 +3696,6 @@ function toTIdeTZaS(thisOne){ // de TodoZone à Stock reusage
     where: "todoZone",
     why: "stock",
     div: div,
-    newWidth: "",
     reuse: reuse
   };
   taskAddAllInfo(infos);
@@ -3712,16 +3710,15 @@ function toTIdeASaM(thisOne){ // de AllStorage à Modification
   parent.scrollIntoView(); 
   let todoIndex = listTasks.findIndex(td => td.id == parent.id);
   let todo = listTasks[todoIndex];
-  let width = getComputedStyle(div).width; 
-  let num = width.slice(0, -2); 
-  let newWidth = Number(num) + 44; 
+  // let width = getComputedStyle(div).width; 
+  // let num = width.slice(0, -2); 
+  // let newWidth = Number(num) + 44; 
   clickScreen.classList.remove("displayNone"); 
   let infos = {
     todo: todo,
     where: "allStorage",
     why: "mod",
     div: div,
-    newWidth: newWidth,
     todoIndex: todoIndex
   };
   taskAddAllInfo(infos);
@@ -3754,16 +3751,12 @@ function toTIdeSSaM(thisOne){ // de SearchScreen à Modification
     todoIndex = listTasks.findIndex(td => td.id == parent.id);
     todo = listTasks[todoIndex];
   };
-  let width = getComputedStyle(div).width; 
-  let num = width.slice(0, -2); 
-  let newWidth = Number(num) + 44; 
   clickScreen.classList.remove("displayNone"); 
   let infos = {
     todo: todo,
     where: "searchScreen",
     why: "mod",
     div: div,
-    newWidth: newWidth,
     togoList: togoList,
   };
   if(recurryIsIt){
@@ -3789,8 +3782,7 @@ function toTIdeSSaS(thisOne){ // de SearchScreen à Stock reusage
   todo.date = getTodayDateString();
   delete todo.stock;
   delete todo.storedId;
-  //let newWidth = Number(window.innerWidth - 16);
-  let div = document.getElementById("searchScreen");
+  let div = document.body;
   div.scrollIntoView();
   clickScreen.classList.remove("displayNone"); 
   let infos = {
@@ -3798,7 +3790,6 @@ function toTIdeSSaS(thisOne){ // de SearchScreen à Stock reusage
     where: "searchScreen",
     why: "stock",
     div: div,
-    newWidth: "",
     reuse: reuse
   };
   taskAddAllInfo(infos);
@@ -3822,14 +3813,13 @@ function toTIdeCMaN(thisOne){ // de CalMonthPage à New
     tutto: true,
     date: kaseDate
   };
-  let newWidth = Number(window.innerWidth - 20);
-  let div = document.getElementById("calMonthPage");
+  // let newWidth = Number(window.innerWidth - 20);
+  let div = document.body;
   let infos = {
     todo: todo,
     where: "calMonthPage",
     why: "new",
-    div: div,
-    newWidth: newWidth
+    div: div
   };
   taskAddAllInfo(infos);
 };
@@ -3858,14 +3848,12 @@ function toTIdeCMaM(thisOne){ // de CalMonthPage à Modification
     todoIndex = listTasks.findIndex(td => td.id == parent.dataset.id);
     todo = listTasks[todoIndex];
   };
-  let newWidth = Number(window.innerWidth - 20); 
-  let div = document.getElementById("calMonthPage");
+  let div = document.body;
   let infos = {
     todo: todo,
     where: "calMonthPage",
     why: "mod",
-    div: div,
-    newWidth: newWidth,
+    div: div
   };
   if(recurryIsIt){
     infos.recIndex = recIndex;
@@ -3909,14 +3897,13 @@ function toTIdeCWaN(thisOne){ // de CalWeekPage à New
     todo.tutto = false;
   };
   newTodoStockFromCal = todo;
-  let newWidth = Number(window.innerWidth - 20);
-  let div = document.getElementById("calWeekPage");
+  // let newWidth = Number(window.innerWidth - 20);
+  let div = document.body;
   let infos = {
     todo: todo,
     where: "calWeekPage",
     why: "new",
-    div: div,
-    newWidth: newWidth
+    div: div
   };
   taskAddAllInfo(infos);
 };
@@ -3943,15 +3930,13 @@ function toTIdeCWaM(thisOne){ // de CalWeekPage à Modification
   } else{
     todoIndex = listTasks.findIndex(td => td.id == parent.dataset.id);
     todo = listTasks[todoIndex];
-  };
-  let newWidth = Number(window.innerWidth - 20); 
-  let div = document.getElementById("calWeekPage");
+  }; 
+  let div = document.body;
   let infos = {
     todo: todo,
     where: "", // we don't even use it!
     why: "mod",
-    div: div,
-    newWidth: newWidth,
+    div: div
   };
   if(recurryIsIt){
     infos.recIndex = recIndex;
@@ -3993,7 +3978,6 @@ function toTIdeCCaNS(thisOne){ //de calendar (month || weekly) à Stock reusage 
     where: "",
     why: "stock",
     div: div,
-    newWidth: "",
     reuse: reuse
   };
   taskAddAllInfo(infos);
@@ -4008,7 +3992,6 @@ function taskAddAllInfo(infos){
   let why = infos.why;//why == "new", "mod", "pro", "stock"
   let div = infos.div;
   let togoList = infos.togoList;
-  let newWidth = infos.newWidth;
  
   console.log(todo);
   let myShows;
@@ -4085,7 +4068,9 @@ function taskAddAllInfo(infos){
     projectHow = ``;
   };
 //taskInfoProject similar to projectLi
-  let taskAllInfo = `<div id="taskInfo" class="taskInfoClass${todo.term == "wholeProject" ? ` taskInfoProject` : ``}" style="${newWidth !== "" ? `width:${newWidth}px; ` : ``}${(where == "todoZone" || where == "searchScreen" || where == "allStorage") ? (why == "new" || why == "stock") ? `top: 0; left: 0;` : `top: 25px; left: -37px;` : `top: 10px; left: 10px;`}${todo.term == "wholeProject" ? `border-color:${colorsList[pColor].colorBG}; outline-color: ${colorsList[pColor].colorBG5};` : ``}">
+
+//  style="${newWidth !== "" ? `width:${newWidth}px; ` : ``}${(where == "todoZone" || where == "searchScreen" || where == "allStorage") ? (why == "new" || why == "stock") ? `top: 0; left: 0;` : `top: 25px; left: -37px;` : `top: 10px; left: 10px;`}${todo.term == "wholeProject" ? `border-color:${colorsList[pColor].colorBG}; outline-color: ${colorsList[pColor].colorBG5};` : ``}"
+  let taskAllInfo = `<div id="taskInfo" class="taskInfoClass${todo.term == "wholeProject" ? ` taskInfoProject` : ``}">
     <div class="taskInfoWrapper">
       <div id="SupClickScreen" class="Screen displayNone"></div>
       <input id="doneIt" type="checkbox" class="cossin cornerItInput" />

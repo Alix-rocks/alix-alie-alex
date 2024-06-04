@@ -3132,6 +3132,7 @@ function calendarSave(todo){ //
       if(todo.var == "giorno"){
         ogniOgni(todo, date);
       } else if(todo.var == "settimana"){
+        todo.daysWeek = [];
         inDaySection.querySelectorAll('input[name="daysWeekChoice"]').forEach(choice => {
           if(choice.checked == true){
             todo.daysWeek.push(choice.value);
@@ -3541,11 +3542,13 @@ let newlabelColor = "";
 
 // MARK: TODO List
 /*
+3. Arranger le css des miniList
 1. Gérer le clickscreen (voir si on peut en créer un pour chaque niveau)
-2. Revoir la sortie de taskInfo!
+  - On n'utilise pas de clickscreen pour les calendars weekly et monthly
+  - On crée un nouveau clickscreen à chaque fois qu'on crée un addOn (taskInfo ou checkUrges ou iconPalet ou reDate ou label ou smallCalendar ou (?)): le z-index est de 1 de moins que celui du addOn et avec le addEventListener que si on click, on a addOn.remove() et clickscreen.remove() et un scrollBackToParent or top 
+2. Revoir la sortie de taskInfo! --> il reste à gérer le clickHandlerAddOn qu'on a ajouté au clickscreen (est-ce qu'on garde ça ou pas?) (ou on add le même eventListener que pour cancel button. Et on fait juste remove le clickscreen...)
 1. considérer afficher allStore dans le body à chaque fois? (peut-être même taskInfo aussi, vu que des fois, c'est la seule chose qui change d'un toTI à l'autre!)
 
-2. Revoir les calculs de ogni settimana (j'suis pas sure si ça marche bien ou pas)
 3. if fineMai and recurryDates.length == 0 then alert and check if you can use alert "ok" to do erase and "cancel" to open taskInfo with the todo that is about to be erased!!) 
 9. dans les calendar, faire un équivalent de recurryDateToTodoCreation ("in")
 ...Si on met les recurry dans les search results, le toTIdeSSaM() est déjà arrangé pour recevoir les recurry!
@@ -3643,20 +3646,10 @@ function toTIdeTZaM(thisOne){ // de TodoZone à Modification
     recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
     let recurring = listTasks[recIndex];
     todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
-    // todo = JSON.parse(JSON.stringify(recurring));
-    // clearRecurringData(todo);
-    // todo.id = crypto.randomUUID();
-    // todo.line = "todoDay";
-    // todo.date = parent.dataset.date;
-    // todo.recurry = true;
-    // todo.recId = parent.dataset.rec;
   } else{
     todoIndex = listTasks.findIndex(td => td.id == parent.id);
     todo = listTasks[todoIndex];
   };
-  // let width = getComputedStyle(div).width; 
-  // let num = width.slice(0, -2); 
-  // let newWidth = Number(num) + 44; 
   clickScreen.classList.remove("displayNone"); 
   let infos = {
     todo: todo,
@@ -3740,13 +3733,6 @@ function toTIdeSSaM(thisOne){ // de SearchScreen à Modification
     recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
     let recurring = listTasks[recIndex];
     todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
-    // todo = JSON.parse(JSON.stringify(recurring));
-    // clearRecurringData(todo);
-    // todo.id = crypto.randomUUID();
-    // todo.line = "todoDay";
-    // todo.date = parent.dataset.date;
-    // todo.recurry = true;
-    // todo.recId = parent.dataset.rec;
   } else{
     todoIndex = listTasks.findIndex(td => td.id == parent.id);
     todo = listTasks[todoIndex];
@@ -3986,6 +3972,7 @@ window.toTIdeCCaNS = toTIdeCCaNS;
 
 // MARK: TASKINFO
 function taskAddAllInfo(infos){
+  let positionA = window.scrollY;
   let parents;
   let todo = infos.todo;
   let where = infos.where;//where == "todoZone", "calWeekPage", "calMonthPage", "searchScreen", "allStorage"
@@ -4370,13 +4357,17 @@ function taskAddAllInfo(infos){
     projectSwitch = false;
   };
   taskCancelBtn.addEventListener("click", () => {
-    if(where == "todoZone" && why !== "stock" && why !== "new"){
-      moving = true;
-      clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
-    } else{
-      taskInfo.remove();
-      //add scrollbackToTop!
-    };
+    parent.classList.remove("selectedTask");
+    taskInfo.remove();
+    window.scrollTo(0, positionA);
+    clickScreen.classList.add("displayNone"); //remove()
+    // if(where == "todoZone" && why !== "stock" && why !== "new"){// should be for searchscreen too...
+    //   moving = true; // section that it's scrolling to is the list the li is in... but maybe it should just scroll back to the parent!?
+    //   clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
+    // } else{
+    //   taskInfo.remove();
+    //   //add scrollbackToTop!
+    // };
   });
   doneIt.addEventListener("click", () => {
     if(doneIt.checked){
@@ -5030,10 +5021,10 @@ function taskAddAllInfo(infos){
         delete todo.miniHide;
       };
 
-      if(where == "todoZone" || where == "searchScreen" || where == "allStorage"){
-        parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
-      };
-      //Since there are no more copy, we don't need that anymore (except in the swipingDay Section if it's the date the todo is...)
+      // if(where == "todoZone" || where == "searchScreen" || where == "allStorage"){
+      //   parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
+      // }; //in the swipingDay Section if it's the date the todo is...)
+      parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
 
       if(!todo.recurry && todo.line !== "recurringDay"){
         if(!todo.stock && !todo.stored && storeIt.checked){
@@ -5083,7 +5074,9 @@ function taskAddAllInfo(infos){
         todoCreation(newTodo);
       };
 
+
       togoList = getTogoList(todo);
+      todoCreation(todo);
       if(doneIt.checked){
         if(todo.term == "alwaysHere"){
           todoCreation(todo);
@@ -5114,47 +5107,73 @@ function taskAddAllInfo(infos){
       } else{
         listTasks.splice(infos.todoIndex, 1);
       };
-      if(where == "todoZone" || where == "searchScreen" || where == "allStorage"){
-        parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
-      }; //we don't need parents anymore since there are no more copy! (except in the swipingDay Section if it's the date the todo is...)
+      // if(where == "todoZone" || where == "searchScreen" || where == "allStorage"){
+      //   parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
+      // }; //in the swipingDay Section if it's the date the todo is...)
+      parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
     };
     
     localStorage.listTasks = JSON.stringify(listTasks);
     updateWeek();
     updateMonth();
-    // A REVOIR!!
-    if(where == "searchScreen" || where == "allStorage"){
-      moving = false;
-      taskInfo.remove();
-      clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
-      howToSortIt(togoList); //only if there's a togoList!
-    };
-    //console.log(togoList);
-    if((why == "new" || why == "stock") && togoList !== ""){
-      scrollToSection(togoList);
-      taskInfo.remove();
-      howToSortIt(togoList); //only if there's a togoList!
-    } else if((why == "new" || why == "stock") && togoList == ""){
-      taskInfo.remove();
-    } else if(where == "todoZone" && togoList !== ""){
-      moving = true;
-      parents.forEach(parent => {
-        parent.remove();
-      });
-      parent.remove(); // it wasn't complaining but that was still useless...
-      clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
-      howToSortIt(togoList); //only if there's a togoList!
-    } else if(where == "todoZone" && togoList == ""){
-      parents.forEach(parent => {
-        parent.remove();
-      });
-      parent.remove(); // it wasn't complaining but that was still useless...
-      clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
-    } else{ //not in the list, so month/week
-      moving = false;
-      taskInfo.remove();
+
+    //nouvelle version
+    // pour les calendars, on vient de faire update
+    // pour les listes, on a déjà fait todoCreation, il reste à enlever les parents et taskInfo et le clickscreen
+    parents.forEach(parent => {
+      parent.remove();
+    });
+    parent.remove();
+    taskInfo.remove();
+    clickScreen.classList.add("displayNone");
+    if(togoList !== ""){
+      howToSortIt(togoList);
+    } else{
       sortItAllWell();
     };
+    // now let's see if and where we should scroll...
+    let newLi = document.getElementById(todo.id);
+    if(newLi){
+      newLi.scrollIntoView();
+    } else{
+      window.scrollTo({ top: 0 });
+    };
+    
+    
+    
+
+    // A REVOIR!!
+    // if(where == "searchScreen" || where == "allStorage"){
+    //   moving = false;
+    //   taskInfo.remove();
+    //   clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
+    //   howToSortIt(togoList); //only if there's a togoList!
+    // };
+    // if((why == "new" || why == "stock") && togoList !== ""){
+    //   scrollToSection(togoList);
+    //   taskInfo.remove();
+    //   howToSortIt(togoList); //only if there's a togoList!
+    // } else if((why == "new" || why == "stock") && togoList == ""){
+    //   taskInfo.remove();
+    // } else if(where == "todoZone" && togoList !== ""){
+    //   moving = true;
+    //   parents.forEach(parent => {
+    //     parent.remove();
+    //   });
+    //   parent.remove(); // it wasn't complaining but that was still useless...
+    //   clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
+    //   howToSortIt(togoList); //only if there's a togoList!
+    // } else if(where == "todoZone" && togoList == ""){
+    //   parents.forEach(parent => {
+    //     parent.remove();
+    //   });
+    //   parent.remove(); // it wasn't complaining but that was still useless...
+    //   clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
+    // } else{ //not in the list, so month/week
+    //   moving = false;
+    //   taskInfo.remove();
+    //   sortItAllWell();
+    // };
     updateArrowsColor();
     updateCBC();
     console.log(todo);
@@ -5203,6 +5222,14 @@ function scrollToSection(list){
   };
   section.scrollIntoView();
 };
+
+  // let positionA = window.scrollY;
+  // let positionB = window.scrollY;
+  // let positionDif = positionB - positionA;
+  // if(positionDif > 25){
+  //   window.scrollTo(0, positionA);
+  // };
+  
 
 function clickHandlerAddOn(addOn, future, screen, listToGo){
   if(screen == clickScreen){

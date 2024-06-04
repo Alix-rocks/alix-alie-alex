@@ -155,6 +155,39 @@ let mySettings = {
   //myBaseColors: [],
   mySorting: []
 };
+let mySections = [
+  {
+    title: "CURRENT PROJECTS",
+    slogan: "Let's stick to those for now please...",
+    nickname: "currentProject",
+    color: "#600061"
+  }, {
+    title: "NEXT",
+    slogan: "Soon, soon it'll be your turn...",
+    nickname: "nextThing",
+    color: "darkgreen"
+  }, {
+    title: "WHENEVER",
+    slogan: "The never ending list...",
+    color: "midnightblue",
+    subsection: [
+      {
+        name: "The long term shit",
+        nickname: "longTerm",
+      }, {
+        name: "The one time thingies",
+        nickname: "oneTime",
+      }
+    ],
+    addOn: `<button id="shuffleBtn">Shuffle it!</button>
+    <h5 class="sousBtn">Tell me what to do!</h5>`
+  }, {
+    title: "ALWAYS",
+    slogan: "Forever and ever...",
+    nickname: "alwaysHere",
+    color: "goldenrod"
+  }
+];
 //localStorage.mySettings = JSON.stringify(mySettings);
 let cBC;
 // let colorsText = [];
@@ -1951,6 +1984,7 @@ function recycleEvent(recycle){ //from Done
 window.recycleEvent = recycleEvent;
 
 function stockCreaction(todo){ 
+  //you can't create a stock from an event because because even though the stock will be created (as a copy), the event becomes stored but with the pin icon checked, it can only be noDay so the event gets lost
   clearRecurringData(todo);
   let newTodo = JSON.parse(JSON.stringify(todo));
   newTodo.id = crypto.randomUUID();
@@ -1963,10 +1997,10 @@ function stockCreaction(todo){
   todo.stored = true; //has a model in storage
   todo.stockId = newTodo.id;
   localStorage.listTasks = JSON.stringify(listTasks);
-  todoCreation(newTodo);
-  sortItAll();
-  document.querySelector("#storageInput").checked = true;
-  document.querySelector("#storageList").scrollIntoView();
+  // todoCreation(newTodo);
+  // sortItAll();
+  // document.querySelector("#storageInput").checked = true;
+  // document.querySelector("#storageList").scrollIntoView();
 };
 
 function reDateEvent(thisOne){ // in Done Zone
@@ -3547,6 +3581,7 @@ let newlabelColor = "";
   - On n'utilise pas de clickscreen pour les calendars weekly et monthly
   - On crée un nouveau clickscreen à chaque fois qu'on crée un addOn (taskInfo ou checkUrges ou iconPalet ou reDate ou label ou smallCalendar ou (?)): le z-index est de 1 de moins que celui du addOn et avec le addEventListener que si on click, on a addOn.remove() et clickscreen.remove() et un scrollBackToParent or top 
 2. Revoir la sortie de taskInfo! --> il reste à gérer le clickHandlerAddOn qu'on a ajouté au clickscreen (est-ce qu'on garde ça ou pas?) (ou on add le même eventListener que pour cancel button. Et on fait juste remove le clickscreen...)
+4. revoir le concept de stockCreaction (:1953) (notes are over there) parce que ça marche pas!
 1. considérer afficher allStore dans le body à chaque fois? (peut-être même taskInfo aussi, vu que des fois, c'est la seule chose qui change d'un toTI à l'autre!)
 
 3. if fineMai and recurryDates.length == 0 then alert and check if you can use alert "ok" to do erase and "cancel" to open taskInfo with the todo that is about to be erased!!) 
@@ -4071,97 +4106,97 @@ function taskAddAllInfo(infos){
       </div>` : todo.stored ? `<div class="storeItLabel cornerItLabel" >
       <span class="fa-solid fa-recycle" style="line-height: 2.1em; font-size: 1.1em;"></span>
     </div>` : `<input id="storeIt" type="checkbox" class="cossin cornerItInput" ${todo.stock ? `checked` : ``} />
-      <label for="storeIt" class="storeItLabel cornerItLabel">
-        <span class="typcn typcn-pin-outline cornerItUnChecked pinUnChecked"></span>
-        <span class="typcn typcn-pin cornerItChecked pinChecked"></span>
-      </label>`}
-      <input id="copyIt" type="checkbox" class="cossin cornerItInput" />
-      <label for="copyIt" class="copyItLabel cornerItLabel">
-        <i class="fa-regular fa-copy cornerItUnChecked"></i>
-        <i class="fa-solid fa-copy cornerItChecked"></i>
-      </label>
-      <input id="trashIt" type="checkbox" class="cossin cornerItInput" />
-      <label for="trashIt" class="trashItLabel cornerItLabel${(why == "new" || why == "stock") ? ` hidden` : ``}">
-        <i class="fa-regular fa-trash-can cornerItUnChecked"></i>
-        <i class="fa-solid fa-trash-can cornerItChecked"></i>
-      </label>
-      <div class="taskInfoInput relDiv${calendarStock ? ` calendarStockVersion` : ``}">
-        ${todo.pParents && todo.pParents.length > 0 ? `<div class="projectOnglet" style="background-color:${todo.PColorBG}; color:${todo.PColorTX};">${todo.Pnickname}</div>` : ``}
-        <span id="iconIt" class="IconI ${todo.icon}"></span>
-        <div id="labelIt" class="labelOnglet labelTaskOnglet" style="left:-10px; top:2px; background-color:${todo.LColor ? colorsList[todo.LColor].colorBG : "initial"}; color:${todo.LColor ? colorsList[todo.LColor].colorTX : "inherit"};">${todo.LName ? todo.LName : "Label"}</div>
-        <div class="underLining" id="taskTitle-underLining"></div>
-        <input type="text" id="taskTitle" style="color:${todo.term == "showThing" ? mySettings.myBaseColors[0].colorBG : mySettings.myBaseColors[todo.color].colorBG};" value="${todo.task ? todo.task : ""}">
-        <span id="colorIt" class="typcn typcn-tag tagSpan ${todo.term == "showThing" ? `hidden` : ``}" style="color:${mySettings.myBaseColors[todo.color].colorBG};"></span>
-        ${calendarStock ? `<button class="addBtns" onclick="getStorage()"><span class="typcn typcn-shopping-bag"></span></button>` : ``}
+    <label for="storeIt" class="storeItLabel cornerItLabel">
+      <span class="typcn typcn-pin-outline cornerItUnChecked pinUnChecked"></span>
+      <span class="typcn typcn-pin cornerItChecked pinChecked"></span>
+    </label>`}
+    <input id="copyIt" type="checkbox" class="cossin cornerItInput" />
+    <label for="copyIt" class="copyItLabel cornerItLabel">
+      <i class="fa-regular fa-copy cornerItUnChecked"></i>
+      <i class="fa-solid fa-copy cornerItChecked"></i>
+    </label>
+    <input id="trashIt" type="checkbox" class="cossin cornerItInput" />
+    <label for="trashIt" class="trashItLabel cornerItLabel${(why == "new" || why == "stock") ? ` hidden` : ``}">
+      <i class="fa-regular fa-trash-can cornerItUnChecked"></i>
+      <i class="fa-solid fa-trash-can cornerItChecked"></i>
+    </label>
+    <div class="taskInfoInput relDiv${calendarStock ? ` calendarStockVersion` : ``}">
+      ${todo.pParents && todo.pParents.length > 0 ? `<div class="projectOnglet" style="background-color:${todo.PColorBG}; color:${todo.PColorTX};">${todo.Pnickname}</div>` : ``}
+      <span id="iconIt" class="IconI ${todo.icon}"></span>
+      <div id="labelIt" class="labelOnglet labelTaskOnglet" style="left:-10px; top:2px; background-color:${todo.LColor ? colorsList[todo.LColor].colorBG : "initial"}; color:${todo.LColor ? colorsList[todo.LColor].colorTX : "inherit"};">${todo.LName ? todo.LName : "Label"}</div>
+      <div class="underLining" id="taskTitle-underLining"></div>
+      <input type="text" id="taskTitle" style="color:${todo.term == "showThing" ? mySettings.myBaseColors[0].colorBG : mySettings.myBaseColors[todo.color].colorBG};" value="${todo.task ? todo.task : ""}">
+      <span id="colorIt" class="typcn typcn-tag tagSpan ${todo.term == "showThing" ? `hidden` : ``}" style="color:${mySettings.myBaseColors[todo.color].colorBG};"></span>
+      ${calendarStock ? `<button class="addBtns" onclick="getStorage()"><span class="typcn typcn-shopping-bag"></span></button>` : ``}
+    </div>
+    <div id="trashedArea">
+      <input id="tellWhyInput" type="checkbox" class="cossin taskToggleInput" />
+      <div>
+        <label for="tellWhyInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 10px;">
+          <h5 class="topList">Tell me why...<span class="tellYou" id="tellYouWhy">${todo.info ? `(because)` : ``}</span></h5>
+          <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
+        </label>
+        <div class="taskToggleList relDiv" style="margin-bottom: 25px;">
+          <textarea id="taskDetails" class="taskInfoInput taskDetails">${todo.info ? todo.info : ""}</textarea>
+          <input id="switchTextareaSize" type="checkbox" class="switchDisplayInput cossin" />
+          <label for="switchTextareaSize" style="float: right; margin-right: 15px; margin-top: -5px;">
+            <i class="typcn typcn-plus switchDisplayUnChecked"></i>
+            <i class="typcn typcn-minus switchDisplayChecked"></i>
+          </label>
+        </div>
       </div>
-      <div id="trashedArea">
-        <input id="tellWhyInput" type="checkbox" class="cossin taskToggleInput" />
-        <div>
-          <label for="tellWhyInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 10px;">
-            <h5 class="topList">Tell me why...<span class="tellYou" id="tellYouWhy">${todo.info ? `(because)` : ``}</span></h5>
-            <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
-          </label>
-          <div class="taskToggleList relDiv" style="margin-bottom: 25px;">
-            <textarea id="taskDetails" class="taskInfoInput taskDetails">${todo.info ? todo.info : ""}</textarea>
-            <input id="switchTextareaSize" type="checkbox" class="switchDisplayInput cossin" />
-            <label for="switchTextareaSize" style="float: right; margin-right: 15px; margin-top: -5px;">
-              <i class="typcn typcn-plus switchDisplayUnChecked"></i>
-              <i class="typcn typcn-minus switchDisplayChecked"></i>
-            </label>
-          </div>
-        </div>
 
-        <input id="tellMoreInput" type="checkbox" class="cossin taskToggleInput" />
-        <div>
-          <label for="tellMoreInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 10px;">
-            <h5 class="topList">Tell me more...<span class="tellYou" id="tellYouMore">${todo.miniList ? `(...)` : ``}</span></h5>
-            <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
-          </label>
-          <div id="miniListDiv" class="taskToggleList taskInfoInput">
-            <ul>
-              ${miniList}
-              <li class="allMiniLi" id="addMiniListLi" style="margin: 15px 0 20px;}">
-                <input id="hideMiniInput" type="checkbox" class="cossin" ${todo.miniHide ? `checked ` : ``}/>
-                <label for="hideMiniInput" style="margin-right: 5px;">
-                  <span class="typcn typcn-eye-outline" style="font-size:1.7em"></span>
-                </label>
-                <form id="addMiniForm">
-                  <input type="text" id="addMiniListInput" class="listNameInput" style="border: 0.5px solid var(--tx-color); border-radius: 5px; padding: 0 7px;" placeholder="one more" />
-                  <button type="submit" class="iconOnlyBtn" id="addMiniListBtn" style="margin-left: 5px;"><span class="typcn typcn-plus"></span></button>
-                </form>
-              </li>
-            </ul>
-          </div>
+      <input id="tellMoreInput" type="checkbox" class="cossin taskToggleInput" />
+      <div>
+        <label for="tellMoreInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 10px;">
+          <h5 class="topList">Tell me more...<span class="tellYou" id="tellYouMore">${todo.miniList ? `(...)` : ``}</span></h5>
+          <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
+        </label>
+        <div id="miniListDiv" class="taskToggleList taskInfoInput">
+          <ul>
+            ${miniList}
+            <li class="allMiniLi" id="addMiniListLi" style="margin: 15px 0 20px;}">
+              <input id="hideMiniInput" type="checkbox" class="cossin" ${todo.miniHide ? `checked ` : ``}/>
+              <label for="hideMiniInput" style="margin-right: 5px;">
+                <span class="typcn typcn-eye-outline" style="font-size:1.7em"></span>
+              </label>
+              <form id="addMiniForm">
+                <input type="text" id="addMiniListInput" class="listNameInput" style="border: 0.5px solid var(--tx-color); border-radius: 5px; padding: 0 7px;" placeholder="one more" />
+                <button type="submit" class="iconOnlyBtn" id="addMiniListBtn" style="margin-left: 5px;"><span class="typcn typcn-plus"></span></button>
+              </form>
+            </li>
+          </ul>
         </div>
-        ${projectHow}
-        <input id="tellWhatInput" type="checkbox" class="cossin taskToggleInput" />
-        <div>
-          <label for="tellWhatInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
-            <h5 class="topList">Tell me what...<span class="tellYou">(<span id="tellYouTermProject">${todo.wholeProject || todo.partProject ? `Project - ` : ``}</span><span id="tellYouTerm">${t(todo.term)}</span><span id="tellYouShowType">${todo.term == "showThing" ? ` - ${todo.showType ? todo.showType : mySettings.myShowTypes[0].name}` : ``}</span><span id="tellYouUrge">${todo.urge ? ` - Priority: ${todo.urgeNum}` : ``}</span>)</span></h5>
-            <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
-          </label>
-          <div class="taskToggleList taskInfoInput relDiv">
-            <!-- <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Project</h5>
-            <input class="myRadio" type="checkbox" name="projectOptions" id="wholeProjectInput" value="wholeProject" ${todo.wholeProject ? `checked` : ``} />
-            <label for="wholeProjectInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's a whole big thing</span><br />
-            <span class="smallText otherSmallText">with lots of little things in it</span></label>
-            <div class="wholeProjectDiv">
-              <h5 style="margin: 5px 0 0 0;">${todo.wholeProject ? `Wanna change the label?` : `Let's give it a label`}</h5>
-              <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
-                <p>Choose a color: ${projectColorsChoice}</p>
-                <p>Choose a nickname:</p>
-                <input id="projectNickInput" type="text" value="${todo.Pnickname ? todo.Pnickname : ""}"/>
-              </div>
+      </div>
+      ${projectHow}
+      <input id="tellWhatInput" type="checkbox" class="cossin taskToggleInput" />
+      <div>
+        <label for="tellWhatInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
+          <h5 class="topList">Tell me what...<span class="tellYou">(<span id="tellYouTermProject">${todo.wholeProject || todo.partProject ? `Project - ` : ``}</span><span id="tellYouTerm">${t(todo.term)}</span><span id="tellYouShowType">${todo.term == "showThing" ? ` - ${todo.showType ? todo.showType : mySettings.myShowTypes[0].name}` : ``}</span><span id="tellYouUrge">${todo.urge ? ` - Priority: ${todo.urgeNum}` : ``}</span>)</span></h5>
+          <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
+        </label>
+        <div class="taskToggleList taskInfoInput relDiv">
+          <!-- <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Project</h5>
+          <input class="myRadio" type="checkbox" name="projectOptions" id="wholeProjectInput" value="wholeProject" ${todo.wholeProject ? `checked` : ``} />
+          <label for="wholeProjectInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's a whole big thing</span><br />
+          <span class="smallText otherSmallText">with lots of little things in it</span></label>
+          <div class="wholeProjectDiv">
+            <h5 style="margin: 5px 0 0 0;">${todo.wholeProject ? `Wanna change the label?` : `Let's give it a label`}</h5>
+            <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
+              <p>Choose a color: ${projectColorsChoice}</p>
+              <p>Choose a nickname:</p>
+              <input id="projectNickInput" type="text" value="${todo.Pnickname ? todo.Pnickname : ""}"/>
             </div>
-            <input class="myRadio" type="checkbox" name="projectOptions" id="partProjectInput" value="partProject" ${todo.partProject ? `checked` : ``} />
-            <label for="partProjectInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's part of something bigger</span><br />
-            <span class="smallText otherSmallText">than itself</span></label>
-            <div class="partProjectDiv">
-              <h5 style="margin: 5px 0 0 0;">What project is it a part of?</h5>
-              <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
-                ${projectNamesChoice}
-              </div>
-            </div>-->
+          </div>
+          <input class="myRadio" type="checkbox" name="projectOptions" id="partProjectInput" value="partProject" ${todo.partProject ? `checked` : ``} />
+          <label for="partProjectInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's part of something bigger</span><br />
+          <span class="smallText otherSmallText">than itself</span></label>
+          <div class="partProjectDiv">
+            <h5 style="margin: 5px 0 0 0;">What project is it a part of?</h5>
+            <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
+              ${projectNamesChoice}
+            </div>
+          </div>-->
           <div class="hidden" style="height: 0;">
             <h5 class="taskInfoSubTitle" style="margin: 0;">Project</h5>
             <input class="myRadio" type="radio" name="termOptions" id="wholeProject" value="wholeProject" ${todo.term == "wholeProject" ? `checked` : ``} />
@@ -4192,39 +4227,7 @@ function taskAddAllInfo(infos){
           <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Habit</h5>
           <input class="myRadio" type="radio" name="termOptions" id="sameHabit" value="sameHabit" ${todo.term == "sameHabit" ? `checked` : ``} />
           <label for="sameHabit" class="termLabel"><span class="myRadio"></span><span style="opacity:.6;font-size:14px;">It's always the same thing...</span></label>
-          
-          <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Task</h5>
-          
-          <input class="myRadio" type="radio" name="termOptions" id="topPriority" value="topPriority" ${todo.term == "topPriority" ? `checked` : ``} />
-          <label for="topPriority" class="termLabel"><span class="myRadio"></span><span style="color:red;">That's our top priority!</span></label>
-          <div class="urgeDiv">
-            <h5 style="margin: 5px 0 0 0;">How urgent is it?</h5>
-            <div class="inDaySection" style="width: fit-content; margin-bottom: 10px;">
-              <p><label for="urgeInput" style="display:inline-block;"><span style="color:red;">Pri</span><span style="color:#ff8400;">ori</span><span style="color:#ffd000;">ty:</span>  </label><input id="urgeInput" type="number" value="${todo.term == "topPriority" && todo.urge ? todo.urgeNum : "0"}" /></p>
-            </div>
-          </div>
 
-          <input class="myRadio" type="radio" name="termOptions" id="nextThing" value="nextThing" ${todo.term == "nextThing" ? `checked` : ``} />
-          <label for="nextThing" class="termLabel"><span class="myRadio"></span><span style="color:darkgreen;">It's what I'm gonna do next</span></label>
-
-          <input class="myRadio" type="radio" name="termOptions" id="longTerm" value="longTerm" ${todo.term == "longTerm" ? `checked` : ``} />
-          <label for="longTerm" class="termLabel"><span class="myRadio"></span><span style="color:midnightblue;">It's a whenever kinda long term shit</span></label>
-
-          <input class="myRadio" type="radio" name="termOptions" id="oneTime" value="oneTime" ${todo.term == "oneTime" ? `checked` : ``} />
-          <label for="oneTime" class="termLabel"><span class="myRadio"></span><span style="color:midnightblue;">It's a whenever kinda one time thing</span></label>
-          
-          <input class="myRadio" type="radio" name="termOptions" id="alwaysHere" value="alwaysHere" ${todo.term == "alwaysHere" ? `checked` : ``} />
-          <label for="alwaysHere" class="termLabel"><span class="myRadio"></span><span style="color:goldenrod;">Forever, forever ever?!</span></label>
-          
-          <input class="myRadio" type="radio" name="termOptions" id="waitForIt" value="waitForIt" ${todo.term == "waitForIt" ? `checked` : ``} />
-          <label for="waitForIt" class="termLabel"><span class="myRadio"></span><span style="color:rgb(100, 122, 122);">It's what I've been waiting for</span></label>
-
-          <input class="myRadio" type="radio" name="termOptions" id="thinkBoutIt" value="thinkBoutIt" ${todo.term == "thinkBoutIt" ? `checked` : ``} />
-          <label for="thinkBoutIt" class="termLabel"><span class="myRadio"></span><span style="color:rgb(100, 122, 122);">It's what I need to think about</span></label>
-          
-          <input class="myRadio" type="radio" name="termOptions" id="crazyShit" value="crazyShit" ${todo.term == "crazyShit" ? `checked` : ``} />
-          <label for="crazyShit" class="termLabel"><span class="myRadio"></span><span style="color:rgb(239, 125, 144);">It's just a <em>maybe-one-day-probably-never</em> kinda crazy idea</span></label>
-          
           <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Event</h5>
           <input class="myRadio" type="radio" name="termOptions" id="showThing" value="showThing" ${todo.term == "showThing" ? `checked` : ``} />
           <label for="showThing" class="termLabel"><span class="myRadio"></span><span style="border-radius: 10px; border: 0.5px solid var(--tx-color); padding: 0 7px;">It's a whole show!</span></label>
@@ -4247,50 +4250,84 @@ function taskAddAllInfo(infos){
                 </div>
               </div> 
             </div>
-            
           </div>
+          
+          <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Task</h5>
+        
+          <input class="myRadio" type="radio" name="termOptions" id="topPriority" value="topPriority" ${todo.term == "topPriority" ? `checked` : ``} />
+          <label for="topPriority" class="termLabel"><span class="myRadio"></span><span style="color:red;">That's our top priority!</span></label>
+          <div class="urgeDiv">
+            <h5 style="margin: 5px 0 0 0;">How urgent is it?</h5>
+            <div class="inDaySection" style="width: fit-content; margin-bottom: 10px;">
+              <p><label for="urgeInput" style="display:inline-block;"><span style="color:red;">Pri</span><span style="color:#ff8400;">ori</span><span style="color:#ffd000;">ty:</span>  </label><input id="urgeInput" type="number" value="${todo.term == "topPriority" && todo.urge ? todo.urgeNum : "0"}" /></p>
+            </div>
           </div>
+
+          <input class="myRadio" type="radio" name="termOptions" id="currentProject" value="currentProject" ${todo.term == "currentProject" ? `checked` : ``} />
+          <label for="currentProject" class="termLabel"><span class="myRadio"></span><span style="color:#600061 ;">It's what I'm trying to get done nowadays</span></label>
+
+          <input class="myRadio" type="radio" name="termOptions" id="nextThing" value="nextThing" ${todo.term == "nextThing" ? `checked` : ``} />
+          <label for="nextThing" class="termLabel"><span class="myRadio"></span><span style="color:darkgreen;">It's what I'm gonna do next</span></label>
+
+          <input class="myRadio" type="radio" name="termOptions" id="longTerm" value="longTerm" ${todo.term == "longTerm" ? `checked` : ``} />
+          <label for="longTerm" class="termLabel"><span class="myRadio"></span><span style="color:midnightblue;">It's a whenever kinda long term shit</span></label>
+
+          <input class="myRadio" type="radio" name="termOptions" id="oneTime" value="oneTime" ${todo.term == "oneTime" ? `checked` : ``} />
+          <label for="oneTime" class="termLabel"><span class="myRadio"></span><span style="color:midnightblue;">It's a whenever kinda one time thing</span></label>
+          
+          <input class="myRadio" type="radio" name="termOptions" id="alwaysHere" value="alwaysHere" ${todo.term == "alwaysHere" ? `checked` : ``} />
+          <label for="alwaysHere" class="termLabel"><span class="myRadio"></span><span style="color:goldenrod;">Forever, forever ever?!</span></label>
+          
+          <input class="myRadio" type="radio" name="termOptions" id="waitForIt" value="waitForIt" ${todo.term == "waitForIt" ? `checked` : ``} />
+          <label for="waitForIt" class="termLabel"><span class="myRadio"></span><span style="color:rgb(100, 122, 122);">It's what I've been waiting for</span></label>
+
+          <input class="myRadio" type="radio" name="termOptions" id="thinkBoutIt" value="thinkBoutIt" ${todo.term == "thinkBoutIt" ? `checked` : ``} />
+          <label for="thinkBoutIt" class="termLabel"><span class="myRadio"></span><span style="color:rgb(100, 122, 122);">It's what I need to think about</span></label>
+          
+          <input class="myRadio" type="radio" name="termOptions" id="crazyShit" value="crazyShit" ${todo.term == "crazyShit" ? `checked` : ``} />
+          <label for="crazyShit" class="termLabel"><span class="myRadio"></span><span style="color:rgb(239, 125, 144);">It's just a <em>maybe-one-day-probably-never</em> kinda crazy idea</span></label>
         </div>
-        <input id="tellWhereInput" type="checkbox" class="cossin taskToggleInput" />
-        <div>
-          <label for="tellWhereInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
-            <h5 class="topList">Tell me where...<span class="tellYou" id="tellYouWhere">${todo.where == "home" || !todo.where ? "(home)" : "(somewhere)"}</span></h5>
-            <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
-          </label>
-          <div class="taskToggleList taskInfoInput relDiv">
-            <div class="inDaySection taskInfoInput" style="width: -webkit-fill-available; max-width: 280px;">
-              <input id="whereHomeInput" type="checkbox" class="tuttoGiornoInput cossin" ${(!todo.where || (todo.where && todo.where == "home")) ? `checked` : ``} />
-              <div class="calendarInsideMargin tuttoGiornoDiv" style="justify-content: flex-start;">
-                <label for="whereHomeInput" class="slideZone">
-                  <div class="slider">
-                    <span class="si">Sì</span>
-                    <span class="no">No</span>
-                  </div>
-                </label>
-                <p id="hshText" style="margin: 0 0 0 10px;">Home Sweet Home</p>
-              </div>
-              <div class="noneTuttoGiornoDiv calendarInsideMargin">
-                <label for="whereInput" style="display: block;">Destination:</label>
-                <textarea id="whereInput" style="width: 100%; margin-bottom: 10px;">${todo.where && todo.where !== "home" && todo.where !== "not home" ? todo.where : ``}</textarea>
-                <p style="text-align:right; margin:0;"><button onclick="copyText()"><i class="fa-regular fa-clipboard"></i></button></p>
-              </div>
+      </div>
+      <input id="tellWhereInput" type="checkbox" class="cossin taskToggleInput" />
+      <div>
+        <label for="tellWhereInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
+          <h5 class="topList">Tell me where...<span class="tellYou" id="tellYouWhere">${todo.where == "home" || !todo.where ? "(home)" : "(somewhere)"}</span></h5>
+          <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
+        </label>
+        <div class="taskToggleList taskInfoInput relDiv">
+          <div class="inDaySection taskInfoInput" style="width: -webkit-fill-available; max-width: 280px;">
+            <input id="whereHomeInput" type="checkbox" class="tuttoGiornoInput cossin" ${(!todo.where || (todo.where && todo.where == "home")) ? `checked` : ``} />
+            <div class="calendarInsideMargin tuttoGiornoDiv" style="justify-content: flex-start;">
+              <label for="whereHomeInput" class="slideZone">
+                <div class="slider">
+                  <span class="si">Sì</span>
+                  <span class="no">No</span>
+                </div>
+              </label>
+              <p id="hshText" style="margin: 0 0 0 10px;">Home Sweet Home</p>
+            </div>
+            <div class="noneTuttoGiornoDiv calendarInsideMargin">
+              <label for="whereInput" style="display: block;">Destination:</label>
+              <textarea id="whereInput" style="width: 100%; margin-bottom: 10px;">${todo.where && todo.where !== "home" && todo.where !== "not home" ? todo.where : ``}</textarea>
+              <p style="text-align:right; margin:0;"><button onclick="copyText()"><i class="fa-regular fa-clipboard"></i></button></p>
             </div>
           </div>
         </div>
-        <input id="tellWhenInput" type="checkbox" class="cossin taskToggleInput" />
-        <div>
-          <label for="tellWhenInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
-            <h5 class="topList">Tell me when...<span class="tellYou">(<span id="tellYouWhen">${t(todo.line)}</span><span id="tellYouDay">${todo.date ? ` ${todo.date}` : ``}</span>)</span></h5>
-            <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
-          </label>
-          <div class="taskToggleList relDiv">
-            <div id="calendarHome"></div>
-          </div>
+      </div>
+      <input id="tellWhenInput" type="checkbox" class="cossin taskToggleInput" />
+      <div>
+        <label for="tellWhenInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
+          <h5 class="topList">Tell me when...<span class="tellYou">(<span id="tellYouWhen">${t(todo.line)}</span><span id="tellYouDay">${todo.date ? ` ${todo.date}` : ``}</span>)</span></h5>
+          <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
+        </label>
+        <div class="taskToggleList relDiv">
+          <div id="calendarHome"></div>
         </div>
       </div>
-      <button id="taskInfoBtn">Save</button>
-      <button class="ScreenBtn2" id="taskCancelBtn">Cancel</button>
     </div>
+    <button id="taskInfoBtn">Save</button>
+    <button class="ScreenBtn2" id="taskCancelBtn">Cancel</button>
+  </div>
   </div>`;
   //<input class="myRadio" type="radio" name="projectOptions" id="notProjectInput" value="notProject" ${!todo.wholeProject && !todo.partProject ? `checked` : ``} />
   //<label for="notProjectInput" class="termLabel"><span class="myRadio"></span><span>None of the above</span><br />
@@ -5123,7 +5160,7 @@ function taskAddAllInfo(infos){
     parents.forEach(parent => {
       parent.remove();
     });
-    parent.remove();
+    if(parent){parent.remove();};
     taskInfo.remove();
     clickScreen.classList.add("displayNone");
     if(togoList !== ""){
@@ -5132,8 +5169,15 @@ function taskAddAllInfo(infos){
       sortItAllWell();
     };
     // now let's see if and where we should scroll...
+    console.log(todo.id);
     let newLi = document.getElementById(todo.id);
+    console.log(newLi);
     if(newLi){
+      let list = newLi.parentElement;
+      let section = list.closest("section");
+      if(section.querySelector(".listToggleInput")){
+        section.querySelector(".listToggleInput").checked = true;
+      };
       newLi.scrollIntoView();
     } else{
       window.scrollTo({ top: 0 });

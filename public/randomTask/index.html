@@ -221,7 +221,7 @@ Options for sorting
           <label for="limboInput" class="listToggleLabel">
             <h3 class="topList"><span class="topListTitle">Limbo...</span></h3>
             <h5 class="topList">What are you meant to be?...</h5>
-            <span id="listLimboChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
           <ul id="listLimbo" class="listToggleList"></ul>
         </div>
@@ -233,7 +233,7 @@ Options for sorting
           <label for="limboInput">
             <h3 class="topList"><span class="topListTitle">Limbo...</span></h3>
             <h5 class="topList">What are you meant to be?...</h5>
-            <span id="listLimboChevron" class="typcn typcn-chevron-right-outline listToggleChevron displayNone"></span>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron displayNone"></span>
           </label>
           <ul id="listLimbo"></ul>
         </div>
@@ -285,9 +285,39 @@ Options for sorting
           <!-- <label for="urgesInput"> -->
             <h3 class="topList"><span class="topListTitle" style="text-decoration-color: red;"><span style="color:red;">PRI</span><span style="color:#ff8400;">ORI</span><span style="color:#ffd000;">TY!</span></span></h3>
             <h5 class="topList">Once these are done, then you can go play with the other ones!</h5>
-            <!-- <span id="listUrgesChevron" class="typcn typcn-chevron-right-outline listToggleChevron displayNone"></span> -->
+            <!-- <span class="typcn typcn-chevron-right-outline listToggleChevron displayNone"></span> -->
           <!-- </label> -->
           <ul id="topPriorityList" class="sortedList" data-sort="urge"></ul>
+        </div>
+      </section>
+      <!-- MARK: CURRENT -->
+      <section id="currentSection">
+        <input id="currentInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="currentInput" class="listToggleLabel">
+            <h3 class="topList"><span class="topListTitle" style="text-decoration-color: #600061 ; color:#600061 ;">CURRENT PROJECTS</span></h3>
+            <h5 class="topList">Let's stick to those for now please...</h5>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <div class="listToggleList">
+            <div class="relDiv noH4SubList noH4SubListClosed">
+              <!-- <h4 class="subList"></h4> -->
+              <div class="sortlistWhole">
+                <input id="sortcurrentProjectList" class="sortlistInput cossin" type="checkbox" />
+                <div class="sortlistDiv">
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                </div>
+                <label for="sortcurrentProjectList" class="sortlistLabel">
+                  <i class="fa-solid fa-ellipsis sortUnchecked"></i>
+                  <i class="typcn typcn-tick sortChecked"></i>
+                </label>
+              </div>
+            </div> 
+            <ul id="currentProjectList" class="sortedList" data-sort="color"></ul>
+          </div>
         </div>
       </section>
       <!-- MARK: NEXT -->
@@ -297,7 +327,7 @@ Options for sorting
           <label for="nextInput" class="listToggleLabel">
             <h3 class="topList"><span class="topListTitle" style="text-decoration-color: darkgreen; color:darkgreen;">NEXT</span></h3>
             <h5 class="topList">Soon, soon it'll be your turn...</h5>
-            <span id="listNextChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
           <div class="listToggleList">
             <div class="relDiv noH4SubList noH4SubListClosed">
@@ -327,7 +357,7 @@ Options for sorting
           <label for="listInput" class="listToggleLabel">
             <h3 class="topList"><span class="topListTitle" style="text-decoration-color:midnightblue; color:midnightblue;">WHENEVER</span></h3>
             <h5 class="topList">The never ending list...</h5>
-            <span id="listChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
           <div class="listToggleList">
             <div class="relDiv">
@@ -387,7 +417,7 @@ Options for sorting
           <label for="alwaysInput" class="listToggleLabel">
             <h3 class="topList"><span class="topListTitle" style="text-decoration-color: goldenrod; color:goldenrod;">ALWAYS</span></h3>
             <h5 class="topList">Forever and ever...</h5>
-            <span id="listAlwaysChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
           <div class="listToggleList">
             <div class="relDiv noH4SubList noH4SubListClosed">
@@ -417,7 +447,7 @@ Options for sorting
           <label for="waitInput" class="listToggleLabel">
             <h3 class="topList"><span class="topListTitle" style="text-decoration-color: rgb(100, 122, 122); color:rgb(100, 122, 122);">WAITING</span></h3>
             <h5 class="topList">Wait for it...</h5>
-            <span id="listWaitChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
           <div class="listToggleList">
             <div class="relDiv noH4SubList noH4SubListClosed">
@@ -447,7 +477,7 @@ Options for sorting
           <label for="thinkInput" class="listToggleLabel">
             <h3 class="topList"><span class="topListTitle" style="text-decoration-color: rgb(100, 122, 122); color:rgb(100, 122, 122);">THINKING</span></h3>
             <h5 class="topList">Thinking about it...</h5>
-            <span id="listThinkChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
           <div class="listToggleList">
             <div class="relDiv noH4SubList noH4SubListClosed">
@@ -477,7 +507,7 @@ Options for sorting
           <label for="ideaInput" class="listToggleLabel">
             <h3 class="topList"><span class="topListTitle" style="text-decoration-color: rgb(239, 125, 144); color:rgb(239, 125, 144);">Random Ideas</span></h3>
             <h5 class="topList">It's a <em>maybe-one-day-probably-never</em> kinda thing...</h5>
-            <span id="listIdeaChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
           <div class="listToggleList">
             <div class="relDiv noH4SubList noH4SubListClosed">
@@ -507,7 +537,7 @@ Options for sorting
           <label for="scheduledInput" class="listToggleLabel">
             <h3 class="topList"><span class="topListTitle">Scheduled</span></h3>
             <h5 class="topList">All in good time...</h5>
-            <span id="listScheduledChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
           <div class="listToggleList">
             <ul id="listScheduled" class="sortedList" data-sort="date"></ul>
@@ -521,7 +551,7 @@ Options for sorting
           <label for="storageInput" class="listToggleLabel">
             <h3 class="topList"><span class="topListTitle">Storage</span></h3>
             <h5 class="topList">Recycling is good...</h5>
-            <span id="listStorageChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
           <ul id="listStorage" class="listToggleList sortedList" data-sort="text"></ul>
         </div>
@@ -533,7 +563,7 @@ Options for sorting
           <label for="recurringInput" class="listToggleLabel">
             <h3 class="topList"><span class="topListTitle">Recurring</span></h3>
             <h5 class="topList">Don't worry, they'll be back...</h5>
-            <span id="listRecurringChevron" class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
           <ul id="listRecurring" class="listToggleList sortedList" data-sort="text"></ul>
         </div>

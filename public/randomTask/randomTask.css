@@ -1634,6 +1634,12 @@ input[name="projectColorChoices"]:checked + label, input[name="labelColorChoices
   opacity: .6;
   text-decoration: line-through;
 }
+.allMiniLi{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
 .miniLi > .listNameInput{
   font-size: 1em;
   font-weight: 500;

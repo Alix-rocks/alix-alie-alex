@@ -186,6 +186,21 @@ let mySections = [
     slogan: "Forever and ever...",
     nickname: "alwaysHere",
     color: "goldenrod"
+  }, {
+    title: "WAITING",
+    slogan: "Wait for it...",
+    nickname: "waitForIt",
+    color: "rgb(100, 122, 122)"
+  }, {
+    title: "THINKING",
+    slogan: "Thinking about it...",
+    nickname: "thinkBoutIt",
+    color: "rgb(100, 122, 122)"
+  }, {
+    title: "Random Ideas",
+    slogan: "It's a <em>maybe-one-day-probably-never</em> kinda thing...",
+    nickname: "crazyShit",
+    color: "rgb(239, 125, 144)"
   }
 ];
 //localStorage.mySettings = JSON.stringify(mySettings);
@@ -1976,8 +1991,17 @@ function recycleEvent(recycle){ //from Done
       todoCreation(todo);
       sortItAll();
       updateCBC();
-      document.querySelector("#listInput").checked = true;
-      document.querySelector("#wheneverLists").scrollIntoView();
+      let newLi = document.getElementById(todo.id);
+      if(newLi){
+        let list = newLi.parentElement;
+        let section = list.closest("section");
+        if(section.querySelector(".listToggleInput")){
+          section.querySelector(".listToggleInput").checked = true;
+        };
+        newLi.scrollIntoView();
+      } else{
+        window.scrollTo({ top: 0 });
+      };
     };
   };    
 };
@@ -3576,7 +3600,6 @@ let newlabelColor = "";
 
 // MARK: TODO List
 /*
-3. Arranger le css des miniList
 1. Gérer le clickscreen (voir si on peut en créer un pour chaque niveau)
   - On n'utilise pas de clickscreen pour les calendars weekly et monthly
   - On crée un nouveau clickscreen à chaque fois qu'on crée un addOn (taskInfo ou checkUrges ou iconPalet ou reDate ou label ou smallCalendar ou (?)): le z-index est de 1 de moins que celui du addOn et avec le addEventListener que si on click, on a addOn.remove() et clickscreen.remove() et un scrollBackToParent or top 
@@ -4097,6 +4120,7 @@ function taskAddAllInfo(infos){
       <div id="SupClickScreen" class="Screen displayNone"></div>
       <input id="doneIt" type="checkbox" class="cossin cornerItInput" />
       <label for="doneIt" class="doneItLabel cornerItLabel">
+        <!-- <i class="typcn typcn-media-stop-outline" cornerItHalfChecked"></i> -->
         <i class="typcn typcn-input-checked-outline cornerItUnChecked"></i>
         <i class="typcn typcn-input-checked cornerItChecked"></i>
       </label>

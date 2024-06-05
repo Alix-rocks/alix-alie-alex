@@ -496,6 +496,9 @@ async function getTasksSettings() {
     //   sendRecurringBackToGetRecurryDates(todo, date);
     // };
     
+    delete todo.storedId;
+    delete todo.stored;
+    delete todo.stockId;
     
     if(!todo.pPosition || (todo.pPosition && todo.pPosition == "out")){
       //change all the todo.color for the index value in baseColors
@@ -1984,10 +1987,15 @@ function recycleEvent(recycle){ //from Done
       let doned = listDones[i].list[recycleId];
       let todo = JSON.parse(JSON.stringify(doned));
       todo.id = crypto.randomUUID();
+      clearRecurringData(todo);
+      delete todo.recurry;
+      delete todo.recId;
+      delete todo.date;
+      delete todo.stock;
       todo.line = "noDay";
       listTasks.push(todo);
       localStorage.listTasks = JSON.stringify(listTasks);
-      //maybe we could do like in reuseItEvent and open taskInfo instead...
+      //maybe we could do like in reuseItEvent and open taskInfo instead... then add todo.recycled
       todoCreation(todo);
       sortItAll();
       updateCBC();
@@ -2006,26 +2014,6 @@ function recycleEvent(recycle){ //from Done
   };    
 };
 window.recycleEvent = recycleEvent;
-
-function stockCreaction(todo){ 
-  //you can't create a stock from an event because because even though the stock will be created (as a copy), the event becomes stored but with the pin icon checked, it can only be noDay so the event gets lost
-  clearRecurringData(todo);
-  let newTodo = JSON.parse(JSON.stringify(todo));
-  newTodo.id = crypto.randomUUID();
-  delete newTodo.date;
-  newTodo.line = "noDay";
-  newTodo.stock = true; //is in storage
-  newTodo.storedId = [todo.id];
-  
-  listTasks.push(newTodo);
-  todo.stored = true; //has a model in storage
-  todo.stockId = newTodo.id;
-  localStorage.listTasks = JSON.stringify(listTasks);
-  // todoCreation(newTodo);
-  // sortItAll();
-  // document.querySelector("#storageInput").checked = true;
-  // document.querySelector("#storageList").scrollIntoView();
-};
 
 function reDateEvent(thisOne){ // in Done Zone
   parent = thisOne.parentElement;
@@ -2136,12 +2124,6 @@ function gotItDone(doned){ //doned is either the todo per se or a fake todo crea
     getRecurryDateOut(doned); //removes the date from the recurryDates of its recurring
     donedItem = doned;
   } else{
-    if(doned.stored){
-      let stockIndex = listTasks.findIndex(todo => todo.id == doned.stockId);
-      if(stockIndex !== -1){
-        listTasks[stockIndex].storedId = listTasks[stockIndex].storedId.filter(id => id !== doned.id);
-      }; //else, means the stock has been erased without erasing its stored...
-    };
     let donedIndex = listTasks.findIndex(todo => todo.id == doned.id);
     let donedSplice = listTasks.splice(donedIndex, 1);
     donedItem = donedSplice[0];
@@ -2200,26 +2182,13 @@ window.trashDoneEvent = trashDoneEvent;
 
 function trashStockEvent(thisOne){ //from Storage
   let trashLi = thisOne.parentElement;
-  let trashId = trashLi.id; 
-  trashStock(trashId); 
+  let trashIndex = listTasks.findIndex(todo => todo.id == trashLi.id);
+  listTasks.splice(trashIndex, 1);
+  localStorage.listTasks = JSON.stringify(listTasks);
+  trashLi.remove();
   updateCBC();
 };
 window.trashStockEvent = trashStockEvent;
-
-function trashStock(trashId){
-  let trashIndex = listTasks.findIndex(todo => todo.id == trashId);
-  let trash = listTasks[trashIndex];
-  if(trash.storedId.length > 0){
-    trash.storedId.forEach(todoId => {
-      let todoIndex = listTasks.findIndex(todo => todo.id == todoId);
-      delete listTasks[todoIndex].stored;
-      delete listTasks[todoIndex].stockId;
-    });
-  };
-  listTasks.splice(trashIndex, 1);
-  localStorage.listTasks = JSON.stringify(listTasks);
-  document.getElementById(trashId).remove();
-};
 
 function trashRecurringEvent(thisOne){
   let trashLi = thisOne.parentElement;
@@ -3249,8 +3218,8 @@ function calendarSave(todo){ //
 // MARK: KEY/VALUES
 /* 
 todo.newShit => si présent et true, veut dire qu'il vient d'être créé (est deleted après)
-todo.status => "todo" ou "done"
-todo.doneDate => date (string) où ça a été coché fait
+~todo.status => "todo" ou "done"
+~todo.doneDate => date (string) où ça a été coché fait
 todo.id
 todo.task
 todo.info
@@ -3284,10 +3253,11 @@ todo.prima => durée du buffer avant l'event
 todo.primaRow = heure à laquelle le buffer commence ("00-00" rounded to fifteen)
 todo.dopo => durée du buffer après l'event
 todo.dopoRow = heure à laquelle le buffer fini ("00-00" rounded to fifteen)
-todo.stored => true/false (has a model in storage)
-todo.stockId
+xxxtodo.stored => true/false (has a model in storage)
+xxxtodo.stockId
 todo.stock => true/false (is a model in storage)
-todo.storedId = []
+xxxtodo.storedId = []
+todo.recycled => has been recycled from either a stock or a done (to remove once it's been saved, just like newShit)
 todo.dal => date que ça commence
 todo.ogni => numéro de répétition
 todo.var => timeVariation, type de variation : "giorno", "settimana", "mese" or "anno"
@@ -3600,11 +3570,11 @@ let newlabelColor = "";
 
 // MARK: TODO List
 /*
-1. Gérer le clickscreen (voir si on peut en créer un pour chaque niveau)
+1. Gérer le clickscreen (voir si on peut en créer un pour chaque niveau) (then we can erase the 'where: "todoZone"' in infos!)
   - On n'utilise pas de clickscreen pour les calendars weekly et monthly
   - On crée un nouveau clickscreen à chaque fois qu'on crée un addOn (taskInfo ou checkUrges ou iconPalet ou reDate ou label ou smallCalendar ou (?)): le z-index est de 1 de moins que celui du addOn et avec le addEventListener que si on click, on a addOn.remove() et clickscreen.remove() et un scrollBackToParent or top 
 2. Revoir la sortie de taskInfo! --> il reste à gérer le clickHandlerAddOn qu'on a ajouté au clickscreen (est-ce qu'on garde ça ou pas?) (ou on add le même eventListener que pour cancel button. Et on fait juste remove le clickscreen...)
-4. revoir le concept de stockCreaction (:1953) (notes are over there) parce que ça marche pas!
+4. iconChoice (from the li) is still using recIndex.recurrys...
 1. considérer afficher allStore dans le body à chaque fois? (peut-être même taskInfo aussi, vu que des fois, c'est la seule chose qui change d'un toTI à l'autre!)
 
 3. if fineMai and recurryDates.length == 0 then alert and check if you can use alert "ok" to do erase and "cancel" to open taskInfo with the todo that is about to be erased!!) 
@@ -3626,45 +3596,25 @@ function toTIdeTZaP(thisOne){ // de TodoZone à Procrastinator
     //moving = false; //must stay false in month/week/search
   let div = thisOne.parentElement.parentElement;
   parent = div.parentElement; 
-  let recurryIsIt = parent.dataset.rec && parent.dataset.rec !== "undefined" ? true : false;
   parent.classList.add("selectedTask");
   parent.scrollIntoView(); 
   let togoList = parent.parentElement.id;
-  let todo;  
-  let todoIndex; 
-  let recIndex;
-  if(recurryIsIt){
-    recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
+  let todo;
+  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+    let recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
     let recurring = listTasks[recIndex];
     todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
-    // todo = JSON.parse(JSON.stringify(recurring));
-    // clearRecurringData(todo);
-    // todo.id = crypto.randomUUID();
-    // todo.line = "todoDay";
-    // todo.date = parent.dataset.date;
-    // todo.recurry = true;
-    // todo.recId = parent.dataset.rec;
   } else{
-    todoIndex = listTasks.findIndex(td => td.id == parent.id);
+    let todoIndex = listTasks.findIndex(td => td.id == parent.id);
     todo = listTasks[todoIndex];
   };
-  // let width = getComputedStyle(div).width; 
-  // let num = width.slice(0, -2); 
-  // let newWidth = Number(num) + 44; 
   clickScreen.classList.remove("displayNone");
   thisOne.parentElement.remove();
   let infos = {
     todo: todo,
-    where: "todoZone",
-    why: "mod",
+    where: "todoZone", //That's only used for the clickScreen handler...
     div: div,
-    // newWidth: newWidth,
     togoList: togoList
-  };
-  if(recurryIsIt){
-    infos.recIndex = recIndex;
-  } else{
-    infos.todoIndex = todoIndex;
   };
   taskAddAllInfo(infos);
 };
@@ -3684,7 +3634,6 @@ function toTIdeTZaN(){ // de TodoZone à New (addForm but without the addInput.v
   let infos = {
     todo: todo,
     where: "todoZone",
-    why: "new",
     div: div
   };
   taskAddAllInfo(infos);
@@ -3693,33 +3642,24 @@ function toTIdeTZaN(){ // de TodoZone à New (addForm but without the addInput.v
 function toTIdeTZaM(thisOne){ // de TodoZone à Modification
   let div= thisOne.parentElement;
   parent = div.parentElement;
-  let recurryIsIt = parent.dataset.rec && parent.dataset.rec !== "undefined" ? true : false;
   parent.classList.add("selectedTask");
   parent.scrollIntoView(); 
   let togoList = parent.parentElement.id;
   let todo;
-  let todoIndex;
-  let recIndex;
-  if(recurryIsIt){
-    recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
+  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+    let recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
     let recurring = listTasks[recIndex];
     todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
   } else{
-    todoIndex = listTasks.findIndex(td => td.id == parent.id);
+    let todoIndex = listTasks.findIndex(td => td.id == parent.id);
     todo = listTasks[todoIndex];
   };
   clickScreen.classList.remove("displayNone"); 
   let infos = {
     todo: todo,
     where: "todoZone",
-    why: "mod",
     div: div,
     togoList: togoList
-  };
-  if(recurryIsIt){
-    infos.recIndex = recIndex;
-  } else{
-    infos.todoIndex = todoIndex;
   };
   taskAddAllInfo(infos);
 };
@@ -3732,12 +3672,10 @@ function toTIdeTZaS(thisOne){ // de TodoZone à Stock reusage
   let reuse = listTasks[reuseIndex];
   let todo = JSON.parse(JSON.stringify(reuse));
   todo.id = crypto.randomUUID();
-  todo.stored = true;
-  todo.stockId = reuse.id;
   todo.line = "todoDay";
   todo.date = getTodayDateString();
+  todo.recycled = true;
   delete todo.stock;
-  delete todo.storedId;
   //let newWidth = Number(window.innerWidth - 16);
   let div = document.body;
   div.scrollIntoView();
@@ -3745,9 +3683,7 @@ function toTIdeTZaS(thisOne){ // de TodoZone à Stock reusage
   let infos = {
     todo: todo,
     where: "todoZone",
-    why: "stock",
-    div: div,
-    reuse: reuse
+    div: div
   };
   taskAddAllInfo(infos);
 };
@@ -3761,16 +3697,11 @@ function toTIdeASaM(thisOne){ // de AllStorage à Modification
   parent.scrollIntoView(); 
   let todoIndex = listTasks.findIndex(td => td.id == parent.id);
   let todo = listTasks[todoIndex];
-  // let width = getComputedStyle(div).width; 
-  // let num = width.slice(0, -2); 
-  // let newWidth = Number(num) + 44; 
   clickScreen.classList.remove("displayNone"); 
   let infos = {
     todo: todo,
     where: "allStorage",
-    why: "mod",
-    div: div,
-    todoIndex: todoIndex
+    div: div
   };
   taskAddAllInfo(infos);
 };
@@ -3780,33 +3711,24 @@ function toTIdeSSaM(thisOne){ // de SearchScreen à Modification
   moving = false; //must stay false in month/week/search
   let div= thisOne.parentElement;
   parent = div.parentElement;
-  let recurryIsIt = parent.dataset.rec && parent.dataset.rec !== "undefined" ? true : false;
   parent.classList.add("selectedTask");
   parent.scrollIntoView(); 
   let togoList = parent.parentElement.id;
   let todo;
-  let todoIndex;
-  let recIndex;
-  if(recurryIsIt){
-    recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
+  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+    let recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
     let recurring = listTasks[recIndex];
     todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
   } else{
-    todoIndex = listTasks.findIndex(td => td.id == parent.id);
+    let todoIndex = listTasks.findIndex(td => td.id == parent.id);
     todo = listTasks[todoIndex];
   };
   clickScreen.classList.remove("displayNone"); 
   let infos = {
     todo: todo,
     where: "searchScreen",
-    why: "mod",
     div: div,
     togoList: togoList,
-  };
-  if(recurryIsIt){
-    infos.recIndex = recIndex;
-  } else{
-    infos.todoIndex = todoIndex;
   };
   taskAddAllInfo(infos);
 };
@@ -3820,21 +3742,17 @@ function toTIdeSSaS(thisOne){ // de SearchScreen à Stock reusage
   let reuse = listTasks[reuseIndex];
   let todo = JSON.parse(JSON.stringify(reuse));
   todo.id = crypto.randomUUID();
-  todo.stored = true;
-  todo.stockId = reuse.id;
   todo.line = "todoDay";
   todo.date = getTodayDateString();
+  todo.recycled = true;
   delete todo.stock;
-  delete todo.storedId;
   let div = document.body;
   div.scrollIntoView();
   clickScreen.classList.remove("displayNone"); 
   let infos = {
     todo: todo,
     where: "searchScreen",
-    why: "stock",
-    div: div,
-    reuse: reuse
+    div: div
   };
   taskAddAllInfo(infos);
 };
@@ -3857,12 +3775,10 @@ function toTIdeCMaN(thisOne){ // de CalMonthPage à New
     tutto: true,
     date: kaseDate
   };
-  // let newWidth = Number(window.innerWidth - 20);
   let div = document.body;
   let infos = {
     todo: todo,
     where: "calMonthPage",
-    why: "new",
     div: div
   };
   taskAddAllInfo(infos);
@@ -3872,44 +3788,26 @@ window.toTIdeCMaN = toTIdeCMaN;
 function toTIdeCMaM(thisOne){ // de CalMonthPage à Modification
   moving = false; //must stay false in month/week/search
   parent = thisOne;
-  let recurryIsIt = parent.dataset.rec && parent.dataset.rec !== "undefined" ? true : false;
   let kase = parent.parentElement; 
   let todo;
-  let todoIndex;
-  let recIndex;
-  if(recurryIsIt){
-    recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
+  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+    let recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
     let recurring = listTasks[recIndex];
     todo = getWholeRecurry(recurring, kase.dataset.wholedate, parent.dataset.rec);
-    // todo = JSON.parse(JSON.stringify(recurring));
-    // clearRecurringData(todo);
-    // todo.id = crypto.randomUUID();
-    // todo.line = "todoDay";
-    // todo.date = kase.dataset.wholedate;
-    // todo.recurry = true;
-    // todo.recId = parent.dataset.rec;
   } else{
-    todoIndex = listTasks.findIndex(td => td.id == parent.dataset.id);
+    let todoIndex = listTasks.findIndex(td => td.id == parent.dataset.id);
     todo = listTasks[todoIndex];
   };
   let div = document.body;
   let infos = {
     todo: todo,
     where: "calMonthPage",
-    why: "mod",
     div: div
-  };
-  if(recurryIsIt){
-    infos.recIndex = recIndex;
-  } else{
-    infos.todoIndex = todoIndex;
   };
   taskAddAllInfo(infos);
 };
 window.toTIdeCMaM = toTIdeCMaM;
 
-function toTIdeCMaS(thisOne){ // de CalMonthPage à Stock reusage
-};
 function toTIdeCWaN(thisOne){ // de CalWeekPage à New
   moving = false; //must stay false in month/week/search
   calendarStock = true;
@@ -3941,12 +3839,10 @@ function toTIdeCWaN(thisOne){ // de CalWeekPage à New
     todo.tutto = false;
   };
   newTodoStockFromCal = todo;
-  // let newWidth = Number(window.innerWidth - 20);
   let div = document.body;
   let infos = {
     todo: todo,
     where: "calWeekPage",
-    why: "new",
     div: div
   };
   taskAddAllInfo(infos);
@@ -3956,43 +3852,24 @@ window.toTIdeCWaN = toTIdeCWaN;
 function toTIdeCWaM(thisOne){ // de CalWeekPage à Modification
   moving = false; //must stay false in month/week/search
   parent = thisOne; 
-  let recurryIsIt = parent.dataset.rec && parent.dataset.rec !== "undefined" ? true : false;
   let todo;
-  let todoIndex;
-  let recIndex;
-  if(recurryIsIt){
-    recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
+  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+    let recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
     let recurring = listTasks[recIndex];
     todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
-    // todo = JSON.parse(JSON.stringify(recurring));
-    // clearRecurringData(todo);
-    // todo.id = crypto.randomUUID();
-    // todo.line = "todoDay";
-    // todo.date = parent.dataset.date;
-    // todo.recurry = true;
-    // todo.recId = parent.dataset.rec;
   } else{
-    todoIndex = listTasks.findIndex(td => td.id == parent.dataset.id);
+    let todoIndex = listTasks.findIndex(td => td.id == parent.dataset.id);
     todo = listTasks[todoIndex];
   }; 
   let div = document.body;
   let infos = {
     todo: todo,
     where: "", // we don't even use it!
-    why: "mod",
     div: div
-  };
-  if(recurryIsIt){
-    infos.recIndex = recIndex;
-  } else{
-    infos.todoIndex = todoIndex;
   };
   taskAddAllInfo(infos);
 };
 window.toTIdeCWaM = toTIdeCWaM;
-
-function toTIdeCWaS(thisOne){ // de CalWeekPage à Stock reusage
-};
 
 function toTIdeCCaNS(thisOne){ //de calendar (month || weekly) à Stock reusage à partir de New (calendarStock)
   moving = false; //must stay false in month/week/search
@@ -4009,20 +3886,16 @@ function toTIdeCCaNS(thisOne){ //de calendar (month || weekly) à Stock reusage 
   todo.dalle = todo.dalle ? todo.dalle : newTodo.dalle;
   todo.alle = todo.alle ? todo.alle : newTodo.alle;
   todo.tutto = todo.dalle ? false : true;
-  todo.stored = true;
-  todo.stockId = reuse.id;
   todo.line = "todoDay";
+  todo.recycled = true;
   delete todo.stock;
-  delete todo.storedId;
   //let newWidth = Number(window.innerWidth - 16);
   let div = document.body;
   clickScreen.classList.remove("displayNone"); 
   let infos = {
     todo: todo,
     where: "",
-    why: "stock",
-    div: div,
-    reuse: reuse
+    div: div
   };
   taskAddAllInfo(infos);
 };
@@ -4034,7 +3907,6 @@ function taskAddAllInfo(infos){
   let parents;
   let todo = infos.todo;
   let where = infos.where;//where == "todoZone", "calWeekPage", "calMonthPage", "searchScreen", "allStorage"
-  let why = infos.why;//why == "new", "mod", "pro", "stock"
   let div = infos.div;
   let togoList = infos.togoList;
  
@@ -4127,7 +3999,7 @@ function taskAddAllInfo(infos){
       ${todo.recurry || todo.line == "recurringDay" ? `
       <div class="storeItLabel cornerItLabel" >
         <span class="typcn typcn-arrow-repeat"></span>
-      </div>` : todo.stored ? `<div class="storeItLabel cornerItLabel" >
+      </div>` : todo.recycled ? `<div class="storeItLabel cornerItLabel" >
       <span class="fa-solid fa-recycle" style="line-height: 2.1em; font-size: 1.1em;"></span>
     </div>` : `<input id="storeIt" type="checkbox" class="cossin cornerItInput" ${todo.stock ? `checked` : ``} />
     <label for="storeIt" class="storeItLabel cornerItLabel">
@@ -4140,7 +4012,7 @@ function taskAddAllInfo(infos){
       <i class="fa-solid fa-copy cornerItChecked"></i>
     </label>
     <input id="trashIt" type="checkbox" class="cossin cornerItInput" />
-    <label for="trashIt" class="trashItLabel cornerItLabel${(why == "new" || why == "stock") ? ` hidden` : ``}">
+    <label for="trashIt" class="trashItLabel cornerItLabel${(todo.newShit || todo.recycled) ? ` hidden` : ``}">
       <i class="fa-regular fa-trash-can cornerItUnChecked"></i>
       <i class="fa-solid fa-trash-can cornerItChecked"></i>
     </label>
@@ -4716,7 +4588,7 @@ function taskAddAllInfo(infos){
   let recurringDaySection = document.querySelector("#recurringDaySection");
   let noDaySection = document.querySelector("#noDaySection");
   let deadlineSection = document.querySelector("#deadlineSection");
-  if(!todo.recurry && todo.line !== "recurringDay" && !todo.stored){
+  if(!todo.recurry && todo.line !== "recurringDay" && !todo.recycled){
     storeIt.addEventListener("click", () => {
       let radio = document.querySelector('input[name="termOptions"]:checked').value;
       if(storeIt.checked){
@@ -4768,7 +4640,7 @@ function taskAddAllInfo(infos){
         colorIt.classList.remove("hidden");
         taskTitle.style.color = newcolor ? mySettings.myBaseColors[newcolor].colorBG : mySettings.myBaseColors[todo.color].colorBG;
         busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
-        if(storeIt && storeIt.checked && !todo.stored){ // if it's a recurry, that used to make it bug because there was no storeIt to check if it's checked or not, so I added storeIt
+        if(storeIt && storeIt.checked && !todo.recycled){ // if it's a recurry, that used to make it bug because there was no storeIt to check if it's checked or not, so I added storeIt
           setN();
         } else{
           setTRN();
@@ -5088,23 +4960,17 @@ function taskAddAllInfo(infos){
       parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
 
       if(!todo.recurry && todo.line !== "recurringDay"){
-        if(!todo.stock && !todo.stored && storeIt.checked){
-          if(why == "new" || todo.newShit){ //inclus addform
-            //todo.line = "noDay"; le calendarSave est juste après
-            todo.stock = true; //is in storage
-            todo.storedId = []; //pour ses futurs copies stored
-          } else{
-            stockCreaction(todo); //todo.stored = true; (has a model in storage) (included in stockCreation)
-          };
-        };
-        if(todo.stock && !storeIt.checked){
-          trashStock(todo.id); //erasing the stock and transforming all the stored in not stored (normal todo)
+        if(!todo.stock && storeIt.checked){
+            todo.stock = true; //goes in storage
+            todo.line = "noDay";
+          } else if(todo.stock && !storeIt.checked){
+            delete todo.stock //is not in storage anymore
         };
       };
   
-      if(todo.newShit){
-        delete todo.newShit;
-      };
+
+      delete todo.newShit;
+      delete todo.recycled;
       
 
       
@@ -5120,13 +4986,15 @@ function taskAddAllInfo(infos){
 
       //WOLA si todo était stored ou stock et là devient reccuringDay?!
 
-      if(why == "new"){
+      // if(why == "new" || why == "stock"){
+      //   listTasks.push(todo);
+      // };
+      let todoIndex = listTasks.findIndex(td => td.id == todo.id);
+      if(todoIndex == -1){
         listTasks.push(todo);
       };
-      if(why == "stock"){
-        infos.reuse.storedId.push(todo.id);
-        listTasks.push(todo);
-      };
+      // we could also just check if the todo.id is in listTask, and if not, push it there... that way we might not need the why... (check if we use it somewhere else...)
+
 
       if(copyIt.checked){ //WOLA! Si c'est stock, il faut enlever les storedId! Si c'est reccuring...
         let newTodo = JSON.parse(JSON.stringify(todo));
@@ -5146,7 +5014,7 @@ function taskAddAllInfo(infos){
       }; // the li.remove comes later but parents or parent need to have been established before (i.e. do create parents after by looking for li with the todo.id, otherwise you will have erased to new one too!)
       
       
-    } else if(trashIt.checked){
+    } else if(trashIt.checked){ //if it's new, there's nothing to do, the todo doesn't exist yet in the listTasks
       //ALSO TRASH THE Project IN MYProjectS!
       if(todo.project == "wholeProject"){
         let indexP = mySettings.myProjects.findIndex(project => project.nickname == todo.Pnickname);
@@ -5155,22 +5023,12 @@ function taskAddAllInfo(infos){
       }; //Are partProjects in the wholeProject or not?!
       if(todo.recurry == true){ //the parent will be removed, but we need to remove the date in the recurring.recurryDates
         getRecurryDateOut(todo); // donc la date du todo est enlevée des recurryDates de son recurringDay        
-      } else if(todo.stored){
-        let stockIdx = listTasks.findIndex(toDo => toDo.id == todo.stockId);
-        let stock = listTasks[stockIdx];
-        console.log(stock);
-        let todoIdx = stock.storedId.indexOf(todo.id);
-        stock.storedId.splice(todoIdx, 1);
-        console.log(stock);
-        listTasks.splice(infos.todoIndex, 1);
-      } else if(why == "new"){ // "stock" too, maybe?
-        //nothing to do, the todo doesn't exist yet in the listTasks
       } else{
-        listTasks.splice(infos.todoIndex, 1);
+        let trashIndex = listTasks.findIndex(td => td.id == todo.id);
+        if(trashIndex !== -1){
+          listTasks.splice(trashIndex, 1);
+        };
       };
-      // if(where == "todoZone" || where == "searchScreen" || where == "allStorage"){
-      //   parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
-      // }; //in the swipingDay Section if it's the date the todo is...)
       parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
     };
     
@@ -5343,6 +5201,7 @@ function iconChoice(thisOne){
     todoIndex = listTasks.findIndex(todo => todo.id == liId);
     todo = listTasks[todoIndex];
   };
+  
   iconTag.insertAdjacentElement("afterend", iconsPalet);
   iconsPalet.classList.remove("displayNone");
   clickScreen.classList.remove("displayNone");
@@ -5365,14 +5224,7 @@ function iconChoice(thisOne){
         delete oldRecurry[0].recId;
         listTasks.push(oldRecurry[0]);
       };
-      if(todo.line == "recurringDay"){
-        todo.recurrys.forEach(recurry => {
-          recurry.icon = todo.icon;
-          if(recurry.out){
-            document.getElementById(recurry.id).querySelector(".IconI").className = `IconI ${icon}`;
-          };
-        });
-      };
+      
       localStorage.listTasks = JSON.stringify(listTasks);
       updateCBC();
       clickHandlerAddOn(iconsPalet, "keep", clickScreen);

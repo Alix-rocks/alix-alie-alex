@@ -3600,6 +3600,18 @@ function toTIdeTZaP(thisOne){ // de TodoZone à Procrastinator
   parent.scrollIntoView(); 
   let togoList = parent.parentElement.id;
   let todo;
+  // function getTodoFromParent(){ //parent is global
+  //  let todo;
+  //   if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+  //     let recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
+  //     let recurring = listTasks[recIndex];
+  //     todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
+  //   } else{
+  //     let todoIndex = listTasks.findIndex(td => td.id == parent.id);
+  //     todo = listTasks[todoIndex];
+  //   };
+  //  return todo;
+  // };
   if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
     let recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
     let recurring = listTasks[recIndex];
@@ -3630,11 +3642,10 @@ function toTIdeTZaN(){ // de TodoZone à New (addForm but without the addInput.v
     line: "noDay"
   };
   //let newWidth = Number(window.innerWidth - 16);
-  let div = document.body;
   let infos = {
     todo: todo,
     where: "todoZone",
-    div: div
+    div: document.body
   };
   taskAddAllInfo(infos);
 };
@@ -3775,11 +3786,10 @@ function toTIdeCMaN(thisOne){ // de CalMonthPage à New
     tutto: true,
     date: kaseDate
   };
-  let div = document.body;
   let infos = {
     todo: todo,
     where: "calMonthPage",
-    div: div
+    div: document.body
   };
   taskAddAllInfo(infos);
 };
@@ -3793,16 +3803,15 @@ function toTIdeCMaM(thisOne){ // de CalMonthPage à Modification
   if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
     let recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
     let recurring = listTasks[recIndex];
-    todo = getWholeRecurry(recurring, kase.dataset.wholedate, parent.dataset.rec);
+    todo = getWholeRecurry(recurring, kase.dataset.wholedate, parent.dataset.rec); //consider adding the date in the parent.dataset so that we can use the same function getTodoFromParent as the others
   } else{
     let todoIndex = listTasks.findIndex(td => td.id == parent.dataset.id);
     todo = listTasks[todoIndex];
   };
-  let div = document.body;
   let infos = {
     todo: todo,
     where: "calMonthPage",
-    div: div
+    div: document.body
   };
   taskAddAllInfo(infos);
 };
@@ -3839,11 +3848,10 @@ function toTIdeCWaN(thisOne){ // de CalWeekPage à New
     todo.tutto = false;
   };
   newTodoStockFromCal = todo;
-  let div = document.body;
   let infos = {
     todo: todo,
     where: "calWeekPage",
-    div: div
+    div: document.body
   };
   taskAddAllInfo(infos);
 };
@@ -3861,11 +3869,10 @@ function toTIdeCWaM(thisOne){ // de CalWeekPage à Modification
     let todoIndex = listTasks.findIndex(td => td.id == parent.dataset.id);
     todo = listTasks[todoIndex];
   }; 
-  let div = document.body;
   let infos = {
     todo: todo,
-    where: "", // we don't even use it!
-    div: div
+    where: "", // we don't even use it! (except for the clickscreen handler... wait until we've dealed with that)
+    div: document.body
   };
   taskAddAllInfo(infos);
 };
@@ -3890,12 +3897,11 @@ function toTIdeCCaNS(thisOne){ //de calendar (month || weekly) à Stock reusage 
   todo.recycled = true;
   delete todo.stock;
   //let newWidth = Number(window.innerWidth - 16);
-  let div = document.body;
   clickScreen.classList.remove("displayNone"); 
   let infos = {
     todo: todo,
     where: "",
-    div: div
+    div: document.body
   };
   taskAddAllInfo(infos);
 };
@@ -4960,10 +4966,10 @@ function taskAddAllInfo(infos){
       parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
 
       if(!todo.recurry && todo.line !== "recurringDay"){
-        if(!todo.stock && storeIt.checked){
+        if(!todo.stock && storeIt && storeIt.checked){
             todo.stock = true; //goes in storage
             todo.line = "noDay";
-          } else if(todo.stock && !storeIt.checked){
+          } else if(todo.stock && storeIt && !storeIt.checked){
             delete todo.stock //is not in storage anymore
         };
       };

@@ -614,13 +614,7 @@ input[name="daysWeekChoice"]:checked + label.dayCircle{
 h5.taskInfoInput{
   margin-bottom: 0;
 }
-.taskDetails{
-  height: 105px;
-  margin-bottom: 0;
-}
-.taskDetailsFullHeight{
-  height: 50.64vh;
-}
+
 .taskInfoSubTitle{
   text-decoration-line: underline;
   text-decoration-style: dotted;
@@ -938,7 +932,7 @@ body > #taskInfo{
 }
 
 
-.numberedCal, .urgeCheck{
+.numberedCal, .checkOptions{
   position: relative;
   padding: 0;
   width: 30px;
@@ -948,15 +942,15 @@ body > #taskInfo{
 .numberedCal{
   height: 27px;
 }
-.urgeCheck{
+.checkOptions{
   height: 33px;
 }
-.numberedCal i, .urgeCheck i{
+.numberedCal i, .checkOptions i{
   position: absolute;
   top: 0;
   left: 0;
 }
-.urgeCheck span{
+.checkOptions span{
   position: absolute;
   top: 0;
   left: 0;
@@ -986,7 +980,7 @@ body > #taskInfo{
   text-shadow: -0.75px -0.75px 0 rgb(7, 10, 10), 0 -0.75px 0 rgb(7, 10, 10), 0.75px -0.75px 0 rgb(7, 10, 10), 0.75px 0 0 rgb(7, 10, 10), 0.75px 0.75px 0 rgb(7, 10, 10), 0 0.75px 0 rgb(7, 10, 10), -0.75px 0.75px 0 rgb(7, 10, 10), -0.75px 0 0 rgb(7, 10, 10);
 }
 
-.checkOrUrgeDiv{
+.checkOptionsDiv{
   position: absolute;
   top: 0;
   left: 0;
@@ -998,14 +992,20 @@ body > #taskInfo{
   border-radius: 5px;
   z-index: 550;
 }
-.checkOrUrgeDiv input{
+.checkOptionsDiv input{
   width: 40px;
   height: 25px;
   margin-left: 5px;
 }
-.checkOrUrgeDiv i{
+.checkOptionsDiv i{
   margin-left: -3px;
   line-height: 25px;
+}
+
+.checkOptionsDiv i.checkOptionsCheck{
+  font-size: 1.8em;
+  margin-bottom: -5px;
+  color: var(--tx-color);
 }
 
 li .textDone{
@@ -1566,6 +1566,10 @@ input[name="projectColorChoices"]:checked + label, input[name="labelColorChoices
   flex-wrap: nowrap;
   align-items: center;
 }
+.taskDetails{
+  height: 0px;
+  margin-bottom: 0;
+}
 .listToggleInput:checked + div .listToggleLabel{
   margin-bottom: 5px;
 }
@@ -1579,6 +1583,12 @@ input[name="projectColorChoices"]:checked + label, input[name="labelColorChoices
   visibility: visible;
   min-height: fit-content;
   height: fit-content;
+}
+#tellWhyInput:checked + div .taskToggleList > .taskDetails{
+  height: 105px;
+}
+.taskDetailsFullHeight{
+  height: 50.64vh!important;
 }
 .taskInfoSectionLabel{
   padding: 0 10px;

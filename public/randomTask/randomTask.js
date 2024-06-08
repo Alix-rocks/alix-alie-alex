@@ -939,7 +939,6 @@ async function saveToCloud(){
       myBusies: myBusies
     });
   }; 
-
   listDones = JSON.parse(localStorage.listDones);
   const docRefDones = collection(db, "randomTask", auth.currentUser.email, "myListDones");
   const docSnapDones = await getDocs(docRefDones);
@@ -956,6 +955,7 @@ async function saveToCloud(){
       });
     };
   });   
+
   await batch.commit();
   resetCBC();
   resetModif();
@@ -1643,7 +1643,7 @@ function todoCreation(todo){
         document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" ${todo.date ? `data-date="${todo.date}"` : ``} ${todo.dalle ? `data-time="${todo.dalle}"` : ``} ${todo.recurry ? `data-rec="${todo.recId}"` : ``} ${todo.term == "alwaysHere" ? `data-always="here"` : ``} class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : ``}${todo.pPosition == "out" ? ` projectLi` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}${todo.pPosition == "out" ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : ``}">
           ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
           ${pOngletsDiv}
-          <div class="urgeCheck" style="color: ${todo.urge ? todo.urgeColor : ``}" ${todo.urge || todo.label ? `onclick="checkOrUrge(this)"` : `onclick="checkEvent(this, 'norm')"`}>
+          <div class="checkOptions" style="color: ${todo.urge ? todo.urgeColor : ``}" onclick="checkOptions(this)">
             <i class="typcn typcn-media-stop-outline emptyCheck"></i>
             <span>${todo.urge ? todo.urgeNum : ``}</span>
           </div>
@@ -1743,44 +1743,36 @@ function getTogoList(todo){
   return togoList;
 };
 
-function checkOrUrge(thisOne){
+function checkOptions(thisOne){
   clickScreen.classList.remove("displayNone");
   parent = thisOne.parentElement;
   parent.classList.add("selectedTask");
-  let checkId = parent.id;
-  let todo;
-  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
-    let recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
-    let recurring = listTasks[recIndex];
-    todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
-  } else{
-    let todoIndex = listTasks.findIndex(todo => todo.id == checkId);
-    todo = listTasks[todoIndex];
-  };
+  let todo = getTodoFromParent();;
   console.log(todo);
-  parent.insertAdjacentHTML("beforeend", `<div class="checkOrUrgeDiv">
+  parent.insertAdjacentHTML("beforeend", `<div class="checkOptionsDiv">
   ${todo.label ? `<i id="labelChoice" class="fa-solid fa-folder-closed fa-rotate-270" style="font-size: 1.2em;color:${colorsList[todo.LColor].colorBG};"></i>` : ``}
-  <i class="typcn typcn-input-checked-outline" style="font-size: 1.8em; margin-bottom: -5px; color:var(--tx-color);" onclick="checkEvent(this, 'urge')"></i>
-  ${todo.urge ? `<input id="newUrgeNumInput" type="number" value="${todo.urgeNum}"/>
-  </div>` : ``}`);
-  let checkOrUrgeDiv = document.querySelector(".checkOrUrgeDiv");
-  clickScreen.addEventListener("click", () => clickHandlerAddOn(checkOrUrgeDiv, "trash", clickScreen, ""));
-  
-  let labelChoice = parent.querySelector("#labelChoice");
-  labelChoice.addEventListener("click", () => {
-    parent.scrollIntoView();
-    let labelDiv = parent.querySelector(".labelLiOnglet");
-    let options = {
-      icon: labelChoice,
-      where: checkOrUrgeDiv,
-      labelDiv: labelDiv,
-      screen: clickScreen, //should be an other screen...
-      myLabels: mySettings.myLabels && mySettings.myLabels.length > 0 ? true : false
-    };
-    creatingLabelPanel(todo, options);
-  });
+  ${todo.urge ? `<input id="newUrgeNumInput" type="number" value="${todo.urgeNum}"/>` : ``}
+  <i class="typcn typcn-input-checked-outline checkOptionsCheck" onclick="PartialCheckEvent(this.parentElement)"></i>
+  ${todo.term == "alwaysHere" ? `` : `<i class="typcn typcn-input-checked checkOptionsCheck" onclick="TotalCheckEvent(this.parentElement)"></i>`}
+  </div>`);
+  let checkOptionsDiv = parent.querySelector(".checkOptionsDiv");
+  clickScreen.addEventListener("click", () => clickHandlerAddOn(checkOptionsDiv, "trash", clickScreen, ""));
+  if(todo.label){
+    let labelChoice = parent.querySelector("#labelChoice");
+    labelChoice.addEventListener("click", () => {
+      parent.scrollIntoView();
+      let labelDiv = parent.querySelector(".labelLiOnglet");
+      let options = {
+        icon: labelChoice,
+        where: checkOptionsDiv,
+        labelDiv: labelDiv,
+        screen: clickScreen, //should be an other screen...
+        myLabels: mySettings.myLabels && mySettings.myLabels.length > 0 ? true : false
+      };
+      creatingLabelPanel(todo, options);
+    }); //
+  };
 
-  let urgeCheckDiv = parent.querySelector("div.urgeCheck");
   if(todo.urge){
     let newUrgeNumInput = document.querySelector("#newUrgeNumInput");
     newUrgeNumInput.addEventListener("change", () => {
@@ -1788,21 +1780,21 @@ function checkOrUrge(thisOne){
         delete todo.urge;
         delete todo.urgeNum;
         delete todo.urgeColor;
-        urgeCheckDiv.style.color = mySettings.myBaseColors[0].colorBG;
-        urgeCheckDiv.querySelector("span").textContent = "";
-        urgeCheckDiv.setAttribute("onclick", "checkEvent(this, 'norm')");
+        checkOptionsDiv.style.color = mySettings.myBaseColors[0].colorBG;
+        checkOptionsDiv.querySelector("span").textContent = "";
+        //urgeCheckDiv.setAttribute("onclick", "checkEvent(this)");
       } else{
         todo.urgeNum = newUrgeNumInput.value;
-        urgeCheckDiv.querySelector("span").textContent = newUrgeNumInput.value;
+        checkOptionsDiv.querySelector("span").textContent = newUrgeNumInput.value;
       };
       localStorage.listTasks = JSON.stringify(listTasks);
       colorUrges("next");
       updateCBC();
-      clickHandlerAddOn(checkOrUrgeDiv, "trash", clickScreen, "");
+      clickHandlerAddOn(checkOptionsDiv, "trash", clickScreen, "");
     });
   };
 };
-window.checkOrUrge = checkOrUrge;
+window.checkOptions = checkOptions;
 
 function colorUrges(when){
   let filteredUrges = listTasks.filter(todo => todo.urge == true);
@@ -1832,8 +1824,8 @@ function colorUrges(when){
       };
       if(when == "next"){
         let li = document.getElementById(urges[i].id);
-        li.querySelector("div.urgeCheck").style.color = urges[i].urgeColor;
-        li.querySelector("div.urgeCheck > span").textContent = urges[i].urgeNum;
+        li.querySelector("div.checkOptions").style.color = urges[i].urgeColor;
+        li.querySelector("div.checkOptions > span").textContent = urges[i].urgeNum;
       };
     };
     sortIt("urge", "topPriorityList");
@@ -2090,22 +2082,30 @@ doneNextBtn.addEventListener("click", () => {
   };
 });
 
-function checkEvent(emptyCheck, where){
-  let li;
-  if(where == "norm"){
-    li = emptyCheck.parentElement;
-  } else if(where == "urge"){
-    li = emptyCheck.parentElement.parentElement;
-  };
-  let doned = getTodoFromLi(li);
-  if(!li.dataset.always){
-    li.remove();
-  };
-  gotItDone(doned);
-  //doneAction(li); // need to wait until animation is over before moving on to the next (gotItDone and remove) (use metro app animation)
+
+
+function PartialCheckEvent(emptyCheck){
+  parent = emptyCheck.parentElement;
+  let doned = getTodoFromParent();
+  //parent.querySelector(".checkOptionsDiv").remove();
+  let checkOptionsDiv = parent.querySelector(".checkOptionsDiv");
+  clickHandlerAddOn(checkOptionsDiv, "trash", clickScreen, "");
+  gotItHalfDone(doned);
   updateCBC();
 };
-window.checkEvent = checkEvent;
+
+window.PartialCheckEvent = PartialCheckEvent;
+
+function TotalCheckEvent(emptyCheck){
+  parent = emptyCheck.parentElement;
+  let doned = getTodoFromParent();
+  parent.remove();
+  gotItDone(doned);
+  //doneAction(parent); // need to wait until animation is over before moving on to the next (gotItDone and remove) (use metro app animation)
+  updateCBC();
+};
+
+window.TotalCheckEvent = TotalCheckEvent;
 
 function doneAction(li){
   li.insertAdjacentHTML("beforeend", `<div class="doneAction"><div class="doneActionTopOpct"></div><div class="doneActionBtmLine"></div></div>`);
@@ -2116,6 +2116,32 @@ function getRecurryDateOut(todo){ //pour enlever la date d'un recurry de la list
   let recIndex = listTasks.findIndex(td => td.id == todo.recId);
   let recurring = listTasks[recIndex];
   recurring.recurryDates = recurring.recurryDates.filter(rD => rD !== todo.date);
+};
+
+function gotItHalfDone(doned){ //doned is either the todo per se or a fake todo created for the recurry
+  let donedDate = getTodayDateString(); //return
+  
+  let dateFound = false;
+  for (const i in listDones) {
+    if (listDones[i].date == donedDate) {
+      dateFound = true;
+      listDones[i].list.push(doned);
+    };
+  };
+  if(!dateFound){
+    let doneList = [doned];
+    let done = {
+      date: donedDate,
+      list: doneList
+    };
+    listDones.push(done);
+  };
+  
+  addModif(donedDate);
+  donedDateCreation(donedDate);
+  donedCreation(donedDate, doned);
+  refreshDoneId();
+  localStorageDones("next");
 };
 
 function gotItDone(doned){ //doned is either the todo per se or a fake todo created for the recurry
@@ -2194,7 +2220,7 @@ function trashRecurringEvent(thisOne){
   let trashLi = thisOne.parentElement;
   let trashId = trashLi.id;
   let trashIndex = listTasks.findIndex(todo => todo.id == trashId);
-  listTasks[trashIndex].recurrys.forEach(recurry => {
+  listTasks[trashIndex].recurrys.forEach(recurry => { // we don't need that anymore! OR we could remove all the li that has the recId in dataset...
     if(document.getElementById(recurry.id)){
       document.getElementById(recurry.id).remove();
     };
@@ -2280,9 +2306,9 @@ function sortItAll(){
           first = li[i].dataset.term;
           second = li[i + 1].dataset.term;
         } else if(type == "urge"){
-          first = li[i].querySelector("div.urgeCheck > span").textContent;
+          first = li[i].querySelector("div.checkOptions > span").textContent;
           first = first > 0 ? first : Infinity;
-          second = li[i + 1].querySelector("div.urgeCheck > span").textContent;
+          second = li[i + 1].querySelector("div.checkOptions > span").textContent;
           second = second > 0 ? second : Infinity;
         } else if(type == "datetime"){
           first = `${li[i].dataset.date ? li[i].dataset.date : ""}-${li[i].dataset.time ? li[i].dataset.time.replace(":", "-") : ""}`;
@@ -2403,9 +2429,9 @@ function sortIt(type, listName) {
         first = li[i].dataset.order;
         second = li[i + 1].dataset.order;
       } else if(type == "urge"){
-        first = li[i].querySelector("div.urgeCheck > span").textContent;
+        first = li[i].querySelector("div.checkOptions > span").textContent;
         first = first > 0 ? first : Infinity;
-        second = li[i + 1].querySelector("div.urgeCheck > span").textContent;
+        second = li[i + 1].querySelector("div.checkOptions > span").textContent;
         second = second > 0 ? second : Infinity;
       } else if(type == "datetime"){
         first = `${li[i].dataset.date ? li[i].dataset.date : ""}-${li[i].dataset.time ? li[i].dataset.time.replace(":", "-") : ""}`;
@@ -3570,6 +3596,10 @@ let newlabelColor = "";
 
 // MARK: TODO List
 /*
+8. change gotItDone/gotItHalfDone for removeFromListTasks (une only for totalCheckEvent ... could also be used for trashStockEvent and trashRecurringEvent?) and addToDones (use for both checkEvent)
+8.5. trashRecurringEvent must be updated...
+7. in checkOptions, the change label doesn't really work...
+6. Faire un tri-state checkEvent for taskInfo
 1. Gérer le clickscreen (voir si on peut en créer un pour chaque niveau) (then we can erase the 'where: "todoZone"' in infos!)
   - On n'utilise pas de clickscreen pour les calendars weekly et monthly
   - On crée un nouveau clickscreen à chaque fois qu'on crée un addOn (taskInfo ou checkUrges ou iconPalet ou reDate ou label ou smallCalendar ou (?)): le z-index est de 1 de moins que celui du addOn et avec le addEventListener que si on click, on a addOn.remove() et clickscreen.remove() et un scrollBackToParent or top 
@@ -3589,7 +3619,19 @@ let newlabelColor = "";
 //Parents are only necessairy if we're working on a todo that is in the swiping section (for example, you would have the one on wednesday and the one in scheduled) or if in search, we add the results of different searches together and a todo comes up more than once
 //todoIndex... we could not add it to infos since we only need it if we trash it! (and if it was a recurry (not pushed in listTask yet, so no index), then we'll need to remove the date in recurryDates)
 
-
+function getTodoFromParent(){ //parent is global
+  let todo;
+  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
+    let recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
+    let recurring = listTasks[recIndex];
+    todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
+  } else{
+    let parentId = parent.dataset.id ? parent.dataset.id : parent.id;
+    let todoIndex = listTasks.findIndex(td => td.id == parentId);
+    todo = listTasks[todoIndex];
+  };
+  return todo;
+};
 
 // to go to taskAddAllInfo
 function toTIdeTZaP(thisOne){ // de TodoZone à Procrastinator
@@ -3599,31 +3641,10 @@ function toTIdeTZaP(thisOne){ // de TodoZone à Procrastinator
   parent.classList.add("selectedTask");
   parent.scrollIntoView(); 
   let togoList = parent.parentElement.id;
-  let todo;
-  // function getTodoFromParent(){ //parent is global
-  //  let todo;
-  //   if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
-  //     let recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
-  //     let recurring = listTasks[recIndex];
-  //     todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
-  //   } else{
-  //     let todoIndex = listTasks.findIndex(td => td.id == parent.id);
-  //     todo = listTasks[todoIndex];
-  //   };
-  //  return todo;
-  // };
-  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
-    let recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
-    let recurring = listTasks[recIndex];
-    todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
-  } else{
-    let todoIndex = listTasks.findIndex(td => td.id == parent.id);
-    todo = listTasks[todoIndex];
-  };
   clickScreen.classList.remove("displayNone");
   thisOne.parentElement.remove();
   let infos = {
-    todo: todo,
+    todo: getTodoFromParent(),
     where: "todoZone", //That's only used for the clickScreen handler...
     div: div,
     togoList: togoList
@@ -3656,18 +3677,9 @@ function toTIdeTZaM(thisOne){ // de TodoZone à Modification
   parent.classList.add("selectedTask");
   parent.scrollIntoView(); 
   let togoList = parent.parentElement.id;
-  let todo;
-  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
-    let recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
-    let recurring = listTasks[recIndex];
-    todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
-  } else{
-    let todoIndex = listTasks.findIndex(td => td.id == parent.id);
-    todo = listTasks[todoIndex];
-  };
   clickScreen.classList.remove("displayNone"); 
   let infos = {
-    todo: todo,
+    todo: getTodoFromParent(),
     where: "todoZone",
     div: div,
     togoList: togoList
@@ -3687,7 +3699,6 @@ function toTIdeTZaS(thisOne){ // de TodoZone à Stock reusage
   todo.date = getTodayDateString();
   todo.recycled = true;
   delete todo.stock;
-  //let newWidth = Number(window.innerWidth - 16);
   let div = document.body;
   div.scrollIntoView();
   clickScreen.classList.remove("displayNone"); 
@@ -3706,11 +3717,9 @@ function toTIdeASaM(thisOne){ // de AllStorage à Modification
   parent = div.parentElement;
   parent.classList.add("selectedTask");
   parent.scrollIntoView(); 
-  let todoIndex = listTasks.findIndex(td => td.id == parent.id);
-  let todo = listTasks[todoIndex];
   clickScreen.classList.remove("displayNone"); 
   let infos = {
-    todo: todo,
+    todo: getTodoFromParent(),
     where: "allStorage",
     div: div
   };
@@ -3725,18 +3734,9 @@ function toTIdeSSaM(thisOne){ // de SearchScreen à Modification
   parent.classList.add("selectedTask");
   parent.scrollIntoView(); 
   let togoList = parent.parentElement.id;
-  let todo;
-  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
-    let recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
-    let recurring = listTasks[recIndex];
-    todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
-  } else{
-    let todoIndex = listTasks.findIndex(td => td.id == parent.id);
-    todo = listTasks[todoIndex];
-  };
   clickScreen.classList.remove("displayNone"); 
   let infos = {
-    todo: todo,
+    todo: getTodoFromParent(),
     where: "searchScreen",
     div: div,
     togoList: togoList,
@@ -3783,6 +3783,7 @@ function toTIdeCMaN(thisOne){ // de CalMonthPage à New
     icon: "fa-solid fa-ban noIcon",
     term: "showThing",
     line: "todoDay",
+    busy: true,
     tutto: true,
     date: kaseDate
   };
@@ -3798,18 +3799,8 @@ window.toTIdeCMaN = toTIdeCMaN;
 function toTIdeCMaM(thisOne){ // de CalMonthPage à Modification
   moving = false; //must stay false in month/week/search
   parent = thisOne;
-  let kase = parent.parentElement; 
-  let todo;
-  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
-    let recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
-    let recurring = listTasks[recIndex];
-    todo = getWholeRecurry(recurring, kase.dataset.wholedate, parent.dataset.rec); //consider adding the date in the parent.dataset so that we can use the same function getTodoFromParent as the others
-  } else{
-    let todoIndex = listTasks.findIndex(td => td.id == parent.dataset.id);
-    todo = listTasks[todoIndex];
-  };
   let infos = {
-    todo: todo,
+    todo: getTodoFromParent(),
     where: "calMonthPage",
     div: document.body
   };
@@ -3830,6 +3821,7 @@ function toTIdeCWaN(thisOne){ // de CalWeekPage à New
     color: "0",
     icon: "fa-solid fa-ban noIcon",
     term: "showThing",
+    busy: true,
     line: "todoDay",
     date: colDate
   };
@@ -3859,18 +3851,9 @@ window.toTIdeCWaN = toTIdeCWaN;
 
 function toTIdeCWaM(thisOne){ // de CalWeekPage à Modification
   moving = false; //must stay false in month/week/search
-  parent = thisOne; 
-  let todo;
-  if(parent.dataset.rec && parent.dataset.rec !== "undefined"){
-    let recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
-    let recurring = listTasks[recIndex];
-    todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
-  } else{
-    let todoIndex = listTasks.findIndex(td => td.id == parent.dataset.id);
-    todo = listTasks[todoIndex];
-  }; 
+  parent = thisOne;  
   let infos = {
-    todo: todo,
+    todo: getTodoFromParent(),
     where: "", // we don't even use it! (except for the clickscreen handler... wait until we've dealed with that)
     div: document.body
   };
@@ -3908,6 +3891,17 @@ function toTIdeCCaNS(thisOne){ //de calendar (month || weekly) à Stock reusage 
 window.toTIdeCCaNS = toTIdeCCaNS;
 
 // MARK: TASKINFO
+
+// const checkSwitch = [
+//   `<i class="typcn typcn-media-stop-outline emptyCheck"></i>`, 
+//   `<i class="typcn typcn-input-checked-outline checkOptionsCheck"></i>`, 
+//   `<i class="typcn typcn-input-checked"></i>`
+// ];
+// let checkSquareDiv = parent.querySelector(".checkSquareDiv");
+// let nowStateIndex = checkSwitch.findIndex(state => state == checkSquareDiv.innerHTML);
+// let nextState = nowStateIndex == checkSwitch.length - 1 ? checkSwitch[0] : checkSwitch[nowStateIndex + 1];
+// checkSquareDiv.innerHTML = nextState;
+
 function taskAddAllInfo(infos){
   let positionA = window.scrollY;
   let parents;
@@ -4641,11 +4635,13 @@ function taskAddAllInfo(infos){
           colorIt.classList.remove("hidden");
           taskTitle.style.color = newcolor ? mySettings.myBaseColors[newcolor].colorBG : mySettings.myBaseColors[todo.color].colorBG;
           busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
+          document.querySelector("#tellYouShowType").innerText = ``;
         };
       } else{
         colorIt.classList.remove("hidden");
         taskTitle.style.color = newcolor ? mySettings.myBaseColors[newcolor].colorBG : mySettings.myBaseColors[todo.color].colorBG;
         busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
+        document.querySelector("#tellYouShowType").innerText = ``;
         if(storeIt && storeIt.checked && !todo.recycled){ // if it's a recurry, that used to make it bug because there was no storeIt to check if it's checked or not, so I added storeIt
           setN();
         } else{
@@ -5247,8 +5243,8 @@ function creatingLabelPanel(todo, options){ //création du paneau et
   /* 
   options = {
     where (taskInfo or labelTag), 
-    labelDiv (labelIt (taskInfo) or labelTag (checkOrUrge)), 
-    screen (SupClickScreen (taskInfo) or clickScreen (checkOrUrge)), 
+    labelDiv (labelIt (taskInfo) or labelTag (checkOptions)), 
+    screen (SupClickScreen (taskInfo) or clickScreen (checkOptions)), 
     myLabels (true (mySettings.myLabels && mySettings.myLabels.length > 0) or false),
   } */
 
@@ -5530,9 +5526,9 @@ function putShowsInMonth(monthlyFirst, monthlyLast){
   shows.forEach(show => {
     let eventDiv;
     if(show.term == "showThing"){
-      eventDiv = `<div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} data-showType="${show.showType}" ${!show.past ? `onclick="toTIdeCMaM(this)"` : ``} class="eventDiv ${show.past ? "pastEvent" : ""}" style="background-color:${show.STColorBG}; color:${show.STColorTX};">${show.task}</div>`;
+      eventDiv = `<div data-id="${show.id}" data-date="${show.date}" ${show.recurry ? `data-rec="${show.recId}"` : ``} data-showType="${show.showType}" ${!show.past ? `onclick="toTIdeCMaM(this)"` : ``} class="eventDiv ${show.past ? "pastEvent" : ""}" style="background-color:${show.STColorBG}; color:${show.STColorTX};">${show.task}</div>`;
     } else if(show.term == "reminder"){
-      eventDiv = `<div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${!show.past ? `onclick="toTIdeCMaM(this)"` : ``} class="eventDiv ${show.date < today ? "pastEvent" : ""}" style="color:${mySettings.myBaseColors[show.color].colorBG};">${show.task}</div>`;
+      eventDiv = `<div data-id="${show.id}" data-date="${show.date}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${!show.past ? `onclick="toTIdeCMaM(this)"` : ``} class="eventDiv ${show.date < today ? "pastEvent" : ""}" style="color:${mySettings.myBaseColors[show.color].colorBG};">${show.task}</div>`;
     };
     let kase = document.querySelector("[data-wholedate='" + show.date + "']");
     if(kase){
@@ -6116,9 +6112,9 @@ function busyZoneCreation(show){
   let dayIdx = meseDayICalc(show.date);
   let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
   let day = `${mySettings.myWeeksDayArray[idx].code}`;  
-  let start = show.primaRow ? show.primaRow : show.dalleRow;
-  start = start < "11-00" ? "11-00" : start;
-  let end = show.dopoRow ? show.dopoRow : show.alleRow;
+  let start = show.primaRow ? show.primaRow : show.dalleRow ? show.dalleRow : "11-00"; //There won't be a dalleRow if it's tutto!
+  start = start <= "11-00" ? "11-00" : start; // we should have a mySettings.myWeeksDayArray[idx].peopleClockIn instead of 11:00
+  let end = show.dopoRow ? show.dopoRow : show.alleRow ? show.alleRow : "02-00"; 
   end = end < mySettings.myTomorrow.replace(":", "-") ? "end" : end;
   let meal = (show.showType !== "Calia" && show.prima >= "03:00") ? true : false;
   

@@ -1622,17 +1622,16 @@ input[name="projectColorChoices"]:checked + label, input[name="labelColorChoices
 .listCheckInput{
   display: none;
 }
-.miniUnChecked{
+i.miniUnChecked{
   display: block;
-  width: fit-content;
+  /* width: fit-content; */
   font-size: 1.7em;
-  height: 26px;
+  line-height: 1em;
 }
-.miniChecked{
+i.miniChecked{
   display: none;
-  width: fit-content;
-  margin-left: 2px;
-  margin-right: 2px;
+  /* width: fit-content; */
+  line-height: 1.2em;
 }
 .listCheckInput:checked + label > .miniUnChecked{
   display: none;
@@ -1649,6 +1648,7 @@ input[name="projectColorChoices"]:checked + label, input[name="labelColorChoices
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 .miniLi > .listNameInput{
   font-size: 1em;
@@ -1683,7 +1683,7 @@ input[name="projectColorChoices"]:checked + label, input[name="labelColorChoices
   display: flex;
   align-items: center;
   position: absolute;
-  right: 27px;
+  right: 23px;
   background-color: var(--bg-color);
   border: 3px solid var(--bg-color);
 }

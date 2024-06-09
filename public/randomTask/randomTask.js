@@ -3870,6 +3870,7 @@ function toTIdeCCaNS(thisOne){ //de calendar (month || weekly) à Stock reusage 
   let reuseIndex = listTasks.findIndex(todo => todo.id == reuseId);
   let reuse = listTasks[reuseIndex];
   let todo = JSON.parse(JSON.stringify(reuse));
+  todo.id = crypto.randomUUID();
   let newTodo = newTodoStockFromCal;
   //Now we compare the todo with the newTodo
   todo.date = newTodo.date;
@@ -4992,6 +4993,7 @@ function taskAddAllInfo(infos){
       //   listTasks.push(todo);
       // };
       let todoIndex = listTasks.findIndex(td => td.id == todo.id);
+      console.log(todoIndex);
       if(todoIndex == -1){
         listTasks.push(todo);
       };
@@ -5005,7 +5007,9 @@ function taskAddAllInfo(infos){
         todoCreation(newTodo);
       };
 
-
+    
+      storageSwitch = todo.stock ? true : false;
+  
       togoList = getTogoList(todo);
       todoCreation(todo);
       if(doneIt.checked){
@@ -5013,7 +5017,10 @@ function taskAddAllInfo(infos){
           todoCreation(todo);
         };
         gotItDone(todo); 
-      }; // the li.remove comes later but parents or parent need to have been established before (i.e. do create parents after by looking for li with the todo.id, otherwise you will have erased to new one too!)
+      };
+
+      storageSwitch = false;
+       // the li.remove comes later but parents or parent need to have been established before (i.e. do create parents after by looking for li with the todo.id, otherwise you will have erased to new one too!)
       
       
     } else if(trashIt.checked){ //if it's new, there's nothing to do, the todo doesn't exist yet in the listTasks
@@ -5047,7 +5054,7 @@ function taskAddAllInfo(infos){
     if(parent){parent.remove();};
     taskInfo.remove();
     clickScreen.classList.add("displayNone");
-    if(togoList !== ""){
+    if(togoList !== ""){ //revoir les méthodes de tri et s'assurer de tenir compte du storage aussi
       howToSortIt(togoList);
     } else{
       sortItAllWell();
@@ -5059,7 +5066,7 @@ function taskAddAllInfo(infos){
     if(newLi){
       let list = newLi.parentElement;
       let section = list.closest("section");
-      if(section.querySelector(".listToggleInput")){
+      if(section && section.querySelector(".listToggleInput")){
         section.querySelector(".listToggleInput").checked = true;
       };
       newLi.scrollIntoView();

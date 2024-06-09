@@ -3596,6 +3596,7 @@ let newlabelColor = "";
 
 // MARK: TODO List
 /*
+9. Review all the sorting functions... This is getting ridicule!
 8. change gotItDone/gotItHalfDone for removeFromListTasks (une only for totalCheckEvent ... could also be used for trashStockEvent and trashRecurringEvent?) and addToDones (use for both checkEvent)
 8.5. trashRecurringEvent must be updated...
 7. in checkOptions, the change label doesn't really work...
@@ -3893,15 +3894,11 @@ window.toTIdeCCaNS = toTIdeCCaNS;
 
 // MARK: TASKINFO
 
-// const checkSwitch = [
-//   `<i class="typcn typcn-media-stop-outline emptyCheck"></i>`, 
-//   `<i class="typcn typcn-input-checked-outline checkOptionsCheck"></i>`, 
-//   `<i class="typcn typcn-input-checked"></i>`
-// ];
-// let checkSquareDiv = parent.querySelector(".checkSquareDiv");
-// let nowStateIndex = checkSwitch.findIndex(state => state == checkSquareDiv.innerHTML);
-// let nextState = nowStateIndex == checkSwitch.length - 1 ? checkSwitch[0] : checkSwitch[nowStateIndex + 1];
-// checkSquareDiv.innerHTML = nextState;
+const checkSwitch = [
+  "typcn typcn-media-stop-outline", 
+  "typcn typcn-input-checked-outline", 
+  "typcn typcn-input-checked"
+];
 
 function taskAddAllInfo(infos){
   let positionA = window.scrollY;
@@ -3991,12 +3988,9 @@ function taskAddAllInfo(infos){
   let taskAllInfo = `<div id="taskInfo" class="taskInfoClass${todo.term == "wholeProject" ? ` taskInfoProject` : ``}">
     <div class="taskInfoWrapper">
       <div id="SupClickScreen" class="Screen displayNone"></div>
-      <input id="doneIt" type="checkbox" class="cossin cornerItInput" />
-      <label for="doneIt" class="doneItLabel cornerItLabel">
-        <!-- <i class="typcn typcn-media-stop-outline" cornerItHalfChecked"></i> -->
-        <i class="typcn typcn-input-checked-outline cornerItUnChecked"></i>
-        <i class="typcn typcn-input-checked cornerItChecked"></i>
-      </label>
+      <button id="doneIt" class="iconOnlyBtn cornerItLabel">
+        <i class="typcn typcn-media-stop-outline"></i>
+      </button>
       ${todo.recurry || todo.line == "recurringDay" ? `
       <div class="storeItLabel cornerItLabel" >
         <span class="typcn typcn-arrow-repeat"></span>
@@ -4248,6 +4242,7 @@ function taskAddAllInfo(infos){
   });
   let taskInfo = document.querySelector("#taskInfo");
   let doneIt = document.querySelector("#doneIt");
+  let doneIcon = doneIt.querySelector("i");
   let copyIt = document.querySelector("#copyIt");
   let trashIt = document.querySelector("#trashIt");
   let storeIt = document.querySelector("#storeIt");
@@ -4303,20 +4298,29 @@ function taskAddAllInfo(infos){
     //   //add scrollbackToTop!
     // };
   });
+  let newState;
   doneIt.addEventListener("click", () => {
-    if(doneIt.checked){
-      taskInfoBtn.innerText = "Save & declare it done!";
+    let nowState = doneIcon.className;
+    let nowStateIndex = checkSwitch.findIndex(state => state == nowState);
+    newState = nowStateIndex == checkSwitch.length - 1 ? checkSwitch[0] : todo.term == "alwaysHere" ? checkSwitch[checkSwitch.length - 1] : checkSwitch[nowStateIndex + 1];
+    doneIcon.className = newState;
+    if(newState == checkSwitch[0]){
+      taskInfoBtn.innerText = "Save";
+    } else if(newState == checkSwitch[1]){
+      taskInfoBtn.innerHTML = `Save & declare it...<br/>partially done!` ;
+      trashIt.checked = false;
+      copyIt.checked = false;      
+    } else if(newState == checkSwitch[2]){
       trashIt.checked = false;
       copyIt.checked = false;
-    } else{
-      taskInfoBtn.innerText = "Save";
+      taskInfoBtn.innerHTML = todo.term == "alwaysHere" ? `Save & declare it done!<br/>(for today)` : "Save & declare it done!";
     };
   });
   trashIt.addEventListener("click", () => {
     if(trashIt.checked){
       taskInfoBtn.innerText = "Trash it!";
       copyIt.checked = false;
-      doneIt.checked = false;
+      doneIcon.className = checkSwitch[0];
     } else{
       taskInfoBtn.innerText = "Save";
     };
@@ -4325,7 +4329,7 @@ function taskAddAllInfo(infos){
     if(copyIt.checked){
       taskInfoBtn.innerText = "Save & Copy";
       trashIt.checked = false;
-      doneIt.checked = false;
+      doneIcon.className = checkSwitch[0];
     } else{
       taskInfoBtn.innerText = "Save";
     };
@@ -4961,7 +4965,7 @@ function taskAddAllInfo(infos){
       //   parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
       // }; //in the swipingDay Section if it's the date the todo is...)
       parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
-
+      console.log(parents);
       if(!todo.recurry && todo.line !== "recurringDay"){
         if(!todo.stock && storeIt && storeIt.checked){
             todo.stock = true; //goes in storage
@@ -5011,12 +5015,18 @@ function taskAddAllInfo(infos){
       storageSwitch = todo.stock ? true : false;
   
       togoList = getTogoList(todo);
-      todoCreation(todo);
-      if(doneIt.checked){
+      if(newState == checkSwitch[0]){
+        todoCreation(todo);
+      } else if(newState == checkSwitch[1]){
+        gotItHalfDone(todo);
+        todoCreation(todo);
+      } else if(newState == checkSwitch[2]){
         if(todo.term == "alwaysHere"){
+          gotItHalfDone(todo);
           todoCreation(todo);
+        } else{
+          gotItDone(todo);
         };
-        gotItDone(todo); 
       };
 
       storageSwitch = false;
@@ -5049,9 +5059,12 @@ function taskAddAllInfo(infos){
     // pour les calendars, on vient de faire update
     // pour les listes, on a déjà fait todoCreation, il reste à enlever les parents et taskInfo et le clickscreen
     parents.forEach(parent => {
+      console.log("parentsRemoval");
       parent.remove();
     });
-    if(parent){parent.remove();};
+    if(parent){
+      console.log("parentRemoval");
+      parent.remove();};
     taskInfo.remove();
     clickScreen.classList.add("displayNone");
     if(togoList !== ""){ //revoir les méthodes de tri et s'assurer de tenir compte du storage aussi

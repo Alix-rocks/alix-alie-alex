@@ -630,6 +630,12 @@ h5.taskInfoInput{
   width: 30px;
   height: 30px;
 }
+#doneIt{
+  left: 5px;
+}
+#doneIt > .typcn-media-stop-outline{
+  font-size: 1.7em;
+}
 .storeItLabel{
   right: 5px;
 }
@@ -639,7 +645,7 @@ h5.taskInfoInput{
 .trashItLabel{
   right: 95px;
 }
-.doneItLabel{
+#doneItLabel{
   left: 5px;
   font-size: 1.3em;
 }

@@ -388,12 +388,19 @@ async function getTasksSettings() {
   //lastUpdate
   if(localStorage.getItem("lastUpdateLocalStorage")){
     lastUpdateLocalStorage = localStorage.lastUpdateLocalStorage;
+    console.log(lastUpdateLocalStorage);
   };
   if(getTasks.exists() && getTasks.data().lastUpdateFireStore){
     lastUpdateFireStore = getTasks.data().lastUpdateFireStore;
+    console.log(lastUpdateFireStore);
   };
   if(lastUpdateLocalStorage !== "" && lastUpdateFireStore !== "" && lastUpdateLocalStorage < lastUpdateFireStore){
+    console.log("plus petit que");
     earthIt.style.backgroundColor = "rgb(237, 20, 61)";
+  } else if(lastUpdateLocalStorage !== "" && lastUpdateFireStore !== "" && lastUpdateLocalStorage > lastUpdateFireStore){
+    console.log("plus grand que");
+  } else if(lastUpdateLocalStorage !== "" && lastUpdateFireStore !== "" && lastUpdateLocalStorage == lastUpdateFireStore){
+    console.log("égal");
   };
   //console.log(getTasks.data().mySettings);
   //mySettings
@@ -451,26 +458,6 @@ async function getTasksSettings() {
   if(mySettings.myLabels && mySettings.myLabels.length > 0){
     myLabelsGeneralChoice();
   };
-  // myBusies = [];
-  // mySettings.myWeeksDayArray.forEach(day => {
-  //   let busyIn = {
-  //     type: "sempre", //"sempre" if appears at each week, like sleep and meal
-  //     col: day.code,
-  //     start: "00-00",
-  //     end: roundFifteenTime(day.clockIn) //that would be for the pre-morning sleep
-  //   };
-  //   myBusies.push(busyIn);
-  //   if(!(day.clockOut > "00:00" && day.clockOut < mySettings.myTomorrow)){
-  //     console.log(day.clockOut);
-  //     let busyOut = {
-  //       type: "sempre",
-  //       col: day.code,
-  //       start: roundFifteenTime(day.clockOut),
-  //       end: "end"
-  //     };
-  //     myBusies.push(busyOut);
-  //   };
-  // });
 
   //listTasks
   if(localStorage.getItem("listTasks")){
@@ -872,61 +859,26 @@ function resetModif(){
 // *** CLOUDSAVE
 
 async function saveToCloud(){
-  let timestamp = new Date();
-  console.log(timestamp);
+  let nowStamp = new Date().getTime();
+  console.log(nowStamp);
   const batch = writeBatch(db);
-  // myList = JSON.parse(localStorage.myList);
-  // myDones2023 = JSON.parse(localStorage.myDones2023);
 
   listTasks = JSON.parse(localStorage.listTasks);
-
-  /* //Get a modif() like the dones to reduce the number of termListe
-  let terms = listTasks.map(a => a.term);
-  const uniqueSet = Array.from(new Set(terms));
-  console.log(uniqueSet);
-  
-  const docRefTodos = collection(db, "randomTask", auth.currentUser.email, "myListTodos");
-  const docSnapTodos = await getDocs(docRefTodos);
-  
-  uniqueSet.map(termListe => {
-    let todos = listTasks.filter((td) => td.term == termListe);
-    if(docSnapTodos[termListe]){
-      batch.update(doc(db, "randomTask", auth.currentUser.email, "myListTodos", termListe), {
-        todos: todos
-      });
-    } else{
-      batch.set(doc(db, "randomTask", auth.currentUser.email, "myListTodos", termListe), {
-        todos: todos
-      });
-    };
-  }); */   
-
-
-
-  //listTasks = JSON.parse(localStorage.listTasks);
   mySettings = JSON.parse(localStorage.mySettings);
   const docRefTasks = doc(db, "randomTask", auth.currentUser.email);
   const docSnapTasks = await getDoc(docRefTasks);
   
   if (docSnapTasks.exists()){
     batch.update(doc(db, "randomTask", auth.currentUser.email), { // or batch.update or await updateDoc
-      // myDones2023: myDones2023
-      // myDones202401: myDones202401,
-      // myDones202402: myDones202402
-      // myList: myList
       listTasks: listTasks,
       mySettings: mySettings,
-      lastUpdateFireStore: timestamp
+      lastUpdateFireStore: nowStamp
     });
   } else{
     batch.set(doc(db, "randomTask", auth.currentUser.email), { // or batch.set or await setDoc
-      // myDones2023: myDones2023
-      // myDones202401: myDones202401,
-      // myDones202402: myDones202402
-      // myList: myList
       listTasks: listTasks,
       mySettings: mySettings,
-      lastUpdateFireStore: timestamp
+      lastUpdateFireStore: nowStamp
     });
   }; 
 
@@ -979,7 +931,7 @@ async function saveToCloud(){
   });   
 
   await batch.commit();
-  localStorage.lastUpdateLocalStorage = timestamp;
+  localStorage.lastUpdateLocalStorage = nowStamp;
   resetCBC();
   resetModif();
 };

@@ -13,6 +13,9 @@ import { app, analytics, db, auth, provider } from "../myFirebase.js";
 import trans from "../trans.js";
 auth.languageCode = 'fr';
 
+const cloudIt = document.querySelector("#cloudIt");
+const earthIt = document.querySelector("#earthIt");
+
 getRedirectResult(auth)
   .then((result) => {
     // This gives you a Google Access Token. You can use it to access Google APIs.
@@ -53,6 +56,7 @@ onAuthStateChanged(auth,(user) => {
     logInBtn.addEventListener("click", logIn);
     tryBtn.addEventListener("click", freeIn);
     cloudIt.classList.add("displayNone");
+    earthIt.classList.add("displayNone");
   };
 });
 
@@ -329,7 +333,8 @@ const pageEvent = new Event("click");
       });
       let wantedPage = radio.nextElementSibling;
       wantedPage.classList.remove("displayNone");
-      document.querySelector("#cloudIt").className = `${wantedPage.dataset.cloudit}`;
+      cloudIt.className = `${wantedPage.dataset.cloudit}`;
+      earthIt.className = `${wantedPage.dataset.cloudit}`;
       // window.scrollTo({ top: 0, behavior: 'smooth' });
       window.scrollTo({ top: 0 });
       document.querySelectorAll('input[name="switchPageRadios"]').forEach(radio => {
@@ -374,9 +379,22 @@ function getCloudBC(){
   };
 };
 
+let lastUpdateLocalStorage = "";
+let lastUpdateFireStore = "";
+
 // MARK: getTasksSettings
 async function getTasksSettings() {
   const getTasks = await getDoc(doc(db, "randomTask", auth.currentUser.email));
+  //lastUpdate
+  if(localStorage.getItem("lastUpdateLocalStorage")){
+    lastUpdateLocalStorage = localStorage.lastUpdateLocalStorage;
+  };
+  if(getTasks.exists() && getTasks.data().lastUpdateFireStore){
+    lastUpdateFireStore = getTasks.data().lastUpdateFireStore;
+  };
+  if(lastUpdateLocalStorage !== "" && lastUpdateFireStore !== "" && lastUpdateLocalStorage < lastUpdateFireStore){
+    earthIt.style.backgroundColor = "rgb(237, 20, 61)";
+  };
   //console.log(getTasks.data().mySettings);
   //mySettings
   if(localStorage.getItem("mySettings")){
@@ -854,6 +872,8 @@ function resetModif(){
 // *** CLOUDSAVE
 
 async function saveToCloud(){
+  let timestamp = new Date();
+  console.log(timestamp);
   const batch = writeBatch(db);
   // myList = JSON.parse(localStorage.myList);
   // myDones2023 = JSON.parse(localStorage.myDones2023);
@@ -895,7 +915,8 @@ async function saveToCloud(){
       // myDones202402: myDones202402
       // myList: myList
       listTasks: listTasks,
-      mySettings: mySettings
+      mySettings: mySettings,
+      lastUpdateFireStore: timestamp
     });
   } else{
     batch.set(doc(db, "randomTask", auth.currentUser.email), { // or batch.set or await setDoc
@@ -904,7 +925,8 @@ async function saveToCloud(){
       // myDones202402: myDones202402
       // myList: myList
       listTasks: listTasks,
-      mySettings: mySettings
+      mySettings: mySettings,
+      lastUpdateFireStore: timestamp
     });
   }; 
 
@@ -957,6 +979,7 @@ async function saveToCloud(){
   });   
 
   await batch.commit();
+  localStorage.lastUpdateLocalStorage = timestamp;
   resetCBC();
   resetModif();
 };
@@ -1615,7 +1638,7 @@ function todoCreation(todo){
         <div class="textDiv"><span class="text" onclick="${searchSwitch ? `toTIdeSSaM(this)` : `toTIdeTZaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG};`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.dalle ? todo.dalle : ''}</span></div>
         <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.dealine ? `doneDay` : todo.line}"></i><span style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${numberedDays}</span></div></li>`);
       } else if(todo.term == "reminder"){
-        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" ${todo.date ? `data-date="${todo.date}"` : ``} ${todo.dalle ? `data-time="${todo.dalle}"` : ``} ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="reminderClass">
+        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" ${todo.date ? `data-date="${todo.date}"` : ``} ${todo.dalle ? `data-time="${todo.dalle}"` : ``} ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="todoLi reminderClass">
           <i class="typcn typcn-bell" style="font-size: 1em;"></i>
           <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" style="font-size: .8em;"></i>
           <div class="textDiv"><span onclick="${searchSwitch ? `toTIdeSSaM(this)` : `toTIdeTZaM(this)`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px; ` : ``}color:${mySettings.myBaseColors[todo.color].colorBG}; font-size: 1em;">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" style="font-size: .8em;" onclick="timeItEvent(this)">${todo.dalle ? todo.dalle : ""}</span>
@@ -4298,7 +4321,7 @@ function taskAddAllInfo(infos){
     //   //add scrollbackToTop!
     // };
   });
-  let newState;
+  let newState = checkSwitch[0];
   doneIt.addEventListener("click", () => {
     let nowState = doneIcon.className;
     let nowStateIndex = checkSwitch.findIndex(state => state == nowState);

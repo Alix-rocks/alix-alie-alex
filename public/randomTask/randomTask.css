@@ -274,6 +274,15 @@ input[type="radio"]{
   color: var(--tx-color);
   z-index: 10;
 }
+#earthIt{
+  margin: 0;
+  font-size: 25px;
+  line-height: 1em;
+  padding: 2px 5px 2px 5px;
+  background-color: rgba(237, 20, 61, 0);
+  color: var(--tx-color);
+  z-index: 10;
+}
 .cloudTop{
   position: absolute;
   top: 8px;
@@ -283,6 +292,9 @@ input[type="radio"]{
   position: fixed;
   bottom: 8px;
   right: 8px;
+}
+#earthIt.cloudTop, #earthIt.cloudBottom{
+  right: 58px;
 }
 .noCloud{
   display: none;
@@ -634,7 +646,11 @@ h5.taskInfoInput{
   left: 5px;
 }
 #doneIt > .typcn-media-stop-outline{
-  font-size: 1.7em;
+  font-size: 2.05em;
+  line-height: .9em;
+}
+#doneIt > .typcn-input-checked-outline, #doneIt > .typcn-input-checked{
+  font-size: 1.8em;
 }
 .storeItLabel{
   right: 5px;
@@ -1989,7 +2005,7 @@ hr.zoneHr{
 }
 
 #addingZone{
-  width: calc(100vw - (2 * 42px) - (4 * 8px));
+  width: calc(100vw - (3 * 42px) - (4 * 8px));
   /* (100vw - (2 * 42px (cloudBtn)) - (2 * 8px (margins)) - (2 * 8px (space between))) */
   display: flex;
   margin-bottom: 15px;

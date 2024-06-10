@@ -388,19 +388,12 @@ async function getTasksSettings() {
   //lastUpdate
   if(localStorage.getItem("lastUpdateLocalStorage")){
     lastUpdateLocalStorage = localStorage.lastUpdateLocalStorage;
-    console.log(lastUpdateLocalStorage);
   };
   if(getTasks.exists() && getTasks.data().lastUpdateFireStore){
     lastUpdateFireStore = getTasks.data().lastUpdateFireStore;
-    console.log(lastUpdateFireStore);
   };
-  if(lastUpdateLocalStorage !== "" && lastUpdateFireStore !== "" && lastUpdateLocalStorage < lastUpdateFireStore){
-    console.log("plus petit que");
+  if((lastUpdateLocalStorage !== "" && lastUpdateFireStore !== "" && lastUpdateLocalStorage < lastUpdateFireStore) || lastUpdateLocalStorage == ""){
     earthIt.style.backgroundColor = "rgb(237, 20, 61)";
-  } else if(lastUpdateLocalStorage !== "" && lastUpdateFireStore !== "" && lastUpdateLocalStorage > lastUpdateFireStore){
-    console.log("plus grand que");
-  } else if(lastUpdateLocalStorage !== "" && lastUpdateFireStore !== "" && lastUpdateLocalStorage == lastUpdateFireStore){
-    console.log("égal");
   };
   //console.log(getTasks.data().mySettings);
   //mySettings
@@ -855,6 +848,8 @@ function resetModif(){
   localStorage.modif = JSON.stringify([]);
 };
 
+earthIt.addEventListener("click", updateFromCloud);
+
 
 // *** CLOUDSAVE
 
@@ -969,8 +964,10 @@ function updateFromCloud(){
   createBody();
   getWeeklyCalendar();
   settingsPage();
-  clearStorageBtn.textContent = "Updated!";
   updateArrowsColor();
+  //clearStorageBtn.textContent = "Updated!";
+  earthIt.style.backgroundColor = "rgba(237, 20, 61, 0)";
+  localStorage.lastUpdateLocalStorage = new Date().getTime();
 };
 
 async function cloudSaveSettings(){
@@ -1058,7 +1055,7 @@ function resetCBC(){
     </div>`;
     }).join("");
     document.querySelector("#settingsDiv").innerHTML = `<span id="exitX">x</span>
-    <button id="clearStorageBtn" style="margin-top: 15px;">Update</button>
+    <!--<button id="clearStorageBtn" style="margin-top: 15px;">Update</button>-->
     <hr />
     <h2>Settings</h2>
     <h3>What side are you on?</h3>
@@ -1097,7 +1094,7 @@ function resetCBC(){
 
     let switchModeSlider = document.querySelector("#switchModeSlider");
     let timeInput = document.querySelector("#timeInput");
-    let clearStorageBtn = document.querySelector("#clearStorageBtn");
+    //let clearStorageBtn = document.querySelector("#clearStorageBtn");
     let exitX = document.querySelector("#exitX");
     let cancelBtn = document.querySelector("#cancelBtn");
     let settingsBtn = document.querySelector("#settingsBtn");
@@ -1146,7 +1143,7 @@ function resetCBC(){
       };
     });
 
-    clearStorageBtn.addEventListener("click", updateFromCloud);
+    //clearStorageBtn.addEventListener("click", updateFromCloud);
     exitX.addEventListener("click", () => {
       //settingsScreen.classList.add("displayNone");
       document.getElementById(previousPage).checked = true;
@@ -3575,7 +3572,6 @@ let newlabelColor = "";
 8. change gotItDone/gotItHalfDone for removeFromListTasks (une only for totalCheckEvent ... could also be used for trashStockEvent and trashRecurringEvent?) and addToDones (use for both checkEvent)
 8.5. trashRecurringEvent must be updated...
 7. in checkOptions, the change label doesn't really work...
-6. Faire un tri-state checkEvent for taskInfo
 1. Gérer le clickscreen (voir si on peut en créer un pour chaque niveau) (then we can erase the 'where: "todoZone"' in infos!)
   - On n'utilise pas de clickscreen pour les calendars weekly et monthly
   - On crée un nouveau clickscreen à chaque fois qu'on crée un addOn (taskInfo ou checkUrges ou iconPalet ou reDate ou label ou smallCalendar ou (?)): le z-index est de 1 de moins que celui du addOn et avec le addEventListener que si on click, on a addOn.remove() et clickscreen.remove() et un scrollBackToParent or top 

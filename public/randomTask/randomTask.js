@@ -384,6 +384,8 @@ let lastUpdateLocalStorage = "";
 let lastUpdateFireStore = "";
 
 // MARK: getTasksSettings
+let hierOggiTime;
+let oggiDemainTime;
 async function getTasksSettings() {
   const getTasks = await getDoc(doc(db, "randomTask", auth.currentUser.email));
   //lastUpdate
@@ -406,6 +408,7 @@ async function getTasksSettings() {
   } else{
     localStorage.mySettings = JSON.stringify(mySettings);
   };
+
   // if(getTasks.exists() && getTasks.data().mySettings.myShowTypes){
   //   mySettings.myShowTypes = getTasks.data().mySettings.myShowTypes;
   //   localStorage.mySettings = JSON.stringify(mySettings);
@@ -415,6 +418,8 @@ async function getTasksSettings() {
     mySettings.myBaseColors = baseColors;
     localStorage.mySettings = JSON.stringify(mySettings);
   };
+
+  console.log(mySettings);
   //création de colorPalet based on myBaseColors
   let colors = mySettings.myBaseColors.map((color, idx) => {
     if(idx > 0){
@@ -464,6 +469,9 @@ async function getTasksSettings() {
   };
   colorUrges("first");
   localStorage.listTasks = JSON.stringify(listTasks);
+
+  hierOggiTime = timeLimit("hierOggi");
+  oggiDemainTime = timeLimit("oggiDemain");
   
   listTasks.forEach(todo => {
 
@@ -1517,7 +1525,7 @@ function getWholeRecurry(todo, date, recId){
 };
 
 function recurryDateToTodoCreation(todo, recurryDate, fate){ //todo == the todo that todo.line == "recurryngDay"; recurryDate == date to create (from todo.recurryDates); fate == "out" (if needs to be pushed in listTasks, becoming a new todo, and the recurryDate taken out of recurryDates) OR "in" (if it's just temporary and the recurryDate shall stay in recurryDates; we're not creating a new todo)
-
+  console.log(todo);
   let recurry = getWholeRecurry(todo, recurryDate, todo.id);
   // let recurry = JSON.parse(JSON.stringify(todo));
   // clearRecurringData(recurry);
@@ -1651,9 +1659,8 @@ function todoCreation(todo){
 };
 
 
-let hierOggiTime = timeLimit("hierOggi");
-let oggiDemainTime = timeLimit("oggiDemain");
-let demainApresTime = timeLimit("demainApres");
+
+//let demainApresTime = timeLimit("demainApres");
 function getTogoList(todo){ 
   //console.log(todo);
   let todoDateTime;
@@ -1816,6 +1823,8 @@ function recurryCreation(todo){
       dateTime = `${todo.recurryDates[idx]}-${todo.dalle ? todo.dalle.replace(":", "-") : "5-00"}`;
     };
   } else{
+    console.log(todo.task + "  " + dateTime);
+    console.log(oggiDemainTime);
     while(dateTime < oggiDemainTime){
       if(dateTime < hierOggiTime){
         todo.recurryDates.splice(idx, 1);
@@ -5736,6 +5745,9 @@ function putDatesInWeek(date){
     };    
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", todayArea);
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", nowArea);
+    document.querySelectorAll(".backToTodayBtn").forEach(btn => {
+      btn.classList.add("displayNone");
+    });
   };
   updateSleepAreas();
 
@@ -5799,6 +5811,19 @@ function updateSleepAreas(){
   }).join("");
   document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", sleepAreas);
 };
+
+function backToWeeklyToday(){
+  document.querySelectorAll(".backToTodayBtn").forEach(btn => {
+    btn.classList.add("displayNone");
+  });
+  eraseWeek();
+  let date = new Date();
+  let dayIdx = date.getDay();
+  let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
+  date.setDate(date.getDate() - idx);
+  putDatesInWeek(date);
+};
+window.backToWeeklyToday = backToWeeklyToday;
 
 function putShowsInWeek(Dday, Sday){
   let shows = listTasks.filter((todo) => ((todo.term == "showThing" || todo.term == "reminder") && todo.line !== "noDay")); //on enlève "noDay" ou on aurait pu enlever todo.stock == true
@@ -5958,11 +5983,11 @@ function getWeeklyCalendar(){
     <button class="weeklyBtn" id="weekBackward">
       <i class="fa-solid fa-caret-left" style="font-size:30px;"></i>
     </button>
-    <button class="weeklyBtn">
+    <button class="weeklyBtn backToTodayBtn displayNone" onclick="backToWeeklyToday()">
       <i class="fa-solid fa-calendar-day" style="font-size:16px;"></i>
     </button>
     <span id="weeklyYearSpan" style="flex-grow: 1;">${year}</span>
-    <button class="weeklyBtn">
+    <button class="weeklyBtn backToTodayBtn displayNone" onclick="backToWeeklyToday()">
       <i class="fa-solid fa-calendar-day" style="font-size:16px;"></i>
     </button>
     <button class="weeklyBtn" id="weekForward">
@@ -6054,11 +6079,15 @@ function getWeeklyCalendar(){
     let todayAreaDiv = document.querySelector(".todayArea");
     if(todayAreaDiv){
       todayAreaDiv.remove();
+      document.querySelector(".nowArea").remove();
+      document.querySelectorAll(".backToTodayBtn").forEach(btn => {
+        btn.classList.remove("displayNone");
+      });
     };
-    let nowAreaDiv = document.querySelector(".nowArea");
-    if(nowAreaDiv){
-      nowAreaDiv.remove();
-    };
+    // let nowAreaDiv = document.querySelector(".nowArea");
+    // if(nowAreaDiv){
+    //   nowAreaDiv.remove();
+    // };
     eraseWeek();
     let Dday = document.querySelector("#Dday").dataset.date;
     let Ddate = getDateFromString(Dday);
@@ -6069,11 +6098,15 @@ function getWeeklyCalendar(){
     let todayAreaDiv = document.querySelector(".todayArea");
     if(todayAreaDiv){
       todayAreaDiv.remove();
+      document.querySelector(".nowArea").remove();
+      document.querySelectorAll(".backToTodayBtn").forEach(btn => {
+        btn.classList.remove("displayNone");
+      });
     };
-    let nowAreaDiv = document.querySelector(".nowArea");
-    if(nowAreaDiv){
-      nowAreaDiv.remove();
-    };
+    // let nowAreaDiv = document.querySelector(".nowArea");
+    // if(nowAreaDiv){
+    //   nowAreaDiv.remove();
+    // };
     eraseWeek();
     let Sday = document.querySelector("#Sday").dataset.date;
     let Sdate = getDateFromString(Sday);

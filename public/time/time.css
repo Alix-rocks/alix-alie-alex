@@ -348,6 +348,11 @@
 footer div{
   padding: 10px;
 }
+
+.duree{
+  font-size: .7em;
+  opacity: .7;
+}
 #capture-screenshot{
   position: fixed;
   top: 13px;
@@ -364,3 +369,4 @@ footer div{
   background: var(--bg-color);
   color: var(--tx-color);
 }
+

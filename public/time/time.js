@@ -5,6 +5,12 @@ import { app, analytics, db, auth, provider } from "../myFirebase.js";
 //Check, si jamais t'utilise ça pour d'autre app, isole-le, comme myFirebase
 auth.languageCode = 'fr';
 
+document.querySelector(':root').style.setProperty('--bg-color', 'black');
+document.querySelector(".wrapper").style.visibility = "visible";
+document.querySelector("#color-picker").value = "10";
+document.documentElement.style.setProperty('--thumbColor', '#F2F3F4');
+setColors(242, 243, 244, 9, 8, 7, 6, 5, 4, 3, 2, 1, 1);
+
 getRedirectResult(auth)
   .then((result) => {
     // This gives you a Google Access Token. You can use it to access Google APIs.
@@ -678,10 +684,10 @@ function calculateTime(e) {
     return step.checked;
   }).map((step, idx) => {
     if (step.name == "Travelling" || step.name == "Traveling") {
-      return `<p>Départ: ${sumTimeSub(steps.steps, idx, arriveeTime)}</p>`;
+      return `<p>Départ <span class="duree">(${step.value} min)</span> : ${sumTimeSub(steps.steps, idx, arriveeTime)}</p>`;
     }
     else {
-      return `<p>${step.name}: ${sumTimeSub(steps.steps, idx, arriveeTime)}</p>`;
+      return `<p>${step.name} <span class="duree">(${step.value} min)</span> : ${sumTimeSub(steps.steps, idx, arriveeTime)}</p>`;
     };
   });
   // console.log(stepArray);

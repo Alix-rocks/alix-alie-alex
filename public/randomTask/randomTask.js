@@ -86,9 +86,10 @@ let listDones = [];
 let myBusies = [];
 let mySettings = {
   mySide: "light",
-  myTomorrow: "03:00",
+  myTomorrow: "00:00",
   myFavoriteView: "switchPageInputList",
   myFirstDayOfTheWeek: "domenica",
+  mySleepZones: true,
   myWeeksDayArray: [{
     day: 0,
     name0Maj: "domenica",
@@ -1055,8 +1056,8 @@ function resetCBC(){
     </div>`;
     }).join("");
     document.querySelector("#settingsDiv").innerHTML = `<span id="exitX">x</span>
-    <!--<button id="clearStorageBtn" style="margin-top: 15px;">Update</button>-->
-    <hr />
+    <!--<button id="clearStorageBtn" style="margin-top: 15px;">Update</button>
+    <hr />-->
     <h2>Settings</h2>
     <h3>What side are you on?</h3>
     <div id="switchModeSlider">
@@ -1635,7 +1636,7 @@ function todoCreation(todo){
       
           <h4>If you realize you don't actually want nor need to do it:</h4>
           <p>Then do yourself a favor and just delete it!</p>
-          <button onclick="toTIdeTZaP(this)">Yeah, thanks</button></div>` : ``}
+          <button onclick="toTIdeTZaM(this.parentElement)">Yeah, thanks</button></div>` : ``}
           </div>
           <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)">
             <i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.deadline ? `doneDay` : todo.line}"></i>
@@ -1643,7 +1644,7 @@ function todoCreation(todo){
           </div>
         </li>`);
       };
-    } else if(!document.getElementById(togoList)){
+    } else if(!document.getElementById(togoList) && !todo.stock){
       alert(`Oups! "${todo.task}" doesn't have anywhere to go!`);
     };
   };
@@ -1847,7 +1848,13 @@ function sendRecurringBackToGetRecurryDates(todo, date){
 
 
 function donedCreation(donedDate, doned){
-  document.getElementById(donedDate).insertAdjacentHTML("beforeend", `<li ${doned.term == "showThing" ? `class="showLi" style="background-color: ${doned.STColorBG}; color: ${doned.STColorTX};"` : ``}><i class="typcn typcn-tick"></i><span class="textDone" ${doned.term == "showThing" ? `` : `style="color:${mySettings.myBaseColors[doned.color].colorBG};"`}>${doned.task}</span><i class="typcn typcn-trash" onclick="trashDoneEvent(this)"></i><i class="fa-regular fa-calendar-xmark" onclick="reDateEvent(this)"></i><i class="typcn typcn-arrow-sync" onclick="recycleEvent(this)"></i></li>`);
+  document.getElementById(donedDate).insertAdjacentHTML("beforeend", `<li ${doned.term == "showThing" ? `class="showLi" style="background-color: ${doned.STColorBG}; color: ${doned.STColorTX};"` : ``}>
+    <i class="typcn typcn-tick"></i>
+    <span class="textDone" ${doned.term == "showThing" ? `` : `style="color:${mySettings.myBaseColors[doned.color].colorBG};"`}>${doned.task}</span>
+    <i class="typcn typcn-trash" style="margin-right: 5px;" onclick="trashDoneEvent(this)"></i>
+    <i class="fa-regular fa-calendar-xmark" style="margin-right: 5px;" onclick="reDateEvent(this)"></i>
+    <i class="typcn typcn-arrow-sync" onclick="recycleEvent(this)"></i>
+  </li>`);
 };
 
 function donedDateCreation(donedDate){
@@ -3568,19 +3575,37 @@ let newlabelColor = "";
 
 // MARK: TODO List
 /*
+***EnCours:
+- weeklyFilter (l'icon filter est en displayNone en attendant que le reste du code soit fait)
+
+1. Buffer, moi ça écrit 0:00, mais en réalité, c'est minuit... (c'est pour ça que Marc a 12:00) donc ça marche pas...
+
+1. Tout repenser le système de date pour pouvoir avoir dalle (date & time) et alle  (date & time)
+
+2. création du weekly sans les sleepZones? {comment y faire comprendre que 2:00 c'est plus tard que 23:00?? (et l'inverse pour le matin, au cas où)}
+
+3. Trouver une solution pour pouvoir afficher plus d'un évènement en même temps dans le weekly...
+
 9. Review all the sorting functions... This is getting ridicule!
+
 8. change gotItDone/gotItHalfDone for removeFromListTasks (une only for totalCheckEvent ... could also be used for trashStockEvent and trashRecurringEvent?) and addToDones (use for both checkEvent)
+
 8.5. trashRecurringEvent must be updated...
+
 7. in checkOptions, the change label doesn't really work...
+
 1. Gérer le clickscreen (voir si on peut en créer un pour chaque niveau) (then we can erase the 'where: "todoZone"' in infos!)
   - On n'utilise pas de clickscreen pour les calendars weekly et monthly
   - On crée un nouveau clickscreen à chaque fois qu'on crée un addOn (taskInfo ou checkUrges ou iconPalet ou reDate ou label ou smallCalendar ou (?)): le z-index est de 1 de moins que celui du addOn et avec le addEventListener que si on click, on a addOn.remove() et clickscreen.remove() et un scrollBackToParent or top 
+
 2. Revoir la sortie de taskInfo! --> il reste à gérer le clickHandlerAddOn qu'on a ajouté au clickscreen (est-ce qu'on garde ça ou pas?) (ou on add le même eventListener que pour cancel button. Et on fait juste remove le clickscreen...)
+
 4. iconChoice (from the li) is still using recIndex.recurrys...
+
 1. considérer afficher allStore dans le body à chaque fois? (peut-être même taskInfo aussi, vu que des fois, c'est la seule chose qui change d'un toTI à l'autre!)
 
-3. if fineMai and recurryDates.length == 0 then alert and check if you can use alert "ok" to do erase and "cancel" to open taskInfo with the todo that is about to be erased!!) 
-9. dans les calendar, faire un équivalent de recurryDateToTodoCreation ("in")
+3. if fineMai and recurryDates.length == 0 then alert and check if you can use alert "ok" to do erase and "cancel" to open taskInfo with the todo that is about to be erased!!)
+
 ...Si on met les recurry dans les search results, le toTIdeSSaM() est déjà arrangé pour recevoir les recurry!
 */
 
@@ -3606,24 +3631,6 @@ function getTodoFromParent(){ //parent is global
 };
 
 // to go to taskAddAllInfo
-function toTIdeTZaP(thisOne){ // de TodoZone à Procrastinator
-    //moving = false; //must stay false in month/week/search
-  let div = thisOne.parentElement.parentElement;
-  parent = div.parentElement; 
-  parent.classList.add("selectedTask");
-  parent.scrollIntoView(); 
-  let togoList = parent.parentElement.id;
-  clickScreen.classList.remove("displayNone");
-  thisOne.parentElement.remove();
-  let infos = {
-    todo: getTodoFromParent(),
-    where: "todoZone", //That's only used for the clickScreen handler...
-    div: div,
-    togoList: togoList
-  };
-  taskAddAllInfo(infos);
-};
-window.toTIdeTZaP = toTIdeTZaP;
 
 function toTIdeTZaN(){ // de TodoZone à New (addForm but without the addInput.value, so when you directly click the add button (if you write an addInput.value, it directly goes to todoCreation, then after that you can click on it to go to taskInfo, in which case, it's a toTIdeTZaM))
   let todo = {
@@ -3643,7 +3650,7 @@ function toTIdeTZaN(){ // de TodoZone à New (addForm but without the addInput.v
   taskAddAllInfo(infos);
 };
 
-function toTIdeTZaM(thisOne){ // de TodoZone à Modification
+function toTIdeTZaM(thisOne){ // de TodoZone à Modification et à Procrastinator (this.parentElement)
   let div= thisOne.parentElement;
   parent = div.parentElement;
   parent.classList.add("selectedTask");
@@ -5903,15 +5910,72 @@ function createWeeklyshow(show){
   div.insertAdjacentHTML("beforeend", add);
 };
 
+function getWeeklyFilter(){
+  console.log("weeklyFilter");
+  let view = 0;
+  let myShows;
+  if(mySettings.myShowTypes.length > 0){
+    myShows = mySettings.myShowTypes.map((myShowType) => {
+      return `<li class="showTypeLabelDiv" id="div${myShowType.name}">
+        <input class="showInput" type="checkbox" name="showOptions" id="${myShowType.name}Show" value="${myShowType.name}" ${myShowType.views[view] == true ? "checked" : ""} />
+        <label for="${myShowType.name}Show" class="showLi showTypeLabel" style="background-color:${myShowType.colorBG};color:${myShowType.colorTX};">${myShowType.name}<i class="typcn typcn-tick showTick"></i></label>
+      </li>`; //colorsList[myShowType.color].colorTX
+    }).join("");
+  } else{
+    myShows = `<h6>pssst... You've got no types of show... yet</h6>`;
+  };
+  
+  document.body.insertAdjacentHTML("beforeend", `<div id="weeklyFilter" class="taskInfoClass">
+    <span id="exitXweeklyFilter" class="exitX">x</span>
+    <h2>Pick your landscape</h2>
+    <h4 style="font-weight: 500;">What kinda stuff do you wanna see here?</h4>
+    <hr style="margin-top: 0;"/>
+    <ul id="weeklyFilterList">
+      ${myShows}
+      <li class="showTypeLabelDiv" id="divTasks">
+        <input class="showInput" type="checkbox" name="showOptions" id="tasks" value="tasks" />
+        <label for="tasks" class="showLi showTypeLabel" style="background-color:var(--bg-color);color:var(--tx-color);">all the timed tasks<i class="typcn typcn-tick showTick"></i></label>
+      </li>
+    </ul>
+    <button id="weeklyFilterBtn" class="ScreenBtn1">Let's see...</button>
+  </div>`);
+  let weeklyFilter = document.querySelector("#weeklyFilter");
+  weeklyFilter.querySelector("#exitXweeklyFilter").addEventListener("click", () => {
+    weeklyFilter.remove();
+  });
+  weeklyFilter.querySelector("#weeklyFilterBtn").addEventListener("click", () => {
+    weeklyFilter.querySelectorAll('input[name="showOptions"]').forEach(box => {
+      //mySettings.myShowTypes.name
+    });
+    weeklyFilter.remove();
+  });
+};
+window.getWeeklyFilter = getWeeklyFilter;
+
 function getWeeklyCalendar(){
   let arrayItem = [];
-  let rowYear = `<div class="weeklyItem weeklyTitle" style="grid-row:1; border-bottom-width: 1px;"><button class="weeklyBtn" id="weekBackward" style="float: left;"><span class="typcn typcn-media-play-reverse"></span></button><span id="weeklyYearSpan">${year}</span><button class="weeklyBtn" id="weekForward" style="float: right;"><span class="typcn typcn-media-play"></span></button></div>`;
+  let rowYear = `<div class="weeklyItem weeklyTitle weeklyTitleWBtns">
+    <button class="weeklyBtn" id="weekBackward">
+      <i class="fa-solid fa-caret-left" style="font-size:30px;"></i>
+    </button>
+    <button class="weeklyBtn">
+      <i class="fa-solid fa-calendar-day" style="font-size:16px;"></i>
+    </button>
+    <span id="weeklyYearSpan" style="flex-grow: 1;">${year}</span>
+    <button class="weeklyBtn">
+      <i class="fa-solid fa-calendar-day" style="font-size:16px;"></i>
+    </button>
+    <button class="weeklyBtn" id="weekForward">
+      <i class="fa-solid fa-caret-right" style="font-size:30px;"></i>
+    </button>
+  </div>`;
   let rowMonth = `<div class="weeklyItem weeklyTitle" style="grid-row:2; border-bottom-width: 2px;"><span id="weeklyMonthSpan">${monthName}</span></div>`;
   arrayItem.push(rowYear, rowMonth);
   let myDay = Number(mySettings.myTomorrow.substring(0, 2));
   for(let c = 1; c < 9; c++){
     let arrayC = [];
-    let rowDay = `<div ${c == 2 ? `id="Dday"` : c == 8 ? `id="Sday"` : ``} class="weeklyItem" style="grid-column:${c}; grid-row:3; font-size:14px; font-weight:600; line-height: calc(((92vh / 29) * 1.5) / 2); border-radius:2px 2px 0 0; border-bottom:1px solid rgba(47, 79, 79, .5);${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}"${c > 1 ? ` data-code="${mySettings.myWeeksDayArray[c - 2].code}">${mySettings.myWeeksDayArray[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : `>`}</div>`; //shall we add the date as an id, as a data-date or as an area?
+    // let rowDay = `<div ${c == 2 ? `id="Dday"` : c == 8 ? `id="Sday"` : ``} class="weeklyItem" style="grid-column:${c}; grid-row:3; font-size:14px; font-weight:600; line-height: calc(((92vh / 29) * 1.5) / 2); border-radius:2px 2px 0 0; border-bottom:1px solid rgba(47, 79, 79, .5);${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}"${c > 1 ? ` data-code="${mySettings.myWeeksDayArray[c - 2].code}">${mySettings.myWeeksDayArray[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : `><i class="fa-solid fa-filter"></i>`}</div>`; //shall we add the date as an id, as a data-date or as an area?
+    let rowDay = `<div ${c == 2 ? `id="Dday"` : c == 8 ? `id="Sday"` : ``} class="weeklyItem ${c == 1 ? `weeklyDaysRowFilter` : `weeklyDaysRow" style="grid-column:${c};`}"${c > 1 ? ` data-code="${mySettings.myWeeksDayArray[c - 2].code}">${mySettings.myWeeksDayArray[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : `><button onclick="getWeeklyFilter()" class="displayNone"><i class="fa-solid fa-filter"></i></button>`}</div>`; //shall we add the date as an id, as a data-date or as an area?
     let rowTutto = `<div class="weeklyItem weeklyTutto" ${c > 1 ? `onclick="toTIdeCWaN(this)"` : ``} ${c > 1 ? `data-tutto="${mySettings.myWeeksDayArray[c - 2].code}"` : ``} style="grid-column:${c}; grid-row:4; border-bottom: 1px solid rgba(47, 79, 79, .5);"></div>`;
     arrayC.push(rowDay);
     arrayC.push(rowTutto);
@@ -5934,6 +5998,31 @@ function getWeeklyCalendar(){
   nomiCol.push(lastCol);
   let nomiCols = nomiCol.join(" ");
   let nomiRow = [];
+  let clockIns = mySettings.myWeeksDayArray.sort((d1, d2) => (d1.clockIn < d2.clockIn) ? -1 : (d1.clockIn > d2.clockIn) ? 1 : 0);
+    console.log(clockIns[0].clockIn);
+  if(mySettings.mySleepZones == true){
+    for(let h = 0; h < 24; h++){ //93
+      let rowH = `[row-${String(myDay).padStart(2, "0")}-00${h == 0 ? ` row-tutto-end` : ``}] minmax(0, .25fr)`;
+      let rowH15 = `[row-${String(myDay).padStart(2, "0")}-15] minmax(0, .25fr)`;
+      let rowH30 = `[row-${String(myDay).padStart(2, "0")}-30] minmax(0, .25fr)`;
+      let rowH45 = `[row-${String(myDay).padStart(2, "0")}-45] minmax(0, .25fr)`;
+      nomiRow.push(rowH, rowH15, rowH30, rowH45);
+      myDay == 23 ? myDay = 0 : myDay++;
+    };
+  } else if(mySettings.mySleepZones == false){
+    let clockIns = mySettings.myWeeksDayArray.sort((d1, d2) => (d1.clockIn < d2.clockIn) ? -1 : (d1.clockIn > d2.clockIn) ? 1 : 0);
+    console.log(clockIns);
+    /* let preClockOuts = mySettings.myWeeksDayArray.map(d => {
+      return d.clockOut <= mySettings.myTomorrow  .......
+      fuck I don't know! Need to figure out how to make it understand that 2:00 is later than 23:00!
+    })  
+    let clockOuts = mySettings.myWeeksDayArray.sort((d1, d2) => (d1.clockOut < d2.clockOut) ? -1 : (d1.clockOut > d2.clockOut) ? 1 : 0);
+    console.log(clockOuts); */
+  };
+  /* If we want clockedIn only in weekly, here's how to do it:
+  Go through all the clockIn and take the earliest one, that will be your "myDay"
+  Go through all the clockOut and take the latest one
+  Take the latest minus the earliest and that'll give you the number you need for the "h < 24" in the for loop */
   for(let h = 0; h < 24; h++){ //93
     let rowH = `[row-${String(myDay).padStart(2, "0")}-00${h == 0 ? ` row-tutto-end` : ``}] minmax(0, .25fr)`;
     let rowH15 = `[row-${String(myDay).padStart(2, "0")}-15] minmax(0, .25fr)`;

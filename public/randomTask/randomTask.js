@@ -419,7 +419,6 @@ async function getTasksSettings() {
     localStorage.mySettings = JSON.stringify(mySettings);
   };
 
-  console.log(mySettings);
   //création de colorPalet based on myBaseColors
   let colors = mySettings.myBaseColors.map((color, idx) => {
     if(idx > 0){
@@ -864,7 +863,6 @@ earthIt.addEventListener("click", updateFromCloud);
 
 async function saveToCloud(){
   let nowStamp = new Date().getTime();
-  console.log(nowStamp);
   const batch = writeBatch(db);
 
   listTasks = JSON.parse(localStorage.listTasks);
@@ -1093,7 +1091,17 @@ function resetCBC(){
     <select id="firstDayOfWeekInput">
       ${firstDayOptions}
     </select>
-    <h3>When are you clocking in and out?</h3>
+    <h3>Do you want to see yourself sleeping?</h3>
+    <input id="sleepZonesInput" type="checkbox" class="tuttoGiornoInput cossin" ${mySettings.mySleepZones ? `checked` : ``} />
+      <div class="calendarInsideMargin tuttoGiornoDiv" style="justify-content: center;">
+        <label for="sleepZonesInput" class="slideZone">
+          <div class="slider">
+            <span class="si">Sì</span>
+            <span class="no">No</span>
+          </div>
+        </label>
+      </div>
+    <h3>Then when are you clocking in and out?</h3>
     <div class="clockingDiv">
       ${clockingOptions}
     </div>
@@ -1103,6 +1111,7 @@ function resetCBC(){
 
     let switchModeSlider = document.querySelector("#switchModeSlider");
     let timeInput = document.querySelector("#timeInput");
+    let sleepZonesInput = document.querySelector("#sleepZonesInput");
     //let clearStorageBtn = document.querySelector("#clearStorageBtn");
     let exitX = document.querySelector("#exitX");
     let cancelBtn = document.querySelector("#cancelBtn");
@@ -1112,6 +1121,7 @@ function resetCBC(){
       timeInput.value = mySettings.myTomorrow;
     };
     let previousTomorrow = timeInput.value;
+    let previousSleepZones = mySettings.mySleepZones;
     if(mySettings.myFavoriteView){
       document.getElementById(mySettings.myFavoriteView).checked = true;
       document.getElementById(mySettings.myFavoriteView).dispatchEvent(pageEvent);
@@ -1185,7 +1195,13 @@ function resetCBC(){
       };
 
       mySettings.myFavoriteView = document.querySelector('input[name="choicePageRadios"]:checked').value;
+
       
+      mySettings.mySleepZones = sleepZonesInput.checked ? true : false;
+      if(previousSleepZones !== mySettings.mySleepZones){
+        getWeeklyCalendar();
+      };
+
       if(document.getElementById("switchModeBall").classList.contains("ballLight")){
         mySettings.mySide = "light";
       } else {
@@ -1525,7 +1541,6 @@ function getWholeRecurry(todo, date, recId){
 };
 
 function recurryDateToTodoCreation(todo, recurryDate, fate){ //todo == the todo that todo.line == "recurryngDay"; recurryDate == date to create (from todo.recurryDates); fate == "out" (if needs to be pushed in listTasks, becoming a new todo, and the recurryDate taken out of recurryDates) OR "in" (if it's just temporary and the recurryDate shall stay in recurryDates; we're not creating a new todo)
-  console.log(todo);
   let recurry = getWholeRecurry(todo, recurryDate, todo.id);
   // let recurry = JSON.parse(JSON.stringify(todo));
   // clearRecurringData(recurry);
@@ -1728,7 +1743,6 @@ function checkOptions(thisOne){
   parent = thisOne.parentElement;
   parent.classList.add("selectedTask");
   let todo = getTodoFromParent();;
-  console.log(todo);
   parent.insertAdjacentHTML("beforeend", `<div class="checkOptionsDiv">
   ${todo.label ? `<i id="labelChoice" class="fa-solid fa-folder-closed fa-rotate-270" style="font-size: 1.2em;color:${colorsList[todo.LColor].colorBG};"></i>` : ``}
   ${todo.urge ? `<input id="newUrgeNumInput" type="number" value="${todo.urgeNum}"/>` : ``}
@@ -1823,8 +1837,6 @@ function recurryCreation(todo){
       dateTime = `${todo.recurryDates[idx]}-${todo.dalle ? todo.dalle.replace(":", "-") : "5-00"}`;
     };
   } else{
-    console.log(todo.task + "  " + dateTime);
-    console.log(oggiDemainTime);
     while(dateTime < oggiDemainTime){
       if(dateTime < hierOggiTime){
         todo.recurryDates.splice(idx, 1);
@@ -2426,7 +2438,6 @@ function sortIt(type, listName) {
           second = `${li[i + 1].dataset.date ? li[i + 1].dataset.date : ""}-${li[i + 1].dataset.time ? li[i + 1].dataset.time.replace(":", "-") : ""}`;
       } else if(type == "deadline"){
         first = li[i].querySelector("div.numberedCal > span").textContent ? Number(li[i].querySelector("div.numberedCal > span").textContent) : Infinity;
-        console.log(first);
         second = li[i + 1].querySelector("div.numberedCal > span").textContent ? Number(li[i + 1].querySelector("div.numberedCal > span").textContent) : Infinity;
       };
       if (first > second){ 
@@ -3355,7 +3366,6 @@ function ogniOgni(todo, date){ //For ogni X days/month(on Y date)/year until fin
     };
   };
   todo.recurryDates = pruning(todo, listDates);
-  console.log(todo.recurryDates);
 };
 
 function ogniSettimana(todo, date){
@@ -3400,7 +3410,6 @@ function ogniSettimana(todo, date){
     };
   };
   todo.recurryDates = pruning(todo, listDates);
-  console.log(todo.recurryDates);
 };
 
 function ogniMeseDay(todo, date){ //For ogni X month on Y° day until fine o dopo Y occorrenza o 50 se mai
@@ -3466,7 +3475,6 @@ function ogniMeseDay(todo, date){ //For ogni X month on Y° day until fine o dop
     };
   };
   todo.recurryDates = pruning(todo, listDates);
-  console.log(todo.recurryDates);
 };
 
 
@@ -3587,11 +3595,11 @@ let newlabelColor = "";
 ***EnCours:
 - weeklyFilter (l'icon filter est en displayNone en attendant que le reste du code soit fait)
 
+***ÀFaire:
 1. Buffer, moi ça écrit 0:00, mais en réalité, c'est minuit... (c'est pour ça que Marc a 12:00) donc ça marche pas...
+Créer un input pour duration: échelle: 15min; min:0; max:??
 
 1. Tout repenser le système de date pour pouvoir avoir dalle (date & time) et alle  (date & time)
-
-2. création du weekly sans les sleepZones? {comment y faire comprendre que 2:00 c'est plus tard que 23:00?? (et l'inverse pour le matin, au cas où)}
 
 3. Trouver une solution pour pouvoir afficher plus d'un évènement en même temps dans le weekly...
 
@@ -3610,6 +3618,7 @@ let newlabelColor = "";
 2. Revoir la sortie de taskInfo! --> il reste à gérer le clickHandlerAddOn qu'on a ajouté au clickscreen (est-ce qu'on garde ça ou pas?) (ou on add le même eventListener que pour cancel button. Et on fait juste remove le clickscreen...)
 
 4. iconChoice (from the li) is still using recIndex.recurrys...
+5. consider creating and removing the color and icon palets everytime instead of sometimes trashing it and sometimes moving it...
 
 1. considérer afficher allStore dans le body à chaque fois? (peut-être même taskInfo aussi, vu que des fois, c'est la seule chose qui change d'un toTI à l'autre!)
 
@@ -4941,7 +4950,6 @@ function taskAddAllInfo(infos){
             checked: li.querySelector(".listCheckInput").checked ? true : false
           };
         });
-        console.log(todo.miniList);
         todo.miniHide = hideMiniInput.checked ? true : false;
       } else{
         delete todo.miniList;
@@ -4984,7 +4992,6 @@ function taskAddAllInfo(infos){
       //   listTasks.push(todo);
       // };
       let todoIndex = listTasks.findIndex(td => td.id == todo.id);
-      console.log(todoIndex);
       if(todoIndex == -1){
         listTasks.push(todo);
       };
@@ -5046,11 +5053,9 @@ function taskAddAllInfo(infos){
     // pour les calendars, on vient de faire update
     // pour les listes, on a déjà fait todoCreation, il reste à enlever les parents et taskInfo et le clickscreen
     parents.forEach(parent => {
-      console.log("parentsRemoval");
       parent.remove();
     });
     if(parent){
-      console.log("parentRemoval");
       parent.remove();};
     taskInfo.remove();
     clickScreen.classList.add("displayNone");
@@ -5060,9 +5065,7 @@ function taskAddAllInfo(infos){
       sortItAllWell();
     };
     // now let's see if and where we should scroll...
-    console.log(todo.id);
     let newLi = document.getElementById(todo.id);
-    console.log(newLi);
     if(newLi){
       let list = newLi.parentElement;
       let section = list.closest("section");
@@ -5804,12 +5807,14 @@ function updateSleepAreas(){
   document.querySelectorAll(".sleepArea").forEach(we => {
     we.remove();
   });
-  let myDay = Number(mySettings.myTomorrow.substring(0, 2));
-  let sleepAreas = mySettings.myWeeksDayArray.map((clock) => {
-    return `<div class="sleepArea" style="grid-area: row-${String(myDay).padStart(2, "0")}-00 / col-${clock.code} / row-${clock.clockIn.replace(":", "-")} / col-${clock.code}"></div>
-    <div class="sleepArea" style="grid-area: row-${clock.clockOut.replace(":", "-")} / col-${clock.code} / row-end / col-${clock.code}"></div>`;
-  }).join("");
-  document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", sleepAreas);
+  if(mySettings.mySleepZones == true){
+    let myDay = Number(mySettings.myTomorrow.substring(0, 2));
+    let sleepAreas = mySettings.myWeeksDayArray.map((clock) => {
+      return `<div class="sleepArea" style="grid-area: row-${String(myDay).padStart(2, "0")}-00 / col-${clock.code} / row-${clock.clockIn.replace(":", "-")} / col-${clock.code}"></div>
+      <div class="sleepArea" style="grid-area: row-${clock.clockOut.replace(":", "-")} / col-${clock.code} / row-end / col-${clock.code}"></div>`;
+    }).join("");
+    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", sleepAreas);
+  };
 };
 
 function backToWeeklyToday(){
@@ -5997,6 +6002,24 @@ function getWeeklyCalendar(){
   let rowMonth = `<div class="weeklyItem weeklyTitle" style="grid-row:2; border-bottom-width: 2px;"><span id="weeklyMonthSpan">${monthName}</span></div>`;
   arrayItem.push(rowYear, rowMonth);
   let myDay = Number(mySettings.myTomorrow.substring(0, 2));
+  let numberH;
+  if(mySettings.mySleepZones == false){
+    let arrayOfTimes = [];
+    for(let h = 0; h < 24; h++){ //93
+      arrayOfTimes.push(myDay);
+      myDay == 23 ? myDay = 0 : myDay++;
+    };
+    let clockOuts = mySettings.myWeeksDayArray.sort((d1, d2) => (arrayOfTimes.indexOf(Number(d1.clockOut.substring(0, 2))) < arrayOfTimes.indexOf(Number(d2.clockOut.substring(0, 2)))) ? -1 : (arrayOfTimes.indexOf(Number(d1.clockOut.substring(0, 2))) > arrayOfTimes.indexOf(Number(d2.clockOut.substring(0, 2)))) ? 1 : 0);
+    let clockIns = mySettings.myWeeksDayArray.sort((d1, d2) => (arrayOfTimes.indexOf(Number(d1.clockIn.substring(0, 2))) < arrayOfTimes.indexOf(Number(d2.clockIn.substring(0, 2)))) ? -1 : (arrayOfTimes.indexOf(Number(d1.clockIn.substring(0, 2))) > arrayOfTimes.indexOf(Number(d2.clockIn.substring(0, 2)))) ? 1 : 0);
+    let firstClockInIdx = arrayOfTimes.indexOf(Number(clockIns[0].clockIn.substring(0, 2)));
+    let lastClockOutIdx = arrayOfTimes.indexOf(Number(clockOuts[clockOuts.length-1].clockOut.substring(0, 2)));
+    myDay = Number(clockIns[0].clockIn.substring(0, 2));
+    numberH = lastClockOutIdx - firstClockInIdx; 
+  } else{
+    //myDay = Number(mySettings.myTomorrow.substring(0, 2));
+    numberH = 24;
+  };
+  let numberR = numberH + 1;
   for(let c = 1; c < 9; c++){
     let arrayC = [];
     // let rowDay = `<div ${c == 2 ? `id="Dday"` : c == 8 ? `id="Sday"` : ``} class="weeklyItem" style="grid-column:${c}; grid-row:3; font-size:14px; font-weight:600; line-height: calc(((92vh / 29) * 1.5) / 2); border-radius:2px 2px 0 0; border-bottom:1px solid rgba(47, 79, 79, .5);${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}"${c > 1 ? ` data-code="${mySettings.myWeeksDayArray[c - 2].code}">${mySettings.myWeeksDayArray[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : `><i class="fa-solid fa-filter"></i>`}</div>`; //shall we add the date as an id, as a data-date or as an area?
@@ -6005,11 +6028,12 @@ function getWeeklyCalendar(){
     arrayC.push(rowDay);
     arrayC.push(rowTutto);
     let line = 5;
-    for(let r = 1; r < 25; r++){
-      let item = `<div class="weeklyItem" ${c > 1 ? `onclick="toTIdeCWaN(this)"` : ``} style="grid-column:${c}; grid-row:${line} / ${line + 4};${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""} ${myDay == 23 ? " border-bottom:2px solid rgba(47, 79, 79, .8);" : ""}">${c == 1 ? `${String(myDay).padStart(2, "0")}:00` : ``}${mySettings.myTomorrow !== "00:00" && myDay == 0 && c > 1 ? `<span class="weeklyAfterDateSpan"></span>` : ``}</div>`;
+    let myDayHere = myDay;
+    for(let r = 1; r < numberR; r++){
+      let item = `<div class="weeklyItem" ${c > 1 ? `onclick="toTIdeCWaN(this)"` : ``} style="grid-column:${c}; grid-row:${line} / ${line + 4};${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""} ${myDayHere == 23 ? " border-bottom:2px solid rgba(47, 79, 79, .8);" : ""}">${c == 1 ? `${String(myDayHere).padStart(2, "0")}:00` : ``}${mySettings.myTomorrow !== "00:00" && myDayHere == 0 && c > 1 ? `<span class="weeklyAfterDateSpan"></span>` : ``}</div>`;
       arrayC.push(item);
       line += 4;
-      myDay == 23 ? myDay = 0 : myDay++;
+      myDayHere == 23 ? myDayHere = 0 : myDayHere++;
     };
     let arrayCs = arrayC.join("");
     arrayItem.push(arrayCs);
@@ -6023,32 +6047,9 @@ function getWeeklyCalendar(){
   nomiCol.push(lastCol);
   let nomiCols = nomiCol.join(" ");
   let nomiRow = [];
-  let clockIns = mySettings.myWeeksDayArray.sort((d1, d2) => (d1.clockIn < d2.clockIn) ? -1 : (d1.clockIn > d2.clockIn) ? 1 : 0);
-    console.log(clockIns[0].clockIn);
-  if(mySettings.mySleepZones == true){
-    for(let h = 0; h < 24; h++){ //93
-      let rowH = `[row-${String(myDay).padStart(2, "0")}-00${h == 0 ? ` row-tutto-end` : ``}] minmax(0, .25fr)`;
-      let rowH15 = `[row-${String(myDay).padStart(2, "0")}-15] minmax(0, .25fr)`;
-      let rowH30 = `[row-${String(myDay).padStart(2, "0")}-30] minmax(0, .25fr)`;
-      let rowH45 = `[row-${String(myDay).padStart(2, "0")}-45] minmax(0, .25fr)`;
-      nomiRow.push(rowH, rowH15, rowH30, rowH45);
-      myDay == 23 ? myDay = 0 : myDay++;
-    };
-  } else if(mySettings.mySleepZones == false){
-    let clockIns = mySettings.myWeeksDayArray.sort((d1, d2) => (d1.clockIn < d2.clockIn) ? -1 : (d1.clockIn > d2.clockIn) ? 1 : 0);
-    console.log(clockIns);
-    /* let preClockOuts = mySettings.myWeeksDayArray.map(d => {
-      return d.clockOut <= mySettings.myTomorrow  .......
-      fuck I don't know! Need to figure out how to make it understand that 2:00 is later than 23:00!
-    })  
-    let clockOuts = mySettings.myWeeksDayArray.sort((d1, d2) => (d1.clockOut < d2.clockOut) ? -1 : (d1.clockOut > d2.clockOut) ? 1 : 0);
-    console.log(clockOuts); */
-  };
-  /* If we want clockedIn only in weekly, here's how to do it:
-  Go through all the clockIn and take the earliest one, that will be your "myDay"
-  Go through all the clockOut and take the latest one
-  Take the latest minus the earliest and that'll give you the number you need for the "h < 24" in the for loop */
-  for(let h = 0; h < 24; h++){ //93
+    
+  
+  for(let h = 0; h < numberH; h++){ //93
     let rowH = `[row-${String(myDay).padStart(2, "0")}-00${h == 0 ? ` row-tutto-end` : ``}] minmax(0, .25fr)`;
     let rowH15 = `[row-${String(myDay).padStart(2, "0")}-15] minmax(0, .25fr)`;
     let rowH30 = `[row-${String(myDay).padStart(2, "0")}-30] minmax(0, .25fr)`;
@@ -6056,6 +6057,7 @@ function getWeeklyCalendar(){
     nomiRow.push(rowH, rowH15, rowH30, rowH45);
     myDay == 23 ? myDay = 0 : myDay++;
   };
+  
   let firstRows = `[row-Year] 1fr [row-Month] 1fr [row-Day] 1.5fr [row-tutto] 1fr`;
   let lastLine = `[row-end]`;
   nomiRow.unshift(firstRows);

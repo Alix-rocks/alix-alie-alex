@@ -898,7 +898,7 @@ async function saveToCloud(){
           dopoRow: todo.dopoRow,
           alleRow: todo.alleRow,
           showType: todo.showType,
-          showPrima: todo.showPrima
+          showPrima: todo.showPrima //what the hell is that?!
         };
         busyZoneCreation(tempRecurry)
       });
@@ -2822,6 +2822,18 @@ function creatingCalendar(todo, home, classs){
   let rec = todo.line == "recurringDay" ? true : false;
   let shw = (todo.term == "showThing" || todo.term == "reminder") && !todo.stock ? true : false;
   let date = todo.date ? todo.date : rec ? todo.dal : getTodayDateString();
+
+  //input duration for buffers
+  let durationArray = [];
+  let m = 0;
+  let h = 0;
+  for(let i = 0; i < (24 * 4); i++){
+    let time = String(h).padStart(2, "0") + `:` + String(m).padStart(2, "0");
+    durationArray = [...durationArray, `<option value="${time}">${time}</option>`];
+    m = m == 45 ? 0 : m + 15;
+    h = m == 0 ? h + 1 : h;
+  };
+  let duration = durationArray.join("");
   
   let daysWeek = mySettings.myWeeksDayArray.map((day, idx) => {
     return `<input type="checkbox" name="daysWeekChoice" class="cossin changeRecurryDates" id="${day.nameNoAcc}" value="${idx}" ${(rec && todo.var == "settimana" && todo.daysWeek && todo.daysWeek.includes(day.nameNoAcc)) ? `checked` : meseDayICalc(date) == idx ? `checked` : ``} />
@@ -2944,8 +2956,20 @@ function creatingCalendar(todo, home, classs){
   let bufferDiv = `<div id="bufferSection" class="calendarMargin" style="margin-top:20px;">
     <h5 class="taskInfoInput" style="margin-left: 0;">How long will that really take?</h5>
     <div class="inDaySection" style="width: -webkit-fill-available; max-width: 200px;">
-      <p style="margin-top: 10px;"><span>Before: </span><input id="primaBuffer" type="time" step="900" value="${todo.prima ? todo.prima : `00:00`}" /></p>
-      <p><span>After: </span><input id="dopoBuffer" type="time" step="900" value="${todo.dopo ? todo.dopo : `00:00`}" /></p>
+      <p style="margin-top: 10px;">
+        <span>Before: </span>
+        <!--<input id="primaBuffer" type="time" step="900" value="${todo.prima ? todo.prima : `00:00`}" />-->
+        <select id="durationSelectPrima">
+          ${duration}
+        </select>
+      </p>
+      <p>
+        <span>After: </span>
+        <!--<input id="dopoBuffer" type="time" step="900" value="${todo.dopo ? todo.dopo : `00:00`}" />-->
+        <select id="durationSelectDopo">
+          ${duration}
+        </select>
+      </p>
     </div>
   </div>`;
 
@@ -3117,8 +3141,10 @@ function calendarSave(todo){ //
   // the 3 of them (noDay, todoDay and recurringDay) can have time and buffer
   let inDaySection = document.querySelector('input[name="whatDay"]:checked ~ div.DaySection > div.inDaySection');
   todo.tutto = inDaySection.querySelector('input[type="checkbox"].tuttoGiornoInput').checked ? true : false;
-  let primaBuffer = document.querySelector("#primaBuffer");
-  let dopoBuffer = document.querySelector("#dopoBuffer");
+  // let primaBuffer = document.querySelector("#primaBuffer");
+  // let dopoBuffer = document.querySelector("#dopoBuffer");
+  let primaBuffer = document.querySelector("#durationSelectPrima");
+  let dopoBuffer = document.querySelector("#durationSelectDopo");
   todo.prima = primaBuffer.value ? primaBuffer.value : "00:00";
   todo.dopo = dopoBuffer.value ? dopoBuffer.value : "00:00";
   if(todo.tutto){
@@ -3600,6 +3626,41 @@ let newlabelColor = "";
 Créer un input pour duration: échelle: 15min; min:0; max:??
 
 1. Tout repenser le système de date pour pouvoir avoir dalle (date & time) et alle  (date & time)
+  Dans weekly, le début est un jour/une col, la fin est un autre jour, la même col (dateTime < nextDayTime)
+  Si c'est sur deux jours, comment qu'on le met dans le weekly? Un we from dateTimeBeg to endOfDay, un autre we from startOfDay to dateTimeEnd
+  todo.dateTimeStart = "2024-06-19-11-00"
+  todo.dateTimeEnd = "2024-06-20-15-00"
+  to check if it's today (without considering time), we could use .startsWith(date)
+  Where do we use date:
+    - in todo.recurryDates we have the date and in the todo, we have dalle, alle, prima et dopo
+    * what if it's tutto?!
+    todo.dateTimeStart = "2024-06-19" or "2024-06-19-XX-XX" (or 05-00 but that's risky, specially for those whose tomorrow aren't 3:00!)
+    todo.dateTimeEnd = "2024-06-19-XX-XX"
+    - in search
+    - swiping section (we basically recreate dateTime!)
+    - getWholeRecurry(todo, date, recId) ...
+    - todoCreation
+      - we check the next recurryDate to show the days in the calendar icon
+      - timeSpan/timeInput (in the li, we show the time)
+    - getTogoList
+      we basically recreate dateTime!
+      we use the last recurryDate to create more recurryDates...
+    - recurryCreation
+      we recreate dateTime
+    - getRecurryDateOut(todo)(we use recurry.date to remove that date from it's todo.recurryDates)
+    - Sorts
+    - shuffle
+    - smallCalendar (create and save calendar)
+    - calculating the recurryDates! (and all the meseCalculate, weekCalculate, etc) (quoique ça, on utilise todo.dal ...!)
+    - when creating a new/stock todo: todo.date from monthly or weekly or today (if stock)
+    - taskInfo: tell me when (date)
+    - monthly: one less sorting to do (dateTime instead of date, then time)
+    - weekly: 
+      - compare date with Dday and Sday (we could add time to these two)
+      - dalle and alle give you the row whereas date gives you the col
+    - busyZoneCreation
+
+
 
 3. Trouver une solution pour pouvoir afficher plus d'un évènement en même temps dans le weekly...
 

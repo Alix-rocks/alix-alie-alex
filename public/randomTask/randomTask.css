@@ -901,7 +901,7 @@ ul{
   border-style: solid;
   border-width: 0 3.5px 0 2px;
   border-color: transparent;
-  height: 33.5px;
+  min-height: 33.5px;
 }
 
 .todoLi i{
@@ -922,6 +922,8 @@ ul{
   font-size: 20px;
   line-height: 1em;
   padding: 0;
+  margin-block-start: .2em;
+  margin-block-end: .2em;
 }
 .todoLi .textDiv{
   flex-grow: 1;
@@ -949,9 +951,9 @@ body > #taskInfo{
   padding: 10px 10px 0 5px;
 }
 .textDiv #taskInfo{
-  width: calc(100% + 44px);
-  top: 25px;
-  left: -37px;
+  width: calc(100% + 109.5px);
+  top: calc(100% - .1em);
+  left: -77px;
 }
 
 
@@ -1243,9 +1245,12 @@ input#recurringDayInput:checked ~ div#recurryDaySection{
   display: none;
 }
 .noneTuttoGiornoDiv{
-  display: block;
+  display: flex;
 }
-.tuttoGiornoInput:checked ~ div.noneTuttoGiornoDiv{
+/* .tuttoGiornoInput:checked ~ div.noneTuttoGiornoDiv{
+  display: none;
+} */
+.tuttoGiornoInput:checked ~ div.noneTuttoGiornoDiv > input[type="time"]{
   display: none;
 }
 p#hshText{
@@ -1424,6 +1429,9 @@ input[name="colorRadio"]:checked + label > div{
 } */
 .reminderClass .textDiv{
   margin: 0 7px 0 0;
+}
+.reminderClass{
+  height: fit-content;
 }
 /* .reminderClass > .textDiv > span.text{
   font-size: 1em;

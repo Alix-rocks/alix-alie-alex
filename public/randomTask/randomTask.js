@@ -481,12 +481,28 @@ async function getTasksSettings() {
     if(todo.dalle){
       todo.startTime = todo.dalle;
       delete todo.dalle;
-      //delete todo.dalleRow;
+    };
+    if(todo.dalleRow){
+      delete todo.dalleRow;
+    };
+    if(todo.prima){
+      todo.prima = roundFifteenTime(todo.prima).replace("-", ":");
+    };
+    if(todo.primaRow){
+      delete todo.primaRow;
     };
     if(todo.alle){
       todo.stopTime = todo.alle;
       delete todo.alle;
-      //delete todo.alleRow;
+    };
+    if(todo.alleRow){
+      delete todo.alleRow;
+    };
+    if(todo.dopo){
+      todo.dopo = roundFifteenTime(todo.dopo).replace("-", ":");
+    };
+    if(todo.dopoRow){
+      delete todo.dopoRow;
     };
 
 //other modifications...
@@ -710,10 +726,48 @@ async function getDones(){
       //   } else{
       //     myList.push(done);
       //   };
-        
       // });
+      let mylist = donedDate.data().dones.map(done => {
+        if(done.color && done.color.length > 2){
+          let idxColor = mySettings.myBaseColors.findIndex(color => color.colorBG == done.color);
+          done.color = String(idxColor);
+        };
+        if(done.date){
+          done.startDate = done.date;
+          done.stopDate = done.date;
+          delete done.date;
+        };
+        if(done.dalle){
+          done.startTime = done.dalle;
+          delete done.dalle;
+        };
+        if(done.dalleRow){
+          delete done.dalleRow;
+        };
+        if(done.prima){
+          done.prima = roundFifteenTime(done.prima).replace("-", ":");
+        };
+        if(done.primaRow){
+          delete done.primaRow;
+        };
+        if(done.alle){
+          done.stopTime = done.alle;
+          delete done.alle;
+        };
+        if(done.alleRow){
+          delete done.alleRow;
+        };
+        if(done.dopo){
+          done.dopo = roundFifteenTime(done.dopo).replace("-", ":");
+        };
+        if(done.dopoRow){
+          delete done.dopoRow;
+        };
+        return done;
+      });
       let mydate = donedDate.id;
-      let mylist = donedDate.data().dones;
+      // let mylist = donedDate.data().dones;
+      //console.log(mylist);
       listDones.push({date: mydate, list: mylist});
     });//listDones.push({...donedDate.data().dones, date: mydate});
     // console.log(myList);
@@ -731,10 +785,11 @@ async function getDones(){
       let donedDate = doned.date;
       donedDateCreation(donedDate);
       doned.list.forEach(tidoned => {
-        if(tidoned.color && tidoned.color.length > 2){
-          let idxColor = mySettings.myBaseColors.findIndex(color => color.colorBG == tidoned.color);
-          tidoned.color = String(idxColor);
-        };
+        // if(tidoned.color && tidoned.color.length > 2){
+        //   console.log("vieille couleur! ");
+        //   let idxColor = mySettings.myBaseColors.findIndex(color => color.colorBG == tidoned.color);
+        //   tidoned.color = String(idxColor);
+        // };
         
         donedCreation(donedDate, tidoned);
       });
@@ -908,10 +963,14 @@ async function saveToCloud(){
       todo.recurryDates.forEach(recurryDate => {
         let tempRecurry = {
           startDate: recurryDate,
-          primaRow: todo.primaRow,
-          dalleRow: todo.dalleRow,
-          dopoRow: todo.dopoRow,
-          alleRow: todo.alleRow,
+          prima: todo.prima,
+          //primaRow: todo.primaRow,
+          startTime: todo.startTime,
+          //dalleRow: todo.dalleRow,
+          dopo: todo.dopo,
+          //dopoRow: todo.dopoRow,
+          stopTime: todo.stopTime,
+          //alleRow: todo.alleRow,
           showType: todo.showType,
           showPrima: todo.showPrima //what the hell is that?!
         };
@@ -2174,8 +2233,9 @@ function gotItDone(doned){ //doned is either the todo per se or a fake todo crea
     colorUrges("next");
   };    
   localStorage.listTasks = JSON.stringify(listTasks);
+  console.log(donedItem);
 
-  let donedDate = getTodayDateString(); //return
+  let donedDate = donedItem.term == "showThing" || donedItem.term == "reminder" ? donedItem.startDate : getTodayDateString(); //return
   
   let dateFound = false;
   for (const i in listDones) {
@@ -2716,7 +2776,7 @@ function timeItEvent(thisOne){
     } else if(input.value){
       thisOne.textContent = input.value;
       todo.startTime = input.value;
-      todo.dalleRow = roundFifteenTime(todo.startTime);
+      //todo.dalleRow = roundFifteenTime(todo.startTime);
       li.setAttribute("data-time", input.value);
     };
     thisOne.classList.remove("displayNone");
@@ -2917,10 +2977,12 @@ function creatingCalendar(todo, home, classs){
         </label>
       </div>
       <div class="noneTuttoGiornoDiv calendarInsideMargin">
+        <span>c'è un inizio?</span>
         <input type="date" id="oneDayStartDateInput" class="changeRecurryDates" value="${startDate}" />
         <input id="oneDayStartTimeInput" type="time" class="dalle dalleTxt" value="${todo.startTime ? todo.startTime : ``}" />
       </div>
       <div class="noneTuttoGiornoDiv calendarInsideMargin">
+        <span>c'è una fine?</span>
         <input type="date" id="oneDayStopDateInput" class="changeRecurryDates" value="${stopDate}" />
         <input id="oneDayStopTimeInput" type="time" class="alle alleTxt" value="${todo.stopTime ? todo.stopTime : ``}" />
       </div>
@@ -3101,6 +3163,9 @@ function creatingCalendar(todo, home, classs){
     oneDayStopDate.value = oneDayStopDate.value < oneDayStartDate.value ? oneDayStartDate.value : oneDayStopDate.value;
   });
 
+  document.querySelector("#durationSelectPrima").value = todo.prima ? todo.prima : `00:00`;
+  document.querySelector("#durationSelectDopo").value = todo.dopo ? todo.dopo : `00:00`;
+
   if(!todo.recurry){
     meseCalculate(startDate);//need it here otherwise the text just isn't there, because, ci-bas, meseCalculate only happens when var is changed, but if it is mese from the beginning, it wouldn't happen (week is taken care of earlier when we check them all)
     let weekSection = document.querySelector("#weekSection");
@@ -3217,38 +3282,27 @@ function calendarSave(todo){ //
   todo.dopo = dopoBuffer.value ? dopoBuffer.value : "00:00";
   if(todo.tutto){
     //delete todo.prima; //otherwise, if it's stock, we loose all the buffers!
-    delete todo.primaRow;
+    //delete todo.primaRow;
     delete todo.startTime;
-    delete todo.dalleRow;
+    //delete todo.dalleRow;
     delete todo.stopTime;
-    delete todo.alleRow;
+    //delete todo.alleRow;
     //delete todo.dopo; //otherwise, if it's stock, we loose all the buffers!
-    delete todo.dopoRow;
+    //delete todo.dopoRow;
   } else{
     let dalle = inDaySection.querySelector('input[type="time"].dalle');
     if(dalle && dalle.value !== ""){
       todo.startTime = dalle.value;
-      todo.dalleRow = roundFifteenTime(todo.startTime); //returns time rounded to 15s with a - instead of a : (for the row-name in weekly)
-      if(todo.prima && todo.prima !== "00:00"){
-        let prima = roundFifteenTime(todo.prima); //we might not need that anymore since prima and dopo  only have 15min increments in the select...
-        todo.primaRow = timeMath(todo.dalleRow, "minus", prima); //returns time rounded to 15s with a - instead of a : (for the row-name in weekly)
-      };
     } else{
       delete todo.startTime;
-      delete todo.dalleRow;
       todo.tutto = true;
     };
     let alle = inDaySection.querySelector('input[type="time"].alle');
     if(alle && alle.value !== ""){
       todo.stopTime = alle.value;
-      todo.alleRow = todo.stopTime ? roundFifteenTime(todo.stopTime) : "end";
-      if(todo.dopo && todo.dopo !== "00:00"){
-        let dopo = roundFifteenTime(todo.dopo); //we might not need that anymore since prima and dopo  only have 15min increments in the select...
-        todo.dopoRow = timeMath(todo.alleRow, "plus", dopo);
-      };
     } else{
       delete todo.stopTime;
-      delete todo.alleRow;
+      //delete todo.alleRow;
     };
   };
   
@@ -3935,7 +3989,7 @@ function toTIdeCMaM(thisOne){ // de CalMonthPage à Modification
   moving = false; //must stay false in month/week/search
   parent = thisOne;
   let infos = {
-    todo: getTodoFromParent(),
+    todo: getTodoFromParent(), //if it's done (past), it won't work because it's not in listTasks anymore... do we want to be able to modify done ones? If so, we'll need to have a function to get the done in the listDones... and modify it there...
     where: "calMonthPage",
     div: document.body
   };
@@ -3988,10 +4042,11 @@ function toTIdeCWaM(thisOne){ // de CalWeekPage à Modification
   moving = false; //must stay false in month/week/search
   parent = thisOne;  
   let infos = {
-    todo: getTodoFromParent(),
+    todo: getTodoFromParent(), //if it's done (past), it won't work because it's not in listTasks anymore... do we want to be able to modify done ones? If so, we'll need to have a function to get the done in the listDones... and modify it there...
     where: "", // we don't even use it! (except for the clickscreen handler... wait until we've dealed with that)
     div: document.body
   };
+  console.log(infos.todo);
   taskAddAllInfo(infos);
 };
 window.toTIdeCWaM = toTIdeCWaM;
@@ -5629,13 +5684,6 @@ function getLastWeekDate(){
 
 // MARK: MONTHLY CALENDAR
 
-let date = new Date();
-let todayDate = date.getDate();
-let year = date.getFullYear();
-let month = date.getMonth(); //pour vrai, enlève le "+ 1"
-let monthName = date.toLocaleString('it-IT', { month: 'long' }).toLocaleUpperCase();
-let todayWholeDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(todayDate).padStart(2, "0")}`
-
 function putShowsInMonth(monthlyFirst, monthlyLast){
   let filteredShows = listTasks.filter((todo) => todo.term == "showThing" || todo.term == "reminder");
   let shows = [];
@@ -5662,8 +5710,8 @@ function putShowsInMonth(monthlyFirst, monthlyLast){
   filteredDonedShows.forEach(done => {
     done.list.forEach(list => {
       if(list.term == "showThing"){
-        list.startDate = done.date;
-        list.startTime = list.dalle;
+        //list.startDate = done.date;
+        list.startTime = list.dalle ? list.dalle : list.startTime;
         list.past = true;
         shows.push(list);
       };
@@ -5681,6 +5729,7 @@ function putShowsInMonth(monthlyFirst, monthlyLast){
     } else if(show.term == "reminder"){
       eventDiv = `<div data-id="${show.id}" data-date="${show.startDate}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${!show.past ? `onclick="toTIdeCMaM(this)"` : ``} class="eventDiv ${show.startDate < today ? "pastEvent" : ""}" style="color:${mySettings.myBaseColors[show.color].colorBG};">${show.task}</div>`;
     };
+    //if it's done (past), the onclick="toTIdeCMaM(this) won't work because it's not in listTasks anymore... do we want to be able to modify done ones? If so, we'll need to have a function to get the done in the listDones... and modify it there...
     let kase = document.querySelector("[data-wholedate='" + show.startDate + "']");
     if(kase){
       kase.insertAdjacentHTML("beforeend", eventDiv);
@@ -5700,8 +5749,14 @@ function putShowsInMonth(monthlyFirst, monthlyLast){
     }; 
   });
 };
+
 let tbodyMC = document.querySelector("#monthlyCalendarTBody");
 function createBody(){
+  let monthlyDate = new Date();
+  let todayDate = monthlyDate.getDate();
+  let year = monthlyDate.getFullYear();
+  let month = monthlyDate.getMonth(); //pour vrai, enlève le "+ 1"
+  let todayWholeDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(todayDate).padStart(2, "0")}`;
   let trs = [];
   for(let i = 0; i < 6; i++){
     let tds = [];
@@ -5715,7 +5770,7 @@ function createBody(){
   };
   let trsF = trs.join("");
   tbodyMC.innerHTML = trsF;
-  getMonthlyCalendar();
+  getMonthlyCalendar(year, month, todayWholeDate);
   document.querySelector("#monthBackward").addEventListener("click", () => {
     document.querySelectorAll(".circle").forEach(circle => {
       circle.parentElement.classList.remove("selectedKase");
@@ -5725,8 +5780,10 @@ function createBody(){
       div.remove();
     });
     month = month > 0 ? month - 1 : 11;
+    console.log(month);
     year = month == 11 ? year - 1 : year;
-    getMonthlyCalendar();
+    console.log(year);
+    getMonthlyCalendar(year, month, todayWholeDate);
   });
   
   document.querySelector("#monthForward").addEventListener("click", () => {
@@ -5738,15 +5795,17 @@ function createBody(){
       div.remove();
     });
     month = month < 11 ? month + 1 : 0;
+    console.log(month);
     year = month == 0 ? year + 1 : year;
-    getMonthlyCalendar();
+    console.log(year);
+    getMonthlyCalendar(year, month, todayWholeDate);
   });
 };  
 
 
-function getMonthlyCalendar(){
+function getMonthlyCalendar(year, month, todayWholeDate){
   let first = new Date(year, month, 1);
-  monthName = first.toLocaleString('it-IT', { month: 'long' }).toLocaleUpperCase();
+  let monthName = first.toLocaleString('it-IT', { month: 'long' }).toLocaleUpperCase();
   monthNameSpace.innerText = monthName;
   yearNameSpace.innerText = year;
   
@@ -5996,10 +6055,9 @@ function putShowsInWeek(Dday, Sday){
   filteredDonedShows.forEach(done => {
     done.list.forEach(doned => {
       if(doned.term == "showThing"){
-        doned.startDate = done.date;
-        doned.startTime = doned.dalle;
+        //doned.startDate = done.date;
         doned.past = true;
-        console.log(doned);
+        //console.log(doned);
         createWeeklyshow(doned);
       };// if the show has been marked doned at an other date, that makes it weird... that's why we should separate the date and the doneDate. and, anyway, the pastEvent should be past, based on the date and not on whether they've been done or not. But for the task, you'll want the doneDate 
     });
@@ -6025,6 +6083,7 @@ function timeMath(one, math, two){
 };
 
 function createWeeklyshow(show){
+  console.log(show);
   let dayIdx = meseDayICalc(show.startDate); //if between 00:00 and myTomorrow, it should be yesterday's date!
   let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
   let day = `${mySettings.myWeeksDayArray[idx].code}`;  
@@ -6035,25 +6094,26 @@ function createWeeklyshow(show){
     add = `<div data-id="${show.id}" data-date="${show.startDate}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="toTIdeCWaM(this); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `background-color: var(--bg-color); color:${show.color}; border:none; border-radius: 0;`}">${show.info ? `*` : ``}
     ${show.task} <i class="IconI ${show.icon}"></i>
   </div>`; //add underline if miniList
+  //if it's done (past), the onclick="toTIdeCWaM(this) won't work because it's not in listTasks anymore... do we want to be able to modify done ones? If so, we'll need to have a function to get the done in the listDones... and modify it there...
   } else{
     // now you can take show.dalleRow, show.alleRow, show.primaRow and show.dopoRow (just make sure there's a DATE, because "noDay" can also have them all)
     let primaDiv = ``;
     let dopoDiv = ``;
     div = document.querySelector(".weeklyContainer");
     if(show.prima && show.prima !== "00:00"){
-      primaDiv = `<div class="weeklyBuffer ${show.past ? "pastEvent" : ""}" style="grid-column:col-${day}; grid-row:row-${show.primaRow}/row-${show.dalleRow};"></div>`;
+      primaDiv = `<div class="weeklyBuffer ${show.past ? "pastEvent" : ""}" style="grid-column:col-${day}; grid-row:row-${timeMath(roundFifteenTime(show.startTime), "minus", show.prima)}/row-${roundFifteenTime(show.startTime)};"></div>`;
     };
     if(show.dopo && show.dopo !== "00:00"){
-      dopoDiv = `<div class="weeklyBuffer ${show.past ? "pastEvent" : ""}" style="grid-column:col-${day}; grid-row:row-${show.alleRow}/row-${show.dopoRow};"></div>`;
+      dopoDiv = `<div class="weeklyBuffer ${show.past ? "pastEvent" : ""}" style="grid-column:col-${day}; grid-row:row-${roundFifteenTime(show.stopTime)}/row-${timeMath(show.stopTime ? roundFifteenTime(show.stopTime) : "end", "plus", roundFifteenTime(show.dopo))};"></div>`;
     };
     add = `
     ${primaDiv}
-    <div data-id="${show.id}" data-date="${show.startDate}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="toTIdeCWaM(this); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `color:${show.color}; border:none;`}  grid-column:col-${day}; grid-row:row-${show.dalleRow}${show.term == "reminder" ? `` : `/row-${show.alleRow}`};">
+    <div data-id="${show.id}" data-date="${show.startDate}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="toTIdeCWaM(this); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `color:${show.color}; border:none;`}  grid-column:col-${day}; grid-row:row-${roundFifteenTime(show.startTime)}${show.term == "reminder" ? `` : `/row-${roundFifteenTime(show.stopTime)}`};">
     ${show.info ? `*` : ``}${show.task}<br />
       <i class="IconI ${show.icon}"></i>
     </div>
     ${dopoDiv}
-    `;
+    `; //if it's done (past), the onclick="toTIdeCWaM(this) won't work because it's not in listTasks anymore... do we want to be able to modify done ones? If so, we'll need to have a function to get the done in the listDones... and modify it there...
     //YOU COULD USE THAT PART TO SHOW THOSE WHO HAVEN'T HAD THE ROW ONES...
     // let primaDiv = ``;
     // let dopoDiv = ``;
@@ -6126,6 +6186,9 @@ function getWeeklyFilter(){
 window.getWeeklyFilter = getWeeklyFilter;
 
 function getWeeklyCalendar(){
+  let weeklyDate = new Date();
+  let year = weeklyDate.getFullYear();
+  let monthName = weeklyDate.toLocaleString('it-IT', { month: 'long' }).toLocaleUpperCase();
   let arrayItem = [];
   let rowYear = `<div class="weeklyItem weeklyTitle weeklyTitleWBtns">
     <button class="weeklyBtn" id="weekBackward">
@@ -6370,9 +6433,9 @@ function busyZoneCreation(show){
   let dayIdx = meseDayICalc(show.startDate);
   let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
   let day = `${mySettings.myWeeksDayArray[idx].code}`;  
-  let start = show.primaRow ? show.primaRow : show.dalleRow ? show.dalleRow : "11-00"; //There won't be a dalleRow if it's tutto!
+  let start = show.startTime ? timeMath(roundFifteenTime(show.startTime), "minus", show.prima) : "11-00";
   start = start <= "11-00" ? "11-00" : start; // we should have a mySettings.myWeeksDayArray[idx].peopleClockIn instead of 11:00
-  let end = show.dopoRow ? show.dopoRow : show.alleRow ? show.alleRow : "02-00"; 
+  let end = show.stopTime ? timeMath(roundFifteenTime(show.stopTime), "plus", show.dopo) : "02-00";
   end = end < mySettings.myTomorrow.replace(":", "-") ? "end" : end;
   let meal = (show.showType !== "Calia" && show.prima >= "03:00") ? true : false;
   

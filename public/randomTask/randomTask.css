@@ -1246,6 +1246,10 @@ input#recurringDayInput:checked ~ div#recurryDaySection{
 }
 .noneTuttoGiornoDiv{
   display: flex;
+  align-items: center;
+}
+.noneTuttoGiornoDiv > span{
+  width: 55px;
 }
 /* .tuttoGiornoInput:checked ~ div.noneTuttoGiornoDiv{
   display: none;

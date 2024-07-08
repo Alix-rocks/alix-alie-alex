@@ -1909,12 +1909,40 @@ hr.zoneHr{
   position: relative;
 }
 .monthlyCalendar td{
-  height: calc((100vh - 51px - 20px) / 6);
+  height: calc((100vh - 51px - 70px) / 6);
 }
 .monthlyCalendar th{
   height: 15px;
   font-size: 12px;
   line-height: 14px;
+}
+td.toWeeklyArrow{
+  width: 10px;
+  border-top: none;
+  border-bottom: none;
+}
+.toWeeklyArrow > button{
+  border-top: calc((100vh - 51px - 70px) / 12) solid transparent;
+  border-bottom: calc((100vh - 51px - 70px) / 12) solid transparent;
+  width: 0;
+}
+td.toWeeklyArrowRight{
+  border-right: none;
+}
+td.toWeeklyArrowLeft{
+  border-left: none;
+}
+.toWeeklyArrowRight > button{
+  border-top: calc((100vh - 51px - 70px) / 12) solid transparent;
+  border-left: 10px solid #555;
+  border-bottom: calc((100vh - 51px - 70px) / 12) solid transparent;
+  width: 0;
+}
+.toWeeklyArrowLeft > button{
+  border-top: calc((100vh - 51px - 70px) / 12) solid transparent;
+  border-right: 10px solid #555;
+  border-bottom: calc((100vh - 51px - 70px) / 12) solid transparent;
+  width: 0;
 }
 .circle{
   position: absolute;

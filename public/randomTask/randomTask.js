@@ -1004,7 +1004,19 @@ async function saveToCloud(){
         dones: doned.list
       });
     };
-  });   
+  });  
+  /* WHEN YOU WANT TO UPDATE ALL THE DONES */
+  // listDones.forEach(td => {
+  //   if(docSnapDones[td.date]){
+  //     batch.update(doc(db, "randomTask", auth.currentUser.email, "myListDones", td.date), {
+  //       dones: td.list
+  //     });
+  //   } else{
+  //     batch.set(doc(db, "randomTask", auth.currentUser.email, "myListDones", td.date), {
+  //       dones: td.list
+  //     });
+  //   };
+  // }); 
 
   await batch.commit();
   localStorage.lastUpdateLocalStorage = nowStamp;
@@ -3424,13 +3436,13 @@ todo.deadline => date (string) du deadline (if no deadline, delete)
 todo.dlTutto => true/false if deadline is all day or not (if no deadline, delete)
 todo.finoAlle => heure (string) du deadline (if no deadline, delete)
 todo.startTime (anciennement todo.dalle) => time à laquelle ça commence aussi anciennement todo.time (pour les event)
-todo.dalleRow = "00-00" rounded to fifteen
+xxxtodo.dalleRow = "00-00" rounded to fifteen
 todo.stopTime (anciennement todo.alle) => time à laquelle ça fini
-todo.alleRow = "00-00" rounded to fifteen (if there's no alle, then "end")
+xxxtodo.alleRow = "00-00" rounded to fifteen (if there's no alle, then "end")
 todo.prima => durée du buffer avant l'event
-todo.primaRow = heure à laquelle le buffer commence ("00-00" rounded to fifteen)
+xxxtodo.primaRow = heure à laquelle le buffer commence ("00-00" rounded to fifteen)
 todo.dopo => durée du buffer après l'event
-todo.dopoRow = heure à laquelle le buffer fini ("00-00" rounded to fifteen)
+xxxtodo.dopoRow = heure à laquelle le buffer fini ("00-00" rounded to fifteen)
 xxxtodo.stored => true/false (has a model in storage)
 xxxtodo.stockId
 todo.stock => true/false (is a model in storage)
@@ -5622,17 +5634,30 @@ function removeLabel(todo){
 };
 
 // *** DATE
-function getTodayDateString(){
+function getMyTodayDate(){
   let todayDate = new Date();
   let yesterDate = new Date();
   yesterDate.setDate(yesterDate.getDate() - 1);
   let currentHour = String(todayDate.getHours()).padStart(2, "0");
   let currentMinute = String(todayDate.getMinutes()).padStart(2, "0");
   let currentTime = `${currentHour}:${currentMinute}`;
-  let date = currentTime <= mySettings.myTomorrow ? yesterDate : todayDate;
-  // return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-  return getStringFromDate(date);
+  let myTodayDate = currentTime <= mySettings.myTomorrow ? yesterDate : todayDate;
+  return myTodayDate;
 };
+function getTodayDateString(){
+  // let todayDate = new Date();
+  // let yesterDate = new Date();
+  // yesterDate.setDate(yesterDate.getDate() - 1);
+  // let currentHour = String(todayDate.getHours()).padStart(2, "0");
+  // let currentMinute = String(todayDate.getMinutes()).padStart(2, "0");
+  // let currentTime = `${currentHour}:${currentMinute}`;
+  // let date = currentTime <= mySettings.myTomorrow ? yesterDate : todayDate;
+  // return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  return getStringFromDate(getMyTodayDate());
+};
+
+
+
 
 function getTomorrowDateSring(){
   let todayDate = new Date();
@@ -5752,25 +5777,25 @@ function putShowsInMonth(monthlyFirst, monthlyLast){
 
 let tbodyMC = document.querySelector("#monthlyCalendarTBody");
 function createBody(){
-  let monthlyDate = new Date();
-  let todayDate = monthlyDate.getDate();
-  let year = monthlyDate.getFullYear();
-  let month = monthlyDate.getMonth(); //pour vrai, enlève le "+ 1"
-  let todayWholeDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(todayDate).padStart(2, "0")}`;
+  let year = getMyTodayDate().getFullYear();
+  let month = getMyTodayDate().getMonth();
   let trs = [];
   for(let i = 0; i < 6; i++){
     let tds = [];
     for(let j = 0; j < 7; j++){
-      let td = `<td ${i == 0 && j == 0 ? `id="monthlyFirst"` : i == 5 && j == 6 ? `id="monthlyLast"` : ``}><div class="circle"></div><span class="typcn typcn-plus addEvent displayNone" onclick="toTIdeCMaN(this)"></span></td>`;
+      let td = `<td ${i == 0 && j == 0 ? `id="monthlyFirst"` : i == 5 && j == 6 ? `id="monthlyLast"` : ``} ${j == 0 ? `data-weekly="${i + 1}"` : ``}><div class="circle"></div><span class="typcn typcn-plus addEvent displayNone" onclick="toTIdeCMaN(this)"></span></td>`;
       tds.push(td);
     };
     let tdsF = tds.join("");
-    let tr = `<tr>${tdsF}</tr>`;
+    let tr = `<tr>
+        ${tdsF}
+        <td class="toWeeklyArrow toWeeklyArrowRight"><button onclick="goToThisWeekly(${i + 1})"></button></td>
+      </tr>`;
     trs.push(tr);
   };
   let trsF = trs.join("");
   tbodyMC.innerHTML = trsF;
-  getMonthlyCalendar(year, month, todayWholeDate);
+  getMonthlyCalendar(year, month);
   document.querySelector("#monthBackward").addEventListener("click", () => {
     document.querySelectorAll(".circle").forEach(circle => {
       circle.parentElement.classList.remove("selectedKase");
@@ -5779,11 +5804,16 @@ function createBody(){
     document.querySelectorAll(".eventDiv").forEach(div => {
       div.remove();
     });
+    let todayCircle = document.querySelector(".heresToday");
+    if(todayCircle){
+      todayCircle.classList.remove("heresToday");
+      document.querySelectorAll(".backToTodayBtn").forEach(btn => {
+        btn.classList.remove("displayNone");
+      });
+    };
     month = month > 0 ? month - 1 : 11;
-    console.log(month);
     year = month == 11 ? year - 1 : year;
-    console.log(year);
-    getMonthlyCalendar(year, month, todayWholeDate);
+    getMonthlyCalendar(year, month);
   });
   
   document.querySelector("#monthForward").addEventListener("click", () => {
@@ -5794,16 +5824,44 @@ function createBody(){
     document.querySelectorAll(".eventDiv").forEach(div => {
       div.remove();
     });
+    let todayCircle = document.querySelector(".heresToday");
+    if(todayCircle){
+      todayCircle.classList.remove("heresToday");
+      document.querySelectorAll(".backToTodayBtn").forEach(btn => {
+        btn.classList.remove("displayNone");
+      });
+    };
     month = month < 11 ? month + 1 : 0;
-    console.log(month);
     year = month == 0 ? year + 1 : year;
-    console.log(year);
-    getMonthlyCalendar(year, month, todayWholeDate);
+    getMonthlyCalendar(year, month);
   });
 };  
 
+function backToMonthlyToday(){
+  document.querySelectorAll(".circle").forEach(circle => {
+    circle.parentElement.classList.remove("selectedKase");
+    circle.parentElement.querySelector(".addEvent").classList.add("displayNone");
+  });
+  document.querySelectorAll(".eventDiv").forEach(div => {
+    div.remove();
+  });
+  let year = getMyTodayDate().getFullYear();
+  let month = getMyTodayDate().getMonth();
+  getMonthlyCalendar(year, month);
+};
+window.backToMonthlyToday = backToMonthlyToday;
 
-function getMonthlyCalendar(year, month, todayWholeDate){
+function goToThisWeekly(weeklyNum){
+  let Dwholedate = tbodyMC.querySelector(`[data-weekly="${weeklyNum}"]`).dataset.wholedate;
+  let Ddate = getDateFromString(Dwholedate);
+  eraseWeek();
+  putDatesInWeek(Ddate);
+  document.getElementById("switchPageInputWeek").dispatchEvent(pageEvent);
+};
+window.goToThisWeekly = goToThisWeekly;
+
+function getMonthlyCalendar(year, month){
+  //let todayWholeDate = getTodayDateString();
   let first = new Date(year, month, 1);
   let monthName = first.toLocaleString('it-IT', { month: 'long' }).toLocaleUpperCase();
   monthNameSpace.innerText = monthName;
@@ -5816,7 +5874,7 @@ function getMonthlyCalendar(year, month, todayWholeDate){
   let i = 0;
   let num = numStart;
   tbodyMC.querySelectorAll(".circle").forEach((td) => {
-    td.classList.remove("heresToday");
+    //td.classList.remove("heresToday");
     if(i < firstDay){
       td.innerText = num;
       let day = String(num).padStart(2, "0");
@@ -5864,8 +5922,11 @@ function getMonthlyCalendar(year, month, todayWholeDate){
       i++;
     };
     
-    if(td.parentElement.dataset.wholedate == todayWholeDate){
+    if(td.parentElement.dataset.wholedate == getTodayDateString()){
       td.classList.add("heresToday");
+      document.querySelectorAll(".backToTodayBtn").forEach(btn => {
+        btn.classList.add("displayNone");
+      });
     };
     td.addEventListener("click", () => {
       document.querySelectorAll(".circle").forEach(circle => {
@@ -5876,11 +5937,11 @@ function getMonthlyCalendar(year, month, todayWholeDate){
       td.parentElement.querySelector(".addEvent").classList.remove("displayNone");
     });
   });
-  document.querySelectorAll(".addEvent").forEach(plus => {
-    plus.addEventListener("click", () => {
+  // document.querySelectorAll(".addEvent").forEach(plus => {
+  //   plus.addEventListener("click", () => {
       
-    });
-  });
+  //   });
+  // });
   let monthlyFirst = document.querySelector("#monthlyFirst").dataset.wholedate;
   let monthlyLast = document.querySelector("#monthlyLast").dataset.wholedate;
   putShowsInMonth(monthlyFirst, monthlyLast);
@@ -5890,12 +5951,19 @@ function updateMonth(){
   document.querySelectorAll(".circle").forEach(circle => {
     circle.parentElement.classList.remove("selectedKase");
     circle.parentElement.querySelector(".addEvent").classList.add("displayNone");
+    // if(circle.parentElement.dataset.wholedate == getTodayDateString()){
+    //   circle.classList.add("heresToday");
+    //   document.querySelectorAll(".backToTodayBtn").forEach(btn => {
+    //     btn.classList.add("displayNone");
+    //   });
+    // }; Les dates restent les mêmes!!! donc pas besoin de vérifier heresToday ni les backToTodayBtn!!!
   });
   document.querySelectorAll(".eventDiv").forEach(div => {
     div.remove();
   });
   let monthlyFirst = document.querySelector("#monthlyFirst").dataset.wholedate;
   let monthlyLast = document.querySelector("#monthlyLast").dataset.wholedate;
+
   putShowsInMonth(monthlyFirst, monthlyLast);
 };
 
@@ -5927,6 +5995,11 @@ function putDatesInWeek(date){
       d = d < 6 ? d + 1 : d = 0;
     });
   };
+  let todayAreaDiv = document.querySelector(".todayArea");
+  if(todayAreaDiv){
+    todayAreaDiv.remove();
+    document.querySelector(".nowArea").remove();
+  };
   let today = getTodayDateString();
   let dayIdx = meseDayICalc(today);
   const test = arrayDate.some(el => (el.full == today));
@@ -5950,6 +6023,10 @@ function putDatesInWeek(date){
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", nowArea);
     document.querySelectorAll(".backToTodayBtn").forEach(btn => {
       btn.classList.add("displayNone");
+    });
+  } else{
+    document.querySelectorAll(".backToTodayBtn").forEach(btn => {
+      btn.classList.remove("displayNone");
     });
   };
   updateSleepAreas();
@@ -6091,7 +6168,7 @@ function createWeeklyshow(show){
   let add;
   if(show.tutto || !show.startTime || show.startTime == ""){
     div = document.querySelector(`[data-tutto="${day}"]`);
-    add = `<div data-id="${show.id}" data-date="${show.startDate}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="toTIdeCWaM(this); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `background-color: var(--bg-color); color:${show.color}; border:none; border-radius: 0;`}">${show.info ? `*` : ``}
+    add = `<div data-id="${show.id}" data-date="${show.startDate}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="toTIdeCWaM(this); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `background-color: var(--bg-color); color:${mySettings.myBaseColors[show.color].colorBG}; border:none; border-radius: 0;`}">${show.info ? `*` : ``}
     ${show.task} <i class="IconI ${show.icon}"></i>
   </div>`; //add underline if miniList
   //if it's done (past), the onclick="toTIdeCWaM(this) won't work because it's not in listTasks anymore... do we want to be able to modify done ones? If so, we'll need to have a function to get the done in the listDones... and modify it there...
@@ -6108,7 +6185,7 @@ function createWeeklyshow(show){
     };
     add = `
     ${primaDiv}
-    <div data-id="${show.id}" data-date="${show.startDate}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="toTIdeCWaM(this); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `color:${show.color}; border:none;`}  grid-column:col-${day}; grid-row:row-${roundFifteenTime(show.startTime)}${show.term == "reminder" ? `` : `/row-${roundFifteenTime(show.stopTime)}`};">
+    <div data-id="${show.id}" data-date="${show.startDate}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="toTIdeCWaM(this); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `color:${mySettings.myBaseColors[show.color].colorBG}; border:none;`}  grid-column:col-${day}; grid-row:row-${roundFifteenTime(show.startTime)}${show.term == "reminder" ? `` : `/row-${roundFifteenTime(show.stopTime)}`};">
     ${show.info ? `*` : ``}${show.task}<br />
       <i class="IconI ${show.icon}"></i>
     </div>
@@ -6284,14 +6361,14 @@ function getWeeklyCalendar(){
   putDatesInWeek(date);
   
   document.querySelector("#weekBackward").addEventListener("click", () => {
-    let todayAreaDiv = document.querySelector(".todayArea");
-    if(todayAreaDiv){
-      todayAreaDiv.remove();
-      document.querySelector(".nowArea").remove();
-      document.querySelectorAll(".backToTodayBtn").forEach(btn => {
-        btn.classList.remove("displayNone");
-      });
-    };
+    // let todayAreaDiv = document.querySelector(".todayArea");
+    // if(todayAreaDiv){
+    //   todayAreaDiv.remove();
+    //   document.querySelector(".nowArea").remove();
+    //   document.querySelectorAll(".backToTodayBtn").forEach(btn => {
+    //     btn.classList.remove("displayNone");
+    //   });
+    // };
     // let nowAreaDiv = document.querySelector(".nowArea");
     // if(nowAreaDiv){
     //   nowAreaDiv.remove();
@@ -6303,14 +6380,14 @@ function getWeeklyCalendar(){
     putDatesInWeek(Ddate);
   });
   document.querySelector("#weekForward").addEventListener("click", () => {
-    let todayAreaDiv = document.querySelector(".todayArea");
-    if(todayAreaDiv){
-      todayAreaDiv.remove();
-      document.querySelector(".nowArea").remove();
-      document.querySelectorAll(".backToTodayBtn").forEach(btn => {
-        btn.classList.remove("displayNone");
-      });
-    };
+    // let todayAreaDiv = document.querySelector(".todayArea");
+    // if(todayAreaDiv){
+    //   todayAreaDiv.remove();
+    //   document.querySelector(".nowArea").remove();
+    //   document.querySelectorAll(".backToTodayBtn").forEach(btn => {
+    //     btn.classList.remove("displayNone");
+    //   });
+    // };
     // let nowAreaDiv = document.querySelector(".nowArea");
     // if(nowAreaDiv){
     //   nowAreaDiv.remove();

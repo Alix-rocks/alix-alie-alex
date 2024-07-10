@@ -77,6 +77,10 @@ window.logOut = logOut;
 // *** START
 let searchSwitch = false;
 let projectSwitch = false;
+//let myList = [];
+// let myDones2023 = [];
+// let myDones202401 = [];
+// let myDones202402 = [];
 let listTasks = [];
 let listDones = [];
 let myBusies = [];
@@ -206,6 +210,7 @@ let mySections = [
 ];
 //localStorage.mySettings = JSON.stringify(mySettings);
 let cBC;
+// let colorsText = [];
 let baseColors = [{
   colorBG: "var(--tx-color)", //black
   colorTX: "var(--bg-color)", //white
@@ -345,6 +350,25 @@ const pageEvent = new Event("click");
   });
 })();
 
+// (() => {
+//   document.querySelectorAll('input[name="switchPageRadios"]').forEach(radio => {
+//     radio.addEventListener("change", () => {
+//       document.querySelectorAll(".onePage").forEach(page => {
+//         page.classList.add("displayNone");
+//       });
+//       radio.nextElementSibling.classList.remove("displayNone");
+//       document.querySelectorAll('input[name="switchPageRadios"]').forEach(radio => {
+//         radio.labels.forEach(label => {
+//           label.classList.replace("whiteOnPurple", "purpleOnWhite");
+//         });
+//       });
+//       radio.labels.forEach(label => {
+//         label.classList.replace("purpleOnWhite", "whiteOnPurple");
+//       });
+//     });
+//   });
+// })();
+
 function getCloudBC(){
   if(localStorage.getItem("cBC")){
     cBC = localStorage.cBC;
@@ -384,6 +408,11 @@ async function getTasksSettings() {
   } else{
     localStorage.mySettings = JSON.stringify(mySettings);
   };
+
+  // if(getTasks.exists() && getTasks.data().mySettings.myShowTypes){
+  //   mySettings.myShowTypes = getTasks.data().mySettings.myShowTypes;
+  //   localStorage.mySettings = JSON.stringify(mySettings);
+  // };
 
   if(!mySettings.myBaseColors){
     mySettings.myBaseColors = baseColors;
@@ -444,16 +473,97 @@ async function getTasksSettings() {
   oggiDemainTime = timeLimit("oggiDemain");
   
   listTasks.forEach(todo => {
+    if(todo.date){
+      todo.startDate = todo.date;
+      todo.stopDate = todo.date;
+      delete todo.date;
+    };
+    if(todo.dalle){
+      todo.startTime = todo.dalle;
+      delete todo.dalle;
+    };
+    if(todo.dalleRow){
+      delete todo.dalleRow;
+    };
+    if(todo.prima){
+      todo.prima = roundFifteenTime(todo.prima).replace("-", ":");
+    };
+    if(todo.primaRow){
+      delete todo.primaRow;
+    };
+    if(todo.alle){
+      todo.stopTime = todo.alle;
+      delete todo.alle;
+    };
+    if(todo.alleRow){
+      delete todo.alleRow;
+    };
+    if(todo.dopo){
+      todo.dopo = roundFifteenTime(todo.dopo).replace("-", ":");
+    };
+    if(todo.dopoRow){
+      delete todo.dopoRow;
+    };
+
+//other modifications...
+    // if(todo.line == "doneDay"){
+    //   todo.deadline = todo.date;
+    //   todo.line = "noDay";
+    //   delete todo.date;
+    // };
+    // if(todo.line !== "recurringDay"){
+      // todo.status = "todo";
+      // myList.push(todo);
+    // };
+
+    //Change all the todo.recurry in todo.recurryDates
+    // if(todo.line == "recurringDay"){
+    //   //console.log(todo);
+    //   todo.recurryDates = todo.recurrys.map(recurry => {
+    //     return recurry.date;
+    //   });
+    //   delete todo.recurrys;
+    //   delete todo.listDates;
+    //   //console.log(todo.recurryDates.length);
+    // };
+
+    //Recalculate all the recurryDates
+    // if(todo.line == "recurringDay"){
+    //   let date = getDateFromString(todo.dal);
+    //   sendRecurringBackToGetRecurryDates(todo, date);
+    // };
+    
+    delete todo.storedId;
+    delete todo.stored;
+    delete todo.stockId;
     
     if(!todo.pPosition || (todo.pPosition && todo.pPosition == "out")){
+      //change all the todo.color for the index value in baseColors
+      // let idxColor = mySettings.myBaseColors.findIndex(color => color.colorBG == todo.color);
+      // todo.color = String(idxColor);
+      // if(todo.line == "recurringDay"){
+      //   todo.recurrys.forEach(recurry => {
+      //     recurry.color = String(idxColor);
+      //   });
+      // };
+      // if(todo.miniList && todo.miniList.length > 0){
+      //   todo.miniList.forEach(mini => {
+      //     let idxMiniColor = mySettings.myBaseColors.findIndex(color => color.colorBG == mini.color);
+      //     mini.color = idxMiniColor == -1 ? 0 : String(idxMiniColor);
+      //   });
+      // };
+      // if(todo.urge){
+      //   todo.term = "topPriority";
+      // };
 
       
 
       todoCreation(todo);
     };
   });
+  //localStorage.myList = JSON.stringify(myList);
   localStorage.listTasks = JSON.stringify(listTasks);
-
+  //localStorage.myBusies = JSON.stringify(myBusies);
   updateArrowsColor();
   // those that have an array, in mySettings.mySorting could have the class sortedList remove and so not be considered by sortItAll()
   if(mySettings.mySorting){ //cleaning justInCase
@@ -601,8 +711,72 @@ async function getDones(){
     listDones = JSON.parse(localStorage.listDones);
   } else if(getDones){
     getDones.forEach((donedDate) => {
-      listDones.push({date: donedDate.id, list: donedDate.data().dones});
-    });
+      // let theDate = donedDate.id;
+      // donedDate.data().dones.forEach(done => {
+      //   let idxColor = mySettings.myBaseColors.findIndex(color => color.colorBG == done.color);
+      //   done.color = String(idxColor);
+      //   done.doneDate = theDate;
+      //   done.status = "done";
+      //   if(theDate < "2024-01-01"){
+      //     myDones2023.push(done);
+      //   } else if(theDate >= "2024-01-01" && theDate <= "2024-01-31"){
+      //     myDones202401.push(done);
+      //   } else if(theDate >= "2024-02-01" && theDate <= "2024-02-29"){
+      //     myDones202402.push(done);
+      //   } else{
+      //     myList.push(done);
+      //   };
+      // });
+      let mylist = donedDate.data().dones.map(done => {
+        if(done.color && done.color.length > 2){
+          let idxColor = mySettings.myBaseColors.findIndex(color => color.colorBG == done.color);
+          done.color = String(idxColor);
+        };
+        if(done.date){
+          done.startDate = done.date;
+          done.stopDate = done.date;
+          delete done.date;
+        };
+        if(done.dalle){
+          done.startTime = done.dalle;
+          delete done.dalle;
+        };
+        if(done.dalleRow){
+          delete done.dalleRow;
+        };
+        if(done.prima){
+          done.prima = roundFifteenTime(done.prima).replace("-", ":");
+        };
+        if(done.primaRow){
+          delete done.primaRow;
+        };
+        if(done.alle){
+          done.stopTime = done.alle;
+          delete done.alle;
+        };
+        if(done.alleRow){
+          delete done.alleRow;
+        };
+        if(done.dopo){
+          done.dopo = roundFifteenTime(done.dopo).replace("-", ":");
+        };
+        if(done.dopoRow){
+          delete done.dopoRow;
+        };
+        return done;
+      });
+      let mydate = donedDate.id;
+      // let mylist = donedDate.data().dones;
+      //console.log(mylist);
+      listDones.push({date: mydate, list: mylist});
+    });//listDones.push({...donedDate.data().dones, date: mydate});
+    // console.log(myList);
+    // localStorage.myDones2023 = JSON.stringify(myDones2023);
+    // localStorage.myDones202401 = JSON.stringify(myDones202401);
+    // localStorage.myDones202402 = JSON.stringify(myDones202402);
+    // localStorage.myList = JSON.stringify(myList);
+    // let myListJSON = JSON.stringify(myList);
+    // console.log(myListJSON.length * 8);
     localStorageDones("first");
   };
   let sortedListDones = listDones.sort((d1, d2) => (d1.date > d2.date) ? 1 : (d1.date < d2.date) ? -1 : 0);
@@ -610,7 +784,13 @@ async function getDones(){
     if (doned.list.length !== 0) {
       let donedDate = doned.date;
       donedDateCreation(donedDate);
-      doned.list.forEach(tidoned => {        
+      doned.list.forEach(tidoned => {
+        // if(tidoned.color && tidoned.color.length > 2){
+        //   console.log("vieille couleur! ");
+        //   let idxColor = mySettings.myBaseColors.findIndex(color => color.colorBG == tidoned.color);
+        //   tidoned.color = String(idxColor);
+        // };
+        
         donedCreation(donedDate, tidoned);
       });
     };
@@ -719,6 +899,8 @@ function freeIn(){
 };
 
 
+
+
 //push date in modif everytime you modify it, then empty it when the update has been done.
 
 function addModif(date){
@@ -782,10 +964,15 @@ async function saveToCloud(){
         let tempRecurry = {
           startDate: recurryDate,
           prima: todo.prima,
+          //primaRow: todo.primaRow,
           startTime: todo.startTime,
+          //dalleRow: todo.dalleRow,
           dopo: todo.dopo,
+          //dopoRow: todo.dopoRow,
           stopTime: todo.stopTime,
+          //alleRow: todo.alleRow,
           showType: todo.showType,
+          showPrima: todo.showPrima //what the hell is that?!
         };
         busyZoneCreation(tempRecurry)
       });
@@ -839,6 +1026,20 @@ async function saveToCloud(){
 
 cloudIt.addEventListener("click", saveToCloud);
 
+// setInterval(() => {
+//   if(cBC > 0){
+//     saveToCloud();
+//   };
+// }, 60000); 
+
+// document.addEventListener("visibilitychange", () => {
+//   if (document.hidden) {
+
+//   } else {
+//     console.log("on synchronise!");
+//     updateFromCloud();
+//   };
+// });
 
 function updateFromCloud(){
   localStorage.clear();
@@ -848,6 +1049,7 @@ function updateFromCloud(){
   listTasks = [];
   listDones = [];
   wheneverList = [];
+  // myBusies = [];
   resetModif();
   resetCBC();
   getTasksSettings();
@@ -856,11 +1058,27 @@ function updateFromCloud(){
   getWeeklyCalendar();
   settingsPage();
   updateArrowsColor();
+  //clearStorageBtn.textContent = "Updated!";
   earthIt.style.backgroundColor = "rgba(237, 20, 61, 0)";
   localStorage.lastUpdateLocalStorage = new Date().getTime();
 };
 
-function updateArrowsColor(){//update arrows color
+async function cloudSaveSettings(){
+  const docRef = doc(db, "randomTask", auth.currentUser.email);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()){
+    await updateDoc(doc(db, "randomTask", auth.currentUser.email), {
+      mySettings: mySettings
+    });
+  } else{
+    await setDoc(doc(db, "randomTask", auth.currentUser.email), {
+      mySettings: mySettings
+    });
+  };
+};
+
+function updateArrowsColor(){
+  //update arrows color
   document.querySelectorAll("section").forEach(section => {
     if(section.querySelector("input.listToggleInput")){
       if(section.id == "limboSection"){
@@ -980,6 +1198,7 @@ function resetCBC(){
     let switchModeSlider = document.querySelector("#switchModeSlider");
     let timeInput = document.querySelector("#timeInput");
     let sleepZonesInput = document.querySelector("#sleepZonesInput");
+    //let clearStorageBtn = document.querySelector("#clearStorageBtn");
     let exitX = document.querySelector("#exitX");
     let cancelBtn = document.querySelector("#cancelBtn");
     let settingsBtn = document.querySelector("#settingsBtn");
@@ -1029,11 +1248,15 @@ function resetCBC(){
       };
     });
 
+    //clearStorageBtn.addEventListener("click", updateFromCloud);
     exitX.addEventListener("click", () => {
+      //settingsScreen.classList.add("displayNone");
       document.getElementById(previousPage).checked = true;
       document.getElementById(previousPage).dispatchEvent(pageEvent);
     });
     cancelBtn.addEventListener("click", () => {
+      // settingsScreen.classList.add("displayNone");
+      // document.querySelector('input[name="switchPageRadios"]:checked').nextElementSibling.classList.remove("displayNone");
       document.getElementById(previousPage).checked = true;
       document.getElementById(previousPage).dispatchEvent(pageEvent);
     });
@@ -1058,6 +1281,7 @@ function resetCBC(){
       };
 
       mySettings.myFavoriteView = document.querySelector('input[name="choicePageRadios"]:checked').value;
+
       
       mySettings.mySleepZones = sleepZonesInput.checked ? true : false;
       if(previousSleepZones !== mySettings.mySleepZones){
@@ -1069,6 +1293,7 @@ function resetCBC(){
       } else {
         mySettings.mySide = "dark";
       };
+      
       
       if(clockChangeListener){ //if there are clocks: mySettings.offAreas = true
         // document.querySelectorAll(".dayClocksDiv").forEach(div => {
@@ -1099,7 +1324,11 @@ function resetCBC(){
         getWeeklyCalendar();
       };
       localStorage.mySettings = JSON.stringify(mySettings);
-      //  No more cloudSaveSettings() => we just do a updateCBC(); and let the user save it with everything else
+      // if(userConnected){
+      //   cloudSaveSettings(); //or we just do a updateCBC(); and let the user save it with everything else
+      // };
+      // settingsScreen.classList.add("displayNone");
+      // document.querySelector('input[name="switchPageRadios"]:checked').nextElementSibling.classList.remove("displayNone");
       updateCBC();
       document.getElementById(previousPage).checked = true;
       document.getElementById(previousPage).dispatchEvent(pageEvent);
@@ -1344,11 +1573,11 @@ function addThatdayTodos(){
   listTasks.forEach(todo => {
     let todoDateTime;
     let todoDeadlineTime;
-    if(todo.deadline && todo.deadline !== todo.startDate){
+    if(todo.deadline && todo.deadline !== todo.startDate){ // && todo.status == "todo"
       let modifiedDalle = todo.finoAlle ? todo.finoAlle.replace(":", "-") : "5-00";
       todoDeadlineTime = `${todo.deadline}-${modifiedDalle}`;
     };
-    if(todo.startDate){
+    if(todo.startDate){ // && todo.status == "todo"
       let modifiedDalle = todo.startTime ? todo.startTime.replace(":", "-") : "5-00";
       todoDateTime = `${todo.startDate}-${modifiedDalle}`;
     } else if(todo.line == "recurringDay"){
@@ -1398,7 +1627,15 @@ function getWholeRecurry(todo, date, recId){
 };
 
 function recurryDateToTodoCreation(todo, recurryDate, fate){ //todo == the todo that todo.line == "recurryngDay"; recurryDate == date to create (from todo.recurryDates); fate == "out" (if needs to be pushed in listTasks, becoming a new todo, and the recurryDate taken out of recurryDates) OR "in" (if it's just temporary and the recurryDate shall stay in recurryDates; we're not creating a new todo)
-  let recurry = getWholeRecurry(todo, recurryDate, todo.id);    
+  let recurry = getWholeRecurry(todo, recurryDate, todo.id);
+  // let recurry = JSON.parse(JSON.stringify(todo));
+  // clearRecurringData(recurry);
+  // recurry.id = crypto.randomUUID();
+  // recurry.line = "todoDay";
+  // recurry.date = recurryDate;
+  // recurry.recurry = true;
+  // recurry.recId = todo.id;
+    
   todoCreation(recurry);
   if(fate == "out"){ // to remove the recurryDate from todo.recurryDates AND pushing the new recurry in listTasks
     todo.recurryDates = todo.recurryDates.filter(rD => rD !== recurryDate);
@@ -1524,7 +1761,7 @@ function todoCreation(todo){
 
 
 
-
+//let demainApresTime = timeLimit("demainApres");
 function getTogoList(todo){ 
   //console.log(todo);
   let todoDateTime;
@@ -1937,6 +2174,7 @@ doneNextBtn.addEventListener("click", () => {
 function PartialCheckEvent(emptyCheck){
   parent = emptyCheck.parentElement;
   let doned = getTodoFromParent();
+  //parent.querySelector(".checkOptionsDiv").remove();
   let checkOptionsDiv = parent.querySelector(".checkOptionsDiv");
   clickHandlerAddOn(checkOptionsDiv, "trash", clickScreen, "");
   gotItHalfDone(doned);
@@ -2550,6 +2788,7 @@ function timeItEvent(thisOne){
     } else if(input.value){
       thisOne.textContent = input.value;
       todo.startTime = input.value;
+      //todo.dalleRow = roundFifteenTime(todo.startTime);
       li.setAttribute("data-time", input.value);
     };
     thisOne.classList.remove("displayNone");
@@ -2557,7 +2796,7 @@ function timeItEvent(thisOne){
     if(list == "listToday" || list == "listTomorrow"){
       sortIt("datetime", list);
     };
-    if(li.dataset.rec && li.dataset.rec !== "undefined"){ //That part needs to be reviewed! (old recurrys system!)
+    if(li.dataset.rec && li.dataset.rec !== "undefined"){
       delete li.dataset.rec;
       let oldRecurry = listTasks[recIndex].recurrys.splice(todoIndex, 1);
       delete oldRecurry[0].recurry;
@@ -2603,6 +2842,13 @@ function smallCalendarChoice(thisOne){//thisOne = taskToDate est l'icon calendar
     recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
     let recurring = listTasks[recIndex];
     todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
+    // todo = JSON.parse(JSON.stringify(recurring));
+    // clearRecurringData(todo);
+    // todo.id = crypto.randomUUID();
+    // todo.line = "todoDay";
+    // todo.date = parent.dataset.date;
+    // todo.recurry = true;
+    // todo.recId = parent.dataset.rec;
   } else{
     todoIndex = listTasks.findIndex(td => td.id == parent.id);
     todo = listTasks[todoIndex];
@@ -2621,6 +2867,7 @@ function smallCalendarChoice(thisOne){//thisOne = taskToDate est l'icon calendar
       delete todo.recurry;
       delete todo.recId; //et todo redevient un todo normal!
       listTasks.push(todo);// et le todo est maintenant dans la listTask!
+      //parent.remove();
     };
     calendarSave(todo); //
     if(todo.newShit){
@@ -2637,6 +2884,7 @@ function smallCalendarChoice(thisOne){//thisOne = taskToDate est l'icon calendar
     parents.forEach(parent => {
       parent.remove();
     });
+    //parent.remove();
     todoCreation(todo);
 
     localStorage.listTasks = JSON.stringify(listTasks);
@@ -2661,6 +2909,7 @@ function creatingCalendar(todo, home, classs){
   };
   let rec = todo.line == "recurringDay" ? true : false;
   let shw = (todo.term == "showThing" || todo.term == "reminder") && !todo.stock ? true : false;
+  // let date = todo.date ? todo.date : rec ? todo.dal : getTodayDateString();
   let startDate = todo.startDate ? todo.startDate : rec ? todo.dal : getTodayDateString();
   let stopDate = todo.stopDate ? todo.stopDate : rec ? todo.dal : todo.startDate ? todo.startDate : getTodayDateString();
   //input duration for buffers
@@ -2679,6 +2928,49 @@ function creatingCalendar(todo, home, classs){
     return `<input type="checkbox" name="daysWeekChoice" class="cossin changeRecurryDates" id="${day.nameNoAcc}" value="${idx}" ${(rec && todo.var == "settimana" && todo.daysWeek && todo.daysWeek.includes(day.nameNoAcc)) ? `checked` : meseDayICalc(startDate) == idx ? `checked` : ``} />
     <label for="${day.nameNoAcc}" class="dayCircle">${day.letter}</label>`;
   }).join("");
+
+/* <div class="DaySection" id="oneDaySection">
+    <h5 class="taskInfoInput" style="margin-left: 0;">It's a one time thing</h5>
+    <div class="inDaySection" style="width: -webkit-fill-available; max-width: 200px;">
+      <input type="date" id="oneDayDateInput" class="centerDateInput changeRecurryDates" value="${date}" />
+      <input id="oneTuttoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.tutto ? `checked` : todo.tutto == false ? `` : `checked`} />
+      <div class="calendarInsideMargin tuttoGiornoDiv">
+        <p style="margin: 0;">Tutto il giorno?!</p>
+        <label for="oneTuttoGiornoInput" class="slideZone">
+          <div class="slider">
+            <span class="si">Sì</span>
+            <span class="no">No</span>
+          </div>
+        </label>
+      </div>
+      <div class="noneTuttoGiornoDiv calendarInsideMargin">
+        <p><span>c'è un inizio?</span><input id="oneDayTimeDalleInput" type="time" class="dalle dalleTxt" value="${todo.dalle ? todo.dalle : ``}" /></p>
+        <p><span>c'è una fine?</span><input id="oneDayTimeAlleInput" type="time" class="alle alleTxt" value="${todo.alle ? todo.alle : ``}" /></p>
+      </div>
+    </div>
+  </div> 
+  
+  <div class="inDaySection" style="width: -webkit-fill-available; max-width: 200px;">
+      <input id="oneTuttoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.tutto ? `checked` : todo.tutto == false ? `` : `checked`} />
+      <div class="calendarInsideMargin tuttoGiornoDiv">
+        <p style="margin: 0;">Tutto il giorno?!</p>
+        <label for="oneTuttoGiornoInput" class="slideZone">
+          <div class="slider">
+            <span class="si">Sì</span>
+            <span class="no">No</span>
+          </div>
+        </label>
+      </div>
+      <input type="date" id="oneDayStartDateInput" class="changeRecurryDates" value="${date}" />
+      <div class="noneTuttoGiornoDiv calendarInsideMargin">
+        <input id="oneDayTimeStartInput" type="time" class="dalle dalleTxt" value="${todo.dalle ? todo.dalle : ``}" />
+      </div>
+
+      <input type="date" id="oneDayStopDateInput" class="changeRecurryDates" value="${date}" />
+      <div class="noneTuttoGiornoDiv calendarInsideMargin">
+        <input id="oneDayTimeStopInput" type="time" class="alle alleTxt" value="${todo.alle ? todo.alle : ``}" />
+      </div>
+    </div>*/
 
   let todoDayDiv = `<div id="todoDaySection" ${todo.stock ? `class="displayNone"` : ``}>
   <input class="myRadio changeRecurryDates" type="radio" id="todoDayInput" name="whatDay" value="todoDay" ${todo.line == "todoDay" || (shw && todo.line !== "recurringDay") ? `checked` : ``} />
@@ -2973,8 +3265,19 @@ function clearRecurringData(todo){
   delete todo.fineOpt;
   delete todo.fine;
   delete todo.fineCount;
+  delete todo.listDates;
   delete todo.recurryDates;
   delete todo.recPileUP;
+  if(todo.recurrys){
+    todo.recurrys.forEach(recurry => {
+      if(recurry.out){
+        if(document.getElementById(recurry.id)){
+          document.getElementById(recurry.id).remove();
+        };
+      };
+    });
+    delete todo.recurrys;
+  };
   //Don't delete todo.recurry nor todo.recId
 };
 
@@ -2983,15 +3286,21 @@ function calendarSave(todo){ //
   // the 3 of them (noDay, todoDay and recurringDay) can have time and buffer
   let inDaySection = document.querySelector('input[name="whatDay"]:checked ~ div.DaySection > div.inDaySection');
   todo.tutto = inDaySection.querySelector('input[type="checkbox"].tuttoGiornoInput').checked ? true : false;
+  // let primaBuffer = document.querySelector("#primaBuffer");
+  // let dopoBuffer = document.querySelector("#dopoBuffer");
   let primaBuffer = document.querySelector("#durationSelectPrima");
   let dopoBuffer = document.querySelector("#durationSelectDopo");
   todo.prima = primaBuffer.value ? primaBuffer.value : "00:00";
   todo.dopo = dopoBuffer.value ? dopoBuffer.value : "00:00";
   if(todo.tutto){
     //delete todo.prima; //otherwise, if it's stock, we loose all the buffers!
+    //delete todo.primaRow;
     delete todo.startTime;
+    //delete todo.dalleRow;
     delete todo.stopTime;
+    //delete todo.alleRow;
     //delete todo.dopo; //otherwise, if it's stock, we loose all the buffers!
+    //delete todo.dopoRow;
   } else{
     let dalle = inDaySection.querySelector('input[type="time"].dalle');
     if(dalle && dalle.value !== ""){
@@ -3005,11 +3314,14 @@ function calendarSave(todo){ //
       todo.stopTime = alle.value;
     } else{
       delete todo.stopTime;
+      //delete todo.alleRow;
     };
   };
   
   todo.busy = document.querySelector("#busyInput").checked ? true : false;
-  //busyZoneCreation(todo); (will be done when we save to cloud)
+  if(todo.busy){ //first, you need to put this AFTER the todo.date has been established, second, you should only do this if... (you know what, busy shouldn't be checked by default (unless it's a show))
+    //busyZoneCreation(todo); (will be done when we save to cloud)
+  };
 
   if(todo.line == "noDay"){
     clearRecurringData(todo);
@@ -3055,6 +3367,12 @@ function calendarSave(todo){ //
       } else if(todo.var == "anno"){
           ogniOgni(todo, date);
       };
+      
+      //sendRecurringToGetRecurryDates(todo, date);
+      // recurryDateToTodoCreation(todo, recurryDate, "out"); ??
+      // recurryCreation(todo);
+      //recurryOuting(todo);
+      //PAS BESOIN DE LE CRÉÉ CAR ÇA VA SE FAIRE APRÈS (smallCalendar AND taskInfo)
     } else{
       todo.recPileUP = document.querySelector("#pileUpInput").checked ? true : false;
     };
@@ -3089,6 +3407,8 @@ function calendarSave(todo){ //
 // MARK: KEY/VALUES
 /* 
 todo.newShit => si présent et true, veut dire qu'il vient d'être créé (est deleted après)
+~todo.status => "todo" ou "done"
+~todo.doneDate => date (string) où ça a été coché fait
 todo.id
 todo.task
 todo.info
@@ -3108,18 +3428,25 @@ todo.showType => nom du showType (pas sûre que ça soit nécessaire/c'est utile
 todo.STColorBG => couleur du background du showType
 todo.STColorTX => couleur du texte du showType
 todo.STColor => index of mySettings.myShowTypes but That doesn't work! we would want the index of colorsList (to rethink)
-todo.startDate (anciennement todo.date) => date string
-todo.stopDate => date string
-todo.line => "todoDay", "recurringDay", "noDay"
+todo.startDate (anciennement todo.date)
+todo.stopDate
+todo.line => "todoDay", "recurringDay", "noDay" ("doneDay" ne sert qu'à mettre le calendrier rouge)
 todo.tutto => true/false si ça dure toute la journée ou si on considère 'dalle' et 'alle'
 todo.deadline => date (string) du deadline (if no deadline, delete)
 todo.dlTutto => true/false if deadline is all day or not (if no deadline, delete)
 todo.finoAlle => heure (string) du deadline (if no deadline, delete)
 todo.startTime (anciennement todo.dalle) => time à laquelle ça commence aussi anciennement todo.time (pour les event)
+xxxtodo.dalleRow = "00-00" rounded to fifteen
 todo.stopTime (anciennement todo.alle) => time à laquelle ça fini
+xxxtodo.alleRow = "00-00" rounded to fifteen (if there's no alle, then "end")
 todo.prima => durée du buffer avant l'event
+xxxtodo.primaRow = heure à laquelle le buffer commence ("00-00" rounded to fifteen)
 todo.dopo => durée du buffer après l'event
+xxxtodo.dopoRow = heure à laquelle le buffer fini ("00-00" rounded to fifteen)
+xxxtodo.stored => true/false (has a model in storage)
+xxxtodo.stockId
 todo.stock => true/false (is a model in storage)
+xxxtodo.storedId = []
 todo.recycled => has been recycled from either a stock or a done (to remove once it's been saved, just like newShit)
 todo.dal => date que ça commence
 todo.ogni => numéro de répétition
@@ -3133,10 +3460,13 @@ todo.fineOpt => option quand ça fini: "fineMai", "fineGiorno" or "fineDopo"
 todo.fine => jour que ça fini (date)
 todo.fineCount => nombre d'occurences après lesquelles ça fini
 todo.recurryDates =  [] array of the dates (previously called listDates)
+xxx todo.listDates = []
+xxx todo.recurrys = [{}] array de tout les recurry (object) créés à partir de la listDates
 todo.recId = id du todo qui est le recurring (l'original) (pour les recurry qui n'ont pas encore été pushed in listTasks seulement, pour qu'on puisse enlever sa date dans l'array recurryDate... non, let's keep the recId even after its been pushed in listTasks, in case one day we want to offer l'option "modify them all" or something like that) 
 todo.recurry => true/false means it's one occurence of a recurring (calendar icon purple and cycle icon in taskInfo) (whether it's out in listTasks or not)
 On sait si le <li> doit être dans les recurring ou dans les autres listes (donc présent dans listTasks) grâce à todo.line == "recurringDay" ou else
 xxx todo.out => (isn't used) true (le <li> du recurry a été créé) / false ou inexistant (le <li> n'a pas encore été créé)
+xxx todo.recurring => aucune idée à quoi ça sert...
 todo.label => true/false
 todo.LName => string
 todo.LColor => index of colorsList
@@ -3153,7 +3483,15 @@ mySettings.myShowTypes.colorTX => color (text)
 mySettings.myShowTypes.color => index of colorsList (only for newly created showTypes, not my 4 old ones) */
 
 
-// MARK: RECURRING
+// *** RECURRING
+
+function getStringFromDate(date){
+  let currentDate = String(date.getDate()).padStart(2, "0");
+  let currentMonth = String(date.getMonth()+1).padStart(2, "0");
+  let currentYear = date.getFullYear();
+  let currentFullDate = `${currentYear}-${currentMonth}-${currentDate}`;
+  return currentFullDate;
+};
 
 function ogniOgni(todo, date){ //For ogni X days/month(on Y date)/year until fine o dopo Y occorrenza o 50 se mai
   let start;
@@ -3343,17 +3681,6 @@ function meseCalculate(date){
   document.querySelector("#ogniXDateText").innerText = `ogni mese, il giorno ${dalG}`;
   document.querySelector("#ogniXDayText").innerText = `ogni mese, il ${dayC}° ${mySettings.myWeeksDayArray[dayIdx].name0Maj}`;
 };
-
-// MARK: DATE CALCULE
-
-function getStringFromDate(date){
-  let currentDate = String(date.getDate()).padStart(2, "0");
-  let currentMonth = String(date.getMonth()+1).padStart(2, "0");
-  let currentYear = date.getFullYear();
-  let currentFullDate = `${currentYear}-${currentMonth}-${currentDate}`;
-  return currentFullDate;
-};
-
 function getDateFromString(date){
   let dalA = date.slice(0, 4);
   let dalM = date.slice(5, 7);
@@ -3361,7 +3688,6 @@ function getDateFromString(date){
   let dalG = meseDateCalc(date);
   return new Date(dalA, dalM - 1, dalG);
 };
-
 function getDateTimeFromString(date, time){
   let dalA = date.slice(0, 4);
   let dalM = date.slice(5, 7);
@@ -3440,13 +3766,19 @@ let newlabelColor = "";
 1. Tout repenser le système de date pour pouvoir avoir dalle (date & time) et alle  (date & time)
   Dans weekly, le début est un jour/une col, la fin est un autre jour, la même col (dateTime < nextDayTime)
   Si c'est sur deux jours, comment qu'on le met dans le weekly? Un we from dateTimeBeg to endOfDay, un autre we from startOfDay to dateTimeEnd
-
+  todo.dateTimeStart = "2024-06-19-11-00"
+  todo.dateTimeEnd = "2024-06-20-15-00"
+  OU
   todo.startDate = "2024-06-19"
-  todo.startTime = "11:00"
+  todo.startTime = "11-00" (or "11:00")
   todo.stopDate = "2024-06-20"
-  todo.stopTime = "15:00"
-
+  todo.stopTime = "15-00" (or "15:00")
+  to check if it's today (without considering time), we could use .startsWith(date)
   Where do we use date:
+    - in todo.recurryDates we have the date and in the todo, we have dalle, alle, prima et dopo
+    * what if it's tutto?!
+    todo.dateTimeStart = "2024-06-19" or "2024-06-19-XX-XX" (or 05-00 but that's risky, specially for those whose tomorrow aren't 3:00!)
+    todo.dateTimeEnd = "2024-06-19-XX-XX"
     - in search
     - swiping section (we basically recreate dateTime!)
     - getWholeRecurry(todo, date, recId) ...
@@ -3531,6 +3863,7 @@ function toTIdeTZaN(){ // de TodoZone à New (addForm but without the addInput.v
     term: "oneTime",
     line: "noDay"
   };
+  //let newWidth = Number(window.innerWidth - 16);
   let infos = {
     todo: todo,
     where: "todoZone",
@@ -3749,6 +4082,7 @@ function toTIdeCCaNS(thisOne){ //de calendar (month || weekly) à Stock reusage 
   todo.line = "todoDay";
   todo.recycled = true;
   delete todo.stock;
+  //let newWidth = Number(window.innerWidth - 16);
   clickScreen.classList.remove("displayNone"); 
   let infos = {
     todo: todo,
@@ -3851,7 +4185,7 @@ function taskAddAllInfo(infos){
   };
 //taskInfoProject similar to projectLi
 
-//  style="${todo.term == "wholeProject" ? `border-color:${colorsList[pColor].colorBG}; outline-color: ${colorsList[pColor].colorBG5};` : ``}"
+//  style="${newWidth !== "" ? `width:${newWidth}px; ` : ``}${(where == "todoZone" || where == "searchScreen" || where == "allStorage") ? (why == "new" || why == "stock") ? `top: 0; left: 0;` : `top: 25px; left: -37px;` : `top: 10px; left: 10px;`}${todo.term == "wholeProject" ? `border-color:${colorsList[pColor].colorBG}; outline-color: ${colorsList[pColor].colorBG5};` : ``}"
   let taskAllInfo = `<div id="taskInfo" class="taskInfoClass${todo.term == "wholeProject" ? ` taskInfoProject` : ``}">
     <div class="taskInfoWrapper">
       <div id="SupClickScreen" class="Screen displayNone"></div>
@@ -5034,6 +5368,13 @@ function scrollToSection(list){
   section.scrollIntoView();
 };
 
+  // let positionA = window.scrollY;
+  // let positionB = window.scrollY;
+  // let positionDif = positionB - positionA;
+  // if(positionDif > 25){
+  //   window.scrollTo(0, positionA);
+  // };
+  
 
 function clickHandlerAddOn(addOn, future, screen, listToGo){
   if(screen == clickScreen){
@@ -5094,7 +5435,7 @@ function iconChoice(thisOne){
       let liIcon = li.querySelector(".IconI");
       liIcon.className = `IconI ${icon}`;
       todo.icon = icon;
-      if(li.dataset.rec && li.dataset.rec !== "undefined"){ //update that part!
+      if(li.dataset.rec && li.dataset.rec !== "undefined"){
         delete li.dataset.rec;
         let oldRecurry = listTasks[recIndex].recurrys.splice(todoIndex, 1);
         delete oldRecurry[0].recurry;
@@ -5304,8 +5645,19 @@ function getMyTodayDate(){
   return myTodayDate;
 };
 function getTodayDateString(){
+  // let todayDate = new Date();
+  // let yesterDate = new Date();
+  // yesterDate.setDate(yesterDate.getDate() - 1);
+  // let currentHour = String(todayDate.getHours()).padStart(2, "0");
+  // let currentMinute = String(todayDate.getMinutes()).padStart(2, "0");
+  // let currentTime = `${currentHour}:${currentMinute}`;
+  // let date = currentTime <= mySettings.myTomorrow ? yesterDate : todayDate;
+  // return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
   return getStringFromDate(getMyTodayDate());
 };
+
+
+
 
 function getTomorrowDateSring(){
   let todayDate = new Date();
@@ -5365,6 +5717,13 @@ function putShowsInMonth(monthlyFirst, monthlyLast){
       show.recurryDates.forEach(recurryDate => {
         if(monthlyFirst <= recurryDate && recurryDate <= monthlyLast){
           let recurry = getWholeRecurry(show, recurryDate, show.id);
+          // let recurry = JSON.parse(JSON.stringify(show));
+          // clearRecurringData(recurry);
+          // recurry.id = crypto.randomUUID();
+          // recurry.date = recurryDate;
+          // recurry.line = "todoDay";
+          // recurry.recurry = true;
+          // recurry.recId = show.id;
           shows.push(recurry);
         };
       });
@@ -5385,6 +5744,7 @@ function putShowsInMonth(monthlyFirst, monthlyLast){
   });
   
   let sortedShows = shows.sort((s1, s2) => (s1.startDate < s2.startDate) ? -1 : (s1.startDate > s2.startDate) ? 1 : (s1.startDate == s2.startDate) ? (s1.term < s2.term) ? -1 : (s1.term > s2.term) ? 1 : (s1.term == s2.term) ? (s1.startTime < s2.startTime) ? -1 : (s1.startTime > s2.startTime) ? 1 : 0 : 0 : 0);
+  //On n'a probablement pas besoin de les classer par date (juste par dalle) parce que de toutes façons, pour chacun, on cherche la bonne case en fonction de sa date. On veut juste mettre le plus tôt avant le plus tard, donc juste classé par dalle, ça pourrait être assez... et term... pour mettre les reminder en haut... (à moins qu'on fasse kase.insertAdjacentHTML("afterbegin", eventDiv); pour les reminder...)
   shows = sortedShows;
   let today = getTodayDateString();
   shows.forEach(show => {
@@ -5754,6 +6114,13 @@ function putShowsInWeek(Dday, Sday){
       show.recurryDates.map(recurryDate => {
         if(Dday <= recurryDate && recurryDate <= Sday){//takes only the ones that should show up this week
           let recurry = getWholeRecurry(show, recurryDate, show.id);
+          // let recurry = JSON.parse(JSON.stringify(show));
+          // clearRecurringData(recurry);
+          // recurry.id = crypto.randomUUID();
+          // recurry.date = recurryDate;
+          // recurry.line = "todoDay";
+          // recurry.recurry = true;
+          // recurry.recId = show.id;
           createWeeklyshow(recurry);
         };
       })
@@ -5806,6 +6173,7 @@ function createWeeklyshow(show){
   </div>`; //add underline if miniList
   //if it's done (past), the onclick="toTIdeCWaM(this) won't work because it's not in listTasks anymore... do we want to be able to modify done ones? If so, we'll need to have a function to get the done in the listDones... and modify it there...
   } else{
+    // now you can take show.dalleRow, show.alleRow, show.primaRow and show.dopoRow (just make sure there's a DATE, because "noDay" can also have them all)
     let primaDiv = ``;
     let dopoDiv = ``;
     div = document.querySelector(".weeklyContainer");
@@ -5823,6 +6191,30 @@ function createWeeklyshow(show){
     </div>
     ${dopoDiv}
     `; //if it's done (past), the onclick="toTIdeCWaM(this) won't work because it's not in listTasks anymore... do we want to be able to modify done ones? If so, we'll need to have a function to get the done in the listDones... and modify it there...
+    //YOU COULD USE THAT PART TO SHOW THOSE WHO HAVEN'T HAD THE ROW ONES...
+    // let primaDiv = ``;
+    // let dopoDiv = ``;
+    // div = document.querySelector(".weeklyContainer");
+    // let hourStart = roundFifteenTime(show.dalle);
+    // let hourEnd = (show.alle) ? roundFifteenTime(show.alle) : "end";
+    // if(show.prima && show.prima !== "00:00"){
+    //   let prima = roundFifteenTime(show.prima);
+    //   prima = timeMath(hourStart, "minus", prima);
+    //   primaDiv = `<div class="weeklyBuffer ${show.past ? "pastEvent" : ""}" style="grid-column:col-${day}; grid-row:row-${prima}/row-${hourStart};"></div>`;
+    // };
+    // if(show.dopo && show.dopo !== "00:00"){
+    //   let dopo = roundFifteenTime(show.dopo);
+    //   dopo = timeMath(hourEnd, "plus", dopo);
+    //   dopoDiv = `<div class="weeklyBuffer ${show.past ? "pastEvent" : ""}" style="grid-column:col-${day}; grid-row:row-${hourEnd}/row-${dopo};"></div>`;
+    // };
+    // add = `
+    // ${primaDiv}
+    // <div data-id="${show.id}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="toTIdeCWaM(this)" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `color:${show.color}; border:none;`}  grid-column:col-${day}; grid-row:row-${hourStart}${show.term == "reminder" ? `` : `/row-${hourEnd}`};">
+    //   ${show.task}<br />
+    //   <i class="IconI ${show.icon}"></i>
+    // </div>
+    // ${dopoDiv}
+    // `;
   };
   
   div.insertAdjacentHTML("beforeend", add);
@@ -5913,6 +6305,7 @@ function getWeeklyCalendar(){
   let numberR = numberH + 1;
   for(let c = 1; c < 9; c++){
     let arrayC = [];
+    // let rowDay = `<div ${c == 2 ? `id="Dday"` : c == 8 ? `id="Sday"` : ``} class="weeklyItem" style="grid-column:${c}; grid-row:3; font-size:14px; font-weight:600; line-height: calc(((92vh / 29) * 1.5) / 2); border-radius:2px 2px 0 0; border-bottom:1px solid rgba(47, 79, 79, .5);${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}"${c > 1 ? ` data-code="${mySettings.myWeeksDayArray[c - 2].code}">${mySettings.myWeeksDayArray[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : `><i class="fa-solid fa-filter"></i>`}</div>`; //shall we add the date as an id, as a data-date or as an area?
     let rowDay = `<div ${c == 2 ? `id="Dday"` : c == 8 ? `id="Sday"` : ``} class="weeklyItem ${c == 1 ? `weeklyDaysRowFilter` : `weeklyDaysRow" style="grid-column:${c};`}"${c > 1 ? ` data-code="${mySettings.myWeeksDayArray[c - 2].code}">${mySettings.myWeeksDayArray[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : `><button onclick="getWeeklyFilter()" class="displayNone"><i class="fa-solid fa-filter"></i></button>`}</div>`; //shall we add the date as an id, as a data-date or as an area?
     let rowTutto = `<div class="weeklyItem weeklyTutto" ${c > 1 ? `onclick="toTIdeCWaN(this)"` : ``} ${c > 1 ? `data-tutto="${mySettings.myWeeksDayArray[c - 2].code}"` : ``} style="grid-column:${c}; grid-row:4; border-bottom: 1px solid rgba(47, 79, 79, .5);"></div>`;
     arrayC.push(rowDay);
@@ -5968,6 +6361,18 @@ function getWeeklyCalendar(){
   putDatesInWeek(date);
   
   document.querySelector("#weekBackward").addEventListener("click", () => {
+    // let todayAreaDiv = document.querySelector(".todayArea");
+    // if(todayAreaDiv){
+    //   todayAreaDiv.remove();
+    //   document.querySelector(".nowArea").remove();
+    //   document.querySelectorAll(".backToTodayBtn").forEach(btn => {
+    //     btn.classList.remove("displayNone");
+    //   });
+    // };
+    // let nowAreaDiv = document.querySelector(".nowArea");
+    // if(nowAreaDiv){
+    //   nowAreaDiv.remove();
+    // };
     eraseWeek();
     let Dday = document.querySelector("#Dday").dataset.date;
     let Ddate = getDateFromString(Dday);
@@ -5975,6 +6380,18 @@ function getWeeklyCalendar(){
     putDatesInWeek(Ddate);
   });
   document.querySelector("#weekForward").addEventListener("click", () => {
+    // let todayAreaDiv = document.querySelector(".todayArea");
+    // if(todayAreaDiv){
+    //   todayAreaDiv.remove();
+    //   document.querySelector(".nowArea").remove();
+    //   document.querySelectorAll(".backToTodayBtn").forEach(btn => {
+    //     btn.classList.remove("displayNone");
+    //   });
+    // };
+    // let nowAreaDiv = document.querySelector(".nowArea");
+    // if(nowAreaDiv){
+    //   nowAreaDiv.remove();
+    // };
     eraseWeek();
     let Sday = document.querySelector("#Sday").dataset.date;
     let Sdate = getDateFromString(Sday);
@@ -6000,6 +6417,22 @@ function updateWeek(){
   putShowsInWeek(Dday, Sday);
 };
 
+// function addNewWeekly(thisOne){
+//   let rowNum = thisOne.style.gridRowStart;
+//   let hourMath = ((rowNum - 5) / 4) + 3;
+//   let hourNum = hourMath < 24 ? hourMath : hourMath - 24;
+//   let rowhour = `${String(hourNum).padStart(2, "0")}:00`;
+//   let colNum = thisOne.style.gridColumnStart;
+//   let code = mySettings.myWeeksDayArray[colNum - 2].code;
+//   let colEl = document.querySelector(`[data-code="${code}"]`);
+//   let colDate = colEl.dataset.date;
+//   // we need a date
+//   console.log(colNum);
+//   console.log(code);
+//   console.log(colDate);
+// };
+
+// window.addNewWeekly = addNewWeekly;
 
 window.onload = () => {
   setTimeout(function() {
@@ -6011,6 +6444,68 @@ window.onload = () => {
 // };
 
 
+/* function busyZoneCreation(show){ //first try
+  //don't forget to add the sleepAreas and mealAreas too, in the scheduling weekly
+
+  //we'll need the day (column) too (NO! because the column can change with the settings.. no? or maybe not...)
+
+  console.log(show);
+  let dayIdx = meseDayICalc(show.date);
+  let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
+  let day = `${mySettings.myWeeksDayArray[idx].code}`;  
+  //if tutto... do we start after the sleepArea or the whole column with myTomorrow?
+  let myClockIn = roundFifteenTime(mySettings.myWeeksDayArray[idx].clockIn); // returns 10-00
+  let myClockOut = roundFifteenTime(mySettings.myWeeksDayArray[idx].clockOut); // returns 02-00
+  let clockIn = myClockIn;
+  let clockOut = myClockOut < mySettings.myTomorrow.replace(":", "-") ? "end" : myClockOut;
+  // clockIn et clockOut vont toujours être plus grand que 00-00! Ça prend la date aussi! dans les show.dalle et show.alle et donc à considérer dans weekly too!
+  let start;
+  let end;
+  if(show.tutto || !show.dalle || show.dalle == ""){
+    if(mySettings.offAreas == true){
+      start = clockIn;
+      end = clockOut;
+    } else{
+      start = "00-00";
+      end = "end";
+    };
+  } else{
+    let prima = "";
+    let hourStart = roundFifteenTime(show.dalle);
+    let hourEnd = show.alle ? roundFifteenTime(show.alle) : mySettings.offAreas == true ? clockOut : "end";
+    let dopo = "";
+    if(show.prima && show.prima !== "00:00"){
+      prima = roundFifteenTime(show.prima);
+      prima = timeMath(hourStart, "minus", prima);
+    };
+    if(show.dopo && show.dopo !== "00:00"){
+      dopo = roundFifteenTime(show.dopo);
+      dopo = timeMath(hourEnd, "plus", dopo);
+    };
+    start = prima !== "" ? prima : hourStart;
+    end = dopo !== "" ? dopo == "00-00" ? "end" : dopo : hourEnd == "00-00" ? "end" : hourEnd;
+  };
+  let busy = {
+    type: "once", //"sempre" if appears at each week, like sleep and meal
+    date: show.date,
+    col: day,
+    start: start,
+    end: end
+  }; // then all we have to do is make sure the date is in that particular showing week and we add the div to the weekly! It should go straight in the right column and rows
+  myBusies.push(busy);
+
+  //filter myBusies by col, then sort by start
+  // for(i = 0; i < myBFS.lenght; i++){
+    // let breakStart = myBFS[i].end;
+    // let breakEnd = myBFS[i + 1].start;
+    // timeMath(breakEnd, "minus", breakStart);
+    // if(breakEnd - breakStart > buffer + event + buffer){
+      // creation
+    //}
+  //}
+}; */
+//localStorage.myBusies = JSON.stringify(myBusies);
+
 function busyZoneCreation(show){
   let dayIdx = meseDayICalc(show.startDate);
   let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
@@ -6021,6 +6516,7 @@ function busyZoneCreation(show){
   end = end < mySettings.myTomorrow.replace(":", "-") ? "end" : end;
   let meal = (show.showType !== "Calia" && show.prima >= "03:00") ? true : false;
   
+
   let busy = {
     type: "once", //"sempre" if appears at each week, like sleep and meal
     date: show.startDate,
@@ -6032,3 +6528,85 @@ function busyZoneCreation(show){
   myBusies.push(busy);
 
 };
+
+
+
+
+
+
+
+// function onLongPress(element, list, callback) {
+//   let timer;
+//   let wholeList;
+//   let siblings;
+//   // element.addEventListener('touchstart', (e) => { 
+//   //   timer = setTimeout(() => {
+//   //     timer = null;
+//   //     element.classList.add("dragging");
+//   //     console.log(element);
+//   //     wholeList = document.querySelector("#" + list);
+//   //     siblings = [...wholeList.querySelectorAll("li:not(.dragging)")];
+//   //     console.log(siblings);
+//   //     callback(e, list);
+//   //   }, 500);
+//   // });
+//   element.addEventListener('dragstart', (e) => { 
+//       element.classList.add("dragging");
+//       console.log(element);
+//       wholeList = document.querySelector("#" + list);
+//       siblings = [...wholeList.querySelectorAll("li:not(.dragging)")];
+//       console.log(siblings);
+//       //callback(e);
+//   });
+//   function cancel(e) {
+//     clearTimeout(timer);
+//     e.currentTarget.classList.remove("dragging");
+//     setNewOrder(list);
+//   };
+//   function drapDropIt(e){
+//     e.preventDefault();
+//     // let wholeList = document.querySelector("#" + list);
+//     //const draggingLi = document.querySelector(".dragging");
+//     // let siblings = [...wholeList.querySelectorAll("li:not(.dragging)")];
+//     console.log(siblings);
+//     let nextSibling = siblings.find(sibling => {
+//       if (e.clientX) {
+//         //if mouse
+//         return e.clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
+//       } else {
+//         //if touch
+//         return e.changedTouches[0].clientY <= sibling.offsetTop + sibling.offsetHeight / 2;
+//       };
+//     });
+//     //nextSibling.insertAdjacentElement("beforebegin", element);
+//     wholeList.insertBefore(element, nextSibling);
+//   };
+//   element.addEventListener('touchmove', (e) => {
+//     drapDropIt(e);
+//   });
+//   element.addEventListener('dragover', (e) => {
+//     drapDropIt(e);
+//   });
+//   element.addEventListener('touchend', (e) => {
+//     cancel(e);
+//   });
+//   element.addEventListener('dragend', (e) => {
+//     cancel(e);
+//   });
+//   element.addEventListener('drop', (e) => {
+//     cancel(e);
+//   });
+// };
+
+// function setNewOrder(list){
+//   let n = 1;
+//   document.querySelectorAll("#" + list + " > li").forEach(li => {
+//     li.setAttribute("data-order", n);
+//     let todoIndex = listTasks.findIndex(el => el.id == li.id);
+//     let todo = listTasks[todoIndex];
+//     todo.order = n;
+//     n++;
+//   });
+//   localStorage.listTasks = JSON.stringify(listTasks);
+//   updateCBC();
+// };

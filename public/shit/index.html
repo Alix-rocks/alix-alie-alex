@@ -14,21 +14,29 @@
     <script src="https://kit.fontawesome.com/b4f765f607.js" crossorigin="anonymous"></script>
     <!-- CSS -->
     <link rel="stylesheet" href="shit.css">
-    <title>Shit</title>
+    <title>BYO Shit</title>
   </head>
 <body>
+  <!-- To add:
+   <i class="fa-solid fa-person-booth"></i>
+   <i class="fa-solid fa-poo-storm"></i>
+   <i class="fa-solid fa-poo"></i>
+   <i class="fa-solid fa-toilet"></i>
+   <i class="fa-solid fa-person-through-window"></i>
+  -->
     <button id="cloudIt" class="cloudIt">
       <span class="typcn typcn-cloud-storage-outline"></span>
     </button>
     <div class="wholeShow">
+      <button id="playBtn" onclick="showON()" class="action" style="margin-bottom: 15px;"><i class="fa-solid fa-poo-storm"></i>Get a new shit-show</button>
       <div id="shitShow">Let's see what we've got for you today...</div>
       <div class="wholeShowBtns">
-        <button id="pervBtn" class="hidden">perv</button>
-        <button id="modBtn" class="hidden">modify it</button>
-        <button id="nextBtn">next</button>
+        <button id="pervBtn" class="player hidden"><i class="fa-solid fa-backward-step"></i><br/>perv</button>
+        <button id="modBtn" class="player hidden"><i class="fa-solid fa-pen"></i><br/>modify it</button>
+        <button id="nextBtn"class="player"><i class="fa-solid fa-forward-step"></i><br/>next</button>
       </div>
     </div>
-    <div id="shitForm"></div>
+    <form id="shitForm"></form>
     <script type="module" src="shit.js"></script>
   </body>
 </html>

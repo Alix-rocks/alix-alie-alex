@@ -28,6 +28,35 @@ button {
   font-weight: 600;
   background-color: lightgrey;
 }
+button.player {
+  border:none;
+  width: fit-content;
+  color: var(--tx-color);
+  text-align: center;
+  font-size: 1em;
+  font-weight: 600;
+  background-color: var(--bg-color);
+  line-height: 1em;
+}
+button.player i{
+  padding: 2px;
+}
+button.action {
+  border: none;
+  border-radius: 25px;
+  padding: 5px 10px;
+  width: fit-content;
+  color: var(--bg-color);
+  text-align: center;
+  font-size: 1em;
+  font-weight: 600;
+  background-color: var(--tx-color);
+  display: flex;
+  align-items: center;
+}
+button.action i{
+  padding-right: 5px;
+}
 .cloudIt{
   margin: 0;
   font-size: 25px;

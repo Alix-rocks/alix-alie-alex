@@ -116,6 +116,7 @@ function resettoUL(){
   cloudIt.style.backgroundColor = "rgba(237, 20, 61, 0)";  
   localStorage.toUL = toUL;
 };
+
 let shitID = "";
 function showON(){  
   console.log(listeMemes);  
@@ -125,8 +126,13 @@ function showON(){
   const pervBtn = document.querySelector("#pervBtn");
   const nextBtn = document.querySelector("#nextBtn");
   const modBtn = document.querySelector("#modBtn");
+  state();
   function state(){
-    if(idR == 0){
+    if(idR == -1){
+      pervBtn.classList.add("hidden");
+      nextBtn.classList.remove("hidden");
+      modBtn.classList.add("hidden");
+    } else if(idR == 0){
       pervBtn.classList.add("hidden");
       nextBtn.classList.remove("hidden");
       modBtn.classList.remove("hidden");
@@ -136,16 +142,16 @@ function showON(){
       modBtn.classList.remove("hidden");
     } else if (idR == randyMemes.length - 1) {
       pervBtn.classList.remove("hidden");
-      nextBtn.classList.add("hidden");
+      nextBtn.classList.remove("hidden");
       modBtn.classList.remove("hidden");
     } else if(idR == randyMemes.length){
-      idR = -1;
+      idR = -2;
       pervBtn.classList.add("hidden");
       nextBtn.classList.add("hidden");
       modBtn.classList.add("hidden");
     };
-    shitShow.innerHTML = idR == -1 ? "It's over!" : listeMemes[randyMemes[idR]].meme.replace(/\n/g, '<br>');
-    shitID = listeMemes[randyMemes[idR]].id;
+    shitShow.innerHTML = idR == -1 ? "Let's see what we've got for you today..." : idR == -2 ? "That's it for today<br/>Try again later!" : listeMemes[randyMemes[idR]].meme.replace(/\n/g, '<br>');
+    shitID = idR >= 0 ? listeMemes[randyMemes[idR]].id : "";
   };
     
   pervBtn.addEventListener("click", () => {    
@@ -156,12 +162,13 @@ function showON(){
   nextBtn.addEventListener("click", () => {    
     idR++;
     state();
-  });  
+  });
     
   modBtn.addEventListener("click", () => {    
     createForm("mod");  
   });
-};//non, you have to create a new form otherwise submit will just create a new one instead of modify it.
+};
+window.showON = showON;
 function createForm(why) {  
   let shit = {};  
   let shitIdx;

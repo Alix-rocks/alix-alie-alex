@@ -1435,7 +1435,7 @@ input[name="colorRadio"]:checked + label > div{
   margin: 0 7px 0 0;
 }
 .reminderClass{
-  height: fit-content;
+  min-height: fit-content;
 }
 /* .reminderClass > .textDiv > span.text{
   font-size: 1em;

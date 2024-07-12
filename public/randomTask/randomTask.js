@@ -2879,8 +2879,10 @@ function creatingCalendar(todo, home, classs){
   
   let oneDayStartDate = document.querySelector("#oneDayStartDateInput");
   let oneDayStopDate = document.querySelector("#oneDayStopDateInput");
+  let dalDate = document.querySelector("#dalInput");
   oneDayStartDate.addEventListener("change", () => {
     oneDayStopDate.value = oneDayStopDate.value < oneDayStartDate.value ? oneDayStartDate.value : oneDayStopDate.value;
+    //dalDate.value = dalDate.value < oneDayStartDate.value ? oneDayStartDate.value : dalDate.value;
   });
 
   document.querySelector("#durationSelectPrima").value = todo.prima ? todo.prima : `00:00`;
@@ -2893,7 +2895,7 @@ function creatingCalendar(todo, home, classs){
     let timeVariationInput = document.querySelector("#timeVariationInput");
 
     timeVariationInput.addEventListener("change", () => {
-      startDate = document.querySelector("#dalInput").value;
+      startDate = dalDate.value;
       if(timeVariationInput.value == "settimana"){
         weekCalculate(startDate);
         weekSection.classList.remove("displayNone");
@@ -2908,7 +2910,7 @@ function creatingCalendar(todo, home, classs){
       };
     });
     document.querySelector("#dalInput").addEventListener("change", () => {
-      startDate = document.querySelector("#dalInput").value;
+      startDate = dalDate.value;
       weekCalculate(startDate);
       meseCalculate(startDate);
     });
@@ -2924,6 +2926,8 @@ function creatingCalendar(todo, home, classs){
     dalle.addEventListener("change", () => {
       if(dalle.value){
         dalle.parentElement.querySelector("span").textContent = "inizia alle:";
+        let alle = dalle.parentElement.parentElement.querySelector(".alleTxt");
+        alle.value = alle.value < dalle.value ? dalle.value : alle.value;
       } else{
         dalle.parentElement.querySelector("span").textContent = "c'è un inizio?";
       };
@@ -3693,18 +3697,16 @@ function toTIdeCWaN(thisOne){ // de CalWeekPage à New
     line: "todoDay",
     startDate: colDate
   };
-  let rowNum = thisOne.style.gridRowStart;
-  if(rowNum == 4){
+  let rowName = thisOne.style.gridRowStart;
+  console.log(rowName);
+  if(rowName == "row-tutto"){
     todo.tutto = true;
   } else{
-    let hourMath = ((rowNum - 5) / 4) + 3;
-    let hourNum = hourMath < 24 ? hourMath : hourMath - 24;
-    let rowHour = `${String(hourNum).padStart(2, "0")}:00`;
+    let hourMath = Number(rowName.slice(4, 6));
     let hourEndMath = hourMath + 1;
     let hourEndNum = hourEndMath < 24 ? hourEndMath : hourEndMath - 24;
-    let rowHourEnd = `${String(hourEndNum).padStart(2, "0")}:00`;
-    todo.startTime = rowHour;
-    todo.stopTime = rowHourEnd;
+    todo.startTime = `${String(hourMath).padStart(2, "0")}:00`;
+    todo.stopTime = `${String(hourEndNum).padStart(2, "0")}:00`;
     todo.tutto = false;
   };
   newTodoStockFromCal = todo;
@@ -5890,10 +5892,11 @@ function getWeeklyCalendar(){
       <i class="fa-solid fa-caret-right" style="font-size:30px;"></i>
     </button>
   </div>`;
-  let rowMonth = `<div class="weeklyItem weeklyTitle" style="grid-row:2; border-bottom-width: 2px;"><span id="weeklyMonthSpan">${monthName}</span></div>`;
+  let rowMonth = `<div class="weeklyItem weeklyTitle" style="grid-row:row-Month; border-bottom-width: 2px;"><span id="weeklyMonthSpan">${monthName}</span></div>`;
   arrayItem.push(rowYear, rowMonth);
   let myDay = Number(mySettings.myTomorrow.substring(0, 2));
   let numberH;
+  let arrayOfRowNames = [];
   if(mySettings.mySleepZones == false){
     let arrayOfTimes = [];
     for(let h = 0; h < 24; h++){ //93
@@ -5906,21 +5909,45 @@ function getWeeklyCalendar(){
     let lastClockOutIdx = arrayOfTimes.indexOf(Number(clockOuts[clockOuts.length-1].clockOut.substring(0, 2)));
     myDay = Number(clockIns[0].clockIn.substring(0, 2));
     numberH = lastClockOutIdx - firstClockInIdx; 
+    // creation of arrayOfRowNames
+    for(let i = firstClockInIdx; i < lastClockOutIdx; i++){
+      let time = String(arrayOfTimes[i]).padStart(2, "0");
+      let row00 = `row-${time}-00`; //${i == firstClockInIdx ? ` row-tutto-end` : ``}
+      let row15 = `row-${time}-15`;
+      let row30 = `row-${time}-30`;
+      let row45 = `row-${time}-45`;
+      arrayOfRowNames.push(row00, row15, row30, row45);
+    };
+    arrayOfRowNames.push("row-end");
+    console.log(arrayOfRowNames);
+    
   } else{
     //myDay = Number(mySettings.myTomorrow.substring(0, 2));
     numberH = 24;
+    // creation of arrayOfRowNames
+    for(let h = 0; h < numberH; h++){ //93
+      let time = String(myDay).padStart(2, "0");
+      let rowH = `row-${time}-00`; //${h == 0 ? ` row-tutto-end` : ``}
+      let rowH15 = `row-${time}-15`;
+      let rowH30 = `row-${time}-30`;
+      let rowH45 = `row-${time}-45`;
+      arrayOfRowNames.push(rowH, rowH15, rowH30, rowH45);
+      myDay == 23 ? myDay = 0 : myDay++;
+    };
+    arrayOfRowNames.push("row-end");
+    console.log(arrayOfRowNames);
   };
   let numberR = numberH + 1;
   for(let c = 1; c < 9; c++){
     let arrayC = [];
     let rowDay = `<div ${c == 2 ? `id="Dday"` : c == 8 ? `id="Sday"` : ``} class="weeklyItem ${c == 1 ? `weeklyDaysRowFilter` : `weeklyDaysRow" style="grid-column:${c};`}"${c > 1 ? ` data-code="${mySettings.myWeeksDayArray[c - 2].code}">${mySettings.myWeeksDayArray[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : `><button onclick="getWeeklyFilter()" class="displayNone"><i class="fa-solid fa-filter"></i></button>`}</div>`; //shall we add the date as an id, as a data-date or as an area?
-    let rowTutto = `<div class="weeklyItem weeklyTutto" ${c > 1 ? `onclick="toTIdeCWaN(this)"` : ``} ${c > 1 ? `data-tutto="${mySettings.myWeeksDayArray[c - 2].code}"` : ``} style="grid-column:${c}; grid-row:4; border-bottom: 1px solid rgba(47, 79, 79, .5);"></div>`;
+    let rowTutto = `<div class="weeklyItem weeklyTutto" ${c > 1 ? `onclick="toTIdeCWaN(this)"` : ``} ${c > 1 ? `data-tutto="${mySettings.myWeeksDayArray[c - 2].code}"` : ``} style="grid-column:${c}; grid-row:row-tutto; border-bottom: 1px solid rgba(47, 79, 79, .5);"></div>`;
     arrayC.push(rowDay);
     arrayC.push(rowTutto);
-    let line = 5;
+    let line = 0;
     let myDayHere = myDay;
     for(let r = 1; r < numberR; r++){
-      let item = `<div class="weeklyItem" ${c > 1 ? `onclick="toTIdeCWaN(this)"` : ``} style="grid-column:${c}; grid-row:${line} / ${line + 4};${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""} ${myDayHere == 23 ? " border-bottom:2px solid rgba(47, 79, 79, .8);" : ""}">${c == 1 ? `${String(myDayHere).padStart(2, "0")}:00` : ``}${mySettings.myTomorrow !== "00:00" && myDayHere == 0 && c > 1 ? `<span class="weeklyAfterDateSpan"></span>` : ``}</div>`;
+      let item = `<div class="weeklyItem" ${c > 1 ? `onclick="toTIdeCWaN(this)"` : ``} style="grid-column:${c}; grid-row:${arrayOfRowNames[line]} / ${arrayOfRowNames[line + 4]};${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""} ${myDayHere == 23 ? " border-bottom:2px solid rgba(47, 79, 79, .8);" : ""}">${c == 1 ? `${String(myDayHere).padStart(2, "0")}:00` : ``}${mySettings.myTomorrow !== "00:00" && myDayHere == 0 && c > 1 ? `<span class="weeklyAfterDateSpan"></span>` : ``}</div>`;
       arrayC.push(item);
       line += 4;
       myDayHere == 23 ? myDayHere = 0 : myDayHere++;
@@ -5928,31 +5955,25 @@ function getWeeklyCalendar(){
     let arrayCs = arrayC.join("");
     arrayItem.push(arrayCs);
   };
-  let nomiCol = mySettings.myWeeksDayArray.map((giorno) => {
-    return `[col-${giorno.code}] 1fr`;
-  });
-  let firstCol = `[col-Hour] 45px`;
-  let lastCol = `[col-end]`;
-  nomiCol.unshift(firstCol);
-  nomiCol.push(lastCol);
-  let nomiCols = nomiCol.join(" ");
-  let nomiRow = [];
-    
-  
-  for(let h = 0; h < numberH; h++){ //93
-    let rowH = `[row-${String(myDay).padStart(2, "0")}-00${h == 0 ? ` row-tutto-end` : ``}] minmax(0, .25fr)`;
-    let rowH15 = `[row-${String(myDay).padStart(2, "0")}-15] minmax(0, .25fr)`;
-    let rowH30 = `[row-${String(myDay).padStart(2, "0")}-30] minmax(0, .25fr)`;
-    let rowH45 = `[row-${String(myDay).padStart(2, "0")}-45] minmax(0, .25fr)`;
-    nomiRow.push(rowH, rowH15, rowH30, rowH45);
-    myDay == 23 ? myDay = 0 : myDay++;
-  };
-  
-  let firstRows = `[row-Year] 1fr [row-Month] 1fr [row-Day] 1.5fr [row-tutto] 1fr`;
-  let lastLine = `[row-end]`;
-  nomiRow.unshift(firstRows);
-  nomiRow.push(lastLine);
-  let nomiRows = nomiRow.join(" ");
+  let nomiCols = mySettings.myWeeksDayArray.map((giorno, idx) => {
+    if(idx == 0){
+      return `[col-Hour] 45px [col-${giorno.code}] 1fr`;
+    } else if(idx !== mySettings.myWeeksDayArray.length - 1){
+      return `[col-${giorno.code}] 1fr`;
+    } else{
+      return `[col-${giorno.code}] 1fr [col-end]`;
+    };
+  }).join(" ");
+  let nomiRows = arrayOfRowNames.map((row, idx) => {
+    if(idx == 0){
+      return `[row-Year] 1fr [row-Month] 1fr [row-Day] 1.5fr [row-tutto] 1fr [${row}] minmax(0, .25fr)`;
+    } else if(idx !== arrayOfRowNames.length - 1){
+      return `[${row}] minmax(0, .25fr)`;
+    } else{
+      return `[row-end]`;
+    };
+  }).join(" ");
+
   let container = document.querySelector(".weeklyContainer");
   container.style.gridTemplateRows = nomiRows;
   container.style.gridTemplateColumns = nomiCols;

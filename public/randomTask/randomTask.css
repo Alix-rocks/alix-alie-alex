@@ -1055,20 +1055,7 @@ li .textDone{
   line-height: 1em;
   border-bottom: none;
 }
-.primaLiBuffer{
-  position: absolute;
-  top: -16.5px;
-  border-radius: 5px;
-  border: 0.5px solid var(--tx-color);
-  background-color: rgba(47, 79, 79, .6);
-  width: 100%;
-  font-size: .7em;
-  text-align: right;
-  padding-right: 37px;
-}
-.showLiBuffer{
-  margin-top: 16.5px;
-}
+
 
 .labelOnglet{
   height: 32px;
@@ -1426,6 +1413,22 @@ input[name="colorRadio"]:checked + label > div{
 .showLiLabel{
   border-radius: 50px 15px 15px 50px;
   border-left: none;
+}
+.primaLiBuffer{
+  position: absolute;
+  top: -16.5px;
+  left: -.5px;
+  border-radius: 5px 5px 0 0;
+  border: 0.5px solid var(--tx-color);
+  background-color: rgba(47, 79, 79, .6);
+  width: calc(100% + 1px);
+  font-size: .7em;
+  text-align: right;
+  padding-right: 37px;
+}
+.showLiBuffer{
+  margin-top: 18px;
+  border-radius: 0 0 10px 10px;
 }
 .topListReminder{
   margin: 10px 0 5px;

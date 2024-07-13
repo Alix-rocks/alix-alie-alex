@@ -27,8 +27,15 @@
     <button id="cloudIt" class="cloudIt">
       <span class="typcn typcn-cloud-storage-outline"></span>
     </button>
-    <div class="wholeShow">
-      <button id="playBtn" onclick="showON()" class="action" style="margin-bottom: 15px;"><i class="fa-solid fa-poo-storm"></i>Get a new shit-show</button>
+    <form id="newShitForm"></form>
+    <button id="wholeListBtn" onclick="wholeList()" class="action" style="margin: 10vh auto 0;"><i class="fa-solid fa-list-ul"></i>Get my shit together</button>
+    <div class="wholeList hidden">
+      <ul id="wholeList">
+        
+      </ul>
+    </div>
+    <button id="playBtn" onclick="showON()" class="action" style="margin: 10vh auto 0;"><i class="fa-solid fa-poo-storm"></i>Get a new shit-show</button>
+    <div class="wholeShow hidden">
       <div id="shitShow">Let's see what we've got for you today...</div>
       <div class="wholeShowBtns">
         <button id="pervBtn" class="player hidden"><i class="fa-solid fa-backward-step"></i><br/>perv</button>

@@ -1485,9 +1485,16 @@ function todoCreation(todo){
         if(todo.pPosition == "out"){
           console.log(todo);
         };
-        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" ${todo.startDate ? `data-date="${todo.startDate}"` : ``} ${todo.startTime ? `data-time="${todo.startTime}"` : ``} ${todo.recurry ? `data-rec="${todo.recId}"` : ``} ${todo.term == "alwaysHere" ? `data-always="here"` : ``} class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : ``}${todo.pPosition == "out" ? ` projectLi` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}${todo.pPosition == "out" ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : ``}">
+        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li 
+          id="${todo.id}" 
+          ${todo.startDate ? `data-date="${todo.startDate}"` : ``} 
+          ${todo.startTime ? `data-time="${todo.startTime}"` : ``} 
+          ${todo.recurry ? `data-rec="${todo.recId}"` : ``} 
+          ${todo.term == "alwaysHere" ? `data-always="here"` : ``} 
+          class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : ``}${todo.pPosition == "out" ? ` projectLi` : ``}${todo.startTime && todo.prima && todo.prima !== "00:00" ? ` showLiBuffer` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}${todo.pPosition == "out" ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : ``}">
           ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
           ${pOngletsDiv}
+          ${todo.startTime && todo.prima && todo.prima !== "00:00" ? `<div class="primaLiBuffer">${timeMath(roundFifteenTime(todo.startTime), "minus", todo.prima).replace("-", ":")}</div>` : ``}
           <div class="checkOptions" style="color: ${todo.urge ? todo.urgeColor : ``}" onclick="checkOptions(this)">
             <i class="typcn typcn-media-stop-outline emptyCheck"></i>
             <span>${todo.urge ? todo.urgeNum : ``}</span>
@@ -3437,6 +3444,8 @@ let newlabelColor = "";
 /*
 ***EnCours:
 - weeklyFilter (l'icon filter est en displayNone en attendant que le reste du code soit fait)
+pour commencer, je propose une liste des types de shows et task avec, pour chaque, un slider vert show/hide ou un oeil avec ou sans barre.
+Avec deux bouttons: "let's see" (qui ne va pas sauver dans les settings) et "save as default" (qui va sauver dans les settings lors du prochain saveToCloud (donc on rougit le nuage))
 
 ***ÀFaire:
 

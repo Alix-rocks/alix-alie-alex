@@ -1055,6 +1055,20 @@ li .textDone{
   line-height: 1em;
   border-bottom: none;
 }
+.primaLiBuffer{
+  position: absolute;
+  top: -16.5px;
+  border-radius: 5px;
+  border: 0.5px solid var(--tx-color);
+  background-color: rgba(47, 79, 79, .6);
+  width: 100%;
+  font-size: .7em;
+  text-align: right;
+  padding-right: 37px;
+}
+.showLiBuffer{
+  margin-top: 16.5px;
+}
 
 .labelOnglet{
   height: 32px;

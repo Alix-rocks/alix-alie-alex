@@ -69,13 +69,16 @@ button.action i{
   top: 8px;
   right: 8px;
 }
+#wholeList > li+li{
+  margin-top: 10px;
+}
 .wholeShow{
   display: flex;
   align-items: center;
   flex-direction: column;
   width: 62vw;
   max-width: 250px;
-  margin: 10vh auto;
+  margin: 5vh auto 10vh;
 }
 .wholeShowBtns{
   width: 100%;
@@ -118,4 +121,8 @@ button.action i{
 .btnIcon{
   border: none;
   background-color: var(--bg-color);
+}
+button.activeBtn{
+  border: 1.5px solid rgb(47, 79, 79);
+  background-color: rgba(47, 79, 79, .5);
 }

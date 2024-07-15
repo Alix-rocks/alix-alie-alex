@@ -2041,6 +2041,9 @@ td.toWeeklyArrowLeft{
   line-height: calc(((92vh / 29) * 1.5) / 2);
   border-radius: 2px 2px 0 0;
   border-bottom: 1px solid rgba(47, 79, 79, .5);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 .weeklyTitle{
   grid-column: 1 / 9;
@@ -2048,6 +2051,13 @@ td.toWeeklyArrowLeft{
   font-weight: 600; 
   border-radius: 0; 
   border: .5px solid rgba(47, 79, 79, .5);
+}
+.weeklyMonthTitle{
+  grid-row: row-Month;
+  border-bottom-width: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .weeklyBtn{
   padding: 0 5px;
@@ -2086,6 +2096,18 @@ td.toWeeklyArrowLeft{
   line-height: 12px;
   overflow: hidden;
   position: relative;
+}
+.sizeClass7{
+  font-size: 7px;
+  line-height: 7px;
+}
+.sizeClass10{
+  font-size: 10px;
+  line-height: 10px;
+}
+.sizeClass12{
+  font-size: 12px;
+  line-height: 12px;
 }
 .weeklyTutto{
   overflow: visible;

@@ -789,6 +789,24 @@ async function saveToCloud(){
         };
         busyZoneCreation(tempRecurry)
       });
+    } else if(!todo.stock && todo.busy && (todo.startTime && todo.stopTime && todo.startTime !== todo.stopTime)){
+      if(todo.line == "todoDay" ){
+        let tempTodo = todo;
+        tempTodo.showType = "task";
+        busyZoneCreation(tempTodo);
+      } else if(todo.line == "recurringDay"){
+        todo.recurryDates.forEach(recurryDate => {
+          let tempRecurry = {
+            startDate: recurryDate,
+            prima: todo.prima,
+            startTime: todo.startTime,
+            dopo: todo.dopo,
+            stopTime: todo.stopTime,
+            showType: "task",
+          };
+          busyZoneCreation(tempRecurry)
+        });
+      };
     };
   });
   const docRefBusies = doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies");
@@ -3736,7 +3754,7 @@ function toTIdeCWaM(thisOne){ // de CalWeekPage à Modification
     where: "", // we don't even use it! (except for the clickscreen handler... wait until we've dealed with that)
     div: document.body
   };
-  console.log(infos.todo);
+  //console.log(infos.todo);
   taskAddAllInfo(infos);
 };
 window.toTIdeCWaM = toTIdeCWaM;
@@ -3786,7 +3804,7 @@ function taskAddAllInfo(infos){
   let div = infos.div;
   let togoList = infos.togoList;
  
-  console.log(todo);
+  //console.log(todo);
   let myShows;
   if(mySettings.myShowTypes.length > 0){
     myShows = mySettings.myShowTypes.map((myShowType, idx) => {
@@ -5759,7 +5777,8 @@ function backToWeeklyToday(){
 window.backToWeeklyToday = backToWeeklyToday;
 
 function putShowsInWeek(Dday, Sday){
-  let shows = listTasks.filter((todo) => ((todo.term == "showThing" || todo.term == "reminder") && todo.line !== "noDay")); //on enlève "noDay" ou on aurait pu enlever todo.stock == true
+  // let shows = listTasks.filter((todo) => ((todo.term == "showThing" || todo.term == "reminder") && todo.line !== "noDay")); //on enlève "noDay" ou on aurait pu enlever todo.stock == true
+  let shows = listTasks.filter((todo) => (todo.line !== "noDay" && ((todo.startTime && todo.stopTime && todo.startTime !== todo.stopTime) || todo.term == "reminder"))); //on enlève "noDay" ou on aurait pu enlever todo.stock == true
   shows.map(show => { //WATCH OUT: if between 00:00 and myTomorrow, it would be yesterday's date so maybe not that week!!
     if(show.line == "recurringDay"){ 
       show.recurryDates.map(recurryDate => {
@@ -5804,7 +5823,7 @@ function timeMath(one, math, two){
 };
 
 function createWeeklyshow(show){
-  console.log(show);
+  //console.log(show);
   let dayIdx = meseDayICalc(show.startDate); //if between 00:00 and myTomorrow, it should be yesterday's date!
   let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
   let day = `${mySettings.myWeeksDayArray[idx].code}`;  
@@ -5812,13 +5831,27 @@ function createWeeklyshow(show){
   let add;
   if(show.tutto || !show.startTime || show.startTime == ""){
     div = document.querySelector(`[data-tutto="${day}"]`);
-    add = `<div data-id="${show.id}" data-date="${show.startDate}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="toTIdeCWaM(this); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `background-color: var(--bg-color); color:${mySettings.myBaseColors[show.color].colorBG}; border:none; border-radius: 0;`}">${show.info ? `*` : ``}
-    ${show.task} <i class="IconI ${show.icon}"></i>
+    add = `<div data-id="${show.id}" data-date="${show.startDate}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="toTIdeCWaM(this); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : show.term == "reminder" ? `color:${mySettings.myBaseColors[show.color].colorBG}; border:none; border-radius: 0;` : `color:${mySettings.myBaseColors[show.color].colorBG}; border-color:${mySettings.myBaseColors[show.color].colorBG};`}">${show.info ? `*` : ``}<span ${show.miniList ? `style="text-decoration:underline;"` : ``}>${show.task}</span> <i class="IconI ${show.icon}"></i>
   </div>`; //add underline if miniList
   //if it's done (past), the onclick="toTIdeCWaM(this) won't work because it's not in listTasks anymore... do we want to be able to modify done ones? If so, we'll need to have a function to get the done in the listDones... and modify it there...
   } else{
     let primaDiv = ``;
     let dopoDiv = ``;
+    let duration = timeMath(roundFifteenTime(show.stopTime), "minus", roundFifteenTime(show.startTime));
+    function getSizeClass(duration){
+      switch(true){
+        case (duration < "01-00"):
+          return "sizeClass7";
+        case (duration >= "01-00" && duration <= "02-00"):
+          return "sizeClass10";
+        case (duration > "02-00"):
+          return "sizeClass12";
+        default:
+          console.log("oups!");
+          break;
+      };
+    };
+    let sizeClass = getSizeClass(duration);
     div = document.querySelector(".weeklyContainer");
     if(show.prima && show.prima !== "00:00"){
       primaDiv = `<div class="weeklyBuffer ${show.past ? "pastEvent" : ""}" style="grid-column:col-${day}; grid-row:row-${timeMath(roundFifteenTime(show.startTime), "minus", show.prima)}/row-${roundFifteenTime(show.startTime)};"></div>`;
@@ -5828,8 +5861,8 @@ function createWeeklyshow(show){
     };
     add = `
     ${primaDiv}
-    <div data-id="${show.id}" data-date="${show.startDate}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="toTIdeCWaM(this); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : `color:${mySettings.myBaseColors[show.color].colorBG}; border:none;`}  grid-column:col-${day}; grid-row:row-${roundFifteenTime(show.startTime)}${show.term == "reminder" ? `` : `/row-${roundFifteenTime(show.stopTime)}`};">
-    ${show.info ? `*` : ``}${show.task}<br />
+    <div data-id="${show.id}" data-date="${show.startDate}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="toTIdeCWaM(this); event.stopPropagation();" class="weeklyEvent ${sizeClass} ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : show.term == "reminder" ? `color:${mySettings.myBaseColors[show.color].colorBG}; border:none; border-radius: 0;` : `color:${mySettings.myBaseColors[show.color].colorBG}; border-color:${mySettings.myBaseColors[show.color].colorBG};`}  grid-column:col-${day}; grid-row:row-${roundFifteenTime(show.startTime)}${show.term == "reminder" ? `` : `/row-${roundFifteenTime(show.stopTime)}`};">
+    ${show.info ? `*` : ``}<span ${show.miniList ? `style="text-decoration:underline;"` : ``}>${show.task}</span><br />
       <i class="IconI ${show.icon}"></i>
     </div>
     ${dopoDiv}
@@ -5901,7 +5934,7 @@ function getWeeklyCalendar(){
       <i class="fa-solid fa-caret-right" style="font-size:30px;"></i>
     </button>
   </div>`;
-  let rowMonth = `<div class="weeklyItem weeklyTitle" style="grid-row:row-Month; border-bottom-width: 2px;"><span id="weeklyMonthSpan">${monthName}</span></div>`;
+  let rowMonth = `<div class="weeklyItem weeklyTitle weeklyMonthTitle"><span id="weeklyMonthSpan">${monthName}</span></div>`;
   arrayItem.push(rowYear, rowMonth);
   let myDay = Number(mySettings.myTomorrow.substring(0, 2));
   let numberH;
@@ -5928,7 +5961,7 @@ function getWeeklyCalendar(){
       arrayOfRowNames.push(row00, row15, row30, row45);
     };
     arrayOfRowNames.push("row-end");
-    console.log(arrayOfRowNames);
+    //console.log(arrayOfRowNames);
     
   } else{
     //myDay = Number(mySettings.myTomorrow.substring(0, 2));
@@ -6042,6 +6075,7 @@ window.onload = () => {
 
 
 function busyZoneCreation(show){
+  //console.log(show);
   let dayIdx = meseDayICalc(show.startDate);
   let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
   let day = `${mySettings.myWeeksDayArray[idx].code}`;  

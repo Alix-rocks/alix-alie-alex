@@ -5778,7 +5778,7 @@ window.backToWeeklyToday = backToWeeklyToday;
 
 function putShowsInWeek(Dday, Sday){
   // let shows = listTasks.filter((todo) => ((todo.term == "showThing" || todo.term == "reminder") && todo.line !== "noDay")); //on enlève "noDay" ou on aurait pu enlever todo.stock == true
-  let shows = listTasks.filter((todo) => (todo.line !== "noDay" && ((todo.startTime && todo.stopTime && todo.startTime !== todo.stopTime) || todo.term == "reminder"))); //on enlève "noDay" ou on aurait pu enlever todo.stock == true
+  let shows = listTasks.filter((todo) => (todo.line !== "noDay" && ((todo.startTime && todo.stopTime && todo.startTime !== todo.stopTime) || todo.term == "reminder" || todo.term == "showThing"))); //on enlève "noDay" ou on aurait pu enlever todo.stock == true
   shows.map(show => { //WATCH OUT: if between 00:00 and myTomorrow, it would be yesterday's date so maybe not that week!!
     if(show.line == "recurringDay"){ 
       show.recurryDates.map(recurryDate => {
@@ -5823,13 +5823,14 @@ function timeMath(one, math, two){
 };
 
 function createWeeklyshow(show){
-  //console.log(show);
+  console.log(show);
   let dayIdx = meseDayICalc(show.startDate); //if between 00:00 and myTomorrow, it should be yesterday's date!
   let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
   let day = `${mySettings.myWeeksDayArray[idx].code}`;  
   let div;
   let add;
   if(show.tutto || !show.startTime || show.startTime == ""){
+    console.log(show.task);
     div = document.querySelector(`[data-tutto="${day}"]`);
     add = `<div data-id="${show.id}" data-date="${show.startDate}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="toTIdeCWaM(this); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : show.term == "reminder" ? `color:${mySettings.myBaseColors[show.color].colorBG}; border:none; border-radius: 0;` : `color:${mySettings.myBaseColors[show.color].colorBG}; border-color:${mySettings.myBaseColors[show.color].colorBG};`}">${show.info ? `*` : ``}<span ${show.miniList ? `style="text-decoration:underline;"` : ``}>${show.task}</span> <i class="IconI ${show.icon}"></i>
   </div>`; //add underline if miniList
@@ -5977,7 +5978,6 @@ function getWeeklyCalendar(){
       myDay == 23 ? myDay = 0 : myDay++;
     };
     arrayOfRowNames.push("row-end");
-    console.log(arrayOfRowNames);
   };
   let numberR = numberH + 1;
   for(let c = 1; c < 9; c++){

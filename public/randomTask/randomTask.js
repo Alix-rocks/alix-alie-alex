@@ -1466,7 +1466,7 @@ function todoCreation(todo){
       if(todo.stock){
         document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.startTime ? `data-time="${todo.startTime}"` : ``}" class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : todo.term == "reminder" ? ` reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
         ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
-        <i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i><div class="textDiv"><span class="text" onclick="${searchSwitch ? `toTIdeSSaM(this)` : storageSwitch ? `toTIdeASaM(this)` : `toTIdeTZaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${mySettings.myBaseColors[todo.color].colorBG};" />` : ``}<span class="timeSpan">${todo.startTime ? todo.startTime : ''}</span></div><i class="fa-solid fa-recycle" onclick="${searchSwitch ? `toTIdeSSaS(this)` : calendarStock ? `toTIdeCCaNS(this)` : `toTIdeTZaS(this)`}"></i></li>`);
+        <i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i><div class="textDiv"><span class="text" onclick="${searchSwitch ? `toTIdeSSaM(this)` : storageSwitch ? `toTIdeASaM(this)` : `toTIdeTZaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${mySettings.myBaseColors[todo.color].colorBG};" />` : ``}<span class="timeSpan">${todo.startTime ? todo.startTime : ''}</span></div><i class="fa-solid fa-recycle" onclick="${searchSwitch ? `toTIdeSSaS(this)` : calendarStock ? `toTIdeCCaNS(this)` : `toTIdeTZaS(this)`}"></i></li>`);
       } else if(todo.line == "recurringDay"){
         let time = todo.startTime ? todo.startTime : mySettings.myTomorrow;
         let nextDate = getDateTimeFromString(todo.recurryDates[0], time);
@@ -1474,7 +1474,7 @@ function todoCreation(todo){
         document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.startTime ? `data-time="${todo.startTime}"` : ``}" class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : todo.term == "reminder" ? ` reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
         ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
         <i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i>
-        <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
+        <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i>
         <div class="textDiv"><span class="text" onclick="${searchSwitch ? `toTIdeSSaM(this)` : `toTIdeTZaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG};`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.startTime ? todo.startTime : ''}</span></div>
         <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.dealine ? `doneDay` : todo.line}"></i><span style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${numberedDays}</span></div></li>`);
       } else if(todo.term == "reminder"){
@@ -1517,7 +1517,7 @@ function todoCreation(todo){
             <i class="typcn typcn-media-stop-outline emptyCheck"></i>
             <span>${todo.urge ? todo.urgeNum : ``}</span>
           </div>
-          <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}"></i>
+          <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i>
           <div class="textDiv"><span onclick="${searchSwitch ? `toTIdeSSaM(this)` : `toTIdeTZaM(this)`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? `` : ` color:${mySettings.myBaseColors[todo.color].colorBG};`}">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.startTime ? todo.startTime : ""}</span>
           <input type="time" class="displayNone"/>
           ${togoList == "listOups" && numberedDays < -5 ? `<div class="proHelp">
@@ -2502,6 +2502,25 @@ let wheneverList = [];
 let listPage = document.querySelector("#listPage");
 let toDoPage = document.querySelector("#toDoPage");
 shuffleBtn.addEventListener("click", () => {
+  let todayDate = getTodayDateString();
+  wheneverList = listTasks.filter(task => (task.term == "oneTime" || task.term == "longTerm" || task.term == "alwaysHere") && !task.stock && task.line !== "recurringDay" && (task.line == "noDay" || task.startDate == todayDate) && task.quicky); 
+  for (let i = wheneverList.length - 1; i > 0; i--) { 
+    const j = Math.floor(Math.random() * (i + 1)); 
+    [wheneverList[i], wheneverList[j]] = [wheneverList[j], wheneverList[i]]; 
+  };
+  listPage.classList.toggle("displayNone");
+  toDoPage.classList.toggle("displayNone");
+  num = 0;
+  taskToDo.innerText = wheneverList[num].task;
+  taskToDo.style.color = mySettings.myBaseColors[wheneverList[num].color].colorBG;
+  if(wheneverList[num].info){ // add also if there's a miniList!!
+    moreInfoWhole.classList.remove("displayNone");
+    moreInfoDiv.innerText = wheneverList[num].info;
+  } else{
+    moreInfoWhole.classList.add("displayNone");
+  };
+});
+/* shuffleBtn.addEventListener("click", () => {
   let todayDate = getTodayDateString(); //that might not work getTodayTime()
   // wheneverList = listTasks.filter(task => ((!task.date || task.date == "" || task.date <= todayDate) && (task.line !== "recurringDay" && !task.stock)) || (task.date > todayDate && task.line == "doneDay")); 
   wheneverList = listTasks.filter(task => (task.term == "oneTime" || task.term == "longTerm" || task.term == "alwaysHere") && !task.stock && task.line !== "recurringDay" && (task.line == "noDay" || task.startDate == todayDate)); 
@@ -2521,7 +2540,7 @@ shuffleBtn.addEventListener("click", () => {
   } else{
     moreInfoWhole.classList.add("displayNone");
   };
-});
+}); */
 
 nopeNextBtn.addEventListener("click", () => {
   if(wheneverList.length == 0){
@@ -3124,6 +3143,7 @@ todo.info
 todo.color => number (index in mySettings.myBaseColors)
 todo.icon
 todo.term => {project: "wholeProject"}, {rappel: "reminder"}, {habit: "sameHabit"}, {task: "topPriority", "nextThing", "longTerm", "oneTime", "alwaysHere", "waitForIt", "thinkBoutIt", "crazyShit"}, {event: "showThing"}
+todo.quicky => could be done in 15min or less
 todo.urge
 todo.urgeNum
 todo.urgeColor
@@ -3887,6 +3907,11 @@ function taskAddAllInfo(infos){
       <button id="doneIt" class="iconOnlyBtn cornerItLabel">
         <i class="typcn typcn-media-stop-outline"></i>
       </button>
+      <input id="quickyIt" type="checkbox" class="cossin cornerItInput" ${todo.quicky ? `checked` : ``} />
+      <label for="quickyIt" class="quickyItLabel cornerItLabel">
+        <i class="fa-regular fa-clock cornerItUnChecked"></i>
+        <i class="fa-solid fa-clock cornerItChecked"></i>
+      </label>
       ${todo.recurry || todo.line == "recurringDay" ? `
       <div class="storeItLabel cornerItLabel" >
         <span class="typcn typcn-arrow-repeat"></span>
@@ -4139,6 +4164,7 @@ function taskAddAllInfo(infos){
   let taskInfo = document.querySelector("#taskInfo");
   let doneIt = document.querySelector("#doneIt");
   let doneIcon = doneIt.querySelector("i");
+  let quickyIt = document.querySelector("#quickyIt");
   let copyIt = document.querySelector("#copyIt");
   let trashIt = document.querySelector("#trashIt");
   let storeIt = document.querySelector("#storeIt");
@@ -4473,6 +4499,10 @@ function taskAddAllInfo(infos){
       });
     });
     SupClickScreen.addEventListener("click", () => clickHandlerAddOn(iconsPalet, "keep", SupClickScreen, "nowhere"));
+  });
+
+  quickyIt.addEventListener("click", () => {
+    iconIt.style.color = quickyIt.checked ? "mediumvioletred" : "inherit";
   });
   
   //SHOW TYPE
@@ -4898,6 +4928,12 @@ function taskAddAllInfo(infos){
         listTasks.push(todo);
       };
       // we could also just check if the todo.id is in listTask, and if not, push it there... that way we might not need the why... (check if we use it somewhere else...)
+
+      if(quickyIt.checked){
+        todo.quicky = true;
+      } else{
+        delete todo.quicky;
+      };
 
 
       if(copyIt.checked){ //WOLA! Si c'est stock, il faut enlever les storedId! Si c'est reccuring...

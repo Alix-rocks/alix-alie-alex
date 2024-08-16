@@ -652,6 +652,9 @@ h5.taskInfoInput{
 #doneIt > .typcn-input-checked-outline, #doneIt > .typcn-input-checked{
   font-size: 1.8em;
 }
+.quickyItLabel{
+  left: 50px;
+}
 .storeItLabel{
   right: 5px;
 }

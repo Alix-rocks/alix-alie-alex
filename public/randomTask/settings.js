@@ -121,6 +121,10 @@ export let mySettings = {
     <label for="choicePageInputWeek" class="bottomBtn purpleOnWhite">
       <i class="fa-solid fa-calendar-week"></i>
     </label>
+    <input id="choicePageInputConvo" value="switchPageInputConvo" name="choicePageRadios" type="radio" class="displayNone" ${mySettings.myFavoriteView == "switchPageInputConvo" ? `checked` : ``} />
+    <label for="choicePageInputConvo" class="bottomBtn purpleOnWhite">
+      <i class="fa-solid fa-comments"></i>
+    </label>
     <h3>What time does your day really end?</h3>
     <input id="timeInput" type="time">
     <h3>What day does your week actually start?</h3>

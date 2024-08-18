@@ -205,6 +205,13 @@ Options for sorting
       </table>
     </div>
   </div>
+  <!-- MARK: PAGE CONVO -->
+  <input id="switchPageInputConvo" name="switchPageRadios" type="radio" class="displayNone">
+  <div id="convoPage" data-cloudit="cloudBottom" class="wholeScreenCalendar onePage displayNone">
+    <div class="">
+      <h1>CRM!</h1>
+    </div>
+  </div>
 
   <!-- MARK: PAGE WEEK -->
   <input id="switchPageInputWeek" name="switchPageRadios" type="radio" class="displayNone">
@@ -224,6 +231,16 @@ Options for sorting
       </a>
     </div>
     <div id="labelSelectionDiv">
+    </div>
+    <input id="openHourTogglerInput" type="checkbox" class="tuttoGiornoInput cossin" />
+    <div id="openHourToggler" class="tuttoGiornoDiv">
+      <p>OPENING<br/>HOUR</p>
+      <label for="openHourTogglerInput" class="slideZone">
+        <div class="slider">
+          <span class="si">Sì</span>
+          <span class="no">No</span>
+        </div>
+      </label>
     </div>
     <div id="todoZone">
       <div id="addingZone">
@@ -618,6 +635,9 @@ Options for sorting
       </div>
     </label>
     <div id="allPagesMenu">
+      <label for="switchPageInputConvo" data-page="switchPageInputConvo" class="bottomBtn menuLabel purpleOnWhite">
+        <i class="fa-solid fa-comments" style="font-size: 20px;"></i>
+      </label>
       <label for="switchPageInputWeek" data-page="switchPageInputWeek" class="bottomBtn menuLabel purpleOnWhite">
         <i class="fa-solid fa-calendar-week"></i>
       </label>

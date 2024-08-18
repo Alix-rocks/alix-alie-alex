@@ -655,6 +655,9 @@ h5.taskInfoInput{
 .quickyItLabel{
   left: 50px;
 }
+.convoItLabel{
+  left: 95px;
+}
 .storeItLabel{
   right: 5px;
 }
@@ -1206,7 +1209,7 @@ input#recurringDayInput:checked ~ div#recurryDaySection{
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
-  width: -webkit-fill-available!important;
+  width: -webkit-fill-available;
 }
 .slideZone{
   display: block;
@@ -2186,6 +2189,27 @@ td.toWeeklyArrowLeft{
 }
 .calendarStockVersion .tagSpan{
   right: 54px;
+}
+
+#openHourToggler{
+  width: 50px;
+  right: 160px;
+  position: fixed;
+  bottom: 15px;
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--bg-color);
+  border-radius: 5px;
+  padding-top: 2px;
+}
+#openHourToggler > p{
+  margin: 0;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1em;
+  text-align: center;
 }
 
 .cossin{

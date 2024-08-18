@@ -71,12 +71,27 @@ function logOut(){
 };
 window.logOut = logOut;
 
+function isItOpenHour(){
+  let todayDate = new Date();
+  //lundi (1) au vendredi (5)
+  let weekDays = [1, 2, 3, 4, 5];
+  let todayDay = todayDate.getDay();
+  //de 8 à 5
+  let currentHour = String(todayDate.getHours()).padStart(2, "0");
+  let currentMinute = String(todayDate.getMinutes()).padStart(2, "0");
+  let currentTime = `${currentHour}:${currentMinute}`;
+
+  return weekDays.includes(todayDay) && currentTime >= "08:00" && currentTime < "17:00" ? true : false;
+};
 
 
 
 // *** START
 let searchSwitch = false;
 let projectSwitch = false;
+let openHourSwitch = isItOpenHour();
+let openHourToggle = isItOpenHour(); //on pourrait le rajouter dans les settings
+document.querySelector("#openHourTogglerInput").checked = openHourToggle ? true : false;
 let listTasks = [];
 let listDones = [];
 let myBusies = [];
@@ -971,6 +986,10 @@ function resetCBC(){
     <label for="choicePageInputWeek" class="bottomBtn purpleOnWhite">
       <i class="fa-solid fa-calendar-week"></i>
     </label>
+    <input id="choicePageInputConvo" value="switchPageInputConvo" name="choicePageRadios" type="radio" class="displayNone" ${mySettings.myFavoriteView == "switchPageInputConvo" ? `checked` : ``} />
+    <label for="choicePageInputConvo" class="bottomBtn purpleOnWhite">
+      <i class="fa-solid fa-comments" style="font-size: 20px;"></i>
+    </label>
     <h3>What time does your day really end?</h3>
     <input id="timeInput" type="time">
     <h3>What day does your week actually start?</h3>
@@ -1386,7 +1405,19 @@ function addThatdayTodos(){
 };
 
 
-
+document.querySelector("#openHourTogglerInput").addEventListener("click", openOrCloseHour);
+function openOrCloseHour(){
+  openHourToggle = document.querySelector("#openHourTogglerInput").checked ? true : false;
+  if(openHourToggle){
+    document.querySelectorAll('[data-openHour="true"]').forEach(todo => {
+      todo.classList.remove("displayNone");
+    });
+  } else{
+    document.querySelectorAll('[data-openHour="true"]').forEach(todo => {
+      todo.classList.add("displayNone");
+    });
+  };
+};
   
 
 // MARK: CREATION
@@ -1509,7 +1540,8 @@ function todoCreation(todo){
           ${todo.startTime ? `data-time="${todo.startTime}"` : ``} 
           ${todo.recurry ? `data-rec="${todo.recId}"` : ``} 
           ${todo.term == "alwaysHere" ? `data-always="here"` : ``} 
-          class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : ``}${todo.pPosition == "out" ? ` projectLi` : ``}${todo.startTime && todo.prima && todo.prima !== "00:00" ? ` showLiBuffer` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}${todo.pPosition == "out" ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : ``}">
+          ${todo.openHour ? `data-openHour="true"` : ``} 
+          class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : ``}${todo.pPosition == "out" ? ` projectLi` : ``}${todo.startTime && todo.prima && todo.prima !== "00:00" ? ` showLiBuffer` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}${!openHourSwitch && !openHourToggle && todo.openHour ? ` displayNone` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}${todo.pPosition == "out" ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : ``}">
           ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
           ${pOngletsDiv}
           ${todo.startTime && todo.prima && todo.prima !== "00:00" ? `<div class="primaLiBuffer">${timeMath(roundFifteenTime(todo.startTime), "minus", todo.prima).replace("-", ":")}</div>` : ``}
@@ -2842,6 +2874,22 @@ function creatingCalendar(todo, home, classs){
     </div>
   </div>`;
 
+  let openHourDiv = `<div id="openHourSection" class="calendarMargin" style="margin-top:20px;">
+    <h5 class="taskInfoInput" style="margin-left: 0;">Is that only doable during opening hours?</h5>
+    <div class="inDaySection" style="width: -webkit-fill-available; max-width: 200px;">
+      <input id="openHourInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.openHour ? `checked` : ``} />
+      <div class="calendarInsideMargin tuttoGiornoDiv">
+        <p style="margin: 0;">8 à 5 du<br/>lundi au vendredi!</p>
+        <label for="openHourInput" class="slideZone">
+          <div class="slider">
+            <span class="si">Sì</span>
+            <span class="no">No</span>
+          </div>
+        </label>
+      </div>
+    </div>
+  </div>`;
+
   let bufferDiv = `<div id="bufferSection" class="calendarMargin" style="margin-top:20px;">
     <h5 class="taskInfoInput" style="margin-left: 0;">How long will that really take?</h5>
     <div class="inDaySection" style="width: -webkit-fill-available; max-width: 200px;">
@@ -2906,6 +2954,8 @@ function creatingCalendar(todo, home, classs){
       ${todoDayDiv}
       ${recurringDayDiv}
       ${noDayDiv}
+      <hr class="calendarhr"/>
+      ${openHourDiv}
       <hr class="calendarhr"/>
       ${bufferDiv}
       <hr class="calendarhr"/>
@@ -3055,6 +3105,8 @@ function calendarSave(todo){ //
       delete todo.stopTime;
     };
   };
+
+  todo.openHour = document.querySelector("#openHourInput").checked ? true : false;
   
   todo.busy = document.querySelector("#busyInput").checked ? true : false;
   //busyZoneCreation(todo); (will be done when we save to cloud)
@@ -3911,6 +3963,11 @@ function taskAddAllInfo(infos){
       <label for="quickyIt" class="quickyItLabel cornerItLabel">
         <i class="fa-regular fa-clock cornerItUnChecked"></i>
         <i class="fa-solid fa-clock cornerItChecked"></i>
+      </label>
+      <input id="convoIt" type="checkbox" class="cossin cornerItInput" ${todo.convo ? `checked` : ``} />
+      <label for="convoIt" class="convoItLabel cornerItLabel">
+        <i class="fa-regular fa-comments cornerItUnChecked" style="font-size: 20px;"></i>
+        <i class="fa-solid fa-comments cornerItChecked" style="font-size: 20px;"></i>
       </label>
       ${todo.recurry || todo.line == "recurringDay" ? `
       <div class="storeItLabel cornerItLabel" >

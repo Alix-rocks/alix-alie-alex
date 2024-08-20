@@ -62,9 +62,9 @@ if (localStorage.getItem("toUL")) {
 
 async function getListes() {  
   const getMeme = await getDoc(doc(db, "shit", "meme"));
-  //if(localStorage.getItem("listeMemes")){
-    //listeMemes = JSON.parse(localStorage.listeMemes);
-  //} else 
+  if(localStorage.getItem("listeMemes")){
+    listeMemes = JSON.parse(localStorage.listeMemes);
+  } else 
   if(getMeme.exists()){    
     let listeTexts = getMeme.data().listeTexts;    
     let listeImages = getMeme.data().listeImages;    
@@ -118,12 +118,19 @@ function resettoUL(){
   localStorage.toUL = toUL;
 };
 
-function showON(){  
+function showON(start){  
   console.log(listeMemes);  
   let randyMemes = RandArray(listeMemes); 
-  document.querySelector(".wholeShow").classList.remove("hidden"); 
+  // document.querySelector(".wholeShow").classList.remove("hidden"); 
+  document.querySelector(".wholeShow").innerHTML = `<div id="shitShow">Let's see what we've got for you today...</div>
+    <div class="wholeShowBtns">
+      <button id="pervBtn" class="player hidden"><i class="fa-solid fa-backward-step"></i><br/>perv</button>
+      <button id="modBtn" class="player hidden"><i class="fa-solid fa-pen"></i><br/>modify it</button>
+      <button id="nextBtn"class="player"><i class="fa-solid fa-forward-step"></i><br/>next</button>
+    </div>`; 
   const shitShow = document.querySelector("#shitShow");    
-  let idR = -1;
+  // let idR = -1;
+  let idR = start;
   const pervBtn = document.querySelector("#pervBtn");
   const nextBtn = document.querySelector("#nextBtn");
   const modBtn = document.querySelector("#modBtn");
@@ -152,6 +159,7 @@ function showON(){
       modBtn.classList.add("hidden");
     };
     shitShow.innerHTML = idR == -1 ? "Let's see what we've got for you today..." : idR == -2 ? "That's it for today<br/>Try again later!" : listeMemes[randyMemes[idR]].meme.replace(/\n/g, '<br>');
+    shitShow.dataset.id = idR == -1 ? "" : idR == -2 ? "" : listeMemes[randyMemes[idR]].id;
   };
     
   pervBtn.addEventListener("click", () => {    
@@ -164,10 +172,17 @@ function showON(){
     state();
   });
     
-  modBtn.addEventListener("click", () => {   
-    let shit = listeMemes[randyMemes[idR]]; 
-    console.log(shit);
-    createModForm(shit);  
+  modBtn.addEventListener("click", () => { 
+    let shitID = shitShow.dataset.id;
+    let shitFromIDindex = listeMemes.findIndex(meme => meme.id == shitID);
+    let shitFromID = listeMemes[shitFromIDindex];
+    createModForm(shitFromID);
+    // let shitFromIDR = listeMemes[randyMemes[idR]]; 
+    // if(shitFromID.id == shitFromIDR.id){
+    //   createModForm(shitFromID); 
+    // } else{
+    //   alert("oups, that shit ain't passing...");
+    // }; 
   });
 };
 window.showON = showON;
@@ -181,7 +196,7 @@ function createBYOSForm() {
   <form id="shitForm">      
     <div>        
       <label>Meme:</label>        
-      <textarea id="quote" autocomplete="off"></textarea>      
+      <textarea id="newQuote" autocomplete="off"></textarea>      
     </div>      
     <div>        
       <label>Tags:</label>        
@@ -220,11 +235,12 @@ function createBYOSForm() {
   };  
      
   newShitForm.addEventListener("submit", (e) => {   
+    console.log(document.querySelector("#newQuote").value);
     e.preventDefault();
     let newShit = {      
       id: crypto.randomUUID(),      
       type: "T", // "T" = text. "I" = image      
-      meme: document.querySelector("#quote").value,      
+      meme: document.querySelector("#newQuote").value,      
       tags: getShitTags() //tag.num of tag in listeTags (non, won't work if we modify them) 
       //font: "" //font.num of listeFonts
     };    
@@ -239,7 +255,7 @@ function createBYOSForm() {
 
 
 function createModForm(shit) { 
-  let shitIdx = listeMemes.findIndex(meme => meme.id == shit.id);     
+  console.log(shit);    
   let tagsList = listeTags.map((tag, idx) => {
     return `<li><input id="tag${idx}" class="cossin" name="tags" type="checkbox" value="${tag.num}" ${shit.tags.includes(tag.num) ? `checked` : ``}/>      
     <label for="tag${idx}" class="tagLabel">${tag.tag}</label></li>`  
@@ -248,7 +264,7 @@ function createModForm(shit) {
   <form id="shitForm">      
     <div>        
       <label>Meme:</label>        
-      <textarea id="quote" autocomplete="off">${shit.meme}</textarea>      
+      <textarea id="modQuote" autocomplete="off">${shit.meme.replace('<br>', /\n/g)}</textarea>      
     </div>      
     <div>        
       <label>Tags:</label>        
@@ -291,32 +307,48 @@ function createModForm(shit) {
      
   shitForm.addEventListener("submit", (e) => {   
     e.preventDefault();
+    //console.log(document.querySelector("#modQuote").value);
     shit.tags = getShitTags();      
-    shit.meme = document.querySelector("#quote").value; 
+    shit.meme = document.querySelector("#modQuote").value; 
     localStorage.listeMemes = JSON.stringify(listeMemes);      
     updatetoUL(); 
     shitForm.innerHTML = "";   
   });    
 
-  shitForm.querySelector("#trashBtn").addEventListener("click", () => {        
-    listeMemes.splice(shitIdx, 1);
+  shitForm.querySelector("#trashBtn").addEventListener("click", () => {
+    listeMemes = listeMemes.filter(meme => meme.id !== shit.id)
+    // let shitIdx = listeMemes.findIndex(meme => meme.id == shit.id);         
+    // listeMemes.splice(shitIdx, 1);
     localStorage.listeMemes = JSON.stringify(listeMemes);      
     updatetoUL();
-    shitForm.innerHTML = "";   
+    shitForm.innerHTML = "";
+    if(document.querySelector("#shitShow")){
+      showON(0);
+    };   
   });  
   shitForm.querySelector("#cancelBtn").addEventListener("click", () => {        
     shitForm.innerHTML = "";   
   });
 };
 
+
 function wholeList(){
   document.querySelector("#wholeListBtn").classList.add("activeBtn");
   document.querySelector(".wholeList").classList.remove("hidden");
   document.querySelector("#wholeList").innerHTML = listeMemes.map((meme) => {
-    return `<li>${meme.meme.replace(/\n/g, '<br>')}</li>`;
+    return `<li data-id="${meme.id}" onclick="modThis(this)">${meme.meme.replace(/\n/g, '<br>')}</li>`;
   }).join("");
 };
 window.wholeList = wholeList;
+
+function modThis(li){
+  let shitIdx = listeMemes.findIndex(meme => meme.id == li.dataset.id); 
+  let shit = listeMemes[shitIdx];
+  createModForm(shit);
+};
+
+window.modThis = modThis;
+
 // To add your own shitconst addYOSForm = document.querySelector('#addYOS')addYOSForm.addEventListener('submit', (e) => {  e.preventDefault();  //let finalList = []  //var markedCheckbox = document.getElementsByName('theme');  //for (var checkbox of markedCheckbox) {    //if (checkbox.checked) {      //finalList.push(checkbox.value);    //}  //}
   //if (addYOSForm.quote.value === "" || finalList.length === 0) {    //document.querySelector("#badShit").innerHTML = "You forgot something...";    //document.querySelector("#wisely").innerHTML = "Choose wisely...";  //} else {    let quoteHTML = addYOSForm.quote.value.replace(/\n/g, '<br>');        let newQuote = {      id: crypto.randomUUID(),      type: "text",      meme: quoteHTML      //tags: []      //font: ""    };    newListeTexts.push(newQuote);    localStorage.newListeTexts = JSON.stringify(newListeTexts);    console.log(newListeTexts);    updatetoUL();    addYOSForm.reset();});
 function RandArray(array) {  

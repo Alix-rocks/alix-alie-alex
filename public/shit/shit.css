@@ -109,7 +109,7 @@ button.action i{
   opacity: 0;
   visibility: hidden;
 }
-#quote{
+#newQuote, #modQuote{
   display: block;
   width: 100%;
   height: 100px;

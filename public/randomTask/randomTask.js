@@ -4988,11 +4988,14 @@ function taskAddAllInfo(infos){
       // save convo
       if(convoIt.checked){
         todo.convo = true;
+        todo.convoStatus = document.querySelector('input[name="convoStatusRadios"]:checked').value;
+        todo.convoContactId = contactList[thisContactIndex].id;
       } else{
         delete todo.convo;
+        delete todo.convoStatus;//?
+        delete todo.convoContactId;//?
       };
-      todo.convoStatus = document.querySelector('input[name="convoStatusRadios"]:checked').value;
-      todo.convoContactId = contactList[thisContactIndex].id;
+      
   
       // save Label
       if(JSON.stringify(newLabel) !== '{"color":"","name":""}'){

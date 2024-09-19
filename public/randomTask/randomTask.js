@@ -305,6 +305,32 @@ let colorsList = [ //showTypeChoices
 }];
 let switchSortArray = ["fa-solid fa-arrow-right-arrow-left fa-rotate-90", "fa-solid fa-folder-closed fa-rotate-270", "fa-solid fa-hashtag", "fa-regular fa-hourglass-half", "typcn typcn-tag sortingTag", "fa-solid fa-arrow-down-a-z", "fa-solid fa-icons"];
 let icons = ["fa-solid fa-comments", "fa-solid fa-lightbulb", "fa-solid fa-dollar-sign", "fa-solid fa-spider", "fa-solid fa-gavel", "fa-solid fa-couch", "fa-solid fa-head-side-virus", "fa-solid fa-screwdriver-wrench", "fa-solid fa-universal-access", "fa-solid fa-droplet", "fa-solid fa-code", "fa-solid fa-poo", "fa-solid fa-globe", "fa-solid fa-briefcase", "fa-solid fa-brain", "fa-solid fa-champagne-glasses", "fa-solid fa-seedling", "fa-solid fa-utensils", "fa-solid fa-heart-pulse", "fa-solid fa-sun", "fa-solid fa-broom", "fa-solid fa-people-group", "fa-solid fa-bullhorn", "fa-solid fa-magnifying-glass", "fa-solid fa-heart", "fa-solid fa-cake-candles", "fa-regular fa-hourglass-half", "fa-solid fa-road", "fa-solid fa-envelopes-bulk", "fa-solid fa-person-chalkboard", "fa-regular fa-face-grin-stars", "fa-regular fa-face-grin-hearts", "fa-regular fa-face-grin-squint", "fa-regular fa-face-smile-wink", "fa-regular fa-face-meh-blank", "fa-regular fa-face-flushed", "fa-regular fa-face-grimace", "fa-regular fa-face-rolling-eyes", "fa-regular fa-face-grin-beam-sweat", "fa-regular fa-face-surprise", "fa-regular fa-face-frown-open", "fa-regular fa-face-frown", "fa-regular fa-face-sad-tear", "fa-regular fa-face-tired", "fa-regular fa-face-sad-cry", "fa-regular fa-face-dizzy", "fa-regular fa-face-angry", "fa-solid fa-ban noIcon"];
+let contactList = [
+  {
+    id: "1234",
+    nickname: "Dave",
+    prenom: "David",
+    nom: "Gadoury",
+    phone: "", //(si textos)
+    email: "", //(si email)
+    adresse: "",
+    spaces: ["Messenger"], //(en ordre de préférence)
+    groups: ["perso"], //caliaPR, caliaClient, caliaLead(potential client), perso, PAB, etc
+    langue: ["fr"] //fr (français), en(english), fe(franglish)
+  },
+  {
+    id: "1254",
+    nickname: "Niamh",
+    prenom: "Niamh",
+    nom: "Devaney",
+    phone: "", //(si textos)
+    email: "", //(si email)
+    adresse: "",
+    spaces: ["Messenger"], //(en ordre de préférence)
+    groups: ["perso"], //caliaPR, caliaClient, caliaLead(potential client), perso, PAB, etc
+    langue: ["en"] //fr (français), en(english), fe(franglish)
+  }
+];
 
 (() => {
   let iconsAll = icons.map(icon => {
@@ -790,21 +816,23 @@ async function saveToCloud(){
   myBusies = [];
   listTasks.forEach(todo => {
     //Modify all the event to busy
-    if(todo.term == "showThing" && todo.line == "todoDay" && todo.showType !== "Cancelled"){
-      busyZoneCreation(todo);
-    } else if(todo.term == "showThing" && todo.line == "recurringDay"){
-      todo.recurryDates.forEach(recurryDate => {
-        let tempRecurry = {
-          startDate: recurryDate,
-          prima: todo.prima,
-          startTime: todo.startTime,
-          dopo: todo.dopo,
-          stopTime: todo.stopTime,
-          showType: todo.showType,
-        };
-        busyZoneCreation(tempRecurry)
-      });
-    } else if(!todo.stock && todo.busy && (todo.startTime && todo.stopTime && todo.startTime !== todo.stopTime)){
+    if(todo.term == "showThing" && todo.showType !== "Cancelled"){
+      if(todo.line == "todoDay" ){
+        busyZoneCreation(todo);
+      } else if(todo.line == "recurringDay"){
+        todo.recurryDates.forEach(recurryDate => {
+          let tempRecurry = {
+            startDate: recurryDate,
+            prima: todo.prima,
+            startTime: todo.startTime,
+            dopo: todo.dopo,
+            stopTime: todo.stopTime,
+            showType: todo.showType,
+          };
+          busyZoneCreation(tempRecurry)
+        });
+      };
+    } else if(todo.term !== "showThing" && !todo.stock && todo.busy && (todo.startTime && todo.stopTime && todo.startTime !== todo.stopTime)){
       if(todo.line == "todoDay" ){
         let tempTodo = todo;
         tempTodo.showType = "task";
@@ -885,8 +913,8 @@ function updateFromCloud(){
   resetCBC();
   getTasksSettings();
   getDones();
-  createBody();
-  getWeeklyCalendar();
+  //createBody(); (already in getDones())
+  //getWeeklyCalendar(); (already in getDones())
   settingsPage();
   updateArrowsColor();
   earthIt.style.backgroundColor = "rgba(237, 20, 61, 0)";
@@ -1607,12 +1635,15 @@ function getTogoList(todo){
         togoList = "listRecurring";
       } else{
         console.log(todo);
-        alert(todo.task + ", C'est finnnniiiiiiii!!!");
-        //if "ok" then erase:
-        // let todoIndex = listTasks.findIndex(tod => tod.id == todo.id);
-        // listTasks.splice(todoIndex, 1);
-        // localStorage.listTasks = JSON.stringify(listTasks);
-        togoList = "";
+        let answer = prompt(todo.task + ", C'est finnnniiiiiiii!!!\nShould we say goodbye?");
+        if(answer == null || answer == ""){
+          togoList = "";
+        } else{
+          let todoIndex = listTasks.findIndex(tod => tod.id == todo.id);
+          listTasks.splice(todoIndex, 1);
+          localStorage.listTasks = JSON.stringify(listTasks);
+          togoList = "";
+        };
       };
     } else if(todo.recurryDates.length == 1 && todo.fineOpt == "fineMai"){
       let date = getDateFromString(todo.recurryDates[0]);
@@ -2944,6 +2975,8 @@ function creatingCalendar(todo, home, classs){
       <div class="noneTuttoGiornoDiv calendarInsideMargin">
         <p><span>a che ora precisamente?</span><input id="lastDayTimeAlleInput" type="time" class="finoAlle finaleTxt" value="${todo.finoAlle ? todo.finoAlle : ``}" /></p>
       </div>
+      <h5 style="margin-left: 0; margin-bottom: 0;">Do you want to set an alarm for it?</h5>
+      <!-- How many (number) days/weeks/months (choice) before the deadline? -->
     </div>
   </div>
 </div>`;
@@ -3539,6 +3572,16 @@ Avec deux bouttons: "let's see" (qui ne va pas sauver dans les settings) et "sav
 
 ***ÀFaire:
 
+*? Mettre le boutton SAVE (dans taskInfo) en haut plutôt qu'en bas pour pas avoir à enlever le clavier pour pouvoir sauver?
+
+*Pouvoir ordonner les task dans Today's plan... (faire comme les schedules dans Time?)
+
+*Quand tu cliques sur un event A dans les calendar, puis sur un event B dans storage, il faudrait que ça modifie l'event A, avec la journée de l'event A, mais les heures et autres de l'event B. (et non la journée du dernier event que t'as créé... (PAB schedule creation))
+
+**Dans monthly et weekly: On ne peut pas voir les reminder du passé s'ils sont recurring, parce que les dates du passé sont effacées de l'array recurryDates et qu'ils ne sont pas non plus dans la liste des dones! (les reminder du passé qui étaient todoDay, sont toutefois visibles)
+
+*Option to add an alarm if there is a deadline: how many days/weeks/months before the deadline do you want it to appear? (Maybe with an icon of clock at the beginning of the task, in the li ?) Just make it kind of an alert on the day of the alarm, just like the procrastination "alert"
+
 *If we use recurring just like google, and use todoDay as todo.dal as well as todo.dalle/startTime et todo.alle/stopTime, we could calculate the recurryDates with todo.startDate and a todo.duration to calculate the new todo.stopDate... (create new function dateTimeMath)
 1. Tout repenser le système de date pour pouvoir avoir dalle (date & time) et alle  (date & time)
   Dans weekly, le début est un jour/une col, la fin est un autre jour, la même col (dateTime < nextDayTime)
@@ -3989,6 +4032,39 @@ function taskAddAllInfo(infos){
       <i class="fa-regular fa-trash-can cornerItUnChecked"></i>
       <i class="fa-solid fa-trash-can cornerItChecked"></i>
     </label>
+    <div id="convoSection">
+      <div class="convoStatusDiv">
+        <input type="radio" name="convoStatusRadios" id="convoStatus1" value="cS1" ${todo.convoStatus == "cS1" ? `checked` : ``} />
+        <label for="convoStatus1">
+          <span class="outerRing" style="border-color: rgb(59, 152, 105);"></span>
+          <span class="innerCircle" style="background-color: rgb(59, 152, 105);"></span>
+          <span class="statusTitle">Tell, Ask, Relance...</span>
+        </label>
+        <input type="radio" name="convoStatusRadios" id="convoStatus2" value="cS2" ${todo.convoStatus == "cS2" ? `checked` : ``} />
+        <label for="convoStatus2">
+          <span class="outerRing" style="border-color: goldenrod;"></span>
+          <span class="innerCircle" style="background-color: goldenrod;"></span>
+          <span class="statusTitle">Wait to hear from...</span>
+        </label>
+        <input type="radio" name="convoStatusRadios" id="convoStatus3" value="cS3" ${todo.convoStatus == "cS3" ? `checked` : ``} />
+        <label for="convoStatus3">
+          <span class="outerRing" style="border-color: crimson;"></span>
+          <span class="innerCircle" style="background-color: crimson;"></span>
+          <span class="statusTitle">Let's reply to...</span>
+        </label>
+        <input type="radio" name="convoStatusRadios" id="convoStatus4" value="cS4" ${todo.convoStatus == "cS4" ? `checked` : ``} />
+        <label for="convoStatus4">
+          <span class="outerRing" style="border-color: darkslategray;"></span>
+          <span class="innerCircle" style="background-color: darkslategray;"></span>
+          <span class="statusTitle">We're done with...</span>
+        </label>
+      </div>
+      <div id="convoContactDiv">
+        <label>Contact: </label>
+        <input type="text" id="contactSearchInput" value="${todo.convo ? contactList[contactList.findIndex(ct => ct.id == todo.convoContactId)].nickname : ``}" />
+        <div id="contactSearchList"></div>
+      </div>
+    </div>
     <div class="taskInfoInput relDiv${calendarStock ? ` calendarStockVersion` : ``}">
       ${todo.pParents && todo.pParents.length > 0 ? `<div class="projectOnglet" style="background-color:${todo.PColorBG}; color:${todo.PColorTX};">${todo.Pnickname}</div>` : ``}
       <span id="iconIt" class="IconI ${todo.icon}"></span>
@@ -4218,6 +4294,7 @@ function taskAddAllInfo(infos){
   calendarDiv.querySelector("#oneDayStartDateInput").addEventListener("change", (e) => {
     document.querySelector("#tellYouDay").innerText = ` ${e.target.value}`;
   });
+  
   let taskInfo = document.querySelector("#taskInfo");
   let doneIt = document.querySelector("#doneIt");
   let doneIcon = doneIt.querySelector("i");
@@ -4235,6 +4312,47 @@ function taskAddAllInfo(infos){
   let SupClickScreen = document.querySelector("#SupClickScreen");
   let colorIt = document.querySelector("#colorIt");
   let colorPalet = document.querySelector("#colorPalet");
+  let contactSearchInput = document.querySelector("#contactSearchInput");
+
+  // *** CONVO
+  let thisStatus = "";
+  let thisNickname = "";
+  let thisContactIndex;
+  document.querySelectorAll('input[name="convoStatusRadios"]').forEach(radio => {
+    radio.addEventListener("click", () => {
+      console.log(radio.value);
+      thisStatus = t(radio.value);
+      thisConvo();
+      //taskTitle.value = t(radio.value);
+    });
+  });
+  contactSearchInput.addEventListener("input", () => {
+    let tip = contactSearchInput.value.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+    let result = contactList.filter(contact => (contact.nickname.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').startsWith(tip) || contact.prenom.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').startsWith(tip)) || contact.nom.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').startsWith(tip));
+    console.log(result);
+    document.querySelector("#contactSearchList").innerHTML = result.map((ct) => {
+      return `<button id="${ct.id}" class="nickChoice" onclick="thisContact(this)">${ct.nickname}</button>`;
+    }).join("") + `<button class="nickChoice" style="background-color: lightgrey;"  onclick="addNewContact()">add new contact</button>`;
+  });
+  
+  function thisConvo(){
+    taskTitle.value = thisStatus + " " + thisNickname;
+  };
+
+  function thisContact(div){
+    thisContactIndex = contactList.findIndex(contact => contact.id == div.id);
+    thisNickname = contactList[thisContactIndex].nickname;
+    document.querySelector("#contactSearchList").innerHTML = "";
+    contactSearchInput.value = thisNickname;
+    thisConvo();
+  };
+  window.thisContact = thisContact;
+
+  function addNewContact(){
+    let start = contactSearchInput.value;
+    //create a form to add new contact with "start" already in the nickname input
+  };
+  window.addNewContact = addNewContact;
 
   // *** LABEL
   let labelIt = document.querySelector("#labelIt");
@@ -4866,6 +4984,15 @@ function taskAddAllInfo(infos){
       //   delete todo.PColorTX;
       //   delete todo.Pnickname;
       // };
+
+      // save convo
+      if(convoIt.checked){
+        todo.convo = true;
+      } else{
+        delete todo.convo;
+      };
+      todo.convoStatus = document.querySelector('input[name="convoStatusRadios"]:checked').value;
+      todo.convoContactId = contactList[thisContactIndex].id;
   
       // save Label
       if(JSON.stringify(newLabel) !== '{"color":"","name":""}'){
@@ -5482,6 +5609,7 @@ function getLastWeekDate(){
 function putShowsInMonth(monthlyFirst, monthlyLast){
   let filteredShows = listTasks.filter((todo) => todo.term == "showThing" || todo.term == "reminder");
   let shows = [];
+  console.log(filteredShows);
   filteredShows.forEach(show => {
     if(show.line == "recurringDay"){
       show.recurryDates.forEach(recurryDate => {
@@ -5505,7 +5633,7 @@ function putShowsInMonth(monthlyFirst, monthlyLast){
       };
     });
   });
-  
+  // console.log(shows);
   let sortedShows = shows.sort((s1, s2) => (s1.startDate < s2.startDate) ? -1 : (s1.startDate > s2.startDate) ? 1 : (s1.startDate == s2.startDate) ? (s1.term < s2.term) ? -1 : (s1.term > s2.term) ? 1 : (s1.term == s2.term) ? (s1.startTime < s2.startTime) ? -1 : (s1.startTime > s2.startTime) ? 1 : 0 : 0 : 0);
   shows = sortedShows;
   let today = getTodayDateString();
@@ -5514,7 +5642,7 @@ function putShowsInMonth(monthlyFirst, monthlyLast){
     if(show.term == "showThing"){
       eventDiv = `<div data-id="${show.id}" data-date="${show.startDate}" ${show.recurry ? `data-rec="${show.recId}"` : ``} data-showType="${show.showType}" ${!show.past ? `onclick="toTIdeCMaM(this)"` : ``} class="eventDiv ${show.past ? "pastEvent" : ""}" style="background-color:${show.STColorBG}; color:${show.STColorTX};">${show.task}</div>`;
     } else if(show.term == "reminder"){
-      eventDiv = `<div data-id="${show.id}" data-date="${show.startDate}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${!show.past ? `onclick="toTIdeCMaM(this)"` : ``} class="eventDiv ${show.startDate < today ? "pastEvent" : ""}" style="color:${mySettings.myBaseColors[show.color].colorBG};">${show.task}</div>`;
+      eventDiv = `<div data-id="${show.id}" data-date="${show.startDate}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${!show.past ? `onclick="toTIdeCMaM(this)"` : ``} class="eventDiv ${show.startDate < today ? "pastEvent" : ""}" style="color:${mySettings.myBaseColors[show.color].colorBG};border:none;">${show.task}</div>`;
     };
     //if it's done (past), the onclick="toTIdeCMaM(this) won't work because it's not in listTasks anymore... do we want to be able to modify done ones? If so, we'll need to have a function to get the done in the listDones... and modify it there...
     let kase = document.querySelector("[data-wholedate='" + show.startDate + "']");
@@ -5916,14 +6044,14 @@ function timeMath(one, math, two){
 };
 
 function createWeeklyshow(show){
-  console.log(show);
+  //console.log(show);
   let dayIdx = meseDayICalc(show.startDate); //if between 00:00 and myTomorrow, it should be yesterday's date!
   let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
   let day = `${mySettings.myWeeksDayArray[idx].code}`;  
   let div;
   let add;
   if(show.tutto || !show.startTime || show.startTime == ""){
-    console.log(show.task);
+    //console.log(show.task);
     div = document.querySelector(`[data-tutto="${day}"]`);
     add = `<div data-id="${show.id}" data-date="${show.startDate}" ${show.recurry ? `data-rec="${show.recId}"` : ``} ${show.term == "showThing" ? `data-showType="${show.showType}"` : ``} onclick="toTIdeCWaM(this); event.stopPropagation();" class="weeklyEvent ${show.past ? "pastEvent" : ""}" style="${show.term == "showThing" ? `background-color:${show.STColorBG}; color:${show.STColorTX};` : show.term == "reminder" ? `color:${mySettings.myBaseColors[show.color].colorBG}; border:none; border-radius: 0;` : `color:${mySettings.myBaseColors[show.color].colorBG}; border-color:${mySettings.myBaseColors[show.color].colorBG};`}">${show.info ? `*` : ``}<span ${show.miniList ? `style="text-decoration:underline;"` : ``}>${show.task}</span> <i class="IconI ${show.icon}"></i>
   </div>`; //add underline if miniList

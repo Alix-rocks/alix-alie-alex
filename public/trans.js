@@ -70,7 +70,28 @@ const trans = {
       "or": "Keeps coming back",
       "fr": "Répète",
       "en": "Recurring"
+    },
+    "cS1": {
+      "or": "Tell, Ask, Relance",
+      "fr": "Dis-y, demandes-y, r'lance donc",
+      "en": "Tell, Ask, Relance"
+    },
+    "cS2": {
+      "or": "Wait to hear from",
+      "fr": "Attends d'ses nouvelles",
+      "en": "Wait to hear from"
+    },
+    "cS3": {
+      "or": "Let's reply to",
+      "fr": "Réponds-y donc",
+      "en": "Let's reply to"
+    },
+    "cS4": {
+      "or": "We're done with",
+      "fr": "Ok, c'est fini avec",
+      "en": "We're done with"
     }
+
     
   },
   "metro":

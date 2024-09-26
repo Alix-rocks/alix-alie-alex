@@ -1,0 +1,15 @@
+#timeShowZone{
+  width: 200px;
+  height: 25px;
+  border-radius: 5px;
+  margin: 100px auto;
+  border: 2px solid;
+  background-color: transparent;
+}
+#timeShow{
+  width: 0;
+  height: 25px;
+  border-radius: 2.5px;
+  background-color: green;
+  animation-timing-function: linear;
+}

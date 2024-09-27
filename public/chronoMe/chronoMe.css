@@ -1,6 +1,67 @@
+:root{
+  --bg-color: #F2F3F4;
+  --tx-color: darkslategrey;
+}
+*{
+  font-family: 'Nunito', sans-serif;
+  user-select: none;
+}
+body{
+  color: var(--tx-color);
+  background-color: var(--bg-color);
+  /* max-width: 500px; Doesn't work because all the 'position:absolute;' are not affected by the body's width*/
+}
+
+
+.allTimeDiv{
+  box-sizing: border-box;
+  width: 90vw;
+  margin: 20px auto;
+  display: flex;
+  text-align: center;
+}
+.allTimeDiv > div{
+  padding: 0 0 2px 0;
+}
+.allTimeDiv label{
+  font-size: 14px;
+}
+.allTimeDiv select{
+  border-radius: 3px;
+}
+.positionClass{
+  color: blueviolet;
+}
+.positionClass select{
+  border-color: blueviolet;
+  color: blueviolet;
+}
+.stretchClass{
+  color: green;
+}
+.stretchClass select{
+  border-color: green;
+  color: green;
+}
+.pauseClass{
+  color: red;
+}
+.pauseClass select{
+  border-color: red;
+  color: red;
+}
+.activated{
+  border: 2px solid;
+  border-radius: 5px;
+  font-weight: 800;
+}
+.done{
+  opacity: .3;
+}
+
 #timeShowZone{
-  width: 200px;
-  height: 25px;
+  width: 250px;
+  height: 30px;
   border-radius: 5px;
   margin: 100px auto;
   border: 2px solid;
@@ -8,8 +69,34 @@
 }
 #timeShow{
   width: 0;
-  height: 25px;
+  height: 30px;
   border-radius: 2.5px;
   background-color: green;
   animation-timing-function: linear;
 }
+#chronoMe{
+  width: 175px;
+  height: 175px;
+  display: block;
+  margin: auto;
+  border-radius: 50%;
+  border: 1px solid firebrick;
+  outline: none;
+  user-select: none;
+  cursor: pointer;
+  top: -3px;
+  transform: translateY(0px);
+  position: relative;
+  box-shadow: inset 0 30px 30px -15px rgba(255,255,255,.1), inset 0 0 5px 2px rgba(255,255,255,.3), inset 0 1px 20px rgba(0,0,0,0), 0 5px 0 darkred, 0 3px 2px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.1), 0 10px 20px rgba(0,0,0,.1);
+  background: crimson;
+  color: white;
+  font-size: 36px;
+  text-shadow: 0 1px 0 rgba(0,0,0,.3);
+  transition: 150ms all;
+}
+
+#chronoMe:focus {
+  transform: translateY(3px);
+  box-shadow: inset 0 16px 2px -15px rgba(0,0,0,0), inset 0 0 5px 2px rgba(255,255,255,.15), inset 0 1px 20px rgba(0,0,0,.1), 0 0 0 darkred, 0 0 0 2px rgba(255,255,255,.5), 0 0 0 rgba(0,0,0,0), 0 0 0 rgba(0,0,0,0);
+}
+

@@ -20,16 +20,37 @@
 </head>
 
 <body>
-  <select class="delaySelect" id="delay0Select"></select>
-  <select class="delaySelect" id="delay1Select"></select>
-  <select class="delaySelect" id="delay2Select"></select>
-  <select class="delaySelect" id="delay3Select"></select>
-  <select class="delaySelect" id="delay4Select"></select>
-  <select class="delaySelect" id="delay5Select"></select>
-  <button id="chronoMe">Play</button>
+  <div class="allTimeDiv">
+    <div class="positionClass">
+      <label for="delay0Select">Position</label>
+      <select class="delaySelect" id="delay0Select"></select>
+    </div>
+    <div class="stretchClass">
+      <label for="delay1Select">Stretch</label>
+      <select class="delaySelect" id="delay1Select"></select>
+    </div>
+    <div class="pauseClass">
+      <label for="delay2Select">Pause</label>
+      <select class="delaySelect" id="delay2Select"></select>
+    </div>
+    <div class="stretchClass">
+      <label for="delay3Select">Stretch</label>
+      <select class="delaySelect" id="delay3Select"></select>
+    </div>
+    <div class="pauseClass">
+      <label for="delay4Select">Pause</label>
+      <select class="delaySelect" id="delay4Select"></select>
+    </div>
+    <div class="stretchClass">
+      <label for="delay5Select">Stretch</label>
+      <select class="delaySelect" id="delay5Select"></select>
+    </div>
+  </div>
+  
   <div id="timeShowZone">
     <div id="timeShow"></div>
   </div>
+  <button id="chronoMe">Start</button>
   <script type="module" src="chronoMe.js"></script>
 </body>
 </html>

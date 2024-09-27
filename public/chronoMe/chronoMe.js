@@ -16,7 +16,7 @@ const timeShow = document.querySelector("#timeShow");
 const timeShowZone = document.querySelector("#timeShowZone");
 function turnGreen(duration){
   timeShowZone.style.backgroundColor = "";
-  timeShow.animate([{width: "0"},{width: "200px"}], duration);
+  timeShow.animate([{width: "0"},{width: "250px"}], duration);
 };
 function turnBlueViolet(duration){
   timeShowZone.style.backgroundColor = "rgba(138, 43, 226, 1)";
@@ -26,8 +26,8 @@ function turnRed(duration){
   timeShowZone.style.backgroundColor = "rgba(255, 0, 0, 1)";
   timeShowZone.animate([{backgroundColor: "rgba(255, 0, 0, 1)"},{backgroundColor: "rgba(255, 0, 0, 0)"}], duration);
 };
-const delaysDefault = [5, 20, 5, 20, 5, 20];
-//const delaysDefault = [3, 8, 3, 8, 3, 8];
+//const delaysDefault = [5, 20, 8, 20, 8, 20];
+const delaysDefault = [3, 8, 3, 8, 3, 8];
 
 delaysDefault.map((select, idx) => {
   let options = [];
@@ -76,6 +76,26 @@ function beep(duration, frequency, volume){
     });
 };
 
+function activateDiv(divIdx){
+  let allDivs = Array.from(document.querySelectorAll(".allTimeDiv > div"));
+  allDivs.forEach((div, idx) => {
+    if(divIdx == idx){
+      div.classList.add("activated");
+      if(divIdx > 0){
+        allDivs[divIdx - 1].classList.remove("activated");
+        allDivs[divIdx - 1].classList.add("done");
+      };
+    } else if(divIdx == allDivs.length){
+      allDivs[divIdx - 1].classList.remove("activated");
+      allDivs[divIdx - 1].classList.add("done");
+    };
+  });
+};
+
+function backToStart(){
+  document.querySelector("#chronoMe").blur();
+};
+
 document.querySelector("#chronoMe").addEventListener("click", () => {
   let delay0 = document.querySelector("#delay0Select").value * 1000;
   let delay1 = document.querySelector("#delay1Select").value * 1000;
@@ -85,19 +105,19 @@ document.querySelector("#chronoMe").addEventListener("click", () => {
   let delay5 = document.querySelector("#delay5Select").value * 1000;
   // beep(200, 440, 100);
   Promise.resolve()
-.then(() => {turnBlueViolet(delay0); beep();})
+.then(() => {turnBlueViolet(delay0); beep(); activateDiv(0);})
 .then(() => delay(delay0))
-.then(() => {turnGreen(delay1); beep(200, 870);})
+.then(() => {turnGreen(delay1); beep(200, 870); activateDiv(1);})
 .then(() => delay(delay1))
-.then(() => {turnRed(delay2); beep();})
+.then(() => {turnRed(delay2); beep(); activateDiv(2);})
 .then(() => delay(delay2))
-.then(() => {turnGreen(delay3); beep(200, 870);})
+.then(() => {turnGreen(delay3); beep(200, 870); activateDiv(3);})
 .then(() => delay(delay3))
-.then(() => {turnRed(delay4); beep();})
+.then(() => {turnRed(delay4); beep(); activateDiv(4);})
 .then(() => delay(delay4))
-.then(() => {turnGreen(delay5); beep(200, 870);})
+.then(() => {turnGreen(delay5); beep(200, 870); activateDiv(5);})
 .then(() => delay(delay5))
-.then(() => {turnBlueViolet(); beep();});
+.then(() => {turnBlueViolet(); beep(); backToStart(); activateDiv(6);});
 });
 
 // Simple beep
@@ -114,7 +134,6 @@ function delay(duration) {
   return new Promise((resolve) => {
       setTimeout(() => {
         resolve();
-        // turnGreen();
       }, duration);
   });
 };

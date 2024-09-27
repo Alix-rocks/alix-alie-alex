@@ -832,7 +832,7 @@ async function saveToCloud(){
           busyZoneCreation(tempRecurry)
         });
       };
-    } else if(todo.term !== "showThing" && !todo.stock && todo.busy && (todo.startTime && todo.stopTime && todo.startTime !== todo.stopTime)){
+    } else if(todo.term !== "showThing" && todo.term !== "nevermind" && !todo.stock && todo.busy && (todo.startTime && todo.stopTime && todo.startTime !== todo.stopTime)){
       if(todo.line == "todoDay" ){
         let tempTodo = todo;
         tempTodo.showType = "task";
@@ -3227,7 +3227,7 @@ todo.task
 todo.info
 todo.color => number (index in mySettings.myBaseColors)
 todo.icon
-todo.term => {project: "wholeProject"}, {rappel: "reminder"}, {habit: "sameHabit"}, {task: "topPriority", "nextThing", "longTerm", "oneTime", "alwaysHere", "waitForIt", "thinkBoutIt", "crazyShit"}, {event: "showThing"}
+todo.term => {project: "wholeProject"}, {rappel: "reminder"}, {habit: "sameHabit"}, {task: "topPriority", "nextThing", "longTerm", "oneTime", "alwaysHere", "waitForIt", "thinkBoutIt", "crazyShit", "nevermind"}, {event: "showThing"}
 todo.quicky => could be done in 15min or less
 todo.urge
 todo.urgeNum
@@ -4231,6 +4231,9 @@ function taskAddAllInfo(infos){
           
           <input class="myRadio" type="radio" name="termOptions" id="crazyShit" value="crazyShit" ${todo.term == "crazyShit" ? `checked` : ``} />
           <label for="crazyShit" class="termLabel"><span class="myRadio"></span><span style="color:rgb(239, 125, 144);">It's just a <em>maybe-one-day-probably-never</em> kinda crazy idea</span></label>
+
+          <input class="myRadio" type="radio" name="termOptions" id="nevermind" value="nevermind" ${todo.term == "nevermind" ? `checked` : ``} />
+          <label for="nevermind" class="termLabel"><span class="myRadio"></span><span style="opacity: .4;">Let's just forget about that one...</span></label>
         </div>
       </div>
       <input id="tellWhereInput" type="checkbox" class="cossin taskToggleInput" />
@@ -6002,7 +6005,7 @@ window.backToWeeklyToday = backToWeeklyToday;
 
 function putShowsInWeek(Dday, Sday){
   // let shows = listTasks.filter((todo) => ((todo.term == "showThing" || todo.term == "reminder") && todo.line !== "noDay")); //on enlève "noDay" ou on aurait pu enlever todo.stock == true
-  let shows = listTasks.filter((todo) => (todo.line !== "noDay" && ((todo.startTime && todo.stopTime && todo.startTime !== todo.stopTime) || todo.term == "reminder" || todo.term == "showThing"))); //on enlève "noDay" ou on aurait pu enlever todo.stock == true
+  let shows = listTasks.filter((todo) => (todo.line !== "noDay" && ((todo.startTime && todo.stopTime && todo.startTime !== todo.stopTime) && todo.term !== "nevermind" || todo.term == "reminder" || todo.term == "showThing"))); //on enlève "noDay" ou on aurait pu enlever todo.stock == true
   shows.map(show => { //WATCH OUT: if between 00:00 and myTomorrow, it would be yesterday's date so maybe not that week!!
     if(show.line == "recurringDay"){ 
       show.recurryDates.map(recurryDate => {

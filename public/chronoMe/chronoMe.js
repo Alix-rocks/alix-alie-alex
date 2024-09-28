@@ -44,12 +44,15 @@ function showProgram(prog){
 
 showProgram(progNum);
 
+
 document.querySelector("#moveUpBtn").addEventListener("click", () => {
   progNum = progNum == allPrograms.length - 1 ? 0 : progNum + 1;
+  backToStart();
   showProgram(progNum);
 });
 document.querySelector("#moveDnBtn").addEventListener("click", () => {
   progNum = progNum == 0 ? allPrograms.length - 1 : progNum - 1;
+  backToStart();
   showProgram(progNum);
 });
 
@@ -108,6 +111,9 @@ function activateDiv(divIdx){
 
 function backToStart(){
   document.querySelector("#chronoMe").blur();
+  document.querySelectorAll(".allTimeDiv > div").forEach(div => {
+    div.classList.remove("activated", "done");
+  });
 };
 
 document.querySelector("#chronoMe").addEventListener("click", () => {
@@ -131,7 +137,7 @@ document.querySelector("#chronoMe").addEventListener("click", () => {
 .then(() => delay(delay4))
 .then(() => {turnGreen(delay5); beep(200, 870); activateDiv(5);})
 .then(() => delay(delay5))
-.then(() => {turnBlueViolet(); beep(); backToStart(); activateDiv(6);});
+.then(() => {turnBlueViolet(); beep(600); backToStart(); activateDiv(6);});
 });
 
 // Simple beep

@@ -71,7 +71,7 @@ body{
 .choiceDiv{
   display: flex;
   flex-direction: column;
-  margin: auto;
+  margin: 0 0 0 10px;
 }
 .choiceDiv button{
   background: none;

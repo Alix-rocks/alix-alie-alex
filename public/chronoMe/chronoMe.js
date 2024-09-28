@@ -28,16 +28,30 @@ function turnRed(duration){
 };
 //const delaysDefault = [5, 20, 8, 20, 8, 20];
 const delaysDefault = [3, 8, 3, 8, 3, 8];
+const allPrograms = [[5, 60, 15, 60, 15, 60], [5, 20, 8, 20, 8, 20], [3, 8, 3, 8, 3, 8]]
+let progNum = 0;
 
-delaysDefault.map((select, idx) => {
-  let options = [];
-  for(let i = 0; i < 61; i++){
-    options.push(`<option value="${i}" ${i == select ? "selected" : ""}>${i}</option>`)
-  };
-  options.join("");
-  document.querySelector(`#delay${idx}Select`).innerHTML = options;
+function showProgram(prog){
+  allPrograms[prog].map((select, idx) => {
+    let options = [];
+    for(let i = 0; i < 61; i++){
+      options.push(`<option value="${i}" ${i == select ? "selected" : ""}>${i}</option>`);
+    };
+    options = options.join("");
+    document.querySelector(`.delay${idx}Select`).innerHTML = options;
+  });
+};
+
+showProgram(progNum);
+
+document.querySelector("#moveUpBtn").addEventListener("click", () => {
+  progNum = progNum == allPrograms.length - 1 ? 0 : progNum + 1;
+  showProgram(progNum);
 });
-
+document.querySelector("#moveDnBtn").addEventListener("click", () => {
+  progNum = progNum == 0 ? allPrograms.length - 1 : progNum - 1;
+  showProgram(progNum);
+});
 
 function beep(duration, frequency, volume){
     return new Promise((resolve, reject) => {
@@ -97,12 +111,12 @@ function backToStart(){
 };
 
 document.querySelector("#chronoMe").addEventListener("click", () => {
-  let delay0 = document.querySelector("#delay0Select").value * 1000;
-  let delay1 = document.querySelector("#delay1Select").value * 1000;
-  let delay2 = document.querySelector("#delay2Select").value * 1000;
-  let delay3 = document.querySelector("#delay3Select").value * 1000;
-  let delay4 = document.querySelector("#delay4Select").value * 1000;
-  let delay5 = document.querySelector("#delay5Select").value * 1000;
+  let delay0 = document.querySelector(".delay0Select").value * 1000;
+  let delay1 = document.querySelector(".delay1Select").value * 1000;
+  let delay2 = document.querySelector(".delay2Select").value * 1000;
+  let delay3 = document.querySelector(".delay3Select").value * 1000;
+  let delay4 = document.querySelector(".delay4Select").value * 1000;
+  let delay5 = document.querySelector(".delay5Select").value * 1000;
   // beep(200, 440, 100);
   Promise.resolve()
 .then(() => {turnBlueViolet(delay0); beep(); activateDiv(0);})

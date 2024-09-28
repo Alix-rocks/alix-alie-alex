@@ -12,22 +12,31 @@ body{
   /* max-width: 500px; Doesn't work because all the 'position:absolute;' are not affected by the body's width*/
 }
 
+.topContainer{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+}
 
 .allTimeDiv{
   box-sizing: border-box;
   width: 90vw;
-  margin: 20px auto;
   display: flex;
   text-align: center;
+  justify-content: space-between;
 }
 .allTimeDiv > div{
-  padding: 0 0 2px 0;
+  padding: 3px;
 }
 .allTimeDiv label{
   font-size: 14px;
+  line-height: 1em;
+  display: block;
 }
 .allTimeDiv select{
   border-radius: 3px;
+  margin-top: 3px;
 }
 .positionClass{
   color: blueviolet;
@@ -57,6 +66,30 @@ body{
 }
 .done{
   opacity: .3;
+}
+
+.choiceDiv{
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+.choiceDiv button{
+  background: none;
+  border: none;
+  font-weight: 900;
+  font-size: 16px;
+  color: var(--tx-color);
+}
+.choiceDiv button i{
+  text-shadow: 
+    1px 1px var(--tx-color),
+    1px -1px var(--tx-color),
+    1px 0px var(--tx-color),
+    0px 1px var(--tx-color),
+    -1px 1px var(--tx-color),
+    -1px -1px var(--tx-color),
+    -1px 0px var(--tx-color),
+    0px -1px var(--tx-color);
 }
 
 #timeShowZone{

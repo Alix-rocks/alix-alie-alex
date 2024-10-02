@@ -708,6 +708,27 @@ function calculateTime(e) {
   e.stopPropagation();
   document.getElementById("screen").classList.replace("displayNone", "clickScreen");
   document.getElementById("screen").addEventListener("click", clickHandler);
+  const elem = document.documentElement; // The entire page         
+  // Activate fullscreen
+  if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+  } else if (elem.mozRequestFullScreen) { // Firefox
+      elem.mozRequestFullScreen();
+  } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+      elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { // IE/Edge
+      elem.msRequestFullscreen();
+  };
+  // Exit Fullscreen on user action (optional)
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) {
+      // When the user exits fullscreen, hide the results
+      document.getElementById("scheduleTimeWhole").classList.replace("scheduleTimeWhole", "displayNone");
+      document.getElementById("screen").classList.replace("clickScreen", "displayNone");
+      document.getElementById("screen").removeEventListener("click", clickHandler);
+      calculateTimeBtn.blur();
+    };
+  });
 };
 
 function ifNotes() {
@@ -722,9 +743,21 @@ function ifNotes() {
 };
 
 function clickHandler() {
+  if (document.fullscreenElement) {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) { // Firefox
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { // IE/Edge
+      document.msExitFullscreen();
+    };
+  };
   document.getElementById("scheduleTimeWhole").classList.replace("scheduleTimeWhole", "displayNone");
   document.getElementById("screen").classList.replace("clickScreen", "displayNone");
   document.getElementById("screen").removeEventListener("click", clickHandler);
+
 };
 
 function sumTimeSub(steps, stepIndex, arriveeTime) {

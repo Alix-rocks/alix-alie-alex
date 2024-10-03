@@ -17,42 +17,66 @@ body{
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
+  justify-content: space-between;
 }
 
 .allTimeDiv{
   box-sizing: border-box;
-  width: 90vw;
   display: flex;
   text-align: center;
   justify-content: space-between;
+  flex-grow: 1;
 }
 .allTimeDiv > div{
   padding: 3px;
+}
+.allTimeDiv h3{
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1em;
+  margin: 0 0 .7em;
+}
+.allTimeDiv p{
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1em;
+  margin: .7em 0 0;
 }
 .allTimeDiv label{
   font-size: 14px;
   line-height: 1em;
   display: block;
 }
+.allTimeDiv input[type="text"]{
+  font-size: 14px;
+  line-height: 1em;
+  display: block;
+  border: 1px solid;
+  border-radius: 1px;
+  text-align: center;
+  padding: 0;
+  width: calc((100vw - 16px - 36px - 36px) / 6); 
+  /* 16px = body's margin; 36px = choiceDiv's width+margin; 36px = .allTimeDiv > div's padding */
+}
 .allTimeDiv select{
   border-radius: 3px;
   margin-top: 3px;
 }
-.positionClass{
+.positionClass input[type="text"]{
   color: blueviolet;
 }
 .positionClass select{
   border-color: blueviolet;
   color: blueviolet;
 }
-.stretchClass{
+.stretchClass input[type="text"]{
   color: green;
 }
 .stretchClass select{
   border-color: green;
   color: green;
 }
-.pauseClass{
+.pauseClass input[type="text"]{
   color: red;
 }
 .pauseClass select{
@@ -62,6 +86,9 @@ body{
 .activated{
   border: 2px solid;
   border-radius: 5px;
+  font-weight: 800;
+}
+.activated h3, .activated p{
   font-weight: 800;
 }
 .done{
@@ -92,11 +119,17 @@ body{
     0px -1px var(--tx-color);
 }
 
+#order{
+  font-size: 24px;
+  text-align: center;
+  margin: 100px auto 15px;
+}
+
 #timeShowZone{
   width: 250px;
   height: 30px;
   border-radius: 5px;
-  margin: 100px auto;
+  margin: 0 auto 100px;
   border: 2px solid;
   background-color: transparent;
 }
@@ -131,5 +164,8 @@ body{
 #chronoMe:focus {
   transform: translateY(3px);
   box-shadow: inset 0 16px 2px -15px rgba(0,0,0,0), inset 0 0 5px 2px rgba(255,255,255,.15), inset 0 1px 20px rgba(0,0,0,.1), 0 0 0 darkred, 0 0 0 2px rgba(255,255,255,.5), 0 0 0 rgba(0,0,0,0), 0 0 0 rgba(0,0,0,0);
+}
+#chronoMe:focus span{
+  opacity: .3;
 }
 

@@ -28,19 +28,128 @@ function turnRed(duration){
 };
 //const delaysDefault = [5, 20, 8, 20, 8, 20];
 const delaysDefault = [3, 8, 3, 8, 3, 8];
-const allPrograms = [[5, 60, 15, 60, 15, 60], [5, 20, 8, 20, 8, 20], [3, 8, 3, 8, 3, 8]]
+const allPrograms = [
+  [
+    {
+      word: "Position",
+      color: "rgba(138, 43, 226, 1)",
+      time: 5
+    },
+    {
+      word: "Hold",
+      color: "green",
+      time: 60
+    },
+    {
+      word: "Pause",
+      color: "rgba(255, 0, 0, 1)",
+      time: 15
+    },
+    {
+      word: "Hold",
+      color: "green",
+      time: 60
+    },{
+      word: "Pause",
+      color: "rgba(255, 0, 0, 1)",
+      time: 15
+    },
+    {
+      word: "Hold",
+      color: "green",
+      time: 60
+    }
+  ], 
+  [
+    {
+      word: "Position",
+      color: "rgba(138, 43, 226, 1)",
+      time: 5
+    },
+    {
+      word: "Stretch",
+      color: "green",
+      time: 20
+    },
+    {
+      word: "Pause",
+      color: "rgba(255, 0, 0, 1)",
+      time: 8
+    },
+    {
+      word: "Stretch",
+      color: "green",
+      time: 20
+    },{
+      word: "Pause",
+      color: "rgba(255, 0, 0, 1)",
+      time: 8
+    },
+    {
+      word: "Stretch",
+      color: "green",
+      time: 20
+    }
+  ], 
+  [
+    {
+      word: "Position",
+      color: "rgba(138, 43, 226, 1)",
+      time: 3
+    },
+    {
+      word: "Test",
+      color: "green",
+      time: 6
+    },
+    {
+      word: "Pause",
+      color: "rgba(255, 0, 0, 1)",
+      time: 3
+    },
+    {
+      word: "Test",
+      color: "green",
+      time: 6
+    },{
+      word: "Pause",
+      color: "rgba(255, 0, 0, 1)",
+      time: 3
+    },
+    {
+      word: "Test",
+      color: "green",
+      time: 6
+    }
+  ]
+]
 let progNum = 0;
 
 function showProgram(prog){
-  allPrograms[prog].map((select, idx) => {
-    let options = [];
-    for(let i = 0; i < 61; i++){
-      options.push(`<option value="${i}" ${i == select ? "selected" : ""}>${i}</option>`);
-    };
-    options = options.join("");
-    document.querySelector(`.delay${idx}Select`).innerHTML = options;
-  });
+  let allDivs = allPrograms[progNum].map((step, idx) => {
+    return `<div style="color:${step.color};">
+      <h3>${step.word}</h3>
+      <p>${step.time}</p>
+    </div>`;
+  }).join("");
+  document.querySelector(".allTimeDiv").innerHTML = allDivs;
 };
+
+// function showProgram(prog){
+//   allPrograms[prog].map((select, idx) => {
+//     let options = [];
+//     for(let i = 0; i < 61; i++){
+//       options.push(`<option value="${i}" ${i == select ? "selected" : ""}>${i}</option>`);
+//     };
+//     options = options.join("");
+//     document.querySelector(`.delay${idx}Select`).innerHTML = options;
+//   });
+//   document.querySelectorAll('.allTimeDiv input[type="text"]').forEach(input => {
+//     //input.style.width = input.parentElement.style.width - 6 + "px";
+//     console.log(window.getComputedStyle(input.parentElement).getPropertyValue("width"));
+//     console.log(window.getComputedStyle(input.parentElement).getPropertyValue("width") - 6 + "px");
+//   });
+// };
 
 showProgram(progNum);
 
@@ -48,12 +157,46 @@ showProgram(progNum);
 document.querySelector("#moveUpBtn").addEventListener("click", () => {
   progNum = progNum == allPrograms.length - 1 ? 0 : progNum + 1;
   backToStart();
-  showProgram(progNum);
+  showProgram();
 });
 document.querySelector("#moveDnBtn").addEventListener("click", () => {
   progNum = progNum == 0 ? allPrograms.length - 1 : progNum - 1;
   backToStart();
-  showProgram(progNum);
+  showProgram();
+});
+
+document.querySelector("#addOneBtn").addEventListener("click", () => { // le + se transforme en checkmark et quand on click sur celui-là, ça enregistre
+  progNum = allPrograms.length;
+  backToStart(); //or just: document.querySelector("#chronoMe").blur(); NOT JUST BLUR, WE NEED TO DEACTIVATE IT! because Start just won't work because it's not about the number in the selects anymore, it's about the number in the array! So before the btn start can be activated, we have to had the number added to the array.
+  let options = [];
+  for(let i = 0; i < 61; i++){
+    options.push(`<option value="${i}">${i}</option>`);
+  };
+  options = options.join("");
+  document.querySelector(".allTimeDiv").innerHTML = `<div class="positionClass">
+      <input type="text" id="delay0Select" value="Position"></input>
+      <select class="delaySelect delay0Select">${options}</select>
+    </div>
+    <div class="stretchClass">
+      <input type="text" id="delay1Select" value="Stretch"></input>
+      <select class="delaySelect delay1Select">${options}</select>
+    </div>
+    <div class="pauseClass">
+      <input type="text" id="delay2Select" value="Pause"></input>
+      <select class="delaySelect delay2Select">${options}</select>
+    </div>
+    <div class="stretchClass">
+      <input type="text" id="delay3Select" value="Stretch"></input>
+      <select class="delaySelect delay3Select">${options}</select>
+    </div>
+    <div class="pauseClass">
+      <input type="text" id="delay4Select" value="Pause"></input>
+      <select class="delaySelect delay4Select">${options}</select>
+    </div>
+    <div class="stretchClass">
+      <input type="text" id="delay5Select" value="Stretch"></input>
+      <select class="delaySelect delay5Select">${options}</select>
+    </div>`;
 });
 
 function beep(duration, frequency, volume){
@@ -102,9 +245,13 @@ function activateDiv(divIdx){
         allDivs[divIdx - 1].classList.remove("activated");
         allDivs[divIdx - 1].classList.add("done");
       };
+      document.querySelector("#order").style.color = allPrograms[progNum][divIdx].color;
+      document.querySelector("#order").innerText = allPrograms[progNum][divIdx].word;
     } else if(divIdx == allDivs.length){
       allDivs[divIdx - 1].classList.remove("activated");
       allDivs[divIdx - 1].classList.add("done");
+      document.querySelector("#order").style.color = allPrograms[progNum][0].color;
+      document.querySelector("#order").innerText = "C'est fini !!!";
     };
   });
 };
@@ -117,12 +264,12 @@ function backToStart(){
 };
 
 document.querySelector("#chronoMe").addEventListener("click", () => {
-  let delay0 = document.querySelector(".delay0Select").value * 1000;
-  let delay1 = document.querySelector(".delay1Select").value * 1000;
-  let delay2 = document.querySelector(".delay2Select").value * 1000;
-  let delay3 = document.querySelector(".delay3Select").value * 1000;
-  let delay4 = document.querySelector(".delay4Select").value * 1000;
-  let delay5 = document.querySelector(".delay5Select").value * 1000;
+  let delay0 = allPrograms[progNum][0].time * 1000;
+  let delay1 = allPrograms[progNum][1].time * 1000;
+  let delay2 = allPrograms[progNum][2].time * 1000;
+  let delay3 = allPrograms[progNum][3].time * 1000;
+  let delay4 = allPrograms[progNum][4].time * 1000;
+  let delay5 = allPrograms[progNum][5].time * 1000;
   // beep(200, 440, 100);
   Promise.resolve()
 .then(() => {turnBlueViolet(delay0); beep(); activateDiv(0);})
@@ -137,7 +284,7 @@ document.querySelector("#chronoMe").addEventListener("click", () => {
 .then(() => delay(delay4))
 .then(() => {turnGreen(delay5); beep(200, 870); activateDiv(5);})
 .then(() => delay(delay5))
-.then(() => {turnBlueViolet(); beep(600); backToStart(); activateDiv(6);});
+.then(() => {turnBlueViolet(); beep(600); activateDiv(6); backToStart();});
 });
 
 // Simple beep

@@ -1520,7 +1520,8 @@ function todoCreation(todo){
     };
     numberedDays = Math.floor((doneDate - todayDate)/(1000 * 3600 * 24));
   };
-  if(togoList !== ""){ //what happens if one is stock/stored AND recurring/recurry?
+  console.log(togoList);
+  if(togoList !== ""){ //what happens if one is stock/stored AND recurring/recurry? (tried but don't need:  && togoList !== undefined)
     if(document.getElementById(togoList)){  
       if(todo.stock){
         document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.startTime ? `data-time="${todo.startTime}"` : ``}" class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : todo.term == "reminder" ? ` reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
@@ -1634,12 +1635,14 @@ function getTogoList(todo){
         alert(todo.task + " doesn't have any dates anymore (but should)!");
         togoList = "listRecurring";
       } else{
-        console.log(todo);
-        let answer = prompt(todo.task + ", C'est finnnniiiiiiii!!!\nShould we say goodbye?");
-        if(answer == null || answer == ""){
+        let answer = prompt(todo.task + ", C'est finnnniiiiiiii!!!\nLet's say goodbye!");
+        if(answer == null){
+          console.log("null");
           togoList = "";
-        } else{
+        } else if(answer == ""){ // ok
+          console.log("ok");
           let todoIndex = listTasks.findIndex(tod => tod.id == todo.id);
+          console.log(todoIndex);
           listTasks.splice(todoIndex, 1);
           localStorage.listTasks = JSON.stringify(listTasks);
           togoList = "";
@@ -1648,9 +1651,10 @@ function getTogoList(todo){
     } else if(todo.recurryDates.length == 1 && todo.fineOpt == "fineMai"){
       let date = getDateFromString(todo.recurryDates[0]);
       sendRecurringBackToGetRecurryDates(todo, date);
+    } else{
+      togoList = "listRecurring";
+      recurryCreation(todo);
     };
-    togoList = "listRecurring";
-    recurryCreation(todo);
   } else if((todoDateTime < hierOggiTime) || (todoDeadlineTime < hierOggiTime)){
     if(todo.term == "showThing" || todo.term == "reminder"){ //date or deadline is before today
       togoList = "";
@@ -3274,10 +3278,31 @@ xxx todo.out => (isn't used) true (le <li> du recurry a été créé) / false ou
 todo.label => true/false
 todo.LName => string
 todo.LColor => index of colorsList
+
+**NOUVELLE VERSION SIMPLIFIÉES DES PROJECTS**
+todo.project => true (est soit un "parent" ou un "enfant" de project) / false
+todo.pParent => true (c'est un projet) / false
+todo.pEnfant = (fait partie d'un project) / false
+un todo peut être "parent" ET "enfant" si on réussi à emboîter les projets
+(si todo.project == false, delete all (todo.project, todo.pParent, todo.pEnfant))
+Les project (tout comme les parties de project) peuvent avoir n'importe quel todo.term et paraissent dans leur liste appropriée; la seule différence est:
+- si c'est un project et qu'il n'est pas dans "current projects" on voit juste le nom du project avec son label et son contour et son background, mais aucune de ses parties
+- si c'est un projet et qu'il est dans "current projects", on voit le label, le contour, mais
+  - si il y une des parties qui est "out", le background est blanc et on y voit la dite partie
+  - s'il n'y a pas de partie qui est "out", le background est de la couleur du project et on voit le nom du project, comme il apparaît partout ailleurs
+- si c'est une partie de project, on ne la voit pas, sauf si le project est dans "current projects" ET que la dite partie est "out"
+OU la partie apparait s'il elle est "out", peu importe où est le project?
+Si il y a plusieurs parties "out" dans un même project, est-ce qu'on les montrent toutes?
+Est-ce que c'est moi qui détermine quelle partie est "out" ou "in" ou est-ce que je fais juste dire "montre-moi the next action" et on va mettre "out" la première partie, par défaut???
+Moi, je dis, chaque partie, tu peux décider si elle est "out" ou "in". Ça sera à toi de t'assurer d'en mettre au moins une "out" quand tu mettras le project dans current projects.
+So, dans le taskInfo du project, on a un ul où on met les li des parties, comme elles seraient dans les listes normales, mais le task sera plus petit pour qu'on puisse le rentrer dans task info ET ajouter une switch "out"/"in" au bout.
+Attention, si les parties sont des storage ou des recurring; on peut ben les mettre aussi dans le taskInfo, mais... en fait, ça pourrait marcher puisqu'on fait juste changer le togoList... (on a juste à s'assurer que le togoList final soit le ul du project)
+
+
 If it's a PROJECT
   todo.pNickname => nickname du project à mettre dans le label
   todo.pColor => index of colorsList
-  todo.pParts => [id des todo et project inclus dans ce project (en ordre)]
+  todo.pEnfants => [id des todo et project inclus dans ce project (en ordre)]
 If it's PART of a PROJECT (a project can be part of an other project)
   todo.pParents => [id des projets parents, en ordre du plus parent au moins parent] (oui, juste les id; on ira chercher la couleur du dernier; comme ça, si ça change, on le change juste une fois, pas pour chaque parts)
   todo.pPosition => "out" (shows in the todoZone with the colors of its closest parent) -- "in" (doesn't show in the todoZone but shows in the Project's TaskInfo) -- "done" (shows in the doneZone; doesn't show in the todoZone but shows in the Project's TaskInfo but as done (crossLined))
@@ -3933,15 +3958,15 @@ function taskAddAllInfo(infos){
     myShows = `<h6>pssst... You've got no types of show... yet</h6>`;
   };
 
-  let Pcolors = colorsList.map((icon, idx) => {
-    return `<input id="projectColor${idx}" type="radio" name="projectColorChoices" class="displayNone" value="${idx}" ${todo.PColorBG && todo.PColorBG == icon.colorBG ? "checked" : ""} /><label for="projectColor${idx}" class="showTypeIconsB projectColorChoix"><i class="fa-solid fa-folder-closed" style="color:${icon.colorBG};"></i></label>`;
+  let pColors = colorsList.map((icon, idx) => {
+    return `<input id="projectColor${idx}" type="radio" name="projectColorChoices" class="displayNone" value="${idx}" ${todo.pColor && colorsList[todo.pColor].colorBG == icon.colorBG ? "checked" : ""} /><label for="projectColor${idx}" class="showTypeIconsB projectColorChoix"><i class="fa-solid fa-folder-closed" style="color:${icon.colorBG};"></i></label>`;
   }).join("");
-  let projectColorsChoice = `<div class="projectColorsDiv">${Pcolors}</div>`;
+  let projectColorsChoice = `<div class="projectColorsDiv">${pColors}</div>`;
   let projectNamesChoice;
-  if(mySettings.myProjects && mySettings.myProjects.length > 0){ //instead: listTasks.filter(todo => todo.term == "wholeProject") (how do we figure out the levels of each project?)
-    console.log("more than 0 project");
-    let projectNames = mySettings.myProjects.map((project, idx) => {
-      return `<option style="background-color:${project.colorBG}; color:${project.colorTX};" value="${idx}" ${todo.Pnickname && todo.Pnickname == project.nickname ? `selected` : ``}>${project.nickname}</option>`;
+  let allProjects = listTasks.filter(todo => todo.pParent == true);
+  if(allProjects.length > 0){
+    let projectNames = allProjects.map((project) => {
+      return `<option style="background-color:${colorsList[project.pColor].colorBG}; color:${colorsList[project.pColor].colorTX};" value="${project.id}" ${todo.pNickname && todo.pNickname == project.pNickname ? `selected` : ``}>${project.pNickname}</option>`;
     }).join("");
     projectNamesChoice = `<select id="myProjectNames">
     <option value="null">Choose one</option>
@@ -3950,6 +3975,31 @@ function taskAddAllInfo(infos){
   } else{
     projectNamesChoice = `<h6 style="margin: 0;">pssst... First, you've got to create a project!</h6>`;
   };
+
+  let projectHow = ``;
+  let projectOnglets = ``;
+  if(todo.project){
+    projectHow = `<input id="tellHowInput" type="checkbox" class="cossin taskToggleInput" />
+    <div>
+      <label for="tellHowInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 10px;">
+        <h5 class="topList">Tell me how...<span class="tellYou" id="tellYouHow">${todo.pEnfants && todo.pEnfants.length > 0 ? `(step by step, oh baby)` : `(???)`}</span></h5>
+        <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
+      </label>
+      <div class="taskToggleList relDiv" style="margin-bottom: 25px;">
+        <ul id="projectUl">
+          ${!todo.pEnfants || todo.pEnfants.length <= 0 ? `There's no one here...` : ``}
+        </ul>
+      </div>
+    </div>`;
+    if(todo.pParents && todo.pParents.length > 0){
+      projectOnglets = todo.pParents.map(parentId => {
+        let parentIdx = listTasks.findIndex(todo => todo.id == parentId);
+        let parentTodo = listTasks[parentIdx];
+        return `<div class="projectOnglet" style="background-color:${colorsList[parentTodo.pColor].colorBG}; color:${colorsList[parentTodo.pColor].colorTX};">${parentTodo.pNickname}</div>`;
+      }).join('');
+    };
+  };
+
   let miniList;
   if(todo.miniList && todo.miniList.length > 0){
     miniList = todo.miniList.map((mini, idx) => {
@@ -3977,26 +4027,11 @@ function taskAddAllInfo(infos){
     miniList = `<h6 id="miniListEmpty" style="margin:0;">There's nothing here, yet...</h6>`;
   };
 
-  let projectHow;
-  if(todo.term == "wholeProject"){
-    projectHow = `<input id="tellHowInput" type="checkbox" class="cossin taskToggleInput" />
-    <div>
-      <label for="tellHowInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 10px;">
-        <h5 class="topList">Tell me how...<span class="tellYou" id="tellYouHow">${todo.pParts && todo.pParts.length > 0 ? `(step by step)` : ``}</span></h5>
-        <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
-      </label>
-      <div class="taskToggleList relDiv" style="margin-bottom: 25px;">
-        <ul id="projectUl">
-        </ul>
-      </div>
-    </div>`;
-  } else{
-    projectHow = ``;
-  };
+  
 //taskInfoProject similar to projectLi
 
 //  style="${todo.term == "wholeProject" ? `border-color:${colorsList[pColor].colorBG}; outline-color: ${colorsList[pColor].colorBG5};` : ``}"
-  let taskAllInfo = `<div id="taskInfo" class="taskInfoClass${todo.term == "wholeProject" ? ` taskInfoProject` : ``}">
+  let taskAllInfo = `<div id="taskInfo" class="taskInfoClass${todo.project && todo.pParent ? ` taskInfoProject` : ``}"${todo.project && todo.pParent ? ` style="border-color:${colorsList[todo.pColor].colorBG}; outline-color: ${colorsList[todo.pColor].colorBG5};"` : ``}>
     <div class="taskInfoWrapper">
       <div id="SupClickScreen" class="Screen displayNone"></div>
       <button id="doneIt" class="iconOnlyBtn cornerItLabel">
@@ -4066,7 +4101,7 @@ function taskAddAllInfo(infos){
       </div>
     </div>
     <div class="taskInfoInput relDiv${calendarStock ? ` calendarStockVersion` : ``}">
-      ${todo.pParents && todo.pParents.length > 0 ? `<div class="projectOnglet" style="background-color:${todo.PColorBG}; color:${todo.PColorTX};">${todo.Pnickname}</div>` : ``}
+      ${todo.pParents && todo.pParents.length > 0 ? `<div class="projectOngletDiv">${projectOnglets}</div>` : ``}
       <span id="iconIt" class="IconI ${todo.icon}"></span>
       <div id="labelIt" class="labelOnglet labelTaskOnglet" style="left:-10px; top:2px; background-color:${todo.LColor ? colorsList[todo.LColor].colorBG : "initial"}; color:${todo.LColor ? colorsList[todo.LColor].colorTX : "inherit"};">${todo.LName ? todo.LName : "Label"}</div>
       <div class="underLining" id="taskTitle-underLining"></div>
@@ -4091,6 +4126,18 @@ function taskAddAllInfo(infos){
         </div>
       </div>
 
+      <!--<input id="tellHowInput" type="checkbox" class="cossin taskToggleInput" />
+      <div>
+        <label for="tellHowInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 10px;">
+          <h5 class="topList">Tell me how...<span class="tellYou" id="tellYouHow">${todo.steps ? `(step by step, oh baby)` : ``}</span></h5>
+          <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
+        </label>
+        <div class="taskToggleList relDiv" style="margin-bottom: 25px;">
+          <ul class="stepsUL"></ul>
+        </div>
+      </div>-->
+      ${projectHow}
+
       <input id="tellMoreInput" type="checkbox" class="cossin taskToggleInput" />
       <div>
         <label for="tellMoreInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 10px;">
@@ -4113,27 +4160,27 @@ function taskAddAllInfo(infos){
           </ul>
         </div>
       </div>
-      ${projectHow}
+      
       <input id="tellWhatInput" type="checkbox" class="cossin taskToggleInput" />
       <div>
         <label for="tellWhatInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
-          <h5 class="topList">Tell me what...<span class="tellYou">(<span id="tellYouTermProject">${todo.wholeProject || todo.partProject ? `Project - ` : ``}</span><span id="tellYouTerm">${t(todo.term)}</span><span id="tellYouShowType">${todo.term == "showThing" ? ` - ${todo.showType ? todo.showType : mySettings.myShowTypes[0].name}` : ``}</span><span id="tellYouUrge">${todo.urge ? ` - Priority: ${todo.urgeNum}` : ``}</span>)</span></h5>
+          <h5 class="topList">Tell me what...<span class="tellYou">(<span id="tellYouTermProject">${todo.project ? `Project & ` : ``}</span><span id="tellYouTerm">${t(todo.term)}</span><span id="tellYouShowType">${todo.term == "showThing" ? ` - ${todo.showType ? todo.showType : mySettings.myShowTypes[0].name}` : ``}</span><span id="tellYouUrge">${todo.urge ? ` - Priority: ${todo.urgeNum}` : ``}</span>)</span></h5>
           <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
         </label>
         <div class="taskToggleList taskInfoInput relDiv">
-          <!-- <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Project</h5>
-          <input class="myRadio" type="checkbox" name="projectOptions" id="wholeProjectInput" value="wholeProject" ${todo.wholeProject ? `checked` : ``} />
+          <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Project</h5>
+          <input class="myRadio" type="checkbox" name="projectOptions" id="wholeProjectInput" value="pParent" ${todo.pParent ? `checked` : ``} />
           <label for="wholeProjectInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's a whole big thing</span><br />
           <span class="smallText otherSmallText">with lots of little things in it</span></label>
           <div class="wholeProjectDiv">
-            <h5 style="margin: 5px 0 0 0;">${todo.wholeProject ? `Wanna change the label?` : `Let's give it a label`}</h5>
+            <h5 style="margin: 5px 0 0 0;">${todo.pParent ? `Wanna change the label?` : `Let's give it a label`}</h5>
             <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
               <p>Choose a color: ${projectColorsChoice}</p>
               <p>Choose a nickname:</p>
-              <input id="projectNickInput" type="text" value="${todo.Pnickname ? todo.Pnickname : ""}"/>
+              <input id="projectNickInput" type="text" value="${todo.pNickname ? todo.pNickname : ""}"/>
             </div>
           </div>
-          <input class="myRadio" type="checkbox" name="projectOptions" id="partProjectInput" value="partProject" ${todo.partProject ? `checked` : ``} />
+          <input class="myRadio" type="checkbox" name="projectOptions" id="partProjectInput" value="pEnfant" ${todo.pEnfant ? `checked` : ``} />
           <label for="partProjectInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's part of something bigger</span><br />
           <span class="smallText otherSmallText">than itself</span></label>
           <div class="partProjectDiv">
@@ -4141,30 +4188,8 @@ function taskAddAllInfo(infos){
             <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
               ${projectNamesChoice}
             </div>
-          </div>-->
-          <div class="hidden" style="height: 0;">
-            <h5 class="taskInfoSubTitle" style="margin: 0;">Project</h5>
-            <input class="myRadio" type="radio" name="termOptions" id="wholeProject" value="wholeProject" ${todo.term == "wholeProject" ? `checked` : ``} />
-            <label for="wholeProject" class="termLabel"><span class="myRadio"></span>It's a whole big thing<br />
-            <span class="smallText otherSmallText">with lots of little things in it</span></label>
-            <div class="wholeProjectDiv">
-              <h5 style="margin: 5px 0 0 0;">${todo.wholeProject ? `Wanna change the label?` : `Let's make it a tab`}</h5>
-              <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
-                <p>Choose a color: ${projectColorsChoice}</p>
-                <p>Choose a nickname:</p>
-                <input id="projectNickInput" type="text" value="${todo.Pnickname ? todo.Pnickname : ""}"/>
-              </div>
-            </div>
-            <input class="myRadio" type="checkbox" name="projectOptions" id="partProjectInput" value="partProject" ${todo.pParents && todo.pParents.length > 0 ? `checked` : ``} />
-            <label for="partProjectInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's part of something bigger</span><br />
-            <span class="smallText otherSmallText">than itself</span></label>
-            <div class="partProjectDiv">
-              <h5 style="margin: 5px 0 0 0;">What project is it a part of?</h5>
-              <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
-                ${projectNamesChoice}
-              </div>
-            </div>
           </div>
+
           <h5 class="taskInfoSubTitle" style="margin: 0;">Reminder</h5>
           <input class="myRadio" type="radio" name="termOptions" id="reminder" value="reminder" ${todo.term == "reminder" ? `checked` : ``} />
           <label for="reminder" class="termLabel"><span class="myRadio"></span><span style="font-size:14px;">It's such a special day...</span></label>
@@ -4564,73 +4589,55 @@ function taskAddAllInfo(infos){
   window.moveMiniUp = moveMiniUp;
 
   // *** Project
-  let newProjectColorBG;
-  let newProjectColorTX;
+  let newProjectColor;
   let newProjectNickname;
   let myProject;
+  //If pParent
   document.querySelectorAll('input[name="projectColorChoices"]').forEach(radio => {
     radio.addEventListener("click", () => {
-      newProjectColorBG = colorsList[radio.value].colorBG;
-      newProjectColorTX = colorsList[radio.value].colorTX;
+      newProjectColor = radio.value;
       if(!document.querySelector(".projectOnglet")){
-        taskTitle.insertAdjacentHTML("beforebegin", `<div class="projectOnglet" style="background-color:${newProjectColorBG}; color:${newProjectColorTX};">${newProjectNickname ? newProjectNickname : "Project"}</div>`);
+        taskTitle.insertAdjacentHTML("beforebegin", `<div class="projectOnglet" style="background-color:${colorsList[newProjectColor].colorBG}; color:${colorsList[newProjectColor].colorTX};">${newProjectNickname ? newProjectNickname : "Project"}</div>`);
       } else{
-        document.querySelector(".projectOnglet").style.backgroundColor = newProjectColorBG;
-        document.querySelector(".projectOnglet").style.color = newProjectColorTX;
+        document.querySelector(".projectOnglet").style.backgroundColor = colorsList[newProjectColor].colorBG;
+        document.querySelector(".projectOnglet").style.color = colorsList[newProjectColor].colorTX;
       };
     });
   });
   let projectNickInput = document.querySelector("#projectNickInput");
   projectNickInput.addEventListener("change", () => {
-    //make sure that nickname doesn't already exist! There can be only one of each!!
     newProjectNickname = projectNickInput.value;
     if(!document.querySelector(".projectOnglet")){
-      taskTitle.insertAdjacentHTML("beforebegin", `<div class="projectOnglet" style="background-color:${newProjectColorBG ? newProjectColorBG : "var(--bg-color)"}; color:${newProjectColorTX ? newProjectColorTX : "var(--tx-color)"};">${newProjectNickname !== "" ? newProjectNickname : "Project"}</div>`);
+      taskTitle.insertAdjacentHTML("beforebegin", `<div class="projectOnglet" style="background-color:${newProjectColor ? colorsList[newProjectColor].colorBG : "var(--bg-color)"}; color:${newProjectColor ? colorsList[newProjectColor].colorTX : "var(--tx-color)"};">${newProjectNickname !== "" ? newProjectNickname : "Project"}</div>`);
     } else{
       document.querySelector(".projectOnglet").textContent = newProjectNickname !== "" ? newProjectNickname : "Project";
     };
   });
-  if(mySettings.myProjects && mySettings.myProjects.length > 0){
+  // if pEnfant
+  if(allProjects.length > 0){
     let myProjectNames = document.querySelector("#myProjectNames");
     myProjectNames.addEventListener("change", () => {
       if(myProjectNames.value !== "null"){
-        myProject = mySettings.myProjects[myProjectNames.value];
+        myProject = listTasks[listTasks.findIndex(todo => todo.id == myProjectNames.value)];
         if(!document.querySelector(".projectOnglet")){
-          taskTitle.insertAdjacentHTML("beforebegin", `<div class="projectOnglet" style="background-color:${myProject.colorBG}; color:${myProject.colorTX};">${myProject.nickname}</div>`);
+          taskTitle.insertAdjacentHTML("beforebegin", `<div class="projectOnglet" style="background-color:${colorsList[myProject.pColor].colorBG}; color:${colorsList[myProject.pColor].colorTX};">${myProject.pNickname}</div>`);
         } else{
-          document.querySelector(".projectOnglet").style.backgroundColor = myProject.colorBG;
-          document.querySelector(".projectOnglet").style.color = myProject.colorTX;
-          document.querySelector(".projectOnglet").textContent = myProject.nickname;
+          document.querySelector(".projectOnglet").style.backgroundColor = colorsList[myProject.pColor].colorBG;
+          document.querySelector(".projectOnglet").style.color = colorsList[myProject.pColor].colorTX;
+          document.querySelector(".projectOnglet").textContent = myProject.pNickname;
         };
       };
     });
   };
-//when term wholeProject is selected
-  // => add tellMeHow section with pParts if already exist (if already exist, they will already have been created; maybe just hide the section if another term is selected?)
-  // => show the choices for the pColor and pNickname
-  //if pColor and pNickname exist => add the tab on top of taskInfo and the border(colorsList[pColor].colorBG)/outline(colorsList[pColor].colorBG5) -color 
-
-  // document.querySelectorAll('input[name="projectOptions"]').forEach(project => {
-  //   project.addEventListener("click", () => {
-  //     if(project.value == "wholeProject"){
-  //       if(!document.querySelector(".projectOnglet")){
-  //         taskTitle.insertAdjacentHTML("beforebegin", `<div class="projectOnglet" style="background-color:${newProjectColorBG ? newProjectColorBG : "var(--bg-color)"}; color:${newProjectColorTX ? newProjectColorTX : "var(--tx-color)"};">${newProjectNickname ? newProjectNickname : "Project"}</div>`);
-  //       } else{
-  //         document.querySelector(".projectOnglet").style.backgroundColor = newProjectColorBG ? newProjectColorBG : "var(--bg-color)";
-  //         document.querySelector(".projectOnglet").style.color = newProjectColorTX ? newProjectColorTX : "var(--tx-color)";
-  //         document.querySelector(".projectOnglet").textContent = newProjectNickname ? newProjectNickname : "Project";
-  //       };
-  //     } else if(project.value == "partProject"){
-  //       if(!document.querySelector(".projectOnglet")){
-  //         taskTitle.insertAdjacentHTML("beforebegin", `<div class="projectOnglet" style="background-color:${myProject ? myProject.colorBG : "var(--bg-color)"}; color:${myProject ? myProject.colorTX : "var(--tx-color)"};">${myProject ? myProject.nickname : "Project"}</div>`);
-  //       } else{
-  //         document.querySelector(".projectOnglet").style.backgroundColor = myProject ? myProject.colorBG : "var(--bg-color)";
-  //         document.querySelector(".projectOnglet").style.color = myProject ? myProject.colorTX : "var(--tx-color)";
-  //         document.querySelector(".projectOnglet").textContent = myProject ? myProject.nickname : "Project";
-  //       };
-  //     };
-  //   });
-  // });
+  //if neither pParent nor pEnfant
+  document.querySelectorAll('input[name="projectOptions"]').forEach(checkbox => {
+    checkbox.addEventListener("click", () => {
+      //check les deux checkbox et si les deux sont unchecked, ben remove .projectOnglet
+      if(document.querySelectorAll('input[name="projectOptions"]:checked').length === 0){
+        document.querySelector(".projectOnglet").remove();
+      };
+    });
+  });
   
   
   // *** COLOR
@@ -4885,6 +4892,19 @@ function taskAddAllInfo(infos){
         newSTing = false;
       };
       
+      // *** PROJECT
+      if(document.querySelector("#wholeProjectInput").checked){
+        todo.project = true;
+        todo.pParent = true;
+        todo.pColor = newProjectColor;
+        todo.pNickname = newProjectNickname;
+      };
+      if(document.querySelector("#partProjectInput").checked){
+        todo.project = true;
+        todo.pEnfant = true;
+        todo.pColor = myProject.pColor;
+        todo.pNickname = myProject.pNickname; // pColor et pNickname sont les mêmes pour pParent et pEnfant, fac ça marche pas...
+      }
       // if(document.querySelector('#wholeProjectInput').checked){
       //   todo.wholeProject = true
       //   todo.PColorBG = newProjectColorBG ? newProjectColorBG : todo.PColorBG ? todo.PColorBG : "";

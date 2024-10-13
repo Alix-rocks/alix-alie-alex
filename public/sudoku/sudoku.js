@@ -150,8 +150,28 @@ const sudoki = [
       [6, 1, 5, 3, 8, 4, 2, 9, 7]
     ]},
   { code : "SQL3N2",
-    question : sudokuQuestionA,
-    solution : sudokuSolutionA}
+    question : [
+      [0,0,8,0,3,5,0,0,0],
+      [0,0,5,0,0,2,6,1,0],
+      [0,0,0,0,9,0,0,0,5],
+      [7,0,0,3,0,0,0,0,0],
+      [0,3,2,0,1,0,9,5,0],
+      [0,0,0,0,0,6,0,0,4],
+      [1,0,0,0,7,0,0,0,0],
+      [0,4,3,9,0,0,7,0,0],
+      [0,0,0,4,6,0,8,0,0]
+    ],
+    solution : [
+      [4,6,8,1,3,5,2,9,7],
+      [9,7,5,8,4,2,6,1,3],
+      [3,2,1,6,9,7,4,8,5],
+      [7,5,4,3,8,9,1,2,6],
+      [6,3,2,7,1,4,9,5,8],
+      [8,1,9,5,2,6,3,7,4],
+      [1,8,6,2,7,3,5,4,9],
+      [2,4,3,9,5,8,7,6,1],
+      [5,9,7,4,6,1,8,3,2]
+    ]}
   ],
   [{code : "SQL4N1", //plus de 20000 coups...
     question : [
@@ -1014,7 +1034,7 @@ function checkFilled(why, chiffre) {
       //localStorage.setItem();
         //localStorage : time & errors & indices (& niveau difficulté)
         //Tableau des scores 
-      sudoku.innerHTML = `<div class="popup">
+      sudoku.innerHTML = `<div class="popup" style="position:relative;">
           <h2><span class="typcn typcn-thumbs-up" ></span><span class="typcn typcn-star displayNone"></span><span class="typcn typcn-thumbs-up" style="display: inline-block; transform: scaleX(-1);"></span></h2>
           <div style="margin: 0 auto;" class="levelCircle ${levelColor}"></div>
           <div class="soNumero" style="background-color:${levelColor};">${(n + 1)}</div>
@@ -1061,6 +1081,7 @@ function checkFilled(why, chiffre) {
               <td style="font-weight: 700;">${countTotalPoints()}</td>
             </tr>
           </table>
+          <button style="position:absolute; bottom: -45px; right: 20px; padding: 5px 10px; font-weight: 700;" onclick="nextGame()">Next!</button>
         </div>`;
     } else{
       let count = soFar.filter((num) => num == chiffre).length;
@@ -1080,6 +1101,16 @@ function checkFilled(why, chiffre) {
     };
   };
 };
+
+function nextGame(){
+  n++;
+  let l = niveau - 1;
+  sudokuQuestion = sudoki[l][n].question;
+  sudokuSolution = sudoki[l][n].solution;
+  console.log(sudoki[l][n].code)
+  tableCreation();
+};
+window.nextGame = nextGame;
 
 function littleOnes() {
   tryMode = true;

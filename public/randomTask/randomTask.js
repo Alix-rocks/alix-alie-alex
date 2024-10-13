@@ -488,7 +488,6 @@ async function getTasksSettings() {
     
     if(!todo.pPosition || (todo.pPosition && todo.pPosition == "out")){
 
-      
 
       todoCreation(todo);
     };
@@ -1172,7 +1171,7 @@ function resetCBC(){
   };
 // });
 
-// *** SEARCH
+// MARK: SEARCH
 
 function searchShowType(){
   let optionShow = mySettings.myShowTypes.map((show, idx) => {
@@ -1520,7 +1519,7 @@ function todoCreation(todo){
     };
     numberedDays = Math.floor((doneDate - todayDate)/(1000 * 3600 * 24));
   };
-  console.log(togoList);
+  //console.log(togoList);
   if(togoList !== ""){ //what happens if one is stock/stored AND recurring/recurry? (tried but don't need:  && togoList !== undefined)
     if(document.getElementById(togoList)){  
       if(todo.stock){
@@ -1529,7 +1528,12 @@ function todoCreation(todo){
         <i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i><div class="textDiv"><span class="text" onclick="${searchSwitch ? `toTIdeSSaM(this)` : storageSwitch ? `toTIdeASaM(this)` : `toTIdeTZaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${mySettings.myBaseColors[todo.color].colorBG};" />` : ``}<span class="timeSpan">${todo.startTime ? todo.startTime : ''}</span></div><i class="fa-solid fa-recycle" onclick="${searchSwitch ? `toTIdeSSaS(this)` : calendarStock ? `toTIdeCCaNS(this)` : `toTIdeTZaS(this)`}"></i></li>`);
       } else if(todo.line == "recurringDay"){
         let time = todo.startTime ? todo.startTime : mySettings.myTomorrow;
-        let nextDate = getDateTimeFromString(todo.recurryDates[0], time);
+        let nextDate;
+        if(todo.recurryDates[0]){
+          nextDate = getDateTimeFromString(todo.recurryDates[0], time);
+        } else{
+          console.log(todo);
+        };
         numberedDays = Math.floor(Math.abs(nextDate.getTime() - todayDate.getTime())/(1000 * 3600 * 24));
         document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.startTime ? `data-time="${todo.startTime}"` : ``}" class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : todo.term == "reminder" ? ` reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
         ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
@@ -1645,6 +1649,7 @@ function getTogoList(todo){
           console.log(todoIndex);
           listTasks.splice(todoIndex, 1);
           localStorage.listTasks = JSON.stringify(listTasks);
+          updateCBC();
           togoList = "";
         };
       };
@@ -1781,7 +1786,21 @@ function recurryCreation(todo){
     while(dateTime < oggiDemainTime){
       if(dateTime < hierOggiTime){
         todo.recurryDates.splice(idx, 1);
-        dateTime = `${todo.recurryDates[idx]}-${todo.startTime ? todo.startTime.replace(":", "-") : "5-00"}`;
+        if(todo.recurryDates[idx]){
+          dateTime = `${todo.recurryDates[idx]}-${todo.startTime ? todo.startTime.replace(":", "-") : "5-00"}`;
+        } else{
+          let answer = prompt(todo.task + ", C'est finnnniiiiiiii!!!\nLet's say goodbye!");
+          if(answer == null){
+            console.log("null");
+          } else if(answer == ""){ // ok
+            console.log("ok");
+            let todoIndex = listTasks.findIndex(tod => tod.id == todo.id);
+            console.log(todoIndex);
+            listTasks.splice(todoIndex, 1);
+            localStorage.listTasks = JSON.stringify(listTasks);
+            updateCBC();
+          };
+        };
       } else{
         let recurryDate = todo.recurryDates[idx];
         recurryDateToTodoCreation(todo, recurryDate, "in");

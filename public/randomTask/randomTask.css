@@ -267,41 +267,44 @@ input[type="radio"]{
 }
 
 #cloudIt{
-  margin: 0;
+  margin-left: 16px;
   font-size: 25px;
   line-height: 1em;
   padding: 2px 5px 2px 5px;
   background-color: rgba(237, 20, 61, 0);
   color: var(--tx-color);
-  z-index: 10;
 }
 #earthIt{
-  margin: 0;
+  margin-left: 8px;
   font-size: 25px;
   line-height: 1em;
   padding: 2px 5px 2px 5px;
   background-color: rgba(237, 20, 61, 0);
   color: var(--tx-color);
-  z-index: 10;
 }
-.cloudTop{
+
+.absolutTop{
   position: absolute;
   top: 8px;
   right: 8px;
+  left: 8px;
+  z-index: 400;
 }
-.cloudBottom{
+.fixedBottom{
   position: fixed;
   bottom: 8px;
   right: 8px;
+  z-index: 400;
 }
-#earthIt.cloudTop, #earthIt.cloudBottom{
-  right: 58px;
+.fixedBottom > form > #addInput-underLining, .fixedBottom > form > #addInput{
+  visibility: hidden;
 }
-.noCloud{
-  display: none;
+.absolutTop > form > #addInput-underLining, .absolutTop > form > #addInput{
+  visibility: visible;
 }
+
 #listPage{
-  display: block;
+  /* display: block; */
   position: relative;
   text-align: left;
 }
@@ -312,6 +315,15 @@ input[type="radio"]{
 #SupClickScreen{
   z-index: 1250;
   background-color: rgba(255, 255, 255, 0);
+}
+.newClickScreen{
+  display: flex;
+  background-color: rgba(255, 255, 255, 0);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
 }
 #settings{
   position: absolute;
@@ -964,7 +976,7 @@ body > #taskInfo{
 }
 
 
-.numberedCal, .checkOptions{
+.numberedCal, .checkOptions, .projectOptions{
   position: relative;
   padding: 0;
   width: 30px;
@@ -982,7 +994,7 @@ body > #taskInfo{
   top: 0;
   left: 0;
 }
-.checkOptions span{
+.checkOptions span, .projectOptions span{
   position: absolute;
   top: 0;
   left: 0;
@@ -992,6 +1004,12 @@ body > #taskInfo{
   font-weight: 800;
   line-height: 35px;
   opacity: .7;
+}
+.projectLiOptions, .projectOptions{
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 25px; 
+  border-color: rgba(47, 79, 79, .4);
 }
 .numberedCal span{
   position: absolute;
@@ -2153,11 +2171,11 @@ td.toWeeklyArrowLeft{
   margin: 6% auto;
 }
 
-#addingZone{
-  width: calc(100vw - (3 * 42px) - (4 * 8px));
+#movingzone{
+  /* width: calc(100vw - (3 * 42px) - (4 * 8px)); */
   /* (100vw - (2 * 42px (cloudBtn)) - (2 * 8px (margins)) - (2 * 8px (space between))) */
   display: flex;
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-between;
@@ -2167,13 +2185,13 @@ td.toWeeklyArrowLeft{
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: space-between;
   width: -webkit-fill-available;
 }
 #addForm #addInput{
   width: 0;
   flex-grow: 1;
 }
+
 .addBtns{
   padding: 3px;
   line-height: 1em;
@@ -2204,14 +2222,15 @@ td.toWeeklyArrowLeft{
   width: 50px;
   right: 160px;
   position: fixed;
-  bottom: 15px;
+  bottom: 10px;
   z-index: 400;
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: var(--bg-color);
   border-radius: 5px;
-  padding-top: 2px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 #openHourToggler > p{
   margin: 0;

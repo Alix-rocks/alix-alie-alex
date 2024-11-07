@@ -1,3 +1,195 @@
+import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+import { getAuth, signOut, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+import { app, analytics, db, auth, provider } from "../myFirebase.js";
+import trans from "../trans.js";
+auth.languageCode = 'fr';
+
+const cloudIt = document.querySelector("#cloudIt");
+const earthIt = document.querySelector("#earthIt");
+const movingzone = document.querySelector("#movingzone");
+
+getRedirectResult(auth)
+  .then((result) => {
+    // This gives you a Google Access Token. You can use it to access Google APIs.
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential.accessToken;
+    // The signed-in user info.
+    const user = result.user;
+    // IdP data available using getAdditionalUserInfo(result)
+}).catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    // const email = error.customData.email;
+    // The AuthCredential type that was used.
+    const credential = GoogleAuthProvider.credentialFromError(error);
+});
+
+function logIn(){
+  signInWithRedirect(auth, provider);
+};
+let userConnected = false;
+onAuthStateChanged(auth,(user) => {
+  if(user){
+    userConnected = true;
+    console.log(user);
+    
+    getCloudBC();
+    getTasksSettings();
+    getDones();
+    settingsPage();
+    // createBody();
+    // getWeeklyCalendar();
+    logInScreen.classList.add("displayNone");
+  } else{
+    userConnected = false;
+    logInScreen.classList.remove("displayNone");
+    logInBtn.addEventListener("click", logIn);
+    tryBtn.addEventListener("click", freeIn);
+    cloudIt.classList.add("displayNone");
+    earthIt.classList.add("displayNone");
+  };
+});
+
+function logOut(){
+  signOut(auth).then(() => {
+    // Sign-out successful.
+    localStorage.clear();
+    location.reload();
+  }).catch((error) => {
+    // An error happened.
+  });
+};
+window.logOut = logOut;
+
+if(localStorage.getItem("mySettings")){
+  mySettings = JSON.parse(localStorage.mySettings);
+} else if(getTasks.exists() && getTasks.data().mySettings){
+  mySettings = getTasks.data().mySettings;
+  localStorage.mySettings = JSON.stringify(mySettings);
+} else{
+  localStorage.mySettings = JSON.stringify(mySettings);
+};
+
+function freeIn(){ 
+  //mySettings
+  if(localStorage.getItem("mySettings")){
+    mySettings = JSON.parse(localStorage.mySettings);
+  };
+  logInScreen.classList.add("displayNone");
+};
+
+// *** CLOUDSAVE
+
+async function saveToCloud(){
+  let nowStamp = new Date().getTime();
+  const batch = writeBatch(db);
+
+  listTasks = JSON.parse(localStorage.listTasks);
+  mySettings = JSON.parse(localStorage.mySettings);
+  const docRefTasks = doc(db, "randomTask", auth.currentUser.email);
+  const docSnapTasks = await getDoc(docRefTasks);
+  
+  if (docSnapTasks.exists()){
+    batch.update(doc(db, "randomTask", auth.currentUser.email), { // or batch.update or await updateDoc
+      listTasks: listTasks,
+      mySettings: mySettings,
+      lastUpdateFireStore: nowStamp
+    });
+  } else{
+    batch.set(doc(db, "randomTask", auth.currentUser.email), { // or batch.set or await setDoc
+      listTasks: listTasks,
+      mySettings: mySettings,
+      lastUpdateFireStore: nowStamp
+    });
+  }; 
+
+  myBusies = [];
+  listTasks.forEach(todo => {
+    //Modify all the event to busy
+    if(todo.term == "showThing" && todo.showType !== "Cancelled"){
+      if(todo.line == "todoDay" ){
+        busyZoneCreation(todo);
+      } else if(todo.line == "recurringDay"){
+        todo.recurryDates.forEach(recurryDate => {
+          let tempRecurry = {
+            startDate: recurryDate,
+            prima: todo.prima,
+            startTime: todo.startTime,
+            dopo: todo.dopo,
+            stopTime: todo.stopTime,
+            showType: todo.showType,
+          };
+          busyZoneCreation(tempRecurry)
+        });
+      };
+    } else if(todo.term !== "showThing" && todo.term !== "nevermind" && !todo.stock && todo.busy && (todo.startTime && todo.stopTime && todo.startTime !== todo.stopTime)){
+      if(todo.line == "todoDay" ){
+        let tempTodo = todo;
+        tempTodo.showType = "task";
+        busyZoneCreation(tempTodo);
+      } else if(todo.line == "recurringDay"){
+        todo.recurryDates.forEach(recurryDate => {
+          let tempRecurry = {
+            startDate: recurryDate,
+            prima: todo.prima,
+            startTime: todo.startTime,
+            dopo: todo.dopo,
+            stopTime: todo.stopTime,
+            showType: "task",
+          };
+          busyZoneCreation(tempRecurry)
+        });
+      };
+    };
+  });
+  const docRefBusies = doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies");
+  const docSnapBusies = await getDoc(docRefBusies);
+  if (docSnapBusies.exists()){
+    batch.update(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.update or await updateDoc
+      myBusies: myBusies
+    });
+  } else{
+    batch.set(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.set or await setDoc
+      myBusies: myBusies
+    });
+  }; 
+  listDones = JSON.parse(localStorage.listDones);
+  const docRefDones = collection(db, "randomTask", auth.currentUser.email, "myListDones");
+  const docSnapDones = await getDocs(docRefDones);
+  let modif = getModif();
+  modif.map(modifDate => {
+    let doned = listDones.find((td) => td.date == modifDate);
+    if(docSnapDones[modifDate]){
+      batch.update(doc(db, "randomTask", auth.currentUser.email, "myListDones", modifDate), {
+        dones: doned.list
+      });
+    } else{
+      batch.set(doc(db, "randomTask", auth.currentUser.email, "myListDones", modifDate), {
+        dones: doned.list
+      });
+    };
+  });  
+  /* WHEN YOU WANT TO UPDATE ALL THE DONES */
+  // listDones.forEach(td => {
+  //   if(docSnapDones[td.date]){
+  //     batch.update(doc(db, "randomTask", auth.currentUser.email, "myListDones", td.date), {
+  //       dones: td.list
+  //     });
+  //   } else{
+  //     batch.set(doc(db, "randomTask", auth.currentUser.email, "myListDones", td.date), {
+  //       dones: td.list
+  //     });
+  //   };
+  // }); 
+
+  await batch.commit();
+  localStorage.lastUpdateLocalStorage = nowStamp;
+  resetCBC();
+  resetModif();
+};
+
 // The browser will limit the number of concurrent audio contexts
 // So be sure to re-use them whenever you can
 const myAudioContext = new AudioContext();
@@ -29,23 +221,14 @@ function turnRed(duration){
 //const delaysDefault = [5, 20, 8, 20, 8, 20];
 const delaysDefault = [3, 8, 3, 8, 3, 8];
 const allPrograms = [
-  [
+  [ 
     {
+      name: "Strengthening"
+    },{
       word: "Position",
       color: "rgba(138, 43, 226, 1)",
       time: 5
-    },
-    {
-      word: "Hold",
-      color: "green",
-      time: 60
-    },
-    {
-      word: "Pause",
-      color: "rgba(255, 0, 0, 1)",
-      time: 15
-    },
-    {
+    },{
       word: "Hold",
       color: "green",
       time: 60
@@ -53,8 +236,15 @@ const allPrograms = [
       word: "Pause",
       color: "rgba(255, 0, 0, 1)",
       time: 15
-    },
-    {
+    },{
+      word: "Hold",
+      color: "green",
+      time: 60
+    },{
+      word: "Pause",
+      color: "rgba(255, 0, 0, 1)",
+      time: 15
+    },{
       word: "Hold",
       color: "green",
       time: 60
@@ -62,52 +252,41 @@ const allPrograms = [
   ], 
   [
     {
+      name: "Stretching"
+    },{
       word: "Position",
       color: "rgba(138, 43, 226, 1)",
       time: 5
-    },
-    {
+    },{
       word: "Stretch",
       color: "green",
-      time: 20
-    },
-    {
-      word: "Pause",
-      color: "rgba(255, 0, 0, 1)",
-      time: 8
-    },
-    {
-      word: "Stretch",
-      color: "green",
-      time: 20
+      time: 25
     },{
       word: "Pause",
       color: "rgba(255, 0, 0, 1)",
       time: 8
-    },
-    {
+    },{
       word: "Stretch",
       color: "green",
-      time: 20
+      time: 25
+    },{
+      word: "Pause",
+      color: "rgba(255, 0, 0, 1)",
+      time: 8
+    },{
+      word: "Stretch",
+      color: "green",
+      time: 25
     }
   ], 
   [
     {
+      name: "Demo"
+    },{
       word: "Position",
       color: "rgba(138, 43, 226, 1)",
       time: 3
-    },
-    {
-      word: "Test",
-      color: "green",
-      time: 6
-    },
-    {
-      word: "Pause",
-      color: "rgba(255, 0, 0, 1)",
-      time: 3
-    },
-    {
+    },{
       word: "Test",
       color: "green",
       time: 6
@@ -115,8 +294,15 @@ const allPrograms = [
       word: "Pause",
       color: "rgba(255, 0, 0, 1)",
       time: 3
-    },
-    {
+    },{
+      word: "Test",
+      color: "green",
+      time: 6
+    },{
+      word: "Pause",
+      color: "rgba(255, 0, 0, 1)",
+      time: 3
+    },{
       word: "Test",
       color: "green",
       time: 6
@@ -125,14 +311,16 @@ const allPrograms = [
 ]
 let progNum = 0;
 
-function showProgram(prog){
-  let allDivs = allPrograms[progNum].map((step, idx) => {
-    return `<div style="color:${step.color};">
-      <h3>${step.word}</h3>
-      <p>${step.time}</p>
-    </div>`;
+function showProgram(){
+  document.querySelector("#seqName").innerText = allPrograms[progNum][0].name;
+  document.querySelector(".allTimeDiv").innerHTML = allPrograms[progNum].map((step, idx) => {
+    if(idx !== 0){
+      return `<div style="color:${step.color};">
+        <h3>${step.word}</h3>
+        <p>${step.time}</p>
+      </div>`;
+    };
   }).join("");
-  document.querySelector(".allTimeDiv").innerHTML = allDivs;
 };
 
 // function showProgram(prog){
@@ -151,7 +339,7 @@ function showProgram(prog){
 //   });
 // };
 
-showProgram(progNum);
+showProgram();
 
 
 document.querySelector("#moveUpBtn").addEventListener("click", () => {
@@ -173,30 +361,34 @@ document.querySelector("#addOneBtn").addEventListener("click", () => { // le + s
     options.push(`<option value="${i}">${i}</option>`);
   };
   options = options.join("");
+  document.querySelector("#seqName").innerHTML = `<input class="seqNameInput" type="text" placeholder="Nom de la séquence"></input>`;
   document.querySelector(".allTimeDiv").innerHTML = `<div class="positionClass">
-      <input type="text" id="delay0Select" value="Position"></input>
+      <input type="text" class="stepNameInput" id="delay0Select" value="Position"></input>
       <select class="delaySelect delay0Select">${options}</select>
     </div>
     <div class="stretchClass">
-      <input type="text" id="delay1Select" value="Stretch"></input>
+      <input type="text" class="stepNameInput" id="delay1Select" value="Stretch"></input>
       <select class="delaySelect delay1Select">${options}</select>
     </div>
     <div class="pauseClass">
-      <input type="text" id="delay2Select" value="Pause"></input>
+      <input type="text" class="stepNameInput" id="delay2Select" value="Pause"></input>
       <select class="delaySelect delay2Select">${options}</select>
     </div>
     <div class="stretchClass">
-      <input type="text" id="delay3Select" value="Stretch"></input>
+      <input type="text" class="stepNameInput" id="delay3Select" value="Stretch"></input>
       <select class="delaySelect delay3Select">${options}</select>
     </div>
     <div class="pauseClass">
-      <input type="text" id="delay4Select" value="Pause"></input>
+      <input type="text" class="stepNameInput" id="delay4Select" value="Pause"></input>
       <select class="delaySelect delay4Select">${options}</select>
     </div>
     <div class="stretchClass">
-      <input type="text" id="delay5Select" value="Stretch"></input>
+      <input type="text" class="stepNameInput" id="delay5Select" value="Stretch"></input>
       <select class="delaySelect delay5Select">${options}</select>
     </div>`;
+    //when the checkmark is clicked (to save), we go through each and note the text, (color) and time into one prog
+    //Then push that prog into allPrograms.
+    //Then showProgram (progNum should be the right one)
 });
 
 function beep(duration, frequency, volume){
@@ -245,12 +437,12 @@ function activateDiv(divIdx){
         allDivs[divIdx - 1].classList.remove("activated");
         allDivs[divIdx - 1].classList.add("done");
       };
-      document.querySelector("#order").style.color = allPrograms[progNum][divIdx].color;
-      document.querySelector("#order").innerText = allPrograms[progNum][divIdx].word;
+      document.querySelector("#order").style.color = allPrograms[progNum][divIdx + 1].color;
+      document.querySelector("#order").innerText = allPrograms[progNum][divIdx + 1].word;
     } else if(divIdx == allDivs.length){
       allDivs[divIdx - 1].classList.remove("activated");
       allDivs[divIdx - 1].classList.add("done");
-      document.querySelector("#order").style.color = allPrograms[progNum][0].color;
+      document.querySelector("#order").style.color = allPrograms[progNum][1].color;
       document.querySelector("#order").innerText = "C'est fini !!!";
     };
   });
@@ -264,12 +456,13 @@ function backToStart(){
 };
 
 document.querySelector("#chronoMe").addEventListener("click", () => {
-  let delay0 = allPrograms[progNum][0].time * 1000;
-  let delay1 = allPrograms[progNum][1].time * 1000;
-  let delay2 = allPrograms[progNum][2].time * 1000;
-  let delay3 = allPrograms[progNum][3].time * 1000;
-  let delay4 = allPrograms[progNum][4].time * 1000;
-  let delay5 = allPrograms[progNum][5].time * 1000;
+  //console.log(allPrograms[progNum]);
+  let delay0 = allPrograms[progNum][1].time * 1000;
+  let delay1 = allPrograms[progNum][2].time * 1000;
+  let delay2 = allPrograms[progNum][3].time * 1000;
+  let delay3 = allPrograms[progNum][4].time * 1000;
+  let delay4 = allPrograms[progNum][5].time * 1000;
+  let delay5 = allPrograms[progNum][6].time * 1000;
   // beep(200, 440, 100);
   Promise.resolve()
 .then(() => {turnBlueViolet(delay0); beep(); activateDiv(0);})
@@ -305,14 +498,5 @@ function delay(duration) {
   });
 };
 
-// Emit a set of beeps
-// to simulate a Ready, Set, Go! 
-// It goes like: 
-// (low pitch) Beep 
-// (1 second silence) 
-// (low pitch) Beep
-// (1 second silence)
-// (low pitch) Beep
-// (1 second silence)
-// (higher pitch) Beep!!!
+
 

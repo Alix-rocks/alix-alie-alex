@@ -15,6 +15,7 @@ auth.languageCode = 'fr';
 
 const cloudIt = document.querySelector("#cloudIt");
 const earthIt = document.querySelector("#earthIt");
+const movingzone = document.querySelector("#movingzone");
 
 getRedirectResult(auth)
   .then((result) => {
@@ -42,14 +43,14 @@ onAuthStateChanged(auth,(user) => {
   if(user){
     userConnected = true;
     console.log(user);
-    logInScreen.classList.add("displayNone");
+    
     getCloudBC();
     getTasksSettings();
     getDones();
     settingsPage();
-    //getMines();
     // createBody();
     // getWeeklyCalendar();
+    logInScreen.classList.add("displayNone");
   } else{
     userConnected = false;
     logInScreen.classList.remove("displayNone");
@@ -188,7 +189,7 @@ let mySections = [
     color: "midnightblue",
     subsection: [
       {
-        name: "The long term shit",
+        name: "The long term shits",
         nickname: "longTerm",
       }, {
         name: "The one time thingies",
@@ -370,8 +371,8 @@ const pageEvent = new Event("click");
       });
       let wantedPage = radio.nextElementSibling;
       wantedPage.classList.remove("displayNone");
-      cloudIt.className = `${wantedPage.dataset.cloudit}`;
-      earthIt.className = `${wantedPage.dataset.cloudit}`;
+      console.log(wantedPage);
+      movingzone.className = `${wantedPage.dataset.movingzone}`;
       // window.scrollTo({ top: 0, behavior: 'smooth' });
       window.scrollTo({ top: 0 });
       document.querySelectorAll('input[name="switchPageRadios"]').forEach(radio => {
@@ -452,14 +453,14 @@ async function getTasksSettings() {
   document.getElementById(mySettings.myFavoriteView).dispatchEvent(pageEvent);
   //light or dark mode
   if(mySettings.mySide == "light"){
-    document.getElementById("switchModeBall").className = "ballLight";
-    document.getElementById("switchModeBallUnder").className = "ballLight";
+    // document.getElementById("switchModeBall").className = "ballLight";
+    // document.getElementById("switchModeBallUnder").className = "ballLight";
     document.querySelector(':root').style.setProperty('--bg-color', 'rgb(242, 243, 244)');
     document.querySelector(':root').style.setProperty('--bg-color-7', 'rgba(242, 243, 244, .7)');
     document.querySelector(':root').style.setProperty('--tx-color', 'darkslategrey');
   } else if(mySettings.mySide == "dark"){
-    document.getElementById("switchModeBall").className = "";
-    document.getElementById("switchModeBallUnder").className = "";
+    // document.getElementById("switchModeBall").className = "";
+    // document.getElementById("switchModeBallUnder").className = "";
     document.querySelector(':root').style.setProperty('--bg-color', 'rgb(7, 10, 10)');
     document.querySelector(':root').style.setProperty('--bg-color-7', 'rgba(7, 10, 10, .7)');
     document.querySelector(':root').style.setProperty('--tx-color', 'rgba(242, 243, 244, .8)');
@@ -634,9 +635,10 @@ function myLabelsGeneralChoice(){
   });
 };
 
-
+// MARK: getDones
 async function getDones(){
   const getDones = await getDocs(collection(db, "randomTask", auth.currentUser.email, "myListDones"));
+  let lastWeekDateString = getLastWeekDateString();
   if(localStorage.getItem("listDones")){
     listDones = JSON.parse(localStorage.listDones);
   } else if(getDones){
@@ -647,7 +649,7 @@ async function getDones(){
   };
   let sortedListDones = listDones.sort((d1, d2) => (d1.date > d2.date) ? 1 : (d1.date < d2.date) ? -1 : 0);
   sortedListDones.forEach(doned => {
-    if (doned.list.length !== 0) {
+    if (doned.list.length !== 0 && doned.date > lastWeekDateString) {
       let donedDate = doned.date;
       donedDateCreation(donedDate);
       doned.list.forEach(tidoned => {        
@@ -912,8 +914,8 @@ function updateFromCloud(){
   resetCBC();
   getTasksSettings();
   getDones();
-  //createBody(); (already in getDones())
-  //getWeeklyCalendar(); (already in getDones())
+  // createBody();
+  // getWeeklyCalendar();
   settingsPage();
   updateArrowsColor();
   earthIt.style.backgroundColor = "rgba(237, 20, 61, 0)";
@@ -1492,7 +1494,7 @@ function todoCreation(todo){
   let numberedDays;
   let todayDate = getDateTimeFromString(getTodayDateString(), mySettings.myTomorrow);
   if(projectSwitch){
-    togoList = "projectUl"; // s'assurer de tous les créer: todo "in" et "out" et term=="wholeProject" aussi!
+    togoList = "projectUl";
   } else if(searchSwitch){
     togoList = "searchFound";
   } else if(thatDaySwitch){ // ajuster plus haut pour s'assurer de ce qu'on envoie ici (recurry au lieu de recurryDate)
@@ -1525,7 +1527,7 @@ function todoCreation(todo){
       if(todo.stock){
         document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.startTime ? `data-time="${todo.startTime}"` : ``}" class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : todo.term == "reminder" ? ` reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
         ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
-        <i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i><div class="textDiv"><span class="text" onclick="${searchSwitch ? `toTIdeSSaM(this)` : storageSwitch ? `toTIdeASaM(this)` : `toTIdeTZaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${mySettings.myBaseColors[todo.color].colorBG};" />` : ``}<span class="timeSpan">${todo.startTime ? todo.startTime : ''}</span></div><i class="fa-solid fa-recycle" onclick="${searchSwitch ? `toTIdeSSaS(this)` : calendarStock ? `toTIdeCCaNS(this)` : `toTIdeTZaS(this)`}"></i></li>`);
+        <i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i><div class="textDiv"><span class="text" onclick="${searchSwitch ? `toTIdeSSaM(this)` : storageSwitch ? `toTIdeASaM(this)` : `toTIdeTZaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${mySettings.myBaseColors[todo.color].colorBG};" />` : ``}<span class="timeSpan">${todo.startTime ? todo.startTime : ''}</span></div><i class="fa-solid fa-recycle" onclick="${searchSwitch ? `toTIdeSSaS(this)` : calendarStock ? `toTIdeCCaNS(this)` : projectStock ? `toTIdePaS(this)` : `toTIdeTZaS(this)`}"></i></li>`);
       } else if(todo.line == "recurringDay"){
         let time = todo.startTime ? todo.startTime : mySettings.myTomorrow;
         let nextDate;
@@ -1548,9 +1550,23 @@ function todoCreation(todo){
           <div class="textDiv"><span onclick="${searchSwitch ? `toTIdeSSaM(this)` : `toTIdeTZaM(this)`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px; ` : ``}color:${mySettings.myBaseColors[todo.color].colorBG}; font-size: 1em;">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" style="font-size: .8em;" onclick="timeItEvent(this)">${todo.startTime ? todo.startTime : ""}</span>
           <input type="time" class="displayNone"/></div>
         </li>`);
-      } else { // if(projectSwitch && todo.term == "wholeProject"){}
-        let pOngletsDiv = ``;
+      } else {
+        let pOnglets = ``;
+        if(todo.pParentId && !projectSwitch){
+          while(todo.pParentId !== null){
+            let parentTodo = listTasks[listTasks.findIndex(todo => todo.id == todo.pParentId)];
+            let onglet = `<div class="projectLiOnglet" style="background-color:${colorsList[parentTodo.pColor].colorBG}; color:${colorsList[parentTodo.pColor].colorTX};">${parentTodo.pName}</div>`; 
+            pOnglets.push(onglet);
+          };
+          pOnglets = pOnglets.join(""); 
+        };
         let pColor = 0;
+        if(todo.pColor){
+          pColor = todo.pColor;
+        } else if(!todo.pColor && todo.pParentId){
+          let parentTodo = listTasks[listTasks.findIndex(todo => todo.id == todo.pParentId)];
+          pColor = parentTodo.pColor;
+        };
         // if (!projectSwitch && todo.pParents && todo.pParents.length > 0) {
         //   console.log(todo);
         //   let pOngletsDivLabels = todo.pParents.map(label => {
@@ -1576,9 +1592,9 @@ function todoCreation(todo){
           ${todo.openHour ? `data-openHour="true"` : ``} 
           class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : ``}${todo.pPosition == "out" ? ` projectLi` : ``}${todo.startTime && todo.prima && todo.prima !== "00:00" ? ` showLiBuffer` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}${!openHourSwitch && !openHourToggle && todo.openHour ? ` displayNone` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}${todo.pPosition == "out" ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : ``}">
           ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
-          ${pOngletsDiv}
+          ${todo.pParentId && !projectSwitch ? `<div class="ProjectLiOngletDiv">${pOnglets}</div>` : ``}
           ${todo.startTime && todo.prima && todo.prima !== "00:00" ? `<div class="primaLiBuffer">${timeMath(roundFifteenTime(todo.startTime), "minus", todo.prima).replace("-", ":")}</div>` : ``}
-          <div class="checkOptions" style="color: ${todo.urge ? todo.urgeColor : ``}" onclick="checkOptions(this)">
+          <div class="checkOptions${projectSwitch ? " projectLiOptions" : ""}" style="${todo.urge ? `color: ${todo.urgeColor};` : ``}${projectSwitch && todo.pPosition == "out" ? `border-color:${colorsList[pColor].colorBG};` : ``}" onclick="checkOptions(this, ${pColor})">
             <i class="typcn typcn-media-stop-outline emptyCheck"></i>
             <span>${todo.urge ? todo.urgeNum : ``}</span>
           </div>
@@ -1614,7 +1630,7 @@ function todoCreation(todo){
 
 
 
-
+// MARK: getTogoList
 function getTogoList(todo){ 
   //console.log(todo);
   let todoDateTime;
@@ -1656,6 +1672,8 @@ function getTogoList(todo){
     } else if(todo.recurryDates.length == 1 && todo.fineOpt == "fineMai"){
       let date = getDateFromString(todo.recurryDates[0]);
       sendRecurringBackToGetRecurryDates(todo, date);
+      togoList = "listRecurring";
+      recurryCreation(todo);
     } else{
       togoList = "listRecurring";
       recurryCreation(todo);
@@ -1684,9 +1702,10 @@ function getTogoList(todo){
   return togoList;
 };
 
-function checkOptions(thisOne){
+function checkOptions(thisOne, pColor){ //context is either "normal" or "project" (that one means it's in a project's taskInfo projectUl)
   clickScreen.classList.remove("displayNone");
-  parent = thisOne.parentElement;
+  parent = thisOne.parentElement; //That's the <li>
+  let list = parent.parentElement;//That's the <ul>
   parent.classList.add("selectedTask");
   let todo = getTodoFromParent();;
   parent.insertAdjacentHTML("beforeend", `<div class="checkOptionsDiv">
@@ -1694,6 +1713,8 @@ function checkOptions(thisOne){
   ${todo.urge ? `<input id="newUrgeNumInput" type="number" value="${todo.urgeNum}"/>` : ``}
   <i class="typcn typcn-input-checked-outline checkOptionsCheck" onclick="PartialCheckEvent(this.parentElement)"></i>
   ${todo.term == "alwaysHere" ? `` : `<i class="typcn typcn-input-checked checkOptionsCheck" onclick="TotalCheckEvent(this.parentElement)"></i>`}
+  ${list == "projectUl" ? `<div class="projectOptions" ${todo.pPosition == "out" ? `style="border-color:${colorsList[pColor].colorBG};"` : ``} onclick="projectOptionsEvent(this.parentElement)"><span>${todo.pPosition}</span></div>` : ``}
+  ${list == "projectUl" && todo.pPosition == "done" ? `like recycleEvent from Done` : ``}
   </div>`);
   let checkOptionsDiv = parent.querySelector(".checkOptionsDiv");
   clickScreen.addEventListener("click", () => clickHandlerAddOn(checkOptionsDiv, "trash", clickScreen, ""));
@@ -1771,6 +1792,13 @@ function colorUrges(when){
     sortIt("urge", "topPriorityList");
   };
 };
+
+function projectOptionsEvent(circle){
+  // switch between "in", "out"
+  //the border-color of circle changes color (0 if "in" and pColor if "out")
+  //the border-color of the li (circle.parentElement) changes too
+};
+window.projectOptionsEvent = projectOptionsEvent;
 
 function recurryCreation(todo){
   let idx = 0;
@@ -2585,8 +2613,8 @@ function sortItAllWell(){
 
 // *** SHUFFLE
 let wheneverList = [];
-let listPage = document.querySelector("#listPage");
-let toDoPage = document.querySelector("#toDoPage");
+const listPage = document.querySelector("#listPage");
+const toDoPage = document.querySelector("#toDoPage");
 shuffleBtn.addEventListener("click", () => {
   let todayDate = getTodayDateString();
   wheneverList = listTasks.filter(task => (task.term == "oneTime" || task.term == "longTerm" || task.term == "alwaysHere") && !task.stock && task.line !== "recurringDay" && (task.line == "noDay" || task.startDate == todayDate) && task.quicky); 
@@ -2596,6 +2624,7 @@ shuffleBtn.addEventListener("click", () => {
   };
   listPage.classList.toggle("displayNone");
   toDoPage.classList.toggle("displayNone");
+  movingzone.classList.add("displayNone");
   num = 0;
   taskToDo.innerText = wheneverList[num].task;
   taskToDo.style.color = mySettings.myBaseColors[wheneverList[num].color].colorBG;
@@ -2647,6 +2676,7 @@ nopeNextBtn.addEventListener("click", () => {
 backBtn.addEventListener("click", () => {
   listPage.classList.toggle("displayNone");
   toDoPage.classList.toggle("displayNone");
+  movingzone.classList.remove("displayNone");
 });
 
 // *** TIME
@@ -3299,32 +3329,13 @@ todo.LName => string
 todo.LColor => index of colorsList
 
 **NOUVELLE VERSION SIMPLIFIÉES DES PROJECTS**
-todo.project => true (est soit un "parent" ou un "enfant" de project) / false
-todo.pParent => true (c'est un projet) / false
-todo.pEnfant = (fait partie d'un project) / false
-un todo peut être "parent" ET "enfant" si on réussi à emboîter les projets
-(si todo.project == false, delete all (todo.project, todo.pParent, todo.pEnfant))
-Les project (tout comme les parties de project) peuvent avoir n'importe quel todo.term et paraissent dans leur liste appropriée; la seule différence est:
-- si c'est un project et qu'il n'est pas dans "current projects" on voit juste le nom du project avec son label et son contour et son background, mais aucune de ses parties
-- si c'est un projet et qu'il est dans "current projects", on voit le label, le contour, mais
-  - si il y une des parties qui est "out", le background est blanc et on y voit la dite partie
-  - s'il n'y a pas de partie qui est "out", le background est de la couleur du project et on voit le nom du project, comme il apparaît partout ailleurs
-- si c'est une partie de project, on ne la voit pas, sauf si le project est dans "current projects" ET que la dite partie est "out"
-OU la partie apparait s'il elle est "out", peu importe où est le project?
-Si il y a plusieurs parties "out" dans un même project, est-ce qu'on les montrent toutes?
-Est-ce que c'est moi qui détermine quelle partie est "out" ou "in" ou est-ce que je fais juste dire "montre-moi the next action" et on va mettre "out" la première partie, par défaut???
-Moi, je dis, chaque partie, tu peux décider si elle est "out" ou "in". Ça sera à toi de t'assurer d'en mettre au moins une "out" quand tu mettras le project dans current projects.
-So, dans le taskInfo du project, on a un ul où on met les li des parties, comme elles seraient dans les listes normales, mais le task sera plus petit pour qu'on puisse le rentrer dans task info ET ajouter une switch "out"/"in" au bout.
-Attention, si les parties sont des storage ou des recurring; on peut ben les mettre aussi dans le taskInfo, mais... en fait, ça pourrait marcher puisqu'on fait juste changer le togoList... (on a juste à s'assurer que le togoList final soit le ul du project)
+todo.pParentId = "(id of its closest parent; if it's the top parent, then null)" (so, if todo.pParentId == null || todo.pParentId !== null then it's in the project category (either parent or offspring or both))
+todo.pOffspringId = [array of the id of its offspring, in order] (if it's an offspring then delete todo.pOffspringId, unless it's also a parent?)
+todo.pColor = number (index of the colors of the project, only if it's a project. If it's an offspring, then we go check it's parent's colors' index)
+todo.pName = nickname of the project (for the label), only if it's a project. If it's an offspring, then we go check it's parent's name
+todo.pPosition => "out" (shows in the todoZone with the colors of its closest parent) -- "in" (doesn't show in the todoZone but shows in the Project's TaskInfo) -- "done" (shows in the doneZone; doesn't show in the todoZone but shows in the Project's TaskInfo but as done (crossLined))
+    //todo.pOut = true/false true == it is shown in the list (if it's a project (todo.pOffspringId && todo.pOffspringId !== null), then you have two borders; if it's an offspring (todo.pOffspringId), then you have only one border)
 
-
-If it's a PROJECT
-  todo.pNickname => nickname du project à mettre dans le label
-  todo.pColor => index of colorsList
-  todo.pEnfants => [id des todo et project inclus dans ce project (en ordre)]
-If it's PART of a PROJECT (a project can be part of an other project)
-  todo.pParents => [id des projets parents, en ordre du plus parent au moins parent] (oui, juste les id; on ira chercher la couleur du dernier; comme ça, si ça change, on le change juste une fois, pas pour chaque parts)
-  todo.pPosition => "out" (shows in the todoZone with the colors of its closest parent) -- "in" (doesn't show in the todoZone but shows in the Project's TaskInfo) -- "done" (shows in the doneZone; doesn't show in the todoZone but shows in the Project's TaskInfo but as done (crossLined))
 mySettings.myShowTypes.name
 mySettings.myShowTypes.colorBG => background-color
 mySettings.myShowTypes.colorTX => color (text)
@@ -3609,6 +3620,9 @@ let newlabelColor = "";
 
 // MARK: TODO List
 /*
+***PROJECT
+  - Créer projectOptionsEvent()
+  - getStorage() mais pour offspring
 ***EnCours:
 - weeklyFilter (l'icon filter est en displayNone en attendant que le reste du code soit fait)
 pour commencer, je propose une liste des types de shows et task avec, pour chaque, un slider vert show/hide ou un oeil avec ou sans barre.
@@ -3713,6 +3727,7 @@ function getTodoFromParent(){ //parent is global
 // to go to taskAddAllInfo
 
 function toTIdeTZaN(){ // de TodoZone à New (addForm but without the addInput.value, so when you directly click the add button (if you write an addInput.value, it directly goes to todoCreation, then after that you can click on it to go to taskInfo, in which case, it's a toTIdeTZaM))
+  moving = true;
   let todo = {
     newShit: true,
     id: crypto.randomUUID(),
@@ -3730,6 +3745,7 @@ function toTIdeTZaN(){ // de TodoZone à New (addForm but without the addInput.v
 };
 
 function toTIdeTZaM(thisOne){ // de TodoZone à Modification et à Procrastinator (this.parentElement)
+  moving = true;
   let div= thisOne.parentElement;
   parent = div.parentElement;
   parent.classList.add("selectedTask");
@@ -3747,6 +3763,7 @@ function toTIdeTZaM(thisOne){ // de TodoZone à Modification et à Procrastinato
 window.toTIdeTZaM = toTIdeTZaM;
 
 function toTIdeTZaS(thisOne){ // de TodoZone à Stock reusage
+  document.querySelector("#allStore").remove();
   let reuseLi = thisOne.parentElement;
   let reuseId = reuseLi.id;
   let reuseIndex = listTasks.findIndex(todo => todo.id == reuseId);
@@ -3768,6 +3785,16 @@ function toTIdeTZaS(thisOne){ // de TodoZone à Stock reusage
   taskAddAllInfo(infos);
 };
 window.toTIdeTZaS = toTIdeTZaS;
+
+let projectStock = false;
+
+
+
+function toTIdePaS(thisOne){
+  projectStock = true;
+  document.querySelector("#allStore").remove();
+};
+window.toTIdePaS = toTIdePaS;
 
 function toTIdeASaM(thisOne){ // de AllStorage à Modification
   moving = false;
@@ -3959,9 +3986,10 @@ function taskAddAllInfo(infos){
   let positionA = window.scrollY;
   let parents;
   let todo = infos.todo;
+  console.log(todo);
   let where = infos.where;//where == "todoZone", "calWeekPage", "calMonthPage", "searchScreen", "allStorage"
   let div = infos.div;
-  let togoList = infos.togoList;
+  let togoList = infos.togoList; //on va pas le rechercher à la fin?
  
   //console.log(todo);
   let myShows;
@@ -3982,10 +4010,11 @@ function taskAddAllInfo(infos){
   }).join("");
   let projectColorsChoice = `<div class="projectColorsDiv">${pColors}</div>`;
   let projectNamesChoice;
-  let allProjects = listTasks.filter(todo => todo.pParent == true);
+  let allProjects = listTasks.filter(todo => todo.pOffspringId);
   if(allProjects.length > 0){
+    console.log(allProjects);
     let projectNames = allProjects.map((project) => {
-      return `<option style="background-color:${colorsList[project.pColor].colorBG}; color:${colorsList[project.pColor].colorTX};" value="${project.id}" ${todo.pNickname && todo.pNickname == project.pNickname ? `selected` : ``}>${project.pNickname}</option>`;
+      return `<option style="background-color:${colorsList[project.pColor].colorBG}; color:${colorsList[project.pColor].colorTX};" value="${project.id}" ${todo.pName && todo.pName == project.pName ? `selected` : ``}>${project.pName}</option>`;
     }).join("");
     projectNamesChoice = `<select id="myProjectNames">
     <option value="null">Choose one</option>
@@ -3995,29 +4024,26 @@ function taskAddAllInfo(infos){
     projectNamesChoice = `<h6 style="margin: 0;">pssst... First, you've got to create a project!</h6>`;
   };
 
-  let projectHow = ``;
-  let projectOnglets = ``;
-  if(todo.project){
-    projectHow = `<input id="tellHowInput" type="checkbox" class="cossin taskToggleInput" />
-    <div>
-      <label for="tellHowInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 10px;">
-        <h5 class="topList">Tell me how...<span class="tellYou" id="tellYouHow">${todo.pEnfants && todo.pEnfants.length > 0 ? `(step by step, oh baby)` : `(???)`}</span></h5>
-        <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
-      </label>
-      <div class="taskToggleList relDiv" style="margin-bottom: 25px;">
-        <ul id="projectUl">
-          ${!todo.pEnfants || todo.pEnfants.length <= 0 ? `There's no one here...` : ``}
-        </ul>
-      </div>
-    </div>`;
-    if(todo.pParents && todo.pParents.length > 0){
-      projectOnglets = todo.pParents.map(parentId => {
-        let parentIdx = listTasks.findIndex(todo => todo.id == parentId);
-        let parentTodo = listTasks[parentIdx];
-        return `<div class="projectOnglet" style="background-color:${colorsList[parentTodo.pColor].colorBG}; color:${colorsList[parentTodo.pColor].colorTX};">${parentTodo.pNickname}</div>`;
-      }).join('');
+  
+  let projectOnglets = [];
+  if(todo.pParentId){
+    let pParentId = todo.pParentId;
+    while(pParentId !== null){
+      let parentTodo = listTasks[listTasks.findIndex(todo => todo.id == pParentId)];
+      let onglet = `<div class="projectOnglet" style="background-color:${colorsList[parentTodo.pColor].colorBG}; color:${colorsList[parentTodo.pColor].colorTX};">${parentTodo.pName}</div>`; 
+      projectOnglets.push(onglet);
+      pParentId = parentTodo.pParentId;
     };
   };
+  if(todo.pOffspringId && todo.pOffspringId !== null){
+    console.log("parent!");
+    let onglet = `<div class="projectOnglet" style="background-color:${colorsList[todo.pColor].colorBG}; color:${colorsList[todo.pColor].colorTX};">${todo.pName}</div>`; 
+    projectOnglets.push(onglet);
+  };
+  if(projectOnglets.length > 0){
+    projectOnglets = projectOnglets.join("");
+  };
+  console.log(projectOnglets);
 
   let miniList;
   if(todo.miniList && todo.miniList.length > 0){
@@ -4050,7 +4076,8 @@ function taskAddAllInfo(infos){
 //taskInfoProject similar to projectLi
 
 //  style="${todo.term == "wholeProject" ? `border-color:${colorsList[pColor].colorBG}; outline-color: ${colorsList[pColor].colorBG5};` : ``}"
-  let taskAllInfo = `<div id="taskInfo" class="taskInfoClass${todo.project && todo.pParent ? ` taskInfoProject` : ``}"${todo.project && todo.pParent ? ` style="border-color:${colorsList[todo.pColor].colorBG}; outline-color: ${colorsList[todo.pColor].colorBG5};"` : ``}>
+//<div id="taskInfo" class="taskInfoClass${todo.project && todo.pParent ? ` taskInfoProject` : ``}"${todo.project && todo.pParent ? ` style="border-color:${colorsList[todo.pColor].colorBG}; outline-color: ${colorsList[todo.pColor].colorBG5};"` : ``}>
+  let taskAllInfo = `<div id="taskInfo" class="taskInfo taskInfoClass">
     <div class="taskInfoWrapper">
       <div id="SupClickScreen" class="Screen displayNone"></div>
       <button id="doneIt" class="iconOnlyBtn cornerItLabel">
@@ -4120,7 +4147,7 @@ function taskAddAllInfo(infos){
       </div>
     </div>
     <div class="taskInfoInput relDiv${calendarStock ? ` calendarStockVersion` : ``}">
-      ${todo.pParents && todo.pParents.length > 0 ? `<div class="projectOngletDiv">${projectOnglets}</div>` : ``}
+      <div class="projectOngletDiv">${projectOnglets}</div>
       <span id="iconIt" class="IconI ${todo.icon}"></span>
       <div id="labelIt" class="labelOnglet labelTaskOnglet" style="left:-10px; top:2px; background-color:${todo.LColor ? colorsList[todo.LColor].colorBG : "initial"}; color:${todo.LColor ? colorsList[todo.LColor].colorTX : "inherit"};">${todo.LName ? todo.LName : "Label"}</div>
       <div class="underLining" id="taskTitle-underLining"></div>
@@ -4145,17 +4172,20 @@ function taskAddAllInfo(infos){
         </div>
       </div>
 
-      <!--<input id="tellHowInput" type="checkbox" class="cossin taskToggleInput" />
-      <div>
+      <input id="tellHowInput" type="checkbox" class="cossin taskToggleInput" />
+      <div id="tellHowDiv" ${todo.pOffspringId ? `` : `class="displayNone"`}>
         <label for="tellHowInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 10px;">
-          <h5 class="topList">Tell me how...<span class="tellYou" id="tellYouHow">${todo.steps ? `(step by step, oh baby)` : ``}</span></h5>
+          <h5 class="topList">Tell me how...<span class="tellYou" id="tellYouHow">${todo.pOffspringId && todo.pOffspringId.length > 0 ? `(step by step, oh baby)` : `(Where do I begin???)`}</span></h5>
           <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
         </label>
         <div class="taskToggleList relDiv" style="margin-bottom: 25px;">
-          <ul class="stepsUL"></ul>
+          <ul id="projectUl">
+            ${!todo.pOffspringId || (todo.pOffspringId && todo.pOffspringId.length <= 0) ? `There's no one here...` : ``}
+          </ul>
+          <button id="addOffspringBtn" class="addBtns"><span class="typcn typcn-plus"></span></button>
+          <button class="addBtns" onclick="getStorage()"><span class="typcn typcn-shopping-bag"></span></button>
         </div>
-      </div>-->
-      ${projectHow}
+      </div>
 
       <input id="tellMoreInput" type="checkbox" class="cossin taskToggleInput" />
       <div>
@@ -4183,23 +4213,23 @@ function taskAddAllInfo(infos){
       <input id="tellWhatInput" type="checkbox" class="cossin taskToggleInput" />
       <div>
         <label for="tellWhatInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
-          <h5 class="topList">Tell me what...<span class="tellYou">(<span id="tellYouTermProject">${todo.project ? `Project & ` : ``}</span><span id="tellYouTerm">${t(todo.term)}</span><span id="tellYouShowType">${todo.term == "showThing" ? ` - ${todo.showType ? todo.showType : mySettings.myShowTypes[0].name}` : ``}</span><span id="tellYouUrge">${todo.urge ? ` - Priority: ${todo.urgeNum}` : ``}</span>)</span></h5>
+          <h5 class="topList">Tell me what...<span class="tellYou">(<span id="tellYouTermProject">${todo.pOffspringId && todo.pOffspringId !== null ? `Project & ` : ``}</span><span id="tellYouTerm">${t(todo.term)}</span><span id="tellYouShowType">${todo.term == "showThing" ? ` - ${todo.showType ? todo.showType : mySettings.myShowTypes[0].name}` : ``}</span><span id="tellYouUrge">${todo.urge ? ` - Priority: ${todo.urgeNum}` : ``}</span>)</span></h5>
           <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
         </label>
         <div class="taskToggleList taskInfoInput relDiv">
           <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Project</h5>
-          <input class="myRadio" type="checkbox" name="projectOptions" id="wholeProjectInput" value="pParent" ${todo.pParent ? `checked` : ``} />
+          <input class="myRadio" type="checkbox" name="projectOptions" id="wholeProjectInput" value="pParent" ${todo.pOffspringId && todo.pOffspringId !== null ? `checked` : ``} />
           <label for="wholeProjectInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's a whole big thing</span><br />
           <span class="smallText otherSmallText">with lots of little things in it</span></label>
           <div class="wholeProjectDiv">
-            <h5 style="margin: 5px 0 0 0;">${todo.pParent ? `Wanna change the label?` : `Let's give it a label`}</h5>
+            <h5 style="margin: 5px 0 0 0;">${todo.pOffspringId && todo.pOffspringId !== null ? `Wanna change the label?` : `Let's give it a label`}</h5>
             <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
               <p>Choose a color: ${projectColorsChoice}</p>
               <p>Choose a nickname:</p>
-              <input id="projectNickInput" type="text" value="${todo.pNickname ? todo.pNickname : ""}"/>
+              <input id="projectNickInput" type="text" value="${todo.pName ? todo.pName : ""}"/>
             </div>
           </div>
-          <input class="myRadio" type="checkbox" name="projectOptions" id="partProjectInput" value="pEnfant" ${todo.pEnfant ? `checked` : ``} />
+          <input class="myRadio" type="checkbox" name="projectOptions" id="partProjectInput" value="pOffspring" ${todo.pParentId ? `checked` : ``} />
           <label for="partProjectInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's part of something bigger</span><br />
           <span class="smallText otherSmallText">than itself</span></label>
           <div class="partProjectDiv">
@@ -4325,6 +4355,7 @@ function taskAddAllInfo(infos){
   //<label for="notProjectInput" class="termLabel"><span class="myRadio"></span><span>None of the above</span><br />
   //  <span class="smallText otherSmallText">(it's just its own thing)</span></label>
   div.insertAdjacentHTML("beforeend", taskAllInfo); //different in month/week 
+
   let calendarHome = document.querySelector("#calendarHome");
   creatingCalendar(todo, calendarHome, "inHome");
   let calendarDiv = document.querySelector("#calendarDiv");
@@ -4342,7 +4373,17 @@ function taskAddAllInfo(infos){
     document.querySelector("#tellYouDay").innerText = ` ${e.target.value}`;
   });
   
-  let taskInfo = document.querySelector("#taskInfo");
+  //let taskInfo = document.querySelector("#taskInfo"); //instead of finding it by id, which won't work when we have a second one. We could create an array of all the .taskInfo and select the last one, since they keep being added at the end! 
+  //Although, then we can't just put z-index = 1000 to all taskInfo... right? nope, because then all the newClickScreen will be at 999...
+  //BTW on va probablement pouvoir enlever tout les clickscreen et moving (en tous cas, ceux associés à taskInfo)
+  let allTaskInfo = document.querySelectorAll(".taskInfo");
+  let topDiv;
+  if(allTaskInfo.length > 1){
+    topDiv = window.getComputedStyle(allTaskInfo[allTaskInfo.length - 2]).getPropertyValue("top");
+  };// peut-être vérifier si le parentElement de chaque taskInfo est bel et bien le même div...
+  let taskInfo = allTaskInfo[allTaskInfo.length - 1];
+  taskInfo.style.zIndex = 1000 + (10 * (allTaskInfo.length - 1));
+  taskInfo.style.top = topDiv + 50 + "px";
   let doneIt = document.querySelector("#doneIt");
   let doneIcon = doneIt.querySelector("i");
   let quickyIt = document.querySelector("#quickyIt");
@@ -4360,6 +4401,31 @@ function taskAddAllInfo(infos){
   let colorIt = document.querySelector("#colorIt");
   let colorPalet = document.querySelector("#colorPalet");
   let contactSearchInput = document.querySelector("#contactSearchInput");
+  let iconIt = document.querySelector("#iconIt");
+  let iconsPalet = document.querySelector("#iconsPalet");
+  let taskInfoBtn = document.querySelector("#taskInfoBtn");
+  let taskCancelBtn = document.querySelector("#taskCancelBtn");
+  let busyInput = document.querySelector("#busyInput");
+
+  
+
+  let zIndexDiv = window.getComputedStyle(taskInfo).getPropertyValue("z-index");
+  console.log(zIndexDiv);
+  let newClickScreen = `<div id="newClickScreen" class="newClickScreen" style="z-index:${zIndexDiv - 1};"></div>`;
+  document.body.insertAdjacentHTML("beforeend", newClickScreen);
+  newClickScreen = document.querySelector("#newClickScreen");
+  newClickScreen.addEventListener("click", cancelTaskInfo);
+
+  taskCancelBtn.addEventListener("click", cancelTaskInfo);
+  
+  function cancelTaskInfo(){
+    if(parent){
+      parent.classList.remove("selectedTask");
+    };
+    taskInfo.remove();
+    window.scrollTo(0, positionA);
+    newClickScreen.remove();
+  };
 
   // *** CONVO
   let thisStatus = "";
@@ -4415,35 +4481,17 @@ function taskAddAllInfo(infos){
   labelIt.addEventListener("click", () => {
     creatingLabelPanel(todo, options);
   });
-  let iconIt = document.querySelector("#iconIt");
-  let iconsPalet = document.querySelector("#iconsPalet");
-  let taskInfoBtn = document.querySelector("#taskInfoBtn");
-  let taskCancelBtn = document.querySelector("#taskCancelBtn");
-  let busyInput = document.querySelector("#taskCancelBtn");
-  if(todo.term == "wholeProject" && todo.pParts && todo.pParts.length > 0){
+
+  // *** PROJECT
+  if(todo.pOffspringId && todo.pOffspringId.length > 0){
     projectSwitch = true;
-    todo.pParts.forEach(partId => {
-      let partIdx = listTasks.findIndex(to => to.id == partId);
-      let part = listTasks[partIdx];
-      todoCreation(part);
+    todo.pOffspringId.forEach(offspringId => {
+      let offspring = listTasks[listTasks.findIndex(to => to.id == offspringId)];
+      todoCreation(offspring);
     });
     projectSwitch = false;
   };
-  taskCancelBtn.addEventListener("click", () => {
-    if(parent){
-      parent.classList.remove("selectedTask");
-    };
-    taskInfo.remove();
-    window.scrollTo(0, positionA);
-    clickScreen.classList.add("displayNone"); //remove()
-    // if(where == "todoZone" && why !== "stock" && why !== "new"){// should be for searchscreen too...
-    //   moving = true; // section that it's scrolling to is the list the li is in... but maybe it should just scroll back to the parent!?
-    //   clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
-    // } else{
-    //   taskInfo.remove();
-    //   //add scrollbackToTop!
-    // };
-  });
+
   let newState = checkSwitch[0];
   doneIt.addEventListener("click", () => {
     let nowState = doneIcon.className;
@@ -4608,14 +4656,18 @@ function taskAddAllInfo(infos){
   window.moveMiniUp = moveMiniUp;
 
   // *** Project
-  let newProjectColor;
-  let newProjectNickname;
-  let myProject;
+  let tellHowDiv = document.querySelector("#tellHowDiv");
+  let projectOngletDiv = document.querySelector("#projectOngletDiv");
+  let newProjectColor = "";
+  let newProjectNickname = "";
+  let myProjectId = "";
+
   //If pParent
   document.querySelectorAll('input[name="projectColorChoices"]').forEach(radio => {
     radio.addEventListener("click", () => {
       newProjectColor = radio.value;
-      if(!document.querySelector(".projectOnglet")){
+      if(!document.querySelector(".projectOnglet")){//comment reconnaître le projectOnglet qui est celui du project versus ceux des parents?! parce qu'il faut savoir où on l'ajoute dans le projectOngletDiv... à moins qu'on refasse un nouveau [projectOnglets] à chaque fois?! 
+        //mais c'est vrai que ça fait pas de sens qu'un project ait le même projectOnglet que ses offsprings...
         taskTitle.insertAdjacentHTML("beforebegin", `<div class="projectOnglet" style="background-color:${colorsList[newProjectColor].colorBG}; color:${colorsList[newProjectColor].colorTX};">${newProjectNickname ? newProjectNickname : "Project"}</div>`);
       } else{
         document.querySelector(".projectOnglet").style.backgroundColor = colorsList[newProjectColor].colorBG;
@@ -4637,23 +4689,30 @@ function taskAddAllInfo(infos){
     let myProjectNames = document.querySelector("#myProjectNames");
     myProjectNames.addEventListener("change", () => {
       if(myProjectNames.value !== "null"){
-        myProject = listTasks[listTasks.findIndex(todo => todo.id == myProjectNames.value)];
+        let myProject = listTasks[listTasks.findIndex(todo => todo.id == myProjectNames.value)];
         if(!document.querySelector(".projectOnglet")){
-          taskTitle.insertAdjacentHTML("beforebegin", `<div class="projectOnglet" style="background-color:${colorsList[myProject.pColor].colorBG}; color:${colorsList[myProject.pColor].colorTX};">${myProject.pNickname}</div>`);
-        } else{
+          taskTitle.insertAdjacentHTML("beforebegin", `<div class="projectOnglet" style="background-color:${colorsList[myProject.pColor].colorBG}; color:${colorsList[myProject.pColor].colorTX};">${myProject.pName}</div>`);
+        } else{ //we should be adding to it and/or replacing it... need to figure that out...
           document.querySelector(".projectOnglet").style.backgroundColor = colorsList[myProject.pColor].colorBG;
           document.querySelector(".projectOnglet").style.color = colorsList[myProject.pColor].colorTX;
-          document.querySelector(".projectOnglet").textContent = myProject.pNickname;
+          document.querySelector(".projectOnglet").textContent = myProject.pName;
         };
+        myProjectId = myProject.id;
       };
     });
   };
   //if neither pParent nor pEnfant
   document.querySelectorAll('input[name="projectOptions"]').forEach(checkbox => {
     checkbox.addEventListener("click", () => {
-      //check les deux checkbox et si les deux sont unchecked, ben remove .projectOnglet
-      if(document.querySelectorAll('input[name="projectOptions"]:checked').length === 0){
-        document.querySelector(".projectOnglet").remove();
+      if(document.querySelectorAll('input[name="projectOptions"]:checked').length === 0){//check les deux checkbox et si les deux sont unchecked, ben ça remove .projectOnglet
+        if(document.querySelector(".projectOnglet")){
+          document.querySelector(".projectOnglet").remove();
+        };
+        tellHowDiv.classList.add("displayNone");
+      } else if(checkbox.value == "pParent" && checkbox.checked == true){
+        tellHowDiv.classList.remove("displayNone");
+      } else if(checkbox.value == "pParent" && checkbox.checked == false){
+        tellHowDiv.classList.add("displayNone");
       };
     });
   });
@@ -4913,120 +4972,17 @@ function taskAddAllInfo(infos){
       
       // *** PROJECT
       if(document.querySelector("#wholeProjectInput").checked){
-        todo.project = true;
-        todo.pParent = true;
-        todo.pColor = newProjectColor;
-        todo.pNickname = newProjectNickname;
+        todo.pColor = newProjectColor !== "" ? newProjectColor : todo.pColor !== "" ? todo.pColor : alert("That project needs a color!"); //add dumbproofing
+        todo.pName = newProjectNickname !== "" ? newProjectNickname : todo.pName !== "" ? todo.pName : alert("That project needs a nickname!");
+        todo.pOffspringId = [...document.querySelectorAll("#projectUl > li")].map(li => {
+          return li.id;
+        });
       };
       if(document.querySelector("#partProjectInput").checked){
-        todo.project = true;
-        todo.pEnfant = true;
-        todo.pColor = myProject.pColor;
-        todo.pNickname = myProject.pNickname; // pColor et pNickname sont les mêmes pour pParent et pEnfant, fac ça marche pas...
-      }
-      // if(document.querySelector('#wholeProjectInput').checked){
-      //   todo.wholeProject = true
-      //   todo.PColorBG = newProjectColorBG ? newProjectColorBG : todo.PColorBG ? todo.PColorBG : "";
-      //   todo.PColorTX = newProjectColorTX ? newProjectColorTX : todo.PColorTX ? todo.PColorTX : "";
-      //   todo.Pnickname = newProjectNickname ? newProjectNickname : todo.Pnickname ? todo.Pnickname : "";
-      //   if(todo.PColorBG == "" || todo.PColorTX == "" || todo.Pnickname == ""){
-      //     console.log("should stop");
-      //     e.preventDefault();//This is not working
-      //     e.currentTarget.insertAdjacentHTML("beforebegin", `<h5>Something's missing...</h5>`);
-      //   } else{
-      //     if(mySettings.myProjects && mySettings.myProjects.length > 0){
-      //       let indexP = mySettings.myProjects.findIndex(project => project.nickname == todo.Pnickname);
-      //       if(indexP && indexP >= 0){
-      //         console.log("already existed");
-      //         mySettings.myProjects[indexP].colorBG = todo.PColorBG;
-      //         mySettings.myProjects[indexP].colorTX = todo.PColorTX;
-      //       } else{
-      //         console.log("didn't exist");
-      //         let myNewProject = {
-      //           nickname: todo.Pnickname,
-      //           colorBG: todo.PColorBG,
-      //           colorTX: todo.PColorTX
-      //         };
-      //         mySettings.myProjects.push(myNewProject);
-      //       };
-      //     } else{
-      //       console.log("the whole thing didn't exist");
-      //       let myNewProject = {
-      //         nickname: todo.Pnickname,
-      //         colorBG: todo.PColorBG,
-      //         colorTX: todo.PColorTX
-      //       };
-      //       if(!mySettings.myProjects){
-      //         mySettings.myProjects = [];
-      //         mySettings.myProjects.push(myNewProject);
-      //       } else{
-      //         mySettings.myProjects.push(myNewProject);
-      //       };
-            
-      //       console.log(mySettings);
-      //     };
-      //     localStorage.mySettings = JSON.stringify(mySettings);
-      //   };
-      // } else {
-      //   delete todo.wholeProject;
-      //   delete todo.PColorBG;
-      //   delete todo.PColorTX;
-      //   delete todo.Pnickname;
-      // };
+        todo.pParentId = myProjectId !== "" ? myProjectId : todo.pParentId !== "" ? todo.pParentId : alert("If it's not in one of those projects, then create your own project first.");
+        todo.pPosition = myProjectId !== "" ? "in" : todo.pPosition !== "" ? todo.pPosition : delete todo.pPosition; //par défault
+      };
       
-      // if(todo.project == "partProject"){
-      //   todo.PColorBG = myProject.colorBG;
-      //   todo.PColorTX = myProject.colorTX;
-      //   todo.Pnickname = myProject.nickname;
-      // }
-
-      // todo.project  = document.querySelector('input[name="projectOptions"]:checked').value;
-      // if(todo.project == "wholeProject"){
-      //   todo.PColorBG = newProjectColorBG ? newProjectColorBG : todo.PColorBG ? todo.PColorBG : "";
-      //   todo.PColorTX = newProjectColorTX ? newProjectColorTX : todo.PColorTX ? todo.PColorTX : "";
-      //   todo.Pnickname = newProjectNickname ? newProjectNickname : todo.Pnickname ? todo.Pnickname : "";
-      //   if(todo.PColorBG == "" || todo.PColorTX == "" || todo.Pnickname == ""){
-      //     console.log("should stop");
-      //     e.preventDefault();//This is not working
-      //     e.currentTarget.insertAdjacentHTML("beforebegin", `<h5>Something's missing...</h5>`);
-      //   } else{
-      //     if(mySettings.myProjects && mySettings.myProjects.length > 0){
-      //       let indexP = mySettings.myProjects.findIndex(project => project.nickname == todo.Pnickname);
-      //       if(indexP && indexP >= 0){
-      //         console.log("already existed");
-      //         mySettings.myProjects[indexP].colorBG = todo.PColorBG;
-      //         mySettings.myProjects[indexP].colorTX = todo.PColorTX;
-      //       } else{
-      //         console.log("didn't exist");
-      //         let myNewProject = {
-      //           nickname: todo.Pnickname,
-      //           colorBG: todo.PColorBG,
-      //           colorTX: todo.PColorTX
-      //         };
-      //         mySettings.myProjects.push(myNewProject);
-      //       };
-      //     } else{
-      //       console.log("the whole thing didn't exist");
-      //       let myNewProject = {
-      //         nickname: todo.Pnickname,
-      //         colorBG: todo.PColorBG,
-      //         colorTX: todo.PColorTX
-      //       };
-      //       mySettings.myProjects.push(myNewProject);
-      //       console.log(mySettings);
-      //     };
-      //     localStorage.mySettings = JSON.stringify(mySettings);
-      //   };
-      // } else if(todo.project == "partProject"){
-      //   todo.PColorBG = myProject.colorBG;
-      //   todo.PColorTX = myProject.colorTX;
-      //   todo.Pnickname = myProject.nickname;
-      // } else if(todo.project == "notProject"){
-      //   delete todo.PColorBG;
-      //   delete todo.PColorTX;
-      //   delete todo.Pnickname;
-      // };
-
       // save convo
       if(convoIt.checked){
         todo.convo = true;
@@ -5193,14 +5149,7 @@ function taskAddAllInfo(infos){
       storageSwitch = false;
        // the li.remove comes later but parents or parent need to have been established before (i.e. do create parents after by looking for li with the todo.id, otherwise you will have erased to new one too!)
       
-      
     } else if(trashIt.checked){ //if it's new, there's nothing to do, the todo doesn't exist yet in the listTasks
-      //ALSO TRASH THE Project IN MYProjectS!
-      if(todo.project == "wholeProject"){
-        let indexP = mySettings.myProjects.findIndex(project => project.nickname == todo.Pnickname);
-        mySettings.myProjects.splice(indexP, 1);
-        localStorage.mySettings = JSON.stringify(mySettings);
-      }; //Are partProjects in the wholeProject or not?!
       if(todo.recurry == true){ //the parent will be removed, but we need to remove the date in the recurring.recurryDates
         getRecurryDateOut(todo); // donc la date du todo est enlevée des recurryDates de son recurringDay        
       } else{
@@ -5279,6 +5228,8 @@ function taskAddAllInfo(infos){
     //   taskInfo.remove();
     //   sortItAllWell();
     // };
+    calendarStock = false;
+    projectStock = false;
     updateArrowsColor();
     updateCBC();
     console.log(todo);
@@ -5640,14 +5591,16 @@ function timeLimit(limit){
 
 
 function getLastWeekDate(){
-  let date = new Date();
-  date.setDate(date.getDate() - 7);
-  let lastWeekDay= String(date.getDate()).padStart(2, "0");
-  let lastWeekMonth = String(date.getMonth()+1).padStart(2, "0");
-  let lastWeekYear = date.getFullYear();
-  let lastWeekDate = `${lastWeekYear}-${lastWeekMonth}-${lastWeekDay}`;
-  return lastWeekDate;
+  let date = getMyTodayDate(); //todayDate
+  date.setDate(date.getDate() - 7); //lastWeekDate
+  return date;
 };
+
+function getLastWeekDateString(){
+  let lastWeekDate = getLastWeekDate();
+  return getStringFromDate(lastWeekDate);
+};
+
 
 // MARK: MONTHLY CALENDAR
 

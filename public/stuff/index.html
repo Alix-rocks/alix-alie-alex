@@ -1,0 +1,48 @@
+<!DOCTYPE html><html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+    <!-- Typicons -->
+    <link rel="stylesheet" href="../typicons.css"/>
+    <!-- Flavicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/b4f765f607.js" crossorigin="anonymous"></script>
+    <!-- CSS -->
+    <link rel="stylesheet" href="stuff.css">
+    <title>stuff</title>
+  </head>
+  <body>
+    <form id="addItem">
+      <h2>Adding stuff</h2>
+      <ul class="formUl">
+        <li><label for="itemInput">Item</label><input id="itemInput" type="text"></li>
+        <li><label for="n1Select">Pièce</label><select name="n1Name" id="n1Select">
+          <option value="null"></option>
+        </select></li>
+        <li><label for="n2Select">Section</label><select name="n2Name" id="n2Select">
+          <option value="null"></option>
+        </select></li>
+        <li><label for="n3Select">Bag/Box</label><select name="n3Name" id="n3Select">
+          <option value="null"></option>
+        </select></li>
+        <li><label for="imgUpload">Photo</label><input id="imgUpload" type="text"></li>
+        <li style="text-align: center;"><button type="submit">Sauver</button></li>
+        <li style="text-align: center;"><button type="reset">Annuler</button></li>
+      </ul>
+    </form>
+    <h2>The whole list</h2>
+    <div id="setup"></div>
+    <h2>Searching stuff</h2>
+    <form id="searchStuff">
+      <input type="text">
+      <button type="submit">Search</button>
+    </form>
+    <div id="results"></div>
+    <script type="module" src="stuff.js"></script>
+  </body>
+</html>

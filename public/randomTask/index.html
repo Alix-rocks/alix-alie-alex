@@ -39,7 +39,7 @@
   
   <!-- MARK: PAGE SETTINGS -->
   <input id="switchPageInputSetting" name="switchPageRadios" type="radio" class="displayNone">
-  <div id="settingsScreen" data-cloudit="cloudTop" class="onePage displayNone">
+  <div id="settingsScreen" data-movingzone="absolutTop" class="onePage displayNone">
     <div id="settingsDiv" class="DivScreen">
     </div>
   </div>
@@ -48,7 +48,7 @@
 
   <!-- MARK: PAGE SEARCH -->
   <input id="switchPageInputSearch" name="switchPageRadios" type="radio" class="displayNone">
-  <div id="searchScreen" data-cloudit="cloudTop" class="onePage displayNone">
+  <div id="searchScreen" data-movingzone="absolutTop" class="onePage displayNone">
     <div id="searchDiv" style="text-align: left; padding: 15px; margin: auto; width: 90%;
     max-width: 500px;">
       <form id="searchForm" action="get">
@@ -158,7 +158,7 @@ Options for sorting
   
   <!-- MARK: PAGE MONTH -->
   <input id="switchPageInputMonth" name="switchPageRadios" type="radio" class="displayNone">
-  <div id="calMonthPage" data-cloudit="cloudBottom" class="wholeScreenCalendar onePage displayNone">
+  <div id="calMonthPage" data-movingzone="fixedBottom" class="wholeScreenCalendar onePage displayNone">
     <div class="monthlyWrapper">
       <table class="monthlyCalendar">
         <thead>
@@ -207,7 +207,7 @@ Options for sorting
   </div>
   <!-- MARK: PAGE CONVO -->
   <input id="switchPageInputConvo" name="switchPageRadios" type="radio" class="displayNone">
-  <div id="convoPage" data-cloudit="cloudBottom" class="wholeScreenCalendar onePage displayNone">
+  <div id="convoPage" data-movingzone="fixedBottom" class="wholeScreenCalendar onePage displayNone">
     <div class="">
       <h1>CRM!</h1>
     </div>
@@ -215,14 +215,14 @@ Options for sorting
 
   <!-- MARK: PAGE WEEK -->
   <input id="switchPageInputWeek" name="switchPageRadios" type="radio" class="displayNone">
-  <div id="calWeekPage" data-cloudit="cloudBottom" class="wholeScreenCalendar onePage displayNone">
+  <div id="calWeekPage" data-movingzone="fixedBottom" class="wholeScreenCalendar onePage displayNone">
     <div class="weeklyContainer">
     </div>
   </div>
 
   <!-- MARK: PAGE LIST -->
   <input id="switchPageInputList" name="switchPageRadios" type="radio" class="displayNone">
-  <div id="listPage" data-cloudit="cloudTop" class="onePage">
+  <div id="listPage" data-movingzone="absolutTop" class="onePage displayNone">
     <div id="clickScreen" class="Screen displayNone"></div>
     <div id="AlixTime">
       <a href="https://alix.rocks/time">
@@ -242,15 +242,15 @@ Options for sorting
         </div>
       </label>
     </div>
-    <div id="todoZone">
-      <div id="addingZone">
+    <div id="todoZone" style="margin-top: 55px;">
+      <!-- <div id="addingZone">
         <form id="addForm">
           <div class="underLining" id="addInput-underLining"></div>
           <input id="addInput" type="text" />
           <button id="addBtn" class="addBtns" type="submit"><span class="typcn typcn-plus"></span></button>
         </form>
         <button class="addBtns" onclick="getStorage()"><span class="typcn typcn-shopping-bag"></span></button>
-      </div>
+      </div> -->
       
       <!-- <section id="limboSection" class="displayNone">
         <input id="limboInput" type="checkbox" class="cossin listToggleInput" />
@@ -644,7 +644,7 @@ Options for sorting
     <ul id="doneZone"></ul>
   </div>
   <!-- MARK: TO DO NOW -->
-  <div id="toDoPage" data-cloudit="noCloud" class="onePage displayNone">
+  <div id="toDoPage" data-movingzone="displayNone" class="onePage displayNone">
     <h3>Fac là,<br />pour les 15 prochaines minutes,<br />tu vas...</h3>
     <p id="taskToDo"></p>
     <div id="moreInfoWhole" class="displayNone">
@@ -687,9 +687,17 @@ Options for sorting
       </label>
     </div>
   </div>
-  <button id="cloudIt"><span class="typcn typcn-cloud-storage-outline" style="font-size: 1em;"></span></button>
-  <button id="earthIt"><span class="typcn typcn-weather-stormy" style="font-size: 1em;"></span></button>
   
+  <div id="movingzone">
+    <form id="addForm">
+      <div class="underLining" id="addInput-underLining"></div>
+      <input id="addInput" type="text" />
+      <button id="addBtn" class="addBtns" type="submit"><span class="typcn typcn-plus"></span></button>
+    </form>
+    <button class="addBtns" onclick="getStorage()"><span class="typcn typcn-shopping-bag"></span></button>
+    <button id="cloudIt"><span class="typcn typcn-cloud-storage-outline" style="font-size: 1em;"></span></button>
+    <button id="earthIt"><span class="typcn typcn-weather-stormy" style="font-size: 1em;"></span></button>
+  </div>
 
 <script type="module" src="randomTask.js"></script>
 </body>

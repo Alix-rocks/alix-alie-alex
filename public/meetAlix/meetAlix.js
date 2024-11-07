@@ -2,6 +2,8 @@ import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, delete
 import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
 import { app, analytics, db, auth, provider } from "../myFirebase.js";
 
+let unknownStartDate = "2024-11-26"; //The day the "Not sure yet" section starts
+
 let myEmail = "alexblade.23.49@gmail.com";
 
 let myBusies = [];
@@ -215,7 +217,8 @@ function putDatesInWeek(date){
   //updateSleepAreas();
 
 // MARK: unknownDate
-  let unknownStartDate = "2024-11-04"; //The day the "Not sure yet" section starts
+// See line 5 for the unknownStartDate
+  
   let unknownArea;
   console.log(arrayDate);
   const unknownTestIn = arrayDate.some(el => (el.full == unknownStartDate));

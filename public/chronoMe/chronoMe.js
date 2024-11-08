@@ -256,38 +256,70 @@ const addOneBtn = document.querySelector("#addOneBtn");
 addOneBtn.addEventListener("click", createNew);
 
 function createNew() { // le + se transforme en checkmark et quand on click sur celui-là, ça enregistre
-  addOneBtn.innerHTML = `<i class="fa-solid fa-check"></i>`;
-  progNum = allPrograms.length;
+  addOneBtn.innerHTML = `<i class="fa-regular fa-floppy-disk" style="text-shadow: none;"></i>`;
+  // progNum = allPrograms.length;
   backToStart(); //or just: document.querySelector("#chronoMe").blur(); NOT JUST BLUR, WE NEED TO DEACTIVATE IT! because Start just won't work because it's not about the number in the selects anymore, it's about the number in the array! So before the btn start can be activated, we have to had the number added to the array.
   let options = [];
   for (let i = 0; i < 61; i++) {
     options.push(`<option value="${i}">${i}</option>`);
   };
   options = options.join("");
-  document.querySelector("#seqName").innerHTML = `<input class="seqNameInput" type="text" placeholder="Nom de la séquence"></input>`;
+  document.querySelector("#seqName").innerHTML = `<input id="seqNameInput" type="text" placeholder="Nom de la séquence"></input>`;
   document.querySelector(".allTimeDiv").innerHTML = `<div class="positionClass">
       <input type="text" class="stepNameInput" id="delay0Select" value="Position"></input>
       <select class="delaySelect delay0Select">${options}</select>
+      <select class="colorSelect color0Select">
+        <option data-content="<i class='fa-solid fa-palette' aria-hidden='true'></i>purple"></option>
+        <option value="rgba(138, 43, 226, 1)" style="color:rgba(138, 43, 226, 1);" data-content="<i class='fa-solid fa-palette' aria-hidden='true'></i>purple"></option>
+        <option value="rgba(138, 43, 226, 1)" style="color:rgba(138, 43, 226, 1);" data-content="<i class='fa-solid fa-palette' aria-hidden='true'></i>purple"></option>
+        <option value="green"><i class="fa-solid fa-palette" style="color:green;"></i></option>
+        <option value="rgba(255, 0, 0, 1)"><i class="fa-solid fa-palette" style="color:rgba(255, 0, 0, 1);"></i></option>
+      </select>
     </div>
     <div class="stretchClass">
       <input type="text" class="stepNameInput" id="delay1Select" value="Stretch"></input>
       <select class="delaySelect delay1Select">${options}</select>
+      <select class="colorSelect color1Select">
+        <option value="rgba(138, 43, 226, 1)"><i class="fa-solid fa-palette" style="color:rgba(138, 43, 226, 1);"></i></option>
+        <option value="green"><i class="fa-solid fa-palette" style="color:green;"></i></option>
+        <option value="rgba(255, 0, 0, 1)"><i class="fa-solid fa-palette" style="color:rgba(255, 0, 0, 1);"></i></option>
+      </select>
     </div>
     <div class="pauseClass">
       <input type="text" class="stepNameInput" id="delay2Select" value="Pause"></input>
       <select class="delaySelect delay2Select">${options}</select>
+      <select class="colorSelect color2Select">
+        <option value="rgba(138, 43, 226, 1)"><i class="fa-solid fa-palette" style="color:rgba(138, 43, 226, 1);"></i></option>
+        <option value="green"><i class="fa-solid fa-palette" style="color:green;"></i></option>
+        <option value="rgba(255, 0, 0, 1)"><i class="fa-solid fa-palette" style="color:rgba(255, 0, 0, 1);"></i></option>
+      </select>
     </div>
     <div class="stretchClass">
       <input type="text" class="stepNameInput" id="delay3Select" value="Stretch"></input>
       <select class="delaySelect delay3Select">${options}</select>
+      <select class="colorSelect color3Select">
+        <option value="rgba(138, 43, 226, 1)"><i class="fa-solid fa-palette" style="color:rgba(138, 43, 226, 1);"></i></option>
+        <option value="green"><i class="fa-solid fa-palette" style="color:green;"></i></option>
+        <option value="rgba(255, 0, 0, 1)"><i class="fa-solid fa-palette" style="color:rgba(255, 0, 0, 1);"></i></option>
+      </select>
     </div>
     <div class="pauseClass">
       <input type="text" class="stepNameInput" id="delay4Select" value="Pause"></input>
       <select class="delaySelect delay4Select">${options}</select>
+      <select class="colorSelect color4Select">
+        <option value="rgba(138, 43, 226, 1)"><i class="fa-solid fa-palette" style="color:rgba(138, 43, 226, 1);"></i></option>
+        <option value="green"><i class="fa-solid fa-palette" style="color:green;"></i></option>
+        <option value="rgba(255, 0, 0, 1)"><i class="fa-solid fa-palette" style="color:rgba(255, 0, 0, 1);"></i></option>
+      </select>
     </div>
     <div class="stretchClass">
       <input type="text" class="stepNameInput" id="delay5Select" value="Stretch"></input>
       <select class="delaySelect delay5Select">${options}</select>
+      <select class="colorSelect color5Select">
+        <option value="rgba(138, 43, 226, 1)"><i class="fa-solid fa-palette" style="color:rgba(138, 43, 226, 1);"></i></option>
+        <option value="green"><i class="fa-solid fa-palette" style="color:green;"></i></option>
+        <option value="rgba(255, 0, 0, 1)"><i class="fa-solid fa-palette" style="color:rgba(255, 0, 0, 1);"></i></option>
+      </select>
     </div>`;
   addOneBtn.removeEventListener("click", createNew);
   addOneBtn.addEventListener("click", saveNreset);
@@ -299,7 +331,24 @@ function createNew() { // le + se transforme en checkmark et quand on click sur 
 
 function saveNreset() {
   console.log("yay");
-  document.querySelector("#seqNameInput").value;
+  let newProgram = [];
+  let name = {
+    name: document.querySelector("#seqNameInput").value
+  };
+  newProgram.push(name);
+  document.querySelectorAll(".allTimeDiv > div").forEach(step => {
+    let newStep = {
+      word: step.querySelector(".stepNameInput").value,
+      time: step.querySelector(".delaySelect").value
+    };
+    newProgram.push(newStep);
+  });
+  allPrograms.push(newProgram);
+  localStorage.allPrograms = JSON.stringify(allPrograms);
+  progNum = allPrograms.length - 1;
+  console.log(allPrograms);
+  showProgram();
+  
   addOneBtn.innerHTML = `<i class="fa-solid fa-plus"></i>`;
   addOneBtn.removeEventListener("click", saveNreset);
   addOneBtn.addEventListener("click", createNew);

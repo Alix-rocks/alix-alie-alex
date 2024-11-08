@@ -156,6 +156,7 @@ function freeIn(){
   } else{
     localStorage.setItem("allPrograms", JSON.stringify(allPrograms));
   };
+  showProgram();
   logInScreen.classList.add("displayNone");
 };
 
@@ -251,11 +252,15 @@ document.querySelector("#moveDnBtn").addEventListener("click", () => {
   showProgram();
 });
 
-document.querySelector("#addOneBtn").addEventListener("click", () => { // le + se transforme en checkmark et quand on click sur celui-là, ça enregistre
+const addOneBtn = document.querySelector("#addOneBtn");
+addOneBtn.addEventListener("click", createNew);
+
+function createNew() { // le + se transforme en checkmark et quand on click sur celui-là, ça enregistre
+  addOneBtn.innerHTML = `<i class="fa-solid fa-check"></i>`;
   progNum = allPrograms.length;
   backToStart(); //or just: document.querySelector("#chronoMe").blur(); NOT JUST BLUR, WE NEED TO DEACTIVATE IT! because Start just won't work because it's not about the number in the selects anymore, it's about the number in the array! So before the btn start can be activated, we have to had the number added to the array.
   let options = [];
-  for(let i = 0; i < 61; i++){
+  for (let i = 0; i < 61; i++) {
     options.push(`<option value="${i}">${i}</option>`);
   };
   options = options.join("");
@@ -284,10 +289,22 @@ document.querySelector("#addOneBtn").addEventListener("click", () => { // le + s
       <input type="text" class="stepNameInput" id="delay5Select" value="Stretch"></input>
       <select class="delaySelect delay5Select">${options}</select>
     </div>`;
-    //when the checkmark is clicked (to save), we go through each and note the text, (color) and time into one prog
-    //Then push that prog into allPrograms.
-    //Then showProgram (progNum should be the right one)
-});
+  addOneBtn.removeEventListener("click", createNew);
+  addOneBtn.addEventListener("click", saveNreset);
+  //when the checkmark is clicked (to save), we go through each and note the text, (color) and time into one prog
+  //Then push that prog into allPrograms.
+  //Then showProgram (progNum should be the right one)
+
+};
+
+function saveNreset() {
+  console.log("yay");
+  document.querySelector("#seqNameInput").value;
+  addOneBtn.innerHTML = `<i class="fa-solid fa-plus"></i>`;
+  addOneBtn.removeEventListener("click", saveNreset);
+  addOneBtn.addEventListener("click", createNew);
+};
+
 
 function beep(duration, frequency, volume){
     return new Promise((resolve, reject) => {

@@ -12,6 +12,30 @@ body{
   /* max-width: 500px; Doesn't work because all the 'position:absolute;' are not affected by the body's width*/
 }
 
+.screen{
+  display: flex;
+  background-color: var(--bg-color);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000;
+}
+.divScreen{
+  padding: 15px;
+  margin: auto;
+  border-style: solid;
+  border-width: 2px 3px 3px 2px;
+  border-radius: 5px;
+  text-align: center;
+  position: relative;
+}
+#logInDiv{
+  width: 62%;
+  z-index: 2200;
+}
+
 .topContainer{
   display: flex;
   flex-direction: row;
@@ -175,5 +199,8 @@ body{
 }
 #chronoMe:focus span{
   opacity: .3;
+}
+.displayNone{
+  display: none;
 }
 

@@ -1,12 +1,7 @@
 import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
 import { getAuth, signOut, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
 import { app, analytics, db, auth, provider } from "../myFirebase.js";
-import trans from "../trans.js";
 auth.languageCode = 'fr';
-
-const cloudIt = document.querySelector("#cloudIt");
-const earthIt = document.querySelector("#earthIt");
-const movingzone = document.querySelector("#movingzone");
 
 getRedirectResult(auth)
   .then((result) => {
@@ -26,6 +21,8 @@ getRedirectResult(auth)
     const credential = GoogleAuthProvider.credentialFromError(error);
 });
 
+const logInScreen = document.querySelector("#logInScreen");
+
 function logIn(){
   signInWithRedirect(auth, provider);
 };
@@ -34,21 +31,14 @@ onAuthStateChanged(auth,(user) => {
   if(user){
     userConnected = true;
     console.log(user);
-    
-    getCloudBC();
-    getTasksSettings();
-    getDones();
-    settingsPage();
-    // createBody();
-    // getWeeklyCalendar();
+    getMyPrograms();
+    showProgram();
     logInScreen.classList.add("displayNone");
   } else{
     userConnected = false;
     logInScreen.classList.remove("displayNone");
     logInBtn.addEventListener("click", logIn);
     tryBtn.addEventListener("click", freeIn);
-    cloudIt.classList.add("displayNone");
-    earthIt.classList.add("displayNone");
   };
 });
 
@@ -63,19 +53,102 @@ function logOut(){
 };
 window.logOut = logOut;
 
-if(localStorage.getItem("mySettings")){
-  mySettings = JSON.parse(localStorage.mySettings);
-} else if(getTasks.exists() && getTasks.data().mySettings){
-  mySettings = getTasks.data().mySettings;
-  localStorage.mySettings = JSON.stringify(mySettings);
+let allPrograms = [[{
+      name: "Strengthening"
+    },{
+      word: "Position",
+      color: "rgba(138, 43, 226, 1)",
+      time: 5
+    },{
+      word: "Hold",
+      color: "green",
+      time: 60
+    },{
+      word: "Pause",
+      color: "rgba(255, 0, 0, 1)",
+      time: 15
+    },{
+      word: "Hold",
+      color: "green",
+      time: 60
+    },{
+      word: "Pause",
+      color: "rgba(255, 0, 0, 1)",
+      time: 15
+    },{
+      word: "Hold",
+      color: "green",
+      time: 60
+    }],[{
+      name: "Stretching"
+    },{
+      word: "Position",
+      color: "rgba(138, 43, 226, 1)",
+      time: 5
+    },{
+      word: "Stretch",
+      color: "green",
+      time: 25
+    },{
+      word: "Pause",
+      color: "rgba(255, 0, 0, 1)",
+      time: 8
+    },{
+      word: "Stretch",
+      color: "green",
+      time: 25
+    },{
+      word: "Pause",
+      color: "rgba(255, 0, 0, 1)",
+      time: 8
+    },{
+      word: "Stretch",
+      color: "green",
+      time: 25
+    }],[{
+      name: "Demo"
+    },{
+      word: "Position",
+      color: "rgba(138, 43, 226, 1)",
+      time: 3
+    },{
+      word: "Test",
+      color: "green",
+      time: 6
+    },{
+      word: "Pause",
+      color: "rgba(255, 0, 0, 1)",
+      time: 3
+    },{
+      word: "Test",
+      color: "green",
+      time: 6
+    },{
+      word: "Pause",
+      color: "rgba(255, 0, 0, 1)",
+      time: 3
+    },{
+      word: "Test",
+      color: "green",
+      time: 6
+    }
+  ]
+];
+
+async function getMyPrograms() {
+  const getMyPrograms = await getDoc(doc(db, "chrono", auth.currentUser.email));
+if(localStorage.getItem("allPrograms")){
+  allPrograms = JSON.parse(localStorage.allPrograms);
+} else if(getMyPrograms.exists() && getMyPrograms.data().allPrograms){
+  allPrograms = getMyPrograms.data().allPrograms;
+  localStorage.allPrograms = JSON.stringify(allPrograms);
 } else{
-  localStorage.mySettings = JSON.stringify(mySettings);
+  localStorage.allPrograms = JSON.stringify(allPrograms);
 };
 
 function freeIn(){ 
-  //mySettings
-  if(localStorage.getItem("mySettings")){
-    mySettings = JSON.parse(localStorage.mySettings);
+  if(localStorage.getItem("allPrograms")){
+    allPrograms = JSON.parse(localStorage.allPrograms);
   };
   logInScreen.classList.add("displayNone");
 };
@@ -83,112 +156,19 @@ function freeIn(){
 // *** CLOUDSAVE
 
 async function saveToCloud(){
-  let nowStamp = new Date().getTime();
-  const batch = writeBatch(db);
-
-  listTasks = JSON.parse(localStorage.listTasks);
-  mySettings = JSON.parse(localStorage.mySettings);
-  const docRefTasks = doc(db, "randomTask", auth.currentUser.email);
-  const docSnapTasks = await getDoc(docRefTasks);
-  
-  if (docSnapTasks.exists()){
-    batch.update(doc(db, "randomTask", auth.currentUser.email), { // or batch.update or await updateDoc
-      listTasks: listTasks,
-      mySettings: mySettings,
-      lastUpdateFireStore: nowStamp
+  const docRef = doc(db, "chrono", auth.currentUser.email);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    await updateDoc(doc(db, "chrono", auth.currentUser.email), {
+      ...allPrograms
     });
   } else{
-    batch.set(doc(db, "randomTask", auth.currentUser.email), { // or batch.set or await setDoc
-      listTasks: listTasks,
-      mySettings: mySettings,
-      lastUpdateFireStore: nowStamp
+   await setDoc(doc(db, "plan", auth.currentUser.email), {
+      ...allPrograms
     });
-  }; 
-
-  myBusies = [];
-  listTasks.forEach(todo => {
-    //Modify all the event to busy
-    if(todo.term == "showThing" && todo.showType !== "Cancelled"){
-      if(todo.line == "todoDay" ){
-        busyZoneCreation(todo);
-      } else if(todo.line == "recurringDay"){
-        todo.recurryDates.forEach(recurryDate => {
-          let tempRecurry = {
-            startDate: recurryDate,
-            prima: todo.prima,
-            startTime: todo.startTime,
-            dopo: todo.dopo,
-            stopTime: todo.stopTime,
-            showType: todo.showType,
-          };
-          busyZoneCreation(tempRecurry)
-        });
-      };
-    } else if(todo.term !== "showThing" && todo.term !== "nevermind" && !todo.stock && todo.busy && (todo.startTime && todo.stopTime && todo.startTime !== todo.stopTime)){
-      if(todo.line == "todoDay" ){
-        let tempTodo = todo;
-        tempTodo.showType = "task";
-        busyZoneCreation(tempTodo);
-      } else if(todo.line == "recurringDay"){
-        todo.recurryDates.forEach(recurryDate => {
-          let tempRecurry = {
-            startDate: recurryDate,
-            prima: todo.prima,
-            startTime: todo.startTime,
-            dopo: todo.dopo,
-            stopTime: todo.stopTime,
-            showType: "task",
-          };
-          busyZoneCreation(tempRecurry)
-        });
-      };
-    };
-  });
-  const docRefBusies = doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies");
-  const docSnapBusies = await getDoc(docRefBusies);
-  if (docSnapBusies.exists()){
-    batch.update(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.update or await updateDoc
-      myBusies: myBusies
-    });
-  } else{
-    batch.set(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.set or await setDoc
-      myBusies: myBusies
-    });
-  }; 
-  listDones = JSON.parse(localStorage.listDones);
-  const docRefDones = collection(db, "randomTask", auth.currentUser.email, "myListDones");
-  const docSnapDones = await getDocs(docRefDones);
-  let modif = getModif();
-  modif.map(modifDate => {
-    let doned = listDones.find((td) => td.date == modifDate);
-    if(docSnapDones[modifDate]){
-      batch.update(doc(db, "randomTask", auth.currentUser.email, "myListDones", modifDate), {
-        dones: doned.list
-      });
-    } else{
-      batch.set(doc(db, "randomTask", auth.currentUser.email, "myListDones", modifDate), {
-        dones: doned.list
-      });
-    };
-  });  
-  /* WHEN YOU WANT TO UPDATE ALL THE DONES */
-  // listDones.forEach(td => {
-  //   if(docSnapDones[td.date]){
-  //     batch.update(doc(db, "randomTask", auth.currentUser.email, "myListDones", td.date), {
-  //       dones: td.list
-  //     });
-  //   } else{
-  //     batch.set(doc(db, "randomTask", auth.currentUser.email, "myListDones", td.date), {
-  //       dones: td.list
-  //     });
-  //   };
-  // }); 
-
-  await batch.commit();
-  localStorage.lastUpdateLocalStorage = nowStamp;
-  resetCBC();
-  resetModif();
+  };
 };
+
 
 // The browser will limit the number of concurrent audio contexts
 // So be sure to re-use them whenever you can
@@ -220,95 +200,7 @@ function turnRed(duration){
 };
 //const delaysDefault = [5, 20, 8, 20, 8, 20];
 const delaysDefault = [3, 8, 3, 8, 3, 8];
-const allPrograms = [
-  [ 
-    {
-      name: "Strengthening"
-    },{
-      word: "Position",
-      color: "rgba(138, 43, 226, 1)",
-      time: 5
-    },{
-      word: "Hold",
-      color: "green",
-      time: 60
-    },{
-      word: "Pause",
-      color: "rgba(255, 0, 0, 1)",
-      time: 15
-    },{
-      word: "Hold",
-      color: "green",
-      time: 60
-    },{
-      word: "Pause",
-      color: "rgba(255, 0, 0, 1)",
-      time: 15
-    },{
-      word: "Hold",
-      color: "green",
-      time: 60
-    }
-  ], 
-  [
-    {
-      name: "Stretching"
-    },{
-      word: "Position",
-      color: "rgba(138, 43, 226, 1)",
-      time: 5
-    },{
-      word: "Stretch",
-      color: "green",
-      time: 25
-    },{
-      word: "Pause",
-      color: "rgba(255, 0, 0, 1)",
-      time: 8
-    },{
-      word: "Stretch",
-      color: "green",
-      time: 25
-    },{
-      word: "Pause",
-      color: "rgba(255, 0, 0, 1)",
-      time: 8
-    },{
-      word: "Stretch",
-      color: "green",
-      time: 25
-    }
-  ], 
-  [
-    {
-      name: "Demo"
-    },{
-      word: "Position",
-      color: "rgba(138, 43, 226, 1)",
-      time: 3
-    },{
-      word: "Test",
-      color: "green",
-      time: 6
-    },{
-      word: "Pause",
-      color: "rgba(255, 0, 0, 1)",
-      time: 3
-    },{
-      word: "Test",
-      color: "green",
-      time: 6
-    },{
-      word: "Pause",
-      color: "rgba(255, 0, 0, 1)",
-      time: 3
-    },{
-      word: "Test",
-      color: "green",
-      time: 6
-    }
-  ]
-]
+
 let progNum = 0;
 
 function showProgram(){
@@ -339,7 +231,7 @@ function showProgram(){
 //   });
 // };
 
-showProgram();
+
 
 
 document.querySelector("#moveUpBtn").addEventListener("click", () => {

@@ -32,7 +32,6 @@ onAuthStateChanged(auth,(user) => {
     userConnected = true;
     console.log(user);
     getMyPrograms();
-    showProgram();
     logInScreen.classList.add("displayNone");
   } else{
     userConnected = false;
@@ -53,6 +52,7 @@ function logOut(){
 };
 window.logOut = logOut;
 
+let progNum = 0;
 let allPrograms = [[{
       name: "Strengthening"
     },{
@@ -134,21 +134,27 @@ let allPrograms = [[{
     }
   ]
 ];
+localStorage.allPrograms = JSON.stringify(allPrograms);
 
 async function getMyPrograms() {
   const getMyPrograms = await getDoc(doc(db, "chrono", auth.currentUser.email));
-if(localStorage.getItem("allPrograms")){
-  allPrograms = JSON.parse(localStorage.allPrograms);
-} else if(getMyPrograms.exists() && getMyPrograms.data().allPrograms){
-  allPrograms = getMyPrograms.data().allPrograms;
-  localStorage.allPrograms = JSON.stringify(allPrograms);
-} else{
-  localStorage.allPrograms = JSON.stringify(allPrograms);
+  if(localStorage.getItem("allPrograms")){
+    allPrograms = JSON.parse(localStorage.allPrograms);
+  } else if(getMyPrograms.exists() && getMyPrograms.data().allPrograms){
+    allPrograms = getMyPrograms.data().allPrograms;
+  } else{
+    allPrograms = allPrograms;
+  };
+  localStorage.setItem("allPrograms", JSON.stringify(allPrograms));
+  //localStorage.allPrograms = JSON.stringify(allPrograms);
+  showProgram();
 };
 
 function freeIn(){ 
   if(localStorage.getItem("allPrograms")){
     allPrograms = JSON.parse(localStorage.allPrograms);
+  } else{
+    localStorage.setItem("allPrograms", JSON.stringify(allPrograms));
   };
   logInScreen.classList.add("displayNone");
 };
@@ -163,7 +169,7 @@ async function saveToCloud(){
       ...allPrograms
     });
   } else{
-   await setDoc(doc(db, "plan", auth.currentUser.email), {
+   await setDoc(doc(db, "chrono", auth.currentUser.email), {
       ...allPrograms
     });
   };
@@ -201,7 +207,7 @@ function turnRed(duration){
 //const delaysDefault = [5, 20, 8, 20, 8, 20];
 const delaysDefault = [3, 8, 3, 8, 3, 8];
 
-let progNum = 0;
+
 
 function showProgram(){
   document.querySelector("#seqName").innerText = allPrograms[progNum][0].name;
@@ -389,6 +395,3 @@ function delay(duration) {
       }, duration);
   });
 };
-
-
-

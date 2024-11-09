@@ -432,19 +432,6 @@ async function getTasksSettings() {
     localStorage.mySettings = JSON.stringify(mySettings);
   };
 
-  //création de colorPalet based on myBaseColors
-  let colors = mySettings.myBaseColors.map((color, idx) => {
-    if(idx > 0){
-      let colorBG = color.colorBG.startsWith("#") ? color.colorBG.substring(1) : color.colorBG;
-      return `<input type="radio" id="${colorBG}Radio" name="colorRadio" value="${idx}" />
-      <label for="${colorBG}Radio">
-        <div>
-          <div class="colorDiv" style="background-color:${color.colorBG}; color:${color.colorTX};">${color.tag}</div>
-        </div>
-      </label>`;
-    };
-  }).join("");
-  document.getElementById("colorPalet").innerHTML = colors;
   //Inserion de la date d'aujourd'hui
   document.getElementById("todaysDateSpan").innerHTML = getTodayDateString();
   document.getElementById("todaysDaySpan").innerHTML = getDayNameFromString(getTodayDateString());
@@ -674,19 +661,7 @@ function freeIn(){
     mySettings.myBaseColors = baseColors;
     localStorage.mySettings = JSON.stringify(mySettings);
   };
-  //création de colorPalet based on myBaseColors
-  let colors = mySettings.myBaseColors.map((color, idx) => {
-    if(idx > 0){
-      let colorBG = color.colorBG.startsWith("#") ? color.colorBG.substring(1) : color.colorBG;
-      return `<input type="radio" id="${colorBG}Radio" name="colorRadio" value="${idx}" />
-      <label for="${colorBG}Radio">
-        <div>
-          <div class="colorDiv" style="background-color:${color.colorBG}; color:${color.colorTX};">${color.tag}</div>
-        </div>
-      </label>`;
-    };
-  }).join("");
-  document.getElementById("colorPalet").innerHTML = colors;
+  
   //Inserion de la date d'aujourd'hui
   document.getElementById("todaysDateSpan").innerHTML = getTodayDateString();
   document.getElementById("todaysDaySpan").innerHTML = getDayNameFromString(getTodayDateString());
@@ -1703,21 +1678,22 @@ function getTogoList(todo){
 };
 
 function checkOptions(thisOne, pColor){ //context is either "normal" or "project" (that one means it's in a project's taskInfo projectUl)
-  clickScreen.classList.remove("displayNone");
+  //clickScreen.classList.remove("displayNone");
   parent = thisOne.parentElement; //That's the <li>
   let list = parent.parentElement;//That's the <ul>
   parent.classList.add("selectedTask");
   let todo = getTodoFromParent();;
   parent.insertAdjacentHTML("beforeend", `<div class="checkOptionsDiv">
   ${todo.label ? `<i id="labelChoice" class="fa-solid fa-folder-closed fa-rotate-270" style="font-size: 1.2em;color:${colorsList[todo.LColor].colorBG};"></i>` : ``}
-  ${todo.urge ? `<input id="newUrgeNumInput" type="number" value="${todo.urgeNum}"/>` : ``}
+  ${todo.urge || todo.term == "topPriority" ? `<input id="newUrgeNumInput" type="number" value="${todo.urgeNum ? todo.urgeNum : 0}"/>` : ``}
   <i class="typcn typcn-input-checked-outline checkOptionsCheck" onclick="PartialCheckEvent(this.parentElement)"></i>
   ${todo.term == "alwaysHere" ? `` : `<i class="typcn typcn-input-checked checkOptionsCheck" onclick="TotalCheckEvent(this.parentElement)"></i>`}
   ${list == "projectUl" ? `<div class="projectOptions" ${todo.pPosition == "out" ? `style="border-color:${colorsList[pColor].colorBG};"` : ``} onclick="projectOptionsEvent(this.parentElement)"><span>${todo.pPosition}</span></div>` : ``}
   ${list == "projectUl" && todo.pPosition == "done" ? `like recycleEvent from Done` : ``}
   </div>`);
   let checkOptionsDiv = parent.querySelector(".checkOptionsDiv");
-  clickScreen.addEventListener("click", () => clickHandlerAddOn(checkOptionsDiv, "trash", clickScreen, ""));
+  newClickScreenCreation(checkOptionsDiv);
+  // clickScreen.addEventListener("click", () => clickHandlerAddOn(checkOptionsDiv, "trash", clickScreen, ""));
   if(todo.label){
     let labelChoice = parent.querySelector("#labelChoice");
     labelChoice.addEventListener("click", () => {
@@ -1727,7 +1703,7 @@ function checkOptions(thisOne, pColor){ //context is either "normal" or "project
         icon: labelChoice,
         where: checkOptionsDiv,
         labelDiv: labelDiv,
-        screen: clickScreen, //should be an other screen...
+        //screen: clickScreen, 
         myLabels: mySettings.myLabels && mySettings.myLabels.length > 0 ? true : false
       };
       creatingLabelPanel(todo, options);
@@ -1751,11 +1727,35 @@ function checkOptions(thisOne, pColor){ //context is either "normal" or "project
       localStorage.listTasks = JSON.stringify(listTasks);
       colorUrges("next");
       updateCBC();
-      clickHandlerAddOn(checkOptionsDiv, "trash", clickScreen, "");
+      // clickHandlerAddOn(checkOptionsDiv, "trash", clickScreen, "");
     });
   };
 };
 window.checkOptions = checkOptions;
+
+function newClickScreenCreation(div){
+  let zIndexDiv = window.getComputedStyle(div).getPropertyValue("z-index");
+  let newClickScreen = `<div class="newClickScreen" style="z-index:${zIndexDiv - 1};"></div>`;
+  document.body.insertAdjacentHTML("beforeend", newClickScreen);
+  let allNewClickScreen = document.querySelectorAll(".newClickScreen");
+  newClickScreen = allNewClickScreen[allNewClickScreen.length - 1];
+  newClickScreen.addEventListener("click", () => {
+    newClickScreenRemoval(div);
+  });
+};
+function newClickScreenRemoval(div){
+  div.remove();
+  let allNewClickScreen = document.querySelectorAll(".newClickScreen");
+  allNewClickScreen[allNewClickScreen.length - 1].remove();
+  if(parent){ //that way, we remove the selectedTask class only if it's the last clickscreen (that way, we're safe if it's only, for ex., iconPalet)!
+    parent.scrollIntoView();
+    if(allNewClickScreen.length == 0){
+      parent.classList.remove("selectedTask");
+    };
+  } else{
+    window.scrollTo({ top: 0 });
+  };
+};
 
 function colorUrges(when){
   let filteredUrges = listTasks.filter(todo => todo.urge == true);
@@ -2755,7 +2755,7 @@ function smallCalendarChoice(thisOne){//thisOne = taskToDate est l'icon calendar
   parent.classList.add("selectedTask");
   parent.scrollIntoView();
   let togoList = parent.parentElement.id;
-  clickScreen.classList.remove("displayNone");
+  //clickScreen.classList.remove("displayNone");
   let todo;
   let todoIndex;
   let recIndex;
@@ -2773,7 +2773,8 @@ function smallCalendarChoice(thisOne){//thisOne = taskToDate est l'icon calendar
   };
   creatingCalendar(todo, thisOne, "onIcon");
   let calendarDiv = document.querySelector("#calendarDiv");
-  clickScreen.addEventListener("click", () => clickHandlerAddOn(calendarDiv, "trash", clickScreen, togoList));
+  newClickScreenCreation(calendarDiv);
+  //clickScreen.addEventListener("click", () => clickHandlerAddOn(calendarDiv, "trash", clickScreen, togoList));
   document.querySelector("#saveTheDateBtn").addEventListener("click", () => {
     let previousList = parent.parentElement.id;
     if(recurryIsIt){
@@ -2800,9 +2801,11 @@ function smallCalendarChoice(thisOne){//thisOne = taskToDate est l'icon calendar
     todoCreation(todo);
 
     localStorage.listTasks = JSON.stringify(listTasks);
-    sortItAllWell();
+    sortItAllWell(); //here's the sorting!!
     updateCBC();
-    clickHandlerAddOn(calendarDiv, "trash", clickScreen, togoList);
+    newClickScreenRemoval(calendarDiv);
+    //clickHandlerAddOn(calendarDiv, "trash", clickScreen, togoList);
+    //OR?? howToSortIt(parent.parentElement.id); //but we just removed the parent...?!
   });
 
 };
@@ -3356,13 +3359,14 @@ function ogniOgni(todo, date){ //For ogni X days/month(on Y date)/year until fin
     start = 1;
     stop = Number(todo.fineCount);
     count = true;
-  } else if(todo.fineOpt == "fineMai" && todo.var == "anno"){
+  } else if(todo.fineOpt == "fineMai"){
     start = 1;
     stop = 3;
     count = true;
   } else{
+    alert("y'a un prob de recurring (ogniOgni) avec " + todo.task);
     start = date;
-    stop = getDateFromString("2024-11-30");
+    stop = getDateFromString("2024-12-31");
   };  
   while (start <= stop){
     let Sdate = getStringFromDate(date);
@@ -3751,7 +3755,7 @@ function toTIdeTZaM(thisOne){ // de TodoZone à Modification et à Procrastinato
   parent.classList.add("selectedTask");
   parent.scrollIntoView(); 
   let togoList = parent.parentElement.id;
-  clickScreen.classList.remove("displayNone"); 
+  //clickScreen.classList.remove("displayNone"); 
   let infos = {
     todo: getTodoFromParent(),
     where: "todoZone",
@@ -3776,7 +3780,7 @@ function toTIdeTZaS(thisOne){ // de TodoZone à Stock reusage
   delete todo.stock;
   let div = document.body;
   div.scrollIntoView();
-  clickScreen.classList.remove("displayNone"); 
+  //clickScreen.classList.remove("displayNone"); 
   let infos = {
     todo: todo,
     where: "todoZone",
@@ -3802,7 +3806,7 @@ function toTIdeASaM(thisOne){ // de AllStorage à Modification
   parent = div.parentElement;
   parent.classList.add("selectedTask");
   parent.scrollIntoView(); 
-  clickScreen.classList.remove("displayNone"); 
+  //clickScreen.classList.remove("displayNone"); 
   let infos = {
     todo: getTodoFromParent(),
     where: "allStorage",
@@ -3819,7 +3823,7 @@ function toTIdeSSaM(thisOne){ // de SearchScreen à Modification
   parent.classList.add("selectedTask");
   parent.scrollIntoView(); 
   let togoList = parent.parentElement.id;
-  clickScreen.classList.remove("displayNone"); 
+  //clickScreen.classList.remove("displayNone"); 
   let infos = {
     todo: getTodoFromParent(),
     where: "searchScreen",
@@ -3844,7 +3848,7 @@ function toTIdeSSaS(thisOne){ // de SearchScreen à Stock reusage
   delete todo.stock;
   let div = document.body;
   div.scrollIntoView();
-  clickScreen.classList.remove("displayNone"); 
+  //clickScreen.classList.remove("displayNone"); 
   let infos = {
     todo: todo,
     where: "searchScreen",
@@ -3964,7 +3968,7 @@ function toTIdeCCaNS(thisOne){ //de calendar (month || weekly) à Stock reusage 
   todo.line = "todoDay";
   todo.recycled = true;
   delete todo.stock;
-  clickScreen.classList.remove("displayNone"); 
+  //clickScreen.classList.remove("displayNone"); 
   let infos = {
     todo: todo,
     where: "",
@@ -4079,7 +4083,7 @@ function taskAddAllInfo(infos){
 //<div id="taskInfo" class="taskInfoClass${todo.project && todo.pParent ? ` taskInfoProject` : ``}"${todo.project && todo.pParent ? ` style="border-color:${colorsList[todo.pColor].colorBG}; outline-color: ${colorsList[todo.pColor].colorBG5};"` : ``}>
   let taskAllInfo = `<div id="taskInfo" class="taskInfo taskInfoClass">
     <div class="taskInfoWrapper">
-      <div id="SupClickScreen" class="Screen displayNone"></div>
+      <!-- <div id="SupClickScreen" class="Screen displayNone"></div> -->
       <button id="doneIt" class="iconOnlyBtn cornerItLabel">
         <i class="typcn typcn-media-stop-outline"></i>
       </button>
@@ -4397,35 +4401,37 @@ function taskAddAllInfo(infos){
   let switchTextareaSize = document.querySelector("#switchTextareaSize");
   let urgeInput = document.querySelector("#urgeInput");
   let whereCheck = document.querySelector("#whereHomeInput");
-  let SupClickScreen = document.querySelector("#SupClickScreen");
+  //let SupClickScreen = document.querySelector("#SupClickScreen");
   let colorIt = document.querySelector("#colorIt");
-  let colorPalet = document.querySelector("#colorPalet");
+  //let colorPalet = document.querySelector("#colorPalet");
   let contactSearchInput = document.querySelector("#contactSearchInput");
   let iconIt = document.querySelector("#iconIt");
-  let iconsPalet = document.querySelector("#iconsPalet");
+  //let iconsPalet = document.querySelector("#iconsPalet");
   let taskInfoBtn = document.querySelector("#taskInfoBtn");
   let taskCancelBtn = document.querySelector("#taskCancelBtn");
   let busyInput = document.querySelector("#busyInput");
 
   
+  newClickScreenCreation(taskInfo);
+  // let zIndexDiv = window.getComputedStyle(taskInfo).getPropertyValue("z-index");
+  // console.log(zIndexDiv);
+  // let newClickScreen = `<div id="newClickScreen" class="newClickScreen" style="z-index:${zIndexDiv - 1};"></div>`;
+  // document.body.insertAdjacentHTML("beforeend", newClickScreen);
+  // newClickScreen = document.querySelector("#newClickScreen");
+  // newClickScreen.addEventListener("click", cancelTaskInfo);
 
-  let zIndexDiv = window.getComputedStyle(taskInfo).getPropertyValue("z-index");
-  console.log(zIndexDiv);
-  let newClickScreen = `<div id="newClickScreen" class="newClickScreen" style="z-index:${zIndexDiv - 1};"></div>`;
-  document.body.insertAdjacentHTML("beforeend", newClickScreen);
-  newClickScreen = document.querySelector("#newClickScreen");
-  newClickScreen.addEventListener("click", cancelTaskInfo);
-
-  taskCancelBtn.addEventListener("click", cancelTaskInfo);
+  taskCancelBtn.addEventListener("click", () => {
+    newClickScreenRemoval(taskInfo);
+  });
   
-  function cancelTaskInfo(){
-    if(parent){
-      parent.classList.remove("selectedTask");
-    };
-    taskInfo.remove();
-    window.scrollTo(0, positionA);
-    newClickScreen.remove();
-  };
+  // function cancelTaskInfo(){
+  //   if(parent){
+  //     parent.classList.remove("selectedTask");
+  //   };
+  //   taskInfo.remove();
+  //   newClickScreen.remove();
+  //   window.scrollTo(0, positionA);
+  // };
 
   // *** CONVO
   let thisStatus = "";
@@ -4475,7 +4481,7 @@ function taskAddAllInfo(infos){
   let options = {
     where: taskInfo,
     labelDiv: labelIt,
-    screen: SupClickScreen,
+    // screen: SupClickScreen,
     myLabels: mySettings.myLabels && mySettings.myLabels.length > 0 ? true : false
   };
   labelIt.addEventListener("click", () => {
@@ -4721,9 +4727,25 @@ function taskAddAllInfo(infos){
   // *** COLOR
   let newcolor = todo.color;
   colorIt.addEventListener("click", () => {
+    //création de colorPalet based on myBaseColors
+    let colors = mySettings.myBaseColors.map((color, idx) => {
+      if(idx > 0){
+        let colorBG = color.colorBG.startsWith("#") ? color.colorBG.substring(1) : color.colorBG;
+        return `<input type="radio" id="${colorBG}Radio" name="colorRadio" value="${idx}" />
+        <label for="${colorBG}Radio">
+          <div>
+            <div class="colorDiv" style="background-color:${color.colorBG}; color:${color.colorTX};">${color.tag}</div>
+          </div>
+        </label>`;
+      };
+    }).join("");
+    let colorPalet = `<div id="colorPalet" class="colorPaletClass">${colors}</div>`;
+    // document.getElementById("colorPalet").innerHTML = colors;
     taskInfo.insertAdjacentElement("beforeend", colorPalet);
-    colorPalet.classList.remove("displayNone");
-    SupClickScreen.classList.remove("displayNone");
+    //colorPalet.classList.remove("displayNone");
+    colorPalet = document.querySelector("#colorPalet");
+    //SupClickScreen.classList.remove("displayNone");
+    newClickScreenCreation(colorPalet);
     document.querySelectorAll("input[name='colorRadio']").forEach(radio => {
       if(todo.color == radio.value){
         radio.checked = true;
@@ -4734,19 +4756,36 @@ function taskAddAllInfo(infos){
         newcolor = radio.value;
         taskTitle.style.color = mySettings.myBaseColors[newcolor].colorBG;
         colorIt.style.color = mySettings.myBaseColors[newcolor].colorBG;
-        colorPalet.classList.add("displayNone");
-        clickHandlerAddOn(colorPalet, "keep", SupClickScreen, "nowhere");
-        document.querySelector("#todoZone").insertAdjacentElement("beforeend", colorPalet);
+        //colorPalet.classList.add("displayNone");
+        //clickHandlerAddOn(colorPalet, "keep", SupClickScreen, "nowhere");
+        //document.querySelector("#todoZone").insertAdjacentElement("beforeend", colorPalet);
+        newClickScreenRemoval(colorPalet);
       });
     });
-    SupClickScreen.addEventListener("click", () => clickHandlerAddOn(colorPalet, "keep", SupClickScreen, "nowhere"));
+    //SupClickScreen.addEventListener("click", () => clickHandlerAddOn(colorPalet, "keep", SupClickScreen, "nowhere"));
   });
   //ICON
   let newicon = todo.icon;
   iconIt.addEventListener("click", () => {
+    //creation of iconsPalet
+    let iconsAll = icons.map(icon => {
+      let index = icon.search(" fa-") + 4;
+      let subname = icon.substring(index);
+      let name = subname.split('-').join('');
+      name = name.replace(' ', '');
+      return `<input type="radio" id="${name}Radio" name="iconRadio" value="${icon}" />
+      <label for="${name}Radio">
+        <div>
+          <i class="${icon}"></i>
+        </div>
+      </label>`;
+    }).join("");
+    let iconsPalet = `<div id="iconsPalet" class="iconsPaletClass inTaskDiv">${iconsAll}</div>`;
     taskInfo.insertAdjacentElement("beforeend", iconsPalet);
-    iconsPalet.classList.replace("displayNone", "inTaskDiv");
-    SupClickScreen.classList.remove("displayNone");
+    //iconsPalet.classList.replace("displayNone", "inTaskDiv");
+    iconsPalet = document.querySelector("#iconsPalet");
+    //SupClickScreen.classList.remove("displayNone");
+    newClickScreenCreation(iconsPalet);
     document.querySelectorAll("input[name='iconRadio']").forEach(radio => {
       if(todo.icon == radio.value){
         radio.checked = true;
@@ -4756,12 +4795,13 @@ function taskAddAllInfo(infos){
       radio.addEventListener("click", () => {
         newicon = radio.value;
         iconIt.className = `IconI ${newicon}`;
-        iconsPalet.classList.replace("inTaskDiv", "displayNone");
-        clickHandlerAddOn(iconsPalet, "keep", SupClickScreen, "nowhere");
-        document.querySelector("#todoZone").insertAdjacentElement("beforeend", iconsPalet);
+        //iconsPalet.classList.replace("inTaskDiv", "displayNone");
+        //clickHandlerAddOn(iconsPalet, "keep", SupClickScreen, "nowhere");
+        // document.querySelector("#todoZone").insertAdjacentElement("beforeend", iconsPalet);
+        newClickScreenRemoval(iconsPalet);
       });
     });
-    SupClickScreen.addEventListener("click", () => clickHandlerAddOn(iconsPalet, "keep", SupClickScreen, "nowhere"));
+    // SupClickScreen.addEventListener("click", () => clickHandlerAddOn(iconsPalet, "keep", SupClickScreen, "nowhere"));
   });
 
   quickyIt.addEventListener("click", () => {
@@ -5174,7 +5214,8 @@ function taskAddAllInfo(infos){
     if(parent){
       parent.remove();};
     taskInfo.remove();
-    clickScreen.classList.add("displayNone");
+    newClickScreen.remove();
+    //clickScreen.classList.add("displayNone");
     if(togoList !== ""){ //revoir les méthodes de tri et s'assurer de tenir compte du storage aussi
       howToSortIt(togoList);
     } else{
@@ -5269,12 +5310,6 @@ function scrollToSection(list){
   let section = listToGo.closest("section");
   if(section.querySelector(".listToggleInput")){
     section.querySelector(".listToggleInput").checked = true;
-  } else if(section.querySelector(".swipingInput")){//not sure what that's doing...
-    if(list == "listTomorrow"){
-      section.querySelector(".swipingInput").checked = true;
-    } else if(list == "listToday"){
-      section.querySelector(".swipingInput").checked = false;
-    };
   };
   section.scrollIntoView();
 };
@@ -5324,10 +5359,27 @@ function iconChoice(thisOne){
     todoIndex = listTasks.findIndex(todo => todo.id == liId);
     todo = listTasks[todoIndex];
   };
-  
+
+  //creation of iconsPalet
+  let iconsAll = icons.map(icon => {
+    let index = icon.search(" fa-") + 4;
+    let subname = icon.substring(index);
+    let name = subname.split('-').join('');
+    name = name.replace(' ', '');
+    return `<input type="radio" id="${name}Radio" name="iconRadio" value="${icon}" />
+    <label for="${name}Radio">
+      <div>
+        <i class="${icon}"></i>
+      </div>
+    </label>`;
+  }).join("");
+  let iconsPalet = `<div id="iconsPalet" class="iconsPaletClass">${iconsAll}</div>`;
   iconTag.insertAdjacentElement("afterend", iconsPalet);
-  iconsPalet.classList.remove("displayNone");
-  clickScreen.classList.remove("displayNone");
+  iconsPalet = document.querySelector("#iconsPalet");
+  //clickScreen.classList.remove("displayNone");
+  newClickScreenCreation(iconsPalet);
+
+  //Choisir l'icon
   document.querySelectorAll("input[name='iconRadio']").forEach(radio => {
     if(todo.icon == radio.value){
       radio.checked = true;
@@ -5350,10 +5402,12 @@ function iconChoice(thisOne){
       
       localStorage.listTasks = JSON.stringify(listTasks);
       updateCBC();
-      clickHandlerAddOn(iconsPalet, "keep", clickScreen);
+      //clickHandlerAddOn(iconsPalet, "keep", clickScreen);
+      newClickScreenRemoval(iconsPalet);
+      howToSortIt(parent.parentElement.id); //adding a sorting (in case the section was sorted in terms of icons)
     });
   });
-  clickScreen.addEventListener("click", () => clickHandlerAddOn(iconsPalet, "keep", clickScreen));
+  //clickScreen.addEventListener("click", () => clickHandlerAddOn(iconsPalet, "keep", clickScreen));
 };
 window.iconChoice = iconChoice;
 
@@ -5368,7 +5422,6 @@ function creatingLabelPanel(todo, options){ //création du paneau et
     screen (SupClickScreen (taskInfo) or clickScreen (checkOptions)), 
     myLabels (true (mySettings.myLabels && mySettings.myLabels.length > 0) or false),
   } */
-
   newLabelReset();
 
   // Création du panneau
@@ -5408,8 +5461,9 @@ function creatingLabelPanel(todo, options){ //création du paneau et
 
   //placement du panneau
   options.where.insertAdjacentHTML("beforeend", labelPalet);
-  options.screen.classList.remove("displayNone");
+  //options.screen.classList.remove("displayNone");
   labelPalet = document.querySelector("#labelPalet");
+  newClickScreenCreation(labelPalet);
 
   let createLabelBtn;
   let createLabelCancelBtn;
@@ -5437,7 +5491,7 @@ function creatingLabelPanel(todo, options){ //création du paneau et
           parent.querySelector(".labelLiOnglet").remove();
           howToSortIt(parent.parentElement.id);
         };
-        clickHandlerAddOn(labelPalet, "trash", options.screen, "nowhere");
+        //clickHandlerAddOn(labelPalet, "trash", options.screen, "nowhere");
       } else{
         let label = mySettings.myLabels[e.target.value];
         newlabelColor = label.color;
@@ -5455,7 +5509,7 @@ function creatingLabelPanel(todo, options){ //création du paneau et
           newlabelColor = "";
           newlabelName = "";
         };
-        clickHandlerAddOn(labelPalet, "trash", options.screen, "nowhere");
+        //clickHandlerAddOn(labelPalet, "trash", options.screen, "nowhere");
       };
     });
   };
@@ -5491,7 +5545,8 @@ function creatingLabelPanel(todo, options){ //création du paneau et
         newLabelReset();
         newlabelColor = "";
         newlabelName = "";
-        clickHandlerAddOn(labelPalet, "trash", options.screen, "nowhere");
+        newClickScreenRemoval(labelPalet);
+        //clickHandlerAddOn(labelPalet, "trash", options.screen, "nowhere");
       };
     });
     // cancel btn
@@ -5503,10 +5558,11 @@ function creatingLabelPanel(todo, options){ //création du paneau et
       newLabelReset();
       newlabelColor = "";
       newlabelName = "";
-      clickHandlerAddOn(labelPalet, "trash", options.screen, "nowhere");
+      newClickScreenRemoval(labelPalet);
+      //clickHandlerAddOn(labelPalet, "trash", options.screen, "nowhere");
     });
   };
-  options.screen.addEventListener("click", () => clickHandlerAddOn(labelPalet, "trash", options.screen, "nowhere"));
+  //options.screen.addEventListener("click", () => clickHandlerAddOn(labelPalet, "trash", options.screen, "nowhere"));
 };
 
 function saveNewLabel(){

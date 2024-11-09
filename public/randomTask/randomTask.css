@@ -267,7 +267,7 @@ input[type="radio"]{
 }
 
 #cloudIt{
-  margin-left: 16px;
+  margin-left: 8px;
   font-size: 25px;
   line-height: 1em;
   padding: 2px 5px 2px 5px;
@@ -275,7 +275,7 @@ input[type="radio"]{
   color: var(--tx-color);
 }
 #earthIt{
-  margin-left: 8px;
+  margin-left: 16px;
   font-size: 25px;
   line-height: 1em;
   padding: 2px 5px 2px 5px;

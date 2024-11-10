@@ -333,9 +333,6 @@ let contactList = [
   }
 ];
 
-
-
-
 let previousPage;
 const pageEvent = new Event("click");
 (() => {

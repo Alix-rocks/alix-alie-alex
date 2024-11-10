@@ -264,9 +264,9 @@ function createNew() { // le + se transforme en checkmark et quand on click sur 
     options.push(`<option value="${i}">${i}</option>`);
   };
   options = options.join("");
-  let colorsOptions = `<option value="purple">purple</option>
-  <option data-icon="fa-solid fa-palette" value="green">green</option>
-  <option value="red">red</option>`;
+  let colorsOptions = `<option value="purple" style="color:rgba(138, 43, 226, 1);">&#xf53f;</option>
+  <option value="green" style="color:green;">&#xf53f;</option>
+  <option value="red" style="color:rgba(255, 0, 0, 1);">&#xf53f;</option>`;
   document.querySelector("#seqName").innerHTML = `<input id="seqNameInput" type="text" placeholder="Nom de la séquence"></input>`;
   document.querySelector(".allTimeDiv").innerHTML = `<div class="positionClass">
       <input type="text" class="stepNameInput" id="delay0Select" value="Position"></input>

@@ -333,21 +333,7 @@ let contactList = [
   }
 ];
 
-(() => {
-  let iconsAll = icons.map(icon => {
-    let index = icon.search(" fa-") + 4;
-    let subname = icon.substring(index);
-    let name = subname.split('-').join('');
-    name = name.replace(' ', '');
-    return `<input type="radio" id="${name}Radio" name="iconRadio" value="${icon}" />
-    <label for="${name}Radio">
-      <div>
-        <i class="${icon}"></i>
-      </div>
-    </label>`;
-  }).join("");
-  document.getElementById("iconsPalet").innerHTML = iconsAll;
-})();
+
 
 
 let previousPage;

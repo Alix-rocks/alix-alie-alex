@@ -264,63 +264,70 @@ function createNew() { // le + se transforme en checkmark et quand on click sur 
     options.push(`<option value="${i}">${i}</option>`);
   };
   options = options.join("");
+  let colorsOptions = `<option value="purple">purple</option>
+  <option data-icon="fa-solid fa-palette" value="green">green</option>
+  <option value="red">red</option>`;
   document.querySelector("#seqName").innerHTML = `<input id="seqNameInput" type="text" placeholder="Nom de la séquence"></input>`;
   document.querySelector(".allTimeDiv").innerHTML = `<div class="positionClass">
       <input type="text" class="stepNameInput" id="delay0Select" value="Position"></input>
       <select class="delaySelect delay0Select">${options}</select>
       <select class="colorSelect color0Select">
-        <option data-content="<i class='fa-solid fa-palette' aria-hidden='true'></i>purple"></option>
-        <option value="rgba(138, 43, 226, 1)" style="color:rgba(138, 43, 226, 1);" data-content="<i class='fa-solid fa-palette' aria-hidden='true'></i>purple"></option>
-        <option value="rgba(138, 43, 226, 1)" style="color:rgba(138, 43, 226, 1);" data-content="<i class='fa-solid fa-palette' aria-hidden='true'></i>purple"></option>
-        <option value="green"><i class="fa-solid fa-palette" style="color:green;"></i></option>
-        <option value="rgba(255, 0, 0, 1)"><i class="fa-solid fa-palette" style="color:rgba(255, 0, 0, 1);"></i></option>
+       ${colorsOptions}
       </select>
     </div>
     <div class="stretchClass">
       <input type="text" class="stepNameInput" id="delay1Select" value="Stretch"></input>
       <select class="delaySelect delay1Select">${options}</select>
       <select class="colorSelect color1Select">
-        <option value="rgba(138, 43, 226, 1)"><i class="fa-solid fa-palette" style="color:rgba(138, 43, 226, 1);"></i></option>
-        <option value="green"><i class="fa-solid fa-palette" style="color:green;"></i></option>
-        <option value="rgba(255, 0, 0, 1)"><i class="fa-solid fa-palette" style="color:rgba(255, 0, 0, 1);"></i></option>
+       ${colorsOptions}
       </select>
     </div>
     <div class="pauseClass">
       <input type="text" class="stepNameInput" id="delay2Select" value="Pause"></input>
       <select class="delaySelect delay2Select">${options}</select>
       <select class="colorSelect color2Select">
-        <option value="rgba(138, 43, 226, 1)"><i class="fa-solid fa-palette" style="color:rgba(138, 43, 226, 1);"></i></option>
-        <option value="green"><i class="fa-solid fa-palette" style="color:green;"></i></option>
-        <option value="rgba(255, 0, 0, 1)"><i class="fa-solid fa-palette" style="color:rgba(255, 0, 0, 1);"></i></option>
+        ${colorsOptions}
       </select>
     </div>
     <div class="stretchClass">
       <input type="text" class="stepNameInput" id="delay3Select" value="Stretch"></input>
       <select class="delaySelect delay3Select">${options}</select>
       <select class="colorSelect color3Select">
-        <option value="rgba(138, 43, 226, 1)"><i class="fa-solid fa-palette" style="color:rgba(138, 43, 226, 1);"></i></option>
-        <option value="green"><i class="fa-solid fa-palette" style="color:green;"></i></option>
-        <option value="rgba(255, 0, 0, 1)"><i class="fa-solid fa-palette" style="color:rgba(255, 0, 0, 1);"></i></option>
+        ${colorsOptions}
       </select>
     </div>
     <div class="pauseClass">
       <input type="text" class="stepNameInput" id="delay4Select" value="Pause"></input>
       <select class="delaySelect delay4Select">${options}</select>
       <select class="colorSelect color4Select">
-        <option value="rgba(138, 43, 226, 1)"><i class="fa-solid fa-palette" style="color:rgba(138, 43, 226, 1);"></i></option>
-        <option value="green"><i class="fa-solid fa-palette" style="color:green;"></i></option>
-        <option value="rgba(255, 0, 0, 1)"><i class="fa-solid fa-palette" style="color:rgba(255, 0, 0, 1);"></i></option>
+        ${colorsOptions}
       </select>
     </div>
     <div class="stretchClass">
       <input type="text" class="stepNameInput" id="delay5Select" value="Stretch"></input>
       <select class="delaySelect delay5Select">${options}</select>
-      <select class="colorSelect color5Select">
-        <option value="rgba(138, 43, 226, 1)"><i class="fa-solid fa-palette" style="color:rgba(138, 43, 226, 1);"></i></option>
-        <option value="green"><i class="fa-solid fa-palette" style="color:green;"></i></option>
-        <option value="rgba(255, 0, 0, 1)"><i class="fa-solid fa-palette" style="color:rgba(255, 0, 0, 1);"></i></option>
+      <select class="colorSelect color5Select" value="green">
+        ${colorsOptions}
       </select>
     </div>`;
+    /**
+     *  <option data-content="<i class='fa-solid fa-palette' aria-hidden='true'></i>purple"></option>
+     * <option value="rgba(138, 43, 226, 1)" style="color:rgba(138, 43, 226, 1);" data-content="<i class='fa-solid fa-palette' aria-hidden='true'></i>purple"></option>
+        <option value="rgba(138, 43, 226, 1)" style="color:rgba(138, 43, 226, 1);" data-content="<i class='fa-solid fa-palette' aria-hidden='true'></i>purple"></option>
+        <option value="green"><i class="fa-solid fa-palette" style="color:green;"></i></option>
+        <option value="rgba(255, 0, 0, 1)"><i class="fa-solid fa-palette" style="color:rgba(255, 0, 0, 1);"></i></option>
+         * 
+        <select class="colorSelect color1Select">
+                <option value="rgba(138, 43, 226, 1)"><i class="fa-solid fa-palette" style="color:rgba(138, 43, 226, 1);"></i></option>
+                <option value="green"><i class="fa-solid fa-palette" style="color:green;"></i></option>
+                <option value="rgba(255, 0, 0, 1)"><i class="fa-solid fa-palette" style="color:rgba(255, 0, 0, 1);"></i></option>
+              </select>
+        <select class="colorSelect color2Select">
+                <option value="rgba(138, 43, 226, 1)"><i class="fa-solid fa-palette" style="color:rgba(138, 43, 226, 1);"></i></option>
+                <option value="green"><i class="fa-solid fa-palette" style="color:green;"></i></option>
+                <option value="rgba(255, 0, 0, 1)"><i class="fa-solid fa-palette" style="color:rgba(255, 0, 0, 1);"></i></option>
+              </select>
+     */
   addOneBtn.removeEventListener("click", createNew);
   addOneBtn.addEventListener("click", saveNreset);
   //when the checkmark is clicked (to save), we go through each and note the text, (color) and time into one prog

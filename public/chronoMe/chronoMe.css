@@ -94,6 +94,11 @@ body{
   font: var(--fa-font-solid);
 }
 
+.stepDivClass input[type="text"], .stepDivClass select{
+  color: inherit;
+  border-color: inherit;
+}
+
 .positionClass input[type="text"]{
   color: blueviolet;
 }
@@ -130,7 +135,7 @@ body{
 .choiceDiv{
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-between;
   margin: 0 0 0 10px;
 }
 .choiceDiv button{
@@ -139,6 +144,7 @@ body{
   font-weight: 900;
   font-size: 16px;
   color: var(--tx-color);
+  line-height: 1em;
 }
 .choiceDiv button i{
   text-shadow: 

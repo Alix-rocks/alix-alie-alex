@@ -52,84 +52,116 @@ function logOut(){
 };
 window.logOut = logOut;
 
-let progNum = 0;
+const colorsList = [
+  "rgba(138, 43, 226, 1)",
+  "green",
+  "rgba(255, 0, 0, 1)"
+];
+
+let progNum = 1;
 let allPrograms = [[{
+      name: "Nom de la séquence"
+    },{
+      word: "Position",
+      color: 0,
+      time: 0
+    },{
+      word: "Hold",
+      color: 1,
+      time: 0
+    },{
+      word: "Pause",
+      color: 2,
+      time: 0
+    },{
+      word: "Hold",
+      color: 1,
+      time: 0
+    },{
+      word: "Pause",
+      color: 2,
+      time: 0
+    },{
+      word: "Hold",
+      color: 1,
+      time: 0
+    }],[{
       name: "Strengthening"
     },{
       word: "Position",
-      color: "rgba(138, 43, 226, 1)",
+      color: 0,
       time: 5
     },{
       word: "Hold",
-      color: "green",
+      color: 1,
       time: 60
     },{
       word: "Pause",
-      color: "rgba(255, 0, 0, 1)",
+      color: 2,
       time: 15
     },{
       word: "Hold",
-      color: "green",
+      color: 1,
       time: 60
     },{
       word: "Pause",
-      color: "rgba(255, 0, 0, 1)",
+      color: 2,
       time: 15
     },{
       word: "Hold",
-      color: "green",
+      color: 1,
       time: 60
     }],[{
       name: "Stretching"
     },{
       word: "Position",
-      color: "rgba(138, 43, 226, 1)",
+      color: 0,
       time: 5
     },{
       word: "Stretch",
-      color: "green",
+      color: 1,
       time: 25
     },{
       word: "Pause",
-      color: "rgba(255, 0, 0, 1)",
+      color: 2,
       time: 8
     },{
       word: "Stretch",
-      color: "green",
+      color: 1,
       time: 25
     },{
       word: "Pause",
-      color: "rgba(255, 0, 0, 1)",
+      color: 2,
       time: 8
     },{
       word: "Stretch",
-      color: "green",
+      color: 1,
       time: 25
     }],[{
       name: "Demo"
     },{
       word: "Position",
-      color: "rgba(138, 43, 226, 1)",
+      color: 0,
       time: 3
     },{
       word: "Test",
-      color: "green",
+      color: 1,
       time: 6
     },{
       word: "Pause",
-      color: "rgba(255, 0, 0, 1)",
+      color: 2,
       time: 3
     },{
       word: "Test",
-      color: "green",
+      color: 1,
       time: 6
     },{
       word: "Pause",
-      color: "rgba(255, 0, 0, 1)",
+      color: 2,
       time: 3
     },{
       word: "Test",
-      color: "green",
+      color: 1,
       time: 6
     }
   ]
@@ -211,10 +243,10 @@ const delaysDefault = [3, 8, 3, 8, 3, 8];
 
 
 function showProgram(){
-  document.querySelector("#seqName").innerText = allPrograms[progNum][0].name;
+  document.querySelector("#seqName").innerHTML = `${allPrograms[progNum][0].name}<button onclick="modifyProgram(progIdx)"><i class="fa-solid fa-pen" style="margin-left: 16px;font-size: .75em;"></i></button`;
   document.querySelector(".allTimeDiv").innerHTML = allPrograms[progNum].map((step, idx) => {
     if(idx !== 0){
-      return `<div style="color:${step.color};">
+      return `<div style="color:${colorsList[step.color]};">
         <h3>${step.word}</h3>
         <p>${step.time}</p>
       </div>`;
@@ -222,32 +254,52 @@ function showProgram(){
   }).join("");
 };
 
-// function showProgram(prog){
-//   allPrograms[prog].map((select, idx) => {
-//     let options = [];
-//     for(let i = 0; i < 61; i++){
-//       options.push(`<option value="${i}" ${i == select ? "selected" : ""}>${i}</option>`);
-//     };
-//     options = options.join("");
-//     document.querySelector(`.delay${idx}Select`).innerHTML = options;
-//   });
-//   document.querySelectorAll('.allTimeDiv input[type="text"]').forEach(input => {
-//     //input.style.width = input.parentElement.style.width - 6 + "px";
-//     console.log(window.getComputedStyle(input.parentElement).getPropertyValue("width"));
-//     console.log(window.getComputedStyle(input.parentElement).getPropertyValue("width") - 6 + "px");
-//   });
-// };
+function modifyProgram(progIdx){
 
+};
+window.modifyProgram = modifyProgram;
 
+function showModifiableProgram(progIdx){
+  
+  let addingStep = allPrograms[progIdx].map((step, idx) => {
+    if(idx !== 0){
+      let timeOptions = [];
+        for (let i = 0; i < 61; i++) {
+          timeOptions.push(`<option value="${i}"${i == step.time ? " selected" : ""}>${i}</option>`);
+        };
+        timeOptions = timeOptions.join("");
+      let colorOptions = colorsList.map((col, idx) => {
+        return `<option value="${idx}" style="color:${col};"${step.color == idx ? " selected" : ""}>&#xf53f;</option>`;
+      }).join("");
+      return `<div class="stepDivClass" style="color:${colorsList[step.color]};">
+      <input type="text" class="stepNameInput" value="${step.word}"></input>
+      <select class="delaySelect">${timeOptions}</select>
+      <select class="colorSelect">
+        ${colorOptions}
+      </select>
+    </div>`;
+    }
+  }).join("");
+
+  document.querySelector("#seqName").innerHTML = `<input id="seqNameInput" type="text" placeholder="${allPrograms[progIdx][0].name}"></input>
+  ${progIdx !== 0 ? `<button onclick="replaceProgram(progIdx)"><i class="fa-regular fa-floppy-disk" style="margin-left: 16px;"></i></button>` : ``}`;
+  document.querySelector(".allTimeDiv").innerHTML = addingStep;
+};
+
+function replaceProgram(progIdx){
+
+}
+
+window.replaceProgram = replaceProgram;
 
 
 document.querySelector("#moveUpBtn").addEventListener("click", () => {
-  progNum = progNum == allPrograms.length - 1 ? 0 : progNum + 1;
+  progNum = progNum == allPrograms.length - 1 ? 1 : progNum + 1;
   backToStart();
   showProgram();
 });
 document.querySelector("#moveDnBtn").addEventListener("click", () => {
-  progNum = progNum == 0 ? allPrograms.length - 1 : progNum - 1;
+  progNum = progNum == 1 ? allPrograms.length - 1 : progNum - 1;
   backToStart();
   showProgram();
 });
@@ -259,81 +311,11 @@ function createNew() { // le + se transforme en checkmark et quand on click sur 
   addOneBtn.innerHTML = `<i class="fa-regular fa-floppy-disk" style="text-shadow: none;"></i>`;
   // progNum = allPrograms.length;
   backToStart(); //or just: document.querySelector("#chronoMe").blur(); NOT JUST BLUR, WE NEED TO DEACTIVATE IT! because Start just won't work because it's not about the number in the selects anymore, it's about the number in the array! So before the btn start can be activated, we have to had the number added to the array.
-  let options = [];
-  for (let i = 0; i < 61; i++) {
-    options.push(`<option value="${i}">${i}</option>`);
-  };
-  options = options.join("");
-  let colorsOptions = `<option value="purple" style="color:rgba(138, 43, 226, 1);">&#xf53f;</option>
-  <option value="green" style="color:green;">&#xf53f;</option>
-  <option value="red" style="color:rgba(255, 0, 0, 1);">&#xf53f;</option>`;
-  document.querySelector("#seqName").innerHTML = `<input id="seqNameInput" type="text" placeholder="Nom de la séquence"></input>`;
-  document.querySelector(".allTimeDiv").innerHTML = `<div class="positionClass">
-      <input type="text" class="stepNameInput" id="delay0Select" value="Position"></input>
-      <select class="delaySelect delay0Select">${options}</select>
-      <select class="colorSelect color0Select">
-       ${colorsOptions}
-      </select>
-    </div>
-    <div class="stretchClass">
-      <input type="text" class="stepNameInput" id="delay1Select" value="Stretch"></input>
-      <select class="delaySelect delay1Select">${options}</select>
-      <select class="colorSelect color1Select">
-       ${colorsOptions}
-      </select>
-    </div>
-    <div class="pauseClass">
-      <input type="text" class="stepNameInput" id="delay2Select" value="Pause"></input>
-      <select class="delaySelect delay2Select">${options}</select>
-      <select class="colorSelect color2Select">
-        ${colorsOptions}
-      </select>
-    </div>
-    <div class="stretchClass">
-      <input type="text" class="stepNameInput" id="delay3Select" value="Stretch"></input>
-      <select class="delaySelect delay3Select">${options}</select>
-      <select class="colorSelect color3Select">
-        ${colorsOptions}
-      </select>
-    </div>
-    <div class="pauseClass">
-      <input type="text" class="stepNameInput" id="delay4Select" value="Pause"></input>
-      <select class="delaySelect delay4Select">${options}</select>
-      <select class="colorSelect color4Select">
-        ${colorsOptions}
-      </select>
-    </div>
-    <div class="stretchClass">
-      <input type="text" class="stepNameInput" id="delay5Select" value="Stretch"></input>
-      <select class="delaySelect delay5Select">${options}</select>
-      <select class="colorSelect color5Select" value="green">
-        ${colorsOptions}
-      </select>
-    </div>`;
-    /**
-     *  <option data-content="<i class='fa-solid fa-palette' aria-hidden='true'></i>purple"></option>
-     * <option value="rgba(138, 43, 226, 1)" style="color:rgba(138, 43, 226, 1);" data-content="<i class='fa-solid fa-palette' aria-hidden='true'></i>purple"></option>
-        <option value="rgba(138, 43, 226, 1)" style="color:rgba(138, 43, 226, 1);" data-content="<i class='fa-solid fa-palette' aria-hidden='true'></i>purple"></option>
-        <option value="green"><i class="fa-solid fa-palette" style="color:green;"></i></option>
-        <option value="rgba(255, 0, 0, 1)"><i class="fa-solid fa-palette" style="color:rgba(255, 0, 0, 1);"></i></option>
-         * 
-        <select class="colorSelect color1Select">
-                <option value="rgba(138, 43, 226, 1)"><i class="fa-solid fa-palette" style="color:rgba(138, 43, 226, 1);"></i></option>
-                <option value="green"><i class="fa-solid fa-palette" style="color:green;"></i></option>
-                <option value="rgba(255, 0, 0, 1)"><i class="fa-solid fa-palette" style="color:rgba(255, 0, 0, 1);"></i></option>
-              </select>
-        <select class="colorSelect color2Select">
-                <option value="rgba(138, 43, 226, 1)"><i class="fa-solid fa-palette" style="color:rgba(138, 43, 226, 1);"></i></option>
-                <option value="green"><i class="fa-solid fa-palette" style="color:green;"></i></option>
-                <option value="rgba(255, 0, 0, 1)"><i class="fa-solid fa-palette" style="color:rgba(255, 0, 0, 1);"></i></option>
-              </select>
-     */
+  
+  showModifiableProgram(0);
+  
   addOneBtn.removeEventListener("click", createNew);
   addOneBtn.addEventListener("click", saveNreset);
-  //when the checkmark is clicked (to save), we go through each and note the text, (color) and time into one prog
-  //Then push that prog into allPrograms.
-  //Then showProgram (progNum should be the right one)
-
 };
 
 function saveNreset() {
@@ -346,7 +328,8 @@ function saveNreset() {
   document.querySelectorAll(".allTimeDiv > div").forEach(step => {
     let newStep = {
       word: step.querySelector(".stepNameInput").value,
-      time: step.querySelector(".delaySelect").value
+      time: step.querySelector(".delaySelect").value,
+      color: step.querySelector(".colorSelect").value
     };
     newProgram.push(newStep);
   });

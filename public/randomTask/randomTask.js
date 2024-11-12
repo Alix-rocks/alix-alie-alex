@@ -1730,11 +1730,16 @@ function newClickScreenRemoval(div){
   div.remove();
   let allNewClickScreen = document.querySelectorAll(".newClickScreen");
   allNewClickScreen[allNewClickScreen.length - 1].remove();
-  if(parent){ //that way, we remove the selectedTask class only if it's the last clickscreen (that way, we're safe if it's only, for ex., iconPalet)!
-    parent.scrollIntoView();
-    if(allNewClickScreen.length == 0){
+  console.log(allNewClickScreen.length);
+  if(parent){ 
+    if(allNewClickScreen.length == 1){//that way, we remove the selectedTask class only if it's the last clickscreen (that way, we're safe if it's only, for ex., iconPalet)!
       parent.classList.remove("selectedTask");
     };
+    if(moving){
+      parent.scrollIntoView();
+    } else{
+      window.scrollTo({ top: 0 });
+    };  
   } else{
     window.scrollTo({ top: 0 });
   };
@@ -4724,7 +4729,7 @@ function taskAddAllInfo(infos){
     }).join("");
     let colorPalet = `<div id="colorPalet" class="colorPaletClass">${colors}</div>`;
     // document.getElementById("colorPalet").innerHTML = colors;
-    taskInfo.insertAdjacentElement("beforeend", colorPalet);
+    taskInfo.insertAdjacentHTML("beforeend", colorPalet);
     //colorPalet.classList.remove("displayNone");
     colorPalet = document.querySelector("#colorPalet");
     //SupClickScreen.classList.remove("displayNone");
@@ -4764,7 +4769,7 @@ function taskAddAllInfo(infos){
       </label>`;
     }).join("");
     let iconsPalet = `<div id="iconsPalet" class="iconsPaletClass inTaskDiv">${iconsAll}</div>`;
-    taskInfo.insertAdjacentElement("beforeend", iconsPalet);
+    taskInfo.insertAdjacentHTML("beforeend", iconsPalet);
     //iconsPalet.classList.replace("displayNone", "inTaskDiv");
     iconsPalet = document.querySelector("#iconsPalet");
     //SupClickScreen.classList.remove("displayNone");
@@ -5195,9 +5200,11 @@ function taskAddAllInfo(infos){
       parent.remove();
     });
     if(parent){
-      parent.remove();};
-    taskInfo.remove();
-    newClickScreen.remove();
+      parent.remove();
+    };
+    newClickScreenRemoval(taskInfo);
+    // taskInfo.remove();
+    // newClickScreen.remove();
     //clickScreen.classList.add("displayNone");
     if(togoList !== ""){ //revoir les méthodes de tri et s'assurer de tenir compte du storage aussi
       howToSortIt(togoList);
@@ -5357,7 +5364,7 @@ function iconChoice(thisOne){
     </label>`;
   }).join("");
   let iconsPalet = `<div id="iconsPalet" class="iconsPaletClass">${iconsAll}</div>`;
-  iconTag.insertAdjacentElement("afterend", iconsPalet);
+  iconTag.insertAdjacentHTML("afterend", iconsPalet);
   iconsPalet = document.querySelector("#iconsPalet");
   //clickScreen.classList.remove("displayNone");
   newClickScreenCreation(iconsPalet);

@@ -50,7 +50,7 @@ onAuthStateChanged(auth,(user) => {
     settingsPage();
     // createBody();
     // getWeeklyCalendar();
-    logInScreen.classList.add("displayNone");
+    // logInScreen.classList.add("displayNone");
   } else{
     userConnected = false;
     logInScreen.classList.remove("displayNone");
@@ -631,6 +631,8 @@ async function getDones(){
   localStorageDones("first");
   createBody();
   getWeeklyCalendar();
+  logInScreen.classList.add("displayNone");
+  document.getElementById("loadingScreen").classList.replace("waitingScreen", "displayNone");
 };
 
 
@@ -716,6 +718,7 @@ function freeIn(){
   createBody();
   getWeeklyCalendar();
   logInScreen.classList.add("displayNone");
+  document.getElementById("loadingScreen").classList.replace("waitingScreen", "displayNone");
 };
 
 
@@ -1484,7 +1487,7 @@ function todoCreation(todo){
     if(document.getElementById(togoList)){  
       if(todo.stock){
         document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.startTime ? `data-time="${todo.startTime}"` : ``}" class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : todo.term == "reminder" ? ` reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
-        ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
+        ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="labelOnglet labelLiOnglet noLabel"></div>`}
         <i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i><div class="textDiv"><span class="text" onclick="${searchSwitch ? `toTIdeSSaM(this)` : storageSwitch ? `toTIdeASaM(this)` : `toTIdeTZaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${mySettings.myBaseColors[todo.color].colorBG};" />` : ``}<span class="timeSpan">${todo.startTime ? todo.startTime : ''}</span></div><i class="fa-solid fa-recycle" onclick="${searchSwitch ? `toTIdeSSaS(this)` : calendarStock ? `toTIdeCCaNS(this)` : projectStock ? `toTIdePaS(this)` : `toTIdeTZaS(this)`}"></i></li>`);
       } else if(todo.line == "recurringDay"){
         let time = todo.startTime ? todo.startTime : mySettings.myTomorrow;
@@ -1496,7 +1499,7 @@ function todoCreation(todo){
         };
         numberedDays = Math.floor(Math.abs(nextDate.getTime() - todayDate.getTime())/(1000 * 3600 * 24));
         document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.startTime ? `data-time="${todo.startTime}"` : ``}" class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : todo.term == "reminder" ? ` reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
-        ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
+        ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="labelOnglet labelLiOnglet noLabel"></div>`}
         <i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i>
         <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i>
         <div class="textDiv"><span class="text" onclick="${searchSwitch ? `toTIdeSSaM(this)` : `toTIdeTZaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG};`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.startTime ? todo.startTime : ''}</span></div>
@@ -1549,7 +1552,7 @@ function todoCreation(todo){
           ${todo.term == "alwaysHere" ? `data-always="here"` : ``} 
           ${todo.openHour ? `data-openHour="true"` : ``} 
           class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : ``}${todo.pPosition == "out" ? ` projectLi` : ``}${todo.startTime && todo.prima && todo.prima !== "00:00" ? ` showLiBuffer` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}${!openHourSwitch && !openHourToggle && todo.openHour ? ` displayNone` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}${todo.pPosition == "out" ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : ``}">
-          ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="noLabel"></div>`}
+          ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="labelOnglet labelLiOnglet noLabel"></div>`}
           ${todo.pParentId && !projectSwitch ? `<div class="ProjectLiOngletDiv">${pOnglets}</div>` : ``}
           ${todo.startTime && todo.prima && todo.prima !== "00:00" ? `<div class="primaLiBuffer">${timeMath(roundFifteenTime(todo.startTime), "minus", todo.prima).replace("-", ":")}</div>` : ``}
           <div class="checkOptions${projectSwitch ? " projectLiOptions" : ""}" style="${todo.urge ? `color: ${todo.urgeColor};` : ``}${projectSwitch && todo.pPosition == "out" ? `border-color:${colorsList[pColor].colorBG};` : ``}" onclick="checkOptions(this, ${pColor})">
@@ -1667,7 +1670,7 @@ function checkOptions(thisOne, pColor){ //context is either "normal" or "project
   parent.classList.add("selectedTask");
   let todo = getTodoFromParent();;
   parent.insertAdjacentHTML("beforeend", `<div class="checkOptionsDiv">
-  ${todo.label ? `<i id="labelChoice" class="fa-solid fa-folder-closed fa-rotate-270" style="font-size: 1.2em;color:${colorsList[todo.LColor].colorBG};"></i>` : ``}
+    <i id="labelChoice" class="fa-solid fa-folder-closed fa-rotate-270" style="font-size: 1.2em;color:${todo.label ? colorsList[todo.LColor].colorBG : `var(--tx-color-5)`};"></i>
   ${todo.urge || todo.term == "topPriority" ? `<input id="newUrgeNumInput" type="number" value="${todo.urgeNum ? todo.urgeNum : 0}"/>` : ``}
   <i class="typcn typcn-input-checked-outline checkOptionsCheck" onclick="PartialCheckEvent(this.parentElement)"></i>
   ${todo.term == "alwaysHere" ? `` : `<i class="typcn typcn-input-checked checkOptionsCheck" onclick="TotalCheckEvent(this.parentElement)"></i>`}
@@ -1677,21 +1680,19 @@ function checkOptions(thisOne, pColor){ //context is either "normal" or "project
   let checkOptionsDiv = parent.querySelector(".checkOptionsDiv");
   newClickScreenCreation(checkOptionsDiv);
   // clickScreen.addEventListener("click", () => clickHandlerAddOn(checkOptionsDiv, "trash", clickScreen, ""));
-  if(todo.label){
-    let labelChoice = parent.querySelector("#labelChoice");
-    labelChoice.addEventListener("click", () => {
-      parent.scrollIntoView();
-      let labelDiv = parent.querySelector(".labelLiOnglet");
-      let options = {
-        icon: labelChoice,
-        where: checkOptionsDiv,
-        labelDiv: labelDiv,
-        //screen: clickScreen, 
-        myLabels: mySettings.myLabels && mySettings.myLabels.length > 0 ? true : false
-      };
-      creatingLabelPanel(todo, options);
-    }); //
-  };
+  let labelChoice = parent.querySelector("#labelChoice");
+  labelChoice.addEventListener("click", () => {
+    parent.scrollIntoView();
+    let labelDiv = parent.querySelector(".labelLiOnglet");
+    let options = {
+      icon: labelChoice,
+      where: checkOptionsDiv,
+      labelDiv: labelDiv,
+      //screen: clickScreen, 
+      myLabels: mySettings.myLabels && mySettings.myLabels.length > 0 ? true : false
+    };
+    creatingLabelPanel(todo, options);
+  });
 
   if(todo.urge){
     let newUrgeNumInput = document.querySelector("#newUrgeNumInput");
@@ -1996,8 +1997,9 @@ function reDateEvent(thisOne){ // in Done Zone
   let reDateDivHTML = `<div class="reDateDiv"><h5 class="calendarMargin">Then, when have you done that?!</h5><input id="reDateInput" type="date" class="calendarMargin" /><button id="reDateBtn" class="calendarMargin">STD<br /><span class="smallText">(Save The Date)</span></button></div>`;
   parent.insertAdjacentHTML("beforeend", reDateDivHTML);
   let reDateDiv = document.querySelector(".reDateDiv");
-  clickScreen.classList.remove("displayNone");
-  clickScreen.addEventListener("click", () => clickHandlerAddOn(reDateDiv, "trash", clickScreen, "nowhere"));
+  newClickScreenCreation(reDateDiv);
+  // clickScreen.classList.remove("displayNone");
+  // clickScreen.addEventListener("click", () => clickHandlerAddOn(reDateDiv, "trash", clickScreen, "nowhere"));
   document.querySelector("#reDateBtn").addEventListener("click", () => {
     let newDate = document.querySelector("#reDateInput").value;
     let toRedateTask = parent.querySelector(".textDone").textContent;
@@ -2028,10 +2030,11 @@ function reDateEvent(thisOne){ // in Done Zone
     donedCreation(newDate, toRedate);
     refreshDoneId();
     localStorageDones("next");
-    parent.remove();
+    // parent.remove();
     updateWeek();
     updateMonth();
-    clickHandlerAddOn(reDateDiv, "trash", clickScreen, "nowhere");
+    newClickScreenRemoval(reDateDiv);
+    // clickHandlerAddOn(reDateDiv, "trash", clickScreen, "nowhere");
   });
 };
 
@@ -2071,7 +2074,8 @@ function PartialCheckEvent(emptyCheck){
   parent = emptyCheck.parentElement;
   let doned = getTodoFromParent();
   let checkOptionsDiv = parent.querySelector(".checkOptionsDiv");
-  clickHandlerAddOn(checkOptionsDiv, "trash", clickScreen, "");
+  newClickScreenRemoval(checkOptionsDiv);
+  // clickHandlerAddOn(checkOptionsDiv, "trash", clickScreen, "");
   gotItHalfDone(doned);
   updateCBC();
 };
@@ -2081,7 +2085,7 @@ window.PartialCheckEvent = PartialCheckEvent;
 function TotalCheckEvent(emptyCheck){
   parent = emptyCheck.parentElement;
   let doned = getTodoFromParent();
-  parent.remove();
+  parent.remove(); //The checkOptionsDiv AND the newClickScreen are both in that parent, so they are all removed at the same time! (so no need for newClickScreenRemoval)
   gotItDone(doned);
   //doneAction(parent); // need to wait until animation is over before moving on to the next (gotItDone and remove) (use metro app animation)
   updateCBC();
@@ -2091,7 +2095,7 @@ window.TotalCheckEvent = TotalCheckEvent;
 
 function doneAction(li){
   li.insertAdjacentHTML("beforeend", `<div class="doneAction"><div class="doneActionTopOpct"></div><div class="doneActionBtmLine"></div></div>`);
-  /* the div would have two layers, the under one would be a horizontal line like the trashline in time app and the top one would be gradient of transparent on the right and opaque (bg-color) on the left. The whole thing would move from left to right until the whole li seems to have disapeared */
+  /* the div would have two layers, the under one would be a horizontal line like the trashline in time app and the top one would be gradient of transparent on the right and opaque (bg-color) on the left. The whole thing would move from left to right until the whole li seems to have disapeared (see chronoMe) */
 };
 
 function getRecurryDateOut(todo){ //pour enlever la date d'un recurry de la list recurryDate de son recurring (ne delete pas todo.recurry et todo.recId)
@@ -5484,7 +5488,7 @@ function creatingLabelPanel(todo, options){ //création du paneau et
           localStorage.listTasks = JSON.stringify(listTasks);
           updateCBC();
           options.icon.style.color = "var(--tx-color)";
-          parent.querySelector(".labelLiOnglet").remove();
+          options.labelDiv.classList.add("noLabel");
           howToSortIt(parent.parentElement.id);
         };
         //clickHandlerAddOn(labelPalet, "trash", options.screen, "nowhere");
@@ -5492,6 +5496,7 @@ function creatingLabelPanel(todo, options){ //création du paneau et
         let label = mySettings.myLabels[e.target.value];
         newlabelColor = label.color;
         newlabelName = label.name;
+        options.labelDiv.classList.remove("noLabel");
         options.labelDiv.style.backgroundColor = colorsList[label.color].colorBG;
         options.labelDiv.style.color = colorsList[label.color].colorTX;
         options.labelDiv.innerText = label.name;
@@ -5518,12 +5523,14 @@ function creatingLabelPanel(todo, options){ //création du paneau et
       if(options.icon && newLabel.color !== "" && newLabel.name !== ""){
         createLabelBtn.style.opacity = "1";
       };
+      options.labelDiv.classList.remove("noLabel");
       options.labelDiv.style.backgroundColor = colorsList[newLabel.color].colorBG;
       options.labelDiv.style.color = colorsList[newLabel.color].colorTX;
       options.icon ? options.icon.style.color = colorsList[newLabel.color].colorBG : null;
     });
   });
   document.querySelector("#labelNameInput").addEventListener("change", (e) => {
+    options.labelDiv.classList.remove("noLabel");
     newLabel.name = options.labelDiv.innerText = e.currentTarget.value;
     if(options.icon && newLabel.color !== "" && newLabel.name !== ""){
       createLabelBtn.style.opacity = "1";
@@ -5547,10 +5554,14 @@ function creatingLabelPanel(todo, options){ //création du paneau et
     });
     // cancel btn
     createLabelCancelBtn.addEventListener("click", () => {
-      options.labelDiv.style.backgroundColor = colorsList[todo.LColor].colorBG;
-      options.labelDiv.style.color = colorsList[todo.LColor].colorTX;
-      options.icon.style.color = colorsList[todo.LColor].colorBG;
-      options.labelDiv.innerText = todo.LName;
+      if(todo.label){
+        options.labelDiv.style.backgroundColor = colorsList[todo.LColor].colorBG;
+        options.labelDiv.style.color = colorsList[todo.LColor].colorTX;
+        options.icon.style.color = colorsList[todo.LColor].colorBG;
+        options.labelDiv.innerText = todo.LName;
+      } else{
+        options.labelDiv.classList.add("noLabel");
+      };
       newLabelReset();
       newlabelColor = "";
       newlabelName = "";
@@ -6335,11 +6346,11 @@ function updateWeek(){
 };
 
 
-window.onload = () => {
-  setTimeout(function() {
-    document.getElementById("loadingScreen").classList.replace("waitingScreen", "displayNone");
-  }, 500);
-};
+// window.onload = () => {
+//   setTimeout(function() {
+//     document.getElementById("loadingScreen").classList.replace("waitingScreen", "displayNone");
+//   }, 500);
+// };
 // window.onload = () => {
 //   document.getElementById("loadingScreen").classList.replace("waitingScreen", "displayNone");
 // };

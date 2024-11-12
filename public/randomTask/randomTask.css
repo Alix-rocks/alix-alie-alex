@@ -1115,13 +1115,10 @@ li .textDone{
   left: -13px;
 }
 .noLabel{
-  /* width: 6px;
-  flex-shrink: 0; */
-  display: none;
+  visibility: hidden;
+  /* display: none; */
 }
-/* .noLabel{
-  width: 21px;
-} */
+
 .labelTaskOnglet{
   position: absolute;
   top: 0;
@@ -1444,8 +1441,8 @@ input[name="colorRadio"]:checked + label > div{
   border: .5px solid var(--tx-color);
 }
 .showLiLabel{
-  border-radius: 50px 15px 15px 50px;
-  border-left: none;
+  border: .5px solid var(--tx-color);
+  border-bottom-left-radius: 2px;
 }
 .primaLiBuffer{
   position: absolute;
@@ -1461,7 +1458,8 @@ input[name="colorRadio"]:checked + label > div{
 }
 .showLiBuffer{
   margin-top: 18px;
-  border-radius: 0 0 10px 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 .topListReminder{
   margin: 10px 0 5px;

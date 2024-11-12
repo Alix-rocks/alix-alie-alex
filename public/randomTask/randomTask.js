@@ -1719,17 +1719,23 @@ window.checkOptions = checkOptions;
 function newClickScreenCreation(div){
   let zIndexDiv = window.getComputedStyle(div).getPropertyValue("z-index");
   let newClickScreen = `<div class="newClickScreen" style="z-index:${zIndexDiv - 1};"></div>`;
-  document.body.insertAdjacentHTML("beforeend", newClickScreen);
-  let allNewClickScreen = document.querySelectorAll(".newClickScreen");
-  newClickScreen = allNewClickScreen[allNewClickScreen.length - 1];
+  div.parentElement.insertAdjacentHTML("beforeend", newClickScreen);
+  newClickScreen = getTheHighestClickScreen();
   newClickScreen.addEventListener("click", () => {
     newClickScreenRemoval(div);
   });
 };
+function getTheHighestClickScreen(){
+  let allNewClickScreen = Array.from(document.querySelectorAll(".newClickScreen"));
+  let sortedClickScreens = allNewClickScreen.sort((c1, c2) => (window.getComputedStyle(c1).getPropertyValue("z-index") < window.getComputedStyle(c2).getPropertyValue("z-index") ? 1 : (window.getComputedStyle(c1).getPropertyValue("z-index") > window.getComputedStyle(c2).getPropertyValue("z-index")) ? -1 : 0));
+
+  return sortedClickScreens[sortedClickScreens.length - 1];
+}
 function newClickScreenRemoval(div){
   div.remove();
   let allNewClickScreen = document.querySelectorAll(".newClickScreen");
-  allNewClickScreen[allNewClickScreen.length - 1].remove();
+  let highestClickScreen = getTheHighestClickScreen();
+  highestClickScreen.remove();
   console.log(allNewClickScreen.length);
   if(parent){ 
     if(allNewClickScreen.length == 1){//that way, we remove the selectedTask class only if it's the last clickscreen (that way, we're safe if it's only, for ex., iconPalet)!

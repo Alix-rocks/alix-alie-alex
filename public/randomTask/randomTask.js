@@ -4026,26 +4026,29 @@ function taskAddAllInfo(infos){
     projectNamesChoice = `<h6 style="margin: 0;">pssst... First, you've got to create a project!</h6>`;
   };
 
-  
-  let projectOnglets = [];
-  if(todo.pParentId){
-    let pParentId = todo.pParentId;
-    while(pParentId !== null){
-      let parentTodo = listTasks[listTasks.findIndex(todo => todo.id == pParentId)];
-      let onglet = `<div class="projectOnglet" style="background-color:${colorsList[parentTodo.pColor].colorBG}; color:${colorsList[parentTodo.pColor].colorTX};">${parentTodo.pName}</div>`; 
+  function getProjectOnglets(todo) {
+    let projectOnglets = [];
+    if (todo.pColor && todo.pName) { //then it's a project, whether or not it has offsprings yet, then it also means we must do the borders accordingly 
+      console.log("parent!");
+      let onglet = `<div class="projectOnglet" style="background-color:${colorsList[todo.pColor].colorBG}; color:${colorsList[todo.pColor].colorTX};">${todo.pName}</div>`;
       projectOnglets.push(onglet);
-      pParentId = parentTodo.pParentId;
     };
+    if (todo.pParentId) { //then it's an offspring 
+      let pParentId = todo.pParentId;
+      while (pParentId !== null) {
+        let parentTodo = listTasks[listTasks.findIndex(todo => todo.id == pParentId)];
+        let onglet = `<div class="projectOnglet" style="background-color:${colorsList[parentTodo.pColor].colorBG}; color:${colorsList[parentTodo.pColor].colorTX};">${parentTodo.pName}</div>`;
+        projectOnglets.push(onglet);
+        pParentId = parentTodo.pParentId;
+      };
+    };
+    if (projectOnglets.length > 0) {
+      projectOnglets = projectOnglets.join("");
+    };
+    console.log(projectOnglets);
+    return projectOnglets;
   };
-  if(todo.pOffspringId && todo.pOffspringId !== null){
-    console.log("parent!");
-    let onglet = `<div class="projectOnglet" style="background-color:${colorsList[todo.pColor].colorBG}; color:${colorsList[todo.pColor].colorTX};">${todo.pName}</div>`; 
-    projectOnglets.push(onglet);
-  };
-  if(projectOnglets.length > 0){
-    projectOnglets = projectOnglets.join("");
-  };
-  console.log(projectOnglets);
+  
 
   let miniList;
   if(todo.miniList && todo.miniList.length > 0){
@@ -4149,7 +4152,7 @@ function taskAddAllInfo(infos){
       </div>
     </div>
     <div class="taskInfoInput relDiv${calendarStock ? ` calendarStockVersion` : ``}">
-      <div class="projectOngletDiv">${projectOnglets}</div>
+      <div class="projectOngletDiv">${getProjectOnglets(todo)}</div>
       <span id="iconIt" class="IconI ${todo.icon}"></span>
       <div id="labelIt" class="labelOnglet labelTaskOnglet" style="left:-10px; top:2px; background-color:${todo.LColor ? colorsList[todo.LColor].colorBG : "initial"}; color:${todo.LColor ? colorsList[todo.LColor].colorTX : "inherit"};">${todo.LName ? todo.LName : "Label"}</div>
       <div class="underLining" id="taskTitle-underLining"></div>
@@ -4672,6 +4675,7 @@ function taskAddAllInfo(infos){
       newProjectColor = radio.value;
       if(!document.querySelector(".projectOnglet")){//comment reconnaître le projectOnglet qui est celui du project versus ceux des parents?! parce qu'il faut savoir où on l'ajoute dans le projectOngletDiv... à moins qu'on refasse un nouveau [projectOnglets] à chaque fois?! 
         //mais c'est vrai que ça fait pas de sens qu'un project ait le même projectOnglet que ses offsprings...
+        //let projectOnglets = getProjectOnglets(todo);
         taskTitle.insertAdjacentHTML("beforebegin", `<div class="projectOnglet" style="background-color:${colorsList[newProjectColor].colorBG}; color:${colorsList[newProjectColor].colorTX};">${newProjectNickname ? newProjectNickname : "Project"}</div>`);
       } else{
         document.querySelector(".projectOnglet").style.backgroundColor = colorsList[newProjectColor].colorBG;

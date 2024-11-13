@@ -243,7 +243,7 @@ const delaysDefault = [3, 8, 3, 8, 3, 8];
 
 
 function showProgram(){
-  document.querySelector("#seqName").innerHTML = `${allPrograms[progNum][0].name}<button onclick="modifyProgram(progIdx)"><i class="fa-solid fa-pen" style="margin-left: 16px;font-size: .75em;"></i></button`;
+  document.querySelector("#seqName").innerHTML = `${allPrograms[progNum][0].name}<button onclick="modifyProgram(${progNum})" style="border:none;"><i class="fa-solid fa-pen" style="margin-left: 16px;font-size: .75em;"></i></button`;
   document.querySelector(".allTimeDiv").innerHTML = allPrograms[progNum].map((step, idx) => {
     if(idx !== 0){
       return `<div style="color:${colorsList[step.color]};">
@@ -255,7 +255,7 @@ function showProgram(){
 };
 
 function modifyProgram(progIdx){
-
+  showModifiableProgram(progIdx);
 };
 window.modifyProgram = modifyProgram;
 
@@ -281,14 +281,31 @@ function showModifiableProgram(progIdx){
     }
   }).join("");
 
-  document.querySelector("#seqName").innerHTML = `<input id="seqNameInput" type="text" placeholder="${allPrograms[progIdx][0].name}"></input>
-  ${progIdx !== 0 ? `<button onclick="replaceProgram(progIdx)"><i class="fa-regular fa-floppy-disk" style="margin-left: 16px;"></i></button>` : ``}`;
+  document.querySelector("#seqName").innerHTML = `<input id="seqNameInput" type="text" placeholder="Nom de la séquence"${progIdx !== 0 ? ` value="${allPrograms[progIdx][0].name}"` : ``}></input>
+  ${progIdx !== 0 ? `<button onclick="replaceProgram(${progIdx})" style="border:none;"><i class="fa-regular fa-floppy-disk" style="margin-left: 16px;"></i></button>` : ``}`;
   document.querySelector(".allTimeDiv").innerHTML = addingStep;
 };
 
-function replaceProgram(progIdx){
-
-}
+function replaceProgram(progIdx){ //The program already exists but we're changing it, so basically, we replace the old one with this new one, so we need to make sure we're using the same index
+  let newProgram = [];
+  let name = {
+    name: document.querySelector("#seqNameInput").value
+  };
+  newProgram.push(name);
+  document.querySelectorAll(".allTimeDiv > div").forEach(step => {
+    let newStep = {
+      word: step.querySelector(".stepNameInput").value,
+      time: step.querySelector(".delaySelect").value,
+      color: step.querySelector(".colorSelect").value
+    };
+    newProgram.push(newStep);
+  });
+  allPrograms[progIdx] = newProgram;
+  progNum = progIdx;
+  showProgram();
+  localStorage.allPrograms = JSON.stringify(allPrograms);
+  console.log(allPrograms);
+};
 
 window.replaceProgram = replaceProgram;
 

@@ -2857,9 +2857,11 @@ function creatingCalendar(todo, home, classs){
     <label for="${day.nameNoAcc}" class="dayCircle">${day.letter}</label>`;
   }).join("");
 
-  let todoDayDiv = `<div id="todoDaySection" ${todo.stock ? `class="displayNone"` : ``}>
-  <input class="myRadio changeRecurryDates" type="radio" id="todoDayInput" name="whatDay" value="todoDay" ${todo.line == "todoDay" || (shw && todo.line !== "recurringDay") ? `checked` : ``} />
-  <label for="todoDayInput" id="todoDayInputLabel" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText todoDay">${shw ? `Happening Day` : `To-do Day`}</span><br /><span class="smallText">${shw ? `(the day this is all gonna go down)` : `(the day you want to do it)`}</span></p></label>
+  let todoDayDiv = `<div class="todoDaySection${todo.stock ? ` displayNone` : ``}">
+  <label class="whatDayLabel calendarMargin todoDayInputLabel">
+    <input class="myRadio changeRecurryDates todoDayInput" type="radio" name="whatDay" value="todoDay" ${todo.line == "todoDay" || (shw && todo.line !== "recurringDay") ? `checked` : ``} />
+    <p><span class="myRadio"></span><span class="normalText todoDay">${shw ? `Happening Day` : `To-do Day`}</span><br /><span class="smallText">${shw ? `(the day this is all gonna go down)` : `(the day you want to do it)`}</span></p>
+  </label>
   <div class="DaySection" id="oneDaySection">
     <h5 class="taskInfoInput" style="margin-left: 0;">It's a one time thing</h5>
     <div class="inDaySection" style="width: -webkit-fill-available; max-width: 300px;">
@@ -2887,9 +2889,11 @@ function creatingCalendar(todo, home, classs){
   </div>
 </div>`;
 
-  let recurringDayDiv = `<div id="recurringDaySection" ${todo.recurry || todo.stock ? `class="displayNone"` : ``}>
-    <input class="myRadio changeRecurryDates" type="radio" id="recurringDayInput" name="whatDay" value="recurringDay" ${rec ? `checked` : ``} />
-    <label for="recurringDayInput" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText recurringDay">Recurring Day</span><br /><span class="smallText">(let it come back on its own)</span></label></p></label>
+  let recurringDayDiv = `<div class="recurringDaySection${todo.recurry || todo.stock ? ` displayNone` : ``}">
+    <label class="whatDayLabel calendarMargin">
+      <input class="myRadio changeRecurryDates recurringDayInput" type="radio" name="whatDay" value="recurringDay" ${rec ? `checked` : ``} />
+      <p><span class="myRadio"></span><span class="normalText recurringDay">Recurring Day</span><br /><span class="smallText">(let it come back on its own)</span></label></p>
+    </label>
     <div class="DaySection" id="recurryDaySection">
       <h5 class="taskInfoInput" style="margin-left: 0;">It's a recurring thing</h5>
       <div class="inDaySection" style="width: -webkit-fill-available; max-width: 280px;">
@@ -2952,9 +2956,11 @@ function creatingCalendar(todo, home, classs){
   </div>`;
 
   let noDayDiv = `<div id="noDaySection" ${shw ? `class="displayNone"` : ``}>
-    <input class="myRadio changeRecurryDates" type="radio" id="noDayInput" name="whatDay" value="noDay" ${todo.line == "noDay" || todo.line == "" || !todo.line || todo.stock ? `checked` : ``} />
-    <label for="noDayInput" id="noDayInputLabel" class="whatDayLabel calendarMargin"><p><span class="myRadio"></span><span class="normalText">No Day</span><br /><span class="smallText">${todo.stock ? `(let's put it away until we need it)` : `(just go with the flow)`}</span></label></p></label>
-    <div class="DaySection" id="noDaySection">
+    <label class="whatDayLabel calendarMargin noDayInputLabel">
+      <input class="myRadio changeRecurryDates noDayInput" type="radio" name="whatDay" value="noDay" ${todo.line == "noDay" || todo.line == "" || !todo.line || todo.stock ? `checked` : ``} />
+      <p><span class="myRadio"></span><span class="normalText">No Day</span><br /><span class="smallText">${todo.stock ? `(let's put it away until we need it)` : `(just go with the flow)`}</span></label></p>
+    </label>
+    <div class="DaySection noDaySection">
       <h5 class="taskInfoInput" style="margin-left: 0;">Even if you don't know when that'll be...</h5>
       <div class="inDaySection" style="width: -webkit-fill-available; max-width: 200px;">
         <input id="noTuttoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.tutto ? `checked` : todo.tutto == false ? `` : `checked`} />
@@ -3027,7 +3033,7 @@ function creatingCalendar(todo, home, classs){
     </div>
   </div>`;
 
-  let deadlineDiv = `<div id="deadlineSection" class="calendarMargin${shw ? ` displayNone` : ``}">
+  let deadlineDiv = `<div class="deadlineSection calendarMargin${shw ? ` displayNone` : ``}">
   <h5 style="margin-left: 0; margin-bottom: 0;">Is there a deadline?</h5>
   <div class="inDaySection" style="width: -webkit-fill-available; max-width: 280px;">
     <p style="margin-top: 10px;"><span>Deadline:  </span><input id="deadlineInput" type="date" value="${todo.deadline ? todo.deadline : ``}" /></p>
@@ -4205,7 +4211,7 @@ function taskAddAllInfo(infos){
           <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
         </label>
         <div class="taskToggleList relDiv" style="margin-bottom: 25px;">
-          <ul id="projectUl">
+          <ul class="projectUl">
             ${todo.pOffspringId && todo.pOffspringId.length <= 0 ? `There's no one here...` : ``}
           </ul>
           <button id="addOffspringBtn" class="addBtns"><span class="typcn typcn-plus"></span></button>
@@ -4239,14 +4245,15 @@ function taskAddAllInfo(infos){
       <input id="tellWhatInput" type="checkbox" class="cossin taskToggleInput" />
       <div>
         <label for="tellWhatInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
-          <h5 class="topList">Tell me what...<span class="tellYou">(<span id="tellYouTermProject">${todo.pOffspringId && todo.pOffspringId !== null ? `Project & ` : ``}</span><span id="tellYouTerm">${t(todo.term)}</span><span id="tellYouShowType">${todo.term == "showThing" ? ` - ${todo.showType ? todo.showType : mySettings.myShowTypes[0].name}` : ``}</span><span class="tellYouUrge">${todo.urge ? ` - Priority: ${todo.urgeNum}` : ``}</span>)</span></h5>
+          <h5 class="topList">Tell me what...<span class="tellYou">(<span id="tellYouTermProject">${todo.pOffspringId && todo.pOffspringId !== null ? `Project & ` : ``}</span><span class="tellYouTerm">${t(todo.term)}</span><span class="tellYouShowType">${todo.term == "showThing" ? ` - ${todo.showType ? todo.showType : mySettings.myShowTypes[0].name}` : ``}</span><span class="tellYouUrge">${todo.urge ? ` - Priority: ${todo.urgeNum}` : ``}</span>)</span></h5>
           <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
         </label>
         <div class="taskToggleList taskInfoInput relDiv">
           <h5 class="taskInfoSubTitle" style="margin:10px 0 0 0;">Project</h5>
-          <input class="myRadio" type="checkbox" name="projectOptions" id="wholeProjectInput" value="pParent" ${todo.pOffspringId && todo.pOffspringId !== null ? `checked` : ``} />
-          <label for="wholeProjectInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's a whole big thing</span><br />
-          <span class="smallText otherSmallText">with lots of little things in it</span></label>
+          <label class="termLabel"><span class="myRadio myRadioBox"></span><span>It's a whole big thing</span><br />
+            <input class="myRadio wholeProjectInput" type="checkbox" name="projectOptions" value="pParent" ${todo.pOffspringId && todo.pOffspringId !== null ? `checked` : ``} />
+            <span class="smallText otherSmallText">with lots of little things in it</span>
+          </label>
           <div class="wholeProjectDiv">
             <h5 style="margin: 5px 0 0 0;">${todo.pOffspringId && todo.pOffspringId !== null ? `Wanna change the label?` : `Let's give it a label`}</h5>
             <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
@@ -4255,9 +4262,10 @@ function taskAddAllInfo(infos){
               <input class="projectNickInput" type="text" value="${todo.pName ? todo.pName : ""}"/>
             </div>
           </div>
-          <input class="myRadio" type="checkbox" name="projectOptions" id="partProjectInput" value="pOffspring" ${todo.pParentId ? `checked` : ``} />
-          <label for="partProjectInput" class="termLabel"><span class="myRadio myRadioBox"></span><span>It's part of something bigger</span><br />
-          <span class="smallText otherSmallText">than itself</span></label>
+          <label class="termLabel"><span class="myRadio myRadioBox"></span><span>It's part of something bigger</span><br />
+            <input class="myRadio partProjectInput" type="checkbox" name="projectOptions" value="pOffspring" ${todo.pParentId ? `checked` : ``} />
+            <span class="smallText otherSmallText">than itself</span>
+          </label>
           <div class="partProjectDiv">
             <h5 style="margin: 5px 0 0 0;">What project is it a part of?</h5>
             <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
@@ -4279,19 +4287,22 @@ function taskAddAllInfo(infos){
           <div class="showDiv">
             <h5 class="taskInfoInput" style="margin-left: 0;">What kinda show is that?</h5>
             <div class="inDaySection">
-              <div id="myShowDiv">
+              <div class="myShowDiv">
               ${myShows}
               </div>
               <div id="addShowTypeDiv">
                 <input type="radio" name="showCreation" id="addShowType" class="cossin">
-                <input type="radio" name="showCreation" id="saveShowType" class="cossin">
+                
                 <label for="addShowType" class="showTypeAdding"><i class="typcn typcn-plus"></i></label>
                 <div class="showTypeCreation">
                   <div class="showTypeCreationInside">
-                    <input id="showTypeCreationInput" type="text" placeholder="new type of show" />
-                    <i id="showTypeChoiceIcon" class="typcn typcn-media-record"></i>
+                    <input class="showTypeCreationInput" type="text" placeholder="new type of show" />
+                    <i class="typcn typcn-media-record showTypeChoiceIcon"></i>
                   </div>
-                  <label for="saveShowType" style="display: inline-block;"><i id="showTypeCreationConfirm" class="typcn typcn-tick" style="font-size: 2em;line-height: .5em;"></i></label>
+                  <label style="display: inline-block;">
+                    <input type="radio" name="showCreation" class="cossin saveShowType">
+                    <i class="typcn typcn-tick showTypeCreationConfirm" style="font-size: 2em;line-height: .5em;"></i>
+                  </label>
                 </div>
               </div> 
             </div>
@@ -4355,8 +4366,8 @@ function taskAddAllInfo(infos){
               <p id="hshText" style="margin: 0 0 0 10px;">Home Sweet Home</p>
             </div>
             <div class="noneTuttoGiornoDiv calendarInsideMargin">
-              <label for="whereInput" style="display: block;">Destination:</label>
-              <textarea id="whereInput" style="width: 100%; margin-bottom: 10px;">${todo.where && todo.where !== "home" && todo.where !== "not home" ? todo.where : ``}</textarea>
+              <label style="display: block;">Destination:</label>
+              <textarea class="whereInput" style="width: 100%; margin-bottom: 10px;">${todo.where && todo.where !== "home" && todo.where !== "not home" ? todo.where : ``}</textarea>
               <p style="text-align:right; margin:0;"><button onclick="copyText()"><i class="fa-regular fa-clipboard"></i></button></p>
             </div>
           </div>
@@ -4432,11 +4443,11 @@ function taskAddAllInfo(infos){
   let busyInput = currentTaskInfo.querySelector(".busyInput");
 
   
-  newClickScreenCreation(taskInfo);
+  newClickScreenCreation(currentTaskInfo);
 
 
   taskCancelBtn.addEventListener("click", () => {
-    newClickScreenRemoval(taskInfo);
+    newClickScreenRemoval(currentTaskInfo);
   });
   
   // function cancelTaskInfo(){
@@ -4814,15 +4825,15 @@ function taskAddAllInfo(infos){
   let newSTColorTX;
   let newSTColorIdx;
   let newSTing = false;
-  let myShowDiv = currentTaskInfo.querySelector("#myShowDiv");
-  let showTypeCreationInput = currentTaskInfo.querySelector("#showTypeCreationInput");
-  let showTypeCreationConfirm = currentTaskInfo.querySelector("#showTypeCreationConfirm");
+  let myShowDiv = currentTaskInfo.querySelector(".myShowDiv");
+  let showTypeCreationInput = currentTaskInfo.querySelector(".showTypeCreationInput");
+  let showTypeCreationConfirm = currentTaskInfo.querySelector(".showTypeCreationConfirm");
 
   //Hiding lineOptions
-  let todoDaySection = currentTaskInfo.querySelector("#todoDaySection");
-  let recurringDaySection = currentTaskInfo.querySelector("#recurringDaySection");
-  let noDaySection = currentTaskInfo.querySelector("#noDaySection");
-  let deadlineSection = currentTaskInfo.querySelector("#deadlineSection");
+  let todoDaySection = currentTaskInfo.querySelector(".todoDaySection");
+  let recurringDaySection = currentTaskInfo.querySelector(".recurringDaySection");
+  let noDaySection = currentTaskInfo.querySelector(".noDaySection");
+  let deadlineSection = currentTaskInfo.querySelector(".deadlineSection");
   if(!todo.recurry && todo.line !== "recurringDay" && !todo.recycled){
     storeIt.addEventListener("click", () => {
       let radio = currentTaskInfo.querySelector('input[name="termOptions"]:checked').value;
@@ -4859,7 +4870,7 @@ function taskAddAllInfo(infos){
   
   currentTaskInfo.querySelectorAll('input[name="termOptions"]').forEach(radio => {
     radio.addEventListener("click", () => {
-      currentTaskInfo.querySelector("#tellYouTerm").innerText = t(radio.value);
+      currentTaskInfo.querySelector(".tellYouTerm").innerText = t(radio.value);
       if(radio.value == "showThing" || radio.value == "reminder"){
         setTR();
         if(radio.value == "showThing"){
@@ -4870,13 +4881,13 @@ function taskAddAllInfo(infos){
           colorIt.classList.remove("hidden");
           taskTitle.style.color = newcolor ? mySettings.myBaseColors[newcolor].colorBG : mySettings.myBaseColors[todo.color].colorBG;
           busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
-          currentTaskInfo.querySelector("#tellYouShowType").innerText = ``;
+          currentTaskInfo.querySelector(".tellYouShowType").innerText = ``;
         };
       } else{
         colorIt.classList.remove("hidden");
         taskTitle.style.color = newcolor ? mySettings.myBaseColors[newcolor].colorBG : mySettings.myBaseColors[todo.color].colorBG;
         busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
-        currentTaskInfo.querySelector("#tellYouShowType").innerText = ``;
+        currentTaskInfo.querySelector(".tellYouShowType").innerText = ``;
         if(storeIt && storeIt.checked && !todo.recycled){ // if it's a recurry, that used to make it bug because there was no storeIt to check if it's checked or not, so I added storeIt
           setN();
         } else{
@@ -4896,9 +4907,9 @@ function taskAddAllInfo(infos){
     recurringDaySection.classList.remove("displayNone");
     noDaySection.classList.add("displayNone");
     deadlineSection.classList.add("displayNone");
-    currentTaskInfo.querySelector(`input[name="whatDay"]#${todo.line !== "recurringDay" ? "todoDay" : todo.line}Input`).checked = true;
-    currentTaskInfo.querySelector("#todoDayInputLabel").innerHTML = `<p><span class="myRadio"></span><span class="normalText todoDay">Happening Day</span><br /><span class="smallText">(the day this is all gonna go down)</span></p>`;
-    currentTaskInfo.querySelector("#noDayInputLabel span.smallText").innerText = `(just go with the flow)`;
+    currentTaskInfo.querySelector(`input[name="whatDay"].${todo.line !== "recurringDay" ? "todoDay" : todo.line}Input`).checked = true;
+    currentTaskInfo.querySelector(".todoDayInputLabel").innerHTML = `<p><span class="myRadio"></span><span class="normalText todoDay">Happening Day</span><br /><span class="smallText">(the day this is all gonna go down)</span></p>`;
+    currentTaskInfo.querySelector(".noDayInputLabel span.smallText").innerText = `(just go with the flow)`;
     taskInfoBtn.innerText = "Save";
   };
   function setN(){ // B
@@ -4906,8 +4917,8 @@ function taskAddAllInfo(infos){
     recurringDaySection.classList.add("displayNone");
     noDaySection.classList.remove("displayNone"); 
     deadlineSection.classList.add("displayNone");
-    currentTaskInfo.querySelector("#noDayInput").checked = true;
-    currentTaskInfo.querySelector("#noDayInputLabel span.smallText").innerText = `(let's put it away until we need it)`;
+    currentTaskInfo.querySelector(".noDayInput").checked = true;
+    currentTaskInfo.querySelector(".noDayInputLabel span.smallText").innerText = `(let's put it away until we need it)`;
     taskInfoBtn.innerText = "Save & put it away";
   };
   function setTRN(){ // C
@@ -4915,16 +4926,16 @@ function taskAddAllInfo(infos){
     recurringDaySection.classList.remove("displayNone");
     noDaySection.classList.remove("displayNone"); 
     deadlineSection.classList.remove("displayNone");
-    currentTaskInfo.querySelector(`input[name="whatDay"]#${todo.line}Input`).checked = true;
-    currentTaskInfo.querySelector("#todoDayInputLabel").innerHTML = `<p><span class="myRadio"></span><span class="normalText todoDay">To-do Day</span><br /><span class="smallText">(the day you want to do it)</span></p>`;
-    currentTaskInfo.querySelector("#noDayInputLabel span.smallText").innerText = `(just go with the flow)`;
+    currentTaskInfo.querySelector(`input[name="whatDay"].${todo.line}Input`).checked = true;
+    currentTaskInfo.querySelector(".todoDayInputLabel").innerHTML = `<p><span class="myRadio"></span><span class="normalText todoDay">To-do Day</span><br /><span class="smallText">(the day you want to do it)</span></p>`;
+    currentTaskInfo.querySelector(".noDayInputLabel span.smallText").innerText = `(just go with the flow)`;
     taskInfoBtn.innerText = "Save";
   };
 
   showTypeCreationInput.addEventListener("input", () => {
     newSTing = true;
   });
-  currentTaskInfo.querySelector("#showTypeChoiceIcon").addEventListener("click", () => {
+  currentTaskInfo.querySelector(".showTypeChoiceIcon").addEventListener("click", () => {
     if(showTypeIcons){
       currentTaskInfo.querySelector(".showTypeIconsDiv").remove();
       showTypeIcons = false;
@@ -4952,7 +4963,7 @@ function taskAddAllInfo(infos){
   showTypeCreationConfirm.addEventListener("click", (e) => {
     showTypeCreationConfirm.style.color = mySettings.myBaseColors[0].colorBG;
     if(newSTColor && showTypeCreationInput.value){
-      currentTaskInfo.querySelector("#tellYouShowType").innerText = ` - ${showTypeCreationInput.value}`;
+      currentTaskInfo.querySelector(".tellYouShowType").innerText = ` - ${showTypeCreationInput.value}`;
       let showType = {
         name: showTypeCreationInput.value,
         colorBG: newSTColorBG,
@@ -4988,7 +4999,7 @@ function taskAddAllInfo(infos){
   });
   currentTaskInfo.querySelectorAll('input[name="showOptions"]').forEach(radio => {
     radio.addEventListener("click", () => {
-      currentTaskInfo.querySelector("#tellYouShowType").innerText = ` - ${radio.value}`;
+      currentTaskInfo.querySelector(".tellYouShowType").innerText = ` - ${radio.value}`;
     });
   });
 
@@ -5010,15 +5021,15 @@ function taskAddAllInfo(infos){
       };
       
       // *** PROJECT
-      if(currentTaskInfo.querySelector("#wholeProjectInput").checked){
+      if(currentTaskInfo.querySelector(".wholeProjectInput").checked){
         todo.pColor = newProjectColor !== "" ? newProjectColor : todo.pColor !== "" ? todo.pColor : alert("That project needs a color!"); //add dumbproofing
         todo.pName = newProjectNickname !== "" ? newProjectNickname : todo.pName !== "" ? todo.pName : alert("That project needs a nickname!");
-        todo.pOffspringId = [...currentTaskInfo.querySelectorAll("#projectUl > li")].map(li => {
+        todo.pOffspringId = [...currentTaskInfo.querySelectorAll(".projectUl > li")].map(li => {
           return li.id;
         });
       };
-      if(currentTaskInfo.querySelector("#partProjectInput").checked){
-        todo.pParentId = myProjectId !== "" ? myProjectId : todo.pParentId !== "" ? todo.pParentId : alert("If it's not in one of those projects, then create your own project first.");
+      if(currentTaskInfo.querySelector(".partProjectInput").checked){
+        todo.pParentId = myProjectId !== "" ?  : todo.pParentId !== "" ? todo.pParentId : alert("If it's not in one of those projects, then create your own project first.");
         todo.pPosition = myProjectId !== "" ? "in" : todo.pPosition !== "" ? todo.pPosition : delete todo.pPosition; //par défault
       };
       
@@ -5056,7 +5067,7 @@ function taskAddAllInfo(infos){
         delete todo.info;
       };
 
-      let whereText = currentTaskInfo.querySelector("#whereInput");
+      let whereText = currentTaskInfo.querySelector(".whereInput");
       todo.where = whereCheck.checked ? "home" : whereText.value !== "" ? whereText.value : "not home";
 
       todo.color = newcolor;
@@ -5213,7 +5224,7 @@ function taskAddAllInfo(infos){
     if(parent){
       parent.remove();
     };
-    newClickScreenRemoval(taskInfo);
+    newClickScreenRemoval(currentTaskInfo);
     // taskInfo.remove();
     // newClickScreen.remove();
     //clickScreen.classList.add("displayNone");
@@ -5287,7 +5298,7 @@ function t(key){
 window.copyText = copyText;
 
 function copyText(){
-  let text = currentTaskInfo.querySelector("#whereInput").value;
+  let text = currentTaskInfo.querySelector(".whereInput").value;
   navigator.clipboard.writeText(text);
 };
 

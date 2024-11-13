@@ -1,5 +1,3 @@
-//Before currentTaskInfo
-
 /** When you commit/push a big changes:
  * Run the code in the sandbox first to make the changes thanks to lines (in getTaskSettings AND in getDones), then upload the changes to firestore, then remove these lines (in getTaskSettings AND in getDones), THEN commit and push
 **/
@@ -425,14 +423,10 @@ async function getTasksSettings() {
   document.getElementById(mySettings.myFavoriteView).dispatchEvent(pageEvent);
   //light or dark mode
   if(mySettings.mySide == "light"){
-    // document.getElementById("switchModeBall").className = "ballLight";
-    // document.getElementById("switchModeBallUnder").className = "ballLight";
     document.querySelector(':root').style.setProperty('--bg-color', 'rgb(242, 243, 244)');
     document.querySelector(':root').style.setProperty('--bg-color-7', 'rgba(242, 243, 244, .7)');
     document.querySelector(':root').style.setProperty('--tx-color', 'darkslategrey');
   } else if(mySettings.mySide == "dark"){
-    // document.getElementById("switchModeBall").className = "";
-    // document.getElementById("switchModeBallUnder").className = "";
     document.querySelector(':root').style.setProperty('--bg-color', 'rgb(7, 10, 10)');
     document.querySelector(':root').style.setProperty('--bg-color-7', 'rgba(7, 10, 10, .7)');
     document.querySelector(':root').style.setProperty('--tx-color', 'rgba(242, 243, 244, .8)');
@@ -657,14 +651,10 @@ function freeIn(){
   document.getElementById(mySettings.myFavoriteView).dispatchEvent(pageEvent);
   //light or dark mode
   if(mySettings.mySide == "light"){
-    document.getElementById("switchModeBall").className = "ballLight";
-    document.getElementById("switchModeBallUnder").className = "ballLight";
     document.querySelector(':root').style.setProperty('--bg-color', 'rgb(242, 243, 244)');
     document.querySelector(':root').style.setProperty('--bg-color-7', 'rgba(242, 243, 244, .7)');
     document.querySelector(':root').style.setProperty('--tx-color', 'darkslategrey');
   } else if(mySettings.mySide == "dark"){
-    document.getElementById("switchModeBall").className = "";
-    document.getElementById("switchModeBallUnder").className = "";
     document.querySelector(':root').style.setProperty('--bg-color', 'rgb(7, 10, 10)');
     document.querySelector(':root').style.setProperty('--bg-color-7', 'rgba(7, 10, 10, .7)');
     document.querySelector(':root').style.setProperty('--tx-color', 'rgba(242, 243, 244, .8)');
@@ -1452,13 +1442,14 @@ function recurryDateToTodoCreation(todo, recurryDate, fate){ //todo == the todo 
   
 };
 
+let currentTaskInfo = "";
+console.log(currentTaskInfo);
+
 function todoCreation(todo){
   let togoList;
   let numberedDays;
   let todayDate = getDateTimeFromString(getTodayDateString(), mySettings.myTomorrow);
-  if(projectSwitch){
-    togoList = "projectUl";
-  } else if(searchSwitch){
+  if(searchSwitch){
     togoList = "searchFound";
   } else if(thatDaySwitch){ // ajuster plus haut pour s'assurer de ce qu'on envoie ici (recurry au lieu de recurryDate)
     todayDate = getDateTimeFromString(thatdayDate, mySettings.myTomorrow);
@@ -1488,9 +1479,14 @@ function todoCreation(todo){
   if(togoList !== ""){ //what happens if one is stock/stored AND recurring/recurry? (tried but don't need:  && togoList !== undefined)
     if(document.getElementById(togoList)){  
       if(todo.stock){
-        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.startTime ? `data-time="${todo.startTime}"` : ``}" class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : todo.term == "reminder" ? ` reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
+        let newLi = `<li id="${todo.id}" data-term="${todo.term}" ${todo.startTime ? `data-time="${todo.startTime}"` : ``}" class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : todo.term == "reminder" ? ` reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
         ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="labelOnglet labelLiOnglet noLabel"></div>`}
-        <i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i><div class="textDiv"><span class="text" onclick="${searchSwitch ? `toTIdeSSaM(this)` : storageSwitch ? `toTIdeASaM(this)` : `toTIdeTZaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${mySettings.myBaseColors[todo.color].colorBG};" />` : ``}<span class="timeSpan">${todo.startTime ? todo.startTime : ''}</span></div><i class="fa-solid fa-recycle" onclick="${searchSwitch ? `toTIdeSSaS(this)` : calendarStock ? `toTIdeCCaNS(this)` : projectStock ? `toTIdePaS(this)` : `toTIdeTZaS(this)`}"></i></li>`);
+        <i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i><div class="textDiv"><span class="text" onclick="${searchSwitch ? `toTIdeSSaM(this)` : storageSwitch ? `toTIdeASaM(this)` : `toTIdeTZaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${mySettings.myBaseColors[todo.color].colorBG};" />` : ``}<span class="timeSpan">${todo.startTime ? todo.startTime : ''}</span></div><i class="fa-solid fa-recycle" onclick="${searchSwitch ? `toTIdeSSaS(this)` : calendarStock ? `toTIdeCCaNS(this)` : projectStock ? `toTIdePaS(this)` : `toTIdeTZaS(this)`}"></i></li>`;
+        if(projectSwitch){
+          currentTaskInfo.querySelector(".projectUl").insertAdjacentHTML("beforeend", newLi);
+        } else{
+          document.getElementById(togoList).insertAdjacentHTML("beforeend", newLi);
+        };
       } else if(todo.line == "recurringDay"){
         let time = todo.startTime ? todo.startTime : mySettings.myTomorrow;
         let nextDate;
@@ -1500,29 +1496,32 @@ function todoCreation(todo){
           console.log(todo);
         };
         numberedDays = Math.floor(Math.abs(nextDate.getTime() - todayDate.getTime())/(1000 * 3600 * 24));
-        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.startTime ? `data-time="${todo.startTime}"` : ``}" class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : todo.term == "reminder" ? ` reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
+        let newLi = `<li id="${todo.id}" data-term="${todo.term}" ${todo.startTime ? `data-time="${todo.startTime}"` : ``}" class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : todo.term == "reminder" ? ` reminder` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}">
         ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="labelOnglet labelLiOnglet noLabel"></div>`}
         <i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i>
         <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i>
         <div class="textDiv"><span class="text" onclick="${searchSwitch ? `toTIdeSSaM(this)` : `toTIdeTZaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG};`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.startTime ? todo.startTime : ''}</span></div>
-        <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.dealine ? `doneDay` : todo.line}"></i><span style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${numberedDays}</span></div></li>`);
+        <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.dealine ? `doneDay` : todo.line}"></i><span style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${numberedDays}</span></div></li>`;
+        if(projectSwitch){
+          currentTaskInfo.querySelector(".projectUl").insertAdjacentHTML("beforeend", newLi);
+        } else{
+          document.getElementById(togoList).insertAdjacentHTML("beforeend", newLi);
+        };
       } else if(todo.term == "reminder"){
-        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" ${todo.startDate ? `data-date="${todo.startDate}"` : ``} ${todo.startTime ? `data-time="${todo.startTime}"` : ``} ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="todoLi reminderClass">
+        let newLi = `<li id="${todo.id}" ${todo.startDate ? `data-date="${todo.startDate}"` : ``} ${todo.startTime ? `data-time="${todo.startTime}"` : ``} ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="todoLi reminderClass">
           <i class="typcn typcn-bell" style="font-size: 1em;"></i>
           <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" style="font-size: .8em;"></i>
           <div class="textDiv"><span onclick="${searchSwitch ? `toTIdeSSaM(this)` : `toTIdeTZaM(this)`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px; ` : ``}color:${mySettings.myBaseColors[todo.color].colorBG}; font-size: 1em;">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" style="font-size: .8em;" onclick="timeItEvent(this)">${todo.startTime ? todo.startTime : ""}</span>
           <input type="time" class="displayNone"/></div>
-        </li>`);
-      } else {
-        let pOnglets = ``;
-        if(todo.pParentId && !projectSwitch){
-          while(todo.pParentId !== null){
-            let parentTodo = listTasks[listTasks.findIndex(todo => todo.id == todo.pParentId)];
-            let onglet = `<div class="projectLiOnglet" style="background-color:${colorsList[parentTodo.pColor].colorBG}; color:${colorsList[parentTodo.pColor].colorTX};">${parentTodo.pName}</div>`; 
-            pOnglets.push(onglet);
-          };
-          pOnglets = pOnglets.join(""); 
+        </li>`;
+        if(projectSwitch){
+          currentTaskInfo.querySelector(".projectUl").insertAdjacentHTML("beforeend", newLi);
+        } else{
+          document.getElementById(togoList).insertAdjacentHTML("beforeend", newLi);
         };
+      } else {
+        let projectOnglets = getProjectOnglets(todo);
+        
         let pColor = 0;
         if(todo.pColor){
           pColor = todo.pColor;
@@ -1530,60 +1529,69 @@ function todoCreation(todo){
           let parentTodo = listTasks[listTasks.findIndex(todo => todo.id == todo.pParentId)];
           pColor = parentTodo.pColor;
         };
-        // if (!projectSwitch && todo.pParents && todo.pParents.length > 0) {
-        //   console.log(todo);
-        //   let pOngletsDivLabels = todo.pParents.map(label => {
-        //     let todoId = listTasks.findIndex(todo => todo.id == label);
-        //     let todo = listTasks[todoId];
-            
-        //     return `<div class="projectLiOnglet" style="background-color:${colorsList[todo.pColor].colorBG};color:${colorsList[todo.pColor].colorTX};">${todo.pNick}</div>`;
-        //   }).join("");
-        //   pOngletsDiv = `<div class="ProjectLiOngletDiv">${pOngletsDivLabels}</div>`;
-        //   let lastParent = todo.pParents[todo.pParents.length - 1]
-        //   pColor = listTasks[listTasks.findIndex(todo => todo.id == lastParent)].pColor;
-        //   console.log(pColor);
-        // };
+
         if(todo.pPosition == "out"){
           console.log(todo);
         };
-        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li 
+        let newLi = `<li 
           id="${todo.id}" 
           ${todo.startDate ? `data-date="${todo.startDate}"` : ``} 
           ${todo.startTime ? `data-time="${todo.startTime}"` : ``} 
           ${todo.recurry ? `data-rec="${todo.recId}"` : ``} 
           ${todo.term == "alwaysHere" ? `data-always="here"` : ``} 
           ${todo.openHour ? `data-openHour="true"` : ``} 
-          class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : ``}${todo.pPosition == "out" ? ` projectLi` : ``}${todo.startTime && todo.prima && todo.prima !== "00:00" ? ` showLiBuffer` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}${!openHourSwitch && !openHourToggle && todo.openHour ? ` displayNone` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}${todo.pPosition == "out" ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : ``}">
+
+          class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : ``}
+          ${todo.pPosition == "out" ? ` projectLi` : ``}
+          ${todo.startTime && todo.prima && todo.prima !== "00:00" ? ` showLiBuffer` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}
+          ${!openHourSwitch && !openHourToggle && todo.openHour ? ` displayNone` : ``}" 
+          
+          style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}
+          ${todo.pPosition == "out" ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : ``}">
+
           ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="labelOnglet labelLiOnglet noLabel"></div>`}
-          ${todo.pParentId && !projectSwitch ? `<div class="ProjectLiOngletDiv">${pOnglets}</div>` : ``}
+
+          <div class="ProjectLiOngletDiv">${!projectSwitch && projectOnglets !== null ? projectOnglets : ""}</div>
+
           ${todo.startTime && todo.prima && todo.prima !== "00:00" ? `<div class="primaLiBuffer">${timeMath(roundFifteenTime(todo.startTime), "minus", todo.prima).replace("-", ":")}</div>` : ``}
+
           <div class="checkOptions${projectSwitch ? " projectLiOptions" : ""}" style="${todo.urge ? `color: ${todo.urgeColor};` : ``}${projectSwitch && todo.pPosition == "out" ? `border-color:${colorsList[pColor].colorBG};` : ``}" onclick="checkOptions(this, ${pColor})">
             <i class="typcn typcn-media-stop-outline emptyCheck"></i>
             <span>${todo.urge ? todo.urgeNum : ``}</span>
           </div>
+
           <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i>
-          <div class="textDiv"><span onclick="${searchSwitch ? `toTIdeSSaM(this)` : `toTIdeTZaM(this)`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? `` : ` color:${mySettings.myBaseColors[todo.color].colorBG};`}">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.startTime ? todo.startTime : ""}</span>
-          <input type="time" class="displayNone"/>
-          ${togoList == "listOups" && numberedDays < -5 ? `<div class="proHelp">
-          <h3>You have been procrastinating that one for ${Math.abs(numberedDays)} days...</h3>
-          <p>Why haven't you done it yet?</p> 
-          <p>Is it really worth doing? Why did you want to do it in the first place?</p>
-          <p>Was it and is it still realistic to want to do it?</p>
-      
-          <h4>If you really still want to do it:</h4>
-          <p>What is missing or what is unclear?</p>
-          <p>What do you need or what would help you start this task?</p>
-          <p>What's the very first 'next action'?</p>
-      
-          <h4>If you realize you don't actually want nor need to do it:</h4>
-          <p>Then do yourself a favor and just delete it!</p>
-          <button onclick="toTIdeTZaM(this.parentElement)">Yeah, thanks</button></div>` : ``}
+
+          <div class="textDiv">
+            <span onclick="${searchSwitch ? `toTIdeSSaM(this)` : `toTIdeTZaM(this)`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? `` : ` color:${mySettings.myBaseColors[todo.color].colorBG};`}">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.startTime ? todo.startTime : ""}</span>
+            <input type="time" class="displayNone"/>
+            ${togoList == "listOups" && numberedDays < -5 ? `<div class="proHelp">
+              <h3>You have been procrastinating that one for ${Math.abs(numberedDays)} days...</h3>
+              <p>Why haven't you done it yet?</p> 
+              <p>Is it really worth doing? Why did you want to do it in the first place?</p>
+              <p>Was it and is it still realistic to want to do it?</p>
+          
+              <h4>If you really still want to do it:</h4>
+              <p>What is missing or what is unclear?</p>
+              <p>What do you need or what would help you start this task?</p>
+              <p>What's the very first 'next action'?</p>
+          
+              <h4>If you realize you don't actually want nor need to do it:</h4>
+              <p>Then do yourself a favor and just delete it!</p>
+              <button onclick="toTIdeTZaM(this.parentElement)">Yeah, thanks</button>
+            </div>` : ``}
           </div>
+
           <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)">
             <i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.deadline ? `doneDay` : todo.line}"></i>
             <span class="${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? `` : `displayNone`}" style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? numberedDays : ``}</span>
           </div>
-        </li>`);
+        </li>`;
+        if(projectSwitch){
+          currentTaskInfo.querySelector(".projectUl").insertAdjacentHTML("beforeend", newLi);
+        } else{
+          document.getElementById(togoList).insertAdjacentHTML("beforeend", newLi);
+        };
       };
     } else if(!document.getElementById(togoList) && !todo.stock){
       alert(`Oups! "${todo.task}" doesn't have anywhere to go!`);
@@ -1881,7 +1889,7 @@ function donedDateCreation(donedDate){
   };
 };
 
-function getUnderLiningWidth(input){
+function getUnderLiningWidth(input){ //That's not gonna work with multiple taskInfo...
   let windowWidth = window.innerWidth;
   let pagePadBor = 22;
   let hourCol = 45;
@@ -1890,13 +1898,19 @@ function getUnderLiningWidth(input){
   let magicNum = 19;
   let padLeftPX = getComputedStyle(input).paddingLeft;
   let padLeft = Number(padLeftPX.slice(0, -2));
-  let thisDiv = document.getElementById(`${input.id}-underLining`);
+  let thisDiv;
+  if(currentTaskInfo !== ""){ //taskTitle
+    thisDiv = currentTaskInfo.querySelector(`.${input.id}-underLining`);
+  } else{ //addInput
+    thisDiv = document.getElementById(`${input.id}-underLining`);
+  };
   thisDiv.style.width = `${(((windowWidth - pagePadBor - hourCol)/dayNumber) - eventBor) + magicNum + padLeft}px`;
 };
 
 
 // *** ADD
 let addForm = document.querySelector("#addForm");
+let addInput = document.querySelector("#addInput");
 getUnderLiningWidth(addInput);
 addForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -2861,7 +2875,7 @@ function creatingCalendar(todo, home, classs){
       </div>
       <div class="noneTuttoGiornoDiv calendarInsideMargin">
         <span>c'è un inizio?</span>
-        <input type="date" id="oneDayStartDateInput" class="changeRecurryDates" value="${startDate}" />
+        <input type="date" class="changeRecurryDates oneDayStartDateInput" value="${startDate}" />
         <input id="oneDayStartTimeInput" type="time" class="dalle dalleTxt" value="${todo.startTime ? todo.startTime : ``}" />
       </div>
       <div class="noneTuttoGiornoDiv calendarInsideMargin">
@@ -3000,10 +3014,10 @@ function creatingCalendar(todo, home, classs){
   let busyDiv = `<div id="busySection" class="calendarMargin" style="margin-top:20px;">
     <h5 class="taskInfoInput" style="margin-left: 0;">Shall we consider you unavailable?</h5>
     <div class="inDaySection" style="width: -webkit-fill-available; max-width: 200px;">
-      <input id="busyInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.busy || todo.term == "showThing" ? `checked` : ``} />
       <div class="calendarInsideMargin tuttoGiornoDiv">
         <p style="margin: 0;">Busy busy!</p>
-        <label for="busyInput" class="slideZone">
+        <label class="slideZone">
+          <input type="checkbox" class="tuttoGiornoInput cossin busyInput" ${todo.busy || todo.term == "showThing" ? `checked` : ``} />
           <div class="slider">
             <span class="si">Sì</span>
             <span class="no">No</span>
@@ -3060,7 +3074,7 @@ function creatingCalendar(todo, home, classs){
     home.insertAdjacentHTML("beforeend", smallCalendar);
   };
   
-  let oneDayStartDate = document.querySelector("#oneDayStartDateInput");
+  let oneDayStartDate = document.querySelector(".oneDayStartDateInput");
   let oneDayStopDate = document.querySelector("#oneDayStopDateInput");
   let dalDate = document.querySelector("#dalInput");
   oneDayStartDate.addEventListener("change", () => {
@@ -3197,7 +3211,7 @@ function calendarSave(todo){ //
 
   todo.openHour = document.querySelector("#openHourInput").checked ? true : false;
   
-  todo.busy = document.querySelector("#busyInput").checked ? true : false;
+  todo.busy = document.querySelector(".busyInput").checked ? true : false;
   //busyZoneCreation(todo); (will be done when we save to cloud)
 
   if(todo.line == "noDay"){
@@ -3249,7 +3263,7 @@ function calendarSave(todo){ //
     };
   } else if(todo.line == "todoDay"){
     clearRecurringData(todo);
-    todo.startDate = inDaySection.querySelector('#oneDayStartDateInput').value;
+    todo.startDate = inDaySection.querySelector('.oneDayStartDateInput').value;
     todo.stopDate = inDaySection.querySelector('#oneDayStopDateInput').value;
   };
   let deadlineInput = document.querySelector("#deadlineInput");
@@ -3951,7 +3965,7 @@ window.toTIdeCWaM = toTIdeCWaM;
 
 function toTIdeCCaNS(thisOne){ //de calendar (month || weekly) à Stock reusage à partir de New (calendarStock)
   moving = false; //must stay false in month/week/search
-  document.querySelector("#taskInfo").remove();
+  document.querySelector("#taskInfo").remove(); //make sure if you want to remove all of them or only the last one...
   document.querySelector("#allStore").remove();
   let reuseLi = thisOne.parentElement;
   let reuseId = reuseLi.id;
@@ -4043,7 +4057,7 @@ function taskAddAllInfo(infos){
     let projectNames = allProjects.map((project) => {
       return `<option style="background-color:${colorsList[project.pColor].colorBG}; color:${colorsList[project.pColor].colorTX};" value="${project.id}" ${todo.pName && todo.pName == project.pName ? `selected` : ``}>${project.pName}</option>`;
     }).join("");
-    projectNamesChoice = `<select id="myProjectNames">
+    projectNamesChoice = `<select name="myProjectNames">
     <option value="null">Choose one</option>
     ${projectNames}
   </select>`;
@@ -4075,7 +4089,7 @@ function taskAddAllInfo(infos){
       </li>`;
     }).join("");
   } else{
-    miniList = `<h6 id="miniListEmpty" style="margin:0;">There's nothing here, yet...</h6>`;
+    miniList = `<h6 class="miniListEmpty" style="margin:0;">There's nothing here, yet...</h6>`;
   };
 
   
@@ -4085,40 +4099,45 @@ function taskAddAllInfo(infos){
 //<div id="taskInfo" class="taskInfoClass${todo.project && todo.pParent ? ` taskInfoProject` : ``}"${todo.project && todo.pParent ? ` style="border-color:${colorsList[todo.pColor].colorBG}; outline-color: ${colorsList[todo.pColor].colorBG5};"` : ``}>
   let taskAllInfo = `<div id="taskInfo" class="taskInfo taskInfoClass">
     <div class="taskInfoWrapper">
-      <!-- <div id="SupClickScreen" class="Screen displayNone"></div> -->
-      <button id="doneIt" class="iconOnlyBtn cornerItLabel">
+      <button class="iconOnlyBtn cornerItLabel doneIt">
         <i class="typcn typcn-media-stop-outline"></i>
       </button>
-      <input id="quickyIt" type="checkbox" class="cossin cornerItInput" ${todo.quicky ? `checked` : ``} />
-      <label for="quickyIt" class="quickyItLabel cornerItLabel">
+      
+      <label class="quickyItLabel cornerItLabel">
+        <input type="checkbox" class="cossin cornerItInput quickyIt" ${todo.quicky ? `checked` : ``} />
         <i class="fa-regular fa-clock cornerItUnChecked"></i>
         <i class="fa-solid fa-clock cornerItChecked"></i>
       </label>
-      <input id="convoIt" type="checkbox" class="cossin cornerItInput" ${todo.convo ? `checked` : ``} />
-      <label for="convoIt" class="convoItLabel cornerItLabel">
+      
+      <label class="convoItLabel cornerItLabel">
+        <input type="checkbox" class="cossin cornerItInput convoIt" ${todo.convo ? `checked` : ``} />
         <i class="fa-regular fa-comments cornerItUnChecked" style="font-size: 20px;"></i>
         <i class="fa-solid fa-comments cornerItChecked" style="font-size: 20px;"></i>
       </label>
+      
       ${todo.recurry || todo.line == "recurringDay" ? `
       <div class="storeItLabel cornerItLabel" >
         <span class="typcn typcn-arrow-repeat"></span>
       </div>` : todo.recycled ? `<div class="storeItLabel cornerItLabel" >
       <span class="fa-solid fa-recycle" style="line-height: 2.1em; font-size: 1.1em;"></span>
-    </div>` : `<input id="storeIt" type="checkbox" class="cossin cornerItInput" ${todo.stock ? `checked` : ``} />
-    <label for="storeIt" class="storeItLabel cornerItLabel">
+    </div>` : `<label class="storeItLabel cornerItLabel">
+      <input type="checkbox" class="cossin cornerItInput storeIt" ${todo.stock ? `checked` : ``} />
       <span class="typcn typcn-pin-outline cornerItUnChecked pinUnChecked"></span>
       <span class="typcn typcn-pin cornerItChecked pinChecked"></span>
     </label>`}
-    <input id="copyIt" type="checkbox" class="cossin cornerItInput" />
-    <label for="copyIt" class="copyItLabel cornerItLabel">
+    
+    <label class="copyItLabel cornerItLabel">
+      <input type="checkbox" class="cossin cornerItInput copyIt" />
       <i class="fa-regular fa-copy cornerItUnChecked"></i>
       <i class="fa-solid fa-copy cornerItChecked"></i>
     </label>
-    <input id="trashIt" type="checkbox" class="cossin cornerItInput" />
-    <label for="trashIt" class="trashItLabel cornerItLabel${(todo.newShit || todo.recycled) ? ` hidden` : ``}">
+    
+    <label class="trashItLabel cornerItLabel${(todo.newShit || todo.recycled) ? ` hidden` : ``}">
+      <input type="checkbox" class="cossin cornerItInput trashIt" />
       <i class="fa-regular fa-trash-can cornerItUnChecked"></i>
       <i class="fa-solid fa-trash-can cornerItChecked"></i>
     </label>
+
     <div id="convoSection">
       <div class="convoStatusDiv">
         <input type="radio" name="convoStatusRadios" id="convoStatus1" value="cS1" ${todo.convoStatus == "cS1" ? `checked` : ``} />
@@ -4148,39 +4167,40 @@ function taskAddAllInfo(infos){
       </div>
       <div id="convoContactDiv">
         <label>Contact: </label>
-        <input type="text" id="contactSearchInput" value="${todo.convo ? contactList[contactList.findIndex(ct => ct.id == todo.convoContactId)].nickname : ``}" />
-        <div id="contactSearchList"></div>
+        <input type="text" class="contactSearchInput" value="${todo.convo ? contactList[contactList.findIndex(ct => ct.id == todo.convoContactId)].nickname : ``}" />
+        <div class="contactSearchList"></div>
       </div>
     </div>
     <div class="taskInfoInput relDiv${calendarStock ? ` calendarStockVersion` : ``}">
       <div class="projectOngletDiv">${getProjectOnglets(todo)}</div>
-      <span id="iconIt" class="IconI ${todo.icon}"></span>
-      <div id="labelIt" class="labelOnglet labelTaskOnglet" style="left:-10px; top:2px; background-color:${todo.LColor ? colorsList[todo.LColor].colorBG : "initial"}; color:${todo.LColor ? colorsList[todo.LColor].colorTX : "inherit"};">${todo.LName ? todo.LName : "Label"}</div>
-      <div class="underLining" id="taskTitle-underLining"></div>
-      <input type="text" id="taskTitle" style="color:${todo.term == "showThing" ? mySettings.myBaseColors[0].colorBG : mySettings.myBaseColors[todo.color].colorBG};" value="${todo.task ? todo.task : ""}">
-      <span id="colorIt" class="typcn typcn-tag tagSpan ${todo.term == "showThing" ? `hidden` : ``}" style="color:${mySettings.myBaseColors[todo.color].colorBG};"></span>
+      <span class="iconIt IconI ${todo.icon}"></span>
+      <div class="labelOnglet labelTaskOnglet labelIt" style="left:-10px; top:2px; background-color:${todo.LColor ? colorsList[todo.LColor].colorBG : "initial"}; color:${todo.LColor ? colorsList[todo.LColor].colorTX : "inherit"};">${todo.LName ? todo.LName : "Label"}</div>
+      <div class="underLining taskTitle-underLining"></div>
+      <input type="text" class="taskTitle" style="color:${todo.term == "showThing" ? mySettings.myBaseColors[0].colorBG : mySettings.myBaseColors[todo.color].colorBG};" value="${todo.task ? todo.task : ""}">
+      <span class="colorIt typcn typcn-tag tagSpan ${todo.term == "showThing" ? `hidden` : ``}" style="color:${mySettings.myBaseColors[todo.color].colorBG};"></span>
       ${calendarStock ? `<button class="addBtns" onclick="getStorage()"><span class="typcn typcn-shopping-bag"></span></button>` : ``}
     </div>
     <div id="trashedArea">
       <input id="tellWhyInput" type="checkbox" class="cossin taskToggleInput" />
       <div>
         <label for="tellWhyInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 10px;">
-          <h5 class="topList">Tell me why...<span class="tellYou" id="tellYouWhy">${todo.info ? `(because)` : ``}</span></h5>
+          <h5 class="topList">Tell me why...<span class="tellYou tellYouWhy">${todo.info ? `(because)` : ``}</span></h5>
           <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
         </label>
         <div class="taskToggleList relDiv" style="margin-bottom: 25px;">
-          <textarea id="taskDetails" class="taskInfoInput taskDetails">${todo.info ? todo.info : ""}</textarea>
-          <input id="switchTextareaSize" type="checkbox" class="switchDisplayInput cossin" />
-          <label for="switchTextareaSize" style="float: right; margin-right: 15px; margin-top: -5px;">
+          <textarea class="taskInfoInput taskDetails">${todo.info ? todo.info : ""}</textarea>
+          
+          <label style="float: right; margin-right: 15px; margin-top: -5px;">
+            <input type="checkbox" class="switchDisplayInput cossin switchTextareaSize" />
             <i class="typcn typcn-plus switchDisplayUnChecked"></i>
             <i class="typcn typcn-minus switchDisplayChecked"></i>
           </label>
         </div>
       </div>
 
-      <input id="tellHowInput" type="checkbox" class="cossin taskToggleInput" />
-      <div id="tellHowDiv" ${todo.pOffspringId ? `` : `class="displayNone"`}>
-        <label for="tellHowInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 10px;">
+      <div class="tellHowDiv${todo.pOffspringId ? `` : ` displayNone`}">
+        <label class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 10px;">
+          <input type="checkbox" class="cossin taskToggleInput tellHowInput" />
           <h5 class="topList">Tell me how...<span class="tellYou" id="tellYouHow">${todo.pOffspringId && todo.pOffspringId.length > 0 ? `(step by step, oh baby)` : `(Where do I begin???)`}</span></h5>
           <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
         </label>
@@ -4196,19 +4216,19 @@ function taskAddAllInfo(infos){
       <input id="tellMoreInput" type="checkbox" class="cossin taskToggleInput" />
       <div>
         <label for="tellMoreInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 10px;">
-          <h5 class="topList">Tell me more...<span class="tellYou" id="tellYouMore">${todo.miniList ? `(...)` : ``}</span></h5>
+          <h5 class="topList">Tell me more...<span class="tellYou tellYouMore">${todo.miniList ? `(...)` : ``}</span></h5>
           <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
         </label>
-        <div id="miniListDiv" class="taskToggleList taskInfoInput">
+        <div class="taskToggleList taskInfoInput miniListDiv">
           <ul>
             ${miniList}
-            <li class="allMiniLi" id="addMiniListLi" style="margin: 15px 0 20px;}">
-              <input id="hideMiniInput" type="checkbox" class="cossin" ${todo.miniHide ? `checked ` : ``}/>
-              <label for="hideMiniInput" style="margin-right: 5px;">
+            <li class="allMiniLi addMiniListLi" style="margin: 15px 0 20px;}">
+              <label style="margin-right: 5px;">
+                <input type="checkbox" class="cossin hideMiniInput" ${todo.miniHide ? `checked ` : ``}/>
                 <span class="typcn typcn-eye-outline" style="font-size:1.7em"></span>
               </label>
-              <form id="addMiniForm">
-                <input type="text" id="addMiniListInput" class="listNameInput" style="border: 0.5px solid var(--tx-color); border-radius: 5px; padding: 0 7px;" placeholder="one more" />
+              <form class="addMiniForm">
+                <input type="text" class="listNameInput addMiniListInput" style="border: 0.5px solid var(--tx-color); border-radius: 5px; padding: 0 7px;" placeholder="one more" />
                 <button type="submit" class="iconOnlyBtn" id="addMiniListBtn" style="margin-left: 5px;"><span class="typcn typcn-plus"></span></button>
               </form>
             </li>
@@ -4219,7 +4239,7 @@ function taskAddAllInfo(infos){
       <input id="tellWhatInput" type="checkbox" class="cossin taskToggleInput" />
       <div>
         <label for="tellWhatInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
-          <h5 class="topList">Tell me what...<span class="tellYou">(<span id="tellYouTermProject">${todo.pOffspringId && todo.pOffspringId !== null ? `Project & ` : ``}</span><span id="tellYouTerm">${t(todo.term)}</span><span id="tellYouShowType">${todo.term == "showThing" ? ` - ${todo.showType ? todo.showType : mySettings.myShowTypes[0].name}` : ``}</span><span id="tellYouUrge">${todo.urge ? ` - Priority: ${todo.urgeNum}` : ``}</span>)</span></h5>
+          <h5 class="topList">Tell me what...<span class="tellYou">(<span id="tellYouTermProject">${todo.pOffspringId && todo.pOffspringId !== null ? `Project & ` : ``}</span><span id="tellYouTerm">${t(todo.term)}</span><span id="tellYouShowType">${todo.term == "showThing" ? ` - ${todo.showType ? todo.showType : mySettings.myShowTypes[0].name}` : ``}</span><span class="tellYouUrge">${todo.urge ? ` - Priority: ${todo.urgeNum}` : ``}</span>)</span></h5>
           <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
         </label>
         <div class="taskToggleList taskInfoInput relDiv">
@@ -4232,7 +4252,7 @@ function taskAddAllInfo(infos){
             <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
               <p>Choose a color: ${projectColorsChoice}</p>
               <p>Choose a nickname:</p>
-              <input id="projectNickInput" type="text" value="${todo.pName ? todo.pName : ""}"/>
+              <input class="projectNickInput" type="text" value="${todo.pName ? todo.pName : ""}"/>
             </div>
           </div>
           <input class="myRadio" type="checkbox" name="projectOptions" id="partProjectInput" value="pOffspring" ${todo.pParentId ? `checked` : ``} />
@@ -4284,7 +4304,7 @@ function taskAddAllInfo(infos){
           <div class="urgeDiv">
             <h5 style="margin: 5px 0 0 0;">How urgent is it?</h5>
             <div class="inDaySection" style="width: fit-content; margin-bottom: 10px;">
-              <p><label for="urgeInput" style="display:inline-block;"><span style="color:red;">Pri</span><span style="color:#ff8400;">ori</span><span style="color:#ffd000;">ty:</span>  </label><input id="urgeInput" type="number" value="${todo.term == "topPriority" && todo.urge ? todo.urgeNum : "0"}" /></p>
+              <p><label style="display:inline-block;"><span style="color:red;">Pri</span><span style="color:#ff8400;">ori</span><span style="color:#ffd000;">ty:</span>  </label><input class="urgeInput" type="number" value="${todo.term == "topPriority" && todo.urge ? todo.urgeNum : "0"}" /></p>
             </div>
           </div>
 
@@ -4319,14 +4339,14 @@ function taskAddAllInfo(infos){
       <input id="tellWhereInput" type="checkbox" class="cossin taskToggleInput" />
       <div>
         <label for="tellWhereInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
-          <h5 class="topList">Tell me where...<span class="tellYou" id="tellYouWhere">${todo.where == "home" || !todo.where ? "(home)" : "(somewhere)"}</span></h5>
+          <h5 class="topList">Tell me where...<span class="tellYou tellYouWhere">${todo.where == "home" || !todo.where ? "(home)" : "(somewhere)"}</span></h5>
           <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
         </label>
         <div class="taskToggleList taskInfoInput relDiv">
           <div class="inDaySection taskInfoInput" style="width: -webkit-fill-available; max-width: 280px;">
-            <input id="whereHomeInput" type="checkbox" class="tuttoGiornoInput cossin" ${(!todo.where || (todo.where && todo.where == "home")) ? `checked` : ``} />
             <div class="calendarInsideMargin tuttoGiornoDiv" style="justify-content: flex-start;">
-              <label for="whereHomeInput" class="slideZone">
+              <label class="slideZone">
+                <input type="checkbox" class="tuttoGiornoInput cossin whereHomeInput" ${(!todo.where || (todo.where && todo.where == "home")) ? `checked` : ``} />
                 <div class="slider">
                   <span class="si">Sì</span>
                   <span class="no">No</span>
@@ -4345,7 +4365,7 @@ function taskAddAllInfo(infos){
       <input id="tellWhenInput" type="checkbox" class="cossin taskToggleInput" />
       <div>
         <label for="tellWhenInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
-          <h5 class="topList">Tell me when...<span class="tellYou">(<span id="tellYouWhen">${t(todo.line)}</span><span id="tellYouDay">${todo.startDate ? ` ${todo.startDate}` : ``}</span>)</span></h5>
+          <h5 class="topList">Tell me when...<span class="tellYou">(<span class="tellYouWhen">${t(todo.line)}</span><span class="tellYouDay">${todo.startDate ? ` ${todo.startDate}` : ``}</span>)</span></h5>
           <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
         </label>
         <div class="taskToggleList relDiv">
@@ -4353,8 +4373,8 @@ function taskAddAllInfo(infos){
         </div>
       </div>
     </div>
-    <button id="taskInfoBtn">Save</button>
-    <button class="ScreenBtn2" id="taskCancelBtn">Cancel</button>
+    <button class="taskInfoBtn">Save</button>
+    <button class="ScreenBtn2 taskCancelBtn">Cancel</button>
   </div>
   </div>`;
   //<input class="myRadio" type="radio" name="projectOptions" id="notProjectInput" value="notProject" ${!todo.wholeProject && !todo.partProject ? `checked` : ``} />
@@ -4362,65 +4382,58 @@ function taskAddAllInfo(infos){
   //  <span class="smallText otherSmallText">(it's just its own thing)</span></label>
   div.insertAdjacentHTML("beforeend", taskAllInfo); //different in month/week 
 
-  let calendarHome = document.querySelector("#calendarHome");
-  creatingCalendar(todo, calendarHome, "inHome");
-  let calendarDiv = document.querySelector("#calendarDiv");
-  calendarDiv.querySelectorAll('input[name="whatDay"]').forEach(radio => {
-    radio.addEventListener("click", () => {
-      document.querySelector("#tellYouWhen").innerText = t(radio.value);
-      if(radio.value == "todoDay"){
-        document.querySelector("#tellYouDay").innerText = ` ${document.querySelector("#oneDayStartDateInput").value}`;
-      } else{
-        document.querySelector("#tellYouDay").innerText = ``;
-      };
-    });
-  });
-  calendarDiv.querySelector("#oneDayStartDateInput").addEventListener("change", (e) => {
-    document.querySelector("#tellYouDay").innerText = ` ${e.target.value}`;
-  });
-  
-  //let taskInfo = document.querySelector("#taskInfo"); //instead of finding it by id, which won't work when we have a second one. We could create an array of all the .taskInfo and select the last one, since they keep being added at the end! 
-  //Although, then we can't just put z-index = 1000 to all taskInfo... right? nope, because then all the newClickScreen will be at 999...
-  //BTW on va probablement pouvoir enlever tout les clickscreen et moving (en tous cas, ceux associés à taskInfo)
   let allTaskInfo = document.querySelectorAll(".taskInfo");
   let topDiv;
   if(allTaskInfo.length > 1){
     topDiv = window.getComputedStyle(allTaskInfo[allTaskInfo.length - 2]).getPropertyValue("top");
   };// peut-être vérifier si le parentElement de chaque taskInfo est bel et bien le même div...
-  let taskInfo = allTaskInfo[allTaskInfo.length - 1];
-  taskInfo.style.zIndex = 1000 + (10 * (allTaskInfo.length - 1));
-  taskInfo.style.top = topDiv + 50 + "px";
-  let doneIt = document.querySelector("#doneIt");
+  let currentTaskInfo = allTaskInfo[allTaskInfo.length - 1];
+  currentTaskInfo.style.zIndex = 1000 + (10 * (allTaskInfo.length - 1));
+  currentTaskInfo.style.top = topDiv + 50 + "px";
+
+  let calendarHome = currentTaskInfo.querySelector(".calendarHome");
+  creatingCalendar(todo, calendarHome, "inHome");
+  let calendarDiv = currentTaskInfo.querySelector(".calendarDiv");
+  calendarDiv.querySelectorAll('input[name="whatDay"]').forEach(radio => {
+    radio.addEventListener("click", () => {
+      currentTaskInfo.querySelector(".tellYouWhen").innerText = t(radio.value);
+      if(radio.value == "todoDay"){
+        currentTaskInfo.querySelector(".tellYouDay").innerText = ` ${currentTaskInfo.querySelector(".oneDayStartDateInput").value}`; //add the time
+      } else{
+        currentTaskInfo.querySelector(".tellYouDay").innerText = ``;
+      };
+    });
+  });
+  calendarDiv.querySelector(".oneDayStartDateInput").addEventListener("change", (e) => {
+    currentTaskInfo.querySelector(".tellYouDay").innerText = ` ${e.target.value}`;
+  });
+  
+  
+  let doneIt = currentTaskInfo.querySelector(".doneIt");
   let doneIcon = doneIt.querySelector("i");
-  let quickyIt = document.querySelector("#quickyIt");
-  let copyIt = document.querySelector("#copyIt");
-  let trashIt = document.querySelector("#trashIt");
-  let storeIt = document.querySelector("#storeIt");
-  let taskTitle = document.querySelector("#taskTitle");
+  let quickyIt = currentTaskInfo.querySelector(".quickyIt");
+  let convoIt = currentTaskInfo.querySelector(".convoIt");
+  let storeIt = currentTaskInfo.querySelector(".storeIt");
+  let copyIt = currentTaskInfo.querySelector(".copyIt");
+  let trashIt = currentTaskInfo.querySelector(".trashIt");
+  
+  let taskTitle = currentTaskInfo.querySelector(".taskTitle");
   getUnderLiningWidth(taskTitle);
-  let miniListDiv = document.querySelector("#miniListDiv");
-  let taskDetails = document.querySelector("#taskDetails");
-  let switchTextareaSize = document.querySelector("#switchTextareaSize");
-  let urgeInput = document.querySelector("#urgeInput");
-  let whereCheck = document.querySelector("#whereHomeInput");
-  //let SupClickScreen = document.querySelector("#SupClickScreen");
-  let colorIt = document.querySelector("#colorIt");
-  //let colorPalet = document.querySelector("#colorPalet");
-  let contactSearchInput = document.querySelector("#contactSearchInput");
-  let iconIt = document.querySelector("#iconIt");
-  //let iconsPalet = document.querySelector("#iconsPalet");
-  let taskInfoBtn = document.querySelector("#taskInfoBtn");
-  let taskCancelBtn = document.querySelector("#taskCancelBtn");
-  let busyInput = document.querySelector("#busyInput");
+  let miniListDiv = currentTaskInfo.querySelector(".miniListDiv");
+  let taskDetails = currentTaskInfo.querySelector(".taskDetails");
+  let switchTextareaSize = currentTaskInfo.querySelector(".switchTextareaSize");
+  let urgeInput = currentTaskInfo.querySelector(".urgeInput");
+  let whereCheck = currentTaskInfo.querySelector(".whereHomeInput");
+  let colorIt = currentTaskInfo.querySelector(".colorIt");
+  let contactSearchInput = currentTaskInfo.querySelector(".contactSearchInput");
+  let iconIt = currentTaskInfo.querySelector(".iconIt");
+  let taskInfoBtn = currentTaskInfo.querySelector(".taskInfoBtn");
+  let taskCancelBtn = currentTaskInfo.querySelector(".taskCancelBtn");
+  let busyInput = currentTaskInfo.querySelector(".busyInput");
 
   
   newClickScreenCreation(taskInfo);
-  // let zIndexDiv = window.getComputedStyle(taskInfo).getPropertyValue("z-index");
-  // console.log(zIndexDiv);
-  // let newClickScreen = `<div id="newClickScreen" class="newClickScreen" style="z-index:${zIndexDiv - 1};"></div>`;
-  // document.body.insertAdjacentHTML("beforeend", newClickScreen);
-  // newClickScreen = document.querySelector("#newClickScreen");
-  // newClickScreen.addEventListener("click", cancelTaskInfo);
+
 
   taskCancelBtn.addEventListener("click", () => {
     newClickScreenRemoval(taskInfo);
@@ -4439,7 +4452,7 @@ function taskAddAllInfo(infos){
   let thisStatus = "";
   let thisNickname = "";
   let thisContactIndex;
-  document.querySelectorAll('input[name="convoStatusRadios"]').forEach(radio => {
+  currentTaskInfo.querySelectorAll('input[name="convoStatusRadios"]').forEach(radio => {
     radio.addEventListener("click", () => {
       console.log(radio.value);
       thisStatus = t(radio.value);
@@ -4451,7 +4464,7 @@ function taskAddAllInfo(infos){
     let tip = contactSearchInput.value.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
     let result = contactList.filter(contact => (contact.nickname.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').startsWith(tip) || contact.prenom.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').startsWith(tip)) || contact.nom.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').startsWith(tip));
     console.log(result);
-    document.querySelector("#contactSearchList").innerHTML = result.map((ct) => {
+    currentTaskInfo.querySelector(".contactSearchList").innerHTML = result.map((ct) => {
       return `<button id="${ct.id}" class="nickChoice" onclick="thisContact(this)">${ct.nickname}</button>`;
     }).join("") + `<button class="nickChoice" style="background-color: lightgrey;"  onclick="addNewContact()">add new contact</button>`;
   });
@@ -4463,7 +4476,7 @@ function taskAddAllInfo(infos){
   function thisContact(div){
     thisContactIndex = contactList.findIndex(contact => contact.id == div.id);
     thisNickname = contactList[thisContactIndex].nickname;
-    document.querySelector("#contactSearchList").innerHTML = "";
+    currentTaskInfo.querySelector(".contactSearchList").innerHTML = "";
     contactSearchInput.value = thisNickname;
     thisConvo();
   };
@@ -4476,7 +4489,7 @@ function taskAddAllInfo(infos){
   window.addNewContact = addNewContact;
 
   // *** LABEL
-  let labelIt = document.querySelector("#labelIt");
+  let labelIt = currentTaskInfo.querySelector(".labelIt");
   newLabelReset();
   newlabelName = todo.label ? todo.LName : "";
   newlabelColor = todo.label ? todo.LColor : "";
@@ -4540,18 +4553,18 @@ function taskAddAllInfo(infos){
     taskDetails.classList.toggle("taskDetailsFullHeight");
   })
   taskDetails.addEventListener("change", () => {
-    document.querySelector("#tellYouWhy").innerText = taskDetails.value == "" ? "" : "(because)";
+    currentTaskInfo.querySelector(".tellYouWhy").innerText = taskDetails.value == "" ? "" : "(because)";
   });
   whereCheck.addEventListener("click", () => {
-    document.querySelector("#tellYouWhere").innerText = whereCheck.checked ? "(home)" : "(somewhere)";
+    currentTaskInfo.querySelector(".tellYouWhere").innerText = whereCheck.checked ? "(home)" : "(somewhere)";
   });
   urgeInput.addEventListener("change", () => {
-    document.querySelector("#tellYouUrge").innerText = urgeInput.value > 0 ? ` - Priority: ${urgeInput.value}` : ``;
+    currentTaskInfo.querySelector(".tellYouUrge").innerText = urgeInput.value > 0 ? ` - Priority: ${urgeInput.value}` : ``;
   });
 
   // *** LIST
   //more with SHOW 
-  let hideMiniInput = miniListDiv.querySelector("#hideMiniInput");
+  let hideMiniInput = miniListDiv.querySelector(".hideMiniInput");
   checkTest();
   hideMiniInput.addEventListener("click", (e) => {
     if(hideMiniInput.checked){
@@ -4565,23 +4578,22 @@ function taskAddAllInfo(infos){
     };
   });
   let idxMini = todo.miniList ? todo.miniList.length : 0;
-  let addMiniForm = miniListDiv.querySelector("#addMiniForm");
+  let addMiniForm = miniListDiv.querySelector(".addMiniForm");
   addMiniForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    let newMini = miniListDiv.querySelector("#addMiniListInput").value;
+    let newMini = miniListDiv.querySelector(".addMiniListInput").value;
     if(newMini){
-      if(miniListDiv.querySelector("#miniListEmpty")){
-        miniListDiv.querySelector("#miniListEmpty").remove();
-        document.querySelector("#tellYouMore").innerText = "(...)";
+      if(miniListDiv.querySelector(".miniListEmpty")){
+        miniListDiv.querySelector(".miniListEmpty").remove();
+        currentTaskInfo.querySelector(".tellYouMore").innerText = "(...)";
       };
-      miniListDiv.querySelector("#addMiniListLi").insertAdjacentHTML("beforebegin", `<li class="allMiniLi miniLi">
-        <input id="miniCheck${idxMini}" type="checkbox" class="listCheckInput" onclick="checkTest()" />
-        <label class="listCheckLabel" for="miniCheck${idxMini}">
+      miniListDiv.querySelector(".addMiniListLi").insertAdjacentHTML("beforebegin", `<li class="allMiniLi miniLi">
+        <label class="listCheckLabel">
+        <input class="listCheckInput miniCheck${idxMini}" type="checkbox" onclick="checkTest()" />
           <i class="typcn typcn-media-stop-outline miniUnChecked"></i>
           <i class="typcn typcn-input-checked miniChecked"></i>
         </label>
         <input type="text" class="listNameInput" style="color:var(--tx-color);" value="${newMini}" />
-        <input id="miniOpt${idxMini}" type="checkbox" class="miniOptInput" />
         <div class="miniOptDiv">
           <i onclick="switchMiniType(this)" class="typcn typcn-arrow-repeat"></i>
           <i onclick="switchMiniColor(this)" class="fa-solid fa-palette" style="color:var(--tx-color);"></i>
@@ -4589,11 +4601,12 @@ function taskAddAllInfo(infos){
           <i onclick="moveMiniDown(this)" class="typcn typcn-arrow-down-outline"></i>
           <i onclick="moveMiniUp(this)" class="typcn typcn-arrow-up-outline"></i>
         </div>
-        <label for="miniOpt${idxMini}" class="miniOptLabel">
+        <label class="miniOptLabel">
+          <input class="miniOptInput miniOpt${idxMini}" type="checkbox" />
           <i class="fa-solid fa-ellipsis-vertical" style="width:23px;"></i>
         </label>
       </li>`);
-      miniListDiv.querySelector("#addMiniListInput").value = "";
+      miniListDiv.querySelector(".addMiniListInput").value = "";
       checkTest();
       idxMini++;
     };
@@ -4612,7 +4625,7 @@ function taskAddAllInfo(infos){
         mini.classList.add("displayNone");
       };
     });
-    document.querySelector("#tellYouMore").innerText = miniTot == 0 ? "" : miniTodo == good ? "(all good!)" : "(...)";
+    currentTaskInfo.querySelector(".tellYouMore").innerText = miniTot == 0 ? "" : miniTodo == good ? "(all good!)" : "(...)";
   };
   window.checkTest = checkTest;
 
@@ -4642,7 +4655,7 @@ function taskAddAllInfo(infos){
   function moveMiniDown(thisOne){
     let li = thisOne.parentElement.parentElement;
     let liNext = li.nextElementSibling;
-    if(liNext && liNext.id !== "addMiniListLi"){
+    if(liNext && !liNext.classList.contains("addMiniListLi")){
       liNext.insertAdjacentElement("afterend", li);
     } else{
       let firstOne = li.parentElement.firstElementChild;
@@ -4657,21 +4670,21 @@ function taskAddAllInfo(infos){
     if(liPrev){
       liPrev.insertAdjacentElement("beforebegin", li);
     } else{
-      let addOne = miniListDiv.querySelector("#addMiniListLi");
+      let addOne = miniListDiv.querySelector(".addMiniListLi");
       addOne.insertAdjacentElement("beforebegin", li);
     };
   };
   window.moveMiniUp = moveMiniUp;
 
   // *** Project
-  let tellHowDiv = document.querySelector("#tellHowDiv");
-  let projectOngletDiv = document.querySelector(".projectOngletDiv");
+  let tellHowDiv = currentTaskInfo.querySelector(".tellHowDiv");
+  let projectOngletDiv = currentTaskInfo.querySelector(".projectOngletDiv");
   let newProjectColor = "";
   let newProjectNickname = "";
   let myProjectId = "";
 
   //If pParent
-  document.querySelectorAll('input[name="projectColorChoices"]').forEach(radio => {
+  currentTaskInfo.querySelectorAll('input[name="projectColorChoices"]').forEach(radio => {
     radio.addEventListener("click", () => {
       newProjectColor = radio.value;
         let projectOnglets = getProjectOnglets(todo);
@@ -4681,7 +4694,7 @@ function taskAddAllInfo(infos){
         projectOngletDiv.innerHTML = projectOnglets;
     });
   });
-  let projectNickInput = document.querySelector("#projectNickInput");
+  let projectNickInput = currentTaskInfo.querySelector(".projectNickInput");
   projectNickInput.addEventListener("change", () => {
     newProjectNickname = projectNickInput.value;
     let projectOnglets = getProjectOnglets(todo);
@@ -4691,7 +4704,7 @@ function taskAddAllInfo(infos){
   });
   // if pEnfant
   if(allProjects.length > 0){
-    let myProjectNames = document.querySelector("#myProjectNames");
+    let myProjectNames = currentTaskInfo.querySelector('name="myProjectNames"');
     myProjectNames.addEventListener("change", () => {
       if(myProjectNames.value !== "null"){
         let myProject = listTasks[listTasks.findIndex(todo => todo.id == myProjectNames.value)];
@@ -4704,9 +4717,9 @@ function taskAddAllInfo(infos){
     });
   };
 
-  document.querySelectorAll('input[name="projectOptions"]').forEach(checkbox => {
+  currentTaskInfo.querySelectorAll('input[name="projectOptions"]').forEach(checkbox => {
     checkbox.addEventListener("click", () => {
-      if(document.querySelectorAll('input[name="projectOptions"]:checked').length === 0){//check les deux checkbox et si les deux sont unchecked, ben vide projectOngletDiv
+      if(currentTaskInfo.querySelectorAll('input[name="projectOptions"]:checked').length === 0){//check les deux checkbox et si les deux sont unchecked, ben vide projectOngletDiv
         tellHowDiv.classList.add("displayNone");
         console.log(projectOngletDiv);
         projectOngletDiv.innerHTML = "";
@@ -4734,14 +4747,11 @@ function taskAddAllInfo(infos){
         </label>`;
       };
     }).join("");
-    let colorPalet = `<div id="colorPalet" class="colorPaletClass">${colors}</div>`;
-    // document.getElementById("colorPalet").innerHTML = colors;
-    taskInfo.insertAdjacentHTML("beforeend", colorPalet);
-    //colorPalet.classList.remove("displayNone");
-    colorPalet = document.querySelector("#colorPalet");
-    //SupClickScreen.classList.remove("displayNone");
+    let colorPalet = `<div class="colorPaletClass colorPalet">${colors}</div>`;
+    currentTaskInfo.insertAdjacentHTML("beforeend", colorPalet);
+    colorPalet = currentTaskInfo.querySelector(".colorPalet");
     newClickScreenCreation(colorPalet);
-    document.querySelectorAll("input[name='colorRadio']").forEach(radio => {
+    currentTaskInfo.querySelectorAll("input[name='colorRadio']").forEach(radio => {
       if(todo.color == radio.value){
         radio.checked = true;
       } else{
@@ -4751,9 +4761,6 @@ function taskAddAllInfo(infos){
         newcolor = radio.value;
         taskTitle.style.color = mySettings.myBaseColors[newcolor].colorBG;
         colorIt.style.color = mySettings.myBaseColors[newcolor].colorBG;
-        //colorPalet.classList.add("displayNone");
-        //clickHandlerAddOn(colorPalet, "keep", SupClickScreen, "nowhere");
-        //document.querySelector("#todoZone").insertAdjacentElement("beforeend", colorPalet);
         newClickScreenRemoval(colorPalet);
       });
     });
@@ -4775,13 +4782,13 @@ function taskAddAllInfo(infos){
         </div>
       </label>`;
     }).join("");
-    let iconsPalet = `<div id="iconsPalet" class="iconsPaletClass inTaskDiv">${iconsAll}</div>`;
-    taskInfo.insertAdjacentHTML("beforeend", iconsPalet);
+    let iconsPalet = `<div class="iconsPaletClass inTaskDiv iconsPalet">${iconsAll}</div>`;
+    currentTaskInfo.insertAdjacentHTML("beforeend", iconsPalet);
     //iconsPalet.classList.replace("displayNone", "inTaskDiv");
-    iconsPalet = document.querySelector("#iconsPalet");
+    iconsPalet = currentTaskInfo.querySelector(".iconsPalet");
     //SupClickScreen.classList.remove("displayNone");
     newClickScreenCreation(iconsPalet);
-    document.querySelectorAll("input[name='iconRadio']").forEach(radio => {
+    currentTaskInfo.querySelectorAll("input[name='iconRadio']").forEach(radio => {
       if(todo.icon == radio.value){
         radio.checked = true;
       } else{
@@ -4789,10 +4796,7 @@ function taskAddAllInfo(infos){
       };
       radio.addEventListener("click", () => {
         newicon = radio.value;
-        iconIt.className = `IconI ${newicon}`;
-        //iconsPalet.classList.replace("inTaskDiv", "displayNone");
-        //clickHandlerAddOn(iconsPalet, "keep", SupClickScreen, "nowhere");
-        // document.querySelector("#todoZone").insertAdjacentElement("beforeend", iconsPalet);
+        iconIt.className = `iconIt IconI ${newicon}`;
         newClickScreenRemoval(iconsPalet);
       });
     });
@@ -4810,18 +4814,18 @@ function taskAddAllInfo(infos){
   let newSTColorTX;
   let newSTColorIdx;
   let newSTing = false;
-  let myShowDiv = document.querySelector("#myShowDiv");
-  let showTypeCreationInput = document.querySelector("#showTypeCreationInput");
-  let showTypeCreationConfirm = document.querySelector("#showTypeCreationConfirm");
+  let myShowDiv = currentTaskInfo.querySelector("#myShowDiv");
+  let showTypeCreationInput = currentTaskInfo.querySelector("#showTypeCreationInput");
+  let showTypeCreationConfirm = currentTaskInfo.querySelector("#showTypeCreationConfirm");
 
   //Hiding lineOptions
-  let todoDaySection = document.querySelector("#todoDaySection");
-  let recurringDaySection = document.querySelector("#recurringDaySection");
-  let noDaySection = document.querySelector("#noDaySection");
-  let deadlineSection = document.querySelector("#deadlineSection");
+  let todoDaySection = currentTaskInfo.querySelector("#todoDaySection");
+  let recurringDaySection = currentTaskInfo.querySelector("#recurringDaySection");
+  let noDaySection = currentTaskInfo.querySelector("#noDaySection");
+  let deadlineSection = currentTaskInfo.querySelector("#deadlineSection");
   if(!todo.recurry && todo.line !== "recurringDay" && !todo.recycled){
     storeIt.addEventListener("click", () => {
-      let radio = document.querySelector('input[name="termOptions"]:checked').value;
+      let radio = currentTaskInfo.querySelector('input[name="termOptions"]:checked').value;
       if(storeIt.checked){
         setN();
         if(radio == "showThing"){
@@ -4853,9 +4857,9 @@ function taskAddAllInfo(infos){
     });
   };
   
-  document.querySelectorAll('input[name="termOptions"]').forEach(radio => {
+  currentTaskInfo.querySelectorAll('input[name="termOptions"]').forEach(radio => {
     radio.addEventListener("click", () => {
-      document.querySelector("#tellYouTerm").innerText = t(radio.value);
+      currentTaskInfo.querySelector("#tellYouTerm").innerText = t(radio.value);
       if(radio.value == "showThing" || radio.value == "reminder"){
         setTR();
         if(radio.value == "showThing"){
@@ -4866,13 +4870,13 @@ function taskAddAllInfo(infos){
           colorIt.classList.remove("hidden");
           taskTitle.style.color = newcolor ? mySettings.myBaseColors[newcolor].colorBG : mySettings.myBaseColors[todo.color].colorBG;
           busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
-          document.querySelector("#tellYouShowType").innerText = ``;
+          currentTaskInfo.querySelector("#tellYouShowType").innerText = ``;
         };
       } else{
         colorIt.classList.remove("hidden");
         taskTitle.style.color = newcolor ? mySettings.myBaseColors[newcolor].colorBG : mySettings.myBaseColors[todo.color].colorBG;
         busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
-        document.querySelector("#tellYouShowType").innerText = ``;
+        currentTaskInfo.querySelector("#tellYouShowType").innerText = ``;
         if(storeIt && storeIt.checked && !todo.recycled){ // if it's a recurry, that used to make it bug because there was no storeIt to check if it's checked or not, so I added storeIt
           setN();
         } else{
@@ -4880,9 +4884,9 @@ function taskAddAllInfo(infos){
         };
       };
       if(radio.value !== "topPriority"){
-        document.querySelector("#tellYouUrge").innerText = "";
+        currentTaskInfo.querySelector(".tellYouUrge").innerText = "";
       } else{
-        document.querySelector("#tellYouUrge").innerText = urgeInput.value > 0 ? ` - Priority: ${urgeInput.value}` : ``;
+        currentTaskInfo.querySelector(".tellYouUrge").innerText = urgeInput.value > 0 ? ` - Priority: ${urgeInput.value}` : ``;
       };
     });
   });
@@ -4892,9 +4896,9 @@ function taskAddAllInfo(infos){
     recurringDaySection.classList.remove("displayNone");
     noDaySection.classList.add("displayNone");
     deadlineSection.classList.add("displayNone");
-    document.querySelector(`input[name="whatDay"]#${todo.line !== "recurringDay" ? "todoDay" : todo.line}Input`).checked = true;
-    document.querySelector("#todoDayInputLabel").innerHTML = `<p><span class="myRadio"></span><span class="normalText todoDay">Happening Day</span><br /><span class="smallText">(the day this is all gonna go down)</span></p>`;
-    document.querySelector("#noDayInputLabel span.smallText").innerText = `(just go with the flow)`;
+    currentTaskInfo.querySelector(`input[name="whatDay"]#${todo.line !== "recurringDay" ? "todoDay" : todo.line}Input`).checked = true;
+    currentTaskInfo.querySelector("#todoDayInputLabel").innerHTML = `<p><span class="myRadio"></span><span class="normalText todoDay">Happening Day</span><br /><span class="smallText">(the day this is all gonna go down)</span></p>`;
+    currentTaskInfo.querySelector("#noDayInputLabel span.smallText").innerText = `(just go with the flow)`;
     taskInfoBtn.innerText = "Save";
   };
   function setN(){ // B
@@ -4902,8 +4906,8 @@ function taskAddAllInfo(infos){
     recurringDaySection.classList.add("displayNone");
     noDaySection.classList.remove("displayNone"); 
     deadlineSection.classList.add("displayNone");
-    document.querySelector("#noDayInput").checked = true;
-    document.querySelector("#noDayInputLabel span.smallText").innerText = `(let's put it away until we need it)`;
+    currentTaskInfo.querySelector("#noDayInput").checked = true;
+    currentTaskInfo.querySelector("#noDayInputLabel span.smallText").innerText = `(let's put it away until we need it)`;
     taskInfoBtn.innerText = "Save & put it away";
   };
   function setTRN(){ // C
@@ -4911,25 +4915,25 @@ function taskAddAllInfo(infos){
     recurringDaySection.classList.remove("displayNone");
     noDaySection.classList.remove("displayNone"); 
     deadlineSection.classList.remove("displayNone");
-    document.querySelector(`input[name="whatDay"]#${todo.line}Input`).checked = true;
-    document.querySelector("#todoDayInputLabel").innerHTML = `<p><span class="myRadio"></span><span class="normalText todoDay">To-do Day</span><br /><span class="smallText">(the day you want to do it)</span></p>`;
-    document.querySelector("#noDayInputLabel span.smallText").innerText = `(just go with the flow)`;
+    currentTaskInfo.querySelector(`input[name="whatDay"]#${todo.line}Input`).checked = true;
+    currentTaskInfo.querySelector("#todoDayInputLabel").innerHTML = `<p><span class="myRadio"></span><span class="normalText todoDay">To-do Day</span><br /><span class="smallText">(the day you want to do it)</span></p>`;
+    currentTaskInfo.querySelector("#noDayInputLabel span.smallText").innerText = `(just go with the flow)`;
     taskInfoBtn.innerText = "Save";
   };
 
   showTypeCreationInput.addEventListener("input", () => {
     newSTing = true;
   });
-  document.querySelector("#showTypeChoiceIcon").addEventListener("click", () => {
+  currentTaskInfo.querySelector("#showTypeChoiceIcon").addEventListener("click", () => {
     if(showTypeIcons){
-      document.querySelector(".showTypeIconsDiv").remove();
+      currentTaskInfo.querySelector(".showTypeIconsDiv").remove();
       showTypeIcons = false;
     } else{
       let STicons = colorsList.map((icon, idx) => {
         return `<div class="showTypeIconsB" data-index="${idx}"><div class="showTypeIconsC" style="background-color:${icon.colorBG};"><i class="typcn typcn-tick-outline" style="color:${icon.colorTX};"></i></div></div>`;
       }).join("");
-      document.querySelector(".showTypeCreationInside").insertAdjacentHTML("beforeend", `<div class="showTypeIconsDiv">${STicons}</div>`);
-      document.querySelectorAll(".showTypeIconsB").forEach(btn => {
+      currentTaskInfo.querySelector(".showTypeCreationInside").insertAdjacentHTML("beforeend", `<div class="showTypeIconsDiv">${STicons}</div>`);
+      currentTaskInfo.querySelectorAll(".showTypeIconsB").forEach(btn => {
         btn.addEventListener("click", (e) => {
           newSTColorIdx = e.currentTarget.dataset.index;
           newSTColorBG = colorsList[e.currentTarget.dataset.index].colorBG ;
@@ -4937,7 +4941,7 @@ function taskAddAllInfo(infos){
           showTypeCreationInput.style.backgroundColor = newSTColorBG;
           showTypeCreationInput.style.color = newSTColorTX;
           newSTColor = true;
-          document.querySelector(".showTypeIconsDiv").remove();
+          currentTaskInfo.querySelector(".showTypeIconsDiv").remove();
           showTypeIcons = false;
           newSTing = true;
         });
@@ -4948,7 +4952,7 @@ function taskAddAllInfo(infos){
   showTypeCreationConfirm.addEventListener("click", (e) => {
     showTypeCreationConfirm.style.color = mySettings.myBaseColors[0].colorBG;
     if(newSTColor && showTypeCreationInput.value){
-      document.querySelector("#tellYouShowType").innerText = ` - ${showTypeCreationInput.value}`;
+      currentTaskInfo.querySelector("#tellYouShowType").innerText = ` - ${showTypeCreationInput.value}`;
       let showType = {
         name: showTypeCreationInput.value,
         colorBG: newSTColorBG,
@@ -4966,7 +4970,7 @@ function taskAddAllInfo(infos){
       </div>`);//colorsList[showType.color].colorTX
       
       localStorage.mySettings = JSON.stringify(mySettings);
-      document.querySelectorAll(".underh5").forEach(h => {
+      currentTaskInfo.querySelectorAll(".underh5").forEach(h => {
         h.remove();
       });
       showTypeCreationInput.value = "";
@@ -4982,9 +4986,9 @@ function taskAddAllInfo(infos){
       addShowTypeDiv.insertAdjacentHTML("afterend", `<h5 class="underh5">Ci serve anche un color!</h5>`);
     };
   });
-  document.querySelectorAll('input[name="showOptions"]').forEach(radio => {
+  currentTaskInfo.querySelectorAll('input[name="showOptions"]').forEach(radio => {
     radio.addEventListener("click", () => {
-      document.querySelector("#tellYouShowType").innerText = ` - ${radio.value}`;
+      currentTaskInfo.querySelector("#tellYouShowType").innerText = ` - ${radio.value}`;
     });
   });
 
@@ -5006,14 +5010,14 @@ function taskAddAllInfo(infos){
       };
       
       // *** PROJECT
-      if(document.querySelector("#wholeProjectInput").checked){
+      if(currentTaskInfo.querySelector("#wholeProjectInput").checked){
         todo.pColor = newProjectColor !== "" ? newProjectColor : todo.pColor !== "" ? todo.pColor : alert("That project needs a color!"); //add dumbproofing
         todo.pName = newProjectNickname !== "" ? newProjectNickname : todo.pName !== "" ? todo.pName : alert("That project needs a nickname!");
-        todo.pOffspringId = [...document.querySelectorAll("#projectUl > li")].map(li => {
+        todo.pOffspringId = [...currentTaskInfo.querySelectorAll("#projectUl > li")].map(li => {
           return li.id;
         });
       };
-      if(document.querySelector("#partProjectInput").checked){
+      if(currentTaskInfo.querySelector("#partProjectInput").checked){
         todo.pParentId = myProjectId !== "" ? myProjectId : todo.pParentId !== "" ? todo.pParentId : alert("If it's not in one of those projects, then create your own project first.");
         todo.pPosition = myProjectId !== "" ? "in" : todo.pPosition !== "" ? todo.pPosition : delete todo.pPosition; //par défault
       };
@@ -5021,7 +5025,7 @@ function taskAddAllInfo(infos){
       // save convo
       if(convoIt.checked){
         todo.convo = true;
-        todo.convoStatus = document.querySelector('input[name="convoStatusRadios"]:checked').value;
+        todo.convoStatus = currentTaskInfo.querySelector('input[name="convoStatusRadios"]:checked').value;
         todo.convoContactId = contactList[thisContactIndex].id;
       } else{
         delete todo.convo;
@@ -5052,16 +5056,16 @@ function taskAddAllInfo(infos){
         delete todo.info;
       };
 
-      let whereText = document.querySelector("#whereInput");
+      let whereText = currentTaskInfo.querySelector("#whereInput");
       todo.where = whereCheck.checked ? "home" : whereText.value !== "" ? whereText.value : "not home";
 
       todo.color = newcolor;
       todo.icon = newicon;
 
-      todo.term = document.querySelector('input[name="termOptions"]:checked').value;
+      todo.term = currentTaskInfo.querySelector('input[name="termOptions"]:checked').value;
       if(todo.term == "showThing"){
         let chosen = false;
-        document.querySelectorAll('input[name="showOptions"]').forEach(radio => {
+        currentTaskInfo.querySelectorAll('input[name="showOptions"]').forEach(radio => {
           if(radio.checked){
             todo.showType = radio.value;
             let indexST = mySettings.myShowTypes.findIndex(show => show.name == todo.showType);
@@ -5283,7 +5287,7 @@ function t(key){
 window.copyText = copyText;
 
 function copyText(){
-  let text = document.querySelector("#whereInput").value;
+  let text = currentTaskInfo.querySelector("#whereInput").value;
   navigator.clipboard.writeText(text);
 };
 

@@ -1076,6 +1076,7 @@ li .textDone{
   display: flex;
   position: absolute;
   top: -15.5px;
+  /* Make sure the order is inverted (I think flex can do something like that), because the array of projectOnglet starts with the youngest */
 }
 .projectOnglet, .projectLiOnglet{
   border: 0.5px solid var(--tx-color);

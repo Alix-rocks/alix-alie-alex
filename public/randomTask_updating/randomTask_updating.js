@@ -1674,7 +1674,6 @@ function getTogoList(todo){
 };
 
 function checkOptions(thisOne, pColor){ //context is either "normal" or "project" (that one means it's in a project's taskInfo projectUl)
-  //clickScreen.classList.remove("displayNone");
   parent = thisOne.parentElement; //That's the <li>
   let list = parent.parentElement;//That's the <ul>
   parent.classList.add("selectedTask");
@@ -1900,7 +1899,7 @@ function getUnderLiningWidth(input){ //That's not gonna work with multiple taskI
   let padLeft = Number(padLeftPX.slice(0, -2));
   let thisDiv;
   if(currentTaskInfo !== ""){ //taskTitle
-    thisDiv = currentTaskInfo.querySelector(`.${input.id}-underLining`);
+    thisDiv = currentTaskInfo.querySelector(`.${input.className}-underLining`);
   } else{ //addInput
     thisDiv = document.getElementById(`${input.id}-underLining`);
   };
@@ -2786,7 +2785,7 @@ function smallCalendarChoice(thisOne){//thisOne = taskToDate est l'icon calendar
     parents.push(parent);
   };
   creatingCalendar(todo, thisOne, "onIcon");
-  let calendarDiv = document.querySelector("#calendarDiv");
+  let calendarDiv = document.querySelector(".calendarDiv");
   newClickScreenCreation(calendarDiv);
   //clickScreen.addEventListener("click", () => clickHandlerAddOn(calendarDiv, "trash", clickScreen, togoList));
   document.querySelector("#saveTheDateBtn").addEventListener("click", () => {
@@ -3057,7 +3056,7 @@ function creatingCalendar(todo, home, classs){
   </div>
 </div>`;
 
-  let smallCalendar = `<div id="calendarDiv" class="${classs}"${classs == "onIcon" ? ` style="width:${newWidth}px;"` : ``}>
+  let smallCalendar = `<div class="calendarDiv" class="${classs}"${classs == "onIcon" ? ` style="width:${newWidth}px;"` : ``}>
     ${classs == "onIcon" ? `<h5 class="taskInfoInput">Tell me when...</h5>` : ``}
     <div>
       ${todoDayDiv}
@@ -4103,7 +4102,7 @@ function taskAddAllInfo(infos){
 
 //  style="${todo.term == "wholeProject" ? `border-color:${colorsList[pColor].colorBG}; outline-color: ${colorsList[pColor].colorBG5};` : ``}"
 //<div id="taskInfo" class="taskInfoClass${todo.project && todo.pParent ? ` taskInfoProject` : ``}"${todo.project && todo.pParent ? ` style="border-color:${colorsList[todo.pColor].colorBG}; outline-color: ${colorsList[todo.pColor].colorBG5};"` : ``}>
-  let taskAllInfo = `<div id="taskInfo" class="taskInfo taskInfoClass">
+  let taskAllInfo = `<div class="taskInfo taskInfoClass">
     <div class="taskInfoWrapper">
       <button class="iconOnlyBtn cornerItLabel doneIt">
         <i class="typcn typcn-media-stop-outline"></i>
@@ -4196,8 +4195,8 @@ function taskAddAllInfo(infos){
         <div class="taskToggleList relDiv" style="margin-bottom: 25px;">
           <textarea class="taskInfoInput taskDetails">${todo.info ? todo.info : ""}</textarea>
           
-          <label style="float: right; margin-right: 15px; margin-top: -5px;">
-            <input type="checkbox" class="switchDisplayInput cossin switchTextareaSize" />
+          <label class="switchDisplayLabel" style="float: right; margin-right: 15px; margin-top: -5px;">
+            <input type="checkbox" class="cossin switchTextareaSize" />
             <i class="typcn typcn-plus switchDisplayUnChecked"></i>
             <i class="typcn typcn-minus switchDisplayChecked"></i>
           </label>
@@ -4229,7 +4228,7 @@ function taskAddAllInfo(infos){
           <ul>
             ${miniList}
             <li class="allMiniLi addMiniListLi" style="margin: 15px 0 20px;}">
-              <label style="margin-right: 5px;">
+              <label class="hideMiniLabel" style="margin-right: 5px;">
                 <input type="checkbox" class="cossin hideMiniInput" ${todo.miniHide ? `checked ` : ``}/>
                 <span class="typcn typcn-eye-outline" style="font-size:1.7em"></span>
               </label>
@@ -4380,7 +4379,7 @@ function taskAddAllInfo(infos){
           <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
         </label>
         <div class="taskToggleList relDiv">
-          <div id="calendarHome"></div>
+          <div class="calendarHome"></div>
         </div>
       </div>
     </div>
@@ -4398,7 +4397,7 @@ function taskAddAllInfo(infos){
   if(allTaskInfo.length > 1){
     topDiv = window.getComputedStyle(allTaskInfo[allTaskInfo.length - 2]).getPropertyValue("top");
   };// peut-être vérifier si le parentElement de chaque taskInfo est bel et bien le même div...
-  let currentTaskInfo = allTaskInfo[allTaskInfo.length - 1];
+  currentTaskInfo = allTaskInfo[allTaskInfo.length - 1];
   currentTaskInfo.style.zIndex = 1000 + (10 * (allTaskInfo.length - 1));
   currentTaskInfo.style.top = topDiv + 50 + "px";
 
@@ -4427,7 +4426,6 @@ function taskAddAllInfo(infos){
   let storeIt = currentTaskInfo.querySelector(".storeIt");
   let copyIt = currentTaskInfo.querySelector(".copyIt");
   let trashIt = currentTaskInfo.querySelector(".trashIt");
-  
   let taskTitle = currentTaskInfo.querySelector(".taskTitle");
   getUnderLiningWidth(taskTitle);
   let miniListDiv = currentTaskInfo.querySelector(".miniListDiv");
@@ -4450,14 +4448,6 @@ function taskAddAllInfo(infos){
     newClickScreenRemoval(currentTaskInfo);
   });
   
-  // function cancelTaskInfo(){
-  //   if(parent){
-  //     parent.classList.remove("selectedTask");
-  //   };
-  //   taskInfo.remove();
-  //   newClickScreen.remove();
-  //   window.scrollTo(0, positionA);
-  // };
 
   // *** CONVO
   let thisStatus = "";
@@ -4505,7 +4495,7 @@ function taskAddAllInfo(infos){
   newlabelName = todo.label ? todo.LName : "";
   newlabelColor = todo.label ? todo.LColor : "";
   let options = {
-    where: taskInfo,
+    where: currentTaskInfo,
     labelDiv: labelIt,
     // screen: SupClickScreen,
     myLabels: mySettings.myLabels && mySettings.myLabels.length > 0 ? true : false
@@ -4562,7 +4552,8 @@ function taskAddAllInfo(infos){
   });
   switchTextareaSize.addEventListener("click", () => {
     taskDetails.classList.toggle("taskDetailsFullHeight");
-  })
+    currentTaskInfo.querySelector(".switchDisplayLabel").classList.toggle("taskDetailsFullHeight");
+  });
   taskDetails.addEventListener("change", () => {
     currentTaskInfo.querySelector(".tellYouWhy").innerText = taskDetails.value == "" ? "" : "(because)";
   });
@@ -4578,6 +4569,7 @@ function taskAddAllInfo(infos){
   let hideMiniInput = miniListDiv.querySelector(".hideMiniInput");
   checkTest();
   hideMiniInput.addEventListener("click", (e) => {
+    currentTaskInfo.querySelector(".hideMiniLabel").classList.toggle("hideMini");
     if(hideMiniInput.checked){
       miniListDiv.querySelectorAll(".miniLi > .listCheckInput:checked").forEach(check => {
         check.parentElement.classList.add("displayNone");
@@ -5003,9 +4995,10 @@ function taskAddAllInfo(infos){
     });
   });
 
-  if(where == "todoZone" || where == "searchScreen"){
-    clickScreen.addEventListener("click", () => clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList));
-  };
+  //NOT SURE WHAT THAT WOULD DO NOW SO I BLOCKED IT, BUT CHECK
+  // if(where == "todoZone" || where == "searchScreen"){
+  //   clickScreen.addEventListener("click", () => clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList));
+  // };
   
 
   // MARK: SAVE BUTTON
@@ -5029,7 +5022,7 @@ function taskAddAllInfo(infos){
         });
       };
       if(currentTaskInfo.querySelector(".partProjectInput").checked){
-        todo.pParentId = myProjectId !== "" ?  : todo.pParentId !== "" ? todo.pParentId : alert("If it's not in one of those projects, then create your own project first.");
+        todo.pParentId = myProjectId !== "" ? myProjectId : todo.pParentId !== "" ? todo.pParentId : alert("If it's not in one of those projects, then create your own project first.");
         todo.pPosition = myProjectId !== "" ? "in" : todo.pPosition !== "" ? todo.pPosition : delete todo.pPosition; //par défault
       };
       
@@ -5225,9 +5218,7 @@ function taskAddAllInfo(infos){
       parent.remove();
     };
     newClickScreenRemoval(currentTaskInfo);
-    // taskInfo.remove();
-    // newClickScreen.remove();
-    //clickScreen.classList.add("displayNone");
+
     if(togoList !== ""){ //revoir les méthodes de tri et s'assurer de tenir compte du storage aussi
       howToSortIt(togoList);
     } else{
@@ -5245,47 +5236,13 @@ function taskAddAllInfo(infos){
     } else{
       window.scrollTo({ top: 0 });
     };
-    
-    
-    
 
-    // A REVOIR!!
-    // if(where == "searchScreen" || where == "allStorage"){
-    //   moving = false;
-    //   taskInfo.remove();
-    //   clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
-    //   howToSortIt(togoList); //only if there's a togoList!
-    // };
-    // if((why == "new" || why == "stock") && togoList !== ""){
-    //   scrollToSection(togoList);
-    //   taskInfo.remove();
-    //   howToSortIt(togoList); //only if there's a togoList!
-    // } else if((why == "new" || why == "stock") && togoList == ""){
-    //   taskInfo.remove();
-    // } else if(where == "todoZone" && togoList !== ""){
-    //   moving = true;
-    //   parents.forEach(parent => {
-    //     parent.remove();
-    //   });
-    //   parent.remove(); // it wasn't complaining but that was still useless...
-    //   clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
-    //   howToSortIt(togoList); //only if there's a togoList!
-    // } else if(where == "todoZone" && togoList == ""){
-    //   parents.forEach(parent => {
-    //     parent.remove();
-    //   });
-    //   parent.remove(); // it wasn't complaining but that was still useless...
-    //   clickHandlerAddOn(taskInfo, "trash", clickScreen, togoList);
-    // } else{ //not in the list, so month/week
-    //   moving = false;
-    //   taskInfo.remove();
-    //   sortItAllWell();
-    // };
     calendarStock = false;
     projectStock = false;
     updateArrowsColor();
     updateCBC();
     console.log(todo);
+    currentTaskInfo = "";
   });
   
 };

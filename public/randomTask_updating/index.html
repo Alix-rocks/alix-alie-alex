@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+  <!-- Typicons -->
+  <link rel="stylesheet" href="..\@Fonts&Icons\typicons\typicons.css"/> 
+  <!--  href="../typicons.css" -->
+  <!-- Flavicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="..\@Fonts&Icons\fontawesome\css\fontawesome.min.css"/>
+  <link rel="stylesheet" href="..\@Fonts&Icons\fontawesome\css\regular.min.css"/>
+  <link rel="stylesheet" href="..\@Fonts&Icons\fontawesome\css\solid.min.css"/>
+  <script src="https://kit.fontawesome.com/b4f765f607.js" crossorigin="anonymous"></script>
+  <!-- CSS -->
+  <link rel="stylesheet" href="randomTask_updating.css">
+  <title>Random Task</title>
+</head>
+
+<body>
+  <!-- MARK: LOADING -->
+  <div id="loadingScreen" class="waitingScreen">
+    <div>
+      <span class="typcn typcn-wine"></span>
+      <h6>Like an hourglass<br />but quicker</h6>
+    </div>
+  </div>
+  <!-- MARK: LOG IN -->
+  <div id="logInScreen" class="Screen">
+    <div id="logInDiv" class="DivScreen">
+      <h3>First thing's first...</h3>
+      <h2 >Who do you think you are?!</h2>
+      <button id="logInBtn" class="ScreenBtn1">Log in</button>
+      <button id="tryBtn" class="ScreenBtn2">Free Trial</button>
+    </div>
+  </div>
+  
+  <!-- MARK: PAGE SETTINGS -->
+  <input id="switchPageInputSetting" name="switchPageRadios" type="radio" class="displayNone">
+  <div id="settingsScreen" data-movingzone="absolutTop" class="onePage displayNone">
+    <div id="settingsDiv" class="DivScreen">
+    </div>
+  </div>
+
+
+
+  <!-- MARK: PAGE SEARCH -->
+  <input id="switchPageInputSearch" name="switchPageRadios" type="radio" class="displayNone">
+  <div id="searchScreen" data-movingzone="absolutTop" class="onePage displayNone">
+    <div id="searchDiv" style="text-align: left; padding: 15px; margin: auto; width: 90%;
+    max-width: 500px;">
+      <form id="searchForm" action="get">
+        <h2>Search/filter</h2> 
+        <!-- with toggle arrow to hide the search stuff and show only the results -->
+        <ul>
+          <li>
+            <label for="searchTodo">Todo:</label>
+            <input id="searchTodo" type="checkbox" name="searchStatus">
+            <label for="searchDone">Done:</label>
+            <input id="searchDone" type="checkbox" name="searchStatus">
+          </li>
+          <li>
+            <label for="searchTask">Text: </label>
+            <input id="searchTask" type="text" />
+          </li>
+          <li>
+            <select name="andOr" id="andOrTaskDate">
+              <option value="or">OR</option>
+              <option value="and">AND</option>
+            </select>
+          </li>
+          <li>
+            <label for="searchDate">Date: </label>
+            <input id="searchDate" type="date" />
+          </li>
+          <li class="displayNone">
+            <label for="searchDeadline">Deadline: </label>
+            <input id="searchDeadline" type="date" />
+          </li>
+          <li>
+            <select name="andOr" id="andOrDateShow">
+              <option value="or">OR</option>
+              <option value="and">AND</option>
+            </select>
+          </li>
+          <li>
+            <label for="searchShow">Show: </label>
+            <select id="searchShow"></select>
+          </li>
+          <li>
+            <select name="andOr" id="andOrShowTerm">
+              <option value="or">OR</option>
+              <option value="and">AND</option>
+            </select>
+          </li>
+          <li>
+            <label for="searchTerm">Type: </label>
+            <select id="searchTerm">
+              <option value="">any</option>
+              <option value="reminder">Reminder</option>
+              <option value="sameHabit">Same habit</option>
+              <option value="oneTime">One time thing</option>
+              <option value="longTerm">Long term shit</option>
+              <option value="crazyShit">Crazy idea</option>
+              <option value="showThing">Whole show</option>
+            </select>
+          </li>
+          <li>
+            <select name="andOr" id="andOrTermTag">
+              <option value="or">OR</option>
+              <option value="and">AND</option>
+            </select>
+          </li>
+          <li>
+            <label for="searchTag">Tag: </label>
+            <select id="searchTag">
+              <!-- <option value="">any</option>
+              <option value="orange" class="orange">people</option>
+              <option value="red" class="red">urgent</option>
+              <option value="darkmagenta" class="darkmagenta">errand</option>
+              <option value="dodgerblue" class="dodgerblue">screen</option>
+              <option value="forestgreen" class="forestgreen">physic</option>
+              <option value="darkslategrey" class="darkslategrey">else</option> -->
+            </select>
+          </li>
+          <li>
+            <button id="searchBtn" type="submit">Search/Filter</button>
+          </li>
+          <li>
+            <button id="searchClearResults" class="ScreenBtn2">Clear Results</button>
+            <button id="searchClearFilters" class="ScreenBtn2" type="reset">Clear filters</button>
+          </li>
+        </ul>
+      </form>
+    </div>
+    <ul id="searchFound"></ul>
+  </div>
+  <!-- Different fields:
+Text: myList.filter(todo => todo.task.includes(textInput)) (add some corrections like caps and accent)
+Sort-text
+Date: todo.date == dateInput
+(Add a search in all the recurrys too)
+Sort-date
+Deadline: todo.deadline == dateInput 
+(Add a search in all the recurrys too)?
+Sort-dalle (or full time(date+dalle)
+ShowType {select/option or homemade to get the right colors...}: todo.showType ==
+Sort-date or Sort-text
+Type{select/option: term}: todo.term
+Sort-date or Sort-text or Sort-color or Sort-showType(if showThing)
+Tag{homemade select/option: color}: todo.color
+Sort-color 
+Shows with todoCreation but togoList == "searchFound" (in an other page)
+Options for sorting 
+ -->
+  
+  <!-- MARK: PAGE MONTH -->
+  <input id="switchPageInputMonth" name="switchPageRadios" type="radio" class="displayNone">
+  <div id="calMonthPage" data-movingzone="fixedBottom" class="wholeScreenCalendar onePage displayNone">
+    <div class="monthlyWrapper">
+      <table class="monthlyCalendar">
+        <thead>
+          <tr>
+            <th>
+              <button id="monthBackward"><span class="typcn typcn-media-play-reverse"></span></button>
+              <!-- <button class="weeklyBtn" id="monthBackward">
+                <i class="fa-solid fa-caret-left" style="font-size:30px;"></i>
+              </button> -->
+            </th>
+            <th style="border-right: none;">
+              <button class="weeklyBtn backToMonthlyTodayBtn displayNone" onclick="backToMonthlyToday()">
+                <i class="fa-solid fa-calendar-day" style="font-size:14px;"></i>
+              </button>
+            </th>
+            <th id="yearNameSpace" colspan="3" style="border-right: none; border-left: none;"></th>
+            <th style="border-left: none;">
+              <button class="weeklyBtn backToMonthlyTodayBtn displayNone" onclick="backToMonthlyToday()">
+                <i class="fa-solid fa-calendar-day" style="font-size:14px;"></i>
+              </button>
+            </th>
+            <th>
+              <button id="monthForward"><span class="typcn typcn-media-play"></span></button>
+              <!-- <button class="weeklyBtn" id="monthForward">
+                <i class="fa-solid fa-caret-right" style="font-size:30px;"></i>
+              </button> -->
+            </th>
+          </tr>
+          <tr>
+            <th id="monthNameSpace" colspan="7"></th>
+          </tr>
+          <tr>
+            <th>D</th>
+            <th>L</th>
+            <th>M</th>
+            <th>M</th>
+            <th>G</th>
+            <th>V</th>
+            <th>S</th>
+          </tr>
+        </thead>
+        <tbody id="monthlyCalendarTBody">
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- MARK: PAGE CONVO -->
+  <input id="switchPageInputConvo" name="switchPageRadios" type="radio" class="displayNone">
+  <div id="convoPage" data-movingzone="fixedBottom" class="wholeScreenCalendar onePage displayNone">
+    <div class="">
+      <h1>CRM!</h1>
+    </div>
+  </div>
+
+  <!-- MARK: PAGE WEEK -->
+  <input id="switchPageInputWeek" name="switchPageRadios" type="radio" class="displayNone">
+  <div id="calWeekPage" data-movingzone="fixedBottom" class="wholeScreenCalendar onePage displayNone">
+    <div class="weeklyContainer">
+    </div>
+  </div>
+
+  <!-- MARK: PAGE LIST -->
+  <input id="switchPageInputList" name="switchPageRadios" type="radio" class="displayNone">
+  <div id="listPage" data-movingzone="absolutTop" class="onePage displayNone">
+    <div id="clickScreen" class="Screen displayNone"></div>
+    <div id="AlixTime">
+      <a href="https://alix.rocks/time">
+        <button><i class="fa-solid fa-spider"></i></button>
+        <h6>Time</h6>
+      </a>
+    </div>
+    <div id="labelSelectionDiv">
+    </div>
+    <input id="openHourTogglerInput" type="checkbox" class="tuttoGiornoInput cossin" />
+    <div id="openHourToggler" class="tuttoGiornoDiv">
+      <p>OPENING<br/>HOUR</p>
+      <label for="openHourTogglerInput" class="slideZone">
+        <div class="slider">
+          <span class="si">Sì</span>
+          <span class="no">No</span>
+        </div>
+      </label>
+    </div>
+    <div id="todoZone" style="margin-top: 55px;">
+      <!-- MARK: LIMBO -->
+      <section id="limboSection" class="displayNone">
+        <input id="limboInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="limboInput">
+            <h3 class="topList"><span class="topListTitle">Limbo...</span></h3>
+            <h5 class="topList">What are you meant to be?...</h5>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron displayNone"></span>
+          </label>
+          <ul id="listLimbo"></ul>
+        </div>
+      </section>
+      <!-- MARK: OUPS -->
+      <section id="oupsSection" class="displayNone">
+        <h3 class="topList"><span class="topListTitle">Oups...</span></h3>
+        <h5 class="topList">What should've already been done...</h5>
+        <ul id="listOups"></ul>
+      </section>
+      <!-- MARK: TODAY -->
+      <section id="swipingSection">
+        <div id="todayDiv">
+          <div id="swipeBtns" class="nextOnly">
+            <button id="swipePrevBtn" class="iconOnlyBtn">
+              <i class="typcn typcn-chevron-left swipeChevron"></i>
+            </button>
+            <button id="swipeTodayBtn" class="iconOnlyBtn" style="margin: 0 2px; width: 24px;">
+              <i class="fa-solid fa-calendar-day swipeChevron"></i>
+            </button>
+            <button id="swipeNextBtn" class="iconOnlyBtn">
+              <i class="typcn typcn-chevron-right swipeChevron"></i>
+            </button>
+          </div>
+          <h3 class="topList"><span id="todaysTitle" class="topListTitle">Today's fun</span> <span class="topListDate">(<span id="todaysDateSpan"></span>) <span id="todaysDaySpan"></span></span></h3>
+          <ul class="topListReminder" id="listTodayReminder"></ul>
+          <h5 id="todaysUnderTitle" class="topList">What shall be done today...</h5>
+          <ul id="listToday" class="sortedList" data-sort="datetime"></ul>
+        </div>
+      </section> 
+      <!-- MARK: PRIORITY -->
+      <section id="urgesSection" class="displayNone">
+        <div>
+          <h3 class="topList"><span class="topListTitle" style="text-decoration-color: red;"><span style="color:red;">PRI</span><span style="color:#ff8400;">ORI</span><span style="color:#ffd000;">TY!</span></span></h3>
+          <h5 class="topList">Once these are done, then you can go play with the other ones!</h5>
+          <ul id="topPriorityList" class="sortedList" data-sort="urge"></ul>
+        </div>
+      </section>
+      <!-- MARK: CURRENT -->
+      <section id="currentSection">
+        <input id="currentInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="currentInput" class="listToggleLabel">
+            <h3 class="topList"><span class="topListTitle" style="text-decoration-color: #600061 ; color:#600061 ;">CURRENT PROJECTS</span></h3>
+            <h5 class="topList">Let's stick to those for now please...</h5>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <div class="listToggleList">
+            <div class="relDiv noH4SubList noH4SubListClosed">
+              <div class="sortlistWhole">
+                <input id="sortcurrentProjectList" class="sortlistInput cossin" type="checkbox" />
+                <div class="sortlistDiv">
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                </div>
+                <label for="sortcurrentProjectList" class="sortlistLabel">
+                  <i class="fa-solid fa-ellipsis sortUnchecked"></i>
+                  <i class="typcn typcn-tick sortChecked"></i>
+                </label>
+              </div>
+            </div> 
+            <ul id="currentProjectList" class="sortedList" data-sort="color"></ul>
+          </div>
+        </div>
+      </section>
+      <!-- MARK: NEXT -->
+      <section id="nextSection">
+        <input id="nextInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="nextInput" class="listToggleLabel">
+            <h3 class="topList"><span class="topListTitle" style="text-decoration-color: darkgreen; color:darkgreen;">NEXT</span></h3>
+            <h5 class="topList">Soon, soon it'll be your turn...</h5>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <div class="listToggleList">
+            <div class="relDiv noH4SubList noH4SubListClosed">
+              <div class="sortlistWhole">
+                <input id="sortnextThingList" class="sortlistInput cossin" type="checkbox" />
+                <div class="sortlistDiv">
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                </div>
+                <label for="sortnextThingList" class="sortlistLabel">
+                  <i class="fa-solid fa-ellipsis sortUnchecked"></i>
+                  <i class="typcn typcn-tick sortChecked"></i>
+                </label>
+              </div>
+            </div> 
+            <ul id="nextThingList" class="sortedList" data-sort="color"></ul>
+          </div>
+        </div>
+      </section>
+      <!-- MARK: WHENEVER -->
+      <section id="wheneverSection">
+        <input id="listInput" type="checkbox" class="cossin listToggleInput" />
+        <div id="wheneverLists">
+          <label for="listInput" class="listToggleLabel">
+            <h3 class="topList"><span class="topListTitle" style="text-decoration-color:midnightblue; color:midnightblue;">WHENEVER</span></h3>
+            <h5 class="topList">The never ending list...</h5>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <div class="listToggleList">
+            <div class="relDiv">
+              <h4 class="subList">The long term shit</h4>
+              <div class="sortlistWhole">
+                <input id="sortlongTermList" class="sortlistInput cossin" type="checkbox" />
+                <div class="sortlistDiv">
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                </div>
+                <label for="sortlongTermList" class="sortlistLabel">
+                  <i class="fa-solid fa-ellipsis sortUnchecked"></i>
+                  <i class="typcn typcn-tick sortChecked"></i>
+                </label>
+              </div>
+            </div>
+            <ul id="longTermList" class="sortedList" data-sort="color"></ul>
+            <div class="relDiv">
+              <h4 class="subList">The one time thingies</h4>
+              <div class="sortlistWhole">
+                <input id="sortoneTimeList" class="sortlistInput cossin" type="checkbox" />
+                <div class="sortlistDiv">
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                </div>
+                <label for="sortoneTimeList" class="sortlistLabel">
+                  <i class="fa-solid fa-ellipsis sortUnchecked"></i>
+                  <i class="typcn typcn-tick sortChecked"></i>
+                </label>
+              </div>
+            </div> 
+            <ul id="oneTimeList" class="sortedList" data-sort="color"></ul>
+            <button id="shuffleBtn">Quicky time!</button>
+            <h5 class="sousBtn">Tell me what to do now!</h5>
+          </div>
+        </div>
+      </section>
+      
+        <!-- when recurringDay is checked, open details (? but with nothing in summary?) (or just display:block...) -->
+        <!-- <details>
+              <summary>To be or not to be?</summary>
+              <div>
+                That is the question!
+              </div>
+            </details> -->
+
+      <!-- MARK: ALWAYS -->
+      <section id="alwaysSection">
+        <input id="alwaysInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="alwaysInput" class="listToggleLabel">
+            <h3 class="topList"><span class="topListTitle" style="text-decoration-color: goldenrod; color:goldenrod;">ALWAYS</span></h3>
+            <h5 class="topList">Forever and ever...</h5>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <div class="listToggleList">
+            <div class="relDiv noH4SubList noH4SubListClosed">
+              <div class="sortlistWhole">
+                <input id="sortalwaysHereList" class="sortlistInput cossin" type="checkbox" />
+                <div class="sortlistDiv">
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                </div>
+                <label for="sortalwaysHereList" class="sortlistLabel">
+                  <i class="fa-solid fa-ellipsis sortUnchecked"></i>
+                  <i class="typcn typcn-tick sortChecked"></i>
+                </label>
+              </div>
+            </div> 
+            <ul id="alwaysHereList" class="sortedList" data-sort="color"></ul>
+          </div>
+        </div>
+      </section>
+      <!-- MARK: WAIT -->
+      <section id="waitSection">
+        <input id="waitInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="waitInput" class="listToggleLabel">
+            <h3 class="topList"><span class="topListTitle" style="text-decoration-color: rgb(100, 122, 122); color:rgb(100, 122, 122);">WAITING</span></h3>
+            <h5 class="topList">Wait for it...</h5>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <div class="listToggleList">
+            <div class="relDiv noH4SubList noH4SubListClosed">
+              <div class="sortlistWhole">
+                <input id="sortwaitForItList" class="sortlistInput cossin" type="checkbox" />
+                <div class="sortlistDiv">
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                </div>
+                <label for="sortwaitForItList" class="sortlistLabel">
+                  <i class="fa-solid fa-ellipsis sortUnchecked"></i>
+                  <i class="typcn typcn-tick sortChecked"></i>
+                </label>
+              </div>
+            </div> 
+            <ul id="waitForItList" class="sortedList" data-sort="color"></ul>
+          </div>
+        </div>
+      </section>
+      <!-- MARK: THINK -->
+      <section id="thinkSection">
+        <input id="thinkInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="thinkInput" class="listToggleLabel">
+            <h3 class="topList"><span class="topListTitle" style="text-decoration-color: rgb(100, 122, 122); color:rgb(100, 122, 122);">THINKING</span></h3>
+            <h5 class="topList">Thinking about it...</h5>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <div class="listToggleList">
+            <div class="relDiv noH4SubList noH4SubListClosed">
+              <div class="sortlistWhole">
+                <input id="sortthinkBoutItList" class="sortlistInput cossin" type="checkbox" />
+                <div class="sortlistDiv">
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                </div>
+                <label for="sortthinkBoutItList" class="sortlistLabel">
+                  <i class="fa-solid fa-ellipsis sortUnchecked"></i>
+                  <i class="typcn typcn-tick sortChecked"></i>
+                </label>
+              </div>
+            </div> 
+            <ul id="thinkBoutItList" class="sortedList" data-sort="color"></ul>
+          </div>
+        </div>
+      </section>
+      <!-- MARK: RANDOM IDEAS -->
+      <section id="ideaSection">
+        <input id="ideaInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="ideaInput" class="listToggleLabel">
+            <h3 class="topList"><span class="topListTitle" style="text-decoration-color: rgb(239, 125, 144); color:rgb(239, 125, 144);">Random Ideas</span></h3>
+            <h5 class="topList">It's a <em>maybe-one-day-probably-never</em> kinda thing...</h5>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <div class="listToggleList">
+            <div class="relDiv noH4SubList noH4SubListClosed">
+              <div class="sortlistWhole">
+                <input id="sortcrazyShitList" class="sortlistInput cossin" type="checkbox" />
+                <div class="sortlistDiv">
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                </div>
+                <label for="sortcrazyShitList" class="sortlistLabel">
+                  <i class="fa-solid fa-ellipsis sortUnchecked"></i>
+                  <i class="typcn typcn-tick sortChecked"></i>
+                </label>
+              </div>
+            </div> 
+            <ul id="crazyShitList" class="sortedList" data-sort="text"></ul>
+          </div>
+        </div>
+      </section>
+      <!-- MARK: NEVERMIND -->
+      <section id="nevermindSection">
+        <input id="nevermindInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="nevermindInput" class="listToggleLabel">
+            <h3 class="topList"><span class="topListTitle" style="opacity: .4;">Nevermind</span></h3>
+            <h5 class="topList" style="opacity: .4;">Don't look, I'm trying to forget about these...</h5>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <div class="listToggleList">
+            <div class="relDiv noH4SubList noH4SubListClosed">
+              <div class="sortlistWhole">
+                <input id="sortNevermindList" class="sortlistInput cossin" type="checkbox" />
+                <div class="sortlistDiv">
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                </div>
+                <label for="sortNevermindList" class="sortlistLabel">
+                  <i class="fa-solid fa-ellipsis sortUnchecked"></i>
+                  <i class="typcn typcn-tick sortChecked"></i>
+                </label>
+              </div>
+            </div> 
+            <ul id="nevermindList" class="sortedList" data-sort="text"></ul>
+          </div>
+        </div>
+      </section>
+      <!-- MARK: SCHEDULED -->
+      <section id="scheduledSection">
+        <input id="scheduledInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="scheduledInput" class="listToggleLabel">
+            <h3 class="topList"><span class="topListTitle">Scheduled</span></h3>
+            <h5 class="topList">All in good time...</h5>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <div class="listToggleList">
+            <ul id="listScheduled" class="sortedList" data-sort="date"></ul>
+          </div>
+        </div>
+      </section>
+      <!-- MARK: RECURRING -->
+      <section id="recurringSection">
+        <input id="recurringInput" type="checkbox" class="cossin listToggleInput" />
+        <div>
+          <label for="recurringInput" class="listToggleLabel">
+            <h3 class="topList"><span class="topListTitle">Recurring</span></h3>
+            <h5 class="topList">Don't worry, they'll be back...</h5>
+            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+          </label>
+          <ul id="listRecurring" class="listToggleList sortedList" data-sort="text"></ul>
+        </div>
+      </section>
+    </div>
+    <!-- MARK: DONE ZONE -->
+    <hr class="zoneHr" />
+    <h3 style="display: inline-block;">Done Zone</h3>
+    <ul id="doneZone"></ul>
+  </div>
+  <!-- MARK: TO DO NOW -->
+  <div id="toDoPage" data-movingzone="displayNone" class="onePage displayNone">
+    <h3>Fac là,<br />pour les 15 prochaines minutes,<br />tu vas...</h3>
+    <p id="taskToDo"></p>
+    <div id="moreInfoWhole" class="displayNone">
+      <input id="moreInfoInput" type="checkbox" class="cossin" />
+      <label for="moreInfoInput"><span class="typcn typcn-chevron-right-outline moreInfoChevron"></span></label>
+      <div id="moreInfoDiv"></div>
+    </div>
+    <button id="nopeNextBtn"><span class="typcn typcn-arrow-sync"></span>Nope, next!<span class="typcn typcn-arrow-sync"></span></button>
+    <button id="doneNextBtn"><span class="typcn typcn-thumbs-up"></span>Done, next!!<span class="typcn typcn-arrow-right-outline"></span></button>
+    <button id="backBtn"><span class="typcn typcn-arrow-left-outline"></span>Back!</button>
+  </div>
+  <!-- MARK: MENU -->
+  <div id="menuPages">
+    <input id="switchMenuInput" type="checkbox" class="displayNone">
+    <label for="switchMenuInput" id="switchPageLabel">
+      <div id="toAllPages" class="bottomBtn menuBtn whiteOnPurple">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+    </label>
+    <div id="allPagesMenu">
+      <label for="switchPageInputConvo" data-page="switchPageInputConvo" class="bottomBtn menuLabel purpleOnWhite">
+        <i class="fa-solid fa-comments" style="font-size: 20px;"></i>
+      </label>
+      <label for="switchPageInputWeek" data-page="switchPageInputWeek" class="bottomBtn menuLabel purpleOnWhite">
+        <i class="fa-solid fa-calendar-week"></i>
+      </label>
+      <label for="switchPageInputMonth" data-page="switchPageInputMonth" class="bottomBtn menuLabel purpleOnWhite">
+        <i class="fa-solid fa-calendar-days"></i>
+      </label>
+      <label for="switchPageInputList"  data-page="switchPageInputList" class="bottomBtn menuLabel purpleOnWhite">
+        <i class="fa-solid fa-list-check"></i>
+      </label>
+    </div>
+    <div id="otherPagesMenu">
+      <label for="switchPageInputSetting" class="bottomBtn menuLabel purpleOnWhite">
+        <i class="fa-solid fa-cog"></i>
+      </label>
+      <label for="switchPageInputSearch" class="bottomBtn menuLabel purpleOnWhite">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </label>
+    </div>
+  </div>
+  
+  <div id="movingzone">
+    <form id="addForm">
+      <div class="underLining" id="addInput-underLining"></div>
+      <input id="addInput" type="text" />
+      <button id="addBtn" class="addBtns" type="submit"><span class="typcn typcn-plus"></span></button>
+    </form>
+    <button class="addBtns" onclick="getStorage()"><span class="typcn typcn-shopping-bag"></span></button>
+    <button id="earthIt"><span class="typcn typcn-weather-stormy" style="font-size: 1em;"></span></button>
+    <button id="cloudIt"><span class="typcn typcn-cloud-storage-outline" style="font-size: 1em;"></span></button>
+  </div>
+
+<script type="module" src="randomTask_updating.js"></script>
+</body>
+
+</html>

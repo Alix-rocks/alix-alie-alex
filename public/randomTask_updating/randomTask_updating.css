@@ -1,0 +1,2271 @@
+:root{
+  --bg-color: #F2F3F4;
+  --bg-color-7: rgb(242, 243, 244);
+  --tx-color: darkslategrey;
+  --tx-color-5: rgba(47, 79, 79, .5);
+}
+*{
+  font-family: 'Nunito', sans-serif;
+  
+  box-sizing: border-box;
+  user-select: none;
+}
+body{
+  color: var(--tx-color);
+  background-color: var(--bg-color);
+  /* max-width: 500px; Doesn't work because all the 'position:absolute;' are not affected by the body's width*/
+}
+
+button:active{
+  outline: 1.5px solid rgba(50,205,50,.9);
+}
+
+#loadingScreen{
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 5000;
+}
+.waitingScreen{
+  background-color: var(--bg-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.waitingScreen div{
+  text-align: center;
+}
+.waitingScreen span{
+  font-size: 50px;
+  line-height: 1em;
+}
+.waitingScreen h6{
+  margin-top: 0.5em;
+}
+
+input, select, textarea{
+  /* background-color: var(--bg-color);
+  color: var(--tx-color); */
+  background-color: rgba(242, 243, 244, .8);
+  color: darkslategrey;
+}
+input[type="time"] > i{
+  color: var(--tx-color);
+}
+
+button {
+  border-top: 2px solid var(--tx-color);
+  border-left: 2px solid var(--tx-color);
+  border-right: 4px solid var(--tx-color);
+  border-bottom: 4px solid var(--tx-color);
+  border-radius: 5px;
+  padding: 5px 10px;
+  width: fit-content;
+  color: darkslategrey;
+  text-align: center;
+  font-size: 1em;
+  font-weight: 600;
+  background-color: lightgrey;
+}
+/* button span:nth-of-type(1){
+  padding-right: 5px;
+}
+button span:nth-of-type(2){
+  padding-left: 5px;
+} */
+#addInput, .taskTitle, textarea{
+  border-top: 2px solid var(--tx-color);
+  border-left: 2px solid var(--tx-color);
+  border-right: 4px solid var(--tx-color);
+  border-bottom: 4px solid var(--tx-color);
+  border-radius: 5px;
+  padding: 5px 10px;
+  /* width: fit-content; */
+  color: var(--tx-color);
+  background-color: var(--bg-color-7);
+  font-size: 1em;
+  font-weight: 600;
+  user-select: auto;
+}
+.underLining{
+  height: 31.5px;
+  position: absolute;
+  border-right: 2px solid var(--tx-color);
+  width: 50px;
+  top: 2px;
+  left: 2px;
+  z-index: -1;
+}
+
+.taskTitle{
+  margin:0;
+  padding-right: 39px;
+  padding-left: 41px;
+  border-radius: 3px 5px 5px 5px;
+  width: -webkit-fill-available;
+  text-align: left;
+}
+/* textarea::-webkit-resizer {
+  border: 2px solid var(--tx-color);
+  outline: 4px solid var(--tx-color);
+  border-radius: 2px 0 5px 0;
+} */
+.switchDisplayUnChecked{
+  display: inline-block;
+}
+.switchDisplayChecked{
+  display: none;
+}
+.switchDisplayLabel.taskDetailsFullHeight .switchDisplayUnChecked{
+  display: none;
+}
+.switchDisplayLabel.taskDetailsFullHeight .switchDisplayChecked{
+  display: inline-block;
+}
+/* .switchDisplayInput:checked + label > .switchDisplayUnChecked{
+  display: none;
+}
+.switchDisplayInput:checked + label > .switchDisplayChecked{
+  display: inline-block;
+} */
+input[type="radio"]{
+  display: none;
+}
+.Screen{
+  display: flex;
+  background-color: var(--bg-color);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000;
+}
+.DivScreen{
+  padding: 15px;
+  margin: auto;
+  border-style: solid;
+  border-width: 2px 3px 3px 2px;
+  border-radius: 5px;
+  text-align: center;
+  position: relative;
+}
+#settingsDiv{
+  width: 90%;
+  max-width: 500px;
+  margin-top: 55px;
+}
+#settingsDiv h3{
+  margin-block-start: 2em;
+  margin-block-end: 0.5em;
+}
+#logInDiv{
+  width: 62%;
+  z-index: 2200;
+}
+#exitX, .exitX{
+  position: absolute;
+  top: 5px;
+  right: 7px;
+  font-size: 25px;
+  line-height: 25px;
+  font-weight: 700;
+}
+
+#switchModeSlider{
+  width:45px;
+  height: 22px;
+  padding: 0.5px;
+  border-radius: 50px; 
+  border:1.5px solid; 
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  margin: auto;
+}
+#switchModeBall{ 
+  height: 18px; 
+  width: 18px; 
+  margin: 0 1px 0 .5px;
+  border-radius: 50%; 
+  background: var(--tx-color); 
+  z-index: 10;
+  position: absolute; 
+  right: 0;
+}
+#switchModeBallUnder{
+  height: 18px; 
+  width: 18px; 
+  margin: 0 1px 0 .5px;
+  border-radius: 50%; 
+  background:var(--bg-color); 
+  z-index: 1;
+  position: absolute; 
+  right: 0;
+}
+.ballLight{
+  left: 0;
+}
+#switchModeDark{
+  opacity: .7;
+  margin: 0 -3px 0 0;
+  font-size: 21px;
+  line-height: .95;
+}
+#switchModeLight{
+  opacity: .7;
+  margin: 0 0 1px;
+  font-size: 19px;
+  line-height: 1;
+}
+
+#searchForm ul{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+#searchForm label{
+  display: inline-block;
+}
+#searchForm li + li {
+  margin-top: 1em;
+}
+
+.clockingDiv{
+  text-align: justify;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+}
+.clockingDiv div{
+  margin: 15px 0;
+}
+.clockingDiv div p{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  margin: 5px 0;
+}
+.clockingDiv div p:first-of-type{
+  text-decoration: underline;
+  font-weight: 700;
+}
+.ScreenBtn1{
+  display: block;
+  margin: 25px auto 10px;
+}
+.ScreenBtn2{
+  border-top: 1px solid var(--tx-color);
+  border-left: 1px solid var(--tx-color);
+  border-right: 2px solid var(--tx-color);
+  border-bottom: 2px solid var(--tx-color);
+  border-radius: 3px;
+  padding: 3px 7px;
+  font-size: .7em;
+  font-weight: 500;
+  background-color: rgba(211, 211, 211, .5);
+  color: var(--tx-color);
+}
+
+#cloudIt{
+  margin-left: 8px;
+  font-size: 25px;
+  line-height: 1em;
+  padding: 2px 5px 2px 5px;
+  background-color: rgba(237, 20, 61, 0);
+  color: var(--tx-color);
+}
+#earthIt{
+  margin-left: 16px;
+  font-size: 25px;
+  line-height: 1em;
+  padding: 2px 5px 2px 5px;
+  background-color: rgba(237, 20, 61, 0);
+  color: var(--tx-color);
+}
+
+.absolutTop{
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  left: 8px;
+  z-index: 400;
+}
+.fixedBottom{
+  position: fixed;
+  bottom: 8px;
+  right: 8px;
+  z-index: 400;
+}
+.fixedBottom > form > #addInput-underLining, .fixedBottom > form > #addInput{
+  visibility: hidden;
+}
+.absolutTop > form > #addInput-underLining, .absolutTop > form > #addInput{
+  visibility: visible;
+}
+
+#listPage{
+  /* display: block; */
+  position: relative;
+  text-align: left;
+}
+#clickScreen{
+  z-index: 500;
+  background-color: rgba(255, 255, 255, 0);
+}
+#SupClickScreen{
+  z-index: 1250;
+  background-color: rgba(255, 255, 255, 0);
+}
+.newClickScreen{
+  display: flex;
+  background-color: rgba(255, 255, 255, 0);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
+#settings{
+  position: absolute;
+  top: 0;
+  right: 50px;
+  border-top: 1px solid var(--tx-color);
+  border-left: 1px solid var(--tx-color);
+  border-right: 2px solid var(--tx-color);
+  border-bottom: 2px solid var(--tx-color);
+  border-radius: 3px;
+  text-align: center;
+  padding: 2px 3px;
+  font-size: 25px;
+  line-height: 1em;
+  font-weight: 500;
+  background-color: rgba(211, 211, 211, 0.5);
+}
+#settings span{
+  padding: 0;
+  opacity: .8;
+}
+
+#labelSelectionDiv{
+  display: flex;
+  flex-direction: column-reverse;
+  flex-wrap: nowrap;
+  width: fit-content;
+  right: 75px;
+  position: fixed;
+  bottom: 15px;
+  z-index: 400;
+}
+.labelLabel{
+  border: 1px solid var(--tx-color);
+  border-radius: 8px 2px 2px 2px;
+  display: flex;
+  font-size: 1.1em;
+  font-weight: 600;
+  padding: 0 5px 0 0;
+  line-height: 25px;
+}
+.labelLabelRadio{
+  background-color: var(--bg-color);
+}
+.labelLabel > div{
+  height: 25px;
+  border-radius: 6px 0 0 1px;
+  width: 10px;
+  padding: 5px 1px 2px 1px;
+  margin: 0 3px 0 0;
+}
+.labelLabelCheck{
+  color: var(--tx-color);
+  border: 1px solid var(--tx-color);
+  border-radius: 8px 1px 1px 1px;
+  background-color: var(--bg-color);
+}
+.labelLabelCheck > div{
+  background-color: var(--tx-color);
+}
+#myLabels:checked + label{
+  opacity: .5;
+}
+#myLabelsList{
+  display: none;
+  background-color: var(--bg-color);
+}
+#myLabels:checked ~ div#myLabelsList{
+  display: block;
+}
+
+
+.proHelp{
+  padding: 15px;
+  margin: auto;
+  border-style: solid;
+  border-width: 2px 3px 3px 2px;
+  border-radius: 5px;
+  border-color: var(--tx-color);
+  color: var(--tx-color);
+  background-color: var(--bg-color);
+  position: absolute;
+  top: 25px;
+  z-index: 1000;
+  width: 100%;
+}
+.proHelp h3{
+  text-align: center;
+  margin-top: 0;
+}
+.proHelp h4{
+  text-align: left;
+  margin-block-start: 1.6em;
+  margin-block-end: .5em;
+  border-bottom: 1px solid var(--tx-color);
+}
+.proHelp p{
+  text-align: left;
+  margin-top: 0;
+}
+.proHelp button{
+  margin: auto;
+  display: flex;
+}
+
+#AlixTime{
+  position: fixed;
+  bottom: 10px;
+  border-radius: 5px;
+  z-index: 400;
+}
+#AlixTime{
+  right: 13px;
+  padding: 5px 5px 0;
+  background-color: var(--bg-color);
+}
+#AlixTime a{
+  text-decoration: none;
+}
+#AlixTime button{
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+}
+#AlixTime button{
+  background-color: rgb(19 32 32);
+}
+#AlixTime button i{
+  font-size: 20px;
+  line-height: 25px;
+  text-align: center;
+}
+#AlixTime button i{
+  color: purple;
+}
+#AlixTime button i{
+  font-size: 20px;
+}
+#AlixTime h6{
+  margin: 0;
+  text-align: center;
+  color: purple;
+}
+/* #calMonthPage, #calWeekPage{
+  display: none;
+} */
+/* #switchPageInput:checked + label > #toCalendar{
+  opacity: 0;
+}
+#switchPageInput:checked + label > #toList{
+  opacity: 1;
+}
+#switchPageInput:checked ~ div#calWeekPage{
+  display: block;
+}
+#switchPageInput:checked ~ div#listPage{
+  display: none;
+} */
+#menuPages{
+  position: fixed;
+  bottom: 10px;
+  /* width: 40px;
+  height: 40px; */
+  left: 13px;
+  /* padding: 5px;
+  border: .5px solid darkslategrey;
+  text-align: center;
+  border-radius: 5px; */
+  z-index: 400;
+}
+#allPagesMenu{
+  position: absolute;
+  bottom: 40px;
+  width: 40px;
+  display: none;
+  flex-flow: column nowrap;
+  align-items: center;
+}
+#switchMenuInput:checked ~ div#allPagesMenu{
+  display: flex;
+}
+#otherPagesMenu{
+  position: absolute;
+  bottom: 0;
+  left: 40px;
+  height: 40px;
+  display: none;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+#switchMenuInput:checked ~ div#otherPagesMenu{
+  display: flex;
+}
+.bottomBtn{
+  width: 35px;
+  height: 35px;
+  padding: 5px;
+  border: .5px solid var(--tx-color);
+  text-align: center;
+  border-radius: 5px;
+  display: inline-block;
+}
+.menuBtn{
+  width: 40px;
+  height: 40px;
+}
+.bottomBtn i{
+  font-size: 22px;
+  line-height: 25px;
+}
+.menuBtn i{
+  font-size: 25px;
+  line-height: 30px;
+}
+.whiteOnPurple{
+  background-color: purple;
+}
+.whiteOnPurple i{
+  color: var(--bg-color);
+}
+.purpleOnWhite{
+  background-color: var(--bg-color);
+}
+.purpleOnWhite i{
+  color: purple;
+}
+
+input[name="choicePageRadios"]:checked + label{
+  background-color: purple;
+}
+input[name="choicePageRadios"]:checked + label i{
+  color: var(--bg-color);
+}
+
+.taskInfoClass, #calendarDiv.onIcon, .reDateDiv{
+  color: var(--tx-color);
+  background-color: var(--bg-color);
+  border: 2px solid var(--tx-color);
+  border-radius: 5px;
+  position: absolute;
+  z-index: 1000;
+}
+.projectBorder{
+  /* border-color: darkmagenta; To add with JS */
+  border-width: 3px;
+  /* outline-color: rgba(139, 0, 139, .5); To add with JS */
+  outline-offset: -6px;
+  outline-width: 3px;
+  outline-style: solid;
+}
+
+.taskInfoWrapper{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  padding: 40px 0 10px 0;
+}
+
+
+.onIcon{
+  top: 27px;
+  right: 27px;
+  display: flex;
+  flex-flow: column nowrap;
+  padding: 10px;
+}
+.inDaySection{
+  border: thin dotted;
+  padding: 0 10px;
+  border-radius: 0 15px 15px 15px;
+}
+.centerDateInput{
+  margin: 20px auto 0;
+  display: block;
+}
+.calendarHome{
+  width: 100%;
+}
+.dayCircleWeek{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-evenly;
+}
+.dayCircle{
+  font-size: 16px;
+  width: 25px;
+  height: 25px;
+  line-height: 22px;
+  text-align: center;
+  border-radius: 25px;
+  border: 2px solid var(--tx-color);
+  color: var(--tx-color);
+}
+input[name="daysWeekChoice"]:checked + label.dayCircle{
+  background-color: var(--tx-color);
+  color: white;
+}
+#saveTheDateBtn{
+  margin-top: 20px;
+  align-self: center;
+  line-height: 1em;
+}
+
+.taskInfoInput{
+  width: -webkit-fill-available!important;
+  margin: 10px 20px;
+  text-align: left;
+}
+h5.taskInfoInput{
+  margin-bottom: 0;
+}
+
+.taskInfoSubTitle{
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+}
+.tellYou{
+  font-size: .7em;
+  opacity: .7;
+  margin-left: 7px;
+}
+.cornerItLabel{
+  position: absolute;
+  top: 5px;
+  width: 30px;
+  height: 30px;
+}
+.doneIt{
+  left: 5px;
+}
+.doneIt > .typcn-media-stop-outline{
+  font-size: 2.05em;
+  line-height: .9em;
+}
+.doneIt > .typcn-input-checked-outline, .doneIt > .typcn-input-checked{
+  font-size: 1.8em;
+}
+.quickyItLabel{
+  left: 50px;
+}
+.convoItLabel{
+  left: 95px;
+}
+.storeItLabel{
+  right: 5px;
+}
+.copyItLabel{
+  right: 50px;
+}
+.trashItLabel{
+  right: 95px;
+}
+
+#trashedArea{
+  display: block;
+  width: 100%;
+}
+.trashIt:checked ~ div#trashedArea{
+  display: none;
+}
+.cornerItUnChecked, .cornerItChecked{
+  position: absolute;
+  top: 5px;
+  font-size: 18px;
+  line-height: 24px;
+}
+.pinUnChecked, .pinChecked{
+  font-size: 24px;
+  line-height: 24px;
+}
+.cornerItUnChecked{
+  opacity: 1;
+}
+.cornerItChecked{
+  opacity: 0;
+}
+.cornerItInput:checked + label > .cornerItUnChecked{
+  opacity: 0;
+}
+.cornerItInput:checked + label > .cornerItChecked{
+  opacity: 1;
+}
+.relDiv{
+  position: relative;
+}
+
+.tagSpan{
+  position: absolute;
+  top: 0;
+  right: 10px;
+  font-size: 24px;
+}
+.hidden{
+  opacity: 0;
+  visibility: hidden;
+}
+.iconIt{
+  position: absolute;
+  top: 0;
+  left: 10px;
+  font-size: 20px;
+  line-height: 35px;
+  width: 30px;
+  text-align: left;
+}
+.showDiv{
+  display: none;
+}
+.urgeDiv, .wholeProjectDiv, .partProjectDiv{
+  display: none;
+}
+.urgeInput{
+  width: 40px;
+  margin-left: 10px;
+}
+#showThing:checked ~ div.showDiv{
+  display: block;
+}
+#topPriority:checked ~ div.urgeDiv{
+  display: block;
+}
+/* #longTerm:checked ~ div.urgeDiv{
+  display: block;
+} */
+
+.wholeProjectInput:checked ~ div.wholeProjectDiv{
+  display: block;
+}
+.partProjectInput:checked ~ div.partProjectDiv{
+  display: block;
+}
+.taskInfoBtn{
+  margin: 10px 0;
+}
+
+#todayDiv{
+  width: 100%;
+  height: fit-content;
+  overflow: visible;
+  position: relative;
+}
+#swipeBtns{
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  background-color: var(--bg-color);
+}
+#swipeBtns.nextOnly > #swipePrevBtn, #swipeBtns.nextOnly > #swipeTodayBtn{
+  opacity: 0;
+  visibility: hidden;
+}
+.swipeChevron{
+  line-height: 30px;
+}
+
+
+.topList{
+  margin: 0;
+}
+.topList span.topListTitle{
+  text-decoration: underline;
+}
+.topList span.topListDate{
+  text-decoration: none;
+  font-size: .8em;
+}
+.subList{
+  color: slategrey;
+  width: 100%;
+  border-bottom: 1px dotted slategrey;
+  margin-bottom: 5px;
+}
+.sousBtn{
+  margin-top: 0;
+}
+#toDoPage{
+  display: flex;
+  flex-flow: column nowrap;
+  text-align: center;
+}
+#toDoPage button{
+  width: fit-content;
+  margin: 10px auto;
+}
+#taskToDo{
+  font-size: 1.5em;
+  font-weight: 700;
+}
+.moreInfoChevron{
+  display: inline-block;
+  transform: rotate(90deg);
+  font-size: 25px;
+  line-height: 25px;
+}
+#moreInfoDiv{
+  opacity: 0;
+  visibility: hidden;
+  display: block;
+  height: 0;
+  flex-grow: 1;
+}
+#moreInfoInput:checked + label span{
+  transform: rotate(-90deg);
+}
+#moreInfoInput:checked ~ #moreInfoDiv{
+  opacity: 1;
+  visibility: visible;
+  min-height: fit-content;
+  height: fit-content;
+  width: fit-content;
+  padding: 10px 15px;
+  margin: auto;
+  border-width: 1px 2px 3px;
+  border-style: solid;
+  border-color: var(--tx-color);
+  border-radius: 5px;
+  text-align: left;
+}
+
+ul{
+  list-style: none;
+  padding: 0;
+}
+#todoZone ul{
+  margin-top: 0;
+  width: 100%;
+}
+.todoLi{
+  width: 100%;
+  position: relative;
+  font-weight: 600;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 8px;
+  border-radius: 15px;
+  border-style: solid;
+  border-width: 0 3.5px 0 2px;
+  border-color: transparent;
+  min-height: 33.5px;
+}
+
+.todoLi i{
+  line-height: 1em;
+  padding: 0;
+  width: 30px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.typcn{
+  font-size: 1.5em;
+}
+.todoLi .emptyCheck{
+  font-size: 2em;
+}
+.todoLi .text{
+  font-size: 20px;
+  line-height: 1em;
+  padding: 0;
+  margin-block-start: .2em;
+  margin-block-end: .2em;
+}
+.todoLi .textDiv{
+  flex-grow: 1;
+  margin: 0 7px;
+  position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.todoLi .textDiv > hr{
+  width: 100%;
+  height: 0.5px;
+  border-top: 0.5px dotted;
+  border-bottom: none;
+  border-right: none;
+  border-left: none;
+  margin-left: 10px;
+  margin-right: -5px;
+}
+body > .taskInfo{
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  padding: 10px 10px 0 5px;
+}
+.textDiv .taskInfo{
+  width: calc(100% + 109.5px);
+  top: calc(100% - .1em);
+  left: -77px;
+}
+
+
+.numberedCal, .checkOptions, .projectOptions{
+  position: relative;
+  padding: 0;
+  width: 30px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.numberedCal{
+  height: 27px;
+}
+.checkOptions{
+  height: 33px;
+}
+.numberedCal i, .checkOptions i{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.checkOptions span, .projectOptions span{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 32px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 35px;
+  opacity: .7;
+}
+.projectLiOptions, .projectOptions{
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 25px; 
+  border-color: rgba(47, 79, 79, .4);
+}
+.numberedCal span{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 30px;
+  color: var(--tx-color);
+  text-shadow: -0.75px -0.75px 0 #fff, 0 -0.75px 0 #fff, 0.75px -0.75px 0 #fff, 0.75px 0 0 #fff, 0.75px 0.75px 0 #fff, 0 0.75px 0 #fff, -0.75px 0.75px 0 #fff, -0.75px 0 0 #fff;
+}
+.numberedCalDark span{
+  text-shadow: -0.75px -0.75px 0 rgb(7, 10, 10), 0 -0.75px 0 rgb(7, 10, 10), 0.75px -0.75px 0 rgb(7, 10, 10), 0.75px 0 0 rgb(7, 10, 10), 0.75px 0.75px 0 rgb(7, 10, 10), 0 0.75px 0 rgb(7, 10, 10), -0.75px 0.75px 0 rgb(7, 10, 10), -0.75px 0 0 rgb(7, 10, 10);
+}
+
+.checkOptionsDiv{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: fit-content;
+  border: 2px solid var(--tx-color);
+  background: var(--bg-color);
+  padding: 3px;
+  display: flex;
+  border-radius: 5px;
+  z-index: 550;
+}
+.checkOptionsDiv input{
+  width: 40px;
+  height: 25px;
+  margin-left: 5px;
+}
+.checkOptionsDiv i{
+  margin-left: -3px;
+  line-height: 25px;
+}
+
+.checkOptionsDiv i.checkOptionsCheck{
+  font-size: 1.8em;
+  margin-bottom: -5px;
+  color: var(--tx-color);
+}
+
+li .textDone{
+  font-size: 20px;
+  line-height: 1em;
+  padding: 0;
+  flex-grow: 1;
+  margin: 0 7px;
+}
+.ProjectLiOngletDiv{
+  display: flex;
+  position: absolute;
+  top: -15.5px;
+  left: 30px;
+  z-index: -1;
+}
+.projectOngletDiv{
+  display: flex;
+  position: absolute;
+  top: -15.5px;
+  /* Make sure the order is inverted (I think flex can do something like that), because the array of projectOnglet starts with the youngest */
+}
+.projectOnglet, .projectLiOnglet{
+  border: 0.5px solid var(--tx-color);
+  border-radius: 2px 8px 0 0;
+  font-size: 10px;
+  padding: 2px 5px 0 3px;
+  line-height: 1em;
+  border-bottom: none;
+  position: absolute;
+  top: -12.5px;
+  left: 2.25px;
+}
+
+
+.labelOnglet{
+  height: 32px;
+  border: 0.5px solid var(--tx-color);
+  border-radius: 0 2px 8px 0;
+  font-size: 8px;
+  padding: 2px 1px 5px 1px;
+  line-height: 1em;
+  overflow: hidden;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(-180deg);
+}
+/* Clickable */
+/* .labelLiOnglet{
+  margin-left: 5px;
+  margin-right: 5px;
+} */
+/* If not clickable: */
+.labelLiOnglet{
+  /* margin-right: -5px;
+  flex-shrink: 0; */
+  position: absolute;
+  left: -13px;
+}
+.noLabel{
+  visibility: hidden;
+  /* display: none; */
+}
+
+.labelTaskOnglet{
+  position: absolute;
+  top: 0;
+  left: -8px;
+}
+.selectedTask{
+  background-color: rgba(211, 211, 211, .5);
+}
+.projectLi{
+  border-radius: 5px 8px 0 2px;
+  margin-top: 13px;
+  outline: 6px solid;
+  outline-offset: -8px;
+  margin-left: 8px;
+  border-style: solid;
+  border-width: 3.5px 3.5px 3.5px 2px;
+}
+.whatDayLabel{
+  display: block;
+  font-size: 18px;
+}
+.whatDayLabel p{
+  line-height: 1em;
+  margin: 0;
+}
+span.smallText{
+  font-size: 13px;
+  padding: 0;
+}
+.otherSmallText{
+  margin-top: -3px;
+  display: block;
+  margin-bottom: 7px;
+  margin-left: 21px;
+}
+span.normalText{
+  font-size: 18px;
+  padding: 0;
+  font-weight: 600;
+}
+.calendarMargin{
+  margin: 10px 20px;
+}
+.calendarInsideMargin{
+  margin: 10px 0;
+}
+.calendarhr{
+  margin: 20px 20px 0;
+}
+.myRadio{
+  padding: 0;
+  margin-right: 5px;
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  border-radius: 25px;
+  border: 1px solid var(--tx-color);
+}
+.myRadioBox{
+  border-radius: 3px;
+}
+input.myRadio{
+  display: none;
+}
+/* input[name="whatDay"]:checked + label span.myRadio{ */
+input.myRadio:checked + label span.myRadio{
+  height: 15px;
+  width: 15px;
+  outline: 2px solid var(--bg-color);
+  outline-offset: -3px;
+  border: 2px solid var(--tx-color);
+  background-color: var(--tx-color);
+}
+.todoDay{
+  color: limegreen;
+}
+.doneDay{
+  color: red;
+}
+.recurringDay{
+  color: rebeccapurple;
+}
+.recurry{
+  color:darkmagenta;
+  /* border: 2.5px solid rebeccapurple; */
+  /* border-radius: 10px;
+  outline-offset: -1px;
+  outline-color: rebeccapurple;
+  outline-style: solid;
+  outline-width: 2.5px;
+  width: fit-content; */
+}
+.DaySection{
+  display: none; 
+  flex-flow: column nowrap; 
+  align-items: flex-start;
+  padding: 0 10%;
+}
+.DaySection p{
+  margin-bottom: .3em;
+}
+input[name="whatDay"]:checked ~ div.DaySection{
+  display: flex;
+}
+/* input#todoDayInput:checked ~ div#oneDaySection{
+  display: flex;
+}
+input#recurringDayInput:checked ~ div#recurryDaySection{
+  display: flex;
+} */
+.tuttoGiornoDiv{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  width: -webkit-fill-available;
+}
+.slideZone{
+  display: block;
+  position: relative;
+  width: 35px;
+  height: 20px;
+  border-radius: 25px;
+  border: solid thin var(--tx-color);
+  background-color: lightgrey;
+}
+.slider{
+  float: left;
+  width: 18px;
+  height: 18px;
+  border-radius: 25px;
+  border: solid thin var(--tx-color);
+  background-color: var(--bg-color);
+}
+.slider span{
+  text-align: center;
+  line-height: 18px;
+  font-size: 10px;
+}
+.slider span.no{
+  display: block;
+}
+.slider span.si{
+  display: none;
+}
+.tuttoGiornoInput:checked + div.tuttoGiornoDiv > label{
+  background-color: rgba(50,205,50,.9);
+}
+.tuttoGiornoInput:checked + div.tuttoGiornoDiv > label > .slider{
+  float: right;
+}
+.tuttoGiornoInput:checked + div.tuttoGiornoDiv > label > .slider > span.si{
+  display: block;
+}
+.tuttoGiornoInput:checked + div.tuttoGiornoDiv > label > .slider > span.no{
+  display: none;
+}
+.noneTuttoGiornoDiv{
+  display: flex;
+  align-items: center;
+}
+.noneTuttoGiornoDiv > span{
+  width: 55px;
+}
+/* .tuttoGiornoInput:checked ~ div.noneTuttoGiornoDiv{
+  display: none;
+} */
+.tuttoGiornoInput:checked ~ div.noneTuttoGiornoDiv > input[type="time"]{
+  display: none;
+}
+p#hshText{
+  opacity: .6;
+}
+.whereHomeInput:checked ~ div.tuttoGiornoDiv > p#hshText{
+  opacity: 1;
+}
+.dalleTxt, .alleTxt, .finaleTxt{
+  margin: 0 0 0 10px;
+}
+#timeVariationInput option[value="settimana"]:checked ~ div#weekSection{
+  color: red;
+}
+
+
+.iconsPaletClass, .labelPaletClass{
+  background-color: var(--bg-color);
+  border: 2px solid var(--tx-color);
+  border-radius: 5px;
+  position: absolute;
+  z-index: 1500;
+  top: 27px;
+  left: 35px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-content: space-between;
+  width: 220px;
+  padding: 5px;
+}
+.iconsPaletClass i{
+  color: var(--tx-color);
+}
+.labelPaletClass{
+  border-radius: 0 5px 5px 5px;
+  width: 150px;
+  top: 84px;
+  left: 10px;
+  flex-direction: column;
+  align-items: center;
+}
+.labelPaletClass.onLabel{
+  top: 32px;
+  left: 0;
+}
+.labelPaletClass > div{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.inTaskDiv{
+  top: 64px;
+  left: 26px;
+}
+#iconsPalet i, .iconsPalet i{
+  margin: 7px;
+  font-size: 25px;
+}
+input[name="iconRadio"]:hover + label > div,
+input[name="iconRadio"]:checked + label > div{
+  background-color: rgba(47, 79, 79, .3);
+}
+
+.noIcon{
+  opacity: .4;
+}
+.colorPalet{
+  background-color: var(--bg-color);
+  border: 2px solid var(--tx-color);
+  border-radius: 5px;
+  position: absolute;
+  z-index: 1500;
+  top: 64px;
+  right: 28px;
+}
+.colorPaletClass{
+  display: flex;
+  flex-flow: row wrap;
+  width: 152px;
+  padding: 2px;
+  justify-content: center;
+}
+.colorTd{
+  width: fit-content;
+  height: 25px;
+  border: none;
+}
+input[name="colorRadio"] + label > div{
+  width: 70px;
+  height: 25px;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  border-radius: 2.5px;
+  margin: 1px;
+}
+input[name="colorRadio"]:hover + label > div,
+input[name="colorRadio"]:checked + label > div{
+  background-color: rgba(47, 79, 79, .3);
+}
+.colorDiv{
+  width: 65px;
+  height: 20px;
+  border-radius: 25px;
+  border: none;
+  margin: auto;
+  line-height: 14px;
+  text-align: center;
+  font-size: 14px;
+  padding: 3px 7px 4px;
+}
+.orange{
+  background-color: orange;
+  color: darkslategrey;
+}
+.red{
+  background-color: red;
+  color: darkslategrey;
+}
+.mediumpurple{
+  background-color: mediumpurple;
+  color: darkslategrey;
+}
+.darkmagenta{
+  background-color: darkmagenta;
+  color: white;
+}
+.dodgerblue {
+  background-color: dodgerblue;
+  color: darkslategrey;
+}
+.forestgreen{
+  background-color: forestgreen;
+  color: white;
+}
+.darkslategrey{
+  background-color: var(--tx-color);
+  color: var(--bg-color);
+}
+.termLabel{
+  display: block;
+}
+.dateSpan{
+  position: absolute;
+  top: -5px;
+  right: 10px;
+  line-height: 1;
+}
+.showLi{
+  border-radius: 10px;
+  border: .5px solid var(--tx-color);
+}
+.showLiLabel{
+  border: .5px solid var(--tx-color);
+  border-bottom-left-radius: 2px;
+}
+.primaLiBuffer{
+  position: absolute;
+  top: -16.5px;
+  left: -.5px;
+  border-radius: 5px 5px 0 0;
+  border: 0.5px solid var(--tx-color);
+  background-color: rgba(47, 79, 79, .6);
+  width: calc(100% + 1px);
+  font-size: .7em;
+  text-align: right;
+  padding-right: 37px;
+}
+.showLiBuffer{
+  margin-top: 18px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.topListReminder{
+  margin: 10px 0 5px;
+  border-bottom: .5px solid var(--tx-color);
+  padding: 2.5px 0;
+}
+.sameHabit .textDiv span.text{
+  opacity: .6;
+  font-size: 1em;
+}
+.reminder .textDiv span.text{
+  font-size: 1em;
+}
+/* .reminderClass > i{
+  font-size: .8em;
+} */
+/* .reminderClass > span.timeSpan{
+  font-size: .8em;
+} */
+.reminderClass .textDiv{
+  margin: 0 7px 0 0;
+}
+.reminderClass{
+  min-height: fit-content;
+}
+/* .reminderClass > .textDiv > span.text{
+  font-size: 1em;
+} */
+
+.showInput{
+  display: none;
+}
+.showTypeLabelDiv{
+  display: flex;
+  align-items: baseline;
+}
+.showTypeLabel{
+  padding: 0 7px;
+  margin: 5px 0;
+  display: inline-block;
+  position: relative;
+  opacity: .7;
+  width: 100%;
+}
+.showTick{
+  position: absolute;
+  line-height: 1em;
+  top: -3px;
+  right: 3px;
+  display: none;
+}
+
+input[name="showOptions"]:checked + label.showTypeLabel{
+  opacity: 1;
+}
+input[name="showOptions"]:checked + label.showTypeLabel > i.showTick{
+  display: block;
+}
+#addShowTypeDiv{
+  margin-top: 10px;
+}
+#addShowTypeDiv label{
+  display: inline-block;
+}
+.showTypeCreation{
+  display: none;
+}
+.showTypeAdding{
+  height: 33px;
+}
+#addShowType:checked ~ label.showTypeAdding{
+  display: none;
+}
+#addShowType:checked ~ .showTypeCreation{
+  display: flex;
+}
+.showTypeCreationInside{
+  position: relative;
+  display: inline-block;
+  flex-grow: 1;
+}
+.showTypeCreationInside > input[type=text]{
+  width: 100%;
+  border: .5px solid var(--tx-color);
+  border-radius: 10px;
+  height: 22.5px;
+  padding: 0 7px;
+}
+.taskInfo .showTypeCreationInside > i.typcn-media-record{
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 2.2em;
+  line-height: .6em;
+}
+.showTypeIconsDiv{
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  align-content: space-around;
+  width: 165px;
+  height: 120px;
+  border: 2px solid var(--tx-color);
+  border-radius: 5px;
+  background-color: var(--bg-color);
+  padding: 5px;
+}
+.showTypeIconsB{
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.showTypeIconsB:hover{
+  background-color: rgba(47, 79, 79, .3);
+}
+input[name="projectColorChoices"]:checked + label, input[name="labelColorChoices"]:checked + label{
+  background-color: rgba(47, 79, 79, .3);
+}
+.showTypeIconsC{
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
+  text-align: center;
+  border: .5px solid var(--tx-color);
+  margin: 3px;
+}
+.showTypeIconsC i{
+  font-size: 22px;
+  line-height: 23px;
+}
+.projectColorsDiv{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  align-content: space-around;
+  width: 230px;
+  padding: 5px;
+}
+.projectColorsDiv i{
+  font-size: 1.7em;
+}
+.wholeProjectDiv p{
+  margin: 0;
+}
+.underh5{
+  margin: 0;
+  font-weight: 500;
+}
+.consigne{
+  margin: 5px 0 0 0;
+  font-weight: 500;
+}
+.listToggleLabel, .taskToggleLabel{
+  position: relative;
+  display: block;
+  border-bottom: 1px dotted var(--tx-color);
+  margin-bottom: 5px;
+}
+.listToggleLabel{
+  margin-bottom: 25px;
+}
+.listToggleChevron, .taskToggleChevron{
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: inline-block;
+  transform: rotate(90deg);
+  font-size: 30px;
+  line-height: 45px;
+  padding: 0;
+  opacity: .4;
+}
+.smallChevron{
+  right: 10px;
+  font-size: 20px;
+  line-height: 20px;
+}
+.listToggleList, .taskToggleList{
+  opacity: 0;
+  visibility: hidden;
+  height: 0;
+}
+.smallToggleList{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+.taskDetails{
+  height: 0px;
+  margin-bottom: 0;
+}
+.listToggleInput:checked + div .listToggleLabel{
+  margin-bottom: 5px;
+}
+.listToggleInput:checked + div .listToggleLabel .listToggleChevron, 
+.taskToggleInput:checked + div .taskToggleLabel .taskToggleChevron{
+  transform: rotate(-90deg);
+}
+.listToggleInput:checked + div .listToggleList, 
+.taskToggleInput:checked + div .taskToggleList{
+  opacity: 1;
+  visibility: visible;
+  min-height: fit-content;
+  height: fit-content;
+}
+#tellWhyInput:checked + div .taskToggleList > .taskDetails{
+  height: 105px;
+}
+.taskDetailsFullHeight{
+  height: 50.64vh!important;
+}
+.taskInfoSectionLabel{
+  padding: 0 10px;
+}
+.taskToggleLabel > .taskToggleChevron{
+  font-size: 1.3em;
+  line-height: 1em;
+  opacity: 1;
+  right: 5px;
+}
+
+.addMiniForm{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.iconOnlyBtn{
+  border: none;
+  background-color: var(--bg-color);
+  padding: 0;
+  line-height: 1;
+}
+.listNameInput{
+  border: none;
+  background-color: var(--bg-color);
+  width: -webkit-fill-available;
+  line-height: 24px;
+}
+.listCheckInput{
+  display: none;
+}
+i.miniUnChecked{
+  display: block;
+  /* width: fit-content; */
+  font-size: 1.7em;
+  line-height: 1em;
+}
+i.miniChecked{
+  display: none;
+  /* width: fit-content; */
+  line-height: 1.2em;
+}
+.listCheckInput:checked + label > .miniUnChecked{
+  display: none;
+}
+.listCheckInput:checked + label > .miniChecked{
+  display: block;
+}
+.listCheckInput:checked ~ .listNameInput{
+  opacity: .6;
+  text-decoration: line-through;
+}
+.allMiniLi{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+.miniLi > .listNameInput{
+  font-size: 1em;
+  font-weight: 500;
+}
+
+.miniLi.miniTitle > .listNameInput{
+  text-decoration: underline;
+  opacity: 1;
+  font-weight: 700;
+}
+.miniLi.miniTitle > .listCheckLabel{
+  display: none;
+}
+.miniLi.miniTitle > div.miniOptDiv > .typcn-arrow-repeat{
+  opacity: .6;
+}
+.miniOptInput{
+  display: none;
+}
+.miniOptDiv{
+  display: none;
+}
+.miniOptInput:checked + .miniOptDiv{
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 23px;
+  background-color: var(--bg-color);
+  border: 3px solid var(--bg-color);
+}
+.miniOptDiv i{
+  margin: 0 3px;
+}
+.miniOptLabel{
+  opacity: 1;
+}
+.miniOptInput:checked ~ .miniOptLabel{
+  opacity: .6;
+}
+.miniTypeLabel{
+  opacity: .6;
+}
+input[name="miniType"]:checked + .miniTypeLabel{
+  opacity: 1;
+}
+/* .hiddenEye:after {
+  content: '';
+  height: 24px;
+  border-left: 3px solid var(--tx-color);
+  border-radius: 5px;
+  position: absolute;
+  transform: rotate(45deg);
+  left: 12px;
+  top: 4px;
+} */
+.hideMiniLabel.hideMini > span::after{
+  content: '';
+  height: 24px;
+  border-left: 3px solid var(--tx-color);
+  border-radius: 5px;
+  position: absolute;
+  transform: rotate(45deg);
+  left: 12.5px;
+  top: 8.5px;
+}
+
+.sortlistWhole{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  margin-bottom: 1px;
+  overflow: hidden;
+  height: 25px;
+}
+.sortlistLabel{
+  line-height: 1.5em;
+  padding-right: 6.5px;
+}
+
+.noH4SubList{
+  height: 30px;
+}
+.noH4SubListClosed{
+  height: 15px;
+}
+.noH4SubListClosed > div > .sortlistLabel{
+  line-height: 2.5em;
+}
+
+.sortlistDiv{
+  background-color: var(--bg-color);
+  display: flex;
+  flex-flow: row nowrap;
+  width: 0;
+  opacity: 0;
+  visibility: hidden;
+  height: 0;
+  
+}
+.sortlistDiv i{
+  width: 30px;
+  height: 25px;
+  text-align: center;
+  line-height: 25px;
+  padding: 0;
+  border: none;
+  background-color: var(--bg-color);
+  color: slategrey;
+}
+.sortingTag{
+  font-size: 1.3em;
+  display: block;
+}
+i.chosenSort{
+  color: var(--tx-color);
+}
+.sortlistInput:checked + div.sortlistDiv{
+  opacity: 1;
+  visibility: visible;
+  min-height: fit-content;
+  height: fit-content;
+  width: fit-content;
+}
+i.sortUnchecked{
+  display: inline-block;
+  color: slategrey;
+}
+i.sortChecked{
+  display: none;
+}
+.sortlistInput:checked ~ label.sortlistLabel > i.sortUnchecked{
+  display: none;
+}
+.sortlistInput:checked ~ label.sortlistLabel > i.sortChecked{
+  display: inline-block;
+}
+
+.fullSection{
+  opacity: 1;
+}
+hr.zoneHr{
+  margin: 30px 0 0;
+}
+#doneZone{
+  margin-top: 8px;
+}
+#doneZone li{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+#doneZone li span.textDone{
+  font-size: 18px;
+  text-decoration: line-through;
+}
+#doneZone p span{
+  display: inline-block;
+  margin-bottom: 0;
+  padding-left: 7px;
+}
+#doneZone p:not(span){
+  margin-bottom: 0;
+  text-decoration: underline;
+}
+.reDateDiv{
+  top: 20px;
+  right: 50px;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  padding: 5px 0;
+}
+.dragging{
+  opacity: .4;
+}
+
+.wholeScreenCalendar{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+.monthlyWrapper{
+  width: fit-content;
+  margin: auto;
+  display: flex;
+  flex-flow: row nowrap;
+}
+.monthlyCalendar button{
+  padding: 0;
+  background-color: var(--bg-color);
+  border: none;
+  line-height: 1em;
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
+}
+.monthlyCalendar{
+  border-collapse: collapse;
+}
+.monthlyCalendar td, .monthlyCalendar th{
+  width: calc((100vw - 20px) / 7);
+  border: 1px solid rgba(67, 69, 91, 0.3);
+  text-align: center;
+  position: relative;
+}
+.monthlyCalendar td{
+  height: calc((100vh - 51px - 70px) / 6);
+}
+.monthlyCalendar th{
+  height: 15px;
+  font-size: 12px;
+  line-height: 14px;
+}
+td.toWeeklyArrow{
+  width: 10px;
+  border-top: none;
+  border-bottom: none;
+}
+.toWeeklyArrow > button{
+  border-top: calc((100vh - 51px - 70px) / 12) solid transparent;
+  border-bottom: calc((100vh - 51px - 70px) / 12) solid transparent;
+  width: 0;
+}
+td.toWeeklyArrowRight{
+  border-right: none;
+}
+td.toWeeklyArrowLeft{
+  border-left: none;
+}
+.toWeeklyArrowRight > button{
+  border-top: calc((100vh - 51px - 70px) / 12) solid transparent;
+  border-left: 10px solid #555;
+  border-bottom: calc((100vh - 51px - 70px) / 12) solid transparent;
+  width: 0;
+}
+.toWeeklyArrowLeft > button{
+  border-top: calc((100vh - 51px - 70px) / 12) solid transparent;
+  border-right: 10px solid #555;
+  border-bottom: calc((100vh - 51px - 70px) / 12) solid transparent;
+  width: 0;
+}
+.circle{
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border-radius: 25px;
+  top: 1px;
+  left: 1px;
+  text-align: center;
+  font-size: 10px;
+  line-height: 15px;
+}
+.addEvent{
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  line-height: 1em;
+}
+.eventDiv{
+  font-size: 10px;
+  border-radius: 5px;
+  border: .5px solid var(--tx-color);
+  text-align: center;
+  line-height: 1em;
+  padding: 1px;
+}
+.heresToday{
+  background: rgba(30,144,255,.5);
+}
+.selectedKase{
+  outline: 2px solid var(--tx-color);
+}
+
+.weeklyContainer{
+  display: grid;
+  align-content: center;
+  justify-content: center;
+  border: 1px solid rgba(47, 79, 79, .5);;
+  border-radius: 2px;
+  max-height: 92vh;
+}
+.weeklyItem{
+  border: 0.5px solid rgba(47, 79, 79, .3);
+  border-radius: 2px;
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
+  z-index: 1;
+  font-size: 12px;
+  text-align: center;
+  line-height: calc(92vh / 29);
+  overflow: hidden;
+}
+.weeklyDaysRowFilter{
+  grid-column: 1;
+  grid-row: 3;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: calc(((92vh / 29) * 1.5) / 2);
+  border-radius: 2px 2px 0 0;
+  border-bottom: 1px solid rgba(47, 79, 79, .5);
+  border-radius: 2px 0 0 2px;
+  border-right: 1px solid rgba(47, 79, 79, .5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.weeklyDaysRowFilter > button{
+  border: none;
+  background-color: var(--bg-color);
+  line-height: 1;
+  width: 98%;
+  height: 98%;
+  font-size: 1.3em;
+}
+.weeklyDaysRow{
+  grid-row: 3;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: calc(((92vh / 29) * 1.5) / 2);
+  border-radius: 2px 2px 0 0;
+  border-bottom: 1px solid rgba(47, 79, 79, .5);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.weeklyTitle{
+  grid-column: 1 / 9;
+  font-size: 14px; 
+  font-weight: 600; 
+  border-radius: 0; 
+  border: .5px solid rgba(47, 79, 79, .5);
+}
+.weeklyMonthTitle{
+  grid-row: row-Month;
+  border-bottom-width: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.weeklyBtn{
+  padding: 0 5px;
+  background-color: var(--bg-color);
+  border: none;
+  line-height: 1em;
+  height: 30px;
+}
+.weeklyTitleWBtns{
+  grid-row: 1;
+  border-bottom-width: 1px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.sleepArea{
+  z-index: 1;
+  background-color: rgba(47, 79, 79, .2);
+}
+.todayArea{
+  outline: 2px solid rgba(64, 115, 243, 0.5);
+  border-radius: 3px;
+  z-index: 0;
+}
+.nowArea{
+  /* border-top: 3px solid rgba(64, 115, 243, 0.5); */
+  background-color: rgba(64, 115, 243, 0.5);
+  z-index: 4;
+}
+.weeklyEvent{
+  border: 1px solid var(--tx-color);
+  border-radius: 8px;
+  z-index: 3;
+  text-align: center;
+  font-size: 12px;
+  line-height: 12px;
+  overflow: hidden;
+  position: relative;
+}
+.sizeClass7{
+  font-size: 7px;
+  line-height: 7px;
+}
+.sizeClass10{
+  font-size: 10px;
+  line-height: 10px;
+}
+.sizeClass12{
+  font-size: 12px;
+  line-height: 12px;
+}
+.weeklyTutto{
+  overflow: visible;
+}
+.weeklyTutto > div{
+  margin: 3px 0;
+}
+.weeklyBuffer{
+  border: 0.5px solid var(--tx-color);
+  border-radius: 5px;
+  z-index: 2;
+  background-color: rgba(47, 79, 79, .4);
+}
+.weeklyAfterDateSpan{
+  color: rgba(47, 79, 79, .3);
+}
+.pastEvent{
+  opacity: .4;
+}
+
+#weeklyFilter{
+  text-align: center;
+  width: calc(100vw - 16px);
+  padding: 8px 8px 16px;
+}
+#weeklyFilterList{
+  width: 61.8%;
+  margin: 6% auto;
+}
+
+#movingzone{
+  /* width: calc(100vw - (3 * 42px) - (4 * 8px)); */
+  /* (100vw - (2 * 42px (cloudBtn)) - (2 * 8px (margins)) - (2 * 8px (space between))) */
+  display: flex;
+  /* margin-bottom: 15px; */
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+#addForm{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: -webkit-fill-available;
+}
+#addForm #addInput{
+  width: 0;
+  flex-grow: 1;
+}
+
+.addBtns{
+  padding: 3px;
+  line-height: 1em;
+  margin-left: 8px;
+}
+
+#allStore{
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  padding: 10px 10px 0 5px;
+}
+
+.calendarStockVersion{
+  display: flex; 
+  justify-content: space-between; 
+  flex-flow: row nowrap;
+}
+.calendarStockVersion #taskTitle{
+  width: 0;
+  flex-grow: 1;
+}
+.calendarStockVersion .tagSpan{
+  right: 54px;
+}
+
+#openHourToggler{
+  width: 50px;
+  right: 160px;
+  position: fixed;
+  bottom: 10px;
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--bg-color);
+  border-radius: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+#openHourToggler > p{
+  margin: 0;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1em;
+  text-align: center;
+}
+
+#convoSection{
+  width: 100%;
+  height: 0;
+  visibility: hidden;
+}
+.convoStatusDiv{
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-evenly;
+}
+.convoStatusDiv > label{
+  position: relative;
+  width: 45px;
+  height: 45px;
+}
+.convoStatusDiv .outerRing{
+  opacity: .6;
+  position: absolute;
+  top: 0;
+  left: 10px;
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
+  border-style:solid;
+  border-width: 3px;
+}
+.convoStatusDiv .innerCircle{
+  opacity: 0;
+  position: absolute;
+  top: 5px;
+  left: 15px;
+  width: 15px;
+  height: 15px;
+  border-radius: 25px;
+}
+.convoStatusDiv .statusTitle{
+  text-align: center;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 45px;
+  font-size: 8px;
+  line-height: 9px;
+}
+input[name="convoStatusRadios"]:checked + label > span.innerCircle, input[name="convoStatusRadios"]:checked + label > span.outerRing{
+  opacity: 1;
+}
+input[name="convoStatusRadios"]:checked + label > span.statusTitle{
+  font-weight: 900;
+}
+.convoIt:checked ~ div#convoSection{
+  height: fit-content;
+  visibility: visible;
+  margin: 10px 20px;
+}
+#convoContactDiv{
+  margin: 20px auto 10px;
+  text-align: center;
+  width: fit-content;
+}
+.contactSearchList{
+  display: flex;
+  flex-flow: column nowrap;
+  width: 163px;
+  margin-right: 0;
+  margin-left: auto;
+}
+.nickChoice{
+  padding: 2px;
+  border: solid 2px var(--tx-color);
+  background-color: var(--bg-color);
+  width: 100%;
+}
+
+.cossin{
+  /* NOT WORKING! */
+  /* width: 0.1px;
+  margin: -2px;
+  border: 0; */
+  display: none;
+}
+.displayNone{
+  display: none!important;
+}

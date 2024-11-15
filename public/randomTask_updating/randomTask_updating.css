@@ -759,7 +759,7 @@ h5.taskInfoInput{
   display: block;
 } */
 
-.wholeProjectInput:checked ~ div.wholeProjectDiv{
+.wholeProjectInput:checked + div.wholeProjectDiv{
   display: block;
 }
 .partProjectInput:checked ~ div.partProjectDiv{
@@ -1137,7 +1137,7 @@ input.myRadio{
   display: none;
 }
 /* input[name="whatDay"]:checked + label span.myRadio{ */
-input.myRadio:checked + label span.myRadio{
+input.myRadio:checked + label span.myRadio, label.myRadioLabelChecked span.myRadio{
   height: 15px;
   width: 15px;
   outline: 2px solid var(--bg-color);

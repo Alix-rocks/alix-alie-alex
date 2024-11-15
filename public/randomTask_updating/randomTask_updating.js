@@ -53,6 +53,7 @@ onAuthStateChanged(auth,(user) => {
     // logInScreen.classList.add("displayNone");
   } else{
     userConnected = false;
+    document.getElementById("loadingScreen").classList.replace("waitingScreen", "displayNone");
     logInScreen.classList.remove("displayNone");
     logInBtn.addEventListener("click", logIn);
     tryBtn.addEventListener("click", freeIn);
@@ -1443,7 +1444,7 @@ function recurryDateToTodoCreation(todo, recurryDate, fate){ //todo == the todo 
 };
 
 let currentTaskInfo = "";
-console.log(currentTaskInfo);
+//console.log(currentTaskInfo);
 
 function todoCreation(todo){
   let togoList;
@@ -4253,7 +4254,7 @@ function taskAddAllInfo(infos){
             <input class="myRadio wholeProjectInput" type="checkbox" name="projectOptions" value="pParent" ${todo.pOffspringId && todo.pOffspringId !== null ? `checked` : ``} />
             <span class="smallText otherSmallText">with lots of little things in it</span>
           </label>
-          <div class="wholeProjectDiv">
+          <div class="wholeProjectInputDiv wholeProjectDiv">
             <h5 style="margin: 5px 0 0 0;">${todo.pOffspringId && todo.pOffspringId !== null ? `Wanna change the label?` : `Let's give it a label`}</h5>
             <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
               <p>Choose a color: ${projectColorsChoice}</p>
@@ -4265,7 +4266,7 @@ function taskAddAllInfo(infos){
             <input class="myRadio partProjectInput" type="checkbox" name="projectOptions" value="pOffspring" ${todo.pParentId ? `checked` : ``} />
             <span class="smallText otherSmallText">than itself</span>
           </label>
-          <div class="partProjectDiv">
+          <div class="partProjectInputDiv partProjectDiv">
             <h5 style="margin: 5px 0 0 0;">What project is it a part of?</h5>
             <div class="inDaySection" style="width: fit-content; margin-bottom: 10px; padding: 10px;">
               ${projectNamesChoice}
@@ -4418,6 +4419,11 @@ function taskAddAllInfo(infos){
     currentTaskInfo.querySelector(".tellYouDay").innerText = ` ${e.target.value}`;
   });
   
+  document.querySelectorAll("input.myRadio").forEach(radio => {
+    radio.addEventListener("click", () => {
+      radio.parentElement.classList.toggle("myRadioLabelChecked");
+    });
+  });
   
   let doneIt = currentTaskInfo.querySelector(".doneIt");
   let doneIcon = doneIt.querySelector("i");
@@ -4722,6 +4728,7 @@ function taskAddAllInfo(infos){
 
   currentTaskInfo.querySelectorAll('input[name="projectOptions"]').forEach(checkbox => {
     checkbox.addEventListener("click", () => {
+      //currentTaskInfo.querySelector(checkbox.className)
       if(currentTaskInfo.querySelectorAll('input[name="projectOptions"]:checked').length === 0){//check les deux checkbox et si les deux sont unchecked, ben vide projectOngletDiv
         tellHowDiv.classList.add("displayNone");
         console.log(projectOngletDiv);

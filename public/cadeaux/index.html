@@ -1,0 +1,58 @@
+<!DOCTYPE html><html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+    <!-- Typicons -->
+    <link rel="stylesheet" href="..\@Fonts&Icons\typicons\typicons.css"/> 
+    <!-- Flavicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="..\@Fonts&Icons\fontawesome\css\fontawesome.min.css"/>
+    <link rel="stylesheet" href="..\@Fonts&Icons\fontawesome\css\regular.min.css"/>
+    <link rel="stylesheet" href="..\@Fonts&Icons\fontawesome\css\solid.min.css"/>
+    <script src="https://kit.fontawesome.com/b4f765f607.js" crossorigin="anonymous"></script>
+    <!-- CSS -->
+    <link rel="stylesheet" href="cadeaux.css">
+    <title>Cadeaux de Noël 2024</title>
+  </head>
+  <body>
+    <h1>Cadeaux de Noël<br>2024</h1>
+    <details id="fhDetails">
+      <summary>Françoise Hébert</summary>
+      <div class="listDiv">
+        <h2>Ma liste de cadeaux&nbsp;:</h2>
+        <ul>
+          <li class="ideeLi">
+            <label class="myCheckboxLabel">
+              <input type="checkbox" class="checkBought displayNone">
+              <i class="typcn typcn-media-stop-outline unchecked"></i>
+              <i class="typcn typcn-input-checked checked"></i>
+            </label>
+            
+            <textarea name="" id=""></textarea>
+            <div class="optionsDiv displayNone">
+              <i onclick="switchMiniType(this)" class="typcn typcn-arrow-repeat"></i>
+              <i onclick="switchMiniColor(this)" class="fa-solid fa-palette" style="font-size:18px;"></i>
+              <i onclick="trashMini(this)" class="typcn typcn-trash"></i>
+              <i onclick="moveMiniDown(this)" class="typcn typcn-arrow-down-outline"></i>
+              <i onclick="moveMiniUp(this)" class="typcn typcn-arrow-up-outline"></i>
+            </div>
+            <label class="optionsLabel">
+              <input type="checkbox" class="optionsInput displayNone" />
+              <i class="fa-solid fa-ellipsis-vertical optionsI" style="width:23px;text-align:center;"></i>
+            </label>
+          </li>
+          <li class="addLi">
+            <textarea name="" id=""></textarea>
+            <button class="iconBtn" onclick="addBtn(fh)"><i class="typcn typcn-plus"></i></button>
+          </li>
+        </ul>
+      </div>
+    </details>
+    <script type="module" src="cadeaux.js"></script>
+  </body>
+</html>

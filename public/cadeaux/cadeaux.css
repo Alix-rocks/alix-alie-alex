@@ -1,0 +1,140 @@
+:root{
+  --bg-color: #F2F3F4;
+  --tx-color: darkslategrey;
+}
+*{  
+  font-family: 'Nunito', sans-serif;
+  box-sizing: border-box;
+  /* user-select: none; */
+}
+body{
+  color: var(--tx-color);
+  background-color: var(--bg-color);
+  width: 90vw;
+  max-width: 450px;
+  margin: auto;
+}
+textarea{
+  color: var(--tx-color);
+  background-color: var(--bg-color);
+}
+:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(50,205,50,.9);
+}
+
+h1{
+  line-height: 1.2em;
+  text-align: center;
+}
+
+details > summary{ 
+  border-radius: 2px 15px 15px 2px;
+}
+details[open] > summary{ 
+  border-radius: 2px 15px 0 0;
+}
+summary{
+  border: 2px solid;
+  width: fit-content;
+  padding: 2px 8px 2px 5px;
+  font-weight: 700;
+}
+h2{
+  font-size: 16px;
+  margin: 0;
+  font-weight: 500;
+}
+.listDiv{
+  position: relative;
+  border: 2px solid;
+  border-radius: 0 5px 5px 5px;
+  min-height: 50px;
+  width: 100%;
+  padding: 5px;
+}
+ul{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+li{
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-top: 10px;
+  position: relative;
+}
+.myCheckboxLabel{
+  font-size: 28px;
+  translate: 0 -10px;
+}
+i.unchecked{
+  display: block;
+}
+i.checked{
+  display: none;
+}
+.checkBought:checked ~ i.unchecked{
+  display: none;
+}
+.checkBought:checked ~ i.checked{
+  display: block;
+}
+textarea{
+  width: -webkit-fill-available;
+  font-size: 16px;
+  line-height: 1.2em;
+  min-height: 1.5em;
+  height: auto;
+  margin: 0 5px;
+}
+.ideeLi textarea{
+  border: none;
+}
+.optionsI{
+  opacity: 1;
+}
+.optionsInput:checked + .optionsI{
+  opacity: .6;
+}
+.optionsDiv{
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 34px;
+  top: -5px;
+  background-color: var(--bg-color);
+  border: 1px solid var(--tx-color);
+  border-radius: 3px;
+}
+.optionsDiv i{
+  margin: 0 8px;
+  font-size: 22px;
+}
+.iconBtn{
+  border: none;
+  background-color: var(--bg-color);
+}
+.iconBtn i{
+  display: block;
+  font-size: 22px;
+  translate: 0 -5px;
+  /* text-shadow: 
+    1px 1px var(--tx-color),
+    1px -1px var(--tx-color),
+    1px 0px var(--tx-color),
+    0px 1px var(--tx-color),
+    -1px 1px var(--tx-color),
+    -1px -1px var(--tx-color),
+    -1px 0px var(--tx-color),
+    0px -1px var(--tx-color); */
+}
+.iconBtn:active{
+  color: rgba(50,205,50,.9);
+}
+
+.displayNone{
+  display: none!important;
+}

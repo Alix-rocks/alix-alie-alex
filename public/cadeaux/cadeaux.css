@@ -28,18 +28,17 @@ h1{
   text-align: center;
 }
 
-details > summary{ 
+details.prenomNom > summary{ 
   border-radius: 2px 15px 15px 2px;
-}
-details[open] > summary{ 
-  border-radius: 2px 15px 0 0;
-}
-summary{
   border: 2px solid;
   width: fit-content;
   padding: 2px 8px 2px 5px;
   font-weight: 700;
 }
+details.prenomNom[open] > summary{ 
+  border-radius: 2px 15px 0 0;
+}
+
 h2{
   font-size: 16px;
   margin: 0;
@@ -81,6 +80,11 @@ i.checked{
 }
 .checkBought:checked ~ i.checked{
   display: block;
+}
+.ideeLi summary{
+  text-align: left;
+  width: -webkit-fill-available;
+  width: 100%;
 }
 textarea{
   width: -webkit-fill-available;

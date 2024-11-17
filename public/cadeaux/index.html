@@ -21,7 +21,45 @@
   </head>
   <body>
     <h1>Cadeaux de Noël<br>2024</h1>
-    <details id="fhDetails">
+    <details id="sgDetails" class="prenomNom">
+      <summary>Serge Gentile</summary>
+      <div class="listDiv">
+        <h2>Ma liste de cadeaux&nbsp;:</h2>
+        <ul>
+          <li class="ideeLi">
+            <label class="myCheckboxLabel">
+              <input type="checkbox" class="checkBought displayNone">
+              <i class="typcn typcn-media-stop-outline unchecked"></i>
+              <i class="typcn typcn-input-checked checked"></i>
+            </label>
+            <details>
+              <summary>
+                <input type="text" value="Boîte de chocolat">
+              </summary>
+              Détails&nbsp;:
+              <textarea name="" id=""></textarea>
+            </details>
+            
+            <div class="optionsDiv displayNone">
+              <i onclick="switchMiniType(this)" class="typcn typcn-arrow-repeat"></i>
+              <i onclick="switchMiniColor(this)" class="fa-solid fa-palette" style="font-size:18px;"></i>
+              <i onclick="trashMini(this)" class="typcn typcn-trash"></i>
+              <i onclick="moveMiniDown(this)" class="typcn typcn-arrow-down-outline"></i>
+              <i onclick="moveMiniUp(this)" class="typcn typcn-arrow-up-outline"></i>
+            </div>
+            <label class="optionsLabel">
+              <input type="checkbox" class="optionsInput displayNone" />
+              <i class="fa-solid fa-ellipsis-vertical optionsI" style="width:23px;text-align:center;"></i>
+            </label>
+          </li>
+          <li class="addLi">
+            <textarea name="" id=""></textarea>
+            <button class="iconBtn" onclick="addBtn(fh)"><i class="typcn typcn-plus"></i></button>
+          </li>
+        </ul>
+      </div>
+    </details>
+    <details id="fhDetails" class="prenomNom">
       <summary>Françoise Hébert</summary>
       <div class="listDiv">
         <h2>Ma liste de cadeaux&nbsp;:</h2>

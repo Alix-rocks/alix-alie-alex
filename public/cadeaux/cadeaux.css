@@ -13,40 +13,45 @@ body{
   width: 90vw;
   max-width: 450px;
   margin: auto;
+  position: relative;
+}
+textarea, input[type="text"]{
+  color: var(--tx-color);
+  /* background-color: var(--bg-color); */
+  font-size: 16px;
 }
 textarea{
-  color: var(--tx-color);
-  background-color: var(--bg-color);
+  line-height: normal;
+  min-height: 1.5em;
+  height: auto;
+  margin: 0 5px;
+  width: -webkit-fill-available;
 }
 :focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(50,205,50,.9);
+  box-shadow: 0 0 0 2px rgba(50,205,50,.9);
 }
 
 h1{
   line-height: 1.2em;
   text-align: center;
 }
-
-details.prenomNom > summary{ 
-  border-radius: 2px 15px 15px 2px;
-  border: 2px solid;
-  width: fit-content;
-  padding: 2px 8px 2px 5px;
-  font-weight: 700;
-}
-details.prenomNom[open] > summary{ 
-  border-radius: 2px 15px 0 0;
-}
-
 h2{
   font-size: 16px;
   margin: 0;
   font-weight: 500;
 }
+h3{
+  font-size: 15px;
+  font-weight: 500;
+  margin-top: 1em;
+  margin-bottom: .2em;
+}
+
+
 .listDiv{
   position: relative;
-  border: 2px solid;
+  border: 2px solid var(--tx-color);
   border-radius: 0 5px 5px 5px;
   min-height: 50px;
   width: 100%;
@@ -60,14 +65,19 @@ ul{
 li{
   display: flex;
   flex-flow: row nowrap;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   margin-top: 10px;
   position: relative;
 }
+li.open{
+  align-items: flex-start;
+}
+li.open .myCheckboxLabel{
+  translate: 0 -10px;
+}
 .myCheckboxLabel{
   font-size: 28px;
-  translate: 0 -10px;
 }
 i.unchecked{
   display: block;
@@ -81,21 +91,78 @@ i.checked{
 .checkBought:checked ~ i.checked{
   display: block;
 }
+details{
+  width: -webkit-fill-available;
+  margin: 0 10px;
+}
+details.prenomNom{
+  margin: 5px 10px 10px;
+}
+details.prenomNom > summary{ 
+  border-radius: 2px 15px 15px 2px;
+  border: 2px solid var(--tx-color);
+  width: fit-content;
+  padding: 2px 8px 2px 5px;
+  font-weight: 700;
+}
+details.prenomNom[open] > summary{ 
+  border-radius: 2px 15px 0 0;
+}
+
 .ideeLi summary{
   text-align: left;
   width: -webkit-fill-available;
-  width: 100%;
 }
-textarea{
-  width: -webkit-fill-available;
+.ideeLi summary span{
+  margin-left: 8px;
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 500;
+}
+.insideDiv{
+  border: .5px solid var(--tx-color);
+  margin: 0 -15px;
+  padding: 0 15px;
+  border-radius: 3px;
+  min-height: 28px;
+}
+.addingLi .insideDiv{
+  margin: 0 -15px 0 0;
+}
+.ideeDetailsDiv{
+  border: 1px solid var(--tx-color);
+  border-radius: 3px;
+  text-align: left;
   font-size: 16px;
-  line-height: 1.2em;
-  min-height: 1.5em;
-  height: auto;
-  margin: 0 5px;
+  font-weight: 500;
+  line-height: 1.3em;
+  padding: 5px 8px;
 }
-.ideeLi textarea{
-  border: none;
+.ideeLienP, .addingLienP{
+  margin-top: 0;
+}
+i.fa-globe{
+  margin-right: 8px;
+  opacity: .7;
+}
+.addingLienP{
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+.ideeLienP a{
+  color: rgba(50,205,50,.9);
+}
+.bought > summary > span{
+  opacity: .6;
+  text-decoration: line-through;
+}
+.bought > div{
+  opacity: .5;
+}
+.bought > div > p > a{
+  color: var(--tx-color);
+  text-decoration: none;
 }
 .optionsI{
   opacity: 1;
@@ -120,23 +187,28 @@ textarea{
 .iconBtn{
   border: none;
   background-color: var(--bg-color);
+  color: var(--tx-color);
 }
 .iconBtn i{
-  display: block;
-  font-size: 22px;
-  translate: 0 -5px;
-  /* text-shadow: 
-    1px 1px var(--tx-color),
-    1px -1px var(--tx-color),
-    1px 0px var(--tx-color),
-    0px 1px var(--tx-color),
-    -1px 1px var(--tx-color),
-    -1px -1px var(--tx-color),
-    -1px 0px var(--tx-color),
-    0px -1px var(--tx-color); */
+  font-size: 24px;
 }
 .iconBtn:active{
   color: rgba(50,205,50,.9);
+}
+.addBtnLi{
+  justify-content: flex-end;
+}
+.addingName{
+  margin-left: 8px;
+  width: 90%;
+}
+#dmaj{
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 400;
 }
 
 .displayNone{

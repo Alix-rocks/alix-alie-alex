@@ -21,23 +21,30 @@
   </head>
   <body>
     <h1>Cadeaux de Noël<br>2024</h1>
-    <details id="sgDetails" class="prenomNom">
+    <div id="wholeThing"></div>
+    <button id="earthIt"><span class="typcn typcn-weather-stormy" style="font-size: 1em;"></span></button>
+    <button id="cloudIt"><span class="typcn typcn-cloud-storage-outline" style="font-size: 1em;"></span></button>
+    <!-- <details id="sg" class="prenomNom">
       <summary>Serge Gentile</summary>
       <div class="listDiv">
         <h2>Ma liste de cadeaux&nbsp;:</h2>
-        <ul>
+        <ul data-initial="sg">
           <li class="ideeLi">
             <label class="myCheckboxLabel">
               <input type="checkbox" class="checkBought displayNone">
               <i class="typcn typcn-media-stop-outline unchecked"></i>
               <i class="typcn typcn-input-checked checked"></i>
             </label>
-            <details>
+            <details class="detailsLi">
               <summary>
-                <input type="text" value="Boîte de chocolat">
+                <span>Boîte de chocolat</span>
               </summary>
-              Détails&nbsp;:
-              <textarea name="" id=""></textarea>
+              <div class="insideDiv">
+                <h3>Détails&nbsp;:</h3>
+                <div class="ideeDetailsDiv">Plein de détails, pis de descriptions, pis de couleurs, pis de où, quand, comment, etc!</div>
+                <h3>Lien&nbsp;:</h3>
+                <p class="ideeLienP"><i class="fa-solid fa-globe"></i><a href="www.alix.rocks">alix.rocks</a></p>
+              </div>
             </details>
             
             <div class="optionsDiv displayNone">
@@ -52,45 +59,101 @@
               <i class="fa-solid fa-ellipsis-vertical optionsI" style="width:23px;text-align:center;"></i>
             </label>
           </li>
-          <li class="addLi">
-            <textarea name="" id=""></textarea>
-            <button class="iconBtn" onclick="addBtn(fh)"><i class="typcn typcn-plus"></i></button>
+          <li class="addBtnLi">
+            <button class="iconBtn" onclick="addBtn(this)"><i class="typcn typcn-plus"></i></button>
           </li>
         </ul>
       </div>
     </details>
-    <details id="fhDetails" class="prenomNom">
+    <details id="fh" class="prenomNom">
       <summary>Françoise Hébert</summary>
       <div class="listDiv">
         <h2>Ma liste de cadeaux&nbsp;:</h2>
         <ul>
-          <li class="ideeLi">
-            <label class="myCheckboxLabel">
-              <input type="checkbox" class="checkBought displayNone">
-              <i class="typcn typcn-media-stop-outline unchecked"></i>
-              <i class="typcn typcn-input-checked checked"></i>
-            </label>
-            
-            <textarea name="" id=""></textarea>
-            <div class="optionsDiv displayNone">
-              <i onclick="switchMiniType(this)" class="typcn typcn-arrow-repeat"></i>
-              <i onclick="switchMiniColor(this)" class="fa-solid fa-palette" style="font-size:18px;"></i>
-              <i onclick="trashMini(this)" class="typcn typcn-trash"></i>
-              <i onclick="moveMiniDown(this)" class="typcn typcn-arrow-down-outline"></i>
-              <i onclick="moveMiniUp(this)" class="typcn typcn-arrow-up-outline"></i>
-            </div>
-            <label class="optionsLabel">
-              <input type="checkbox" class="optionsInput displayNone" />
-              <i class="fa-solid fa-ellipsis-vertical optionsI" style="width:23px;text-align:center;"></i>
-            </label>
-          </li>
-          <li class="addLi">
-            <textarea name="" id=""></textarea>
-            <button class="iconBtn" onclick="addBtn(fh)"><i class="typcn typcn-plus"></i></button>
+          <li class="addBtnLi">
+            <button class="iconBtn" onclick="addBtn(this)"><i class="typcn typcn-plus"></i></button>
           </li>
         </ul>
       </div>
     </details>
+    <details id="fhg" class="prenomNom">
+      <summary>François Hébert-Gentile</summary>
+      <div class="listDiv">
+        <h2>Ma liste de cadeaux&nbsp;:</h2>
+        <ul>
+          <li class="addBtnLi">
+            <button class="iconBtn" onclick="addBtn(this)"><i class="typcn typcn-plus"></i></button>
+          </li>
+        </ul>
+      </div>
+    </details>
+    <details id="jvphg" class="prenomNom">
+      <summary>Jessica Vences Perete Hébert-Gentile</summary>
+      <div class="listDiv">
+        <h2>Ma liste de cadeaux&nbsp;:</h2>
+        <ul>
+          <li class="addBtnLi">
+            <button class="iconBtn" onclick="addBtn(this)"><i class="typcn typcn-plus"></i></button>
+          </li>
+        </ul>
+      </div>
+    </details>
+    <details id="rg" class="prenomNom">
+      <summary>Roxanne Gentile</summary>
+      <div class="listDiv">
+        <h2>Ma liste de cadeaux&nbsp;:</h2>
+        <ul>
+          <li class="addBtnLi">
+            <button class="iconBtn" onclick="addBtn(this)"><i class="typcn typcn-plus"></i></button>
+          </li>
+        </ul>
+      </div>
+    </details>
+    <details id="fb" class="prenomNom">
+      <summary>François Bisson</summary>
+      <div class="listDiv">
+        <h2>Ma liste de cadeaux&nbsp;:</h2>
+        <ul>
+          <li class="addBtnLi">
+            <button class="iconBtn" onclick="addBtn(this)"><i class="typcn typcn-plus"></i></button>
+          </li>
+        </ul>
+      </div>
+    </details>
+    <details id="vhg" class="prenomNom">
+      <summary>Valérie Hébert-Gentile</summary>
+      <div class="listDiv">
+        <h2>Ma liste de cadeaux&nbsp;:</h2>
+        <ul>
+          <li class="addBtnLi">
+            <button class="iconBtn" onclick="addBtn(this)"><i class="typcn typcn-plus"></i></button>
+          </li>
+        </ul>
+      </div>
+    </details>
+    <details id="nd" class="prenomNom">
+      <summary>Niamh Devaney</summary>
+      <div class="listDiv">
+        <h2>Ma liste de cadeaux&nbsp;:</h2>
+        <ul>
+          <li class="addBtnLi">
+            <button class="iconBtn" onclick="addBtn(this)"><i class="typcn typcn-plus"></i></button>
+          </li>
+        </ul>
+      </div>
+    </details>
+    <details id="meg" class="prenomNom">
+      <summary>Marc-Éric Gariépy</summary>
+      <div class="listDiv">
+        <h2>Ma liste de cadeaux&nbsp;:</h2>
+        <ul>
+          <li class="addBtnLi">
+            <button class="iconBtn" onclick="addBtn(this)"><i class="typcn typcn-plus"></i></button>
+          </li>
+        </ul>
+      </div>
+    </details>
+    <span id="dmaj"></span> -->
     <script type="module" src="cadeaux.js"></script>
   </body>
 </html>

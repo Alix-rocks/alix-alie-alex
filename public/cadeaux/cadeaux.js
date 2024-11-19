@@ -38,24 +38,7 @@ function resetCBC(){
 
 let checkedBought = [];
 
-let theGifts = [
-  {
-    initial: "sg",
-    nom: "Serge Gentile",
-    suggestions: [{
-      idee: "",
-      details: "",
-      wholeLink: "",
-      finalLink: ""
-    },{
-      idee: "",
-      details: "",
-      wholeLink: "",
-      finalLink: ""
-    }]
-  }
-
-];
+let theGifts = [];
 
 async function getTheGifts() {
   const getTheGifts = await getDocs(collection(db, "cadeaux2024"));
@@ -63,24 +46,25 @@ async function getTheGifts() {
   if(localStorage.getItem("lastUpdateLocalStorage")){
     lastUpdateLocalStorage = localStorage.lastUpdateLocalStorage;
   };
-  if(getTheGifts.exists() && getTheGifts["all"].data().lastUpdateFireStore){
-    lastUpdateFireStore = getTheGifts["all"].data().lastUpdateFireStore;
+  if(localStorage.getItem("checkedBought")){
+    checkedBought = JSON.parse(localStorage.checkedBought);
+  };
+  if(getTheGifts){
+    getTheGifts.forEach(doc => {
+      if(doc.id == "all"){
+        lastUpdateFireStore = doc.lastUpdateFireStore;
+        checkedBought = doc.checked;
+      };
+    });
+    localStorage.checkedBought = JSON.stringify(checkedBought);
   };
   if((lastUpdateLocalStorage !== "" && lastUpdateFireStore !== "" && lastUpdateLocalStorage < lastUpdateFireStore) || lastUpdateLocalStorage == ""){
     earthIt.style.backgroundColor = "rgb(237, 20, 61)";
   };
-
-  if(localStorage.getItem("checkedBought")){
-    checkedBought = JSON.parse(localStorage.checkedBought);
-  };
-  if(getTheGifts.exists() && getTheGifts["all"].data().checked){
-    checkedBought = getTheGifts["all"].data().checked;
-    localStorage.checkedBought = JSON.stringify(checkedBought);
-  };
-
+  
   if(localStorage.getItem("theGifts")){
     theGifts = JSON.parse(localStorage.theGifts);
-  } else if(getTheGifts.exists()){
+  } else if(getTheGifts){
     getTheGifts.forEach(doc => {
       if(doc.id !== "all"){
         let person = {
@@ -185,19 +169,19 @@ function createSections(){
     let listeIdees = person.suggestions.map((idee) => {
       return `<li class="ideeLi" id="${idee.id}">
         <label class="myCheckboxLabel">
-          <input type="checkbox" class="checkBought displayNone" ${checkedBought.includes(idee.id) ? "checked" : ""}>
+          <input type="checkbox" class="checkBought displayNone" ${idee.id && checkedBought.length > 0 && checkedBought.includes(idee.id) ? "checked" : ""}>
           <i class="typcn typcn-media-stop-outline unchecked"></i>
           <i class="typcn typcn-input-checked checked"></i>
         </label>
         <details class="detailsLi">
           <summary>
-            <span>${idee.idee}</span>
+            <span>${idee.idee ? idee.idee : "N'importe quoi"}</span>
           </summary>
           <div class="insideDiv">
             <h3>Détails&nbsp;:</h3>
-            <div class="ideeDetailsDiv">${idee.details.replace(/\n/g, '<br/>')}</div>
+            <div class="ideeDetailsDiv">${idee.details && idee.details !== "" ? idee.details : "bof..."}</div>
             <h3>Lien&nbsp;:</h3>
-            <p class="ideeLienP"><i class="fa-solid fa-globe"></i><a href="${idee.wholeLink}">${idee.finalLink + "..."}</a></p>
+            <p class="ideeLienP"><i class="fa-solid fa-globe"></i><a href="${idee.wholeLink}">${idee.finalLink ? idee.finalLink + "..." : "nul part"}</a></p>
           </div>
         </details>
         
@@ -254,7 +238,7 @@ function addBtn(thisOne){
   </li>`;
   addLi.insertAdjacentHTML("beforebegin", newAddingLi);
 
-  document.querySelectorAll("details.detailsLi").forEach(details => {
+  let details = document.querySelector(".addingLi > .detailsLi");
     details.addEventListener("toggle", () => {
       if(details.hasAttribute("open")){
         details.parentElement.classList.add("open");
@@ -262,7 +246,6 @@ function addBtn(thisOne){
         details.parentElement.classList.remove("open");
       }; 
     });
-  });
 
   document.querySelectorAll("textarea").forEach(textarea => {
     textarea.addEventListener("input", () => {
@@ -316,8 +299,9 @@ function saveNewIdee(thisOne){
     wholeLink: whole,
     finalLink: final
   };
-
+  //add to modif!
   theGifts[index].suggestions.push(newIdee);//???
+  localStorage.theGifts = JSON.stringify(theGifts);
 
   //creation d'un nouveau ideeLi
   let newLi = `<li class="ideeLi" id="${ideeId}">
@@ -355,18 +339,21 @@ function saveNewIdee(thisOne){
 
   addingLi.remove();
   
+  //for all or just for that one?? They should all be onclick and not eventListeners if you add them
   document.querySelectorAll(".checkBought").forEach(input => {
     input.addEventListener("click", () => {
       let li = input.parentElement.parentElement;
       li.querySelector("details").classList.toggle("bought");
       if(input.checked){
-        if(!checkedBought.includes(li.id)){
+        if(li.id && (checkedBought.length == 0 || (checkedBought.length > 0 && !checkedBought.includes(li.id)))){
           checkedBought.push(li.id);
+          localStorage.checkedBought = JSON.stringify(checkedBought);
         };
-      } else{
+      } else if(li.id && checkedBought.length > 0 && checkedBought.includes(li.id)){
         let idx = checkedBought.indexOf(li.id);
         if(idx > -1){
           checkedBought.splice(idx, 1);
+          localStorage.checkedBought = JSON.stringify(checkedBought);
         };
       };
     });

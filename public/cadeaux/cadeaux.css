@@ -15,6 +15,25 @@ body{
   margin: auto;
   position: relative;
 }
+#cloudIt, #earthIt {
+  border-top: 2px solid var(--tx-color);
+  border-left: 2px solid var(--tx-color);
+  border-right: 4px solid var(--tx-color);
+  border-bottom: 4px solid var(--tx-color);
+  border-radius: 5px;
+  color: var(--tx-color);
+  /* padding: 5px 10px; */
+  width: fit-content;
+  text-align: center;
+  font-weight: 600;
+  /* background-color: lightgrey; */
+  font-size: 25px;
+  line-height: 1em;
+  padding: 2px 5px 2px 5px;
+  margin: 10px;
+  background-color: rgba(237, 20, 61, 0);
+}
+
 textarea, input[type="text"]{
   color: var(--tx-color);
   /* background-color: var(--bg-color); */
@@ -122,7 +141,7 @@ details.prenomNom[open] > summary{
 .insideDiv{
   border: .5px solid var(--tx-color);
   margin: 0 -15px;
-  padding: 0 15px;
+  padding: 0 15px 15px;
   border-radius: 3px;
   min-height: 28px;
 }
@@ -186,7 +205,7 @@ i.fa-globe{
 }
 .iconBtn{
   border: none;
-  background-color: var(--bg-color);
+  background-color: inherit;
   color: var(--tx-color);
 }
 .iconBtn i{

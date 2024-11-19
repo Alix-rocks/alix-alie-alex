@@ -8,8 +8,8 @@ cloudIt.addEventListener("click", saveToCloud);
 const earthIt = document.querySelector("#earthIt");
 earthIt.addEventListener("click", updateFromCloud);
 
-let lastUpdateLocalStorage = "";
-let lastUpdateFireStore = "";
+let lastUpdateLocalStorageCadeaux = "";
+let lastUpdateFireStoreCadeaux = "";
 
 let cBC;
 getCloudBC();
@@ -43,8 +43,8 @@ let theGifts = [];
 async function getTheGifts() {
   const getTheGifts = await getDocs(collection(db, "cadeaux2024"));
 
-  if(localStorage.getItem("lastUpdateLocalStorage")){
-    lastUpdateLocalStorage = localStorage.lastUpdateLocalStorage;
+  if(localStorage.getItem("lastUpdateLocalStorageCadeaux")){
+    lastUpdateLocalStorageCadeaux = localStorage.lastUpdateLocalStorageCadeaux;
   };
   if(localStorage.getItem("checkedBought")){
     checkedBought = JSON.parse(localStorage.checkedBought);
@@ -52,29 +52,32 @@ async function getTheGifts() {
   if(getTheGifts){
     getTheGifts.forEach(doc => {
       if(doc.id == "all"){
-        lastUpdateFireStore = doc.lastUpdateFireStore;
-        checkedBought = doc.checked;
+        lastUpdateFireStoreCadeaux = doc.data().lastUpdateFireStore;
+        checkedBought = doc.data().checked;
       };
     });
-    localStorage.checkedBought = JSON.stringify(checkedBought);
+    localStorage.checkedBought = checkedBought.length > 0 ? JSON.stringify(checkedBought) : JSON.stringify([]);
   };
-  if((lastUpdateLocalStorage !== "" && lastUpdateFireStore !== "" && lastUpdateLocalStorage < lastUpdateFireStore) || lastUpdateLocalStorage == ""){
+  if((lastUpdateLocalStorageCadeaux !== "" && lastUpdateFireStoreCadeaux !== "" && lastUpdateLocalStorageCadeaux < lastUpdateFireStoreCadeaux) || lastUpdateLocalStorageCadeaux == ""){
     earthIt.style.backgroundColor = "rgb(237, 20, 61)";
   };
   
   if(localStorage.getItem("theGifts")){
     theGifts = JSON.parse(localStorage.theGifts);
   } else if(getTheGifts){
+    let tempGifts = [];
     getTheGifts.forEach(doc => {
       if(doc.id !== "all"){
         let person = {
           initial: doc.id,
+          color: doc.data().color,
           nom: doc.data().nom,
           suggestions: doc.data().suggestions
         };
-        theGifts.push(person);
+        tempGifts.push(person);
       };
     });
+    theGifts = tempGifts;
     localStorage.theGifts = JSON.stringify(theGifts);
   } else{
     localStorage.theGifts = JSON.stringify([]);
@@ -84,7 +87,6 @@ async function getTheGifts() {
   createSections();
 };
 
-//localStorage.theGifts = JSON.stringify(theGifts);
 
 getTheGifts();
 
@@ -110,19 +112,22 @@ async function saveToCloud(){
   let modif = getModif();
   modif.map(modifiedInitial => {
     let section = theGifts.find((person) => person.initial == modifiedInitial);
-    if(docSnapGifts[modifiedInitial]){
-      batch.update(doc(db, "cadeaux2024", modifiedInitial), {
-        suggestions: section.suggestions
-      });
-    } else{
-      batch.set(doc(db, "cadeaux2024", modifiedInitial), {
-        suggestions: section.suggestions
-      });
-    };
+    batch.updateDoc(doc(db, "cadeaux2024", modifiedInitial), {
+      suggestions: section.suggestions
+    });
+    // if(docSnapGifts[modifiedInitial]){
+    //   batch.updateDoc(doc(db, "cadeaux2024", modifiedInitial), {
+    //     suggestions: section.suggestions
+    //   });
+    // } else{
+    //   batch.set(doc(db, "cadeaux2024", modifiedInitial), {
+    //     suggestions: section.suggestions
+    //   });
+    // };
   });  
 
   await batch.commit();
-  localStorage.lastUpdateLocalStorage = nowStamp;
+  localStorage.lastUpdateLocalStorageCadeaux = nowStamp;
   resetCBC();
   resetModif();
 };
@@ -134,7 +139,7 @@ function updateFromCloud(){
   resetModif();
   getTheGifts();
   earthIt.style.backgroundColor = "rgba(237, 20, 61, 0)";
-  localStorage.lastUpdateLocalStorage = new Date().getTime();
+  localStorage.lastUpdateLocalStorageCadeaux = new Date().getTime();
 };
 
 function addModif(initial){
@@ -166,7 +171,7 @@ function resetModif(){
 
 function createSections(){
   let wholeCode = theGifts.map((person) => {
-    let listeIdees = person.suggestions.map((idee) => {
+    let listeIdees =  person.suggestions.map((idee) => {
       return `<li class="ideeLi" id="${idee.id}">
         <label class="myCheckboxLabel">
           <input type="checkbox" class="checkBought displayNone" ${idee.id && checkedBought.length > 0 && checkedBought.includes(idee.id) ? "checked" : ""}>
@@ -175,13 +180,13 @@ function createSections(){
         </label>
         <details class="detailsLi">
           <summary>
-            <span>${idee.idee ? idee.idee : "N'importe quoi"}</span>
+            <span>${idee.cadeau ? idee.cadeau : "N'importe quoi"}</span>
           </summary>
           <div class="insideDiv">
             <h3>Détails&nbsp;:</h3>
             <div class="ideeDetailsDiv">${idee.details && idee.details !== "" ? idee.details : "bof..."}</div>
             <h3>Lien&nbsp;:</h3>
-            <p class="ideeLienP"><i class="fa-solid fa-globe"></i><a href="${idee.wholeLink}">${idee.finalLink ? idee.finalLink + "..." : "nul part"}</a></p>
+            <p class="ideeLienP"><i class="fa-solid fa-globe"></i><a href="${idee.lienComplet}">${idee.lienFinal ? idee.lienFinal : "nul part"}</a></p>
           </div>
         </details>
         
@@ -198,9 +203,10 @@ function createSections(){
         </label>
       </li>`;
     }).join("");
+    let fadeColor = person.color.replace(".5", ".2");
     return `<details id="${person.initial}" class="prenomNom">
-      <summary>${person.nom}</summary>
-      <div class="listDiv">
+      <summary style="background-color:${person.color};">${person.nom}</summary>
+      <div class="listDiv" style="background-color:${fadeColor};">
         <h2>Ma liste de cadeaux&nbsp;:</h2>
         <ul data-initial="${person.initial}">
           ${listeIdees}
@@ -289,19 +295,21 @@ function saveNewIdee(thisOne){
     step2 = step1;
   };
   let idx = step2.indexOf("/");
-  let final = step2.substring(0, idx + 1); //va aller dans le <a>
+  let final = step2.substring(0, idx + 1) + "..."; //va aller dans le <a>
   console.log(final);
 
   let newIdee = {
     id: ideeId,
-    idee: ideeNom,
+    cadeau: ideeNom,
     details: ideeDetails,
-    wholeLink: whole,
-    finalLink: final
+    lienComplet: whole,
+    lienFinal: final
   };
   //add to modif!
   theGifts[index].suggestions.push(newIdee);//???
+  addModif(initial);
   localStorage.theGifts = JSON.stringify(theGifts);
+  updateCBC();
 
   //creation d'un nouveau ideeLi
   let newLi = `<li class="ideeLi" id="${ideeId}">
@@ -318,7 +326,7 @@ function saveNewIdee(thisOne){
         ${ideeDetails !== "" ? `<h3>Détails&nbsp;:</h3>
         <div class="ideeDetailsDiv">${ideeDetails.replace(/\n/g, '<br/>')}</div>` : ``}
         ${whole !== "" ? `<h3>Lien&nbsp;:</h3>
-        <p class="ideeLienP"><i class="fa-solid fa-globe"></i><a href="${whole}">${final + "..."}</a></p>` : ``}
+        <p class="ideeLienP"><i class="fa-solid fa-globe"></i><a href="${whole}">${final}</a></p>` : ``}
       </div>
     </details>
     
@@ -348,12 +356,14 @@ function saveNewIdee(thisOne){
         if(li.id && (checkedBought.length == 0 || (checkedBought.length > 0 && !checkedBought.includes(li.id)))){
           checkedBought.push(li.id);
           localStorage.checkedBought = JSON.stringify(checkedBought);
+          updateCBC();
         };
       } else if(li.id && checkedBought.length > 0 && checkedBought.includes(li.id)){
         let idx = checkedBought.indexOf(li.id);
         if(idx > -1){
           checkedBought.splice(idx, 1);
           localStorage.checkedBought = JSON.stringify(checkedBought);
+          updateCBC();
         };
       };
     });

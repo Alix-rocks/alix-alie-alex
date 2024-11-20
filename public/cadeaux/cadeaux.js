@@ -174,7 +174,7 @@ function createSections(){
     let listeIdees =  person.suggestions.map((idee) => {
       return `<li class="ideeLi" id="${idee.id}">
         <label class="myCheckboxLabel">
-          <input type="checkbox" class="checkBought displayNone" ${idee.id && checkedBought.length > 0 && checkedBought.includes(idee.id) ? "checked" : ""}>
+          <input type="checkbox" onclick="checkCheckedBought(this)" class="checkBought displayNone" ${idee.id && checkedBought.length > 0 && checkedBought.includes(idee.id) ? "checked" : ""}>
           <i class="typcn typcn-media-stop-outline unchecked"></i>
           <i class="typcn typcn-input-checked checked"></i>
         </label>
@@ -192,13 +192,12 @@ function createSections(){
         
         <div class="optionsDiv displayNone">
           <i onclick="switchMiniType(this)" class="typcn typcn-arrow-repeat"></i>
-          <i onclick="switchMiniColor(this)" class="fa-solid fa-palette" style="font-size:18px;"></i>
           <i onclick="trashMini(this)" class="typcn typcn-trash"></i>
           <i onclick="moveMiniDown(this)" class="typcn typcn-arrow-down-outline"></i>
           <i onclick="moveMiniUp(this)" class="typcn typcn-arrow-up-outline"></i>
         </div>
         <label class="optionsLabel">
-          <input type="checkbox" class="optionsInput displayNone" />
+          <input type="checkbox" onclick="displayOptionsDiv(this)" class="optionsInput displayNone" />
           <i class="fa-solid fa-ellipsis-vertical optionsI" style="width:23px;text-align:center;"></i>
         </label>
       </li>`;
@@ -220,22 +219,60 @@ function createSections(){
   document.querySelector("#wholeThing").innerHTML = wholeCode;
 };
 
-document.querySelectorAll("details.detailsLi").forEach(details => {
-  details.addEventListener("toggle", () => {
-    details.parentElement.classList.toggle("open");
-  });
-});
+function checkCheckedBought(input) {
+   let li = input.parentElement.parentElement;
+   let details= li.querySelector("details");
+   if (input.checked) {
+     details.classList.add("bought");
+     if (li.id && (checkedBought.length == 0 || (checkedBought.length > 0 && !checkedBought.includes(li.id)))) {
+       checkedBought.push(li.id);
+       localStorage.checkedBought = JSON.stringify(checkedBought);
+       updateCBC();
+     };
+   } else {
+     details.classList.remove("bought");
+      if (li.id && checkedBought.length > 0 && checkedBought.includes(li.id)) {
+         let idx = checkedBought.indexOf(li.id);
+         if (idx > -1) {
+           checkedBought.splice(idx, 1);
+           localStorage.checkedBought = JSON.stringify(checkedBought);
+           updateCBC();
+         };
+      };
+  };
+};
+window.checkCheckedBought = checkCheckedBought;
+
+function detailsOpenClose(details){
+  if(details.open == false){
+        details.parentElement.classList.add("open");
+      } else{
+        details.parentElement.classList.remove("open");
+      }; 
+};
+window.detailsOpenClose = detailsOpenClose;
+
+function displayOptionsDiv(input){
+  let div = input.parentElement.parentElement.querySelector(".optionsDiv");
+  if(input.checked){
+    div.classList.remove("displayNone");
+  } else{
+    div.classList.add("displayNone");
+  };
+};
+window.displayOptionsDiv = displayOptionsDiv;
+
 
 function addBtn(thisOne){
   let addLi = thisOne.parentElement;
-  let newAddingLi = `<li class="addingLi open">
+  let newAddingLi = `<li class="addingLi">
     <details class="detailsLi" open>
       <summary>
         <input class="addingName" type="text" placeholder="Idée cadeau" />
       </summary>
       <div class="insideDiv">
         <h3>Détails&nbsp;:</h3>
-        <textarea class="addingDetails" name="" id=""></textarea>
+        <textarea class="addingDetails"></textarea>
         <h3>Lien&nbsp;:</h3>
         <p class="addingLienP"><i class="fa-solid fa-globe"></i><input class="addingLink" type="text"></p>
       </div>
@@ -244,15 +281,7 @@ function addBtn(thisOne){
   </li>`;
   addLi.insertAdjacentHTML("beforebegin", newAddingLi);
 
-  let details = document.querySelector(".addingLi > .detailsLi");
-    details.addEventListener("toggle", () => {
-      if(details.hasAttribute("open")){
-        details.parentElement.classList.add("open");
-      } else{
-        details.parentElement.classList.remove("open");
-      }; 
-    });
-
+  
   document.querySelectorAll("textarea").forEach(textarea => {
     textarea.addEventListener("input", () => {
       textarea.style.height = textarea.scrollHeight + "px";    
@@ -314,7 +343,7 @@ function saveNewIdee(thisOne){
   //creation d'un nouveau ideeLi
   let newLi = `<li class="ideeLi" id="${ideeId}">
     <label class="myCheckboxLabel">
-      <input type="checkbox" class="checkBought displayNone">
+      <input type="checkbox" onclick="checkCheckedBought(this)" class="checkBought displayNone">
       <i class="typcn typcn-media-stop-outline unchecked"></i>
       <i class="typcn typcn-input-checked checked"></i>
     </label>
@@ -331,14 +360,13 @@ function saveNewIdee(thisOne){
     </details>
     
     <div class="optionsDiv displayNone">
-      <i onclick="switchMiniType(this)" class="typcn typcn-arrow-repeat"></i>
-      <i onclick="switchMiniColor(this)" class="fa-solid fa-palette" style="font-size:18px;"></i>
-      <i onclick="trashMini(this)" class="typcn typcn-trash"></i>
-      <i onclick="moveMiniDown(this)" class="typcn typcn-arrow-down-outline"></i>
-      <i onclick="moveMiniUp(this)" class="typcn typcn-arrow-up-outline"></i>
+      <i onclick="modify(this)" class="typcn typcn-arrow-repeat"></i>
+      <i onclick="trash(this)" class="typcn typcn-trash"></i>
+      <i onclick="moveDown(this)" class="typcn typcn-arrow-down-outline"></i>
+      <i onclick="moveUp(this)" class="typcn typcn-arrow-up-outline"></i>
     </div>
     <label class="optionsLabel">
-      <input type="checkbox" class="optionsInput displayNone" />
+      <input type="checkbox" onclick="displayOptionsDiv(this)" class="optionsInput displayNone" />
       <i class="fa-solid fa-ellipsis-vertical optionsI" style="width:23px;text-align:center;"></i>
     </label>
   </li>`;
@@ -346,43 +374,17 @@ function saveNewIdee(thisOne){
   addingLi.insertAdjacentHTML("beforebegin", newLi);
 
   addingLi.remove();
-  
-  //for all or just for that one?? They should all be onclick and not eventListeners if you add them
-  document.querySelectorAll(".checkBought").forEach(input => {
-    input.addEventListener("click", () => {
-      let li = input.parentElement.parentElement;
-      li.querySelector("details").classList.toggle("bought");
-      if(input.checked){
-        if(li.id && (checkedBought.length == 0 || (checkedBought.length > 0 && !checkedBought.includes(li.id)))){
-          checkedBought.push(li.id);
-          localStorage.checkedBought = JSON.stringify(checkedBought);
-          updateCBC();
-        };
-      } else if(li.id && checkedBought.length > 0 && checkedBought.includes(li.id)){
-        let idx = checkedBought.indexOf(li.id);
-        if(idx > -1){
-          checkedBought.splice(idx, 1);
-          localStorage.checkedBought = JSON.stringify(checkedBought);
-          updateCBC();
-        };
-      };
-    });
-  });
-
-  document.querySelectorAll("details.detailsLi").forEach(details => {
-    details.addEventListener("toggle", () => {
-      details.parentElement.classList.toggle("open");
-    });
-  });
-
-  document.querySelectorAll(".optionsInput").forEach(input => {
-    input.addEventListener("click", () => {
-      input.parentElement.parentElement.querySelector(".optionsDiv").classList.toggle("displayNone");
-    });
-  });
 };
 
 window.saveNewIdee = saveNewIdee;
 
-
+function modify(thisOne) {
+  let li = thisOne.parentElement.parentElement;
+  let ul = li.parentElement;
+  let initial = ul.dataset.initial;
+  let index = theGifts.findIndex(id => id.initial == initial);
+  let id = li.id;
+  let idx = theGifts[index].suggestions.findIndex(ide => ide.id == li.id);
+  let itm = theGifts[index].suggestions[idx];
+};
 

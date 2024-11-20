@@ -19,9 +19,15 @@ function getCloudBC(){
     cBC = localStorage.cBC;
     let cBCD = cBC >= 10 ? 1 : "." + cBC;
     cloudIt.style.backgroundColor = "rgba(237, 20, 61, " + cBCD + ")";
+    if(cBC == 0){
+      cloudIt.parentElement.querySelector(".underCloudBtnSpan").style.visibility = "hidden";
+    } else{
+      cloudIt.parentElement.querySelector(".underCloudBtnSpan").style.visibility = "visible";
+    };
   } else {
     cBC = 0;
     localStorage.setItem("cBC", cBC);
+    cloudIt.parentElement.querySelector(".underCloudBtnSpan").style.visibility = "hidden";
   };
 };
 function updateCBC(){
@@ -29,11 +35,13 @@ function updateCBC(){
   localStorage.cBC = cBC;
   let cBCD = cBC >= 10 ? 1 : "." + cBC;
   cloudIt.style.backgroundColor = "rgba(237, 20, 61, " + cBCD + ")";
+  cloudIt.parentElement.querySelector(".underCloudBtnSpan").style.visibility = "visible";
 };
 function resetCBC(){
   cBC = 0;
   cloudIt.style.backgroundColor = "rgba(237, 20, 61, " + cBC + ")";
   localStorage.cBC = cBC;
+  cloudIt.parentElement.querySelector(".underCloudBtnSpan").style.visibility = "hidden";
 };
 
 let checkedBought = [];
@@ -60,6 +68,9 @@ async function getTheGifts() {
   };
   if((lastUpdateLocalStorageCadeaux !== "" && lastUpdateFireStoreCadeaux !== "" && lastUpdateLocalStorageCadeaux < lastUpdateFireStoreCadeaux) || lastUpdateLocalStorageCadeaux == ""){
     earthIt.style.backgroundColor = "rgb(237, 20, 61)";
+    earthIt.parentElement.querySelector(".underCloudBtnSpan").style.visibility = "visible";
+  } else{
+    earthIt.parentElement.querySelector(".underCloudBtnSpan").style.visibility = "hidden";
   };
   
   if(localStorage.getItem("theGifts")){
@@ -103,27 +114,16 @@ async function saveToCloud(){
       lastUpdateFireStore: nowStamp,
       checked: checkedBought
     });
-  } else{
-    batch.set(doc(db, "cadeaux2024", "all"), {
-      lastUpdateFireStore: nowStamp,
-      checked: checkedBought
-    });
   };
+
   let modif = getModif();
   modif.map(modifiedInitial => {
     let section = theGifts.find((person) => person.initial == modifiedInitial);
-    batch.updateDoc(doc(db, "cadeaux2024", modifiedInitial), {
+    batch.update(doc(db, "cadeaux2024", modifiedInitial), {
+      color: section.color,
+      nom: section.nom,
       suggestions: section.suggestions
     });
-    // if(docSnapGifts[modifiedInitial]){
-    //   batch.updateDoc(doc(db, "cadeaux2024", modifiedInitial), {
-    //     suggestions: section.suggestions
-    //   });
-    // } else{
-    //   batch.set(doc(db, "cadeaux2024", modifiedInitial), {
-    //     suggestions: section.suggestions
-    //   });
-    // };
   });  
 
   await batch.commit();
@@ -139,6 +139,7 @@ function updateFromCloud(){
   resetModif();
   getTheGifts();
   earthIt.style.backgroundColor = "rgba(237, 20, 61, 0)";
+  earthIt.parentElement.querySelector(".underCloudBtnSpan").style.visibility = "hidden";
   localStorage.lastUpdateLocalStorageCadeaux = new Date().getTime();
 };
 
@@ -191,10 +192,10 @@ function createSections(){
         </details>
         
         <div class="optionsDiv displayNone">
-          <i onclick="switchMiniType(this)" class="typcn typcn-arrow-repeat"></i>
-          <i onclick="trashMini(this)" class="typcn typcn-trash"></i>
-          <i onclick="moveMiniDown(this)" class="typcn typcn-arrow-down-outline"></i>
-          <i onclick="moveMiniUp(this)" class="typcn typcn-arrow-up-outline"></i>
+          <i onclick="modify(this)" class="typcn typcn-edit"></i>
+          <i onclick="trash(this)" class="typcn typcn-trash"></i>
+          <i onclick="moveDown(this)" class="typcn typcn-arrow-down-outline"></i>
+          <i onclick="moveUp(this)" class="typcn typcn-arrow-up-outline"></i>
         </div>
         <label class="optionsLabel">
           <input type="checkbox" onclick="displayOptionsDiv(this)" class="optionsInput displayNone" />
@@ -232,9 +233,9 @@ function checkCheckedBought(input) {
    } else {
      details.classList.remove("bought");
       if (li.id && checkedBought.length > 0 && checkedBought.includes(li.id)) {
-         let idx = checkedBought.indexOf(li.id);
-         if (idx > -1) {
-           checkedBought.splice(idx, 1);
+         let ideeIdx = checkedBought.indexOf(li.id);
+         if (ideeIdx > -1) {
+           checkedBought.splice(ideeIdx, 1);
            localStorage.checkedBought = JSON.stringify(checkedBought);
            updateCBC();
          };
@@ -242,15 +243,6 @@ function checkCheckedBought(input) {
   };
 };
 window.checkCheckedBought = checkCheckedBought;
-
-function detailsOpenClose(details){
-  if(details.open == false){
-        details.parentElement.classList.add("open");
-      } else{
-        details.parentElement.classList.remove("open");
-      }; 
-};
-window.detailsOpenClose = detailsOpenClose;
 
 function displayOptionsDiv(input){
   let div = input.parentElement.parentElement.querySelector(".optionsDiv");
@@ -272,30 +264,33 @@ function addBtn(thisOne){
       </summary>
       <div class="insideDiv">
         <h3>Détails&nbsp;:</h3>
-        <textarea class="addingDetails"></textarea>
+        <textarea id="addingDetails" class="addingDetails"></textarea>
         <h3>Lien&nbsp;:</h3>
         <p class="addingLienP"><i class="fa-solid fa-globe"></i><input class="addingLink" type="text"></p>
       </div>
     </details>
+    <button class="iconBtn" onclick="cancelNewIdee(this)"><i class="fa-solid fa-xmark"></i></button>
     <button class="iconBtn" onclick="saveNewIdee(this)"><i class="fa-regular fa-floppy-disk"></i></button>
   </li>`;
   addLi.insertAdjacentHTML("beforebegin", newAddingLi);
 
-  
-  document.querySelectorAll("textarea").forEach(textarea => {
-    textarea.addEventListener("input", () => {
-      textarea.style.height = textarea.scrollHeight + "px";    
-    });
+  addLi.parentElement.querySelector("#addingDetails").addEventListener("input", () => {
+    textarea.style.height = textarea.scrollHeight + "px";    
   });
 };
-
 window.addBtn = addBtn;
+
+function cancelNewIdee(thisOne){
+  let addingLi = thisOne.parentElement;
+  addingLi.remove();
+};
+window.cancelNewIdee = cancelNewIdee;
 
 function saveNewIdee(thisOne){
   let addingLi = thisOne.parentElement;
   let addingUl = addingLi.parentElement;
   let initial = addingUl.dataset.initial;
-  let index = theGifts.findIndex(id => id.initial == initial);
+  let personIndex = theGifts.findIndex(id => id.initial == initial);
 
   //id
   let ideeId = crypto.randomUUID();
@@ -334,8 +329,8 @@ function saveNewIdee(thisOne){
     lienComplet: whole,
     lienFinal: final
   };
-  //add to modif!
-  theGifts[index].suggestions.push(newIdee);//???
+  //add to theGifts and modif
+  theGifts[personIndex].suggestions.push(newIdee);
   addModif(initial);
   localStorage.theGifts = JSON.stringify(theGifts);
   updateCBC();
@@ -360,7 +355,7 @@ function saveNewIdee(thisOne){
     </details>
     
     <div class="optionsDiv displayNone">
-      <i onclick="modify(this)" class="typcn typcn-arrow-repeat"></i>
+      <i onclick="modify(this)" class="typcn typcn-edit"></i>
       <i onclick="trash(this)" class="typcn typcn-trash"></i>
       <i onclick="moveDown(this)" class="typcn typcn-arrow-down-outline"></i>
       <i onclick="moveUp(this)" class="typcn typcn-arrow-up-outline"></i>
@@ -382,9 +377,204 @@ function modify(thisOne) {
   let li = thisOne.parentElement.parentElement;
   let ul = li.parentElement;
   let initial = ul.dataset.initial;
-  let index = theGifts.findIndex(id => id.initial == initial);
-  let id = li.id;
-  let idx = theGifts[index].suggestions.findIndex(ide => ide.id == li.id);
-  let itm = theGifts[index].suggestions[idx];
-};
+  let personIndex = theGifts.findIndex(id => id.initial == initial);
+  let ideeIdx = theGifts[personIndex].suggestions.findIndex(idee => idee.id == li.id);
+  let itm = theGifts[personIndex].suggestions[ideeIdx];
 
+  li.classList.add("addingLi");
+  li.innerHTML = `<details class="detailsLi" open>
+    <summary>
+      <input class="addingName" type="text" placeholder="Idée cadeau" value="${itm.cadeau ? itm.cadeau : ""}" />
+    </summary>
+    <div class="insideDiv">
+      <h3>Détails&nbsp;:</h3>
+      <textarea class="addingDetails">${itm.details !== "" ? itm.details.replace(/\n/g, '<br/>') : ""}</textarea>
+      <h3>Lien&nbsp;:</h3>
+      <p class="addingLienP"><i class="fa-solid fa-globe"></i><input class="addingLink" type="text" value="${itm.lienComplet ? itm.lienComplet : ""}"></p>
+    </div>
+  </details>
+  <button id="cancelModifyIdee" class="iconBtn"><i class="fa-solid fa-xmark"></i></button>
+  <button id="saveModifyIdee" class="iconBtn"><i class="fa-regular fa-floppy-disk"></i></button>`;
+
+  let textarea = li.querySelector("textarea");
+  textarea.addEventListener("input", () => {
+    textarea.style.height = textarea.scrollHeight + "px";    
+  });
+
+  //Cancel the modification
+  li.querySelector("#cancelModifyIdee").addEventListener("click", () => {
+    //Recréation du li initial
+    li.classList.remove("addingLi");
+    li.innerHTML = `<label class="myCheckboxLabel">
+        <input type="checkbox" onclick="checkCheckedBought(this)" class="checkBought displayNone">
+        <i class="typcn typcn-media-stop-outline unchecked"></i>
+        <i class="typcn typcn-input-checked checked"></i>
+      </label>
+      <details class="detailsLi">
+        <summary>
+          <span>${itm.cadeau !== "" ? itm.cadeau : "N'importe quoi"}</span>
+        </summary>
+        <div class="insideDiv">
+          ${itm.details !== "" ? `<h3>Détails&nbsp;:</h3>
+          <div class="ideeDetailsDiv">${itm.details.replace(/\n/g, '<br/>')}</div>` : ``}
+          ${itm.lienComplet !== "" ? `<h3>Lien&nbsp;:</h3>
+          <p class="ideeLienP"><i class="fa-solid fa-globe"></i><a href="${itm.lienComplet}">${itm.lienFinal}</a></p>` : ``}
+        </div>
+      </details>
+      
+      <div class="optionsDiv displayNone">
+        <i onclick="modify(this)" class="typcn typcn-edit"></i>
+        <i onclick="trash(this)" class="typcn typcn-trash"></i>
+        <i onclick="moveDown(this)" class="typcn typcn-arrow-down-outline"></i>
+        <i onclick="moveUp(this)" class="typcn typcn-arrow-up-outline"></i>
+      </div>
+      <label class="optionsLabel">
+        <input type="checkbox" onclick="displayOptionsDiv(this)" class="optionsInput displayNone" />
+        <i class="fa-solid fa-ellipsis-vertical optionsI" style="width:23px;text-align:center;"></i>
+      </label>`;
+  });
+
+  //Save the modification
+  li.querySelector("#saveModifyIdee").addEventListener("click", () => {
+    //Nom du cadeau
+    let ideeNom = li.querySelector(".addingName").value;
+
+    //Détails
+    let ideeDetails = li.querySelector(".addingDetails").value;
+
+    // Lien
+    let whole = String(li.querySelector(".addingLink").value); //va aller dans le href
+    console.log(whole);
+    let step1;
+    if(whole.startsWith("https://")){
+      step1 = whole.substring(8);
+    }else if(whole.startsWith("http://")){
+      step1 = whole.substring(7);
+    } else{
+      step1 = whole;
+    };
+    let step2;
+    if(step1.startsWith("www.")){
+      step2 = step1.substring(4);
+    } else{
+      step2 = step1;
+    };
+    let idx = step2.indexOf("/");
+    let final = step2.substring(0, idx + 1) + "..."; //va aller dans le <a>
+
+    //Recréation du nouveau li
+    li.classList.remove("addingLi");
+    li.innerHTML = `<label class="myCheckboxLabel">
+        <input type="checkbox" onclick="checkCheckedBought(this)" class="checkBought displayNone">
+        <i class="typcn typcn-media-stop-outline unchecked"></i>
+        <i class="typcn typcn-input-checked checked"></i>
+      </label>
+      <details class="detailsLi">
+        <summary>
+          <span>${ideeNom !== "" ? ideeNom : "N'importe quoi"}</span>
+        </summary>
+        <div class="insideDiv">
+          ${ideeDetails !== "" ? `<h3>Détails&nbsp;:</h3>
+          <div class="ideeDetailsDiv">${ideeDetails.replace(/\n/g, '<br/>')}</div>` : ``}
+          ${whole !== "" ? `<h3>Lien&nbsp;:</h3>
+          <p class="ideeLienP"><i class="fa-solid fa-globe"></i><a href="${whole}">${final}</a></p>` : ``}
+        </div>
+      </details>
+      
+      <div class="optionsDiv displayNone">
+        <i onclick="modify(this)" class="typcn typcn-edit"></i>
+        <i onclick="trash(this)" class="typcn typcn-trash"></i>
+        <i onclick="moveDown(this)" class="typcn typcn-arrow-down-outline"></i>
+        <i onclick="moveUp(this)" class="typcn typcn-arrow-up-outline"></i>
+      </div>
+      <label class="optionsLabel">
+        <input type="checkbox" onclick="displayOptionsDiv(this)" class="optionsInput displayNone" />
+        <i class="fa-solid fa-ellipsis-vertical optionsI" style="width:23px;text-align:center;"></i>
+      </label>`;
+
+    //modify and save theGifts and add to modify
+    theGifts[personIndex].suggestions[ideeIdx] = {
+      id: li.id,
+      cadeau: ideeNom,
+      details: ideeDetails,
+      lienComplet: whole,
+      lienFinal: final
+    };
+    console.log(theGifts[personIndex].suggestions);
+    addModif(initial);
+    localStorage.theGifts = JSON.stringify(theGifts);
+    updateCBC();
+  });
+};
+window.modify = modify;
+
+function trash(thisOne){
+  let li = thisOne.parentElement.parentElement;
+  let ul = li.parentElement;
+  let initial = ul.dataset.initial;
+  let personIndex = theGifts.findIndex(id => id.initial == initial);
+  let ideeIdx = theGifts[personIndex].suggestions.findIndex(idee => idee.id == li.id);
+  theGifts[personIndex].suggestions.splice(ideeIdx, 1);
+  li.remove();
+
+  addModif(initial);
+  localStorage.theGifts = JSON.stringify(theGifts);
+  updateCBC();
+};
+window.trash = trash;
+
+function moveDown(thisOne){
+  let li = thisOne.parentElement.parentElement;
+  let ul = li.parentElement;
+  let initial = ul.dataset.initial;
+  let personIndex = theGifts.findIndex(id => id.initial == initial);
+  let ideeIdx = theGifts[personIndex].suggestions.findIndex(idee => idee.id == li.id);
+
+  const array = theGifts[personIndex].suggestions;
+  const indexFrom = ideeIdx; // Index of element to move
+  const indexTo = ideeIdx == array.length - 1 ? 0 : ideeIdx + 1; // New index for the element
+
+  [array[indexFrom], array[indexTo]] = [array[indexTo], array[indexFrom]]; 
+  console.log(array);
+
+  let liNext = li.nextElementSibling;
+  if(liNext && liNext.className !== "addBtnLi"){
+    liNext.insertAdjacentElement("afterend", li);
+  } else{
+    let firstOne = ul.firstElementChild;
+    firstOne.insertAdjacentElement("beforebegin", li);
+  };
+
+  addModif(initial);
+  localStorage.theGifts = JSON.stringify(theGifts);
+  updateCBC();
+};
+window.moveDown = moveDown;
+
+function moveUp(thisOne){
+  let li = thisOne.parentElement.parentElement;
+  let ul = li.parentElement;
+  let initial = ul.dataset.initial;
+  let personIndex = theGifts.findIndex(id => id.initial == initial);
+  let ideeIdx = theGifts[personIndex].suggestions.findIndex(idee => idee.id == li.id);
+
+  const array = theGifts[personIndex].suggestions;
+  const indexFrom = ideeIdx; // Index of element to move
+  const indexTo = ideeIdx == 0 ? array.length - 1 : ideeIdx - 1; // New index for the element
+
+  [array[indexFrom], array[indexTo]] = [array[indexTo], array[indexFrom]]; 
+  console.log(array);
+
+  let liPrev = li.previousElementSibling;
+  if(liPrev){
+    liPrev.insertAdjacentElement("beforebegin", li);
+  } else{
+    let addOne = ul.querySelector(".addBtnLi");
+    addOne.insertAdjacentElement("beforebegin", li);
+  };
+
+  addModif(initial);
+  localStorage.theGifts = JSON.stringify(theGifts);
+  updateCBC();
+};
+window.moveUp = moveUp;

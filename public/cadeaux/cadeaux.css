@@ -150,6 +150,7 @@ details.prenomNom > summary{
   border-radius: 2px 15px 15px 2px;
   border: 2px solid var(--tx-color);
   width: max-content;
+  white-space: nowrap;
   padding: 2px 8px 2px 5px;
   font-weight: 700;
 }

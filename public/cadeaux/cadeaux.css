@@ -18,6 +18,8 @@ body{
 .cloudBtnDivDiv{
   display: flex;
   flex-flow: row nowrap;
+  justify-content: center;
+  margin-bottom: 15px;
 }
 .cloudBtnDiv{
   display: flex;
@@ -32,21 +34,35 @@ body{
   border-radius: 5px;
   color: var(--tx-color);
   /* padding: 5px 10px; */
-  width: fit-content;
+  width: 60px;
   text-align: center;
   font-weight: 600;
   /* background-color: lightgrey; */
   font-size: 25px;
   line-height: 1em;
   padding: 2px 5px 2px 5px;
-  margin: 10px 10px 2px;
+  margin: 10px 20px 2px;
   background-color: rgba(237, 20, 61, 0);
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
 }
-.cloudBtnDiv > span.underCloudBtnSpan{
+#cloudIt .typcn-cloud-storage-outline{
+  display: block;
+  translate: 1.5px 0;
+}  
+
+span.underCloudBtnSpan{
   font-size: 10px;
   text-align: center;
   line-height: 1em;
   visibility: hidden;
+}
+span.insideCloudBtnspan{
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1em;
 }
 
 textarea, input[type="text"]{
@@ -216,8 +232,7 @@ i.fa-globe{
   border-radius: 3px;
 }
 .optionsDiv i{
-  margin: 0 8px;
-  font-size: 22px;
+  margin: 0 4px;
 }
 .iconBtn{
   border: none;

@@ -192,10 +192,10 @@ function createSections(){
         </details>
         
         <div class="optionsDiv displayNone">
-          <i onclick="modify(this)" class="typcn typcn-edit"></i>
-          <i onclick="trash(this)" class="typcn typcn-trash"></i>
-          <i onclick="moveDown(this)" class="typcn typcn-arrow-down-outline"></i>
-          <i onclick="moveUp(this)" class="typcn typcn-arrow-up-outline"></i>
+          <button onclick="modify(this)" class="iconBtn"><i class="typcn typcn-edit"></i></button>
+          <button onclick="trash(this)" class="iconBtn"><i class="typcn typcn-trash"></i></button>
+          <button onclick="moveDown(this)" class="iconBtn"><i class="typcn typcn-arrow-down-outline"></i></button>
+          <button onclick="moveUp(this)" class="iconBtn"><i class="typcn typcn-arrow-up-outline"></i></button>
         </div>
         <label class="optionsLabel">
           <input type="checkbox" onclick="displayOptionsDiv(this)" class="optionsInput displayNone" />
@@ -355,10 +355,10 @@ function saveNewIdee(thisOne){
     </details>
     
     <div class="optionsDiv displayNone">
-      <i onclick="modify(this)" class="typcn typcn-edit"></i>
-      <i onclick="trash(this)" class="typcn typcn-trash"></i>
-      <i onclick="moveDown(this)" class="typcn typcn-arrow-down-outline"></i>
-      <i onclick="moveUp(this)" class="typcn typcn-arrow-up-outline"></i>
+      <button onclick="modify(this)" class="iconBtn"><i class="typcn typcn-edit"></i></button>
+      <button onclick="trash(this)" class="iconBtn"><i class="typcn typcn-trash"></i></button>
+      <button onclick="moveDown(this)" class="iconBtn"><i class="typcn typcn-arrow-down-outline"></i></button>
+      <button onclick="moveUp(this)" class="iconBtn"><i class="typcn typcn-arrow-up-outline"></i></button>
     </div>
     <label class="optionsLabel">
       <input type="checkbox" onclick="displayOptionsDiv(this)" class="optionsInput displayNone" />
@@ -423,10 +423,10 @@ function modify(thisOne) {
       </details>
       
       <div class="optionsDiv displayNone">
-        <i onclick="modify(this)" class="typcn typcn-edit"></i>
-        <i onclick="trash(this)" class="typcn typcn-trash"></i>
-        <i onclick="moveDown(this)" class="typcn typcn-arrow-down-outline"></i>
-        <i onclick="moveUp(this)" class="typcn typcn-arrow-up-outline"></i>
+        <button onclick="modify(this)" class="iconBtn"><i class="typcn typcn-edit"></i></button>
+        <button onclick="trash(this)" class="iconBtn"><i class="typcn typcn-trash"></i></button>
+        <button onclick="moveDown(this)" class="iconBtn"><i class="typcn typcn-arrow-down-outline"></i></button>
+        <button onclick="moveUp(this)" class="iconBtn"><i class="typcn typcn-arrow-up-outline"></i></button>
       </div>
       <label class="optionsLabel">
         <input type="checkbox" onclick="displayOptionsDiv(this)" class="optionsInput displayNone" />
@@ -482,10 +482,10 @@ function modify(thisOne) {
       </details>
       
       <div class="optionsDiv displayNone">
-        <i onclick="modify(this)" class="typcn typcn-edit"></i>
-        <i onclick="trash(this)" class="typcn typcn-trash"></i>
-        <i onclick="moveDown(this)" class="typcn typcn-arrow-down-outline"></i>
-        <i onclick="moveUp(this)" class="typcn typcn-arrow-up-outline"></i>
+        <button onclick="modify(this)" class="iconBtn"><i class="typcn typcn-edit"></i></button>
+        <button onclick="trash(this)" class="iconBtn"><i class="typcn typcn-trash"></i></button>
+        <button onclick="moveDown(this)" class="iconBtn"><i class="typcn typcn-arrow-down-outline"></i></button>
+        <button onclick="moveUp(this)" class="iconBtn"><i class="typcn typcn-arrow-up-outline"></i></button>
       </div>
       <label class="optionsLabel">
         <input type="checkbox" onclick="displayOptionsDiv(this)" class="optionsInput displayNone" />
@@ -531,23 +531,25 @@ function moveDown(thisOne){
   let ideeIdx = theGifts[personIndex].suggestions.findIndex(idee => idee.id == li.id);
 
   const array = theGifts[personIndex].suggestions;
-  const indexFrom = ideeIdx; // Index of element to move
-  const indexTo = ideeIdx == array.length - 1 ? 0 : ideeIdx + 1; // New index for the element
+  if(array.length > 1){
+    const indexFrom = ideeIdx; // Index of element to move
+    const indexTo = ideeIdx == array.length - 1 ? 0 : ideeIdx + 1; // New index for the element
 
-  [array[indexFrom], array[indexTo]] = [array[indexTo], array[indexFrom]]; 
-  console.log(array);
+    [array[indexFrom], array[indexTo]] = [array[indexTo], array[indexFrom]]; 
+    console.log(array);
 
-  let liNext = li.nextElementSibling;
-  if(liNext && liNext.className !== "addBtnLi"){
-    liNext.insertAdjacentElement("afterend", li);
-  } else{
-    let firstOne = ul.firstElementChild;
-    firstOne.insertAdjacentElement("beforebegin", li);
+    let liNext = li.nextElementSibling;
+    if(liNext && liNext.className !== "addBtnLi"){
+      liNext.insertAdjacentElement("afterend", li);
+    } else{
+      let firstOne = ul.firstElementChild;
+      firstOne.insertAdjacentElement("beforebegin", li);
+    };
+
+    addModif(initial);
+    localStorage.theGifts = JSON.stringify(theGifts);
+    updateCBC();
   };
-
-  addModif(initial);
-  localStorage.theGifts = JSON.stringify(theGifts);
-  updateCBC();
 };
 window.moveDown = moveDown;
 
@@ -559,22 +561,24 @@ function moveUp(thisOne){
   let ideeIdx = theGifts[personIndex].suggestions.findIndex(idee => idee.id == li.id);
 
   const array = theGifts[personIndex].suggestions;
-  const indexFrom = ideeIdx; // Index of element to move
-  const indexTo = ideeIdx == 0 ? array.length - 1 : ideeIdx - 1; // New index for the element
+  if(array.length > 1){
+    const indexFrom = ideeIdx; // Index of element to move
+    const indexTo = ideeIdx == 0 ? array.length - 1 : ideeIdx - 1; // New index for the element
 
-  [array[indexFrom], array[indexTo]] = [array[indexTo], array[indexFrom]]; 
-  console.log(array);
+    [array[indexFrom], array[indexTo]] = [array[indexTo], array[indexFrom]]; 
+    console.log(array);
 
-  let liPrev = li.previousElementSibling;
-  if(liPrev){
-    liPrev.insertAdjacentElement("beforebegin", li);
-  } else{
-    let addOne = ul.querySelector(".addBtnLi");
-    addOne.insertAdjacentElement("beforebegin", li);
-  };
+    let liPrev = li.previousElementSibling;
+    if(liPrev){
+      liPrev.insertAdjacentElement("beforebegin", li);
+    } else{
+      let addOne = ul.querySelector(".addBtnLi");
+      addOne.insertAdjacentElement("beforebegin", li);
+    };
 
-  addModif(initial);
-  localStorage.theGifts = JSON.stringify(theGifts);
-  updateCBC();
+    addModif(initial);
+    localStorage.theGifts = JSON.stringify(theGifts);
+    updateCBC();
+  };  
 };
 window.moveUp = moveUp;

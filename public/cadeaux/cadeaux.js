@@ -204,7 +204,7 @@ function createSections(){
       </li>`;
     }).join("");
     let fadeColor = person.color.replace(".5", ".2");
-    return `<details id="${person.initial}" class="namesDetails">
+    return `<details name="ideeCadeau" id="${person.initial}" class="namesDetails">
       <summary class="namesSummary" style="background-color:${person.color};">${person.nom}</summary>
       <div class="listDiv" style="background-color:${fadeColor};">
         <h2>Ma liste de cadeaux&nbsp;:</h2>

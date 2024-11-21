@@ -37,8 +37,15 @@
         <span class="underCloudBtnSpan">Sauve ta<br/>nouvelle<br/>version!</span>
       </div>
     </div>
-    <div id="wholeThing"></div>
-    
+    <div id="wholeThing" style="margin-bottom: 4em;"></div>
+    <input id="helpShow" type="radio" name="helpSwitch" class="displayNone"/>
+    <input id="helpExit" type="radio" name="helpSwitch" class="displayNone"/>
+    <div class="helpDiv">
+      <label for="helpExit" class="iconBtn" style="text-align: right;"><i class="fa-solid fa-xmark"></i></label>
+      <h5>La liste officielle est enregistrée dans un nuage. À chaque modifications que tu fait, le <span class="typcn typcn-cloud-storage-outline"></span> devient de plus en plus <span class="rougeSpan">rouge</span>. Ça veut dire que ta version est de plus en plus différente de la version officielle qui est dans le nuage. Lorsque tu as fini de faire tes ajouts et modifications, clique sur le <span class="typcn typcn-cloud-storage-outline"></span> pour que ta version devienne la nouvelle version officielle dans le nuage.</h5>
+      <h5>Avant de modifier quoique ce soit, assures-toi d'avoir rafraîchit la page; ça va lui permettre de vérifier si ta version correspond bien à la version officielle qui est dans le nuage. Si le <span class="typcn typcn-weather-stormy"></span> devient <span class="rougeSpan">rouge</span>, c'est qu'il y a une nouvelle et plus récente version de la liste dans le nuage (Quelqu'un à probablement apporté ses propres modifications!). Tu n'as alors qu'à cliquer sur le <span class="typcn typcn-weather-stormy"></span> et la nouvelle version t'apparaîtra!</h5>
+    </div>
+    <label id="helpBtn" for="helpShow" class="iconBtn"><i class="fa-regular fa-circle-question"></i></label>
     <script type="module" src="cadeaux.js"></script>
   </body>
 </html>

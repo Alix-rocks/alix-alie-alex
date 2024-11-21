@@ -48,34 +48,35 @@ let checkedBought = [];
 
 let theGifts = [];
 
-async function getTheGifts() {
-  const getTheGifts = await getDocs(collection(db, "cadeaux2024"));
-
+async function getTheRest() {
+  const getTheRest = await getDoc(doc(db, "cadeaux2024", "all"));
+  
   if(localStorage.getItem("lastUpdateLocalStorageCadeaux")){
     lastUpdateLocalStorageCadeaux = localStorage.lastUpdateLocalStorageCadeaux;
   };
-  if(localStorage.getItem("checkedBought")){
-    checkedBought = JSON.parse(localStorage.checkedBought);
-  };
-  if(getTheGifts){
-    getTheGifts.forEach(doc => {
-      if(doc.id == "all"){
-        lastUpdateFireStoreCadeaux = doc.data().lastUpdateFireStore;
-        checkedBought = doc.data().checked;
-      };
-    });
-    localStorage.checkedBought = checkedBought.length > 0 ? JSON.stringify(checkedBought) : JSON.stringify([]);
-  };
+  lastUpdateFireStoreCadeaux = getTheRest.data().lastUpdateFireStore;
+  console.log(lastUpdateFireStoreCadeaux);
   if((lastUpdateLocalStorageCadeaux !== "" && lastUpdateFireStoreCadeaux !== "" && lastUpdateLocalStorageCadeaux < lastUpdateFireStoreCadeaux) || lastUpdateLocalStorageCadeaux == ""){
     earthIt.style.backgroundColor = "rgb(237, 20, 61)";
     earthIt.parentElement.querySelector(".underCloudBtnSpan").style.visibility = "visible";
   } else{
     earthIt.parentElement.querySelector(".underCloudBtnSpan").style.visibility = "hidden";
   };
+
+  if(localStorage.getItem("checkedBought")){
+    checkedBought = JSON.parse(localStorage.checkedBought);
+  } else{
+    checkedBought = getTheRest.data().checked;
+  };
+  localStorage.checkedBought = checkedBought.length > 0 ? JSON.stringify(checkedBought) : JSON.stringify([]);
+};
+
+async function getTheGifts() {
+  const getTheGifts = await getDocs(collection(db, "cadeaux2024"));
   
   if(localStorage.getItem("theGifts")){
     theGifts = JSON.parse(localStorage.theGifts);
-  } else if(getTheGifts){
+  } else{
     let tempGifts = [];
     getTheGifts.forEach(doc => {
       if(doc.id !== "all"){
@@ -90,15 +91,13 @@ async function getTheGifts() {
     });
     theGifts = tempGifts;
     localStorage.theGifts = JSON.stringify(theGifts);
-  } else{
-    localStorage.theGifts = JSON.stringify([]);
   };
   
   console.log(theGifts);
   createSections();
 };
 
-
+getTheRest();
 getTheGifts();
 
 async function saveToCloud(){
@@ -137,6 +136,7 @@ function updateFromCloud(){
   document.querySelector("#wholeThing").innerHTML = "";
   resetCBC();
   resetModif();
+  getTheRest();
   getTheGifts();
   earthIt.style.backgroundColor = "rgba(237, 20, 61, 0)";
   earthIt.parentElement.querySelector(".underCloudBtnSpan").style.visibility = "hidden";
@@ -179,15 +179,15 @@ function createSections(){
           <i class="typcn typcn-media-stop-outline unchecked"></i>
           <i class="typcn typcn-input-checked checked"></i>
         </label>
-        <details class="detailsLi">
+        <details class="detailsLi${idee.id && checkedBought.length > 0 && checkedBought.includes(idee.id) ? " bought" : ""}">
           <summary>
             <span>${idee.cadeau ? idee.cadeau : "N'importe quoi"}</span>
           </summary>
           <div class="insideDiv">
             <h3>Détails&nbsp;:</h3>
-            <div class="ideeDetailsDiv">${idee.details && idee.details !== "" ? idee.details : "bof..."}</div>
+            <div class="ideeDetailsDiv">${idee.details && idee.details !== "" ? idee.details : "aucune idée..."}</div>
             <h3>Lien&nbsp;:</h3>
-            <p class="ideeLienP"><i class="fa-solid fa-globe"></i><a href="${idee.lienComplet}">${idee.lienFinal ? idee.lienFinal : "nul part"}</a></p>
+            <p class="ideeLienP"><i class="fa-solid fa-globe"></i>${idee.lienComplet !== "" && idee.lienFinal !== "" ? `<a href="${idee.lienComplet}">${idee.lienFinal}</a>` : `<span>nulle part...</span>`}</p>
           </div>
         </details>
         
@@ -260,7 +260,9 @@ function addBtn(thisOne){
   let newAddingLi = `<li class="addingLi">
     <details class="detailsLi" open>
       <summary>
-        <input class="addingName" type="text" placeholder="Idée cadeau" />
+          <input class="addingName" type="text" placeholder="Idée cadeau" />
+          <button class="iconBtn" onclick="cancelNewIdee(this)"><i class="fa-solid fa-xmark"></i></button>
+          <button class="iconBtn saveBtn" onclick="saveNewIdee(this)"><i class="fa-regular fa-floppy-disk"></i></button>
       </summary>
       <div class="insideDiv">
         <h3>Détails&nbsp;:</h3>
@@ -269,8 +271,7 @@ function addBtn(thisOne){
         <p class="addingLienP"><i class="fa-solid fa-globe"></i><input class="addingLink" type="text"></p>
       </div>
     </details>
-    <button class="iconBtn" onclick="cancelNewIdee(this)"><i class="fa-solid fa-xmark"></i></button>
-    <button class="iconBtn" onclick="saveNewIdee(this)"><i class="fa-regular fa-floppy-disk"></i></button>
+    
   </li>`;
   addLi.insertAdjacentHTML("beforebegin", newAddingLi);
 
@@ -281,15 +282,16 @@ function addBtn(thisOne){
 window.addBtn = addBtn;
 
 function cancelNewIdee(thisOne){
-  let addingLi = thisOne.parentElement;
+  let addingLi = thisOne.parentElement.parentElement.parentElement;
   addingLi.remove();
 };
 window.cancelNewIdee = cancelNewIdee;
 
 function saveNewIdee(thisOne){
-  let addingLi = thisOne.parentElement;
+  let addingLi = thisOne.parentElement.parentElement.parentElement;
   let addingUl = addingLi.parentElement;
   let initial = addingUl.dataset.initial;
+  console.log(initial);
   let personIndex = theGifts.findIndex(id => id.initial == initial);
 
   //id
@@ -302,25 +304,31 @@ function saveNewIdee(thisOne){
   let ideeDetails = addingLi.querySelector(".addingDetails").value;
 
   // Lien
-  let whole = String(addingLi.querySelector(".addingLink").value); //va aller dans le href
-  console.log(whole);
-  let step1;
-  if(whole.startsWith("https://")){
-    step1 = whole.substring(8);
-  }else if(whole.startsWith("http://")){
-    step1 = whole.substring(7);
-  } else{
-    step1 = whole;
+  let lienValue = addingLi.querySelector(".addingLink").value;
+  let whole = "";
+  let final = "";
+  console.log(lienValue);
+  if(lienValue !== ""){
+    whole = String(lienValue); //va aller dans le href
+    console.log(whole.length);
+    let step1;
+    if(whole.startsWith("https://")){
+      step1 = whole.substring(8);
+    }else if(whole.startsWith("http://")){
+      step1 = whole.substring(7);
+    } else{
+      step1 = whole;
+    };
+    let step2;
+    if(step1.startsWith("www.")){
+      step2 = step1.substring(4);
+    } else{
+      step2 = step1;
+    };
+    let idx = step2.indexOf("/");
+    final = idx !== -1 ? step2.substring(0, idx + 1) + "..." : step2; //va aller dans le <a>
+    console.log(final);
   };
-  let step2;
-  if(step1.startsWith("www.")){
-    step2 = step1.substring(4);
-  } else{
-    step2 = step1;
-  };
-  let idx = step2.indexOf("/");
-  let final = step2.substring(0, idx + 1) + "..."; //va aller dans le <a>
-  console.log(final);
 
   let newIdee = {
     id: ideeId,
@@ -385,6 +393,8 @@ function modify(thisOne) {
   li.innerHTML = `<details class="detailsLi" open>
     <summary>
       <input class="addingName" type="text" placeholder="Idée cadeau" value="${itm.cadeau ? itm.cadeau : ""}" />
+      <button id="cancelModifyIdee" class="iconBtn"><i class="fa-solid fa-xmark"></i></button>
+      <button id="saveModifyIdee" class="iconBtn saveBtn"><i class="fa-regular fa-floppy-disk"></i></button>
     </summary>
     <div class="insideDiv">
       <h3>Détails&nbsp;:</h3>
@@ -392,9 +402,7 @@ function modify(thisOne) {
       <h3>Lien&nbsp;:</h3>
       <p class="addingLienP"><i class="fa-solid fa-globe"></i><input class="addingLink" type="text" value="${itm.lienComplet ? itm.lienComplet : ""}"></p>
     </div>
-  </details>
-  <button id="cancelModifyIdee" class="iconBtn"><i class="fa-solid fa-xmark"></i></button>
-  <button id="saveModifyIdee" class="iconBtn"><i class="fa-regular fa-floppy-disk"></i></button>`;
+  </details>`;
 
   let textarea = li.querySelector("textarea");
   textarea.addEventListener("input", () => {
@@ -443,24 +451,31 @@ function modify(thisOne) {
     let ideeDetails = li.querySelector(".addingDetails").value;
 
     // Lien
-    let whole = String(li.querySelector(".addingLink").value); //va aller dans le href
-    console.log(whole);
-    let step1;
-    if(whole.startsWith("https://")){
-      step1 = whole.substring(8);
-    }else if(whole.startsWith("http://")){
-      step1 = whole.substring(7);
-    } else{
-      step1 = whole;
+    let lienValue = li.querySelector(".addingLink").value;
+    let whole = "";
+    let final = "";
+    console.log(lienValue);
+    if(lienValue !== ""){
+      whole = String(lienValue); //va aller dans le href
+      console.log(whole.length);
+      let step1;
+      if(whole.startsWith("https://")){
+        step1 = whole.substring(8);
+      }else if(whole.startsWith("http://")){
+        step1 = whole.substring(7);
+      } else{
+        step1 = whole;
+      };
+      let step2;
+      if(step1.startsWith("www.")){
+        step2 = step1.substring(4);
+      } else{
+        step2 = step1;
+      };
+      let idx = step2.indexOf("/");
+      final = idx !== -1 ? step2.substring(0, idx + 1) + "..." : step2; //va aller dans le <a>
+      console.log(final);
     };
-    let step2;
-    if(step1.startsWith("www.")){
-      step2 = step1.substring(4);
-    } else{
-      step2 = step1;
-    };
-    let idx = step2.indexOf("/");
-    let final = step2.substring(0, idx + 1) + "..."; //va aller dans le <a>
 
     //Recréation du nouveau li
     li.classList.remove("addingLi");

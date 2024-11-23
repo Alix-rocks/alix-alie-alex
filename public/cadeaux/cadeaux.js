@@ -275,7 +275,8 @@ function addBtn(thisOne){
   </li>`;
   addLi.insertAdjacentHTML("beforebegin", newAddingLi);
 
-  addLi.parentElement.querySelector("#addingDetails").addEventListener("input", () => {
+  let textarea = addLi.parentElement.querySelector("#addingDetails");
+  textarea.addEventListener("input", () => {
     textarea.style.height = textarea.scrollHeight + "px";    
   });
 };

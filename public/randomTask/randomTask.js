@@ -5006,7 +5006,10 @@ function taskAddAllInfo(infos){
       };
       
       // *** PROJECT
+      let isParent = false;
+      let isOffspring = false;
       if(document.querySelector("#wholeProjectInput").checked){
+        isParent = true;
         todo.pColor = newProjectColor !== "" ? newProjectColor : todo.pColor !== "" ? todo.pColor : alert("That project needs a color!"); //add dumbproofing
         todo.pName = newProjectNickname !== "" ? newProjectNickname : todo.pName !== "" ? todo.pName : alert("That project needs a nickname!");
         todo.pOffspringId = [...document.querySelectorAll("#projectUl > li")].map(li => {
@@ -5014,9 +5017,13 @@ function taskAddAllInfo(infos){
         });
       };
       if(document.querySelector("#partProjectInput").checked){
-        todo.pParentId = myProjectId !== "" ? myProjectId : todo.pParentId !== "" ? todo.pParentId : alert("If it's not in one of those projects, then create your own project first.");
-        todo.pPosition = myProjectId !== "" ? "in" : todo.pPosition !== "" ? todo.pPosition : delete todo.pPosition; //par défault
+        isOffspring = true;
+        todo.pPosition = myProjectId !== "" ? "in" : todo.pPosition !== "" ? todo.pPosition : "in"; //par défault
       };
+      if(isParent || isOffspring){
+        todo.pParentId = isOffspring == false ? null : myProjectId !== "" ? myProjectId : todo.pParentId !== "" ? todo.pParentId : alert("If it's not in one of those projects, then create your own project first.");
+      };
+
       
       // save convo
       if(convoIt.checked){

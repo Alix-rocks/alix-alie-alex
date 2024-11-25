@@ -1543,7 +1543,7 @@ function todoCreation(todo){
         //   pColor = listTasks[listTasks.findIndex(todo => todo.id == lastParent)].pColor;
         //   console.log(pColor);
         // };
-        if(todo.pPosition == "out"){
+        if(todo.pPosition == "in" || todo.pPosition == "done"){
           console.log(todo);
         };
         document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li 
@@ -1553,7 +1553,8 @@ function todoCreation(todo){
           ${todo.recurry ? `data-rec="${todo.recId}"` : ``} 
           ${todo.term == "alwaysHere" ? `data-always="here"` : ``} 
           ${todo.openHour ? `data-openHour="true"` : ``} 
-          class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : ``}${todo.pPosition == "out" ? ` projectLi` : ``}${todo.startTime && todo.prima && todo.prima !== "00:00" ? ` showLiBuffer` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}${!openHourSwitch && !openHourToggle && todo.openHour ? ` displayNone` : ``}" style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}${todo.pPosition == "out" ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : ``}">
+          class="todoLi${todo.term == "showThing" ? todo.label ? ` showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : ``}${todo.pColor ? ` projectLi` : ``}${todo.startTime && todo.prima && todo.prima !== "00:00" ? ` showLiBuffer` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}${!openHourSwitch && !openHourToggle && todo.openHour ? ` displayNone` : ``}" 
+          style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}${todo.pColor !== 0 ? todo.pOffspringId ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : `border-color:${colorsList[pColor].colorBG};` : ``}">
           ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="labelOnglet labelLiOnglet noLabel"></div>`}
           ${todo.pParentId && !projectSwitch ? `<div class="ProjectLiOngletDiv">${pOnglets}</div>` : ``}
           ${todo.startTime && todo.prima && todo.prima !== "00:00" ? `<div class="primaLiBuffer">${timeMath(roundFifteenTime(todo.startTime), "minus", todo.prima).replace("-", ":")}</div>` : ``}
@@ -5278,6 +5279,7 @@ function taskAddAllInfo(infos){
     updateArrowsColor();
     updateCBC();
     console.log(todo);
+    alert(todo);
   });
   
 };

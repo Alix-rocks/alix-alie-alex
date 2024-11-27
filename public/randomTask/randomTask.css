@@ -583,7 +583,7 @@ input[name="choicePageRadios"]:checked + label i{
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
-  padding: 0 0 10px;
+  padding: 0;
 }
 
 
@@ -955,7 +955,12 @@ body > #taskInfo{
   top: 8px;
   left: 8px;
   right: 8px;
-  padding: 10px 10px 0 5px;
+  padding: 10px 4.5px;
+}
+.taskInfoProject{
+  outline: 6px solid;
+  outline-offset: -8px;
+  border-width: 3.5px;
 }
 .textDiv #taskInfo{
   width: calc(100% + 109.5px);
@@ -2299,7 +2304,7 @@ input[name="convoStatusRadios"]:checked + label > span.innerCircle, input[name="
 input[name="convoStatusRadios"]:checked + label > span.statusTitle{
   font-weight: 900;
 }
-#convoIt:checked ~ div#convoSection{
+#convoSection.showing{
   height: fit-content;
   visibility: visible;
   margin: 10px 20px;

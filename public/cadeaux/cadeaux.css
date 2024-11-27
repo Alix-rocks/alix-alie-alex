@@ -197,7 +197,7 @@ details.namesDetails[open] > summary.namesSummary{
   padding: 0 10px;
 }
 .addingLi .insideDiv{
-  margin-top: 7px;
+  margin: 7px 0 0 0;
   padding: 0 5px 15px;
 }
 .addingLi .detailsLi{

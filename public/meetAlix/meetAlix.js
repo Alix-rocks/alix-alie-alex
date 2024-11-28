@@ -2,7 +2,7 @@ import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, delete
 import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
 import { app, analytics, db, auth, provider } from "../myFirebase.js";
 
-let unknownStartDate = "2024-11-26"; //The day the "Not sure yet" section starts
+let unknownStartDate = "2025-01-06"; //The day the "Not sure yet" section starts
 
 let myEmail = "alexblade.23.49@gmail.com";
 

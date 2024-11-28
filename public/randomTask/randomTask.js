@@ -4443,7 +4443,9 @@ function taskAddAllInfo(todo){
     // screen: SupClickScreen,
     myLabels: mySettings.myLabels && mySettings.myLabels.length > 0 ? true : false
   };
+  
   labelIt.addEventListener("click", () => {
+    console.log("options");
     creatingLabelPanel(todo, options);
   });
 

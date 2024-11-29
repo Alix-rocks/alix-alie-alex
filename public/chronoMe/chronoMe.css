@@ -52,8 +52,24 @@ body{
   flex-grow: 1;
   position: relative;
 }
+.allTimeDiv.modifyingDiv{
+  box-sizing: border-box;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
 .allTimeDiv > div{
   padding: 3px;
+}
+.allTimeDiv.modifyingDiv > div{
+  padding: 3px;
+  width: 50vw;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
 }
 .allTimeDiv h3{
   font-size: 14px;
@@ -75,11 +91,22 @@ body{
 .allTimeDiv .stepNameInput{
   font-size: 14px;
   line-height: 1em;
-  display: block;
+  /* display: block; */
   border: 1px solid;
   border-radius: 1px;
   text-align: center;
   padding: 0;
+  width: calc((100vw - 16px - 36px - 36px) / 6); 
+  /* 16px = body's margin; 36px = choiceDiv's width+margin; 36px = .allTimeDiv > div's padding */
+}
+.allTimeDiv.modifyingDiv .stepNameInput{
+  font-size: 14px;
+  line-height: 1em;
+  /* display: block; */
+  border: 1px solid;
+  border-radius: 1px;
+  text-align: left;
+  padding: 0 0 0 3px;
   width: calc((100vw - 16px - 36px - 36px) / 6); 
   /* 16px = body's margin; 36px = choiceDiv's width+margin; 36px = .allTimeDiv > div's padding */
 }

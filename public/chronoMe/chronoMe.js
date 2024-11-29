@@ -64,105 +64,131 @@ let allPrograms = [[{
     },{
       word: "Position",
       color: 0,
-      time: 0
+      time: "00:00:00"
     },{
       word: "Hold",
       color: 1,
-      time: 0
+      time: "00:00:00"
     },{
       word: "Pause",
       color: 2,
-      time: 0
+      time: "00:00:00"
     },{
       word: "Hold",
       color: 1,
-      time: 0
+      time: "00:00:00"
     },{
       word: "Pause",
       color: 2,
-      time: 0
+      time: "00:00:00"
     },{
       word: "Hold",
       color: 1,
-      time: 0
+      time: "00:00:00"
+    }],[{
+      name: "Screen"
+    },{
+      word: "Position",
+      color: 0,
+      time: "00:00:05"
+    },{
+      word: "Screen",
+      color: 1,
+      time: "01:00:00"
+    },{
+      word: "Pause",
+      color: 2,
+      time: "00:15:00"
+    },{
+      word: "Screen",
+      color: 1,
+      time: "01:00:00"
+    },{
+      word: "Pause",
+      color: 2,
+      time: "00:15:00"
+    },{
+      word: "Screen",
+      color: 1,
+      time: "01:00:00"
     }],[{
       name: "Strengthening"
     },{
       word: "Position",
       color: 0,
-      time: 5
+      time: "00:00:05"
     },{
       word: "Hold",
       color: 1,
-      time: 60
+      time: "00:01:00"
     },{
       word: "Pause",
       color: 2,
-      time: 15
+      time: "00:00:15"
     },{
       word: "Hold",
       color: 1,
-      time: 60
+      time: "00:01:00"
     },{
       word: "Pause",
       color: 2,
-      time: 15
+      time: "00:00:15"
     },{
       word: "Hold",
       color: 1,
-      time: 60
+      time: "00:01:00"
     }],[{
       name: "Stretching"
     },{
       word: "Position",
       color: 0,
-      time: 5
+      time: "00:00:05"
     },{
       word: "Stretch",
       color: 1,
-      time: 25
+      time: "00:00:25"
     },{
       word: "Pause",
       color: 2,
-      time: 8
+      time: "00:00:08"
     },{
       word: "Stretch",
       color: 1,
-      time: 25
+      time: "00:00:25"
     },{
       word: "Pause",
       color: 2,
-      time: 8
+      time: "00:00:08"
     },{
       word: "Stretch",
       color: 1,
-      time: 25
+      time: "00:00:25"
     }],[{
       name: "Demo"
     },{
       word: "Position",
       color: 0,
-      time: 3
+      time: "00:00:03"
     },{
       word: "Test",
       color: 1,
-      time: 6
+      time: "00:00:06"
     },{
       word: "Pause",
       color: 2,
-      time: 3
+      time: "00:00:03"
     },{
       word: "Test",
       color: 1,
-      time: 6
+      time: "00:00:06"
     },{
       word: "Pause",
       color: 2,
-      time: 3
+      time: "00:00:03"
     },{
       word: "Test",
       color: 1,
-      time: 6
+      time: "00:00:06"
     }
   ]
 ];
@@ -239,12 +265,14 @@ function turnRed(duration){
 };
 //const delaysDefault = [5, 20, 8, 20, 8, 20];
 const delaysDefault = [3, 8, 3, 8, 3, 8];
+const allTimeDiv = document.querySelector(".allTimeDiv");
 
 
 
 function showProgram(){
-  document.querySelector("#seqName").innerHTML = `${allPrograms[progNum][0].name}<button onclick="modifyProgram(${progNum})" style="border:none;"><i class="fa-solid fa-pen" style="margin-left: 16px;font-size: .75em;"></i></button`;
-  document.querySelector(".allTimeDiv").innerHTML = allPrograms[progNum].map((step, idx) => {
+  allTimeDiv.classList.remove("modifyingDiv");
+  document.querySelector("#seqName").innerHTML = `${allPrograms[progNum][0].name}<button onclick="modifyProgram(${progNum})" style="border:none;"><i class="fa-solid fa-pen" style="margin-left: 16px;font-size: 1em;color: var(--tx-color);translate: 0 -3px;"></i></button`;
+  allTimeDiv.innerHTML = allPrograms[progNum].map((step, idx) => {
     if(idx !== 0){
       return `<div style="color:${colorsList[step.color]};">
         <h3>${step.word}</h3>
@@ -274,7 +302,7 @@ function showModifiableProgram(progIdx){
       return `<div class="stepDivClass" style="color:${colorsList[step.color]};">
       <input type="text" class="stepNameInput" value="${step.word}"></input>
       
-      <input type="time" class="delaySelect" value="${step.time}" />
+      <input type="time" step="1" class="delaySelect" value="${step.time}" />
       <select class="colorSelect">
         ${colorOptions}
       </select>
@@ -284,7 +312,8 @@ function showModifiableProgram(progIdx){
 //<select class="delaySelect">${timeOptions}</select>
   document.querySelector("#seqName").innerHTML = `<input id="seqNameInput" type="text" placeholder="Nom de la séquence"${progIdx !== 0 ? ` value="${allPrograms[progIdx][0].name}"` : ``}></input>
   ${progIdx !== 0 ? `<button onclick="replaceProgram(${progIdx})" style="border:none;"><i class="fa-regular fa-floppy-disk" style="margin-left: 16px;"></i></button>` : ``}`;
-  document.querySelector(".allTimeDiv").innerHTML = addingStep;
+  allTimeDiv.innerHTML = addingStep;
+  allTimeDiv.classList.add("modifyingDiv");
 };
 
 function replaceProgram(progIdx){ //The program already exists but we're changing it, so basically, we replace the old one with this new one, so we need to make sure we're using the same index
@@ -428,7 +457,7 @@ function backToStart(){
 };
 
 function turnIntoMS(time){
-  return Number(time.split(':')[0]) * 3600000 + Number(time.split(':')[1]) * 60000;
+  return Number(time.split(':')[0]) * 3600000 + Number(time.split(':')[1]) * 60000 + Number(time.split(":")[2]) * 1000;
 };
 
 document.querySelector("#chronoMe").addEventListener("click", () => {

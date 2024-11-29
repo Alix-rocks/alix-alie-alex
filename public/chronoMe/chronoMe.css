@@ -94,9 +94,11 @@ body{
   font: var(--fa-font-solid);
 }
 
-.stepDivClass input[type="text"], .stepDivClass select{
+.stepDivClass input, .stepDivClass select{
   color: inherit;
   border-color: inherit;
+  border: 1px solid;
+  margin-top: 5px;
 }
 
 .positionClass input[type="text"]{

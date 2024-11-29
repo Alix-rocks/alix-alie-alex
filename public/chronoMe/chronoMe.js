@@ -263,24 +263,25 @@ function showModifiableProgram(progIdx){
   
   let addingStep = allPrograms[progIdx].map((step, idx) => {
     if(idx !== 0){
-      let timeOptions = [];
-        for (let i = 0; i < 61; i++) {
-          timeOptions.push(`<option value="${i}"${i == step.time ? " selected" : ""}>${i}</option>`);
-        };
-        timeOptions = timeOptions.join("");
+      // let timeOptions = [];
+      //   for (let i = 0; i < 61; i++) {
+      //     timeOptions.push(`<option value="${i}"${i == step.time ? " selected" : ""}>${i}</option>`);
+      //   };
+      //   timeOptions = timeOptions.join("");
       let colorOptions = colorsList.map((col, idx) => {
         return `<option value="${idx}" style="color:${col};"${step.color == idx ? " selected" : ""}>&#xf53f;</option>`;
       }).join("");
       return `<div class="stepDivClass" style="color:${colorsList[step.color]};">
       <input type="text" class="stepNameInput" value="${step.word}"></input>
-      <select class="delaySelect">${timeOptions}</select>
+      
+      <input type="time" class="delaySelect" value="${step.time}" />
       <select class="colorSelect">
         ${colorOptions}
       </select>
     </div>`;
     }
   }).join("");
-
+//<select class="delaySelect">${timeOptions}</select>
   document.querySelector("#seqName").innerHTML = `<input id="seqNameInput" type="text" placeholder="Nom de la séquence"${progIdx !== 0 ? ` value="${allPrograms[progIdx][0].name}"` : ``}></input>
   ${progIdx !== 0 ? `<button onclick="replaceProgram(${progIdx})" style="border:none;"><i class="fa-regular fa-floppy-disk" style="margin-left: 16px;"></i></button>` : ``}`;
   document.querySelector(".allTimeDiv").innerHTML = addingStep;
@@ -426,14 +427,23 @@ function backToStart(){
   });
 };
 
+function turnIntoMS(time){
+  return Number(time.split(':')[0]) * 3600000 + Number(time.split(':')[1]) * 60000;
+};
+
 document.querySelector("#chronoMe").addEventListener("click", () => {
   //console.log(allPrograms[progNum]);
-  let delay0 = allPrograms[progNum][1].time * 1000;
-  let delay1 = allPrograms[progNum][2].time * 1000;
-  let delay2 = allPrograms[progNum][3].time * 1000;
-  let delay3 = allPrograms[progNum][4].time * 1000;
-  let delay4 = allPrograms[progNum][5].time * 1000;
-  let delay5 = allPrograms[progNum][6].time * 1000;
+  let delay0 = turnIntoMS(allPrograms[progNum][1].time); 
+  let delay1 = turnIntoMS(allPrograms[progNum][2].time);
+  let delay2 = turnIntoMS(allPrograms[progNum][3].time);
+  let delay3 = turnIntoMS(allPrograms[progNum][4].time);
+  let delay4 = turnIntoMS(allPrograms[progNum][5].time);
+  let delay5 = turnIntoMS(allPrograms[progNum][6].time);
+  // let delay1 = allPrograms[progNum][2].time * 1000;
+  // let delay2 = allPrograms[progNum][3].time * 1000;
+  // let delay3 = allPrograms[progNum][4].time * 1000;
+  // let delay4 = allPrograms[progNum][5].time * 1000;
+  // let delay5 = allPrograms[progNum][6].time * 1000;
   // beep(200, 440, 100);
   Promise.resolve()
 .then(() => {turnBlueViolet(delay0); beep(); activateDiv(0);})

@@ -94,23 +94,23 @@ let allPrograms = [[{
     },{
       word: "Screen",
       color: 1,
-      time: "01:00:00"
+      time: "00:20:00"
     },{
       word: "Pause",
       color: 2,
-      time: "00:15:00"
+      time: "00:00:20"
     },{
       word: "Screen",
       color: 1,
-      time: "01:00:00"
+      time: "00:20:00"
     },{
       word: "Pause",
       color: 2,
-      time: "00:15:00"
+      time: "00:00:20"
     },{
       word: "Screen",
       color: 1,
-      time: "01:00:00"
+      time: "00:20:00"
     }],[{
       name: "Strengthening"
     },{
@@ -438,8 +438,15 @@ function activateDiv(divIdx){
         allDivs[divIdx - 1].classList.remove("activated");
         allDivs[divIdx - 1].classList.add("done");
       };
-      document.querySelector("#order").style.color = allPrograms[progNum][divIdx + 1].color;
-      document.querySelector("#order").innerText = allPrograms[progNum][divIdx + 1].word;
+      let time = allPrograms[progNum][divIdx + 1].time;
+      let lastingTtimeH = time.split(':')[0];
+      lastingTtimeH = lastingTtimeH.startsWith("0") ? lastingTtimeH == "00" ? null : lastingTtimeH.slice(1) : lastingTtimeH;
+      let lastingTtimeM = time.split(':')[1];
+      lastingTtimeM = lastingTtimeM.startsWith("0") ? lastingTtimeH ? lastingTtimeM == "00" ? "00" : lastingTtimeM : lastingTtimeM == "00" ? null : lastingTtimeM.slice(1) : lastingTtimeM;
+      let lastingTtimeS = time.split(':')[2];
+      lastingTtimeS = lastingTtimeS.startsWith("0") ? lastingTtimeM ? lastingTtimeS == "00" ? null : lastingTtimeS : lastingTtimeS.slice(1) : lastingTtimeS;
+      document.querySelector("#order").style.color =colorsList[allPrograms[progNum][divIdx + 1].color];
+      document.querySelector("#order").innerHTML = `${allPrograms[progNum][divIdx + 1].word}<br/><span class="lastingTime">${lastingTtimeH ? lastingTtimeH + "h" : ""}${lastingTtimeM ? lastingTtimeH ? " " + lastingTtimeM + "m" : lastingTtimeM + "m" : ""}${lastingTtimeS ? lastingTtimeM ? " " + lastingTtimeS + "s" : lastingTtimeS + "s" : ""}</span>`;
     } else if(divIdx == allDivs.length){
       allDivs[divIdx - 1].classList.remove("activated");
       allDivs[divIdx - 1].classList.add("done");

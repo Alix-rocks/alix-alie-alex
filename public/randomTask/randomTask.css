@@ -1185,18 +1185,22 @@ li .textDone{
 .projectLi, .offspringLi{
   border-radius: 5px 8px 0 2px;
   margin-top: 13px;
-  outline: 6px solid;
-  outline-offset: -8px;
   margin-left: 8px;
   border-style: solid;
   border-width: 3.5px;
   width: 100%;
 }
-.offspringLi{
-  outline: none;
+.projectLi{
+  outline: 6px solid;
+  outline-offset: -8px;
 }
+
 #projectUl .projectLi, #projectUl .offspringLi{
   width: calc(100% - 16px);
+}
+#projectUl .offspringLi{
+  outline: none;
+  border: none;
 }
 #projectUl .projectLi .checkOptions, #projectUl .offspringLi .checkOptions{
   margin-left: 1.5px;

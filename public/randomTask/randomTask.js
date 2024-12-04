@@ -1502,7 +1502,7 @@ function todoCreation(todo){
         ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="labelOnglet labelLiOnglet noLabel"></div>`}
         ${todo.pParentId && !projectSwitch ? `<div class="projectLiOngletDiv">${getProjectOnglets(todo)}</div>` : ``}
         ${todo.startTime && todo.prima && todo.prima !== "00:00" ? `<div class="primaLiBuffer">${timeMath(roundFifteenTime(todo.startTime), "minus", todo.prima).replace("-", ":")}</div>` : ``}
-        <i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i><div class="textDiv"><span class="text" onclick="${searchSwitch ? `toTIdeLIaM(this)` : storageSwitch ? `toTIdeLIaM(this)` : `toTIdeLIaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${mySettings.myBaseColors[todo.color].colorBG};" />` : ``}<span class="timeSpan">${todo.startTime ? todo.startTime : ''}</span></div><i class="fa-solid fa-recycle" onclick="${searchSwitch ? `toTIdeSSaS(this)` : calendarStock ? `toTIdeCCaNS(this)` : projectStock ? `toTIdePaS(this)` : `toTIdeTZaS(this)`}"></i></li>`);
+        <i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i><div class="textDiv"><span class="text" onclick="${projectSwitch ? `toTIdePSaM(this)` : `toTIdeLIaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${mySettings.myBaseColors[todo.color].colorBG};" />` : ``}<span class="timeSpan">${todo.startTime ? todo.startTime : ''}</span></div><i class="fa-solid fa-recycle" onclick="${searchSwitch ? `toTIdeSSaS(this)` : calendarStock ? `toTIdeCCaNS(this)` : projectStock ? `toTIdePaS(this)` : `toTIdeTZaS(this)`}"></i></li>`);
       } else if(todo.line == "recurringDay"){
         let time = todo.startTime ? todo.startTime : mySettings.myTomorrow;
         let nextDate;
@@ -1521,7 +1521,7 @@ function todoCreation(todo){
         ${todo.startTime && todo.prima && todo.prima !== "00:00" ? `<div class="primaLiBuffer">${timeMath(roundFifteenTime(todo.startTime), "minus", todo.prima).replace("-", ":")}</div>` : ``}
         <i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i>
         <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i>
-        <div class="textDiv"><span class="text" onclick="${searchSwitch ? `toTIdeLIaM(this)` : `toTIdeLIaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG};`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.startTime ? todo.startTime : ''}</span></div>
+        <div class="textDiv"><span class="text" onclick="${projectSwitch ? `toTIdePSaM(this)` : `toTIdeLIaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG};`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.startTime ? todo.startTime : ''}</span></div>
         <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.dealine ? `doneDay` : todo.line}"></i><span style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${numberedDays}</span></div></li>`);
       } else if(todo.term == "reminder"){ 
         /*??? ${todo.pParentId && !projectSwitch ? `<div class="projectLiOngletDiv">${getProjectOnglets(todo)}</div>` : ``} */
@@ -1529,7 +1529,7 @@ function todoCreation(todo){
          
           <i class="typcn typcn-bell" style="font-size: 1em;"></i>
           <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" style="font-size: .8em;"></i>
-          <div class="textDiv"><span onclick="${searchSwitch ? `toTIdeLIaM(this)` : `toTIdeLIaM(this)`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px; ` : ``}color:${mySettings.myBaseColors[todo.color].colorBG}; font-size: 1em;">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" style="font-size: .8em;" onclick="timeItEvent(this)">${todo.startTime ? todo.startTime : ""}</span>
+          <div class="textDiv"><span onclick="${projectSwitch ? `toTIdePSaM(this)` : `toTIdeLIaM(this)`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px; ` : ``}color:${mySettings.myBaseColors[todo.color].colorBG}; font-size: 1em;">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" style="font-size: .8em;" onclick="timeItEvent(this)">${todo.startTime ? todo.startTime : ""}</span>
           <input type="time" class="displayNone"/></div>
         </li>`);
       } else if(!todo.pPosition || todo.pPosition == "out" || ((todo.pPosition == "in" || todo.pPosition == "done") && (projectSwitch || searchSwitch))){
@@ -1555,7 +1555,7 @@ function todoCreation(todo){
             <span class="numUrge">${todo.urge ? todo.urgeNum : ``}</span>
           </div>
           <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i>
-          <div class="textDiv"><span onclick="${searchSwitch ? `toTIdeLIaM(this)` : projectSwitch ? `toTIdePSaM(this)` : `toTIdeLIaM(this)`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? `` : ` color:${mySettings.myBaseColors[todo.color].colorBG};`}">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.startTime ? todo.startTime : ""}</span>
+          <div class="textDiv"><span onclick="${projectSwitch ? `toTIdePSaM(this)` : `toTIdeLIaM(this)`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? `` : ` color:${mySettings.myBaseColors[todo.color].colorBG};`}">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.startTime ? todo.startTime : ""}</span>
           <input type="time" class="displayNone"/>
           ${togoList == "listOups" && numberedDays < -5 ? `<div class="proHelp">
           <h3>You have been procrastinating that one for ${Math.abs(numberedDays)} days...</h3>
@@ -1759,6 +1759,9 @@ function checkOptions(thisOne, pColor){ //context is either "normal" or "project
       updateCBC();
     });
   };
+  // parent = ``;
+  // offspring = ``;
+  //No need of them because the div is only removed by the newClickScreenRemoval, so it's taken care of.
 };
 window.checkOptions = checkOptions;
 
@@ -2123,7 +2126,7 @@ function PartialCheckEvent(emptyCheck){
   let checkOptionsDiv = parent.querySelector(".checkOptionsDiv");
   gotItHalfDone(doned);
   updateCBC();
-  newClickScreenRemoval(checkOptionsDiv);
+  newClickScreenRemoval(checkOptionsDiv);//includes parent = offspring = ``;
 };
 
 window.PartialCheckEvent = PartialCheckEvent;
@@ -2131,11 +2134,12 @@ window.PartialCheckEvent = PartialCheckEvent;
 function TotalCheckEvent(emptyCheck){
   parent = emptyCheck.parentElement;
   let doned = getTodoFrom(parent);
-  parent.remove(); //The checkOptionsDiv AND the newClickScreen are both in that parent, so they are all removed at the same time! (so no need for newClickScreenRemoval)
+  parent.remove(); //The checkOptionsDiv AND the newClickScreen are both in that parent, so they are all removed at the same time! (so no need for newClickScreenRemoval) but we do need the parent = offspring = ``;
   gotItDone(doned);
   //doneAction(parent); // need to wait until animation is over before moving on to the next (gotItDone and remove) (use metro app animation)
   updateCBC();
   parent = ``;
+  offspring = ``;
 };
 
 window.TotalCheckEvent = TotalCheckEvent;
@@ -2793,25 +2797,20 @@ let changeRecurryDates = false;
 //AJOUTER OFFSPRING
 function smallCalendarChoice(thisOne){//thisOne = taskToDate est l'icon calendar
   let positionA = window.scrollY
-  parent = thisOne.parentElement;
-  let recurryIsIt = parent.dataset.rec && parent.dataset.rec !== "undefined" ? true : false;
-  parent.classList.add("selectedTask");
-  parent.scrollIntoView();
-  let togoList = parent.parentElement.id;
-  let todo;
-  let todoIndex;
-  let recIndex;
-  if(recurryIsIt){
-    recIndex = listTasks.findIndex(td => td.id == parent.dataset.rec);
-    let recurring = listTasks[recIndex];
-    todo = getWholeRecurry(recurring, parent.dataset.date, parent.dataset.rec);
+  let list = thisOne.parentElement.parentElement.id;//That's the <ul>
+  let li;
+  if(list == "projectUl"){
+    li = offspring = thisOne.parentElement; //That's the <li> inside the parent
   } else{
-    todoIndex = listTasks.findIndex(td => td.id == parent.id);
-    todo = listTasks[todoIndex];
+    li = parent = thisOne.parentElement; //That's the <li>
   };
-  let parents = Array.from(document.querySelectorAll("li")).filter((li) => li.id.includes(todo.id));
+  let recurryIsIt = li.dataset.rec && li.dataset.rec !== "undefined" ? true : false;
+  li.classList.add("selectedTask");
+  li.scrollIntoView();
+  let todo = getTodoFrom(li);
+  let parents = Array.from(document.querySelectorAll("li")).filter((il) => il.id.includes(todo.id));
   if(parents.length == 0){
-    parents.push(parent);
+    parents.push(li);
   };
   creatingCalendar(todo, thisOne, "onIcon");
   let calendarDiv = document.querySelector("#calendarDiv");
@@ -2820,7 +2819,7 @@ function smallCalendarChoice(thisOne){//thisOne = taskToDate est l'icon calendar
   document.querySelector("#saveTheDateBtn").addEventListener("click", () => {
     if(recurryIsIt){
       getRecurryDateOut(todo); // donc la date du todo est enlevée des recurryDates de son recurringDay
-      delete todo.recurry;
+      delete todo.recurry; //et todo redevient un todo normal!
       delete todo.recId; //et todo redevient un todo normal!
       listTasks.push(todo);// et le todo est maintenant dans la listTask!
     };
@@ -2828,8 +2827,15 @@ function smallCalendarChoice(thisOne){//thisOne = taskToDate est l'icon calendar
     if(todo.newShit){
       delete todo.newShit;
     };
-    togoList = getTogoList(todo);
-    todoCreation(todo);
+    if(li == offspring){
+      projectSwitch = true;
+      todoCreation(todo); // creates it in the projectUL
+      projectSwitch = false;
+    } else{
+      projectSwitch = false;
+    };
+    let togoList = getTogoList(todo);
+    todoCreation(todo); //creates it in the todoZone if necessary
     // if(previousList !== togoList){
     //   if(togoList == ""){
     //     moving = false;
@@ -2846,12 +2852,6 @@ function smallCalendarChoice(thisOne){//thisOne = taskToDate est l'icon calendar
       sortItAllWell();
     };
 
-    //newClickScreenRemoval(calendarDiv); //PAS BESOIN, TOUT EST DANS LE PARENT!
-    // calendarDiv.remove();
-    // newClickScreen.remove();
-    // parent.classList.remove("selectedTask");
-    // parent = ``;
-
     // now let's see if and where we should scroll...
     let newLi = document.getElementById(todo.id);
     if(newLi){
@@ -2866,6 +2866,8 @@ function smallCalendarChoice(thisOne){//thisOne = taskToDate est l'icon calendar
       window.scrollTo(0, positionA);
     };
     parent = ``;
+    offspring = ``;
+    //No need for the newClickScreenRemoval(calendarDiv) because everything is in the li (parent or offspring) which gets removed anyway; but we do need the parent = offspring = ``; because, even if the div dans be removed with newClickScreenRemoval(calendarDiv) (by click outside of the div), the div can also be removed with the save button (which removes the whole li)
 
     localStorage.listTasks = JSON.stringify(listTasks);
     //sortItAllWell(); //here's the sorting!!
@@ -3365,7 +3367,7 @@ todo.STColor => index of mySettings.myShowTypes but That doesn't work! we would 
 todo.startDate (anciennement todo.date) => date string
 todo.stopDate => date string
 todo.line => "todoDay", "recurringDay", "noDay"
-todo.tutto => true/false si ça dure toute la journée ou si on considère 'dalle' et 'alle'
+todo.tutto => true/false si ça dure toute la journée ou si on considère 'dalle' et 'alle'. Par défaut: true
 todo.deadline => date (string) du deadline (if no deadline, delete)
 todo.dlTutto => true/false if deadline is all day or not (if no deadline, delete)
 todo.finoAlle => heure (string) du deadline (if no deadline, delete)
@@ -3373,7 +3375,7 @@ todo.startTime (anciennement todo.dalle) => time à laquelle ça commence aussi 
 todo.stopTime (anciennement todo.alle) => time à laquelle ça fini
 todo.prima => durée du buffer avant l'event
 todo.dopo => durée du buffer après l'event
-todo.stock => true/false (is a model in storage)
+todo.stock => true/false (is a model in storage). Default: delete
 todo.recycled => has been recycled from either a stock or a done (to remove once it's been saved, just like newShit)
 todo.dal => date que ça commence
 todo.ogni => numéro de répétition
@@ -3390,18 +3392,21 @@ todo.recurryDates =  [] array of the dates (previously called listDates)
 todo.recId = id du todo qui est le recurring (l'original) (pour les recurry qui n'ont pas encore été pushed in listTasks seulement, pour qu'on puisse enlever sa date dans l'array recurryDate... non, let's keep the recId even after its been pushed in listTasks, in case one day we want to offer l'option "modify them all" or something like that) 
 todo.recurry => true/false means it's one occurence of a recurring (calendar icon purple and cycle icon in taskInfo) (whether it's out in listTasks or not)
 On sait si le <li> doit être dans les recurring ou dans les autres listes (donc présent dans listTasks) grâce à todo.line == "recurringDay" ou else
+todo.recPileUP => once the date of the recurry is past, should it stick around and pile up (true) or should it be forgotten and erased (false). Default: (if not recurringDay)delete/(if recurringDay)false
 xxx todo.out => (isn't used) true (le <li> du recurry a été créé) / false ou inexistant (le <li> n'a pas encore été créé)
+todo.busy => (j'suis pus sûre si on le considère ou pas dans meetAlix, i.e. dans les busies, mais c'était l'idée). Default: false
+todo.openHour => is it only relevant during business hours (Monday to Friday, from 8am to 5pm). Default: false
 todo.label => true/false
 todo.LName => string
 todo.LColor => index of colorsList
 
 **NOUVELLE VERSION SIMPLIFIÉES DES PROJECTS**
-todo.pParentId = "(id of its closest parent; if it's the top parent, then null)" (so, if todo.pParentId == null || todo.pParentId !== null then it's in the project category (either parent or offspring or both))
-todo.pOffspringId = [array of the id of its offspring, in order] (if it's an offspring then delete todo.pOffspringId, unless it's also a parent?)
+todo.pParentId = "(id of its closest parent; if it's the top parent, then "null")" (so, if todo.pParentId, then it's in the project category (either parent or offspring or both))
+todo.pOffspringId = [array of the id of its offspring, in order] (if it's just an offspring then delete todo.pOffspringId, unless it's also a parent?)
 todo.pColor = number (index of the colors of the project, only if it's a project. If it's an offspring, then we go check it's parent's colors' index)
 todo.pName = nickname of the project (for the label), only if it's a project. If it's an offspring, then we go check it's parent's name
 todo.pPosition => "out" (shows in the todoZone with the colors of its closest parent) -- "in" (doesn't show in the todoZone but shows in the Project's TaskInfo) -- "done" (shows in the doneZone; doesn't show in the todoZone but shows in the Project's TaskInfo but as done (crossLined))
-    //todo.pOut = true/false true == it is shown in the list (if it's a project (todo.pOffspringId && todo.pOffspringId !== null), then you have two borders; if it's an offspring (todo.pOffspringId), then you have only one border)
+
 
 mySettings.myShowTypes.name
 mySettings.myShowTypes.colorBG => background-color
@@ -3780,6 +3785,12 @@ Avec deux bouttons: "let's see" (qui ne va pas sauver dans les settings) et "sav
 //Parents are only necessairy if we're working on a todo that is in the swiping section (for example, you would have the one on wednesday and the one in scheduled) or if in search, we add the results of different searches together and a todo comes up more than once
 
 
+/* 
+On pourrait réduire encore plus le nombre de toTI... si:
+  - on met les "thisOne.parentElement.parentElement" directement dans les onclick="...(thisOne.parentElement.parentElement)"
+  - on ajoute qqch qui dit if(parent is <li>){parent.classList.add("selectedTask");}; (comme ça, les calendriers auront pas le selectedTask, mais les autres oui)
+*/
+
 
 // to go to taskAddAllInfo
 
@@ -3825,14 +3836,14 @@ function toTIdeLIaM(thisOne){ // de <li> à Modification (et à Procrastinator (
 window.toTIdeLIaM = toTIdeLIaM;
 
 function toTIdePSaM(thisOne){ // de ProjectSection à Modification
+  parent = thisOne.parentElement.parentElement;//C'est quand déjà qu'on utilise offspring au lieu de parent??
+  parent.classList.add("selectedTask");
+  let todo = getTodoFrom(parent);
   document.querySelector("#projectSection").remove();
   document.querySelector("#taskInfo").remove();
   document.querySelectorAll(".newClickScreen").forEach(ncs => {
     ncs.remove();
   });
-  parent = thisOne.parentElement.parentElement;
-  parent.classList.add("selectedTask");
-  let todo = getTodoFrom(parent);
   taskAddAllInfo(todo);
 };
 window.toTIdePSaM = toTIdePSaM;
@@ -4521,15 +4532,16 @@ function taskAddAllInfo(todo){
     projectSwitch = false;
   };
 
-  document.querySelector("#addOffspringBtn").addEventListener("click", () => { // de ProjectSection à New
-    document.querySelector("#projectSection").remove();
-    document.querySelector("#taskInfo").remove();
-    document.querySelectorAll(".newClickScreen").forEach(ncs => {
-      ncs.remove();
-    });
-    parent.classList.remove("selectedTask");
-    parent = ``;
-    let newtodo = {
+  document.querySelector("#addOffspringBtn").addEventListener("click", (e) => { // de ProjectSection à New
+    saveTaskInfo(e);
+    // document.querySelector("#projectSection").remove();
+    // document.querySelector("#taskInfo").remove();
+    // document.querySelectorAll(".newClickScreen").forEach(ncs => {
+    //   ncs.remove();
+    // });
+    // parent.classList.remove("selectedTask");
+    // parent = ``;
+    let newTodo = {
       newShit: true,
       id: crypto.randomUUID(),
       color: "0",
@@ -4539,7 +4551,12 @@ function taskAddAllInfo(todo){
       pParentId: todo.id,
       pPosition: "in"
     };
-    taskAddAllInfo(newtodo);
+    if(todo.label){
+      newTodo.label = true;
+      newTodo.LName = todo.LName;
+      newTodo.LColor = todo.LColor;
+    };
+    taskAddAllInfo(newTodo);
   });
 
   // *** OTHERS
@@ -4608,7 +4625,7 @@ function taskAddAllInfo(todo){
   //more with SHOW 
   let hideMiniInput = miniListDiv.querySelector("#hideMiniInput");
   checkTest();
-  hideMiniInput.addEventListener("click", (e) => {
+  hideMiniInput.addEventListener("click", () => {
     if(hideMiniInput.checked){
       miniListDiv.querySelectorAll(".miniLi > .listCheckInput:checked").forEach(check => {
         check.parentElement.classList.add("displayNone");
@@ -4619,6 +4636,7 @@ function taskAddAllInfo(todo){
       });
     };
   });
+
   let idxMini = todo.miniList ? todo.miniList.length : 0;
   let addMiniForm = miniListDiv.querySelector("#addMiniForm");
   addMiniForm.addEventListener("submit", (e) => {
@@ -4654,6 +4672,7 @@ function taskAddAllInfo(todo){
     };
     addMiniForm.reset();
   });
+
   function checkTest(){
     let miniTot = 0;
     let miniTodo = 0;
@@ -4728,11 +4747,8 @@ function taskAddAllInfo(todo){
   function getProjectOngletsTemp(){
     let projectOnglets = [];
     let tempColor = newProjectColor !== "" ? newProjectColor : todo.pColor ? todo.pColor : "";
-    console.log(tempColor);
     let tempName = newProjectNickname !== "" ? newProjectNickname : todo.pName ? todo.pName : "";
-    console.log(tempName);
     let tempParentId = JSON.stringify(myParentProject) !== "{}" ? myParentProject.id : todo.pParentId ? todo.pParentId : "null";
-    console.log(tempParentId);
 
     if(tempColor !== "" || tempName !== ""){
       let onglet = `<div class="projectOnglet" style="background-color:${tempColor !== "" ? colorsList[tempColor].colorBG : "var(--bg-color)"}; color:${tempColor !== "" ? colorsList[tempColor].colorTX : "var(--tx-color)"};">${tempName !== "" ? tempName : "Project"}</div>`;
@@ -4791,6 +4807,8 @@ function taskAddAllInfo(todo){
       };
     });
   });
+
+  //If any of the offsprings are clicked, instead of an onclick that creates a new taskInfo, it should be an addEventListener here that ALSO saves that first taskInfo! Because we don't want to have to redo the whole trail for each step! So I guess, saving taskInfo would have to be a function (inside this one), that way, we can use the same whole thing for the save button AND everytime we move to an offspring or a parent!
   
   
   // *** COLOR
@@ -5055,11 +5073,11 @@ function taskAddAllInfo(todo){
 
 
   // MARK: SAVE BUTTON
-  taskInfoBtn.addEventListener("click", (e) => { //add a stop if it's recurry to let them know that if they save it, it'll change it and isolate it... or we just don't care and they'll just have to figure that out on their own?
+  function saveTaskInfo(e){ //add a stop if it's recurry to let them know that if they save it, it'll change it and isolate it... or we just don't care and they'll just have to figure that out on their own?
     if(!trashIt.checked){
       if(newSTing){
         console.log("should stop");
-        e.preventDefault();//This is not working
+        e.preventDefault();//This is not working (just add an alert)
         e.currentTarget.insertAdjacentHTML("beforebegin", `<h5>Don't you want to save your brand new type of show?</h5>
         <h6>(If you don't, just click again!)</h6>`);
         showTypeCreationConfirm.style.color = "red";
@@ -5284,7 +5302,18 @@ function taskAddAllInfo(todo){
     // newClickScreen.remove();
     // parent.classList.remove("selectedTask");
     // parent = ``;
-    
+       
+
+    calendarStock = false;
+    projectStock = false;
+    updateArrowsColor();
+    updateCBC();
+    console.log(todo);
+    parent = ``;
+    console.log(parent);
+  };
+
+  function moveOn(){
     // now let's see if and where we should scroll...
     let newLi = document.getElementById(todo.id);
     if(newLi){
@@ -5298,15 +5327,10 @@ function taskAddAllInfo(todo){
       // window.scrollTo({ top: 0 });
       window.scrollTo(0, positionA);
     };
-    
-
-    calendarStock = false;
-    projectStock = false;
-    updateArrowsColor();
-    updateCBC();
-    console.log(todo);
-    parent = ``;
-    console.log(parent);
+  };
+  taskInfoBtn.addEventListener("click", (e) => {
+    saveTaskInfo(e);
+    moveOn();
   });
   
 };

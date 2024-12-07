@@ -31,51 +31,24 @@ function t(key){
 // MARK: Exemple de liste
 let allOfIt = [
   {
-    n1: "c1", //"c1" = cuisine; "c2" = chambre; "c3" = calia; "c4" = shed; "c5" = dave; "c6" = parents;
-    n2: "c1s1", // section
-    n3: "b1", // bag/box
+    cc: "null", // random id of contenant (bag/box, section, salle, etc)
+    id: "567", //random
+    item: "Officina", //description
+    iURL: ""
+  },{
+    cc: "567", // random id of contenant (bag/box, section, salle, etc)
+    id: "345", //random
+    item: "Bibliothèque noire 1", //description
+    iURL: ""
+  },{
+    cc: "345", // random id of contenant (bag/box, section, salle, etc)
+    id: "123", //random
+    item: "Box-bag 1", //description
+    iURL: ""
+  },{
+    cc: "123", // random id of contenant (bag/box, section, salle, etc)
     id: "", //random
     item: "culotte", //description
-    iURL: ""
-  },
-  {
-    n1: "c1", //"c1" = cuisine; "c2" = chambre; "c3" = calia; "c4" = shed; "c5" = dave; "c6" = parents;
-    n2: "c2s1", // section
-    n3: "b2", // bag/box
-    id: "", //random
-    item: "bas", //description
-    iURL: ""
-  },
-  {
-    n1: "c2", //"c1" = cuisine; "c2" = chambre; "c3" = calia; "c4" = shed; "c5" = dave; "c6" = parents;
-    n2: "c2s3", // section
-    n3: "b3", // bag/box
-    id: "", //random
-    item: "chapeau rouge", //description
-    iURL: ""
-  },
-  {
-    n1: "c2", //"c1" = cuisine; "c2" = chambre; "c3" = calia; "c4" = shed; "c5" = dave; "c6" = parents;
-    n2: "c2s4", // section
-    n3: "b4", // bag/box
-    id: "", //random
-    item: "chapeau noir", //description
-    iURL: ""
-  },
-  {
-    n1: "c3", //"c1" = cuisine; "c2" = chambre; "c3" = calia; "c4" = shed; "c5" = dave; "c6" = parents;
-    n2: "c3s1", // section
-    n3: "b5", // bag/box
-    id: "", //random
-    item: "bas blanc", //description
-    iURL: ""
-  },
-  {
-    n1: "c4", //"c1" = cuisine; "c2" = chambre; "c3" = calia; "c4" = shed; "c5" = dave; "c6" = parents;
-    n2: "c3s2", // section
-    n3: "b6", // bag/box
-    id: "", //random
-    item: "culotte noire", //description
     iURL: ""
   }
 ];

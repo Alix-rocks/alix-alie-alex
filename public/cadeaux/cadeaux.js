@@ -107,6 +107,7 @@ async function saveToCloud(){
   let nowStamp = new Date().getTime();
   theGifts = JSON.parse(localStorage.theGifts);
   checkedBought = JSON.parse(localStorage.checkedBought);
+  console.log("saveToCloud" + checkedBought);
   const docRefGifts = collection(db, "cadeaux2024");
   const docSnapGifts = await getDocs(docRefGifts);
   if(docSnapGifts["all"]){
@@ -139,6 +140,7 @@ function updateFromCloud(){
   resetModif();
   getTheRest();
   getTheGifts();
+  console.log("update " + checkedBought);
   earthIt.style.backgroundColor = "rgba(237, 20, 61, 0)";
   earthIt.parentElement.querySelector(".underCloudBtnSpan").style.visibility = "hidden";
   localStorage.lastUpdateLocalStorageCadeaux = new Date().getTime();
@@ -225,11 +227,13 @@ function checkCheckedBought(input) {
    let li = input.parentElement.parentElement;
    let details= li.querySelector("details");
    if (input.checked) {
+     console.log("got checked");
      details.classList.add("bought");
      if (li.id && (checkedBought.length == 0 || (checkedBought.length > 0 && !checkedBought.includes(li.id)))) {
        checkedBought.push(li.id);
        localStorage.checkedBought = JSON.stringify(checkedBought);
        updateCBC();
+       console.log(checkedBought);
      };
    } else {
      details.classList.remove("bought");

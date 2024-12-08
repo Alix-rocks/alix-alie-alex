@@ -106,17 +106,16 @@ async function saveToCloud(){
   const batch = writeBatch(db);
 
   let nowStamp = new Date().getTime();
+  console.log("nowStamp" + nowStamp);
   theGifts = JSON.parse(localStorage.theGifts);
   checkedBought = JSON.parse(localStorage.checkedBought);
   console.log("saveToCloud" + checkedBought);
   const docRefGifts = collection(db, "cadeaux2024");
   const docSnapGifts = await getDocs(docRefGifts);
-  if(docSnapGifts["all"]){
-    batch.update(doc(db, "cadeaux2024", "all"), {
-      lastUpdateFireStore: nowStamp,
-      checked: checkedBought
-    });
-  };
+  batch.update(doc(db, "cadeaux2024", "all"), {
+    lastUpdateFireStore: nowStamp,
+    checked: checkedBought
+  });
 
   let modif = getModif();
   modif.map(modifiedInitial => {

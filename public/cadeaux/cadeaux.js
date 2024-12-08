@@ -68,8 +68,9 @@ async function getTheRest() {
   } else{
     checkedBought = getTheRest.data().checked;
   };
+  console.log("71 " + checkedBought);
   localStorage.checkedBought = checkedBought.length > 0 ? JSON.stringify(checkedBought) : JSON.stringify([]);
-  console.log(checkedBought);
+  console.log("73 " + checkedBought);
 };
 
 async function getTheGifts() {

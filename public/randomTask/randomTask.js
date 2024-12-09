@@ -55,6 +55,7 @@ onAuthStateChanged(auth,(user) => {
     // logInScreen.classList.add("displayNone");
   } else{
     userConnected = false;
+    document.getElementById("loadingScreen").classList.replace("waitingScreen", "displayNone");
     logInScreen.classList.remove("displayNone");
     logInBtn.addEventListener("click", logIn);
     tryBtn.addEventListener("click", freeIn);

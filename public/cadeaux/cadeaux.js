@@ -68,7 +68,9 @@ async function getTheRest() {
   } else{
     checkedBought = getTheRest.data().checked;
   };
+  console.log("71 " + checkedBought);
   localStorage.checkedBought = checkedBought.length > 0 ? JSON.stringify(checkedBought) : JSON.stringify([]);
+  console.log("73 " + checkedBought);
 };
 
 async function getTheGifts() {
@@ -104,16 +106,16 @@ async function saveToCloud(){
   const batch = writeBatch(db);
 
   let nowStamp = new Date().getTime();
+  console.log("nowStamp" + nowStamp);
   theGifts = JSON.parse(localStorage.theGifts);
   checkedBought = JSON.parse(localStorage.checkedBought);
+  console.log("saveToCloud" + checkedBought);
   const docRefGifts = collection(db, "cadeaux2024");
   const docSnapGifts = await getDocs(docRefGifts);
-  if(docSnapGifts["all"]){
-    batch.update(doc(db, "cadeaux2024", "all"), {
-      lastUpdateFireStore: nowStamp,
-      checked: checkedBought
-    });
-  };
+  batch.update(doc(db, "cadeaux2024", "all"), {
+    lastUpdateFireStore: nowStamp,
+    checked: checkedBought
+  });
 
   let modif = getModif();
   modif.map(modifiedInitial => {
@@ -138,6 +140,7 @@ function updateFromCloud(){
   resetModif();
   getTheRest();
   getTheGifts();
+  console.log("update " + checkedBought);
   earthIt.style.backgroundColor = "rgba(237, 20, 61, 0)";
   earthIt.parentElement.querySelector(".underCloudBtnSpan").style.visibility = "hidden";
   localStorage.lastUpdateLocalStorageCadeaux = new Date().getTime();
@@ -224,11 +227,13 @@ function checkCheckedBought(input) {
    let li = input.parentElement.parentElement;
    let details= li.querySelector("details");
    if (input.checked) {
+     console.log("got checked");
      details.classList.add("bought");
      if (li.id && (checkedBought.length == 0 || (checkedBought.length > 0 && !checkedBought.includes(li.id)))) {
        checkedBought.push(li.id);
        localStorage.checkedBought = JSON.stringify(checkedBought);
        updateCBC();
+       console.log(checkedBought);
      };
    } else {
      details.classList.remove("bought");

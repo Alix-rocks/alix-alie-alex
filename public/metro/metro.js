@@ -12,9 +12,9 @@
 // - Ligne verte (s'il y a réellement les deux types de trains...) faire un code différent pour la ligne verte et afficher les deux trains!
 
 //** get the checked animation through javascript instead (less id and css to write)
-import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, Timestamp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
-import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
-//import { getDocs, getDoc, query, doc } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, Timestamp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+//import { getDocs, getDoc, query, doc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 import { db } from "../myFirebase.js";
 
 let lines = ["Orange", "Bleue", "Verte", "Jaune"];

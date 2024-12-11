@@ -68,7 +68,7 @@ let steps;
 let myScheduleList = [];
 
 async function getPlans() {
-  //console.log(auth.currentUser.email);
+  console.log(auth.currentUser.email);
   const plansQuery = collection(db, "plan", eMail, "myPlans");
   console.log(plansQuery);
   const getPlans = await getDocs(plansQuery);
@@ -106,7 +106,7 @@ async function getPlans() {
     displaySteps();
   };
 };
-getPlans();
+// getPlans();
 
 async function getDefaultSchedule(){
   // const defaultSchedule = await getDocs(query(collection(db, "plan"), where("owner", "==", auth.currentUser.email), where("ordre", "==", 0)));

@@ -3,25 +3,25 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase
 import { getFirestore } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBHSLxXWZUAOH8bKsRSGMnSzOh6QnyPTWQ",
-  authDomain: "alix-alie-alex.firebaseapp.com",
-  projectId: "alix-alie-alex",
-  storageBucket: "alix-alie-alex.appspot.com",
-  messagingSenderId: "519484588635",
-  appId: "1:519484588635:web:ec162ad407f9b45f60357e",
-  measurementId: "G-NFDD6B1G9R"
-};
-
 // const firebaseConfig = {
 //   apiKey: "AIzaSyBHSLxXWZUAOH8bKsRSGMnSzOh6QnyPTWQ",
-//   authDomain: "alix.rocks",
+//   authDomain: "alix-alie-alex.firebaseapp.com",
 //   projectId: "alix-alie-alex",
 //   storageBucket: "alix-alie-alex.appspot.com",
 //   messagingSenderId: "519484588635",
 //   appId: "1:519484588635:web:ec162ad407f9b45f60357e",
 //   measurementId: "G-NFDD6B1G9R"
 // };
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBHSLxXWZUAOH8bKsRSGMnSzOh6QnyPTWQ",
+  authDomain: "alix.rocks",
+  projectId: "alix-alie-alex",
+  storageBucket: "alix-alie-alex.appspot.com",
+  messagingSenderId: "519484588635",
+  appId: "1:519484588635:web:ec162ad407f9b45f60357e",
+  measurementId: "G-NFDD6B1G9R"
+};
 
 
 // Initialize Firebase

@@ -9,8 +9,8 @@
   Ctrl + K ... Ctrl + 1 => Fold all the first levels
 */
 
-import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
-import { getAuth, signOut, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+import { getAuth, signOut, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 import { app, analytics, db, auth, provider } from "../myFirebase.js";
 import trans from "../trans.js";
 auth.languageCode = 'fr';
@@ -38,10 +38,13 @@ getRedirectResult(auth)
 });
 
 function logIn(){
+  console.log("logIn");
+  console.log(auth);
+  console.log(provider);
   signInWithRedirect(auth, provider);
 };
 let userConnected = false;
-onAuthStateChanged(auth,(user) => {
+onAuthStateChanged(auth, (user) => {
   if(user){
     userConnected = true;
     console.log(user);
@@ -55,6 +58,7 @@ onAuthStateChanged(auth,(user) => {
     // logInScreen.classList.add("displayNone");
   } else{
     userConnected = false;
+    console.log("no user");
     document.getElementById("loadingScreen").classList.replace("waitingScreen", "displayNone");
     logInScreen.classList.remove("displayNone");
     logInBtn.addEventListener("click", logIn);
@@ -308,7 +312,7 @@ let colorsList = [ //showTypeChoices
   colorTX: "white"
 }];
 let switchSortArray = ["fa-solid fa-arrow-right-arrow-left fa-rotate-90", "fa-solid fa-folder-closed fa-rotate-270", "fa-solid fa-hashtag", "fa-regular fa-hourglass-half", "typcn typcn-tag sortingTag", "fa-solid fa-arrow-down-a-z", "fa-solid fa-icons"];
-let icons = ["fa-solid fa-comments", "fa-solid fa-lightbulb", "fa-solid fa-dollar-sign", "fa-solid fa-spider", "fa-solid fa-gavel", "fa-solid fa-couch", "fa-solid fa-head-side-virus", "fa-solid fa-screwdriver-wrench", "fa-solid fa-universal-access", "fa-solid fa-droplet", "fa-solid fa-code", "fa-solid fa-poo", "fa-solid fa-globe", "fa-solid fa-briefcase", "fa-solid fa-brain", "fa-solid fa-champagne-glasses", "fa-solid fa-seedling", "fa-solid fa-utensils", "fa-solid fa-heart-pulse", "fa-solid fa-sun", "fa-solid fa-broom", "fa-solid fa-people-group", "fa-solid fa-bullhorn", "fa-solid fa-magnifying-glass", "fa-solid fa-heart", "fa-solid fa-cake-candles", "fa-regular fa-hourglass-half", "fa-solid fa-road", "fa-solid fa-envelopes-bulk", "fa-solid fa-person-chalkboard", "fa-regular fa-face-grin-stars", "fa-regular fa-face-grin-hearts", "fa-regular fa-face-grin-squint", "fa-regular fa-face-smile-wink", "fa-regular fa-face-meh-blank", "fa-regular fa-face-flushed", "fa-regular fa-face-grimace", "fa-regular fa-face-rolling-eyes", "fa-regular fa-face-grin-beam-sweat", "fa-regular fa-face-surprise", "fa-regular fa-face-frown-open", "fa-regular fa-face-frown", "fa-regular fa-face-sad-tear", "fa-regular fa-face-tired", "fa-regular fa-face-sad-cry", "fa-regular fa-face-dizzy", "fa-regular fa-face-angry", "fa-solid fa-ban noIcon"];
+let icons = ["fa-solid fa-comments", "fa-solid fa-lightbulb", "fa-solid fa-dollar-sign", "fa-solid fa-spider", "fa-solid fa-gavel", "fa-solid fa-couch", "fa-solid fa-head-side-virus", "fa-solid fa-screwdriver-wrench", "fa-solid fa-universal-access", "fa-solid fa-droplet", "fa-solid fa-code", "fa-solid fa-poo", "fa-solid fa-globe", "fa-solid fa-briefcase", "fa-solid fa-brain", "fa-solid fa-champagne-glasses", "fa-solid fa-seedling", "fa-solid fa-utensils", "fa-solid fa-heart-pulse", "fa-solid fa-sun", "fa-solid fa-broom", "fa-solid fa-people-group", "fa-solid fa-bullhorn", "fa-solid fa-magnifying-glass", "fa-solid fa-heart", "fa-solid fa-cake-candles", "fa-regular fa-hourglass-half", "fa-solid fa-road", "fa-solid fa-envelopes-bulk", "fa-solid fa-person-chalkboard", "fa-solid fa-house", "fa-regular fa-image", "fa-solid fa-music", "fa-solid fa-paperclip", "fa-solid fa-cart-shopping", "fa-solid fa-car-side", "fa-solid fa-mug-hot", "fa-solid fa-gift", "fa-solid fa-inbox", "fa-solid fa-trash", "fa-solid fa-bookmark", "fa-solid fa-book", "fa-regular fa-eye", "fa-solid fa-gears", "fa-solid fa-ticket", "fa-solid fa-tree", "fa-solid fa-hashtag", "fa-solid fa-dumpster-fire", "fa-regular fa-handshake", "fa-solid fa-snowflake", "fa-regular fa-sun", "fa-solid fa-stethoscope", "fa-solid fa-hand-holding-heart", "fa-solid fa-question", "fa-regular fa-credit-card", "fa-solid fa-mobile-screen-button", "fa-solid fa-laptop", "fa-solid fa-signature", "fa-solid fa-joint", "fa-solid fa-voicemail", "fa-solid fa-dumbbell", "fa-solid fa-weight-scale", "fa-solid fa-transgender", "fa-solid fa-tooth", "fa-solid fa-shoe-prints", "fa-solid fa-piggy-bank", "fa-solid fa-microscope", "fa-solid fa-masks-theater", "fa-solid fa-laptop-code", "fa-solid fa-kitchen-set", "fa-solid fa-hand-middle-finger", "fa-solid fa-dove", "fa-regular fa-face-grin-stars", "fa-regular fa-face-grin-hearts", "fa-regular fa-face-grin-squint", "fa-regular fa-face-smile-wink", "fa-regular fa-face-meh-blank", "fa-regular fa-face-flushed", "fa-regular fa-face-grimace", "fa-regular fa-face-rolling-eyes", "fa-regular fa-face-grin-beam-sweat", "fa-regular fa-face-surprise", "fa-regular fa-face-frown-open", "fa-regular fa-face-frown", "fa-regular fa-face-sad-tear", "fa-regular fa-face-tired", "fa-regular fa-face-sad-cry", "fa-regular fa-face-dizzy", "fa-regular fa-face-angry", "fa-solid fa-ban noIcon"];
 let contactList = [
   {
     id: "1234",

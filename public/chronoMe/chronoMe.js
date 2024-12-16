@@ -164,6 +164,32 @@ let allPrograms = [[{
       color: 1,
       time: "00:00:25"
     }],[{
+      name: "Double Stretching"
+    },{
+      word: "Position",
+      color: 0,
+      time: "00:00:05"
+    },{
+      word: "Stretch 1",
+      color: 1,
+      time: "00:00:30"
+    },{
+      word: "Stretch 2",
+      color: 2,
+      time: "00:00:30"
+    },{
+      word: "Stretch 1",
+      color: 1,
+      time: "00:00:30"
+    },{
+      word: "Stretch 2",
+      color: 2,
+      time: "00:00:30"
+    },{
+      word: "Stretch 1",
+      color: 1,
+      time: "00:00:30"
+    }],[{
       name: "Demo"
     },{
       word: "Position",
@@ -191,6 +217,61 @@ let allPrograms = [[{
       time: "00:00:06"
     }
   ]
+];
+let allPrograms2 = [
+  {
+    name: "Demo",
+    sequence: [{
+        word: "Position",
+        color: 0,
+        noteD: 200,
+        noteF: 440,
+        noteV: 8,
+        delai: "00:00:03",
+        numDiv: 0
+      },{
+        word: "Test",
+        color: 1,
+        noteD: 200,
+        noteF: 870,
+        noteV: 8,
+        delai: "00:00:04",
+        numDiv: 1
+      },{
+        word: "Pause",
+        color: 2,
+        noteD: 200,
+        noteF: 440,
+        noteV: 8,
+        delai: "00:00:03",
+        numDiv: 2
+      },{
+        word: "Test",
+        color: 1,
+        noteD: 200,
+        noteF: 870,
+        noteV: 8,
+        delai: "00:00:04",
+        numDiv: 3
+      },{
+        word: "Pause",
+        color: 2,
+        noteD: 200,
+        noteF: 440,
+        noteV: 8,
+        delai: "00:00:03",
+        numDiv: 4
+      },{
+        word: "Test",
+        color: 1,
+        noteD: 200,
+        noteF: 870,
+        noteV: 8,
+        delai: "00:00:04",
+        numDiv: 5
+      }
+    ]
+  }
 ];
 localStorage.allPrograms = JSON.stringify(allPrograms);
 
@@ -334,6 +415,7 @@ function replaceProgram(progIdx){ //The program already exists but we're changin
   progNum = progIdx;
   showProgram();
   localStorage.allPrograms = JSON.stringify(allPrograms);
+  saveToCloud();
   console.log(allPrograms);
 };
 
@@ -385,7 +467,7 @@ function saveNreset() {
   progNum = allPrograms.length - 1;
   console.log(allPrograms);
   showProgram();
-  
+  saveToCloud();
   addOneBtn.innerHTML = `<i class="fa-solid fa-plus"></i>`;
   addOneBtn.removeEventListener("click", saveNreset);
   addOneBtn.addEventListener("click", createNew);
@@ -397,7 +479,7 @@ function beep(duration, frequency, volume){
         // Set default duration if not provided
         duration = duration || 200;
         frequency = frequency || 440;
-        volume = volume || 5;
+        volume = volume || 8;
 
         try{
             let oscillatorNode = myAudioContext.createOscillator();
@@ -446,7 +528,7 @@ function activateDiv(divIdx){
       let lastingTtimeS = time.split(':')[2];
       lastingTtimeS = lastingTtimeS.startsWith("0") ? lastingTtimeM ? lastingTtimeS == "00" ? null : lastingTtimeS : lastingTtimeS.slice(1) : lastingTtimeS;
       document.querySelector("#order").style.color =colorsList[allPrograms[progNum][divIdx + 1].color];
-      document.querySelector("#order").innerHTML = `${allPrograms[progNum][divIdx + 1].word}<br/><span class="lastingTime">${lastingTtimeH ? lastingTtimeH + "h" : ""}${lastingTtimeM ? lastingTtimeH ? " " + lastingTtimeM + "m" : lastingTtimeM + "m" : ""}${lastingTtimeS ? lastingTtimeM ? " " + lastingTtimeS + "s" : lastingTtimeS + "s" : ""}</span>`;
+      document.querySelector("#order").innerHTML = `${allPrograms[progNum][divIdx + 1].word} <span class="lastingTime">(${lastingTtimeH ? lastingTtimeH + "h" : ""}${lastingTtimeM ? lastingTtimeH ? " " + lastingTtimeM + "m" : lastingTtimeM + "m" : ""}${lastingTtimeS ? lastingTtimeM ? " " + lastingTtimeS + "s" : lastingTtimeS + "s" : ""})</span>`;
     } else if(divIdx == allDivs.length){
       allDivs[divIdx - 1].classList.remove("activated");
       allDivs[divIdx - 1].classList.add("done");
@@ -467,34 +549,73 @@ function turnIntoMS(time){
   return Number(time.split(':')[0]) * 3600000 + Number(time.split(':')[1]) * 60000 + Number(time.split(":")[2]) * 1000;
 };
 
+const actions = [
+  async () => {turnBlueViolet(turnIntoMS(allPrograms[progNum][1].time)); beep(); activateDiv(0); await delay(turnIntoMS(allPrograms[progNum][1].time))},
+  async () => {turnGreen(turnIntoMS(allPrograms[progNum][2].time)); beep(200, 870); activateDiv(1); await delay(turnIntoMS(allPrograms[progNum][2].time))}, 
+  async () => {turnRed(turnIntoMS(allPrograms[progNum][3].time)); beep(); activateDiv(2); await delay(turnIntoMS(allPrograms[progNum][3].time))}, 
+  async () => {turnGreen(turnIntoMS(allPrograms[progNum][4].time)); beep(200, 870); activateDiv(3); await delay(turnIntoMS(allPrograms[progNum][4].time))}, 
+  async () => {turnRed(turnIntoMS(allPrograms[progNum][5].time)); beep(); activateDiv(4); await delay(turnIntoMS(allPrograms[progNum][5].time))}, 
+  async () => {turnGreen(turnIntoMS(allPrograms[progNum][6].time)); beep(200, 870); activateDiv(5); await delay(turnIntoMS(allPrograms[progNum][6].time))}, 
+  async () => {turnBlueViolet(); beep(600); activateDiv(6);  await delay(0)}
+];
+
+
+async function executionEtape(etape){
+  const {color, noteD, noteF, noteV, delai, numDiv} = etape;
+  if (color == 0){
+    turnBlueViolet(turnIntoMS(delai));
+  } else if(color == 1){
+    turnGreen(turnIntoMS(delai));
+  } else if(color == 2){
+    turnRed(turnIntoMS(delai));
+  };
+  beep(noteD, noteF, noteV);
+  activateDiv(numDiv);
+  await delay(turnIntoMS(delai));
+};
+
 document.querySelector("#chronoMe").addEventListener("click", () => {
+  progNum = 0;
   //console.log(allPrograms[progNum]);
-  let delay0 = turnIntoMS(allPrograms[progNum][1].time); 
-  let delay1 = turnIntoMS(allPrograms[progNum][2].time);
-  let delay2 = turnIntoMS(allPrograms[progNum][3].time);
-  let delay3 = turnIntoMS(allPrograms[progNum][4].time);
-  let delay4 = turnIntoMS(allPrograms[progNum][5].time);
-  let delay5 = turnIntoMS(allPrograms[progNum][6].time);
-  // let delay1 = allPrograms[progNum][2].time * 1000;
-  // let delay2 = allPrograms[progNum][3].time * 1000;
-  // let delay3 = allPrograms[progNum][4].time * 1000;
-  // let delay4 = allPrograms[progNum][5].time * 1000;
-  // let delay5 = allPrograms[progNum][6].time * 1000;
-  // beep(200, 440, 100);
-  Promise.resolve()
-.then(() => {turnBlueViolet(delay0); beep(); activateDiv(0);})
-.then(() => delay(delay0))
-.then(() => {turnGreen(delay1); beep(200, 870); activateDiv(1);})
-.then(() => delay(delay1))
-.then(() => {turnRed(delay2); beep(); activateDiv(2);})
-.then(() => delay(delay2))
-.then(() => {turnGreen(delay3); beep(200, 870); activateDiv(3);})
-.then(() => delay(delay3))
-.then(() => {turnRed(delay4); beep(); activateDiv(4);})
-.then(() => delay(delay4))
-.then(() => {turnGreen(delay5); beep(200, 870); activateDiv(5);})
-.then(() => delay(delay5))
-.then(() => {turnBlueViolet(); beep(600); activateDiv(6); backToStart();});
+  // let result = Promise.resolve();
+  // actions.forEach(function (promiseLike) {
+  //   result = result.then(promiseLike);
+  // });
+  // backToStart();
+  // return result;
+  let result = Promise.resolve();
+  console.log(allPrograms2[progNum].sequence);
+  allPrograms2[progNum].sequence.forEach(function (parametre) {
+    result = result.then(executionEtape(parametre));
+  });
+  turnBlueViolet(); 
+  beep(600); 
+  activateDiv(allPrograms2[progNum].sequence.length);
+  backToStart();
+  return result;
+  // actions.map(async (a) => {
+  //   let x = await a();
+  // });
+  // let delay0 = turnIntoMS(allPrograms[progNum][1].time); 
+  // let delay1 = turnIntoMS(allPrograms[progNum][2].time);
+  // let delay2 = turnIntoMS(allPrograms[progNum][3].time);
+  // let delay3 = turnIntoMS(allPrograms[progNum][4].time);
+  // let delay4 = turnIntoMS(allPrograms[progNum][5].time);
+  // let delay5 = turnIntoMS(allPrograms[progNum][6].time);
+//   Promise.resolve()
+// .then(() => {turnBlueViolet(delay0); beep(); activateDiv(0);})
+// .then(() => delay(delay0))
+// .then(() => {turnGreen(delay1); beep(200, 870); activateDiv(1);})
+// .then(() => delay(delay1))
+// .then(() => {turnRed(delay2); beep(); activateDiv(2);})
+// .then(() => delay(delay2))
+// .then(() => {turnGreen(delay3); beep(200, 870); activateDiv(3);})
+// .then(() => delay(delay3))
+// .then(() => {turnRed(delay4); beep(); activateDiv(4);})
+// .then(() => delay(delay4))
+// .then(() => {turnGreen(delay5); beep(200, 870); activateDiv(5);})
+// .then(() => delay(delay5))
+// .then(() => {turnBlueViolet(); beep(600); activateDiv(6); backToStart();});
 });
 
 // Simple beep
@@ -508,6 +629,7 @@ document.querySelector("#chronoMe").addEventListener("click", () => {
 // );
 
 function delay(duration) {
+  console.log(duration);
   return new Promise((resolve) => {
       setTimeout(() => {
         resolve();

@@ -9,10 +9,8 @@
   Ctrl + K ... Ctrl + 1 => Fold all the first levels
 */
 
-import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
-import { getAuth, signOut, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-import { app, analytics, db, auth, provider } from "../myFirebase.js";
-import trans from "../trans.js";
+import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "../../myFirebase.js";
+import trans from "../../trans.js";
 auth.languageCode = 'fr';
 
 const cloudIt = document.querySelector("#cloudIt");
@@ -1546,7 +1544,7 @@ function todoCreation(todo){
           ${todo.recurry ? `data-rec="${todo.recId}"` : ``} 
           ${todo.term == "alwaysHere" ? `data-always="here"` : ``} 
           ${todo.openHour ? `data-openHour="true"` : ``} 
-          class="todoLi${todo.term == "showThing" ? todo.label ? ` showLi showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : ``}${pColor !== 0 ? todo.pColor ? ` projectLi` : ` offspringLi` : ``}${todo.startTime && todo.prima && todo.prima !== "00:00" ? ` showLiBuffer` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}${!openHourSwitch && !openHourToggle && todo.openHour ? ` displayNone` : ``}" 
+          class="todoLi${todo.term == "showThing" ? todo.label ? ` showLi showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : ``}${pColor !== 0 ? todo.pColor ? ` projectLi` : todo.pPosition == "done" ? ` offspringLi doneOffspringLi` : ` offspringLi` : ``}${todo.startTime && todo.prima && todo.prima !== "00:00" ? ` showLiBuffer` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}${!openHourSwitch && !openHourToggle && todo.openHour ? ` displayNone` : ``}" 
           style="
           ${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}
           ${pColor !== 0 ? todo.pColor ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : `border-color:${colorsList[pColor].colorBG};` : ``}
@@ -2139,7 +2137,13 @@ window.PartialCheckEvent = PartialCheckEvent;
 function TotalCheckEvent(emptyCheck){
   parent = emptyCheck.parentElement;
   let doned = getTodoFrom(parent);
-  parent.remove(); //The checkOptionsDiv AND the newClickScreen are both in that parent, so they are all removed at the same time! (so no need for newClickScreenRemoval) but we do need the parent = offspring = ``;
+  if(parent.parentElement.id == "projectUl"){
+    let checkOptionsDiv = parent.querySelector(".checkOptionsDiv");
+    newClickScreenRemoval(checkOptionsDiv);//includes parent = offspring = ``;
+    parent.classList.add("doneOffspringLi");
+  } else{
+    parent.remove(); //The checkOptionsDiv AND the newClickScreen are both in that parent, so they are all removed at the same time! (so no need for newClickScreenRemoval) but we do need the parent = offspring = ``;
+  };
   gotItDone(doned);
   //doneAction(parent); // need to wait until animation is over before moving on to the next (gotItDone and remove) (use metro app animation)
   updateCBC();
@@ -2186,17 +2190,16 @@ function gotItHalfDone(doned){ //doned is either the todo per se or a fake todo 
   localStorageDones("next");
 };
 
-function gotItDone(doned){ //doned is either the todo per se or a fake todo created for the recurry
-  let donedItem;
-  if(doned.recurry){
-    getRecurryDateOut(doned); //removes the date from the recurryDates of its recurring
-    donedItem = doned;
+function gotItDone(donedItem){ //donedItem is either the todo per se or a fake todo created for the recurry
+  if(donedItem.recurry){
+    getRecurryDateOut(donedItem); //removes the date from the recurryDates of its recurring
+  } else if(donedItem.pParentId && donedItem.pParentId !== "null"){
+    donedItem.pPosition = "done";
   } else{
-    let donedIndex = listTasks.findIndex(todo => todo.id == doned.id);
-    let donedSplice = listTasks.splice(donedIndex, 1);
-    donedItem = donedSplice[0];
+    let donedIndex = listTasks.findIndex(todo => todo.id == donedItem.id);
+    listTasks.splice(donedIndex, 1);
   };
-  if(doned.urge){
+  if(donedItem.urge){
     colorUrges("next");
   };    
   localStorage.listTasks = JSON.stringify(listTasks);

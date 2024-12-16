@@ -1184,11 +1184,10 @@ li .textDone{
 }
 .projectLi, .offspringLi{
   border-radius: 5px 8px 0 2px;
-  margin-top: 13px;
-  margin-left: 8px;
   border-style: solid;
   border-width: 3.5px;
   width: 100%;
+  margin-top: 13px;
 }
 .projectLi{
   outline: 6px solid;
@@ -1201,9 +1200,20 @@ li .textDone{
 #projectUl .offspringLi{
   outline: none;
   border: none;
+  margin-left: 15px;
+  margin-top: 0;
 }
 #projectUl .projectLi .checkOptions, #projectUl .offspringLi .checkOptions{
   margin-left: 1.5px;
+}
+#projectUl .offspringLi > .textDiv > .text{
+  font-size: 18px;
+}
+#projectUl .offspringLi.doneOffspringLi{
+  opacity: .3;
+}
+#projectUl .offspringLi.doneOffspringLi > .textDiv > .text{
+  text-decoration: line-through 2px double;
 }
 .whatDayLabel{
   display: block;

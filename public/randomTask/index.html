@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="..\@Fonts&Icons\fontawesome\css\solid.min.css"/>
   <script src="https://kit.fontawesome.com/b4f765f607.js" crossorigin="anonymous"></script>
   <!-- CSS -->
-  <link rel="stylesheet" href="randomTask.css">
+  <link rel="stylesheet" href="v1/randomTask.css">
   <title>Random Task</title>
 </head>
 
@@ -703,7 +703,12 @@ Options for sorting
     <button id="cloudIt"><span class="typcn typcn-cloud-storage-outline" style="font-size: 1em;"></span></button>
   </div>
 
-<script type="module" src="randomTask.js"></script>
+<script src="../version.js"></script>
+<script id="scriptModule" type="module"></script>
+<script>
+  let scriptLocation = `./${version}/randomTask.js`;
+  document.getElementById("scriptModule").src = scriptLocation;
+</script>
 </body>
 
 </html>

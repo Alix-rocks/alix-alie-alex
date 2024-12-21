@@ -57,313 +57,220 @@ const colorsList = [
 ];
 
 let progNum = 1;
-let allPrograms = [{
-  name: "Nom de la séquence",
-  sequence: [{
-    word: "Position",
-    color: 0,
-    noteD: 200,
-    noteF: 440,
-    noteV: 8,
-    delai: "00:00:00",
-    numDiv: 0
-  },{
-    word: "Hold",
-    color: 1,
-    noteD: 200,
-    noteF: 870,
-    noteV: 8,
-    delai: "00:00:00",
-    numDiv: 1
-  },{
-    word: "Pause",
-    color: 2,
-    noteD: 200,
-    noteF: 440,
-    noteV: 8,
-    delai: "00:00:00",
-    numDiv: 2
-  },{
-    word: "Hold",
-    color: 1,
-    noteD: 200,
-    noteF: 870,
-    noteV: 8,
-    delai: "00:00:00",
-    numDiv: 3
-  },{
-    word: "Pause",
-    color: 2,
-    noteD: 200,
-    noteF: 440,
-    noteV: 8,
-    delai: "00:00:00",
-    numDiv: 4
-  },{
-    word: "Hold",
-    color: 1,
-    noteD: 200,
-    noteF: 870,
-    noteV: 8,
-    delai: "00:00:00",
-    numDiv: 5
-  }]
-},{
-  name: "Screen",
-  sequence: [{
-    word: "Position",
-    color: 0,
-    noteD: 200,
-    noteF: 440,
-    noteV: 8,
-    delai: "00:00:05",
-    numDiv: 0
-  },{
-    word: "Screen",
-    color: 1,
-    noteD: 200,
-    noteF: 870,
-    noteV: 8,
-    delai: "00:20:00",
-    numDiv: 1
-  },{
-    word: "Pause",
-    color: 2,
-    noteD: 200,
-    noteF: 440,
-    noteV: 8,
-    delai: "00:00:20",
-    numDiv: 2
-  },{
-    word: "Screen",
-    color: 1,
-    noteD: 200,
-    noteF: 870,
-    noteV: 8,
-    delai: "00:20:00",
-    numDiv: 3
-  },{
-    word: "Pause",
-    color: 2,
-    noteD: 200,
-    noteF: 440,
-    noteV: 8,
-    delai: "00:00:20",
-    numDiv: 4
-  },{
-    word: "Screen",
-    color: 1,
-    noteD: 200,
-    noteF: 870,
-    noteV: 8,
-    delai: "00:20:00",
-    numDiv: 5
-  }]
-},{
-  name: "Strengthening",
-  sequence: [{
-    word: "Position",
-    color: 0,
-    noteD: 200,
-    noteF: 440,
-    noteV: 8,
-    delai: "00:00:05",
-    numDiv: 0
-  },{
-    word: "Hold",
-    color: 1,
-    noteD: 200,
-    noteF: 870,
-    noteV: 8,
-    delai: "00:01:00",
-    numDiv: 1
-  },{
-    word: "Pause",
-    color: 2,
-    noteD: 200,
-    noteF: 440,
-    noteV: 8,
-    delai: "00:00:15",
-    numDiv: 2
-  },{
-    word: "Hold",
-    color: 1,
-    noteD: 200,
-    noteF: 870,
-    noteV: 8,
-    delai: "00:01:00",
-    numDiv: 3
-  },{
-    word: "Pause",
-    color: 2,
-    noteD: 200,
-    noteF: 440,
-    noteV: 8,
-    delai: "00:00:15",
-    numDiv: 4
-  },{
-    word: "Hold",
-    color: 1,
-    noteD: 200,
-    noteF: 870,
-    noteV: 8,
-    delai: "00:01:00",
-    numDiv: 5
-  }]
-},{
-  name: "Stretching",
-  sequence: [{
-    word: "Position",
-    color: 0,
-    noteD: 200,
-    noteF: 440,
-    noteV: 8,
-    delai: "00:00:05",
-    numDiv: 0
-  },{
-    word: "Stretch",
-    color: 1,
-    noteD: 200,
-    noteF: 870,
-    noteV: 8,
-    delai: "00:00:25",
-    numDiv: 1
-  },{
-    word: "Pause",
-    color: 2,
-    noteD: 200,
-    noteF: 440,
-    noteV: 8,
-    delai: "00:00:08",
-    numDiv: 2
-  },{
-    word: "Stretch",
-    color: 1,
-    noteD: 200,
-    noteF: 870,
-    noteV: 8,
-    delai: "00:00:25",
-    numDiv: 3
-  },{
-    word: "Pause",
-    color: 2,
-    noteD: 200,
-    noteF: 440,
-    noteV: 8,
-    delai: "00:00:08",
-    numDiv: 4
-  },{
-    word: "Stretch",
-    color: 1,
-    noteD: 200,
-    noteF: 870,
-    noteV: 8,
-    delai: "00:00:25",
-    numDiv: 5
-  }]
-},{
-  name: "Double Stretching",
-  sequence: [{
-    word: "Position",
-    color: 0,
-    noteD: 200,
-    noteF: 440,
-    noteV: 8,
-    delai: "00:00:05",
-    numDiv: 0
-  },{
-    word: "Stretch 1",
-    color: 1,
-    noteD: 200,
-    noteF: 870,
-    noteV: 8,
-    delai: "00:00:30",
-    numDiv: 1
-  },{
-    word: "Stretch 2",
-    color: 2,
-    noteD: 200,
-    noteF: 440,
-    noteV: 8,
-    delai: "00:00:30",
-    numDiv: 2
-  },{
-    word: "Stretch 1",
-    color: 1,
-    noteD: 200,
-    noteF: 870,
-    noteV: 8,
-    delai: "00:00:30",
-    numDiv: 3
-  },{
-    word: "Stretch 2",
-    color: 2,
-    noteD: 200,
-    noteF: 440,
-    noteV: 8,
-    delai: "00:00:30",
-    numDiv: 4
-  },{
-    word: "Stretch 1",
-    color: 1,
-    noteD: 200,
-    noteF: 870,
-    noteV: 8,
-    delai: "00:00:30",
-    numDiv: 5
-  }]
-},{
-  name: "Demo",
-  sequence: [{
-    word: "Position",
-    color: 0,
-    noteD: 200,
-    noteF: 440,
-    noteV: 8,
-    delai: "00:00:03",
-    numDiv: 0
-  },{
-    word: "Test",
-    color: 1,
-    noteD: 200,
-    noteF: 870,
-    noteV: 8,
-    delai: "00:00:04",
-    numDiv: 1
-  },{
-    word: "Pause",
-    color: 2,
-    noteD: 200,
-    noteF: 440,
-    noteV: 8,
-    delai: "00:00:03",
-    numDiv: 2
-  },{
-    word: "Test",
-    color: 1,
-    noteD: 200,
-    noteF: 870,
-    noteV: 8,
-    delai: "00:00:04",
-    numDiv: 3
-  },{
-    word: "Pause",
-    color: 2,
-    noteD: 200,
-    noteF: 440,
-    noteV: 8,
-    delai: "00:00:03",
-    numDiv: 4
-  },{
-    word: "Test",
-    color: 1,
-    noteD: 200,
-    noteF: 870,
-    noteV: 8,
-    delai: "00:00:04",
-    numDiv: 5
-  }]
-}];
+let allPrograms = [[{
+      name: "Nom de la séquence"
+    },{
+      word: "Position",
+      color: 0,
+      time: "00:00:00"
+    },{
+      word: "Hold",
+      color: 1,
+      time: "00:00:00"
+    },{
+      word: "Pause",
+      color: 2,
+      time: "00:00:00"
+    },{
+      word: "Hold",
+      color: 1,
+      time: "00:00:00"
+    },{
+      word: "Pause",
+      color: 2,
+      time: "00:00:00"
+    },{
+      word: "Hold",
+      color: 1,
+      time: "00:00:00"
+    }],[{
+      name: "Screen"
+    },{
+      word: "Position",
+      color: 0,
+      time: "00:00:05"
+    },{
+      word: "Screen",
+      color: 1,
+      time: "00:20:00"
+    },{
+      word: "Pause",
+      color: 2,
+      time: "00:00:20"
+    },{
+      word: "Screen",
+      color: 1,
+      time: "00:20:00"
+    },{
+      word: "Pause",
+      color: 2,
+      time: "00:00:20"
+    },{
+      word: "Screen",
+      color: 1,
+      time: "00:20:00"
+    }],[{
+      name: "Strengthening"
+    },{
+      word: "Position",
+      color: 0,
+      time: "00:00:05"
+    },{
+      word: "Hold",
+      color: 1,
+      time: "00:01:00"
+    },{
+      word: "Pause",
+      color: 2,
+      time: "00:00:15"
+    },{
+      word: "Hold",
+      color: 1,
+      time: "00:01:00"
+    },{
+      word: "Pause",
+      color: 2,
+      time: "00:00:15"
+    },{
+      word: "Hold",
+      color: 1,
+      time: "00:01:00"
+    }],[{
+      name: "Stretching"
+    },{
+      word: "Position",
+      color: 0,
+      time: "00:00:05"
+    },{
+      word: "Stretch",
+      color: 1,
+      time: "00:00:25"
+    },{
+      word: "Pause",
+      color: 2,
+      time: "00:00:08"
+    },{
+      word: "Stretch",
+      color: 1,
+      time: "00:00:25"
+    },{
+      word: "Pause",
+      color: 2,
+      time: "00:00:08"
+    },{
+      word: "Stretch",
+      color: 1,
+      time: "00:00:25"
+    }],[{
+      name: "Double Stretching"
+    },{
+      word: "Position",
+      color: 0,
+      time: "00:00:05"
+    },{
+      word: "Stretch 1",
+      color: 1,
+      time: "00:00:30"
+    },{
+      word: "Stretch 2",
+      color: 2,
+      time: "00:00:30"
+    },{
+      word: "Stretch 1",
+      color: 1,
+      time: "00:00:30"
+    },{
+      word: "Stretch 2",
+      color: 2,
+      time: "00:00:30"
+    },{
+      word: "Stretch 1",
+      color: 1,
+      time: "00:00:30"
+    }],[{
+      name: "Demo"
+    },{
+      word: "Position",
+      color: 0,
+      time: "00:00:03"
+    },{
+      word: "Test",
+      color: 1,
+      time: "00:00:06"
+    },{
+      word: "Pause",
+      color: 2,
+      time: "00:00:03"
+    },{
+      word: "Test",
+      color: 1,
+      time: "00:00:06"
+    },{
+      word: "Pause",
+      color: 2,
+      time: "00:00:03"
+    },{
+      word: "Test",
+      color: 1,
+      time: "00:00:06"
+    }
+  ]
+];
+let allPrograms2 = [
+  {
+    name: "Demo",
+    sequence: [{
+        word: "Position",
+        color: 0,
+        noteD: 200,
+        noteF: 440,
+        noteV: 8,
+        delai: "00:00:03",
+        numDiv: 0
+      },{
+        word: "Test",
+        color: 1,
+        noteD: 200,
+        noteF: 870,
+        noteV: 8,
+        delai: "00:00:04",
+        numDiv: 1
+      },{
+        word: "Pause",
+        color: 2,
+        noteD: 200,
+        noteF: 440,
+        noteV: 8,
+        delai: "00:00:03",
+        numDiv: 2
+      },{
+        word: "Test",
+        color: 1,
+        noteD: 200,
+        noteF: 870,
+        noteV: 8,
+        delai: "00:00:04",
+        numDiv: 3
+      },{
+        word: "Pause",
+        color: 2,
+        noteD: 200,
+        noteF: 440,
+        noteV: 8,
+        delai: "00:00:03",
+        numDiv: 4
+      },{
+        word: "Test",
+        color: 1,
+        noteD: 200,
+        noteF: 870,
+        noteV: 8,
+        delai: "00:00:04",
+        numDiv: 5
+      }
+    ]
+  }
+];
 localStorage.allPrograms = JSON.stringify(allPrograms);
 
 async function getMyPrograms() {
@@ -424,14 +331,17 @@ const myAudioContext = new AudioContext();
 const timeShow = document.querySelector("#timeShow");
 const timeShowZone = document.querySelector("#timeShowZone");
 function turnGreen(duration){
+  console.log("turnGreen " + duration);
   timeShowZone.style.backgroundColor = "";
   timeShow.animate([{width: "0"},{width: "250px"}], duration);
 };
 function turnBlueViolet(duration){
+  console.log("turnBlueViolet " + duration);
   timeShowZone.style.backgroundColor = "rgba(138, 43, 226, 1)";
   timeShowZone.animate([{backgroundColor: "rgba(138, 43, 226, 1)"},{backgroundColor: "rgba(138, 43, 226, 0)"}], duration);
 };
 function turnRed(duration){
+  console.log("turnRed " + duration);
   timeShowZone.style.backgroundColor = "rgba(255, 0, 0, 1)";
   timeShowZone.animate([{backgroundColor: "rgba(255, 0, 0, 1)"},{backgroundColor: "rgba(255, 0, 0, 0)"}], duration);
 };
@@ -443,12 +353,14 @@ const allTimeDiv = document.querySelector(".allTimeDiv");
 
 function showProgram(){
   allTimeDiv.classList.remove("modifyingDiv");
-  document.querySelector("#seqName").innerHTML = `${allPrograms[progNum].name}<button onclick="modifyProgram(${progNum})" style="border:none;"><i class="fa-solid fa-pen" style="margin-left: 16px;font-size: 1em;color: var(--tx-color);translate: 0 -3px;"></i></button`;
-  allTimeDiv.innerHTML = allPrograms[progNum].sequence.map((step, idx) => {
-    return `<div style="color:${colorsList[step.color]};">
-      <h3>${step.word}</h3>
-      <p>${step.delai}</p>
-    </div>`;
+  document.querySelector("#seqName").innerHTML = `${allPrograms[progNum][0].name}<button onclick="modifyProgram(${progNum})" style="border:none;"><i class="fa-solid fa-pen" style="margin-left: 16px;font-size: 1em;color: var(--tx-color);translate: 0 -3px;"></i></button`;
+  allTimeDiv.innerHTML = allPrograms[progNum].map((step, idx) => {
+    if(idx !== 0){
+      return `<div style="color:${colorsList[step.color]};">
+        <h3>${step.word}</h3>
+        <p>${step.time}</p>
+      </div>`;
+    };
   }).join("");
 };
 
@@ -459,21 +371,28 @@ window.modifyProgram = modifyProgram;
 
 function showModifiableProgram(progIdx){
   
-  let addingStep = allPrograms[progIdx].sequence.map((step, idx) => {
-    let colorOptions = colorsList.map((col, idx) => {
-      return `<option value="${idx}" style="color:${col};"${step.color == idx ? " selected" : ""}>&#xf53f;</option>`;
-    }).join("");
-    return `<div class="stepDivClass" style="color:${colorsList[step.color]};">
-    <input type="text" class="stepNameInput" value="${step.word}"></input>
-    
-    <input type="time" step="1" class="delaySelect" value="${step.delai}" />
-    <select class="colorSelect">
-      ${colorOptions}
-    </select>
-  </div>`;
+  let addingStep = allPrograms[progIdx].map((step, idx) => {
+    if(idx !== 0){
+      // let timeOptions = [];
+      //   for (let i = 0; i < 61; i++) {
+      //     timeOptions.push(`<option value="${i}"${i == step.time ? " selected" : ""}>${i}</option>`);
+      //   };
+      //   timeOptions = timeOptions.join("");
+      let colorOptions = colorsList.map((col, idx) => {
+        return `<option value="${idx}" style="color:${col};"${step.color == idx ? " selected" : ""}>&#xf53f;</option>`;
+      }).join("");
+      return `<div class="stepDivClass" style="color:${colorsList[step.color]};">
+      <input type="text" class="stepNameInput" value="${step.word}"></input>
+      
+      <input type="time" step="1" class="delaySelect" value="${step.time}" />
+      <select class="colorSelect">
+        ${colorOptions}
+      </select>
+    </div>`;
+    }
   }).join("");
 //<select class="delaySelect">${timeOptions}</select>
-  document.querySelector("#seqName").innerHTML = `<input id="seqNameInput" type="text" placeholder="Nom de la séquence"${progIdx !== 0 ? ` value="${allPrograms[progIdx].name}"` : ``}></input>
+  document.querySelector("#seqName").innerHTML = `<input id="seqNameInput" type="text" placeholder="Nom de la séquence"${progIdx !== 0 ? ` value="${allPrograms[progIdx][0].name}"` : ``}></input>
   ${progIdx !== 0 ? `<button onclick="replaceProgram(${progIdx})" style="border:none;"><i class="fa-regular fa-floppy-disk" style="margin-left: 16px;"></i></button>` : ``}`;
   allTimeDiv.innerHTML = addingStep;
   allTimeDiv.classList.add("modifyingDiv");
@@ -488,12 +407,12 @@ function replaceProgram(progIdx){ //The program already exists but we're changin
   document.querySelectorAll(".allTimeDiv > div").forEach(step => {
     let newStep = {
       word: step.querySelector(".stepNameInput").value,
-      delai: step.querySelector(".delaySelect").value,
+      time: step.querySelector(".delaySelect").value,
       color: step.querySelector(".colorSelect").value
-    };//Gotta add the beep!!!
+    };
     newProgram.push(newStep);
   });
-  allPrograms[progIdx].sequence = newProgram;
+  allPrograms[progIdx] = newProgram;
   progNum = progIdx;
   showProgram();
   localStorage.allPrograms = JSON.stringify(allPrograms);
@@ -539,7 +458,7 @@ function saveNreset() {
   document.querySelectorAll(".allTimeDiv > div").forEach(step => {
     let newStep = {
       word: step.querySelector(".stepNameInput").value,
-      delai: step.querySelector(".delaySelect").value,
+      time: step.querySelector(".delaySelect").value,
       color: step.querySelector(".colorSelect").value
     };
     newProgram.push(newStep);
@@ -602,19 +521,19 @@ function activateDiv(divIdx){
         allDivs[divIdx - 1].classList.remove("activated");
         allDivs[divIdx - 1].classList.add("done");
       };
-      let delai = allPrograms[progNum].sequence[divIdx].delai;
-      let lastingTtimeH = delai.split(':')[0];
+      let time = allPrograms[progNum][divIdx + 1].time;
+      let lastingTtimeH = time.split(':')[0];
       lastingTtimeH = lastingTtimeH.startsWith("0") ? lastingTtimeH == "00" ? null : lastingTtimeH.slice(1) : lastingTtimeH;
-      let lastingTtimeM = delai.split(':')[1];
+      let lastingTtimeM = time.split(':')[1];
       lastingTtimeM = lastingTtimeM.startsWith("0") ? lastingTtimeH ? lastingTtimeM == "00" ? "00" : lastingTtimeM : lastingTtimeM == "00" ? null : lastingTtimeM.slice(1) : lastingTtimeM;
-      let lastingTtimeS = delai.split(':')[2];
+      let lastingTtimeS = time.split(':')[2];
       lastingTtimeS = lastingTtimeS.startsWith("0") ? lastingTtimeM ? lastingTtimeS == "00" ? null : lastingTtimeS : lastingTtimeS.slice(1) : lastingTtimeS;
-      document.querySelector("#order").style.color =colorsList[allPrograms[progNum].sequence[divIdx].color];
-      document.querySelector("#order").innerHTML = `${allPrograms[progNum].sequence[divIdx].word} <span class="lastingTime">(${lastingTtimeH ? lastingTtimeH + "h" : ""}${lastingTtimeM ? lastingTtimeH ? " " + lastingTtimeM + "m" : lastingTtimeM + "m" : ""}${lastingTtimeS ? lastingTtimeM ? " " + lastingTtimeS + "s" : lastingTtimeS + "s" : ""})</span>`;
+      document.querySelector("#order").style.color =colorsList[allPrograms[progNum][divIdx + 1].color];
+      document.querySelector("#order").innerHTML = `${allPrograms[progNum][divIdx + 1].word} <span class="lastingTime">(${lastingTtimeH ? lastingTtimeH + "h" : ""}${lastingTtimeM ? lastingTtimeH ? " " + lastingTtimeM + "m" : lastingTtimeM + "m" : ""}${lastingTtimeS ? lastingTtimeM ? " " + lastingTtimeS + "s" : lastingTtimeS + "s" : ""})</span>`;
     } else if(divIdx == allDivs.length){
       allDivs[divIdx - 1].classList.remove("activated");
       allDivs[divIdx - 1].classList.add("done");
-      document.querySelector("#order").style.color = allPrograms[progNum].sequence[0].color;
+      document.querySelector("#order").style.color = allPrograms[progNum][1].color;
       document.querySelector("#order").innerText = "C'est fini !!!";
     };
   });
@@ -627,34 +546,92 @@ function backToStart(){
   });
 };
 
-function turnIntoMS(delai){
-  return Number(delai.split(':')[0]) * 3600000 + Number(delai.split(':')[1]) * 60000 + Number(delai.split(":")[2]) * 1000;
+function turnIntoMS(time){
+  return Number(time.split(':')[0]) * 3600000 + Number(time.split(':')[1]) * 60000 + Number(time.split(":")[2]) * 1000;
 };
 
+const actions = [
+  async () => {turnBlueViolet(turnIntoMS(allPrograms[progNum][1].time)); beep(); activateDiv(0); await delay(turnIntoMS(allPrograms[progNum][1].time));},
+  async () => {turnGreen(turnIntoMS(allPrograms[progNum][2].time)); beep(200, 870); activateDiv(1); await delay(turnIntoMS(allPrograms[progNum][2].time));}, 
+  async () => {turnRed(turnIntoMS(allPrograms[progNum][3].time)); beep(); activateDiv(2); await delay(turnIntoMS(allPrograms[progNum][3].time));}, 
+  async () => {turnGreen(turnIntoMS(allPrograms[progNum][4].time)); beep(200, 870); activateDiv(3); await delay(turnIntoMS(allPrograms[progNum][4].time));}, 
+  async () => {turnRed(turnIntoMS(allPrograms[progNum][5].time)); beep(); activateDiv(4); await delay(turnIntoMS(allPrograms[progNum][5].time));}, 
+  async () => {turnGreen(turnIntoMS(allPrograms[progNum][6].time)); beep(200, 870); activateDiv(5); await delay(turnIntoMS(allPrograms[progNum][6].time));}, 
+  async () => {turnBlueViolet(); beep(600); activateDiv(6);  await delay(0);}
+];
+
+
+
+
+async function executionEtape(etape){
+  const {color, noteD, noteF, noteV, delai, numDiv} = etape;
+  console.log(etape);
+  console.log(color, noteD, noteF, noteV, delai, numDiv);
+  if (color == 0){
+    turnBlueViolet(turnIntoMS(delai));
+  } else if(color == 1){
+    turnGreen(turnIntoMS(delai));
+  } else if(color == 2){
+    turnRed(turnIntoMS(delai));
+  };
+  beep(noteD, noteF, noteV);
+  activateDiv(numDiv);
+  await delay(turnIntoMS(delai));
+};
 
 document.querySelector("#chronoMe").addEventListener("click", () => {
+  progNum = 5;
+  //console.log(allPrograms[progNum]);
   let result = Promise.resolve();
-  allPrograms[progNum].sequence.forEach(function (parametre) {
-    result = result.then(async () => {
-      const {color, noteD, noteF, noteV, delai, numDiv} = parametre;
-      if (color == 0){
-        turnBlueViolet(turnIntoMS(delai));
-      } else if(color == 1){
-        turnGreen(turnIntoMS(delai));
-      } else if(color == 2){
-        turnRed(turnIntoMS(delai));
-      };
-      beep(noteD, noteF, noteV);
-      activateDiv(numDiv);
-      await delay(turnIntoMS(delai));
-    });
+  actions.forEach(function (promiseLike) {
+    result = result.then(promiseLike);
+    console.log(result);
   });
-  // turnBlueViolet(); 
-  // beep(600); 
-  // activateDiv(allPrograms[progNum].sequence.length);
   backToStart();
+  // console.log(result);
   return result;
 
+  // progNum = 0;
+  // let result = Promise.resolve();
+  // console.log(allPrograms2[progNum].sequence);
+  // allPrograms2[progNum].sequence.forEach(function (parametre) {
+  //   console.log(parametre);
+  //   result = result.then(executionEtape(parametre));
+  //   console.log(result);
+  // });
+  // // turnBlueViolet(); 
+  // // beep(600); 
+  // // activateDiv(allPrograms2[progNum].sequence.length);
+  // backToStart();
+  // // console.log(result);
+  // return result;
+
+ 
+
+
+  // actions.map(async (a) => {
+  //   let x = await a();
+  // });
+  // let delay0 = turnIntoMS(allPrograms[progNum][1].time); 
+  // let delay1 = turnIntoMS(allPrograms[progNum][2].time);
+  // let delay2 = turnIntoMS(allPrograms[progNum][3].time);
+  // let delay3 = turnIntoMS(allPrograms[progNum][4].time);
+  // let delay4 = turnIntoMS(allPrograms[progNum][5].time);
+  // let delay5 = turnIntoMS(allPrograms[progNum][6].time);
+//   Promise.resolve()
+// .then(() => {turnBlueViolet(delay0); beep(); activateDiv(0);})
+// .then(() => delay(delay0))
+// .then(() => {turnGreen(delay1); beep(200, 870); activateDiv(1);})
+// .then(() => delay(delay1))
+// .then(() => {turnRed(delay2); beep(); activateDiv(2);})
+// .then(() => delay(delay2))
+// .then(() => {turnGreen(delay3); beep(200, 870); activateDiv(3);})
+// .then(() => delay(delay3))
+// .then(() => {turnRed(delay4); beep(); activateDiv(4);})
+// .then(() => delay(delay4))
+// .then(() => {turnGreen(delay5); beep(200, 870); activateDiv(5);})
+// .then(() => delay(delay5))
+// .then(() => {turnBlueViolet(); beep(600); activateDiv(6); backToStart();});
 });
 
 // Simple beep
@@ -668,6 +645,7 @@ document.querySelector("#chronoMe").addEventListener("click", () => {
 // );
 
 function delay(duration) {
+  console.log(duration);
   return new Promise((resolve) => {
       setTimeout(() => {
         resolve();

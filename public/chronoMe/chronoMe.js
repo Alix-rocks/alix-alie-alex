@@ -594,6 +594,7 @@ function beep(duration, frequency, volume){
 };
 
 function activateDiv(divIdx){
+  console.log(divIdx);
   let allDivs = Array.from(document.querySelectorAll(".allTimeDiv > div"));
   allDivs.forEach((div, idx) => {
     if(divIdx == idx){
@@ -614,7 +615,7 @@ function activateDiv(divIdx){
     } else if(divIdx == allDivs.length){
       allDivs[divIdx - 1].classList.remove("activated");
       allDivs[divIdx - 1].classList.add("done");
-      document.querySelector("#order").style.color = allPrograms[progNum].sequence[0].color;
+      document.querySelector("#order").style.color = colorsList[allPrograms[progNum].sequence[0].color];
       document.querySelector("#order").innerText = "C'est fini !!!";
     };
   });
@@ -649,10 +650,13 @@ document.querySelector("#chronoMe").addEventListener("click", () => {
       await delay(turnIntoMS(delai));
     });
   });
-  // turnBlueViolet(); 
-  // beep(600); 
-  // activateDiv(allPrograms[progNum].sequence.length);
-  backToStart();
+  result = result.then(() => {
+    turnBlueViolet(); 
+    beep(600); 
+    activateDiv(allPrograms[progNum].sequence.length);
+    backToStart();
+  });;
+  
   return result;
 
 });

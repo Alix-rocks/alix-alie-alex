@@ -385,7 +385,7 @@ function getCloudBC(){
   };
 };
 
-let lastUpdateLocalStorage = "";
+let lastUpdateLocalStorageRandomTask = "";
 let lastUpdateFireStore = "";
 
 // MARK: getTasksSettings
@@ -394,13 +394,13 @@ let oggiDemainTime;
 async function getTasksSettings() {
   const getTasks = await getDoc(doc(db, "randomTask", auth.currentUser.email));
   //lastUpdate
-  if(localStorage.getItem("lastUpdateLocalStorage")){
-    lastUpdateLocalStorage = localStorage.lastUpdateLocalStorage;
+  if(localStorage.getItem("lastUpdateLocalStorageRandomTask")){
+    lastUpdateLocalStorageRandomTask = localStorage.lastUpdateLocalStorageRandomTask;
   };
   if(getTasks.exists() && getTasks.data().lastUpdateFireStore){
     lastUpdateFireStore = getTasks.data().lastUpdateFireStore;
   };
-  if((lastUpdateLocalStorage !== "" && lastUpdateFireStore !== "" && lastUpdateLocalStorage < lastUpdateFireStore) || lastUpdateLocalStorage == ""){
+  if((lastUpdateLocalStorageRandomTask !== "" && lastUpdateFireStore !== "" && lastUpdateLocalStorageRandomTask < lastUpdateFireStore) || lastUpdateLocalStorageRandomTask == ""){
     earthIt.style.backgroundColor = "rgb(237, 20, 61)";
   };
   //console.log(getTasks.data().mySettings);
@@ -859,7 +859,7 @@ async function saveToCloud(){
   // }); 
 
   await batch.commit();
-  localStorage.lastUpdateLocalStorage = nowStamp;
+  localStorage.lastUpdateLocalStorageRandomTask = nowStamp;
   resetCBC();
   resetModif();
 };
@@ -884,7 +884,7 @@ function updateFromCloud(){
   settingsPage();
   updateArrowsColor();
   earthIt.style.backgroundColor = "rgba(237, 20, 61, 0)";
-  localStorage.lastUpdateLocalStorage = new Date().getTime();
+  localStorage.lastUpdateLocalStorageRandomTask = new Date().getTime();
 };
 
 function updateArrowsColor(){//update arrows color
@@ -4063,15 +4063,38 @@ function taskAddAllInfo(todo){
     return `<input id="projectColor${idx}" type="radio" name="projectColorChoices" class="displayNone" value="${idx}" ${todo.pColor && colorsList[todo.pColor].colorBG == icon.colorBG ? "checked" : ""} /><label for="projectColor${idx}" class="showTypeIconsB projectColorChoix"><i class="fa-solid fa-folder-closed" style="color:${icon.colorBG};"></i></label>`;
   }).join("");
   let projectColorsChoice = `<div class="projectColorsDiv">${pColors}</div>`;
+  
   let projectNamesChoice;
-  let allProjects = listTasks.filter(todo => todo.pOffspringId);//means they're parents
+  let allProjects = listTasks.filter(td => td.pOffspringId);//means they're parents
   if(allProjects.length > 0){
-    let projectNames = allProjects.map((project) => {
-      return `<option style="background-color:${colorsList[project.pColor].colorBG}; color:${colorsList[project.pColor].colorTX};" value="${project.id}" ${todo.pParentId && todo.pParentId == project.id ? `selected` : ``}>${project.pName}</option>`;
+    let allBigParents = allProjects.filter(td => td.pParentId == "null");
+    let projectNamesParents = allBigParents.map((parentProject) => {
+      let part1 = `<option style="background-color:${colorsList[parentProject.pColor].colorBG}; color:${colorsList[parentProject.pColor].colorTX};" value="${parentProject.id}" ${todo.pParentId && todo.pParentId == parentProject.id ? `selected` : ``}>${parentProject.pName}</option>`;
+      let part2 = ``;
+      let allInsideProjects = allProjects.filter(td => td.pParentId == parentProject.id);
+      if(allInsideProjects.length > 0){
+        let insideProjects = allInsideProjects.map((insideProject) => {
+          let part3 = `<option style="background-color:${colorsList[insideProject.pColor].colorBG}; color:${colorsList[insideProject.pColor].colorTX};" value="${insideProject.id}" ${todo.pParentId && todo.pParentId == insideProject.id ? `selected` : ``}>${insideProject.pName}</option>`;
+          let part4 = ``;
+          let allInsideInsideProjects = allInsideProjects.filter(td => td.pParentId == insideProject.id);
+          if(allInsideInsideProjects.length > 0){
+            let insideInsideProjects = allInsideInsideProjects.map((insideInsideProject) => {
+              return `<option style="background-color:${colorsList[insideInsideProject.pColor].colorBG}; color:${colorsList[insideInsideProject.pColor].colorTX};" value="${insideInsideProject.id}" ${todo.pParentId && todo.pParentId == insideInsideProject.id ? `selected` : ``}>${insideInsideProject.pName}</option>`;
+            }).join("");
+            part4 = `<optgroup label="under ${insideProject.pName}">${insideInsideProjects}</optgroup>`;
+          };
+          return part3 + part4;
+        }).join("");
+        part2 = `<optgroup label="under ${parentProject.pName}">${insideProjects}</optgroup>`;
+      };
+      return part1 + part2;
     }).join("");
+    // let projectNames = allProjects.map((project) => {
+    //   return `<option style="background-color:${colorsList[project.pColor].colorBG}; color:${colorsList[project.pColor].colorTX};" value="${project.id}" ${todo.pParentId && todo.pParentId == project.id ? `selected` : ``}>${project.pName}</option>`;
+    // }).join("");
     projectNamesChoice = `<select id="myProjectNames">
     <option value="null">Choose one</option>
-    ${projectNames}
+    ${projectNamesParents}
   </select>`;
   } else{
     projectNamesChoice = `<h6 style="margin: 0;">pssst... First, you've got to create a project!</h6>`;
@@ -4332,6 +4355,9 @@ function taskAddAllInfo(todo){
               <p><label for="urgeInput" style="display:inline-block;"><span style="color:red;">Pri</span><span style="color:#ff8400;">ori</span><span style="color:#ffd000;">ty:</span>  </label><input id="urgeInput" type="number" value="${todo.term == "topPriority" && todo.urge ? todo.urgeNum : "0"}" /></p>
             </div>
           </div>
+
+          <input class="myRadio" type="radio" name="termOptions" id="nextActions" value="nextActions" ${todo.term == "nextActions" ? `checked` : ``} />
+          <label for="nextActions" class="termLabel"><span class="myRadio"></span><span style="color:green;">That's the next easy action I've gotta do.</span></label>
 
           <input class="myRadio" type="radio" name="termOptions" id="currentProject" value="currentProject" ${todo.term == "currentProject" ? `checked` : ``} />
           <label for="currentProject" class="termLabel"><span class="myRadio"></span><span style="color:#600061 ;">It's what I'm trying to get done nowadays</span></label>

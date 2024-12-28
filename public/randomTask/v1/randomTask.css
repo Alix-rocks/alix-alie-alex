@@ -1215,6 +1215,11 @@ li .textDone{
 #projectUl .offspringLi.doneOffspringLi > .textDiv > .text{
   text-decoration: line-through 2px double;
 }
+
+#myProjectNames option{
+  border-bottom: 2px solid var(--tx-color);
+}
+
 .whatDayLabel{
   display: block;
   font-size: 18px;

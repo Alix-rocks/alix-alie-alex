@@ -4068,27 +4068,76 @@ function taskAddAllInfo(todo){
   let allProjects = listTasks.filter(td => td.pOffspringId);//means they're parents
   if(allProjects.length > 0){
     let allBigParents = allProjects.filter(td => td.pParentId == "null");
-    let projectNamesParents = allBigParents.map((parentProject) => {
-      let part1 = `<option style="background-color:${colorsList[parentProject.pColor].colorBG}; color:${colorsList[parentProject.pColor].colorTX};" value="${parentProject.id}" ${todo.pParentId && todo.pParentId == parentProject.id ? `selected` : ``}>${parentProject.pName}</option>`;
-      let part2 = ``;
-      let allInsideProjects = allProjects.filter(td => td.pParentId == parentProject.id);
-      if(allInsideProjects.length > 0){
-        let insideProjects = allInsideProjects.map((insideProject) => {
-          let part3 = `<option style="background-color:${colorsList[insideProject.pColor].colorBG}; color:${colorsList[insideProject.pColor].colorTX};" value="${insideProject.id}" ${todo.pParentId && todo.pParentId == insideProject.id ? `selected` : ``}>${insideProject.pName}</option>`;
-          let part4 = ``;
-          let allInsideInsideProjects = allInsideProjects.filter(td => td.pParentId == insideProject.id);
-          if(allInsideInsideProjects.length > 0){
-            let insideInsideProjects = allInsideInsideProjects.map((insideInsideProject) => {
-              return `<option style="background-color:${colorsList[insideInsideProject.pColor].colorBG}; color:${colorsList[insideInsideProject.pColor].colorTX};" value="${insideInsideProject.id}" ${todo.pParentId && todo.pParentId == insideInsideProject.id ? `selected` : ``}>${insideInsideProject.pName}</option>`;
-            }).join("");
-            part4 = `<optgroup label="under ${insideProject.pName}">${insideInsideProjects}</optgroup>`;
-          };
-          return part3 + part4;
-        }).join("");
-        part2 = `<optgroup label="under ${parentProject.pName}">${insideProjects}</optgroup>`;
-      };
-      return part1 + part2;
-    }).join("");
+  //Temp C
+  let projectNamesParents = allBigParents.map((parentProject) => {
+    let part1 = `<option style="background-color:${colorsList[parentProject.pColor].colorBG}; color:${colorsList[parentProject.pColor].colorTX};" value="${parentProject.id}" ${todo.pParentId && todo.pParentId == parentProject.id ? `selected` : ``}>${parentProject.pName}</option>`;
+    let part2 = ``;
+    let allInsideProjects = allProjects.filter(td => td.pParentId == parentProject.id);
+    if(allInsideProjects.length > 0){
+      let insideProjects = allInsideProjects.map((insideProject) => {
+        let part3 = `<option style="background-color:${colorsList[insideProject.pColor].colorBG}; color:${colorsList[insideProject.pColor].colorTX};" value="${insideProject.id}" ${todo.pParentId && todo.pParentId == insideProject.id ? `selected` : ``}>--${insideProject.pName}</option>`;
+        let part4 = ``;
+        let allInsideInsideProjects = allProjects.filter(tdI => tdI.pParentId == insideProject.id);
+        console.log(allInsideInsideProjects);
+        if(allInsideInsideProjects.length > 0){
+          let insideInsideProjects = allInsideInsideProjects.map((insideInsideProject) => {
+            let part5 = `<option style="background-color:${colorsList[insideInsideProject.pColor].colorBG}; color:${colorsList[insideInsideProject.pColor].colorTX};" value="${insideInsideProject.id}" ${todo.pParentId && todo.pParentId == insideInsideProject.id ? `selected` : ``}>----${insideInsideProject.pName}</option>`;
+            let part6 = ``;
+            let allInsideInsideInsideProjects = allProjects.filter(tdII => tdII.pParentId == insideInsideProject.id);
+            if(allInsideInsideInsideProjects.length > 0){
+              let insideInsideInsideProjects = allInsideInsideInsideProjects.map((insideInsideInsideProject) => {
+                return `<option style="background-color:${colorsList[insideInsideInsideProject.pColor].colorBG}; color:${colorsList[insideInsideInsideProject.pColor].colorTX};" value="${insideInsideInsideProject.id}" ${todo.pParentId && todo.pParentId == insideInsideInsideProject.id ? `selected` : ``}>------${insideInsideInsideProject.pName}</option>`;
+              }).join("");
+              part6 = `${insideInsideInsideProjects}`;
+            };
+            return part5 + part6;
+            // return `<option style="background-color:${colorsList[insideInsideProject.pColor].colorBG}; color:${colorsList[insideInsideProject.pColor].colorTX};" value="${insideInsideProject.id}" ${todo.pParentId && todo.pParentId == insideInsideProject.id ? `selected` : ``}>${insideInsideProject.pName}</option>`;
+          }).join("");
+          part4 = `${insideInsideProjects}`;
+          console.log(part4);
+        };
+        return part3 + part4;
+      }).join("");
+      part2 = `${insideProjects}`;
+    };
+    return part1 + part2;
+  }).join("");
+  //Temp B
+    // let projectNamesParents = allBigParents.map((parentProject) => {
+    //   return `<option style="background-color:${colorsList[parentProject.pColor].colorBG}; color:${colorsList[parentProject.pColor].colorTX};" value="${parentProject.id}"${todo.pParentId && todo.pParentId == parentProject.id ? ` selected` : ``}>${parentProject.pName}</option>`;
+    // }).join("");
+  //Temp A
+    // let projectNamesParents = allBigParents.map((parentProject) => {
+      // let part1 = `<option style="background-color:${colorsList[parentProject.pColor].colorBG}; color:${colorsList[parentProject.pColor].colorTX};" value="${parentProject.id}" ${todo.pParentId && todo.pParentId == parentProject.id ? `selected` : ``}>${parentProject.pName}</option>`;
+      // let part2 = ``;
+      // let allInsideProjects = allProjects.filter(td => td.pParentId == parentProject.id);
+      // if(allInsideProjects.length > 0){
+      //   let insideProjects = allInsideProjects.map((insideProject) => {
+      //     let part3 = `<option style="background-color:${colorsList[insideProject.pColor].colorBG}; color:${colorsList[insideProject.pColor].colorTX};" value="${insideProject.id}" ${todo.pParentId && todo.pParentId == insideProject.id ? `selected` : ``}>${insideProject.pName}</option>`;
+      //     let part4 = ``;
+      //     let allInsideInsideProjects = allInsideProjects.filter(td => td.pParentId == insideProject.id);
+      //     if(allInsideInsideProjects.length > 0){
+      //       let insideInsideProjects = allInsideInsideProjects.map((insideInsideProject) => {
+      //         let part5 = `<option style="background-color:${colorsList[insideInsideProject.pColor].colorBG}; color:${colorsList[insideInsideProject.pColor].colorTX};" value="${insideInsideProject.id}" ${todo.pParentId && todo.pParentId == insideInsideProject.id ? `selected` : ``}>${insideInsideProject.pName}</option>`;
+      //         let part6 = ``;
+      //         let allInsideInsideInsideProjects = allInsideInsideProjects.filter(td => td.pParentId == insideInsideProject.id);
+      //         if(allInsideInsideInsideProjects.length > 0){
+      //           let insideInsideInsideProjects = allInsideInsideInsideProjects.map((insideInsideInsideProject) => {
+      //             return `<option style="background-color:${colorsList[insideInsideInsideProject.pColor].colorBG}; color:${colorsList[insideInsideInsideProject.pColor].colorTX};" value="${insideInsideInsideProject.id}" ${todo.pParentId && todo.pParentId == insideInsideInsideProject.id ? `selected` : ``}>${insideInsideInsideProject.pName}</option>`;
+      //           }).join("");
+      //           part6 = `<optgroup label="under ${insideInsideProject.pName}">${insideInsideInsideProjects}</optgroup>`;
+      //         };
+      //         return part5 + part6;
+      //         // return `<option style="background-color:${colorsList[insideInsideProject.pColor].colorBG}; color:${colorsList[insideInsideProject.pColor].colorTX};" value="${insideInsideProject.id}" ${todo.pParentId && todo.pParentId == insideInsideProject.id ? `selected` : ``}>${insideInsideProject.pName}</option>`;
+      //       }).join("");
+      //       part4 = `<optgroup label="under ${insideProject.pName}">${insideInsideProjects}</optgroup>`;
+      //     };
+      //     return part3 + part4;
+      //   }).join("");
+      //   part2 = `<optgroup label="under ${parentProject.pName}">${insideProjects}</optgroup>`;
+      // };
+      // return part1 + part2;
+    // }).join("");
     // let projectNames = allProjects.map((project) => {
     //   return `<option style="background-color:${colorsList[project.pColor].colorBG}; color:${colorsList[project.pColor].colorTX};" value="${project.id}" ${todo.pParentId && todo.pParentId == project.id ? `selected` : ``}>${project.pName}</option>`;
     // }).join("");
@@ -4824,6 +4873,13 @@ function taskAddAllInfo(todo){
       if(myProjectNames.value !== "null"){
         myParentProject = listTasks[listTasks.findIndex(td => td.id == myProjectNames.value)];
         projectOngletDiv.innerHTML = getProjectOngletsTemp();
+        // let allInsideProjects = allProjects.filter(td => td.pParentId == myProjectNames.value);
+        // if(allInsideProjects.length > 0){
+        //   let insideProjects = allInsideProjects.map((insideProject) => {
+        //     return `<option style="background-color:${colorsList[insideProject.pColor].colorBG}; color:${colorsList[insideProject.pColor].colorTX};" value="${insideProject.id}"${todo.pParentId && todo.pParentId == insideProject.id ? ` selected` : ``}>${insideProject.pName}</option>`;
+        //   }).join("");
+        //   console.log(insideProjects);
+        // };
       };
     });
   };

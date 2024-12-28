@@ -2020,13 +2020,13 @@ function recycleEvent(recycle){ //from Done
       clearRecurringData(todo);
       delete todo.recurry;
       delete todo.recId;
-      delete todo.startDate;
-      delete todo.stopDate;
+      delete todo.startDate; //doesn't work for shows
+      delete todo.stopDate; //doesn't work for shows
       delete todo.stock;
-      todo.line = "noDay";
+      todo.line = "noDay"; //doesn't work for shows
       listTasks.push(todo);
       localStorage.listTasks = JSON.stringify(listTasks);
-      //maybe we could do like in reuseItEvent and open taskInfo instead... then add todo.recycled
+      //maybe we could do like in reuseItEvent and open taskInfo instead... then add todo.recycled YES!!!
       todoCreation(todo);
       sortItAll();
       updateCBC();
@@ -4091,7 +4091,6 @@ function taskAddAllInfo(todo){
               part6 = `${insideInsideInsideProjects}`;
             };
             return part5 + part6;
-            // return `<option style="background-color:${colorsList[insideInsideProject.pColor].colorBG}; color:${colorsList[insideInsideProject.pColor].colorTX};" value="${insideInsideProject.id}" ${todo.pParentId && todo.pParentId == insideInsideProject.id ? `selected` : ``}>${insideInsideProject.pName}</option>`;
           }).join("");
           part4 = `${insideInsideProjects}`;
           console.log(part4);

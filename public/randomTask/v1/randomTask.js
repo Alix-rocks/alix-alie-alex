@@ -462,7 +462,7 @@ async function getTasksSettings() {
   listTasks.forEach(todo => {
     
     if(!todo.pPosition || (todo.pPosition && todo.pPosition == "out")){
-
+      //We could remove most of the recurryDates of the recurring var==anno that still have like 48 recurryDates in their array...!
 
       todoCreation(todo);
     };
@@ -619,7 +619,7 @@ async function getDones(){
     getDones.forEach((donedDate) => {
       listDones.push({date: donedDate.id, list: donedDate.data().dones});
     });
-    localStorageDones("first");
+    localStorageDones("first"); // fait juste pas updateCBC...
   };
   let sortedListDones = listDones.sort((d1, d2) => (d1.date > d2.date) ? 1 : (d1.date < d2.date) ? -1 : 0);
   sortedListDones.forEach(doned => {
@@ -631,6 +631,21 @@ async function getDones(){
       });
     };
   });
+
+  //Let's transfer all the past reminders from listTasks in the right listDones.date
+  // listTasks.forEach((todo, idx) => {
+  //   if(todo.term == "reminder"){
+  //     let todoDateTime = `${todo.startDate}-${todo.startTime ? todo.startTime.replace(":", "-") : "5-00"}`;
+  //     if(todoDateTime < hierOggiTime){
+  //       let doned = listDones[listDones.findIndex(dd => dd.date == todo.startDate)];
+  //       doned.list.push(todo);
+  //       listTasks.splice(idx, 1);
+  //     };
+  //   };
+  // });
+  localStorage.listTasks = JSON.stringify(listTasks); // NOW we still have to stop the donedReminders from appearing in the doneZone AND make sure they'll appear in the calendars.
+  
+
   refreshDoneId();
   localStorageDones("first");
   createBody();
@@ -869,7 +884,7 @@ cloudIt.addEventListener("click", saveToCloud);
 
 function updateFromCloud(){
   localStorage.clear();
-  document.querySelectorAll("ul").forEach(ul => {
+  document.querySelectorAll("#listPage ul").forEach(ul => {
     ul.innerHTML = "";
   });
   listTasks = [];
@@ -1151,6 +1166,7 @@ function searchShowType(){
     return `<option value="${idx}" style="background-color:${color.colorBG}; color:${color.colorTX};">${color.tag}</option>`;
   }).join("");
   let allColors = `<option value="">any</option>${tagColors}`;
+  
   document.querySelector("#searchTag").insertAdjacentHTML("afterbegin", allColors);
 };
 
@@ -1456,6 +1472,7 @@ function recurryDateToTodoCreation(todo, recurryDate, fate){ //todo == the todo 
 };
 
 function todoCreation(todo){
+  //Si on met les sections en array (au lieu d'en HTML), togoList va être quoi? l'objet au complet comme tel, son index dans l'array ou son id? J'imagine que ça va dépendre de comment on retrouve l'élément de la liste dans le HTML (getElementbyId)...
   let togoList;
   let numberedDays;
   let todayDate = getDateTimeFromString(getTodayDateString(), mySettings.myTomorrow);
@@ -1976,7 +1993,7 @@ addForm.addEventListener("submit", (e) => {
 });
 
 let storageSwitch = false;
-
+//*** Faire quelque chose de similaire pour montrer les pinup (ceux qui ne s'effacent pas et qu'y'en a toujours juste un qu'on peut modifier qu'on sélect celui dans la liste ou celui dans la date todoDay/scheduled ou whereever et qui se "done" juste à moitié; un peu comme les always, mais un coup "done", il redevient noDay et disparait de la liste (les always gardent leur todoDay s'ils en avaient un))
 function getStorage(){
   storageSwitch = true;
   document.body.insertAdjacentHTML("beforeend", `<div id="allStore" class="taskInfoClass">
@@ -2130,6 +2147,7 @@ function PartialCheckEvent(emptyCheck){
   gotItHalfDone(doned);
   updateCBC();
   newClickScreenRemoval(checkOptionsDiv);//includes parent = offspring = ``;
+  //Si c'est un pinup, on veut enlever la date et remettre noDay (pour qu'il disparaisse de la liste) et donc, on veut enlever le parent de la liste
 };
 
 window.PartialCheckEvent = PartialCheckEvent;
@@ -2669,6 +2687,7 @@ function sortItAllWell(){
 };
 
 // *** SHUFFLE
+// What about it's just amongst the 15 min or less tasks?
 let wheneverList = [];
 const listPage = document.querySelector("#listPage");
 const toDoPage = document.querySelector("#toDoPage");
@@ -2878,6 +2897,8 @@ function smallCalendarChoice(thisOne){//thisOne = taskToDate est l'icon calendar
     //No need for the newClickScreenRemoval(calendarDiv) because everything is in the li (parent or offspring) which gets removed anyway; but we do need the parent = offspring = ``; because, even if the div dans be removed with newClickScreenRemoval(calendarDiv) (by click outside of the div), the div can also be removed with the save button (which removes the whole li)
 
     localStorage.listTasks = JSON.stringify(listTasks);
+    updateWeek();
+    updateMonth();
     //sortItAllWell(); //here's the sorting!!
     updateCBC();
   });
@@ -3713,13 +3734,46 @@ Avec deux bouttons: "let's see" (qui ne va pas sauver dans les settings) et "sav
 
 ***ÀFaire:
 
+* Créer les pinup (liste d'épicerie)
+
+* Mettre les sections dans un array, créées par js plutôt que dans HTML (comme ça, on va pouvoir les modifier comme on veut)
+
+*Shuffle juste pour les 15min et moins
+
+*Quand on a choisi un label (dans taskInfo), le popup devrait disparaître au complet, pas juste la liste...
+
+*Quand on copy: le bouton dit "Save & copy" et ferme le taskInfo (et enlève selectedTask) (bref, comme un save normal), mais rouvrir tout de suite après le taskInfo de la nouvelle copie (ou pourrait écrit "copy" en haut) pour qu'elle puisse être modifiée tout de suite.
+
+*Faire qu'on peut soit recycler, soit modifier, les show passés à partir des calendriers (dans la DoneZone, on peut les recycler, mais dans les calendrier, ils sont inclickables...)
+
+*Retester les miniLists et leur visibilité, parce que des fois ils disparaissent ou pas, mais pas comme ils devraient
+
 *? Mettre le boutton SAVE (dans taskInfo) en haut plutôt qu'en bas pour pas avoir à enlever le clavier pour pouvoir sauver?
 
 *Pouvoir ordonner les task dans Today's plan... (faire comme les schedules dans Time?)
 
+*Let's lighten up the recurring "anno"
+  (line 465)
+  //We could remove most of the recurryDates of the recurring var==anno that still have like 48 recurryDates in their array...!
+
+*Let's transfer all the past reminders from listTasks in the right listDones.date
+  (line 635)
+  // listTasks.forEach((todo, idx) => {
+  //   if(todo.term == "reminder"){
+  //     let todoDateTime = `${todo.startDate}-${todo.startTime ? todo.startTime.replace(":", "-") : "5-00"}`;
+  //     if(todoDateTime < hierOggiTime){
+  //       let doned = listDones[listDones.findIndex(dd => dd.date == todo.startDate)];
+  //       doned.list.push(todo);
+  //       listTasks.splice(idx, 1);
+  //     };
+  //   };
+  // });
+  // NOW we still have to stop the donedReminders from appearing in the doneZone AND make sure they'll appear in the calendars.
+
+
 *Quand tu cliques sur un event A dans les calendar, puis sur un event B dans storage, il faudrait que ça modifie l'event A, avec la journée de l'event A, mais les heures et autres de l'event B. (et non la journée du dernier event que t'as créé... (PAB schedule creation))
 
-**Dans monthly et weekly: On ne peut pas voir les reminder du passé s'ils sont recurring, parce que les dates du passé sont effacées de l'array recurryDates et qu'ils ne sont pas non plus dans la liste des dones! (les reminder du passé qui étaient todoDay, sont toutefois visibles)
+**Dans monthly et weekly: On ne peut pas voir les reminder du passé s'ils sont recurring, parce que les dates du passé sont effacées de l'array recurryDates et qu'ils ne sont pas non plus dans la liste des dones! (les reminder du passé qui étaient todoDay, sont toutefois visibles, mais c'est parce qu'ils sont encore dans la todoList et non dans les dones...)
 
 *Option to add an alarm if there is a deadline: how many days/weeks/months before the deadline do you want it to appear? (Maybe with an icon of clock at the beginning of the task, in the li ?) Just make it kind of an alert on the day of the alarm, just like the procrastination "alert"
 
@@ -5298,6 +5352,7 @@ function taskAddAllInfo(todo){
 
       delete todo.newShit;
       delete todo.recycled;
+      //on aurait delete todo.copied aussi, si on cré aussitôt le taskInfo du nouveau todo après avoir "Save & Copy" l'autre
       
       if(todo.recurry == true){
         //we could add an alert saying that if you save it, it's gonna become a whole thing on itself in the big list
@@ -5336,6 +5391,7 @@ function taskAddAllInfo(todo){
         newTodo.id = crypto.randomUUID();
         listTasks.push(newTodo);
         todoCreation(newTodo);
+        //après avoir fermé ce taskInfo et enlevé "selectedParent" il faut recréer un autre taskInfo avec ce nouveau todo
       };
   
       if(newState == checkSwitch[0]){
@@ -5392,6 +5448,8 @@ function taskAddAllInfo(todo){
     // parent.classList.remove("selectedTask");
     // parent = ``;
        
+
+    //Si copyIt.checked, recré un nouveau taskInfo avec le nouveau todo (on pourrait mettre let newTodo plus global (dans cette fonction) et juste le réutiliser ici, ou mettre le if{copyIt.checked} au complet ici, après qu'on ait tout enlevé...)
 
     calendarStock = false;
     projectStock = false;
@@ -5598,6 +5656,7 @@ function creatingLabelPanel(todo, options){ //création du paneau et
         options.labelDiv.style.backgroundColor = "var(--bg-color)";
         options.labelDiv.style.color = "var(--tx-color)";
         options.labelDiv.innerText = "Label";
+        newClickScreenRemoval(labelPalet);
         if(options.icon){
           removeLabel(todo);
           localStorage.listTasks = JSON.stringify(listTasks);
@@ -5605,6 +5664,8 @@ function creatingLabelPanel(todo, options){ //création du paneau et
           options.icon.style.color = "var(--tx-color)";
           options.labelDiv.classList.add("noLabel");
           howToSortIt(parent.parentElement.id);
+          let checkOptionsDiv = document.querySelector(".checkOptionsDiv");
+          newClickScreenRemoval(checkOptionsDiv);
         };
       } else{
         let label = mySettings.myLabels[e.target.value];
@@ -5614,6 +5675,7 @@ function creatingLabelPanel(todo, options){ //création du paneau et
         options.labelDiv.style.backgroundColor = colorsList[label.color].colorBG;
         options.labelDiv.style.color = colorsList[label.color].colorTX;
         options.labelDiv.innerText = label.name;
+        newClickScreenRemoval(labelPalet);
         if(options.icon){
           applyLabel(todo, label.color, label.name);
           localStorage.listTasks = JSON.stringify(listTasks);
@@ -5623,6 +5685,8 @@ function creatingLabelPanel(todo, options){ //création du paneau et
           newLabelReset();
           newlabelColor = "";
           newlabelName = "";
+          let checkOptionsDiv = document.querySelector(".checkOptionsDiv");
+          newClickScreenRemoval(checkOptionsDiv);
         };
       };
     });

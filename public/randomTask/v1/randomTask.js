@@ -17,6 +17,8 @@ const cloudIt = document.querySelector("#cloudIt");
 const earthIt = document.querySelector("#earthIt");
 const movingzone = document.querySelector("#movingzone");
 
+console.log(import.meta.url); 
+
 getRedirectResult(auth)
   .then((result) => {
     // This gives you a Google Access Token. You can use it to access Google APIs.
@@ -40,6 +42,7 @@ function logIn(){
   console.log(auth);
   console.log(provider);
   signInWithRedirect(auth, provider);
+  console.log(user);
 };
 let userConnected = false;
 onAuthStateChanged(auth, (user) => {
@@ -177,54 +180,184 @@ let mySettings = {
   //myBaseColors: [],
   mySorting: []
 };
-let mySections = [
-  {
-    title: "CURRENT PROJECTS",
-    slogan: "Let's stick to those for now please...",
-    nickname: "currentProject",
-    color: "#600061"
-  }, {
-    title: "NEXT",
-    slogan: "Soon, soon it'll be your turn...",
-    nickname: "nextThing",
-    color: "darkgreen"
-  }, {
-    title: "WHENEVER",
-    slogan: "The never ending list...",
-    color: "midnightblue",
-    subsection: [
-      {
-        name: "The long term shits",
-        nickname: "longTerm",
-      }, {
-        name: "The one time thingies",
-        nickname: "oneTime",
-      }
-    ],
-    addOn: `<button id="shuffleBtn">Shuffle it!</button>
-    <h5 class="sousBtn">Tell me what to do!</h5>`
-  }, {
-    title: "ALWAYS",
-    slogan: "Forever and ever...",
-    nickname: "alwaysHere",
-    color: "goldenrod"
-  }, {
-    title: "WAITING",
-    slogan: "Wait for it...",
-    nickname: "waitForIt",
-    color: "rgb(100, 122, 122)"
-  }, {
-    title: "THINKING",
-    slogan: "Thinking about it...",
-    nickname: "thinkBoutIt",
-    color: "rgb(100, 122, 122)"
-  }, {
-    title: "Random Ideas",
-    slogan: "It's a <em>maybe-one-day-probably-never</em> kinda thing...",
-    nickname: "crazyShit",
-    color: "rgb(239, 125, 144)"
-  }
-];
+
+let mySections = [{
+  id: "urges",
+  h3: `<span style="text-decoration-color: red;"><span style="color:red;">PRI</span><span style="color:#ff8400;">ORI</span><span style="color:#ffd000;">TY!</span></span>`,
+  h5: `Once these are done, then you can go play with the other ones!`,
+  togglable: true,
+  default: "open",
+  ifEmpty: "hide",
+  sortable: false
+}, {
+  id: "actions",
+  h3: `<span style="text-decoration-color: green;"><span style="color:green;">NEXT</span> <span style="color:blue;">ACTI</span><span style="color:purple;">ONS!</span></span>`,
+  h5: `These are easy. I'VE GOT THIS!`,
+  togglable: true,
+  default: "open",
+  ifEmpty: "hide",
+  sortable: true
+}, {
+  id: "currentProject",
+  title: "CURRENT PROJECTS",
+  color: "#600061",
+  h5: `Let's stick to those for now please...`,
+  togglable: true,
+  default: "open",
+  ifEmpty: "hide",
+  sortable: true
+}, {
+  id: "next",
+  title: "NEXT",
+  color: "darkgreen",
+  h5: `Soon, soon it'll be your turn...`,
+  togglable: true,
+  default: "closed",
+  ifEmpty: "hide",
+  sortable: true
+}, {
+  id: "whenever",
+  title: "WHENEVER",
+  color: "midnightblue",
+  h5: `The never ending list...`,
+  togglable: true,
+  default: "closed",
+  addon: `<div class="listToggleList">
+            <div class="relDiv">
+              <h4 class="subList">The long term shit</h4>
+              <div class="sortlistWhole">
+                <input id="sortlongTermList" class="sortlistInput cossin" type="checkbox" />
+                <div class="sortlistDiv">
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                </div>
+                <label for="sortlongTermList" class="sortlistLabel">
+                  <i class="fa-solid fa-ellipsis sortUnchecked"></i>
+                  <i class="typcn typcn-tick sortChecked"></i>
+                </label>
+              </div>
+            </div>
+            <ul id="longTermList" class="sortedList" data-sort="color"></ul>
+            <div class="relDiv">
+              <h4 class="subList">The one time thingies</h4>
+              <div class="sortlistWhole">
+                <input id="sortoneTimeList" class="sortlistInput cossin" type="checkbox" />
+                <div class="sortlistDiv">
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                  <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+                </div>
+                <label for="sortoneTimeList" class="sortlistLabel">
+                  <i class="fa-solid fa-ellipsis sortUnchecked"></i>
+                  <i class="typcn typcn-tick sortChecked"></i>
+                </label>
+              </div>
+            </div> 
+            <ul id="oneTimeList" class="sortedList" data-sort="color"></ul>
+          </div>`,
+  ifEmpty: "hide",
+  //sortable: true
+}, {
+  id: "always",
+  title: "ALWAYS",
+  color: "goldenrod",
+  h5: `Forever and ever...`,
+  togglable: true,
+  default: "closed",
+  ifEmpty: "hide",
+  sortable: true
+}, {
+  id: "wait",
+  title: "WAITING",
+  color: "rgb(100, 122, 122)",
+  h5: `Wait for it...`,
+  togglable: true,
+  default: "closed",
+  ifEmpty: "hide",
+  sortable: true
+}, {
+  id: "think",
+  title: "THINKING",
+  color: "rgb(100, 122, 122)",
+  h5: `Thinking about it...`,
+  togglable: true,
+  default: "closed",
+  ifEmpty: "hide",
+  sortable: true
+}, {
+  id: "idea",
+  title: "Random Ideas",
+  color: "rgb(239, 125, 144)",
+  h5: `It's a <em>maybe-one-day-probably-never</em> kinda thing...`,
+  togglable: true,
+  default: "closed",
+  ifEmpty: "hide",
+  sortable: true
+}, {
+  id: "nevermind",
+  title: "Nevermind",
+  color: "rgba(47, 79, 79, .4)",
+  h5: `Don't look, I'm trying to forget about these...`,
+  togglable: true,
+  default: "closed",
+  ifEmpty: "hide",
+  sortable: true
+}, {
+  id: "scheduled",
+  title: "Scheduled",
+  color: "inherit",
+  h5: `All in good time...`,
+  togglable: true,
+  default: "closed",
+  ifEmpty: "hide",
+  sortable: false
+}, {
+  id: "recurring",
+  title: "Recurring",
+  color: "inherit",
+  h5: `Don't worry, they'll be back...`,
+  togglable: true,
+  default: "closed",
+  ifEmpty: "hide",
+  sortable: true
+}]
+
+
+// `<section id="${sect.id}">
+//   <input id="${sect.id}Input" type="checkbox" class="cossin listToggleInput" ${sect.default == "open" ? `checked` : ``} />
+//   <div>
+//     <label for="${sect.id}Input" class="listToggleLabel">
+//       <h3>${sect.h3 ? sect.h3 : `<span style="text-decoration-color: ${sect.color}; color:${sect.color};">${sect.title}</span>`}</h3>
+//       <h5>${sect.h5}</h5>
+//       <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
+//     </label>
+//     <div class="listToggleList">
+//       ${sect.sortable ? `<div class="relDiv noH4SubList noH4SubListClosed">
+//         <!-- <h4 class="subList"></h4> -->
+//         <div class="sortlistWhole">
+//           <input id="sort${sect.id}List" class="sortlistInput cossin" type="checkbox" />
+//           <div class="sortlistDiv">
+//             <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+//             <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+//             <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+//             <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
+//           </div>
+//           <label for="sort${sect.id}List" class="sortlistLabel">
+//             <i class="fa-solid fa-ellipsis sortUnchecked"></i>
+//             <i class="typcn typcn-tick sortChecked"></i>
+//           </label>
+//         </div>
+//       </div> ` : ``}
+//       <ul id="${sect.id}List" class="sortedList" data-sort="color"></ul>
+//     </div>
+//   </div>
+// </section>`
+
+
+
 //localStorage.mySettings = JSON.stringify(mySettings);
 let cBC;
 let baseColors = [{
@@ -1630,7 +1763,7 @@ function getTogoList(todo){
       if(todo.fineOpt == "fineMai"){
         //alert(todo.task + " doesn't have any dates anymore (but should)!");
         sendRecurringBackToGetRecurryDates(todo, getMyTodayDate());
-        togoList = "listRecurring";
+        togoList = "recurringList";
         recurryCreation(todo);
       } else{
         let answer = prompt(todo.task + ", C'est finnnniiiiiiii!!!\nLet's say goodbye!");
@@ -1650,10 +1783,10 @@ function getTogoList(todo){
     } else if(todo.recurryDates.length == 1 && todo.fineOpt == "fineMai"){
       let date = getDateFromString(todo.recurryDates[0]);
       sendRecurringBackToGetRecurryDates(todo, date);
-      togoList = "listRecurring";
+      togoList = "recurringList";
       recurryCreation(todo);
     } else{
-      togoList = "listRecurring";
+      togoList = "recurringList";
       recurryCreation(todo);
     };
   } else if((todoDateTime < hierOggiTime) || (todoDeadlineTime < hierOggiTime)){
@@ -1672,7 +1805,7 @@ function getTogoList(todo){
     if(todo.term == "showThing" || todo.term == "reminder"){ //date is after today
     togoList = "";
     } else{
-      togoList = "listScheduled";
+      togoList = "scheduledList";
     };
   } else{ // no date or deadline is after today
     togoList = todo.term + "List";
@@ -2395,13 +2528,13 @@ function sortItAll(){
   let previousYear = "0000";
   let month;
   let previousMonth = "00";
-  document.querySelectorAll("#listScheduled > h4.subList").forEach(h => {
+  document.querySelectorAll("#scheduledList > h4.subList").forEach(h => {
     h.remove();
   });
-  // document.querySelectorAll("#listScheduled > div.subListDiv").forEach(h => {
+  // document.querySelectorAll("#scheduledList > div.subListDiv").forEach(h => {
   //   h.remove();
   // });
-  document.querySelectorAll("#listScheduled > li").forEach(li => {
+  document.querySelectorAll("#scheduledList > li").forEach(li => {
     let date = li.dataset.date;
     year = date.substring(0, 4);
     month = date.substring(5, 7);
@@ -2413,14 +2546,14 @@ function sortItAll(){
     //   li.insertAdjacentHTML("beforebegin", `<div class="relDiv subListDiv">
     //   <h4 class="subList">${finalMonthName} ${year}</h4>
     //   <div class="sortlistWhole">
-    //     <input id="sortlistScheduled${finalMonthName}${year}" class="sortlistInput cossin" type="checkbox" />
+    //     <input id="sortscheduledList${finalMonthName}${year}" class="sortlistInput cossin" type="checkbox" />
     //     <div class="sortlistDiv">
     //       <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
     //       <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
     //       <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
     //       <button class="switchSortBtn iconOnlyBtn"><i class="fa-solid fa-arrow-right-arrow-left fa-rotate-90"></i></button>
     //     </div>
-    //     <label for="sortlistScheduled${finalMonthName}${year}" class="sortlistLabel">
+    //     <label for="sortscheduledList${finalMonthName}${year}" class="sortlistLabel">
     //       <i class="fa-solid fa-ellipsis sortUnchecked"></i>
     //       <i class="typcn typcn-tick sortChecked"></i>
     //     </label>
@@ -2434,10 +2567,10 @@ function sortItAll(){
     };
   });
   //Recurring subLists
-  document.querySelectorAll("#listRecurring > h4.subList").forEach(h => {
+  document.querySelectorAll("#recurringList > h4.subList").forEach(h => {
     h.remove();
   });
-  let recuLis = Array.from(document.querySelectorAll("#listRecurring > li"));
+  let recuLis = Array.from(document.querySelectorAll("#recurringList > li"));
   for(let i = (recuLis.length - 1); i >= 0; i--){
     let term = recuLis[i].dataset.term;
     if(!document.getElementById(`recu${term}SubList`)){
@@ -3737,10 +3870,28 @@ Avec deux bouttons: "let's see" (qui ne va pas sauver dans les settings) et "sav
 * Créer les pinup (liste d'épicerie)
 
 * Mettre les sections dans un array, créées par js plutôt que dans HTML (comme ça, on va pouvoir les modifier comme on veut)
+  Établir toutes les key/values des objects/sections
+  Créer une page (et le bouton pour y accéder) (ou une section dans les settings) où on va pouvoir modifier les sections
+    title
+    slogan
+    color
+    sort array
+    open/closed
+    show/hide/delete
+    position (in the array, thus in the screen)
+  Ajuster le HTML
+  Créer la fonction pour la création des sections
+  Ajouter qqpart (à chaque "refresh" une fx qui check si des sections sont vides et, si oui, voir dans leur obj si elles doivent être cachée ou non lorsque vide) (là où change l'opacité des chevron en fx de si la section est vide ou pas (on faisait ça au début ou à chaque fois?))
+  Assurer la sauvegarde de l'array mySections dans le cloud
+    Pour la première fois, créer les crypto.randomUUID de chaque section
+    Ensuite, aller modifier les todo.term de chaque todo dans la listTask (et dans les done?!)
+      OU
+    Ajuster le code pour qu'il utilise le todo.term de façon à ce que ça dérange pas si c'est un mot (pour les sections par défault) ou un UUID (pour les nouvelles sections)...
+      OU
+    Créer une fonction de traduction pour chaque fois qu'on utilise le todo.term et que c'est un mot qui va aller chercher le id correspondant (surtout pour les done si on les recycle!)
+
 
 *Shuffle juste pour les 15min et moins
-
-*Quand on a choisi un label (dans taskInfo), le popup devrait disparaître au complet, pas juste la liste...
 
 *Quand on copy: le bouton dit "Save & copy" et ferme le taskInfo (et enlève selectedTask) (bref, comme un save normal), mais rouvrir tout de suite après le taskInfo de la nouvelle copie (ou pourrait écrit "copy" en haut) pour qu'elle puisse être modifiée tout de suite.
 
@@ -3751,6 +3902,8 @@ Avec deux bouttons: "let's see" (qui ne va pas sauver dans les settings) et "sav
 *? Mettre le boutton SAVE (dans taskInfo) en haut plutôt qu'en bas pour pas avoir à enlever le clavier pour pouvoir sauver?
 
 *Pouvoir ordonner les task dans Today's plan... (faire comme les schedules dans Time?)
+
+*Simplier les codes pour les toTIdeTZaN et autres
 
 *Let's lighten up the recurring "anno"
   (line 465)

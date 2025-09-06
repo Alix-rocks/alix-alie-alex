@@ -793,6 +793,8 @@ function freeIn(){
   //mySettings
   if(localStorage.getItem("mySettings")){
     mySettings = JSON.parse(localStorage.mySettings);
+  } else{
+    localStorage.mySettings = JSON.stringify(mySettings);
   };
   if(!mySettings.myBaseColors){
     mySettings.myBaseColors = baseColors;
@@ -807,14 +809,14 @@ function freeIn(){
   document.getElementById(mySettings.myFavoriteView).dispatchEvent(pageEvent);
   //light or dark mode
   if(mySettings.mySide == "light"){
-    document.getElementById("switchModeBall").className = "ballLight";
-    document.getElementById("switchModeBallUnder").className = "ballLight";
+    // document.getElementById("switchModeBall").className = "ballLight";
+    // document.getElementById("switchModeBallUnder").className = "ballLight";
     document.querySelector(':root').style.setProperty('--bg-color', 'rgb(242, 243, 244)');
     document.querySelector(':root').style.setProperty('--bg-color-7', 'rgba(242, 243, 244, .7)');
     document.querySelector(':root').style.setProperty('--tx-color', 'darkslategrey');
   } else if(mySettings.mySide == "dark"){
-    document.getElementById("switchModeBall").className = "";
-    document.getElementById("switchModeBallUnder").className = "";
+    // document.getElementById("switchModeBall").className = "";
+    // document.getElementById("switchModeBallUnder").className = "";
     document.querySelector(':root').style.setProperty('--bg-color', 'rgb(7, 10, 10)');
     document.querySelector(':root').style.setProperty('--bg-color-7', 'rgba(7, 10, 10, .7)');
     document.querySelector(':root').style.setProperty('--tx-color', 'rgba(242, 243, 244, .8)');
@@ -826,6 +828,10 @@ function freeIn(){
   //listTasks
   if(localStorage.getItem("listTasks")){
     listTasks = JSON.parse(localStorage.listTasks);
+  } else{
+    localStorage.listTasks = JSON.stringify([]);
+  };
+  if(listTasks.length > 0){
     colorUrges("first");
     localStorage.listTasks = JSON.stringify(listTasks);
     listTasks.forEach(todo => {
@@ -857,7 +863,7 @@ function freeIn(){
     listDones = JSON.parse(localStorage.listDones);
     let sortedListDones = listDones.sort((d1, d2) => (d1.date > d2.date) ? 1 : (d1.date < d2.date) ? -1 : 0);
     sortedListDones.forEach(doned => {
-      if(doned.list.length !== 0){
+      if(doned.list.length !== 0 && doned.date > lastWeekDateString){
         let donedDate = doned.date;
         donedDateCreation(donedDate);
         doned.list.forEach(tidoned => {
@@ -866,7 +872,9 @@ function freeIn(){
       };
     });
     refreshDoneId();
+    localStorageDones("first");
   };
+  //Calendar
   createBody();
   getWeeklyCalendar();
   logInScreen.classList.add("displayNone");

@@ -1709,6 +1709,12 @@ input[name="projectColorChoices"]:checked + label, input[name="labelColorChoices
 .listToggleLabel{
   margin-bottom: 25px;
 }
+.listToggleLabel h3, .listToggleLabel h5{
+  margin: 0;
+}
+.listToggleLabel > h3 > span{
+  text-decoration: underline;
+}
 .listToggleChevron, .taskToggleChevron{
   position: absolute;
   right: 0;
@@ -2319,6 +2325,30 @@ td.toWeeklyArrowLeft{
   font-weight: 700;
   line-height: 1em;
   text-align: center;
+}
+
+#shuffleZone{
+  width: fit-content;
+  right: 230px;
+  position: fixed;
+  bottom: 10px;
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--bg-color);
+  border-radius: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+#shuffleZone h6{
+  margin: 0;
+  line-height: 1em;
+  padding-top: .2em;
+}
+#shuffleZone button{
+  font-size: 0.8em;
+  padding: 3px 7px;
 }
 
 #convoSection{

@@ -246,6 +246,11 @@ Options for sorting
         </div>
       </label>
     </div>
+    <div id="shuffleZone">
+      <button id="shuffleBtn">Quicky time!</button>
+      <h5 class="sousBtn">Tell me what to do now!</h5>
+    </div>
+    
     <div id="todoZone" style="margin-top: 55px;">
       <!-- <div id="addingZone">
         <form id="addForm">
@@ -256,17 +261,6 @@ Options for sorting
         <button class="addBtns" onclick="getStorage()"><span class="typcn typcn-shopping-bag"></span></button>
       </div> -->
       
-      <!-- <section id="limboSection" class="displayNone">
-        <input id="limboInput" type="checkbox" class="cossin listToggleInput" />
-        <div>
-          <label for="limboInput" class="listToggleLabel">
-            <h3 class="topList"><span class="topListTitle">Limbo...</span></h3>
-            <h5 class="topList">What are you meant to be?...</h5>
-            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
-          </label>
-          <ul id="listLimbo" class="listToggleList"></ul>
-        </div>
-      </section> -->
       <!-- MARK: LIMBO -->
       <section id="limboSection" class="displayNone">
         <input id="limboInput" type="checkbox" class="cossin listToggleInput" />
@@ -286,13 +280,7 @@ Options for sorting
         <ul id="listOups"></ul>
       </section>
       <!-- MARK: TODAY -->
-      <section id="swipingSection">
-        <!-- <div class="sectionSwipeWhole"> -->
-          <!-- <input type="checkbox" id="swipeInput" class="swipingInput cossin">
-          <label for="swipeInput" class="swipeLabel">
-            <i class="typcn typcn-chevron-right swipeChevron"></i>
-          </label> -->
-          
+      <section id="swipingSection">  
           <div id="todayDiv">
             <div id="swipeBtns" class="nextOnly">
               <button id="swipePrevBtn" class="iconOnlyBtn">
@@ -310,14 +298,7 @@ Options for sorting
             <h5 id="todaysUnderTitle" class="topList">What shall be done today...</h5>
             <ul id="listToday" class="sortedList" data-sort="datetime"></ul>
           </div>
-          
-          <!-- <div class="tomorrowDiv">
-            <h3 class="topList"><span class="topListTitle">Tomorrow's plan</span> <span class="topListDate" id="tomorrowsDateSpan"></span></h3>
-            <ul class="topListReminder" id="listTomorrowReminder"></ul>
-            <h5 class="topList">Plan for the worst, aim for the best...</h5>
-            <ul id="listTomorrow" class="sortedList" data-sort="datetime"></ul>
-          </div> -->
-        <!-- </div> -->
+
       </section> 
       <!-- MARK: PRIORITY -->
       <section id="urgesSection" class="displayNone">
@@ -445,24 +426,9 @@ Options for sorting
               </div>
             </div> 
             <ul id="oneTimeList" class="sortedList" data-sort="color"></ul>
-            <!-- <button id="shuffleBtn">Shuffle it!</button>
-            <h5 class="sousBtn">Tell me what to do!</h5> -->
-            <button id="shuffleBtn">Quicky time!</button>
-            <h5 class="sousBtn">Tell me what to do now!</h5>
           </div>
         </div>
       </section>
-      
-        <!-- when recurringDay is checked, open details (? but with nothing in summary?) (or just display:block...) -->
-        <!-- <details>
-              <summary>To be or not to be?</summary>
-              <div>
-                That is the question!
-              </div>
-            </details> -->
-      <!-- MARK: PALETS -->
-      <!-- <div id="iconsPalet" class="iconsPaletClass displayNone"></div> -->
-      <!-- <div id="colorPalet" class="colorPaletClass displayNone"></div> -->
       <!-- MARK: ALWAYS -->
       <section id="alwaysSection">
         <input id="alwaysInput" type="checkbox" class="cossin listToggleInput" />
@@ -589,7 +555,7 @@ Options for sorting
         <div>
           <label for="nevermindInput" class="listToggleLabel">
             <h3 class="topList"><span class="topListTitle" style="opacity: .4;">Nevermind</span></h3>
-            <h5 class="topList" style="opacity: .4;">Don't look, I'm trying to forget about these...</h5>
+            <h5 class="topList"><span style="opacity: .4;">Don't look, I'm trying to forget about these...</span></h5>
             <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
           </label>
           <div class="listToggleList">
@@ -627,18 +593,6 @@ Options for sorting
           </div>
         </div>
       </section>
-      <!-- MARK: STORAGE -->
-      <!-- <section id="storageSection">
-        <input id="storageInput" type="checkbox" class="cossin listToggleInput" />
-        <div id="storageList">
-          <label for="storageInput" class="listToggleLabel">
-            <h3 class="topList"><span class="topListTitle">Storage</span></h3>
-            <h5 class="topList">Recycling is good...</h5>
-            <span class="typcn typcn-chevron-right-outline listToggleChevron"></span>
-          </label>
-          <ul id="listStorage" class="listToggleList sortedList" data-sort="text"></ul>
-        </div>
-      </section> -->
       <!-- MARK: RECURRING -->
       <section id="recurringSection">
         <input id="recurringInput" type="checkbox" class="cossin listToggleInput" />

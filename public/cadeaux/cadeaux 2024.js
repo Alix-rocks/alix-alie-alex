@@ -1,7 +1,7 @@
 import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "../../myFirebase.js";
 
 const cloudIt = document.querySelector("#cloudIt");
-cloudIt.addEventListener("click", saveList); //saveToCloud //saveAllOnce
+cloudIt.addEventListener("click", saveToCloud);
 
 const earthIt = document.querySelector("#earthIt");
 earthIt.addEventListener("click", updateFromCloud);
@@ -71,26 +71,15 @@ async function getTheRest() {
   console.log("73 " + checkedBought);
 };
 
-let newTempGifts = [];
-let newTempList = [];
 async function getTheGifts() {
   const getTheGifts = await getDocs(collection(db, "cadeaux2024"));
   
-  let tempGifts = [];
-  
+  if(localStorage.getItem("theGifts")){
+    theGifts = JSON.parse(localStorage.theGifts);
+  } else{
+    let tempGifts = [];
     getTheGifts.forEach(doc => {
       if(doc.id !== "all"){
-        let newPerson = {
-          initial: doc.id,
-          color: doc.data().color,
-          nom: doc.data().nom
-        };
-        newTempList.push(newPerson);
-        doc.data().suggestions.forEach(sug => {
-          sug.for = doc.id;
-          sug.bought = checkedBought.includes(sug.id) ? true : false;
-          newTempGifts.push(sug);
-        });
         let person = {
           initial: doc.id,
           color: doc.data().color,
@@ -101,39 +90,45 @@ async function getTheGifts() {
       };
     });
     theGifts = tempGifts;
+    localStorage.theGifts = JSON.stringify(theGifts);
+  };
   
   console.log(theGifts);
-  console.log(newTempGifts);
   createSections();
 };
 
 getTheRest();
 getTheGifts();
 
-async function saveToCloud(modIdee){ // modIdee est l'object with either all the new fields modified OR the whole suggestion (all the fields whether they changed or not)
-
-  const docRefIdee = doc(db, "cadeaux2025", modIdee.id);
-  modIdee.updateTime = new Date().getTime();
-  await setDoc(docRefIdee, modIdee, { merge: true }); //This will create the doc if it doesn’t exist, or update only these fields if it does.
-
-};
-
-async function saveList(){ // modIdee est l'object with either all the new fields modified OR the whole suggestion (all the fields whether they changed or not)
-
-  const docRefIdee = doc(db, "cadeaux2025", "list");
-  await setDoc(docRefIdee, newTempList); //This will create the doc if it doesn’t exist, or update only these fields if it does.
-
-};
-
-async function saveAllOnce() {
+async function saveToCloud(){
   const batch = writeBatch(db);
-  const docRefAll = collection(db, "cadeaux2025");
-  newTempGifts.forEach((newTemp) => {
-    const docRefEach = doc(db, "cadeaux2025", newTemp.id)
-    batch.set(docRefEach, newTemp);
+
+  let nowStamp = new Date().getTime();
+  console.log("nowStamp" + nowStamp);
+  theGifts = JSON.parse(localStorage.theGifts);
+  checkedBought = JSON.parse(localStorage.checkedBought);
+  console.log("saveToCloud" + checkedBought);
+  const docRefGifts = collection(db, "cadeaux2024");
+  const docSnapGifts = await getDocs(docRefGifts);
+  batch.update(doc(db, "cadeaux2024", "all"), {
+    lastUpdateFireStore: nowStamp,
+    checked: checkedBought
+  });
+
+  let modif = getModif();
+  modif.map(modifiedInitial => {
+    let section = theGifts.find((person) => person.initial == modifiedInitial);
+    batch.update(doc(db, "cadeaux2024", modifiedInitial), {
+      color: section.color,
+      nom: section.nom,
+      suggestions: section.suggestions
+    });
   });  
-  
+
   await batch.commit();
+  localStorage.lastUpdateLocalStorageCadeaux = nowStamp;
+  resetCBC();
+  resetModif();
 };
 
 function updateFromCloud(){

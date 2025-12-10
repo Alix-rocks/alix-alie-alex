@@ -3,6 +3,7 @@ import { rtdb, getDatabase, ref, set, onValue } from "../../myFirebase.js";
 onValue(ref(rtdb, "workshop/control"), (snapshot) => {
   if (!snapshot.val()) return;
   handleCommand(snapshot.val().action, snapshot.val().data);
+  set(ref(rtdb, "workshop/control"), null);
 });
 
 let screenHeight;

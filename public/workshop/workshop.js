@@ -1,7 +1,8 @@
 import { rtdb, getDatabase, ref, set, onValue } from "../../myFirebase.js";
 
 onValue(ref(rtdb, "workshop/control"), (snapshot) => {
-  console.log("Received:", snapshot.val());
+  if (!snapshot.val()) return;
+  handleCommand(snapshot.val().action, snapshot.val().data);
 });
 
 let screenHeight;
@@ -13,7 +14,31 @@ let screenWidth;
   document.querySelector(':root').style.setProperty('--vh', `${screenHeight}px`);
 })();
 
+function handleCommand(action, data){
+  switch(action){
+    case "slideNext":
+      slideNext();
+      break;
+    case "slidePrev":
+      slidePrev();
+      break;
+    case "stepNext":
+      stepNext();
+      break;
+    case "stepPrev":
+      stepPrev();
+    case "rain":
+      wordRain(data);
+      break;
+    default:
+      console.log(action, data);
+      break;
+  };
+};
+
+const emojiRegex = /\p{Emoji}/gu; // 'g' for global, 'u' for Unicode mode
 let sectionShowed;
+let kasesIds = [];
 
 function displaySection(sectionToShow){
   document.querySelectorAll("section").forEach(section => {
@@ -30,6 +55,7 @@ function displaySection(sectionToShow){
 };
 
 function slideNext(){
+  kasesIds = [];
   let sectionShowedNum = sectionShowed.id.slice(5);
   let sectionToShowId = "slide" + (Number(sectionShowedNum) + 1);
   let sectionToShow = document.querySelector("#" + sectionToShowId);
@@ -38,6 +64,7 @@ function slideNext(){
 window.slideNext = slideNext;
 
 function slidePrev(){
+  kasesIds = [];
   let sectionShowedNum = sectionShowed.id.slice(5);
   let sectionToShowId = "slide" + (Number(sectionShowedNum) - 1);
   let sectionToShow = document.querySelector("#" + sectionToShowId);
@@ -49,15 +76,18 @@ window.slidePrev = slidePrev;
 
 
 
-
 function wordCloudCreation(){
-  const emojiRegex = /\p{Emoji}/gu; // 'g' for global, 'u' for Unicode mode
 
-  let kasesIds = [];
+  kasesIds = [];
 
   let words = Array.from(sectionShowed.querySelectorAll("span")).map(element => element.innerText);
   console.log(words);
-  wordDropdownCreation(words);
+  set(ref(rtdb, "workshop/feedback"), {
+    need: "wordDropdownCreation",
+    info: words,
+    timestamp: Date.now()
+  });
+  //wordDropdownCreation(words);
   
   let colNum = screenWidth > 900 ? 4 : 3;
   let linNum = screenHeight > 900 ? 4 : 3;
@@ -96,67 +126,36 @@ function wordCloudCreation(){
   let allTheLines = lins.join("");
   sectionShowed.querySelector("#cloudBoardTotal").innerHTML = allTheLines;
   console.log(kasesIds);
-
-  function wordDropdownCreation(words){
-    let selector = sectionShowed.querySelector(".wordDropdown");
-    if(!selector){
-      let wordDropdownOptions = words.map(word => {
-          return `<option value="${word.match(emojiRegex) ? word.match(emojiRegex) : word}">${word}</option>`;
-        }).join("");
-      sectionShowed.insertAdjacentHTML("beforeend", `<select class="wordDropdown">
-          <option value="">--Options--</option>
-          ${wordDropdownOptions}
-        </select>`);
-      selector = sectionShowed.querySelector(".wordDropdown");
-      selector.addEventListener("change", () => { 
-        if(selector.value !== ""){
-          console.log(selector.value);
-          wordRain(selector.value);
-          
-          //     let selectedIndex = selector.selectedIndex;
-          //         let selectedOption = selector.options[selectedIndex];
-          //             let selectedText = selectedOption.text;
-          // console.log(selectedText);
-          // wordRain(selectedText);
-        };
-      });
-    };
-    console.log(selector);
-    
-  };
-
-  function wordRain(word){
-    //random index
-    let kaseIndex = Math.floor(Math.random() * kasesIds.length);
-    let kaseId = kasesIds[kaseIndex];
-    console.log(kaseId);
-
-    //random position within the Kase (5 different classes)
-    let positions = ["top", "top left", "top right", "bottom", "bottom left", "bottom right", "left", "right", "center"];
-    let positionIndex = Math.floor(Math.random() * positions.length);
-    let position = positions[positionIndex];
-
-    //random angle (3 or 5 different angles)
-    let tilts = ["tilt15", "tilt-15", "notilt", "tilt15", "tilt-15", "notilt"];
-    let tiltIndex = Math.floor(Math.random() * tilts.length);
-    let tilt = tilts[tiltIndex];
-
-    //random color
-    let colors = ["softBlue", "teal", "purple", "softBlue", "teal", "purple"];
-    let colorIndex = Math.floor(Math.random() * colors.length);
-    let color = colors[colorIndex];
-
-    //random font
-
-    
-    sectionShowed.querySelector("#" + kaseId).innerHTML = `<span class="wordSpan ${word.match(emojiRegex) ? "emojiSpan" : ""} ${position} ${tilt}" style="background-color:var(--accent-30-${color})">${word}</span>`;
-    kasesIds.splice(kaseIndex, 1);
-
-  };
-  
 };
 
+function wordRain(word){
+  //random index
+  let kaseIndex = Math.floor(Math.random() * kasesIds.length);
+  let kaseId = kasesIds[kaseIndex];
+  console.log(kaseId);
 
+  //random position within the Kase (5 different classes)
+  let positions = ["top", "top left", "top right", "bottom", "bottom left", "bottom right", "left", "right", "center"];
+  let positionIndex = Math.floor(Math.random() * positions.length);
+  let position = positions[positionIndex];
+
+  //random angle (3 or 5 different angles)
+  let tilts = ["tilt15", "tilt-15", "notilt", "tilt15", "tilt-15", "notilt"];
+  let tiltIndex = Math.floor(Math.random() * tilts.length);
+  let tilt = tilts[tiltIndex];
+
+  //random color
+  let colors = ["softBlue", "teal", "purple", "softBlue", "teal", "purple"];
+  let colorIndex = Math.floor(Math.random() * colors.length);
+  let color = colors[colorIndex];
+
+  //random font
+  
+  sectionShowed.querySelector("#" + kaseId).innerHTML = `<span class="wordSpan ${word.match(emojiRegex) ? "emojiSpan" : ""} ${position} ${tilt}" style="background-color:var(--accent-30-${color})">${word}</span>`;
+  kasesIds.splice(kaseIndex, 1);
+
+};
+  
 
 
 

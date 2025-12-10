@@ -1,5 +1,10 @@
 import { rtdb, getDatabase, ref, set, onValue } from "../../myFirebase.js";
 
+onValue(ref(rtdb, "workshop/feedback"), (snapshot) => {
+  if (!snapshot.val()) return;
+  handleFeedback(snapshot.val().need, snapshot.val().info);
+});
+
 const timeNow = document.getElementById("timeNow");
 setInterval(() => {
   timeNow.innerText = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -29,10 +34,69 @@ timeDurationEndInput.addEventListener("input", () => {
   };
 });
 
+function handleFeedback(need, info){
+  switch(need){
+    case "wordDropdownCreation":
+      wordDropdownCreation(info);
+      break;
+    // case "slidePrev":
+    //   slidePrev();
+    //   break;
+    // case "stepNext":
+    //   stepNext();
+    //   break;
+    // case "stepPrev":
+    //   stepPrev();
+    // case "rain":
+    //   wordRain(data);
+    //   break;
+    default:
+      console.log(need, info);
+      break;
+  };
+};
+
+const emojiRegex = /\p{Emoji}/gu; // 'g' for global, 'u' for Unicode mode
+const diapoMain = document.querySelector("#diapoMain");
+
 function slideNext(){
+  diapoMain.innerHTML = "";
   set(ref(rtdb, "workshop/control"), {
-    action: "next",
+    action: "slideNext",
     timestamp: Date.now()
   });
 };
 window.slideNext = slideNext;
+
+function slidePrev(){
+  diapoMain.innerHTML = "";
+  set(ref(rtdb, "workshop/control"), {
+    action: "slidePrev",
+    timestamp: Date.now()
+  });
+};
+window.slidePrev = slidePrev;
+
+
+function wordDropdownCreation(words){
+  let wordDropdownOptions = words.map(word => {
+      return `<option value="${word.match(emojiRegex) ? word.match(emojiRegex) : word}">${word}</option>`;
+    }).join("");
+    diapoMain.innerHTML = `<select class="wordDropdown">
+      <option value="">--Options--</option>
+      ${wordDropdownOptions}
+    </select>`;
+  selector = diapoMain.querySelector(".wordDropdown");
+  selector.addEventListener("change", () => { 
+    if(selector.value !== ""){
+      console.log(selector.value);
+      //wordRain(selector.value);
+      set(ref(rtdb, "workshop/control"), {
+        action: "rain",
+        data: selector.value,
+        timestamp: Date.now()
+      });
+    };
+  });
+  console.log(selector);
+};

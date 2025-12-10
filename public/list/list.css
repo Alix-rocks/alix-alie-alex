@@ -6,8 +6,8 @@
   padding: 0;
 }
 .wholeList{
-  /* width: 240px;
-  margin: 0 auto 85px; */
+  width: 240px;
+  margin: 0 auto 85px;
 }
 .listToggleTitle{
   position: relative;

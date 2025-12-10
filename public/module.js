@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "../../myFirebase.js";
-import { choosingLine } from "../metro/metro.js";
+//import { choosingLine } from "./metro/metro.js"; ERROR "Uncaught SyntaxError: The requested module './metro/metro.js' does not provide an export named 'choosingLine' (at module.js:3:10)"
 
 // import transCode from "./transCode.js";
 // TODO: Add SDKs for Firebase products that you want to use

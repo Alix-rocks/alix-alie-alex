@@ -1,0 +1,113 @@
+:root{
+  --bg-color: rgb(244, 244, 244);
+  --tx-color: rgb(34, 34, 34);
+  --accent-teal: rgb(0, 140, 140);
+  --accent-purple: rgb(124, 77, 255);
+  --accent-softBlue: rgb(41, 121, 255);
+  --accent-coral: rgb(255, 111, 97);
+  --accent-30-teal: rgba(0, 140, 140, .3);
+  --accent-30-purple: rgba(124, 77, 255, .3);
+  --accent-30-softBlue: rgba(41, 121, 255, .3);
+  --accent-30-coral: rgba(255, 111, 97, .3);
+  --vw: 100vw;
+  --vh: 100vh;
+}
+*{
+  font-family: 'Nunito', sans-serif;
+  box-sizing: border-box;
+  user-select: none;
+}
+body{
+  color: var(--tx-color);
+  background-color: var(--bg-color);
+}
+
+section{
+  width: 100%;
+  height: var(--vh);
+
+}
+
+.wordCloud > span{
+  display: none;
+}
+.wordCloud{
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+}
+.bottomText{
+  width: 100%;
+  border: 1px solid var(--accent-coral);
+}
+
+#cloudBoardTotal{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-around;
+}
+.cloudBoardLine{
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+}
+.cloudBoardCase{
+  border: .5px solid var(--accent-purple);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wordDropdown{
+  position: fixed;
+  top: 8px;
+  left: 8px;
+}
+
+.wordSpan{
+  display: inline-block;
+  text-align: center;
+  position: absolute;
+  width: min-content;
+  line-height: 1.1;
+  /* if with background-color */
+  border-radius: 10px;
+  padding: 5px;
+  font-weight: 900;
+}
+
+.emojiSpan{
+  font-size: 46px;
+}
+
+.top{
+  top: 10px;
+}
+.bottom{
+  bottom: 10px;
+}
+.left{
+  left: 10px;
+}
+.right{
+  right: 10px;
+}
+
+.tilt15{
+  transform: rotate(15deg);
+}
+.tilt-15{
+  transform: rotate(-15deg);
+}
+
+.invisible{
+  opacity: 0;
+  visibility: hidden;
+}
+.displayNone{
+  display: none;
+}

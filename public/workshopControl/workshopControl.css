@@ -1,0 +1,42 @@
+:root{
+  --bg-color: rgb(31, 31, 31);
+  --tx-color: rgb(236, 236, 236);
+}
+*{
+  font-family: 'Nunito', sans-serif;
+  box-sizing: border-box;
+  user-select: none;
+}
+body{
+  color: var(--tx-color);
+  background-color: var(--bg-color);
+}
+
+#timeNow{
+  text-align: center;
+}
+#timeDurationShowZone{
+  width: calc(100% - 15px);
+  height: 30px;
+  border-radius: 5px;
+  margin: 10px auto;
+  border: 2px solid red;
+  background-color: transparent;
+}
+#timeDurationShow{
+  width: 0;
+  height: 30px;
+  border-radius: 5px;
+  background: green;
+  animation-timing-function: linear;
+}
+.timeDurationSides{
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+}
+#timeDurationTimes{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}

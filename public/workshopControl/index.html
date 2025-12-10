@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Coming+Soon&family=Fuzzy+Bubbles:wght@400;700&family=Indie+Flower&family=Kalam:wght@300;400;700&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Rubik+Dirt&family=Special+Elite&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
+  <!-- Typicons -->
+  <link rel="stylesheet" href="..\@Fonts&Icons\typicons\typicons.css"/> 
+  <!--  href="../typicons.css" -->
+  <!-- Flavicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="..\@Fonts&Icons\fontawesome\css\fontawesome.min.css"/>
+  <link rel="stylesheet" href="..\@Fonts&Icons\fontawesome\css\regular.min.css"/>
+  <link rel="stylesheet" href="..\@Fonts&Icons\fontawesome\css\solid.min.css"/>
+  <script src="https://kit.fontawesome.com/b4f765f607.js" crossorigin="anonymous"></script>
+  <!-- CSS -->
+  <link rel="stylesheet" href="workshopControl.css">
+  <title>Workshop Control</title>
+</head>
+
+<body>
+  <section id="time">
+    <div id="timeNow">Now</div>
+    <div id="timeDuration">
+      <div id="timeDurationShowZone">
+        <div id="timeDurationShow"></div>
+      </div>
+      <div id="timeDurationTimes">
+        <div class="timeDurationSides">
+          <label for="timeDurationStartInput">Start</label>
+          <input id="timeDurationStartInput" class="" type="time" value="" />
+        </div>
+        <div class="timeDurationSides">
+          <label for="timeDurationEndInput">End</label>
+          <input id="timeDurationEndInput" class="" type="time" value="" />
+        </div>
+      </div>
+    </div>
+    <hr>
+  </section>
+  <section id="diapo">
+    <div id="diapoTitle"></div>
+    <div id="diapoQuestion"></div>
+    <div id="diapoActions">
+      <button id="diapoActionsPrev">Prev</button>
+      <button id="diapoActionsReset">Start</button>
+      <button id="diapoActionsEnd">End</button>
+      <button id="diapoActionsNext">Next</button>
+    </div>
+    <hr>
+  </section>
+  <section id="pages">
+    <button id="pagePrev" onclick="slidePrev()">Prev</button>
+    <div id="allPages"></div>
+    <button id="pageNext" onclick="slideNext()">Next</button>
+  </section>
+
+<script type="module" src="workshopControl.js"></script>
+</body>
+
+</html>

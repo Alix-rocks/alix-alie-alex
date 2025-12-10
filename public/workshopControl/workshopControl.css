@@ -1,6 +1,11 @@
 :root{
   --bg-color: rgb(31, 31, 31);
-  --tx-color: rgb(236, 236, 236);
+  /* --tx-color: rgb(236, 236, 236); */
+  --tx-color: rgb(124, 77, 255);
+  --accent-teal: rgb(0, 140, 140);
+  --accent-coral: rgb(255, 111, 97);
+  --vw: 100vw;
+  --vh: 100vh;
 }
 *{
   font-family: 'Nunito', sans-serif;
@@ -10,6 +15,14 @@
 body{
   color: var(--tx-color);
   background-color: var(--bg-color);
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  height: var(--vh);
+}
+
+hr{
+  width: 100%;
 }
 
 #timeNow{
@@ -21,14 +34,14 @@ body{
   height: 30px;
   border-radius: 5px;
   margin: 10px auto;
-  border: 2px solid red;
+  border: 2px solid;
   background-color: transparent;
 }
 #timeDurationShow{
   width: 0;
-  height: 30px;
-  border-radius: 5px;
-  background: green;
+  height: 100%;
+  border-radius: 2.5px;
+  background: var(--accent-coral);
   animation-timing-function: linear;
 }
 .timeDurationSides{
@@ -40,4 +53,31 @@ body{
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
+}
+
+section#diapo{
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+#wordDropdown{
+  display: block;
+  margin: auto;
+  height: 30px;
+}
+
+#wordInput{
+  display: block;
+  margin: 20px auto;
+  height: 30px;
+}
+
+section#pages{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
 }

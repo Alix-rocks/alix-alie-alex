@@ -5,6 +5,16 @@ onValue(ref(rtdb, "workshop/feedback"), (snapshot) => {
   handleFeedback(snapshot.val().need, snapshot.val().info);
 });
 
+let screenHeight;
+let screenWidth;
+(() => {
+  screenHeight = window.innerHeight - 16;
+  screenWidth = window.innerWidth - 16;
+  document.querySelector(':root').style.setProperty('--vw', `${screenWidth}px`);
+  document.querySelector(':root').style.setProperty('--vh', `${screenHeight}px`);
+})();
+
+
 const timeNow = document.getElementById("timeNow");
 setInterval(() => {
   timeNow.innerText = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -82,21 +92,30 @@ function wordDropdownCreation(words){
   let wordDropdownOptions = words.map(word => {
       return `<option value="${word.match(emojiRegex) ? word.match(emojiRegex) : word}">${word}</option>`;
     }).join("");
-    diapoMain.innerHTML = `<select class="wordDropdown">
+    diapoMain.innerHTML = `<select id="wordDropdown"">
       <option value="">--Options--</option>
       ${wordDropdownOptions}
-    </select>`;
-  selector = diapoMain.querySelector(".wordDropdown");
-  selector.addEventListener("change", () => { 
-    if(selector.value !== ""){
-      console.log(selector.value);
-      //wordRain(selector.value);
+    </select>
+    <input id="wordInput" type="text"></input>`;
+  let selector = diapoMain.querySelector("#wordDropdown");
+  selector.addEventListener("change",  () => {
+    makeItRain(selector.value);
+  });
+  
+  let adder = diapoMain.querySelector("#wordInput");
+  adder.addEventListener("change", () => {
+    makeItRain(adder.value);
+  });
+  
+  function makeItRain(water){
+    console.log(water);
+    if(water !== ""){
+      console.log(water);
       set(ref(rtdb, "workshop/control"), {
         action: "rain",
-        data: selector.value,
+        data: water,
         timestamp: Date.now()
       });
     };
-  });
-  console.log(selector);
+  };
 };

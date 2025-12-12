@@ -4,6 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <!-- Google Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Coming+Soon&family=Fuzzy+Bubbles:wght@400;700&family=Indie+Flower&family=Kalam:wght@300;400;700&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Rubik+Dirt&family=Special+Elite&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
   <!-- Typicons -->
@@ -19,7 +22,7 @@
   <link rel="stylesheet" href="..\@Fonts&Icons\fontawesome\css\solid.min.css"/>
   <script src="https://kit.fontawesome.com/b4f765f607.js" crossorigin="anonymous"></script>
   <!-- CSS -->
-  <link rel="stylesheet" href="workshopControl.css">
+  <!-- <link rel="stylesheet" href="workshopControl.css"> -->
   <title>Workshop Control</title>
 </head>
 
@@ -61,7 +64,20 @@
     <button id="pageNext" onclick="slideNext()">Next</button>
   </section>
 
-<script type="module" src="workshopControl.js"></script>
+<!-- <script type="module" src="workshopControl.js"></script> -->
+<script type="module">
+  import { VERSION } from "../testVersion.js";
+  
+  const script = document.createElement("script");
+  script.type = "module";
+  script.src = `workshopControl.js?v=${VERSION}`;
+  document.head.appendChild(script);
+
+  const style = document.createElement("link");
+  style.rel = "stylesheet";
+  style.href = `workshopControl.css?v=${VERSION}`;
+  document.head.appendChild(style);
+</script>
 </body>
 
 </html>

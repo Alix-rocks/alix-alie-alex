@@ -1,5 +1,8 @@
 import { rtdb, getDatabase, ref, set, onValue } from "../../myFirebase.js";
 
+set(ref(rtdb, "workshop/control"), null);
+set(ref(rtdb, "workshop/feedback"), null);
+
 onValue(ref(rtdb, "workshop/feedback"), (snapshot) => {
   if (!snapshot.val()) return;
   handleFeedback(snapshot.val().need, snapshot.val().info);
@@ -51,16 +54,8 @@ function handleFeedback(need, info){
       wordDropdownCreation(info);
       break;
     case "sbf":
-      stepButtonFixing(nextState, prevState);
+      stepButtonFixing(info);
       break;
-    // case "stepNext":
-    //   stepNext();
-    //   break;
-    // case "stepPrev":
-    //   stepPrev();
-    // case "rain":
-    //   wordRain(data);
-    //   break;
     default:
       console.log(need, info);
       break;
@@ -104,7 +99,9 @@ function stepPrev(){
 };
 window.stepPrev = stepPrev;
 
-function stepButtonFixing(nextState, prevState){
+function stepButtonFixing(info){
+  let nextState = info.next;
+  let prevState = info.prev;
   document.querySelector("#diapoActionsNext").disabled = nextState ? false : true;
   document.querySelector("#diapoActionsPrev").disabled = prevState ? false : true;
 };

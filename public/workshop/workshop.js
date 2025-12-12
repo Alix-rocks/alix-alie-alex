@@ -1,5 +1,8 @@
 import { rtdb, getDatabase, ref, set, onValue } from "../../myFirebase.js";
 
+set(ref(rtdb, "workshop/control"), null);
+set(ref(rtdb, "workshop/feedback"), null);
+
 onValue(ref(rtdb, "workshop/control"), (snapshot) => {
   if (!snapshot.val()) return;
   handleCommand(snapshot.val().action, snapshot.val().data);
@@ -148,12 +151,14 @@ function stepPrev(){
 };
 
 function stepButtonFixing(){
-  let next = allSteps == null ? false : stepCurrentIndex <= allSteps.length - 2 ? true : false;
-  let prev = allSteps == null ? false : stepCurrentIndex !== 0 ? true : false;
+  let nextState = allSteps == null ? false : stepCurrentIndex <= allSteps.length - 2 ? true : false;
+  let prevState = allSteps == null ? false : stepCurrentIndex !== 0 ? true : false;
   set(ref(rtdb, "workshop/feedback"), {
     need: "sbf",
-    nextState: next,
-    prevState: prev,
+    info: {
+      next: nextState,
+      prev: prevState
+    },
     timestamp: Date.now()
   });
 };

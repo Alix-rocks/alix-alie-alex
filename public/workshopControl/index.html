@@ -73,12 +73,12 @@
   script.src = `workshopControl.js?v=${VERSION}`;
   document.head.appendChild(script);
 
-  document.querySelector("#timeDurationShowZone").insertAdjacentElement("afterbegin", `<span>${VERSION}</span>`);
-
   const style = document.createElement("link");
   style.rel = "stylesheet";
   style.href = `workshopControl.css?v=${VERSION}`;
   document.head.appendChild(style);
+
+  document.querySelector("#timeDurationShowZone").insertAdjacentHTML("afterbegin", `<span>${VERSION}</span>`);
 </script>
 </body>
 

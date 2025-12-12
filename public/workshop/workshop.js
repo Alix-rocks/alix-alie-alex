@@ -6,11 +6,19 @@ onValue(ref(rtdb, "workshop/control"), (snapshot) => {
   set(ref(rtdb, "workshop/control"), null);
 });
 
+let landscapeMode;
 let screenHeight;
 let screenWidth;
 (() => {
   screenHeight = window.innerHeight - 16;
   screenWidth = window.innerWidth - 16;
+  if(screenWidth > screenHeight){ //if true => landscape mode (16:9)
+    landscapeMode = true;
+    screenWidth = screenHeight * 16 / 9;
+  } else if(screenHeight > screenWidth){ // portrait mode (20:9)
+    landscapeMode = false;
+    screenHeight = screenWidth * 20 / 9;
+  }
   document.querySelector(':root').style.setProperty('--vw', `${screenWidth}px`);
   document.querySelector(':root').style.setProperty('--vh', `${screenHeight}px`);
 })();
@@ -38,8 +46,17 @@ function handleCommand(action, data){
 };
 
 const emojiRegex = /\p{Emoji}/gu; // 'g' for global, 'u' for Unicode mode
-let sectionShowed;
+let sectionShowed = null;
+let allSteps = null;
+let stepCurrentIndex = 0;
+let stepCurrent = null;
 let kasesIds = [];
+const positions = ["top", "top left", "top right", "bottom", "bottom left", "bottom right", "left", "right", "center", "center", "center", "center"];
+let shuffledPositions = [];
+const tilts = ["tilt15", "tilt-15", "notilt", "tilt75", "tilt-75"];
+let shuffledTilts = [];
+const colors = ["softBlue", "teal", "purple"];
+let shuffledColors = [];
 
 function displaySection(sectionToShow){
   document.querySelectorAll("section").forEach(section => {
@@ -53,38 +70,81 @@ function displaySection(sectionToShow){
   if(sectionToShow.classList.contains("wordCloud")){
     wordCloudCreation();
   };
+  if(sectionToShow.classList.contains("imaging")){
+    fixImaging();
+  };
+  if(sectionToShow.classList.contains("stepped")){
+    stepsCreation();
+  };
 };
 
 function slideNext(){
+  allSteps = null;
+  stepCurrentIndex = 0;
+  stepCurrent = null;
   kasesIds = [];
-  let sectionShowedNum = sectionShowed.id.slice(5);
-  let sectionToShowId = "slide" + (Number(sectionShowedNum) + 1);
-  let sectionToShow = document.querySelector("#" + sectionToShowId);
+  shuffledPositions = [];
+  shuffledTilts = [];
+  shuffledColors = [];
+  // let sectionShowedNum = sectionShowed.id.slice(5);
+  let sectionShowedNum = Number(sectionShowed.dataset.slide);
+  //let sectionToShowNum = sectionShowedNum + 1;
+  let sectionToShow = document.querySelector(`section[data-slide="${sectionShowedNum + 1}"]`);
   displaySection(sectionToShow);
 };
 window.slideNext = slideNext;
 
 function slidePrev(){
+  allSteps = null;
+  stepCurrentIndex = 0;
+  stepCurrent = null;
   kasesIds = [];
-  let sectionShowedNum = sectionShowed.id.slice(5);
-  let sectionToShowId = "slide" + (Number(sectionShowedNum) - 1);
-  let sectionToShow = document.querySelector("#" + sectionToShowId);
+  shuffledPositions = [];
+  shuffledTilts = [];
+  shuffledColors = [];
+  let sectionShowedNum = Number(sectionShowed.dataset.slide);
+  let sectionToShow = document.querySelector(`section[data-slide="${sectionShowedNum - 1}"]`);
   displaySection(sectionToShow);
 };
 window.slidePrev = slidePrev;
 
+function fixImaging(){
+  let image = sectionShowed.querySelector("img");
+  image.classList.add(landscapeMode ? "landscapeMode" : "portraitMode");
+};
 
+function stepsCreation(){
+  allSteps = sectionShowed.querySelectorAll('[data-step]');
+  console.log(allSteps);
+  stepCurrentIndex = 0;
+  stepCurrent = allSteps[stepCurrentIndex];
+  console.log(stepCurrent);
+  
+};
 
+function stepNext(){
+  let stepCurrentIndex = stepCurrentIndex + 1;
+  stepCurrent = sectionShowed.querySelector(`section[data-step="${stepCurrentIndex}"]`);
+  stepCurrent.classList.remove("invisible");
+};
 
+function stepPrev(){
+  stepCurrent.classList.add("invisible");
+  stepCurrentIndex = stepCurrentIndex - 1;
+  stepCurrent = sectionShowed.querySelector(`section[data-step="${stepCurrentIndex}"]`);
+};
 
 function wordCloudCreation(){
 
   kasesIds = [];
+  shuffledPositions = [];
+  shuffledTilts = [];
+  shuffledColors = [];
 
   let words = Array.from(sectionShowed.querySelectorAll("span")).map(element => element.innerText);
   console.log(words);
   set(ref(rtdb, "workshop/feedback"), {
-    need: "wordDropdownCreation",
+    need: "wddc",
     info: words,
     timestamp: Date.now()
   });
@@ -127,39 +187,83 @@ function wordCloudCreation(){
   let allTheLines = lins.join("");
   sectionShowed.querySelector("#cloudBoardTotal").innerHTML = allTheLines;
   console.log(kasesIds);
+
+  //Creating the randomized arrays
+  kasesIds = shuffleArray(kasesIds);
+  shuffledPositions = multiShuffle(positions);
+  shuffledTilts = multiShuffle(tilts);
+  shuffledColors = multiShuffle(colors);
 };
 
-function wordRain(word){
-  //random index
-  let kaseIndex = Math.floor(Math.random() * kasesIds.length);
-  let kaseId = kasesIds[kaseIndex];
-  console.log(kaseId);
+//To randomize
+function shuffleArray(arr) {
+  const newArr = [...arr];
+  for (let i = newArr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+  }
+  return newArr;
+}
 
-  //random position within the Kase (5 different classes)
-  let positions = ["top", "top left", "top right", "bottom", "bottom left", "bottom right", "left", "right", "center"];
-  let positionIndex = Math.floor(Math.random() * positions.length);
-  let position = positions[positionIndex];
+function multiShuffle(arr) {
+  let times = Math.ceil(kasesIds.length / arr.length);
+  const result = [];
+  for (let i = 0; i < times; i++) {
+    const shuffled = shuffleArray(arr);
+    result.push(...shuffled);
+  }
+  return result;
+}
 
-  //random angle (3 or 5 different angles)
-  let tilts = ["tilt15", "tilt-15", "notilt", "tilt15", "tilt-15", "notilt"];
-  let tiltIndex = Math.floor(Math.random() * tilts.length);
-  let tilt = tilts[tiltIndex];
+let xIndex = -1;
+function wordRain(word){ 
+  xIndex++; 
+  let emoji = word.match(emojiRegex) ? true : false;
+  let thisKase = sectionShowed.querySelector("#" + kasesIds[xIndex]);
+  thisKase.innerHTML = `<span class="wordSpan ${emoji ? "emojiSpan" : ""} ${shuffledPositions[xIndex]} ${shuffledTilts[xIndex]}" style="background-color:var(--accent-30-${shuffledColors[xIndex]})">${word}</span>`;
 
-  //random color
-  let colors = ["softBlue", "teal", "purple", "softBlue", "teal", "purple"];
-  let colorIndex = Math.floor(Math.random() * colors.length);
-  let color = colors[colorIndex];
-
-  //random font
+  let thisSpan = thisKase.querySelector("span");
+  if(!emoji){
+    letsFitIt(thisSpan);
+  };
   
-  sectionShowed.querySelector("#" + kaseId).innerHTML = `<span class="wordSpan ${word.match(emojiRegex) ? "emojiSpan" : ""} ${position} ${tilt}" style="background-color:var(--accent-30-${color})">${word}</span>`;
-  kasesIds.splice(kaseIndex, 1);
 
 };
-  
+
+async function letsFitIt(element) {
+  let nowHeight = element.scrollHeight;
+  let nowLineHeight = parseFloat(getComputedStyle(element).lineHeight);
+  let nowNumberOfLines = Math.floor(nowHeight / nowLineHeight);
+  console.log('nowNumberOfLines: ' + nowNumberOfLines);
+  let nowFontSize = parseFloat(getComputedStyle(element).fontSize);
+  console.log("nowFontSize first: " + nowFontSize)
+  element.style.overflowWrap = "break-word";
+
+  while (true) {
+    nowFontSize++;
+    element.style.fontSize = nowFontSize + "px";
+
+    // 🔥 allow DOM to update
+    await new Promise(resolve => requestAnimationFrame(resolve));
+
+    let newHeight = element.scrollHeight;
+    let newLineHeight = parseFloat(getComputedStyle(element).lineHeight);
+    let newNumberOfLines = Math.floor(newHeight / newLineHeight);
+
+    if (newNumberOfLines > nowNumberOfLines) {
+      // We exceeded the limit — stop
+      break;
+    }
+  }
+ console.log("nowFontSize out: " + nowFontSize)
+
+  // Go back to the last valid size
+  element.style.fontSize = (nowFontSize - 1) + "px";
+};
 
 
 
 
-let sectionToShow = document.querySelector("#slide1");
+
+let sectionToShow = document.querySelector('section[data-slide="1"]');
 displaySection(sectionToShow);

@@ -47,7 +47,7 @@ timeDurationEndInput.addEventListener("input", () => {
 
 function handleFeedback(need, info){
   switch(need){
-    case "wordDropdownCreation":
+    case "wddc":
       wordDropdownCreation(info);
       break;
     // case "slidePrev":
@@ -88,6 +88,22 @@ function slidePrev(){
 };
 window.slidePrev = slidePrev;
 
+function stepNext(){
+  set(ref(rtdb, "workshop/control"), {
+    action: "stepNext",
+    timestamp: Date.now()
+  });
+};
+window.stepNext = stepNext;
+
+function stepPrev(){
+  set(ref(rtdb, "workshop/control"), {
+    action: "stepPrev",
+    timestamp: Date.now()
+  });
+};
+window.stepPrev = stepPrev;
+
 
 function wordDropdownCreation(words){
   let wordDropdownOptions = words.map(word => {
@@ -101,11 +117,13 @@ function wordDropdownCreation(words){
   let selector = diapoMain.querySelector("#wordDropdown");
   selector.addEventListener("change",  () => {
     makeItRain(selector.value);
+    selector.value = "";
   });
   
   let adder = diapoMain.querySelector("#wordInput");
   adder.addEventListener("change", () => {
     makeItRain(adder.value);
+    adder.value = "";
   });
   
   function makeItRain(water){

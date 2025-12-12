@@ -24,11 +24,14 @@
 </head>
 
 <body>
-  <section id="slide1">
-    <h1>Consentement</h1>
+  <section data-slide="1" class="stepped">
+    <h1 data-step="0">Consentement</h1>
+    <p class="invisible" data-step="1">C'est quoi, ça?!</p>
+    <p class="invisible" data-step="2">Pourquoi c'est important?</p>
+    <p class="invisible" data-step="3">Comment ça marche?</p>
   
   </section>
-  <section id="slide2" class="wordCloud displayNone">
+  <section data-slide="2" class="wordCloud displayNone">
     <div class="topText">
       <h2>Context</h2>
     </div>
@@ -46,11 +49,11 @@ Parce que, des fois, même un oui aurait dû être un non...
       </p>
     </div>
   </section>
-  <section id="slide3" class="displayNone">
-    <img src="..\@Pictures\RÉELS-2É-1.png" alt="" style="width: 100%; height: auto; margin: auto;">
+  <section data-slide="3" class="imaging displayNone">
+    <img src="..\@Pictures\RÉELS-2É-1.png" alt="" style="margin: auto;">
   </section>
 
-  <section id="slide4" class="wordCloud emojiCloud displayNone">
+  <section data-slide="4" class="wordCloud emojiCloud displayNone">
     <div class="topText">
       <h2>Faire semblant</h2>
     </div>
@@ -69,13 +72,6 @@ Parce que, des fois, même un oui aurait dû être un non...
 Parce que, des fois, même un oui aurait dû être un non...
       </p>
     </div>
-
-  </section>
-
-  <section id="pages" style="display: flex; position: fixed; bottom: 0px; width: var(--vw); flex-flow: row nowrap; justify-content: space-between; height: 30px;">
-    <button id="pagePrev" onclick="slidePrev()">Prev</button>
-    <div id="allPages"></div>
-    <button id="pageNext" onclick="slideNext()">Next</button>
   </section>
 
 <script type="module" src="workshop.js"></script>

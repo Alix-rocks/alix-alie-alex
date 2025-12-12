@@ -1,9 +1,11 @@
 :root{
   --bg-color: rgb(31, 31, 31);
   /* --tx-color: rgb(236, 236, 236); */
-  --tx-color: rgb(124, 77, 255);
-  --accent-teal: rgb(0, 140, 140);
-  --accent-coral: rgb(255, 111, 97);
+  --tx-color: rgb(164, 128, 255);
+  --tx-130-color: rgb(124, 77, 255);
+  --tx-30-color: rgb(228,217,255);
+  --accent-teal: #1BDCDC;
+  --accent-coral: #FF8A7A;
   --vw: 100vw;
   --vh: 100vh;
 }
@@ -19,6 +21,7 @@ body{
   flex-flow: column nowrap;
   justify-content: space-between;
   height: var(--vh);
+  font-size: 20px;
 }
 
 hr{
@@ -27,7 +30,7 @@ hr{
 
 #timeNow{
   text-align: center;
-  font-size: 66px;
+  font-size: 3.3em;
 }
 #timeDurationShowZone{
   width: calc(100% - 15px);
@@ -48,12 +51,28 @@ hr{
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
+  font-size: 1em;
 }
 #timeDurationTimes{
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
 }
+.time-clean {
+  border: none;
+  background: transparent;
+  font: inherit;
+  padding: 0;
+  margin: 0;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  appearance: none;
+  color: inherit;
+  text-align: center;
+}
+/* .time-clean::-webkit-calendar-picker-indicator {
+  display: none;
+} */
 
 section#diapo{
   display: flex;
@@ -80,4 +99,22 @@ section#pages{
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
+}
+
+button{
+  border-top: 2px solid var(--tx-color);
+  border-left: 2px solid var(--tx-color);
+  border-right: 4px solid var(--tx-color);
+  border-bottom: 4px solid var(--tx-color);
+  border-radius: 5px;
+  padding: 5px 10px;
+  width: fit-content;
+  color: var(--tx-130-color);
+  text-align: center;
+  font-weight: 600;
+  background-color: var(--tx-30-color);
+}
+
+button#pagePrev, button#pageNext{
+  font-size: 1.3em;
 }

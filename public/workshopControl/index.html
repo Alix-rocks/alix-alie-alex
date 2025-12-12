@@ -33,11 +33,12 @@
       <div id="timeDurationTimes">
         <div class="timeDurationSides">
           <label for="timeDurationStartInput">Start</label>
-          <input id="timeDurationStartInput" class="" type="time" value="" />
+          <span></span>
+          <input id="timeDurationStartInput" class="time-clean" type="time" value="" />
         </div>
         <div class="timeDurationSides">
           <label for="timeDurationEndInput">End</label>
-          <input id="timeDurationEndInput" class="" type="time" value="" />
+          <input id="timeDurationEndInput" class="time-clean" type="time" value="" />
         </div>
       </div>
     </div>
@@ -47,10 +48,10 @@
     <div id="diapoTitle"></div>
     <div id="diapoMain"></div>
     <div id="diapoActions">
-      <button id="diapoActionsPrev">Prev</button>
+      <button id="diapoActionsPrev" onclick="stepPrev()">Prev</button>
       <button id="diapoActionsReset">Start</button>
       <button id="diapoActionsEnd">End</button>
-      <button id="diapoActionsNext">Next</button>
+      <button id="diapoActionsNext" onclick="stepNext()">Next</button>
     </div>
   </section>
   <hr>

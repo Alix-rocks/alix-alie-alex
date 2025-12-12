@@ -39,6 +39,7 @@
           <span></span>
           <input id="timeDurationStartInput" class="time-clean" type="time" value="" />
         </div>
+        <button id="resetTime" onclick="resetLocalTime()">Reset</button>
         <div class="timeDurationSides">
           <label for="timeDurationEndInput">End</label>
           <input id="timeDurationEndInput" class="time-clean" type="time" value="" />
@@ -78,7 +79,7 @@
   style.href = `workshopControl.css?v=${VERSION}`;
   document.head.appendChild(style);
 
-  document.querySelector("#timeDurationShowZone").insertAdjacentHTML("afterbegin", `<span>${VERSION}</span>`);
+  document.querySelector("#timeDurationShowZone").insertAdjacentHTML("beforebegin", `<span>${VERSION}</span>`);
 </script>
 </body>
 

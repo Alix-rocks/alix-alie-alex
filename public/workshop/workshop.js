@@ -43,6 +43,9 @@ function handleCommand(action, data){
     case "rain":
       wordRain(data);
       break;
+    case "refresh":
+      refreshControl();
+      break;
     default:
       console.log(action, data);
       break;
@@ -63,6 +66,14 @@ const colors = ["softBlue", "teal", "purple"];
 let shuffledColors = [];
 
 function displaySection(sectionToShow){
+  allSteps = null;
+  stepButtonFixing();
+  stepCurrentIndex = 0;
+  stepCurrent = null;
+  kasesIds = [];
+  shuffledPositions = [];
+  shuffledTilts = [];
+  shuffledColors = [];
   document.querySelectorAll("section").forEach(section => {
     if(section == sectionToShow){
       section.classList.remove("displayNone");
@@ -81,34 +92,16 @@ function displaySection(sectionToShow){
   if(sectionShowed.classList.contains("stepped")){
     stepsCreation();
   };
-  
-  
 };
 
 function slideNext(){
-  allSteps = null;
-  stepCurrentIndex = 0;
-  stepCurrent = null;
-  kasesIds = [];
-  shuffledPositions = [];
-  shuffledTilts = [];
-  shuffledColors = [];
-  // let sectionShowedNum = sectionShowed.id.slice(5);
   let sectionShowedNum = Number(sectionShowed.dataset.slide);
-  //let sectionToShowNum = sectionShowedNum + 1;
   let sectionToShow = document.querySelector(`section[data-slide="${sectionShowedNum + 1}"]`);
   displaySection(sectionToShow);
 };
 window.slideNext = slideNext;
 
 function slidePrev(){
-  allSteps = null;
-  stepCurrentIndex = 0;
-  stepCurrent = null;
-  kasesIds = [];
-  shuffledPositions = [];
-  shuffledTilts = [];
-  shuffledColors = [];
   let sectionShowedNum = Number(sectionShowed.dataset.slide);
   let sectionToShow = document.querySelector(`section[data-slide="${sectionShowedNum - 1}"]`);
   displaySection(sectionToShow);
@@ -117,17 +110,13 @@ window.slidePrev = slidePrev;
 
 function fixImaging(){
   let image = sectionShowed.querySelector("img");
-  console.log(image);
-  
   image.classList.add(landscapeMode ? "landscapeMode" : "portraitMode");
 };
 
 function stepsCreation(){
   allSteps = sectionShowed.querySelectorAll('[data-step]');
-  console.log(allSteps);
   stepCurrentIndex = 0;
   stepCurrent = allSteps[stepCurrentIndex];
-  console.log(stepCurrent);
   stepButtonFixing();
 };
 
@@ -137,7 +126,6 @@ function stepNext(){
     stepCurrent = allSteps[stepCurrentIndex];
     stepCurrent.classList.remove("invisible");
   };
-  console.log(stepCurrent);
   stepButtonFixing();
 };
 
@@ -170,14 +158,8 @@ function wordCloudCreation(){
   shuffledTilts = [];
   shuffledColors = [];
 
-  let words = Array.from(sectionShowed.querySelectorAll("span")).map(element => element.innerText);
-  console.log(words);
-  set(ref(rtdb, "workshop/feedback"), {
-    need: "wddc",
-    info: words,
-    timestamp: Date.now()
-  });
-  //wordDropdownCreation(words);
+  sendWords();
+  
   
   let colNum = screenWidth > 900 ? 4 : 3;
   let linNum = screenHeight > 900 ? 4 : 3;
@@ -222,6 +204,15 @@ function wordCloudCreation(){
   shuffledPositions = multiShuffle(positions);
   shuffledTilts = multiShuffle(tilts);
   shuffledColors = multiShuffle(colors);
+};
+
+function sendWords(){
+  let words = Array.from(sectionShowed.querySelectorAll("span")).map(element => element.innerText);
+  set(ref(rtdb, "workshop/feedback"), {
+    need: "wddc",
+    info: words,
+    timestamp: Date.now()
+  });
 };
 
 //To randomize
@@ -290,7 +281,15 @@ async function letsFitIt(element) {
   element.style.fontSize = (nowFontSize - 1) + "px";
 };
 
-
+function refreshControl(){
+  if(sectionShowed.classList.contains("wordCloud")){
+    sendWords();
+  };
+  if(sectionShowed.classList.contains("stepped")){
+    stepButtonFixing();
+  };
+  
+};
 
 
 

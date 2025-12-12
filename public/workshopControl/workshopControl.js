@@ -9,6 +9,11 @@ onValue(ref(rtdb, "workshop/feedback"), (snapshot) => {
   set(ref(rtdb, "workshop/feedback"), null);
 });
 
+set(ref(rtdb, "workshop/control"), {
+  action: "refresh",
+  timestamp: Date.now()
+});
+
 let screenHeight;
 let screenWidth;
 (() => {
@@ -32,21 +37,60 @@ const timeDurationShowZoneWidth = getComputedStyle(timeDurationShowZone).width;
 const timeDurationStartInput = document.querySelector("#timeDurationStartInput");
 const timeDurationEndInput = document.querySelector("#timeDurationEndInput");
 
+if(localStorage.getItem("WCTimeStart") && localStorage.getItem("WCTimeStart") !== "" 
+&& localStorage.getItem("WCTimeEnd") && localStorage.getItem("WCTimeEnd") !== "" 
+&& localStorage.getItem("WCTimeEnd") >= new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })){
+  timeDurationStartInput.value = localStorage.getItem("WCTimeStart");
+  timeDurationEndInput.value = localStorage.getItem("WCTimeEnd");
+
+  let totalDuration = durationCalculation(timeDurationStartInput.value, timeDurationEndInput.value);
+  console.log(totalDuration);
+  
+  let pastDuration = durationCalculation(timeDurationStartInput.value, new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
+  console.log(pastDuration);
+
+  let totalWidthNum = parseFloat(getComputedStyle(timeDurationShowZone).width);
+  console.log(totalWidthNum);
+  let pastWidth = totalWidthNum * pastDuration / totalDuration;
+  console.log(pastWidth);
+
+  let restDuration = totalDuration - pastDuration;
+
+  timeDurationShow.animate([{width: pastWidth + "px"},{width: timeDurationShowZoneWidth}], restDuration);
+  
+} else{
+  localStorage.clear();
+};
+
 timeDurationEndInput.addEventListener("input", () => {
+
   if(timeDurationEndInput.value !== null && timeDurationStartInput.value !== null){
-    console.log(timeDurationEndInput.value + " " + timeDurationStartInput.value);
-    let start = timeDurationStartInput.value.split(":");
-    let end = timeDurationEndInput.value.split(":");
-    let startDate = new Date(0, 0, 0, start[0], start[1], 0);
-    let endDate = new Date(0, 0, 0, end[0], end[1], 0);
-    let duration = endDate.getTime() - startDate.getTime();
-    console.log(duration);
-    console.log(timeDurationShowZoneWidth);
+    let duration = durationCalculation(timeDurationStartInput.value, timeDurationEndInput.value);
+
+
     
     
     timeDurationShow.animate([{width: "0"},{width: timeDurationShowZoneWidth}], duration);
+
+    localStorage.setItem("WCTimeStart", timeDurationStartInput.value);
+    localStorage.setItem("WCTimeEnd", timeDurationEndInput.value);
   };
 });
+
+function resetLocalTime(){
+  timeDurationStartInput.value = "";
+  timeDurationEndInput.value = "";
+  localStorage.clear();
+};
+window.resetLocalTime = resetLocalTime;
+
+function durationCalculation(startV, endV){
+  let start = startV.split(":");
+  let end = endV.split(":");
+  let startDate = new Date(0, 0, 0, start[0], start[1], 0);
+  let endDate = new Date(0, 0, 0, end[0], end[1], 0);
+  return endDate.getTime() - startDate.getTime();
+};
 
 function handleFeedback(need, info){
   switch(need){

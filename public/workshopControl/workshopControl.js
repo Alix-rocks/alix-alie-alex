@@ -50,9 +50,9 @@ function handleFeedback(need, info){
     case "wddc":
       wordDropdownCreation(info);
       break;
-    // case "slidePrev":
-    //   slidePrev();
-    //   break;
+    case "sbf":
+      stepButtonFixing(nextState, prevState);
+      break;
     // case "stepNext":
     //   stepNext();
     //   break;
@@ -104,6 +104,10 @@ function stepPrev(){
 };
 window.stepPrev = stepPrev;
 
+function stepButtonFixing(nextState, prevState){
+  document.querySelector("#diapoActionsNext").disabled = nextState ? false : true;
+  document.querySelector("#diapoActionsPrev").disabled = prevState ? false : true;
+};
 
 function wordDropdownCreation(words){
   let wordDropdownOptions = words.map(word => {

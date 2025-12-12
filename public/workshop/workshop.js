@@ -36,6 +36,7 @@ function handleCommand(action, data){
       break;
     case "stepPrev":
       stepPrev();
+      break
     case "rain":
       wordRain(data);
       break;
@@ -66,16 +67,19 @@ function displaySection(sectionToShow){
       section.classList.add("displayNone");
     };
   });
-  if(sectionToShow.classList.contains("wordCloud")){
+  sectionShowed = sectionToShow;
+  console.log(sectionShowed);
+  if(sectionShowed.classList.contains("wordCloud")){
     wordCloudCreation();
   };
-  if(sectionToShow.classList.contains("imaging")){
+  if(sectionShowed.classList.contains("imaging")){
     fixImaging();
   };
-  if(sectionToShow.classList.contains("stepped")){
+  if(sectionShowed.classList.contains("stepped")){
     stepsCreation();
   };
-  sectionShowed = sectionToShow;
+  
+  
 };
 
 function slideNext(){
@@ -121,19 +125,37 @@ function stepsCreation(){
   stepCurrentIndex = 0;
   stepCurrent = allSteps[stepCurrentIndex];
   console.log(stepCurrent);
-  
+  stepButtonFixing();
 };
 
 function stepNext(){
-  let stepCurrentIndex = stepCurrentIndex + 1;
-  stepCurrent = sectionShowed.querySelector(`section[data-step="${stepCurrentIndex}"]`);
-  stepCurrent.classList.remove("invisible");
+  if(stepCurrentIndex <= allSteps.length - 2){
+    stepCurrentIndex = stepCurrentIndex + 1;
+    stepCurrent = allSteps[stepCurrentIndex];
+    stepCurrent.classList.remove("invisible");
+  };
+  console.log(stepCurrent);
+  stepButtonFixing();
 };
 
 function stepPrev(){
-  stepCurrent.classList.add("invisible");
-  stepCurrentIndex = stepCurrentIndex - 1;
-  stepCurrent = sectionShowed.querySelector(`section[data-step="${stepCurrentIndex}"]`);
+  if(stepCurrentIndex !== 0){
+    stepCurrent.classList.add("invisible");
+    stepCurrentIndex = stepCurrentIndex - 1;
+    stepCurrent = allSteps[stepCurrentIndex];
+  };
+  stepButtonFixing();
+};
+
+function stepButtonFixing(){
+  let next = allSteps == null ? false : stepCurrentIndex <= allSteps.length - 2 ? true : false;
+  let prev = allSteps == null ? false : stepCurrentIndex !== 0 ? true : false;
+  set(ref(rtdb, "workshop/feedback"), {
+    need: "sbf",
+    nextState: next,
+    prevState: prev,
+    timestamp: Date.now()
+  });
 };
 
 function wordCloudCreation(){

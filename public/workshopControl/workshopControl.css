@@ -115,6 +115,11 @@ button{
   background-color: var(--tx-30-color);
 }
 
+button:disabled {
+  opacity: 0.5;
+  background-color: var(--bg-color);
+}
+
 button#pagePrev, button#pageNext{
   font-size: 1.3em;
 }

@@ -20,9 +20,9 @@ body{
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-between;
-  height: var(--vh);
+  /* height: var(--vh); */
   font-size: 20px;
-  padding: 0 0 30px 0;
+  /* padding: 0 0 30px 0; */
 }
 
 hr{

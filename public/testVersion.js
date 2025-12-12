@@ -1,1 +1,1 @@
-export const VERSION = 'e4c91f2';
+export const VERSION = Date.now();

@@ -66,7 +66,6 @@ function displaySection(sectionToShow){
       section.classList.add("displayNone");
     };
   });
-  sectionShowed = sectionToShow;
   if(sectionToShow.classList.contains("wordCloud")){
     wordCloudCreation();
   };
@@ -76,6 +75,7 @@ function displaySection(sectionToShow){
   if(sectionToShow.classList.contains("stepped")){
     stepsCreation();
   };
+  sectionShowed = sectionToShow;
 };
 
 function slideNext(){
@@ -110,6 +110,8 @@ window.slidePrev = slidePrev;
 
 function fixImaging(){
   let image = sectionShowed.querySelector("img");
+  console.log(image);
+  
   image.classList.add(landscapeMode ? "landscapeMode" : "portraitMode");
 };
 

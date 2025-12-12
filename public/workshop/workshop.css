@@ -23,6 +23,7 @@ body{
   width: var(--vw);
   height: var(--vh);
   margin: auto;
+  padding: 8px;
 }
 
 section{

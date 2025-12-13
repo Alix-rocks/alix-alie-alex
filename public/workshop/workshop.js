@@ -117,6 +117,7 @@ function displaySection(sectionToShow){
     stepsCreation();
   };
   let currentSlideInfo = getCurrentSlideInfo();
+  console.log("currentSlideInfo " + currentSlideInfo);
   sendCurrentSlideInfo(currentSlideInfo);
 };
 
@@ -135,6 +136,8 @@ function sendCurrentSlideInfo(currentSlideInfo){
     info: currentSlideInfo,
     timestamp: Date.now()
   });
+  console.log("sent");
+  
 };
 
 

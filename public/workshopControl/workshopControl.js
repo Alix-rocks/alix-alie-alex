@@ -89,6 +89,7 @@ function durationCalculation(startV, endV){
 function handleFeedback(need, info){
   switch(need){
     case "cs":
+      console.log("currentSlideSetting " + info);
       currentSlideSetting(info);
       break;
     case "wddc":
@@ -106,6 +107,7 @@ function handleFeedback(need, info){
       };
       stepButtonFixing(info.steps); //object
       allSlidesCreation(info.slides); //array of objects
+      console.log("REFRESH currentSlideSetting " + info);
       currentSlideSetting(info.current); //object
       break;
     default:
@@ -123,6 +125,7 @@ function handleFeedback(need, info){
 const diapoTitle = document.querySelector("#diapoTitle");
 
 function currentSlideSetting(info){
+  
   diapoTitle.innerHTML = `<span class="diapoTitleTitre">${info.titre}</span><span class="diapoTitleType">${info.type}</span>`;
 
   allMiniSlides.forEach(mini => {

@@ -13,7 +13,6 @@ let landscapeMode;
 let screenHeight;
 let screenWidth;
 const emojiRegex = /\p{Emoji}/gu; // 'g' for global, 'u' for Unicode mode
-let allSlides = [];
 let sectionShowed = null;
 let allSteps = null;
 let stepCurrentIndex = 0;
@@ -39,7 +38,8 @@ let shuffledColors = [];
   document.querySelector(':root').style.setProperty('--vw', `${screenWidth}px`);
   document.querySelector(':root').style.setProperty('--vh', `${screenHeight}px`);
 
-  sendAllSlides();
+  let allSlides = getAllSlides();
+  sendAllSlides(allSlides);
 })();
 
 function handleCommand(action, data){
@@ -68,7 +68,8 @@ function handleCommand(action, data){
   };
 };
 
-function sendAllSlides(){
+function getAllSlides(){
+  let allSlides = [];
   document.querySelectorAll("section").forEach(section => {
     let slide = {
       num: section.dataset.slide,
@@ -77,17 +78,20 @@ function sendAllSlides(){
     };
     allSlides.push(slide);
   });
+  return allSlides;
+};
+function sendAllSlides(allSlides){
   set(ref(rtdb, "workshop/feedback"), {
     need: "all",
     info: JSON.stringify(allSlides),
     timestamp: Date.now()
   });
-  
 };
 
 function displaySection(sectionToShow){
   allSteps = null;
-  stepButtonFixing();
+  let stepButtonStates = getStepButtonState();
+  sendStepButtonState(stepButtonStates);
   stepCurrentIndex = 0;
   stepCurrent = null;
   kasesIds = [];
@@ -112,8 +116,26 @@ function displaySection(sectionToShow){
   if(sectionShowed.classList.contains("stepped")){
     stepsCreation();
   };
+  let currentSlideInfo = getCurrentSlideInfo();
+  sendCurrentSlideInfo(currentSlideInfo);
 };
 
+function getCurrentSlideInfo(){
+  let currentSlideInfo = {
+    num: sectionShowed.dataset.slide,
+    titre: sectionShowed.dataset.titre,
+    type: sectionShowed.dataset.type
+  };
+  return currentSlideInfo;
+};
+
+function sendCurrentSlideInfo(currentSlideInfo){
+  set(ref(rtdb, "workshop/feedback"), {
+    need: "cs",
+    info: currentSlideInfo,
+    timestamp: Date.now()
+  });
+};
 
 
 function slideNext(){
@@ -139,7 +161,8 @@ function stepsCreation(){
   allSteps = sectionShowed.querySelectorAll('[data-step]');
   stepCurrentIndex = 0;
   stepCurrent = allSteps[stepCurrentIndex];
-  stepButtonFixing();
+  let stepButtonStates = getStepButtonState();
+  sendStepButtonState(stepButtonStates);
 };
 
 function stepNext(){
@@ -148,7 +171,8 @@ function stepNext(){
     stepCurrent = allSteps[stepCurrentIndex];
     stepCurrent.classList.remove("invisible");
   };
-  stepButtonFixing();
+  let stepButtonStates = getStepButtonState();
+  sendStepButtonState(stepButtonStates);
 };
 
 function stepPrev(){
@@ -157,18 +181,23 @@ function stepPrev(){
     stepCurrentIndex = stepCurrentIndex - 1;
     stepCurrent = allSteps[stepCurrentIndex];
   };
-  stepButtonFixing();
+  let stepButtonStates = getStepButtonState();
+  sendStepButtonState(stepButtonStates);
 };
 
-function stepButtonFixing(){
+function getStepButtonState(){
   let nextState = allSteps == null ? false : stepCurrentIndex <= allSteps.length - 2 ? true : false;
   let prevState = allSteps == null ? false : stepCurrentIndex !== 0 ? true : false;
+  let stepButtonStates = {
+    next: nextState,
+    prev: prevState
+  };
+  return stepButtonStates;
+};
+function sendStepButtonState(stepButtonStates){
   set(ref(rtdb, "workshop/feedback"), {
     need: "sbf",
-    info: {
-      next: nextState,
-      prev: prevState
-    },
+    info: stepButtonStates,
     timestamp: Date.now()
   });
 };
@@ -180,27 +209,23 @@ function wordCloudCreation(){
   shuffledTilts = [];
   shuffledColors = [];
 
-  sendWords();
+  let words = getWords();
   
+  set(ref(rtdb, "workshop/feedback"), {
+    need: "wddc",
+    info: words,
+    timestamp: Date.now()
+  });
   
   let colNum = screenWidth > 900 ? 4 : 3;
   let linNum = screenHeight > 900 ? 4 : 3;
 
   let kaseWidth = (screenWidth) / colNum;
 
-  // let h2Height = Number(getComputedStyle(sectionShowed.querySelector("h2")).height.match(/\d+/g)[0]);
-  // let h2MarginTop = Number(getComputedStyle(sectionShowed.querySelector("h2")).marginTop.match(/\d+/g)[0]);
-  // let h2MarginBottom = Number(getComputedStyle(sectionShowed.querySelector("h2")).marginBottom.match(/\d+/g)[0]);
-  // let h2HeightTotal = h2Height + h2MarginTop + h2MarginBottom;
-  // console.log(h2HeightTotal);
   let topHeight = Number(getComputedStyle(sectionShowed.querySelector(".topText")).height.match(/\d+/g)[0]);
   let bottomHeight = Number(getComputedStyle(sectionShowed.querySelector(".bottomText")).height.match(/\d+/g)[0]);
   
-  console.log(bottomHeight);
-  
   let kaseHeight = (screenHeight - (topHeight + bottomHeight)) / linNum;
-  console.log(kaseHeight);
-  
 
   let kaseNum = 0;
   let lins = [];
@@ -228,13 +253,8 @@ function wordCloudCreation(){
   shuffledColors = multiShuffle(colors);
 };
 
-function sendWords(){
-  let words = Array.from(sectionShowed.querySelectorAll("span")).map(element => element.innerText);
-  set(ref(rtdb, "workshop/feedback"), {
-    need: "wddc",
-    info: words,
-    timestamp: Date.now()
-  });
+function getWords(){
+  return words = Array.from(sectionShowed.querySelectorAll("span")).map(element => element.innerText);
 };
 
 //To randomize
@@ -269,7 +289,6 @@ function wordRain(word){
     letsFitIt(thisSpan);
   };
   
-
 };
 
 async function letsFitIt(element) {
@@ -304,11 +323,29 @@ async function letsFitIt(element) {
 };
 
 function refreshControl(){
+  let words = [];
   if(sectionShowed.classList.contains("wordCloud")){
-    sendWords();
+    words = getWords(); //array
   };
-  stepButtonFixing(); //probably can't send two feedback at the same time!
-  sendAllSlides();
+
+  let stepButtonStates = getStepButtonState(); //objet
+
+  let allSlides = getAllSlides(); //array
+
+  let currentSlide = getCurrentSlideInfo(); //objet
+
+  let refreshAll = {
+    words: words,
+    steps: stepButtonStates,
+    slides: allSlides,
+    current: currentSlide
+  };
+
+  set(ref(rtdb, "workshop/feedback"), {
+    need: "refresh",
+    info: refreshAll,
+    timestamp: Date.now()
+  });
   
 };
 

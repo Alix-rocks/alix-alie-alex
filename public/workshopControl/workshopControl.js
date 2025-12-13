@@ -15,6 +15,7 @@ set(ref(rtdb, "workshop/control"), {
 });
 
 let allSlides = [];
+let allMiniSlides = null;
 const emojiRegex = /\p{Emoji}/gu; // 'g' for global, 'u' for Unicode mode
 const diapoMain = document.querySelector("#diapoMain");
 let screenHeight;
@@ -87,6 +88,9 @@ function durationCalculation(startV, endV){
 
 function handleFeedback(need, info){
   switch(need){
+    case "cs":
+      currentSlideSetting(info);
+      break;
     case "wddc":
       wordDropdownCreation(info);
       break;
@@ -94,13 +98,41 @@ function handleFeedback(need, info){
       stepButtonFixing(info);
       break;
     case "all":
-      // allSlides = JSON.parse(info);
       allSlidesCreation(info);
+      break;
+    case "refresh":
+      if(info.words.length !== 0){
+        wordDropdownCreation(info.words);
+      };
+      stepButtonFixing(info.steps);
+      allSlidesCreation(info.slides);
+      currentSlideSetting(info.current);
       break;
     default:
       console.log(need, info);
       break;
   };
+};
+
+// let currentSlideInfo = {
+//     num: sectionShowed.dataset.slide,
+//     titre: sectionShowed.dataset.titre,
+//     type: sectionShowed.dataset.type
+//   };
+
+const diapoTitle = document.querySelector("#diapoTitle");
+
+function currentSlideSetting(info){
+  diapoTitle.innerHTML = `<span class="diapoTitleTitre">${info.titre}</span><span class="diapoTitleType">${info.type}</span>`;
+
+  allMiniSlides.forEach(mini => {
+    if(mini.dataset.slide == info.num){
+      mini.classList.add("highlighted");
+    } else{
+      mini.classList.remove("highlighted");
+    };
+  });
+  
 };
 
 function allSlidesCreation(info){
@@ -109,6 +141,7 @@ function allSlidesCreation(info){
     return `<div data-slide="${slide.num}" class="miniSlide"><span>${slide.titre}</span><span>${slide.type}</span></div>`;
   }).join("");
   document.querySelector("#allPages").innerHTML = allDivs;
+  allMiniSlides = document.querySelectorAll(".miniSlide");
 };
 
 function slideNext(){

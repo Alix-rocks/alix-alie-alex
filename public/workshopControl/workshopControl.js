@@ -101,12 +101,12 @@ function handleFeedback(need, info){
       allSlidesCreation(info);
       break;
     case "refresh":
-      if(info.words.length !== 0){
-        wordDropdownCreation(info.words);
+      if(info?.words?.length > 0) {
+        wordDropdownCreation(info.words); //array
       };
-      stepButtonFixing(info.steps);
-      allSlidesCreation(info.slides);
-      currentSlideSetting(info.current);
+      stepButtonFixing(info.steps); //object
+      allSlidesCreation(info.slides); //array of objects
+      currentSlideSetting(info.current); //object
       break;
     default:
       console.log(need, info);
@@ -132,11 +132,16 @@ function currentSlideSetting(info){
       mini.classList.remove("highlighted");
     };
   });
-  
+
+  let nombreSlides = allSlides.length;
+  let numeroSlide = Number(info.num);
+  document.querySelector("#pagePrev").disabled = numeroSlide == 1 ? true : false;
+  document.querySelector("#pageNext").disabled = numeroSlide == nombreSlides ? true : false;
+
 };
 
 function allSlidesCreation(info){
-  allSlides = JSON.parse(info);
+  allSlides = info;
   let allDivs = allSlides.map(slide => {
     return `<div data-slide="${slide.num}" class="miniSlide"><span class="miniTitre">${slide.titre}</span><span>${slide.type}</span></div>`;
   }).join("");

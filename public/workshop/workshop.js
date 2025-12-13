@@ -83,7 +83,7 @@ function getAllSlides(){
 function sendAllSlides(allSlides){
   set(ref(rtdb, "workshop/feedback"), {
     need: "all",
-    info: JSON.stringify(allSlides),
+    info: allSlides,
     timestamp: Date.now()
   });
 };
@@ -141,14 +141,18 @@ function sendCurrentSlideInfo(currentSlideInfo){
 function slideNext(){
   let sectionShowedNum = Number(sectionShowed.dataset.slide);
   let sectionToShow = document.querySelector(`section[data-slide="${sectionShowedNum + 1}"]`);
-  displaySection(sectionToShow);
+  if(sectionToShow){
+    displaySection(sectionToShow);
+  };
 };
 window.slideNext = slideNext;
 
 function slidePrev(){
   let sectionShowedNum = Number(sectionShowed.dataset.slide);
   let sectionToShow = document.querySelector(`section[data-slide="${sectionShowedNum - 1}"]`);
-  displaySection(sectionToShow);
+  if(sectionToShow){
+    displaySection(sectionToShow);
+  };
 };
 window.slidePrev = slidePrev;
 
@@ -328,11 +332,11 @@ function refreshControl(){
     words = getWords(); //array
   };
 
-  let stepButtonStates = getStepButtonState(); //objet
+  let stepButtonStates = getStepButtonState(); //object
 
-  let allSlides = getAllSlides(); //array
+  let allSlides = getAllSlides(); //array of objects
 
-  let currentSlide = getCurrentSlideInfo(); //objet
+  let currentSlide = getCurrentSlideInfo(); //object
 
   let refreshAll = {
     words: words,
@@ -353,3 +357,44 @@ function refreshControl(){
 
 let sectionToShow = document.querySelector('section[data-slide="1"]');
 displaySection(sectionToShow);
+
+
+
+
+
+// In workshop:
+// let words = [];
+// if(sectionShowed.classList.contains("wordCloud")){
+//   words = Array.from(sectionShowed.querySelectorAll("span")).map(element => element.innerText); //array
+// };
+// let steps = getStepButtonState(); //objet
+// let refreshAll = {
+//   words: words,
+//   steps: steps
+// };
+
+// set(ref(rtdb, "workshop/feedback"), {
+//   need: "refresh",
+//   info: refreshAll,
+//   timestamp: Date.now()
+// });
+
+// In workshopControl:
+// onValue(ref(rtdb, "workshop/control"), (snapshot) => {
+//   if (!snapshot.val()) return;
+//   handleCommand(snapshot.val().action, snapshot.val().data);
+//   set(ref(rtdb, "workshop/control"), null);
+// });
+// function handleCommand(action, data){ 
+//   switch(action){
+//     case "refresh": 
+//       stepButtonFixing(info.steps);
+//       if(info.words.length !== 0){ //why is that line not working??
+//         wordDropdownCreation(info.words);
+//       };
+//       break;
+//     default:
+//       console.log(action, data);
+//       break;
+//   };
+// };

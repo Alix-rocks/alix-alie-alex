@@ -254,7 +254,7 @@ function wordCloudCreation(){
 };
 
 function getWords(){
-  return words = Array.from(sectionShowed.querySelectorAll("span")).map(element => element.innerText);
+  return Array.from(sectionShowed.querySelectorAll("span")).map(element => element.innerText);
 };
 
 //To randomize

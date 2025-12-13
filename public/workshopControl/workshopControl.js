@@ -138,7 +138,7 @@ function currentSlideSetting(info){
 function allSlidesCreation(info){
   allSlides = JSON.parse(info);
   let allDivs = allSlides.map(slide => {
-    return `<div data-slide="${slide.num}" class="miniSlide"><span>${slide.titre}</span><span>${slide.type}</span></div>`;
+    return `<div data-slide="${slide.num}" class="miniSlide"><span class="miniTitre">${slide.titre}</span><span>${slide.type}</span></div>`;
   }).join("");
   document.querySelector("#allPages").innerHTML = allDivs;
   allMiniSlides = document.querySelectorAll(".miniSlide");

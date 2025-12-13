@@ -101,6 +101,13 @@ function handleFeedback(need, info){
     case "all":
       allSlidesCreation(info);
       break;
+    case "display":
+      if(info?.words?.length > 0) {
+        wordDropdownCreation(info.words); //array
+      };
+      stepButtonFixing(info.steps); //object
+      currentSlideSetting(info.current); //object
+      break;
     case "refresh":
       if(info?.words?.length > 0) {
         wordDropdownCreation(info.words); //array

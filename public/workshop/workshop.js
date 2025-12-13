@@ -88,10 +88,8 @@ function sendAllSlides(allSlides){
   });
 };
 
-function displaySection(sectionToShow){
+function displaySection(sectionToShow){ //sending two things at once!!
   allSteps = null;
-  let stepButtonStates = getStepButtonState();
-  sendStepButtonState(stepButtonStates);
   stepCurrentIndex = 0;
   stepCurrent = null;
   kasesIds = [];
@@ -107,18 +105,39 @@ function displaySection(sectionToShow){
   });
   sectionShowed = sectionToShow;
   console.log(sectionShowed);
-  if(sectionShowed.classList.contains("wordCloud")){
-    wordCloudCreation();
-  };
+
   if(sectionShowed.classList.contains("imaging")){
     fixImaging();
   };
+
+  //words
+  let words = [];
+  if(sectionShowed.classList.contains("wordCloud")){
+    wordCloudCreation();
+    words = getWords();
+  };
+
   if(sectionShowed.classList.contains("stepped")){
     stepsCreation();
   };
+  //stepsButton (whether sectionShowed is stepped or not)
+  let stepButtonStates = getStepButtonState();
+  //sendStepButtonState(stepButtonStates);
+
+  //currentSlide
   let currentSlideInfo = getCurrentSlideInfo();
-  console.log("currentSlideInfo " + currentSlideInfo);
-  sendCurrentSlideInfo(currentSlideInfo);
+  //sendCurrentSlideInfo(currentSlideInfo);
+
+  let wholeDisplay = {
+    words: words,
+    steps: stepButtonStates,
+    current: currentSlideInfo
+  };
+  set(ref(rtdb, "workshop/feedback"), {
+    need: "display",
+    info: wholeDisplay,
+    timestamp: Date.now()
+  });
 };
 
 function getCurrentSlideInfo(){
@@ -168,8 +187,8 @@ function stepsCreation(){
   allSteps = sectionShowed.querySelectorAll('[data-step]');
   stepCurrentIndex = 0;
   stepCurrent = allSteps[stepCurrentIndex];
-  let stepButtonStates = getStepButtonState();
-  sendStepButtonState(stepButtonStates);
+  // let stepButtonStates = getStepButtonState();
+  // sendStepButtonState(stepButtonStates);
 };
 
 function stepNext(){
@@ -216,13 +235,13 @@ function wordCloudCreation(){
   shuffledTilts = [];
   shuffledColors = [];
 
-  let words = getWords();
+  // let words = getWords();
   
-  set(ref(rtdb, "workshop/feedback"), {
-    need: "wddc",
-    info: words,
-    timestamp: Date.now()
-  });
+  // set(ref(rtdb, "workshop/feedback"), {
+  //   need: "wddc",
+  //   info: words,
+  //   timestamp: Date.now()
+  // });
   
   let colNum = screenWidth > 900 ? 4 : 3;
   let linNum = screenHeight > 900 ? 4 : 3;

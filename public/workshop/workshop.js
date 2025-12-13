@@ -44,6 +44,9 @@ let shuffledColors = [];
 
 function handleCommand(action, data){
   switch(action){
+    case "thisSlide":
+      thisSlide(data);
+      break;
     case "slideNext":
       slideNext();
       break;
@@ -66,6 +69,11 @@ function handleCommand(action, data){
       console.log(action, data);
       break;
   };
+};
+
+function thisSlide(slideNum){
+  let sectionToShow = document.querySelector(`section[data-slide="${slideNum}"]`);
+  displaySection(sectionToShow);
 };
 
 function getAllSlides(){

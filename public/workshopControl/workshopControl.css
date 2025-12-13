@@ -137,7 +137,7 @@ section#pages{
   text-align: center;
 }
 
-.highlighted{
+input[name="miniSlides"]:checked + label{
   border: 2px solid var(--accent-coral);
   background-color: var(--accent-30-coral);
 }

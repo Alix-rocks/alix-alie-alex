@@ -15,7 +15,7 @@ set(ref(rtdb, "workshop/control"), {
 });
 
 let allSlides = [];
-let allMiniSlides = null;
+//let allMiniSlides = null;
 const emojiRegex = /\p{Emoji}/gu; // 'g' for global, 'u' for Unicode mode
 const diapoMain = document.querySelector("#diapoMain");
 let screenHeight;
@@ -135,13 +135,15 @@ function currentSlideSetting(info){
   
   diapoTitle.innerHTML = `<span class="diapoTitleTitre">${info.titre}</span><span class="diapoTitleType">${info.type}</span>`;
 
-  allMiniSlides.forEach(mini => {
-    if(mini.dataset.slide == info.num){
-      mini.classList.add("highlighted");
-    } else{
-      mini.classList.remove("highlighted");
-    };
-  });
+  // allMiniSlides.forEach(mini => {
+  //   if(mini.dataset.slide == info.num){
+  //     mini.classList.add("highlighted");
+  //   } else{
+  //     mini.classList.remove("highlighted");
+  //   };
+  // });
+
+  document.querySelector(`#mini${info.num}`).checked = true;
 
   let nombreSlides = allSlides.length;
   let numeroSlide = Number(info.num);
@@ -153,10 +155,24 @@ function currentSlideSetting(info){
 function allSlidesCreation(info){
   allSlides = info;
   let allDivs = allSlides.map(slide => {
-    return `<div data-slide="${slide.num}" class="miniSlide"><span class="miniTitre">${slide.titre}</span><span>${slide.type}</span></div>`;
+    return `<input type="radio" name="miniSlides" id="mini${slide.num}" value="${slide.num}" class="displayNone" /><label for="mini${slide.num}" class="miniSlide"><span class="miniTitre">${slide.titre}</span><span>${slide.type}</span></label>`;
   }).join("");
   document.querySelector("#allPages").innerHTML = allDivs;
-  allMiniSlides = document.querySelectorAll(".miniSlide");
+  //allMiniSlides = document.querySelectorAll(".miniSlide");
+  document.querySelectorAll('input[type="radio"][name="miniSlides"]').forEach(radio => {
+    radio.addEventListener("change", event => {
+      if (event.target.checked) {
+         //send control to get that slide
+        let slideNum = radio.value; 
+        diapoMain.innerHTML = "";
+        set(ref(rtdb, "workshop/control"), {
+          action: "thisSlide",
+          data: slideNum,
+          timestamp: Date.now()
+        });
+      };
+    });
+  });
 };
 
 function slideNext(){

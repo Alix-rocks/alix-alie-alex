@@ -14,6 +14,9 @@ set(ref(rtdb, "workshop/control"), {
   timestamp: Date.now()
 });
 
+let allSlides = [];
+const emojiRegex = /\p{Emoji}/gu; // 'g' for global, 'u' for Unicode mode
+const diapoMain = document.querySelector("#diapoMain");
 let screenHeight;
 let screenWidth;
 (() => {
@@ -43,21 +46,14 @@ if(localStorage.getItem("WCTimeStart") && localStorage.getItem("WCTimeStart") !=
   timeDurationStartInput.value = localStorage.getItem("WCTimeStart");
   timeDurationEndInput.value = localStorage.getItem("WCTimeEnd");
 
-  let totalDuration = durationCalculation(timeDurationStartInput.value, timeDurationEndInput.value);
-  console.log(totalDuration);
-  
+  let totalDuration = durationCalculation(timeDurationStartInput.value, timeDurationEndInput.value); 
   let pastDuration = durationCalculation(timeDurationStartInput.value, new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
-  console.log(pastDuration);
-
   let totalWidthNum = parseFloat(getComputedStyle(timeDurationShowZone).width);
-  console.log(totalWidthNum);
   let pastWidth = totalWidthNum * pastDuration / totalDuration;
-  console.log(pastWidth);
 
   let restDuration = totalDuration - pastDuration;
 
   timeDurationShow.animate([{width: pastWidth + "px"},{width: timeDurationShowZoneWidth}], restDuration);
-  
 } else{
   localStorage.clear();
 };
@@ -66,10 +62,7 @@ timeDurationEndInput.addEventListener("input", () => {
 
   if(timeDurationEndInput.value !== null && timeDurationStartInput.value !== null){
     let duration = durationCalculation(timeDurationStartInput.value, timeDurationEndInput.value);
-
-
-    
-    
+  
     timeDurationShow.animate([{width: "0"},{width: timeDurationShowZoneWidth}], duration);
 
     localStorage.setItem("WCTimeStart", timeDurationStartInput.value);
@@ -100,14 +93,22 @@ function handleFeedback(need, info){
     case "sbf":
       stepButtonFixing(info);
       break;
+    case "all":
+      allSlides = JSON.parse(info);
+      allSlidesCreation();
+      break;
     default:
       console.log(need, info);
       break;
   };
 };
 
-const emojiRegex = /\p{Emoji}/gu; // 'g' for global, 'u' for Unicode mode
-const diapoMain = document.querySelector("#diapoMain");
+function allSlidesCreation(){
+  let allDivs = allSlides.map(slide => {
+    return `<div data-slide="${slide.num}" class="miniSlide"><span>${slide.titre}</span><span>${slide.type}</span></div>`;
+  }).join("");
+  document.querySelector("#allPages").innerHTML = allDivs;
+};
 
 function slideNext(){
   diapoMain.innerHTML = "";

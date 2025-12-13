@@ -103,6 +103,15 @@ section#pages{
   align-items: center;
 }
 
+#allPages{
+  display: flex;
+  flex-flow: row wrap;
+}
+.miniSlide{
+  border: 1px solid var(--tx-color);
+  text-align: center;
+}
+
 button{
   border-top: 2px solid var(--tx-color);
   border-left: 2px solid var(--tx-color);

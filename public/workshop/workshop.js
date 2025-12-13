@@ -12,6 +12,20 @@ onValue(ref(rtdb, "workshop/control"), (snapshot) => {
 let landscapeMode;
 let screenHeight;
 let screenWidth;
+const emojiRegex = /\p{Emoji}/gu; // 'g' for global, 'u' for Unicode mode
+let allSlides = [];
+let sectionShowed = null;
+let allSteps = null;
+let stepCurrentIndex = 0;
+let stepCurrent = null;
+let kasesIds = [];
+const positions = ["top", "top left", "top right", "bottom", "bottom left", "bottom right", "left", "right", "center", "center", "center", "center"];
+let shuffledPositions = [];
+const tilts = ["tilt15", "tilt-15", "notilt", "tilt75", "tilt-75"];
+let shuffledTilts = [];
+const colors = ["softBlue", "teal", "purple"];
+let shuffledColors = [];
+
 (() => {
   screenHeight = window.innerHeight - 16;
   screenWidth = window.innerWidth - 16;
@@ -24,6 +38,8 @@ let screenWidth;
   }
   document.querySelector(':root').style.setProperty('--vw', `${screenWidth}px`);
   document.querySelector(':root').style.setProperty('--vh', `${screenHeight}px`);
+
+  sendAllSlides();
 })();
 
 function handleCommand(action, data){
@@ -52,18 +68,22 @@ function handleCommand(action, data){
   };
 };
 
-const emojiRegex = /\p{Emoji}/gu; // 'g' for global, 'u' for Unicode mode
-let sectionShowed = null;
-let allSteps = null;
-let stepCurrentIndex = 0;
-let stepCurrent = null;
-let kasesIds = [];
-const positions = ["top", "top left", "top right", "bottom", "bottom left", "bottom right", "left", "right", "center", "center", "center", "center"];
-let shuffledPositions = [];
-const tilts = ["tilt15", "tilt-15", "notilt", "tilt75", "tilt-75"];
-let shuffledTilts = [];
-const colors = ["softBlue", "teal", "purple"];
-let shuffledColors = [];
+function sendAllSlides(){
+  document.querySelectorAll("section").forEach(section => {
+    let slide = {
+      num: section.dataset.slide,
+      titre: section.dataset.titre,
+      type: section.dataset.type
+    };
+    allSlides.push(slide);
+  });
+  set(ref(rtdb, "workshop/feedback"), {
+    need: "all",
+    info: JSON.stringify(allSlides),
+    timestamp: Date.now()
+  });
+  
+};
 
 function displaySection(sectionToShow){
   allSteps = null;
@@ -93,6 +113,8 @@ function displaySection(sectionToShow){
     stepsCreation();
   };
 };
+
+
 
 function slideNext(){
   let sectionShowedNum = Number(sectionShowed.dataset.slide);
@@ -285,9 +307,8 @@ function refreshControl(){
   if(sectionShowed.classList.contains("wordCloud")){
     sendWords();
   };
-  if(sectionShowed.classList.contains("stepped")){
-    stepButtonFixing();
-  };
+  stepButtonFixing(); //probably can't send two feedback at the same time!
+  sendAllSlides();
   
 };
 

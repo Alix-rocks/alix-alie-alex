@@ -109,6 +109,15 @@ section#pages{
 }
 .miniSlide{
   border: 1px solid var(--tx-color);
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  margin: 5px;
+  padding: 3px;
+}
+.miniTitre{
+  font-size: .6em;
+  width: min-content;
   text-align: center;
 }
 

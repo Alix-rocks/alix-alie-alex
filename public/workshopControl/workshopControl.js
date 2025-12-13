@@ -94,8 +94,8 @@ function handleFeedback(need, info){
       stepButtonFixing(info);
       break;
     case "all":
-      allSlides = JSON.parse(info);
-      allSlidesCreation();
+      // allSlides = JSON.parse(info);
+      allSlidesCreation(info);
       break;
     default:
       console.log(need, info);
@@ -103,7 +103,8 @@ function handleFeedback(need, info){
   };
 };
 
-function allSlidesCreation(){
+function allSlidesCreation(info){
+  allSlides = JSON.parse(info);
   let allDivs = allSlides.map(slide => {
     return `<div data-slide="${slide.num}" class="miniSlide"><span>${slide.titre}</span><span>${slide.type}</span></div>`;
   }).join("");

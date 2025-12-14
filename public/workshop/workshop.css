@@ -41,6 +41,18 @@ section{
   height: auto;
 }
 
+h1{
+  font-family: 'kalam', sans-serif;
+  font-size: 4em;
+  line-height: 1em;
+  margin-bottom: 0;
+}
+h2{
+  font-family: 'nunito', sans-serif;
+  font-size: 1.85em;
+  margin-top: .5em;
+}
+
 .wordCloud > span{
   display: none;
 }

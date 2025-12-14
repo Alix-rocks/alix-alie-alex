@@ -21,6 +21,7 @@ body{
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-between;
+  width: var(--vw);
   /* height: var(--vh); */
   font-size: 20px;
   /* padding: 0 0 30px 0; */

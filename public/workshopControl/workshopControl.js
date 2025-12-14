@@ -217,10 +217,19 @@ function stepButtonFixing(info){
 };
 
 function wordDropdownCreation(words){
-  let wordDropdownOptions = words.map(word => {
-      return `<option value="${word.match(emojiRegex) ? word.match(emojiRegex) : word}">${word}</option>`;
+  let wordDropdownOptions = words.map(group => {
+    let title = group[0];
+    let options = group.map((word, idx) => {
+      if(idx !== 0){
+        return `<option value="${word.match(emojiRegex) ? word.match(emojiRegex) : word}">${word}</option>`;
+      };
     }).join("");
-    diapoMain.innerHTML = `<select id="wordDropdown"">
+    return `<optgroup label="${title}">
+      ${options}
+    </optgroup>`;
+  }).join("");
+
+  diapoMain.innerHTML = `<select id="wordDropdown"">
       <option value="">--Options--</option>
       ${wordDropdownOptions}
     </select>
@@ -229,7 +238,7 @@ function wordDropdownCreation(words){
   selector.addEventListener("change",  () => {
     makeItRain(selector.value);
     selector.value = "";
-  });
+});
   
   let adder = diapoMain.querySelector("#wordInput");
   adder.addEventListener("change", () => {
@@ -259,25 +268,33 @@ document.querySelector("#fullScreenCB").addEventListener("change", ev => {
 });
 
 function fullscreen(){
-  const elem = document.documentElement; // The entire page         
-  // Activate fullscreen
-  if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-  } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, and Opera
-      elem.webkitRequestFullscreen();
-  } else if (elem.msRequestFullscreen) { // IE/Edge
-      elem.msRequestFullscreen();
-  };
+  set(ref(rtdb, "workshop/control"), {
+    action: "fs",
+    timestamp: Date.now()
+  });
+  // const elem = document.documentElement; // The entire page         
+  // // Activate fullscreen
+  // if (elem.requestFullscreen) {
+  //     elem.requestFullscreen();
+  // } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+  //     elem.webkitRequestFullscreen();
+  // } else if (elem.msRequestFullscreen) { // IE/Edge
+  //     elem.msRequestFullscreen();
+  // };
 };
 
 function exitFullscreen() {
-  if (document.fullscreenElement) {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
-      document.webkitExitFullscreen();
-    } else if (document.msExitFullscreen) { // IE/Edge
-      document.msExitFullscreen();
-    };
-  };
+  set(ref(rtdb, "workshop/control"), {
+    action: "efs",
+    timestamp: Date.now()
+  });
+  // if (document.fullscreenElement) {
+  //   if (document.exitFullscreen) {
+  //     document.exitFullscreen();
+  //   } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
+  //     document.webkitExitFullscreen();
+  //   } else if (document.msExitFullscreen) { // IE/Edge
+  //     document.msExitFullscreen();
+  //   };
+  // };
 };

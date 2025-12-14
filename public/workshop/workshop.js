@@ -63,6 +63,12 @@ function handleCommand(action, data){
     case "rain":
       wordRain(data);
       break;
+    case "fs":
+      fullscreen();
+      break;
+    case "efs":
+      exitFullscreen();
+      break;
     case "refresh":
       refreshControl();
       break;
@@ -289,7 +295,15 @@ function wordCloudCreation(){
 };
 
 function getWords(){
-  return Array.from(sectionShowed.querySelectorAll("span")).map(element => element.innerText);
+  // return Array.from(sectionShowed.querySelectorAll("span.toRain")).map(element => element.innerText);
+  let words = [];
+  sectionShowed.querySelectorAll("span.toStorm").forEach(storm => {
+    let rain = [];
+    storm.querySelectorAll("span").forEach(drop => {
+      rain.push(drop.innerText);
+    })
+    words.push(rain);
+  });
 };
 
 //To randomize

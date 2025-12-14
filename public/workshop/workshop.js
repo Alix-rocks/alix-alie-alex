@@ -304,6 +304,7 @@ function getWords(){
     })
     words.push(rain);
   });
+  return words;
 };
 
 //To randomize
@@ -374,7 +375,7 @@ async function letsFitIt(element) {
 function refreshControl(){
   let words = [];
   if(sectionShowed.classList.contains("wordCloud")){
-    words = getWords(); //array
+    words = getWords(); //array of array
   };
 
   let stepButtonStates = getStepButtonState(); //object
@@ -398,13 +399,13 @@ function refreshControl(){
   
 };
 
-document.querySelector("#fullScreenCB").addEventListener("change", ev => {
-  if(ev.target.checked){
-    fullscreen()
-  } else{
-    exitFullscreen()
-  };
-});
+// document.querySelector("#fullScreenCB").addEventListener("change", ev => {
+//   if(ev.target.checked){
+//     fullscreen()
+//   } else{
+//     exitFullscreen()
+//   };
+// });
 
 function fullscreen(){
   const elem = document.documentElement; // The entire page         

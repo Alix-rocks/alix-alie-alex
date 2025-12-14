@@ -52,6 +52,10 @@ h2{
   font-size: 1.85em;
   margin-top: .5em;
 }
+p{
+  font-size: 2em;
+  font-weight: 600;
+}
 .exercice{
   color: var(--accent-purple);
 }
@@ -93,7 +97,7 @@ h2{
 }
 .bottomText{
   width: 100%;
-  border: 1px solid var(--accent-coral);
+  /* border: 1px solid var(--accent-coral); */
 }
 
 #cloudBoardTotal{

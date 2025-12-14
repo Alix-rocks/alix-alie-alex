@@ -129,12 +129,13 @@ section#pages{
   border: 1px solid var(--tx-color);
   display: flex;
   flex-flow: column nowrap;
+  justify-content: space-between;
   align-items: center;
   margin: 5px;
   padding: 3px;
 }
 .miniTitre{
-  font-size: .4em;
+  font-size: .6em;
   line-height: 1em;
   width: min-content;
   text-align: center;

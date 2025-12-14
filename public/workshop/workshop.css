@@ -52,6 +52,32 @@ h2{
   font-size: 1.85em;
   margin-top: .5em;
 }
+.exercice{
+  color: var(--accent-purple);
+}
+.acrostiche{
+  color: var(--accent-teal);
+}
+.exercice > h1, .acrostiche > h1{
+  font-family: 'nunito', sans-serif;
+  font-size: 3.7em;
+}
+.exercice > h2, .acrostiche > h2{
+  font-family: 'kalam', sans-serif;
+  font-size: 5em;
+  line-height: 1em;
+  margin: 2em auto;
+  text-align: center;
+}
+.acrostiche > p{
+  font-size: 2em;
+  font-weight: 600;
+  border: 3px solid;
+  padding: 1em 2em;
+  border-radius: 25px;
+  width: fit-content;
+  margin: auto;
+}
 
 .wordCloud > span{
   display: none;

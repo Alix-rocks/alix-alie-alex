@@ -116,12 +116,13 @@ section#pages{
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
 }
 
 #allPages{
   display: flex;
   flex-flow: row wrap;
+  justify-content: space-around;
 }
 .miniSlide{
   border: 1px solid var(--tx-color);
@@ -132,9 +133,14 @@ section#pages{
   padding: 3px;
 }
 .miniTitre{
-  font-size: .6em;
+  font-size: .4em;
+  line-height: 1em;
   width: min-content;
   text-align: center;
+}
+.miniType{
+  font-size: .8em;
+  line-height: 1em;
 }
 
 input[name="miniSlides"]:checked + label{
@@ -163,4 +169,8 @@ button:disabled {
 
 button#pagePrev, button#pageNext{
   font-size: 1.3em;
+}
+
+.displayNone{
+  display: none;
 }

@@ -40,6 +40,7 @@ let shuffledColors = [];
 
   let allSlides = getAllSlides();
   sendAllSlides(allSlides);
+
 })();
 
 function handleCommand(action, data){
@@ -383,6 +384,37 @@ function refreshControl(){
   
 };
 
+document.querySelector("#fullScreenCB").addEventListener("change", ev => {
+  if(ev.target.checked){
+    fullscreen()
+  } else{
+    exitFullscreen()
+  };
+});
+
+function fullscreen(){
+  const elem = document.documentElement; // The entire page         
+  // Activate fullscreen
+  if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+  } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+      elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { // IE/Edge
+      elem.msRequestFullscreen();
+  };
+};
+
+function exitFullscreen() {
+  if (document.fullscreenElement) {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { // IE/Edge
+      document.msExitFullscreen();
+    };
+  };
+};
 
 
 let sectionToShow = document.querySelector('section[data-slide="1"]');

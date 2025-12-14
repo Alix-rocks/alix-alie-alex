@@ -155,7 +155,7 @@ function currentSlideSetting(info){
 function allSlidesCreation(info){
   allSlides = info;
   let allDivs = allSlides.map(slide => {
-    return `<input type="radio" name="miniSlides" id="mini${slide.num}" value="${slide.num}" class="displayNone" /><label for="mini${slide.num}" class="miniSlide"><span class="miniTitre">${slide.titre}</span><span>${slide.type}</span></label>`;
+    return `<input type="radio" name="miniSlides" id="mini${slide.num}" value="${slide.num}" class="displayNone" /><label for="mini${slide.num}" class="miniSlide"><span class="miniTitre">${slide.titre}</span><span class="miniType">${slide.type}</span></label>`;
   }).join("");
   document.querySelector("#allPages").innerHTML = allDivs;
   //allMiniSlides = document.querySelectorAll(".miniSlide");
@@ -246,6 +246,38 @@ function wordDropdownCreation(words){
         data: water,
         timestamp: Date.now()
       });
+    };
+  };
+};
+
+document.querySelector("#fullScreenCB").addEventListener("change", ev => {
+  if(ev.target.checked){
+    fullscreen()
+  } else{
+    exitFullscreen()
+  };
+});
+
+function fullscreen(){
+  const elem = document.documentElement; // The entire page         
+  // Activate fullscreen
+  if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+  } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+      elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { // IE/Edge
+      elem.msRequestFullscreen();
+  };
+};
+
+function exitFullscreen() {
+  if (document.fullscreenElement) {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { // IE/Edge
+      document.msExitFullscreen();
     };
   };
 };

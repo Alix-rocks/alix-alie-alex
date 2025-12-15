@@ -216,11 +216,13 @@ function fixImaging(){
 };
 
 function stepsCreation(){
-  allSteps = sectionShowed.querySelectorAll('[data-step]');
+  let unorderedAllSteps = sectionShowed.querySelectorAll('[data-step]');
+  //put them in order!
+  allSteps = Array.from(unorderedAllSteps).sort((a, b) => {
+    return Number(a.dataset.step) - Number(b.dataset.step);
+  });
   stepCurrentIndex = 0;
   stepCurrent = allSteps[stepCurrentIndex];
-  // let stepButtonStates = getStepButtonState();
-  // sendStepButtonState(stepButtonStates);
 };
 
 function stepNext(){

@@ -42,7 +42,7 @@ section{
 }
 
 h1{
-  font-family: 'kalam', sans-serif;
+  font-family: 'kalam', cursive;
   font-size: 4em;
   line-height: 1em;
   margin-bottom: 0;
@@ -67,7 +67,7 @@ p{
   font-size: 3.7em;
 }
 .exercice > h2, .acrostiche > h2{
-  font-family: 'kalam', sans-serif;
+  font-family: 'kalam', cursive;
   font-size: 5em;
   line-height: 1em;
   margin: 2em auto;

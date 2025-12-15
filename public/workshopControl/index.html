@@ -27,6 +27,20 @@
   <link rel="stylesheet" href="..\@Fonts&Icons\fontawesome\css\regular.min.css"/>
   <link rel="stylesheet" href="..\@Fonts&Icons\fontawesome\css\solid.min.css"/>
   <script src="https://kit.fontawesome.com/b4f765f607.js" crossorigin="anonymous"></script>
+  
+  <!-- 1. Hide everything immediately -->
+  <style>body{visibility:hidden}</style>
+
+  <!-- 2. Critical viewport JS -->
+  <script>
+    (() => {
+      let screenHeight = window.innerHeight - 16;
+      let screenWidth = window.innerWidth - 16;
+
+      document.documentElement.style.setProperty('--vh', `${screenHeight}px`);
+      document.documentElement.style.setProperty('--vw', `${screenWidth}px`);
+    })();
+  </script>
   <!-- CSS -->
   <!-- <link rel="stylesheet" href="workshopControl.css"> -->
   <title>Workshop Control</title>

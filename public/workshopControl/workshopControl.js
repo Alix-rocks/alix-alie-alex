@@ -23,9 +23,17 @@ let screenWidth;
 (() => {
   screenHeight = window.innerHeight - 16;
   screenWidth = window.innerWidth - 16;
-  document.querySelector(':root').style.setProperty('--vw', `${screenWidth}px`);
-  document.querySelector(':root').style.setProperty('--vh', `${screenHeight}px`);
 })();
+
+function updateViewportVars() {
+  screenHeight = window.innerHeight - 16;
+  screenWidth = window.innerWidth - 16;
+  document.documentElement.style.setProperty('--vh', `${screenHeight}px`);
+  document.documentElement.style.setProperty('--vw', `${screenWidth}px`);
+}
+
+window.addEventListener('resize', updateViewportVars);
+window.addEventListener('orientationchange', updateViewportVars);
 
 
 const timeNow = document.getElementById("timeNow");
@@ -298,3 +306,7 @@ function exitFullscreen() {
   //   };
   // };
 };
+
+
+
+document.body.style.visibility = "visible";

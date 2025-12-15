@@ -27,7 +27,27 @@
   <link rel="stylesheet" href="..\@Fonts&Icons\fontawesome\css\regular.min.css"/>
   <link rel="stylesheet" href="..\@Fonts&Icons\fontawesome\css\solid.min.css"/>
   <script src="https://kit.fontawesome.com/b4f765f607.js" crossorigin="anonymous"></script>
-  <!-- CSS -->
+  <!-- 1. Hide everything immediately -->
+  <style>body{visibility:hidden}</style>
+
+  <!-- 2. Critical viewport JS -->
+  <script>
+    (() => {
+      let screenHeight = window.innerHeight - 16;
+      let screenWidth = window.innerWidth - 16;
+      if(screenWidth > screenHeight){ //if true => landscape mode (16:9)
+        landscapeMode = true;
+        screenWidth = screenHeight * 16 / 9;
+      } else if(screenHeight > screenWidth){ // portrait mode (20:9)
+        landscapeMode = false;
+        screenHeight = screenWidth * 20 / 9;
+      };
+      document.documentElement.style.setProperty('--vh', `${screenHeight}px`);
+      document.documentElement.style.setProperty('--vw', `${screenWidth}px`);
+    })();
+  </script>
+
+  <!-- 3. CSS -->
   <!-- <link rel="stylesheet" href="workshop.css"> -->
   <title>Workshop</title>
 </head>

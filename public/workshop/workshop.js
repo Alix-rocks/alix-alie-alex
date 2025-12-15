@@ -34,14 +34,29 @@ let shuffledColors = [];
   } else if(screenHeight > screenWidth){ // portrait mode (20:9)
     landscapeMode = false;
     screenHeight = screenWidth * 20 / 9;
-  }
-  document.querySelector(':root').style.setProperty('--vw', `${screenWidth}px`);
-  document.querySelector(':root').style.setProperty('--vh', `${screenHeight}px`);
+  };
 
-  let allSlides = getAllSlides();
-  sendAllSlides(allSlides);
+  // let allSlides = getAllSlides();
+  // sendAllSlides(allSlides);
 
 })();
+
+function updateViewportVars() {
+  screenHeight = window.innerHeight - 16;
+  screenWidth = window.innerWidth - 16;
+  if(screenWidth > screenHeight){ //if true => landscape mode (16:9)
+    landscapeMode = true;
+    screenWidth = screenHeight * 16 / 9;
+  } else if(screenHeight > screenWidth){ // portrait mode (20:9)
+    landscapeMode = false;
+    screenHeight = screenWidth * 20 / 9;
+  };
+  document.documentElement.style.setProperty('--vh', `${screenHeight}px`);
+  document.documentElement.style.setProperty('--vw', `${screenWidth}px`);
+}
+
+window.addEventListener('resize', updateViewportVars);
+window.addEventListener('orientationchange', updateViewportVars);
 
 function handleCommand(action, data){
   switch(action){
@@ -136,23 +151,23 @@ function displaySection(sectionToShow){ //sending two things at once!!
     stepsCreation();
   };
   //stepsButton (whether sectionShowed is stepped or not)
-  let stepButtonStates = getStepButtonState();
-  //sendStepButtonState(stepButtonStates);
+  // let stepButtonStates = getStepButtonState();
 
-  //currentSlide
-  let currentSlideInfo = getCurrentSlideInfo();
-  //sendCurrentSlideInfo(currentSlideInfo);
 
-  let wholeDisplay = {
-    words: words,
-    steps: stepButtonStates,
-    current: currentSlideInfo
-  };
-  set(ref(rtdb, "workshop/feedback"), {
-    need: "display",
-    info: wholeDisplay,
-    timestamp: Date.now()
-  });
+  // //currentSlide
+  // let currentSlideInfo = getCurrentSlideInfo();
+  
+
+  // let wholeDisplay = {
+  //   words: words,
+  //   steps: stepButtonStates,
+  //   current: currentSlideInfo
+  // };
+  // set(ref(rtdb, "workshop/feedback"), {
+  //   need: "display",
+  //   info: wholeDisplay,
+  //   timestamp: Date.now()
+  // });
 };
 
 function getCurrentSlideInfo(){
@@ -419,7 +434,7 @@ function fullscreen(){
   };
 };
 
-function exitFullscreen() {
+function exitFullscreen(){
   if (document.fullscreenElement) {
     if (document.exitFullscreen) {
       document.exitFullscreen();
@@ -439,39 +454,4 @@ displaySection(sectionToShow);
 
 
 
-// In workshop:
-// let words = [];
-// if(sectionShowed.classList.contains("wordCloud")){
-//   words = Array.from(sectionShowed.querySelectorAll("span")).map(element => element.innerText); //array
-// };
-// let steps = getStepButtonState(); //objet
-// let refreshAll = {
-//   words: words,
-//   steps: steps
-// };
-
-// set(ref(rtdb, "workshop/feedback"), {
-//   need: "refresh",
-//   info: refreshAll,
-//   timestamp: Date.now()
-// });
-
-// In workshopControl:
-// onValue(ref(rtdb, "workshop/control"), (snapshot) => {
-//   if (!snapshot.val()) return;
-//   handleCommand(snapshot.val().action, snapshot.val().data);
-//   set(ref(rtdb, "workshop/control"), null);
-// });
-// function handleCommand(action, data){ 
-//   switch(action){
-//     case "refresh": 
-//       stepButtonFixing(info.steps);
-//       if(info.words.length !== 0){ //why is that line not working??
-//         wordDropdownCreation(info.words);
-//       };
-//       break;
-//     default:
-//       console.log(action, data);
-//       break;
-//   };
-// };
+document.body.style.visibility = "visible";

@@ -35,6 +35,7 @@ section#time{
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-between;
+  width: 100%;
 }
 #timeNow{
   text-align: center;
@@ -66,6 +67,7 @@ section#time{
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 .time-clean {
   border: none;
@@ -112,7 +114,7 @@ section#diapo{
 
 section#pages{
   position: fixed;
-  bottom: 10px;
+  bottom: 50px;
   width: var(--vw);
   display: flex;
   flex-flow: row nowrap;
@@ -171,6 +173,11 @@ button:disabled {
 
 button#pagePrev, button#pageNext{
   font-size: 1.3em;
+}
+
+.invisible{
+  opacity: 0;
+  visibility: hidden;
 }
 
 .displayNone{

@@ -353,10 +353,10 @@ function wordRain(word){
   let thisKase = sectionShowed.querySelector("#" + kasesIds[xIndex]);
   thisKase.innerHTML = `<span class="wordSpan ${emoji ? "emojiSpan" : ""} ${shuffledPositions[xIndex]} ${shuffledTilts[xIndex]}" style="background-color:var(--accent-30-${shuffledColors[xIndex]})">${word}</span>`;
 
-  let thisSpan = thisKase.querySelector("span");
-  if(!emoji){
-    letsFitIt(thisSpan);
-  };
+  // let thisSpan = thisKase.querySelector("span");
+  // if(!emoji){
+  //   letsFitIt(thisSpan);
+  // };
   
 };
 

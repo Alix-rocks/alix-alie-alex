@@ -140,6 +140,7 @@ function handleFeedback(need, info){
 const diapoTitle = document.querySelector("#diapoTitle");
 
 function currentSlideSetting(info){
+  diapoMain.innerHTML = "";
   
   diapoTitle.innerHTML = `<span class="diapoTitleTitre">${info.titre}</span><span class="diapoTitleType">${info.type}</span>`;
 

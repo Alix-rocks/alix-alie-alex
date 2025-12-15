@@ -9,10 +9,14 @@ onValue(ref(rtdb, "workshop/feedback"), (snapshot) => {
   set(ref(rtdb, "workshop/feedback"), null);
 });
 
-set(ref(rtdb, "workshop/control"), {
-  action: "refresh",
-  timestamp: Date.now()
-});
+function askRefresh(){
+  set(ref(rtdb, "workshop/control"), {
+    action: "refresh",
+    timestamp: Date.now()
+  });
+};
+window.askRefresh = askRefresh;
+askRefresh();
 
 let allSlides = [];
 //let allMiniSlides = null;
@@ -110,11 +114,11 @@ function handleFeedback(need, info){
       allSlidesCreation(info);
       break;
     case "display":
+      currentSlideSetting(info.current); //object
+      stepButtonFixing(info.steps); //object
       if(info?.words?.length > 0) {
         wordDropdownCreation(info.words); //array
-      };
-      stepButtonFixing(info.steps); //object
-      currentSlideSetting(info.current); //object
+      };      
       break;
     case "refresh":
       allSlidesCreation(info.slides); //array of objects

@@ -81,6 +81,7 @@ section#time{
   appearance: none;
   color: inherit;
   text-align: center;
+  width: 50px;
 }
 .time-clean::-webkit-calendar-picker-indicator {
   display: none;

@@ -14,8 +14,26 @@
 }
 @font-face {
   font-family: "Kalam";
-  src: url("../@Fonts&Icons/Kalam-Bold.ttf") format("truetype");
+  src: url("../@Fonts&Icons/Kalam/Kalam-Bold.ttf") format("truetype");
   font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Nunito";
+  src: url("../@Fonts&Icons/Nunito/static/Nunito-Regular.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Nunito";
+  src: url("../@Fonts&Icons/Nunito/static/Nunito-Regular.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Nunito";
+  src: url("../@Fonts&Icons/Nunito/static/Nunito-Regular.ttf") format("truetype");
+  font-weight: 900;
   font-style: normal;
 }
 
@@ -83,9 +101,9 @@ p{
 .acrostiche > h2{
   font-size: 6em;
 }
-.acrostiche > h3{
-  font-size: 2.5em;
+.acrostiche h3{
   font-family: 'kalam', cursive;
+  font-size: 2.5em;
   line-height: 1.2em;
   text-align: left;
 }

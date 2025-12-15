@@ -47,6 +47,9 @@
 </head>
 
 <body>
+  <button id="askRefresh" onclick="askRefresh()">Refresh</button>
+  <input type="checkbox" id="fullScreenCB" class="displayNone" />
+  <label id="fullScreenLabel" for="fullScreenCB">GO!</label>
   <section id="time">
     <div id="timeNow">Now</div>
     <div id="timeDuration">
@@ -59,10 +62,7 @@
           <span></span>
           <input id="timeDurationStartInput" class="time-clean" type="time" value="" />
         </div>
-        <button id="askRefresh" onclick="askRefresh()">Refresh</button>
         <button id="resetTime" onclick="resetLocalTime()">Reset</button>
-        <input type="checkbox" id="fullScreenCB" class="displayNone" />
-        <label id="fullScreenLabel" for="fullScreenCB" style="margin: 0 0 0 20px">GO!</label>
         <div class="timeDurationSides">
           <label for="timeDurationEndInput">End</label>
           <input id="timeDurationEndInput" class="time-clean" type="time" value="" />

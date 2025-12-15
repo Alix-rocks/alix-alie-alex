@@ -32,6 +32,21 @@ hr{
   width: 100%;
 }
 
+#askRefresh{
+  position: fixed;
+  top: 12px;
+  left: 12px;
+}
+#fullScreenLabel{
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  padding: 5px 10px;
+  width: fit-content;
+  text-align: center;
+  font-weight: 600;
+}
+
 section#time{
   display: flex;
   flex-flow: column nowrap;
@@ -81,7 +96,7 @@ section#time{
   appearance: none;
   color: inherit;
   text-align: center;
-  width: 50px;
+  width: 70px;
 }
 .time-clean::-webkit-calendar-picker-indicator {
   display: none;
@@ -116,7 +131,7 @@ section#diapo{
 
 section#pages{
   position: fixed;
-  bottom: 50px;
+  bottom: 20px;
   width: var(--vw);
   display: flex;
   flex-flow: row nowrap;

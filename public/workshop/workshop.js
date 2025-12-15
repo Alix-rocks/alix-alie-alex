@@ -18,6 +18,7 @@ let allSteps = null;
 let stepCurrentIndex = 0;
 let stepCurrent = null;
 let kasesIds = [];
+let xIndex = -1;
 const positions = ["top", "top left", "top right", "bottom", "bottom left", "bottom right", "left", "right", "center", "center", "center", "center"];
 let shuffledPositions = [];
 const tilts = ["tilt15", "tilt-15", "notilt", "tilt75", "tilt-75"];
@@ -123,6 +124,7 @@ function displaySection(sectionToShow){ //sending two things at once!!
   stepCurrentIndex = 0;
   stepCurrent = null;
   kasesIds = [];
+  xIndex = -1;
   shuffledPositions = [];
   shuffledTilts = [];
   shuffledColors = [];
@@ -261,6 +263,7 @@ function sendStepButtonState(stepButtonStates){
 function wordCloudCreation(){
 
   kasesIds = [];
+  xIndex = -1;
   shuffledPositions = [];
   shuffledTilts = [];
   shuffledColors = [];
@@ -304,6 +307,7 @@ function wordCloudCreation(){
 
   //Creating the randomized arrays
   kasesIds = shuffleArray(kasesIds);
+  console.log(kasesIds);
   shuffledPositions = multiShuffle(positions);
   shuffledTilts = multiShuffle(tilts);
   shuffledColors = multiShuffle(colors);
@@ -342,7 +346,7 @@ function multiShuffle(arr) {
   return result;
 }
 
-let xIndex = -1;
+
 function wordRain(word){ 
   xIndex++; 
   let emoji = word.match(emojiRegex) ? true : false;
@@ -357,6 +361,8 @@ function wordRain(word){
 };
 
 async function letsFitIt(element) {
+  const prevOverflowWrap = element.style.overflowWrap;
+  const prevWordBreak = element.style.wordBreak;
   let nowHeight = element.scrollHeight;
   let nowLineHeight = parseFloat(getComputedStyle(element).lineHeight);
   let nowNumberOfLines = Math.floor(nowHeight / nowLineHeight);
@@ -385,6 +391,8 @@ async function letsFitIt(element) {
 
   // Go back to the last valid size
   element.style.fontSize = (nowFontSize - 1) + "px";
+  element.style.overflowWrap = prevOverflowWrap;
+  element.style.wordBreak = prevWordBreak;
 };
 
 function refreshControl(){

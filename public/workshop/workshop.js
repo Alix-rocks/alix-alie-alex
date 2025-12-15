@@ -151,23 +151,23 @@ function displaySection(sectionToShow){ //sending two things at once!!
     stepsCreation();
   };
   //stepsButton (whether sectionShowed is stepped or not)
-  // let stepButtonStates = getStepButtonState();
+  let stepButtonStates = getStepButtonState();
 
 
-  // //currentSlide
-  // let currentSlideInfo = getCurrentSlideInfo();
+  //currentSlide
+  let currentSlideInfo = getCurrentSlideInfo();
   
 
-  // let wholeDisplay = {
-  //   words: words,
-  //   steps: stepButtonStates,
-  //   current: currentSlideInfo
-  // };
-  // set(ref(rtdb, "workshop/feedback"), {
-  //   need: "display",
-  //   info: wholeDisplay,
-  //   timestamp: Date.now()
-  // });
+  let wholeDisplay = {
+    words: words,
+    steps: stepButtonStates,
+    current: currentSlideInfo
+  };
+  set(ref(rtdb, "workshop/feedback"), {
+    need: "display",
+    info: wholeDisplay,
+    timestamp: Date.now()
+  });
 };
 
 function getCurrentSlideInfo(){

@@ -79,9 +79,9 @@ section#time{
   color: inherit;
   text-align: center;
 }
-/* .time-clean::-webkit-calendar-picker-indicator {
+.time-clean::-webkit-calendar-picker-indicator {
   display: none;
-} */
+}
 
 section#diapo{
   display: flex;

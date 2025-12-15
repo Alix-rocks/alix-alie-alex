@@ -117,13 +117,13 @@ function handleFeedback(need, info){
       currentSlideSetting(info.current); //object
       break;
     case "refresh":
-      if(info?.words?.length > 0) {
-        wordDropdownCreation(info.words); //array
-      };
-      stepButtonFixing(info.steps); //object
       allSlidesCreation(info.slides); //array of objects
       console.log("REFRESH currentSlideSetting " + info);
       currentSlideSetting(info.current); //object
+      stepButtonFixing(info.steps); //object
+      if(info?.words?.length > 0) {
+        wordDropdownCreation(info.words); //array
+      };
       break;
     default:
       console.log(need, info);

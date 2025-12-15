@@ -1,7 +1,8 @@
 :root{
   --bg-color: rgb(31, 31, 31);
   /* --tx-color: rgb(236, 236, 236); */
-  --tx-color: rgb(164, 128, 255);
+  --tx-100-color: rgb(164, 128, 255);
+  --tx-color: rgb(228,217,255);
   --tx-130-color: rgb(124, 77, 255);
   --tx-30-color: rgb(228,217,255);
   --accent-teal: #1BDCDC;
@@ -153,10 +154,10 @@ input[name="miniSlides"]:checked + label{
 }
 
 button{
-  border-top: 2px solid var(--tx-color);
-  border-left: 2px solid var(--tx-color);
-  border-right: 4px solid var(--tx-color);
-  border-bottom: 4px solid var(--tx-color);
+  border-top: 2px solid var(--tx-100-color);
+  border-left: 2px solid var(--tx-100-color);
+  border-right: 4px solid var(--tx-100-color);
+  border-bottom: 4px solid var(--tx-100-color);
   border-radius: 5px;
   padding: 5px 10px;
   width: fit-content;

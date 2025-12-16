@@ -117,6 +117,13 @@ p{
   width: fit-content;
   margin: auto;
 }
+.exercice > p{
+  font-size: 2em;
+  font-weight: 600;
+  line-height: 1em;
+  width: fit-content;
+  margin: auto;
+}
 
 .wordCloud > span.toStorm{
   display: none;
@@ -126,6 +133,17 @@ p{
   flex-flow: column nowrap;
   justify-content: space-between;
 }
+
+.listP{
+  color: var(--accent-softBlue);
+  border: 2px solid var(--accent-30-softBlue);
+  border-radius: 15px;
+}
+
+.toUnveil{
+  color: rbga(0, 0, 0, 0);
+}
+
 .bottomText{
   width: 100%;
   /* border: 1px solid var(--accent-coral); */

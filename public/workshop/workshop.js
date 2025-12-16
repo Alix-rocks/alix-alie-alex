@@ -79,6 +79,9 @@ function handleCommand(action, data){
     case "rain":
       wordRain(data);
       break;
+    case "unveilIt":
+      unveilIt(data);
+      break;
     case "fs":
       fullscreen();
       break;
@@ -149,6 +152,12 @@ function displaySection(sectionToShow){ //sending two things at once!!
     words = getWords();
   };
 
+  //toUnveil
+  let phrases = [];
+  if(sectionShowed.classList.contains("toBeUnveilled")){
+    phrases = getPhrases();
+  };
+
   if(sectionShowed.classList.contains("stepped")){
     stepsCreation();
   };
@@ -162,6 +171,7 @@ function displaySection(sectionToShow){ //sending two things at once!!
 
   let wholeDisplay = {
     words: words,
+    phrases: phrases,
     steps: stepButtonStates,
     current: currentSlideInfo
   };
@@ -328,6 +338,21 @@ function getWords(){
   return words;
 };
 
+function getPhrases(){
+  // return Array.from(sectionShowed.querySelectorAll("span.toRain")).map(element => element.innerText);
+  let phrases = [];
+  sectionShowed.querySelectorAll('input[name="unveilable"]').forEach(sentence => {
+    let phrase = sectionShowed.querySelector(`label[for="${sentence.id}"] > span.phraseToUnveil`).innerText;
+    let code = sentence.value;
+    let toUnveil = {
+      phrase: phrase,
+      code: code
+    };
+    phrases.push(toUnveil);
+  });
+  return phrases;
+};
+
 //To randomize
 function shuffleArray(arr) {
   const newArr = [...arr];
@@ -360,6 +385,10 @@ function wordRain(word){
   //   letsFitIt(thisSpan);
   // };
   
+};
+//toUnveil?? class="typcn typcn-media-stop-outline {font-size: 2.05em; line-height: .9em;} => class="typcn typcn-input-checked {font-size: 1.8em;}
+function unveilIt(phrase){
+
 };
 
 async function letsFitIt(element) {

@@ -139,12 +139,34 @@ section#pages{
   align-items: center;
 }
 
-#allPages{
+/* #allPages{
   display: flex;
   flex-flow: row wrap;
   justify-content: space-around;
   width: 100%;
+} */
+#allPages{
+  /* display: flex;
+  flex-direction: row; */
+  display: grid;
+  grid-auto-flow: column;       /* 👈 columns grow horizontally */
+  grid-template-rows: repeat(2, auto);
+  gap: 0.5rem;          /* optional */
+  width: 100%;
+  
+  overflow-x: auto;    /* 👈 horizontal scroll */
+  overflow-y: hidden;
+
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  scrollbar-width: none; /* Hide scrollbar but keep scrolling Firefox */
+
+  scroll-snap-type: x mandatory; /* Snap to slides */
 }
+#allPages::-webkit-scrollbar { /* Hide scrollbar but keep scrolling */
+  display: none;
+}
+
+
 #pagesBtns{
   display: flex;
   flex-flow: row nowrap;
@@ -154,12 +176,18 @@ section#pages{
 }
 .miniSlide{
   border: 1px solid var(--tx-color);
-  display: flex;
+  /* display: flex; */
+  display: inline-flex;     /* 👈 IMPORTANT */
   flex-flow: column nowrap;
   justify-content: space-between;
   align-items: center;
   margin: 5px;
   padding: 3px;
+}
+.miniSlide{
+  flex: 0 0 auto;   /* 👈 VERY important */
+  width: 80px;      /* or whatever */
+  scroll-snap-align: start; /* or "start" if you prefer */
 }
 .miniTitre{
   font-size: .6em;

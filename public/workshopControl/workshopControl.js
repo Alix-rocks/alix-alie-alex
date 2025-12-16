@@ -148,15 +148,8 @@ function currentSlideSetting(info){
   
   diapoTitle.innerHTML = `<span class="diapoTitleTitre">${info.titre}</span><span class="diapoTitleType">${info.type}</span>`;
 
-  // allMiniSlides.forEach(mini => {
-  //   if(mini.dataset.slide == info.num){
-  //     mini.classList.add("highlighted");
-  //   } else{
-  //     mini.classList.remove("highlighted");
-  //   };
-  // });
-
   document.querySelector(`#mini${info.num}`).checked = true;
+  centerActiveMiniSlide();
 
   let nombreSlides = allSlides.length;
   let numeroSlide = Number(info.num);
@@ -175,6 +168,8 @@ function allSlidesCreation(info){
   document.querySelectorAll('input[type="radio"][name="miniSlides"]').forEach(radio => {
     radio.addEventListener("change", event => {
       if (event.target.checked) {
+        //center to that slide
+        centerActiveMiniSlide();
          //send control to get that slide
         let slideNum = radio.value; 
         diapoMain.innerHTML = "";
@@ -187,6 +182,36 @@ function allSlidesCreation(info){
     });
   });
 };
+
+function centerActiveMiniSlide() {
+  const checkedRadio = document.querySelector(
+    '#allPages input[type="radio"]:checked'
+  );
+
+  if (!checkedRadio) return;
+  console.log(checkedRadio);
+  
+
+  const label = checkedRadio.nextElementSibling;
+
+  if (!label) return;
+  console.log(label);
+  
+
+  label.scrollIntoView({
+    behavior: 'smooth',
+    inline: 'center',
+    block: 'nearest'
+  });
+}
+
+
+// /* Optional: keep centered on resize */
+// window.addEventListener('resize', centerActiveMiniSlide);
+
+// /* Optional: initial centering on load */
+// window.addEventListener('load', centerActiveMiniSlide);
+
 
 function slideNext(){
   diapoMain.innerHTML = "";
@@ -266,6 +291,41 @@ function wordDropdownCreation(words){
       set(ref(rtdb, "workshop/control"), {
         action: "rain",
         data: water,
+        timestamp: Date.now()
+      });
+    };
+  };
+};
+
+function toUnveilDropdownCreation(phrases){
+  let phrasesDropdownOptions = phrases.map((phrase) => {
+    return `<option value="${phrase}">${phrase}</option>`;
+  }).join("");
+
+  diapoMain.innerHTML = `<select id="phraseDropdown"">
+      <option value="">--Options--</option>
+      ${phrasesDropdownOptions}
+    </select>
+    <input id="phraseInput" type="text"></input>`;
+  let selector = diapoMain.querySelector("#phraseDropdown");
+  selector.addEventListener("change",  () => {
+    unveilIt(selector.value);
+    selector.value = "";
+});
+  
+  let adder = diapoMain.querySelector("#phraseInput");
+  adder.addEventListener("change", () => {
+    unveilIt(adder.value);
+    adder.value = "";
+  });
+  
+  function unveilIt(wisdom){
+    console.log(water);
+    if(wisdom !== ""){
+      console.log(water);
+      set(ref(rtdb, "workshop/control"), {
+        action: "unveilIt",
+        data: wisdom,
         timestamp: Date.now()
       });
     };

@@ -144,6 +144,10 @@ p{
   color: rbga(0, 0, 0, 0);
 }
 
+.toUnveil span {
+  color: rgba(0, 0, 0, 1);
+}
+
 .bottomText{
   width: 100%;
   /* border: 1px solid var(--accent-coral); */

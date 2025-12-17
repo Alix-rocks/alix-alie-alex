@@ -13,25 +13,25 @@
   --vh: 100vh;
 }
 @font-face {
-  font-family: "Kalam";
+  font-family: 'Kalam';
   src: url("../@Fonts&Icons/Kalam/Kalam-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
 }
 @font-face {
-  font-family: "Nunito";
+  font-family: 'Nunito';
   src: url("../@Fonts&Icons/Nunito/static/Nunito-Regular.ttf") format("truetype");
   font-weight: 600;
   font-style: normal;
 }
 @font-face {
-  font-family: "Nunito";
+  font-family: 'Nunito';
   src: url("../@Fonts&Icons/Nunito/static/Nunito-Regular.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
 }
 @font-face {
-  font-family: "Nunito";
+  font-family: 'Nunito';
   src: url("../@Fonts&Icons/Nunito/static/Nunito-Regular.ttf") format("truetype");
   font-weight: 900;
   font-style: normal;
@@ -134,13 +134,23 @@ p{
   justify-content: space-between;
 }
 
-
+ul.unveillingList{
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  gap: .5em;
+}
 .toUnveil{
   position: relative;
+  display: inline-block;
   color: var(--accent-softBlue);
   border: 2px solid var(--accent-30-softBlue);
   border-radius: 15px;
   padding: 10px 20px 10px 10px;
+  margin: 0;
+  line-height: 1.1em;
+  font-size: 1.5em;
+  font-weight: 700;
 }
 
 .toUnveil span.emojiToHide, .toUnveil span.emojiToUnveil, .toUnveil span.emojiOfWisdom {
@@ -157,6 +167,7 @@ p{
 .toUnveil span.phraseToUnveil {
   display: inline-block;
   opacity: 0;
+  margin-left: 20px;  
 }
 
 input[name="unveilable"]:checked + label > span.emojiToHide{
@@ -166,6 +177,10 @@ input[name="unveilable"]:checked + label > span.emojiToUnveil {
   display: block;
 }
 input[name="unveilable"]:checked + label > span.phraseToUnveil {
+  opacity: 1;
+}
+
+.unveilled{
   opacity: 1;
 }
 

@@ -351,6 +351,8 @@ function getPhrases(){
     };
     phrases.push(toUnveil);
   });
+  console.log(phrases);
+  
   return phrases;
 };
 
@@ -389,6 +391,8 @@ function wordRain(word){
 };
 //toUnveil?? class="typcn typcn-media-stop-outline {font-size: 2.05em; line-height: .9em;} => class="typcn typcn-input-checked {font-size: 1.8em;}
 function unveilIt(toUnveil){
+  console.log(toUnveil);
+  
   sectionShowed.querySelector(`input[name="unveilable"][value="${toUnveil}"]`).checked = true;
 };
 
@@ -396,7 +400,7 @@ function addWisdom(phrase) {
   sectionShowed.querySelector("ul").insertAdjacentHTML('beforeend', `<li>
     <p class="toUnveil">
       <span class="emojiOfWisdom">🤩</span>
-      <span class="phraseToUnveil">${phrase}</span>
+      <span class="phraseToUnveil unveilled">${phrase}</span>
     </p>
   </li>`
   );

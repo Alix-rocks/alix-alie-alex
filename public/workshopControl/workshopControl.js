@@ -298,8 +298,8 @@ function wordDropdownCreation(words){
 };
 
 function toUnveilDropdownCreation(phrases){
-  let phrasesDropdownOptions = phrases.map((phrase) => {
-    return `<option value="${phrase}">${phrase}</option>`;
+  let phrasesDropdownOptions = phrases.map((sentence) => {
+    return `<option value="${sentence.code}">${sentence.phrase}</option>`;
   }).join("");
 
   diapoMain.innerHTML = `<select id="phraseDropdown"">
@@ -315,20 +315,25 @@ function toUnveilDropdownCreation(phrases){
   
   let adder = diapoMain.querySelector("#phraseInput");
   adder.addEventListener("change", () => {
-    unveilIt(adder.value);
+    addWisdom(adder.value);
     adder.value = "";
   });
   
   function unveilIt(wisdom){
-    console.log(water);
     if(wisdom !== ""){
-      console.log(water);
       set(ref(rtdb, "workshop/control"), {
         action: "unveilIt",
-        data: wisdom,
+        data: wisdom, // code = input.value
         timestamp: Date.now()
       });
     };
+  };
+  function addWisdom(wisdom){
+    set(ref(rtdb, "workshop/control"), {
+      action: "addWisdom",
+      data: wisdom,//whole sentence
+      timestamp: Date.now()
+    });
   };
 };
 

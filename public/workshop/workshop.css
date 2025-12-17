@@ -134,18 +134,38 @@ p{
   justify-content: space-between;
 }
 
-.listP{
+
+.toUnveil{
+  position: relative;
   color: var(--accent-softBlue);
   border: 2px solid var(--accent-30-softBlue);
   border-radius: 15px;
+  padding: 10px;
 }
 
-.toUnveil{
-  color: rbga(0, 0, 0, 0);
+.toUnveil span.emojiToHide, .toUnveil span.emojiToUnveil {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.toUnveil span.emojiToHide {
+  display: block;
+}
+.toUnveil span.emojiToUnveil {
+  display: none;
+}
+.toUnveil span.phraseToUnveil {
+  opacity: 0;
 }
 
-.toUnveil span {
-  color: rgba(0, 0, 0, 1);
+input[name="unveilable"]:checked + label > span.emojiToHide{
+  display: none;
+}
+input[name="unveilable"]:checked + label > span.emojiToUnveil {
+  display: block;
+}
+input[name="unveilable"]:checked + label > span.phraseToUnveil {
+  opacity: 1;
 }
 
 .bottomText{

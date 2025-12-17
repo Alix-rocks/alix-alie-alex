@@ -37,9 +37,8 @@ let shuffledColors = [];
     screenHeight = screenWidth * 20 / 9;
   };
 
-  // let allSlides = getAllSlides();
-  // sendAllSlides(allSlides);
-
+  //let allSlides = getAllSlides();
+  //orderSlides();
 })();
 
 function updateViewportVars() {
@@ -82,6 +81,9 @@ function handleCommand(action, data){
     case "unveilIt":
       unveilIt(data);
       break;
+    case "addWisdom":
+      addWisdom(data);
+      break;
     case "fs":
       fullscreen();
       break;
@@ -102,7 +104,17 @@ function thisSlide(slideNum){
   displaySection(sectionToShow);
 };
 
+function orderSlides() {
+  console.log("orderSlides");
+  let slideNum = 0;
+  document.querySelectorAll('section[data-slide]').forEach(section => {
+    console.log(section);
+    section.dataset.slide = slideNum;
+    slideNum++;
+  });
+};
 function getAllSlides(){
+  orderSlides();
   let allSlides = [];
   document.querySelectorAll("section").forEach(section => {
     let slide = {
@@ -279,14 +291,6 @@ function wordCloudCreation(){
   shuffledPositions = [];
   shuffledTilts = [];
   shuffledColors = [];
-
-  // let words = getWords();
-  
-  // set(ref(rtdb, "workshop/feedback"), {
-  //   need: "wddc",
-  //   info: words,
-  //   timestamp: Date.now()
-  // });
   
   let colNum = screenWidth > 900 ? 4 : 3;
   let linNum = screenHeight > 900 ? 4 : 3;
@@ -339,7 +343,6 @@ function getWords(){
 };
 
 function getPhrases(){
-  // return Array.from(sectionShowed.querySelectorAll("span.toRain")).map(element => element.innerText);
   let phrases = [];
   sectionShowed.querySelectorAll('input[name="unveilable"]').forEach(sentence => {
     let phrase = sectionShowed.querySelector(`label[for="${sentence.id}"] > span.phraseToUnveil`).innerText;
@@ -387,8 +390,12 @@ function wordRain(word){
   
 };
 //toUnveil?? class="typcn typcn-media-stop-outline {font-size: 2.05em; line-height: .9em;} => class="typcn typcn-input-checked {font-size: 1.8em;}
-function unveilIt(phrase){
+function unveilIt(toUnveil){
+  sectionShowed.querySelector(`input[name="unveilable"][value="${toUnveil}"]`).checked = true;
+};
 
+function addWisdom(phrase) {
+  let ul = sectionShowed.querySelector("ul");
 };
 
 async function letsFitIt(element) {
@@ -485,7 +492,7 @@ function exitFullscreen(){
   };
 };
 
-
+orderSlides();
 let sectionToShow = document.querySelector('section[data-slide="1"]');
 displaySection(sectionToShow);
 

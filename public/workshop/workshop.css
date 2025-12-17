@@ -26,13 +26,19 @@
 }
 @font-face {
   font-family: 'Nunito';
-  src: url("../@Fonts&Icons/Nunito/static/Nunito-Regular.ttf") format("truetype");
+  src: url("../@Fonts&Icons/Nunito/static/Nunito-SemiBold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
 }
 @font-face {
   font-family: 'Nunito';
-  src: url("../@Fonts&Icons/Nunito/static/Nunito-Regular.ttf") format("truetype");
+  src: url("../@Fonts&Icons/Nunito/static/Nunito-Bold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Nunito';
+  src: url("../@Fonts&Icons/Nunito/static/Nunito-ExtraBold.ttf") format("truetype");
   font-weight: 900;
   font-style: normal;
 }
@@ -167,7 +173,7 @@ ul.unveillingList{
 .toUnveil span.phraseToUnveil {
   display: inline-block;
   opacity: 0;
-  margin-left: 20px;  
+  margin-left: 35px;  
 }
 
 input[name="unveilable"]:checked + label > span.emojiToHide{

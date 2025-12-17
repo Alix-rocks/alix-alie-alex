@@ -205,6 +205,10 @@ input[name="miniSlides"]:checked + label{
   background-color: var(--accent-30-coral);
 }
 
+#phraseInput{
+  max-width: var(--vw);
+}
+
 button{
   border-top: 2px solid var(--tx-100-color);
   border-left: 2px solid var(--tx-100-color);

@@ -493,7 +493,7 @@ function exitFullscreen(){
 };
 
 orderSlides();
-let sectionToShow = document.querySelector('section[data-slide="1"]');
+let sectionToShow = document.querySelector('section[data-slide="43"]');
 displaySection(sectionToShow);
 
 

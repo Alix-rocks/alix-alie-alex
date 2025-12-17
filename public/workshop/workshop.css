@@ -280,6 +280,10 @@ span.unveilled{
   font-weight: 900;
 }
 
+.smallP p{
+  margin: 0 .5em;
+}
+
 #fullScreenLabel{
   position: fixed;
   bottom: 12px;

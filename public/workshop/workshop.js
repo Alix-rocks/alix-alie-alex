@@ -105,10 +105,8 @@ function thisSlide(slideNum){
 };
 
 function orderSlides() {
-  console.log("orderSlides");
   let slideNum = 0;
   document.querySelectorAll('section[data-slide]').forEach(section => {
-    console.log(section);
     section.dataset.slide = slideNum;
     slideNum++;
   });
@@ -395,7 +393,13 @@ function unveilIt(toUnveil){
 };
 
 function addWisdom(phrase) {
-  let ul = sectionShowed.querySelector("ul");
+  sectionShowed.querySelector("ul").insertAdjacentHTML('beforeend', `<li>
+    <p class="toUnveil">
+      <span class="emojiOfWisdom">🤩</span>
+      <span class="phraseToUnveil">${phrase}</span>
+    </p>
+  </li>`
+  );
 };
 
 async function letsFitIt(element) {

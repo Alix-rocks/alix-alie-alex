@@ -36,9 +36,8 @@ let shuffledColors = [];
     landscapeMode = false;
     screenHeight = screenWidth * 20 / 9;
   };
-
-  //let allSlides = getAllSlides();
-  //orderSlides();
+    document.documentElement.style.setProperty('--vh', `${screenHeight}px`);
+    document.documentElement.style.setProperty('--vw', `${screenWidth}px`);
 })();
 
 function updateViewportVars() {
@@ -55,8 +54,8 @@ function updateViewportVars() {
   document.documentElement.style.setProperty('--vw', `${screenWidth}px`);
 }
 
-window.addEventListener('resize', updateViewportVars);
-window.addEventListener('orientationchange', updateViewportVars);
+// window.addEventListener('resize', updateViewportVars);
+// window.addEventListener('orientationchange', updateViewportVars);
 
 function handleCommand(action, data){
   switch(action){
@@ -292,8 +291,9 @@ function wordCloudCreation(){
   
   let colNum = screenWidth > 900 ? 4 : 3;
   let linNum = screenHeight > 900 ? 4 : 3;
-
-  let kaseWidth = (screenWidth) / colNum;
+  let newWidth = landscapeMode ? screenWidth - 150 : screenWidth;
+  let kaseWidth = (newWidth) / colNum;
+  document.documentElement.style.setProperty('--wCBT', `${newWidth}px`);
 
   let topHeight = Number(getComputedStyle(sectionShowed.querySelector(".topText")).height.match(/\d+/g)[0]);
   let bottomHeight = Number(getComputedStyle(sectionShowed.querySelector(".bottomText")).height.match(/\d+/g)[0]);
@@ -400,7 +400,7 @@ function addWisdom(phrase) {
   sectionShowed.querySelector("ul").insertAdjacentHTML('beforeend', `<li>
     <p class="toUnveil">
       <span class="emojiOfWisdom">🤩</span>
-      <span class="phraseToUnveil unveilled">${phrase}</span>
+      <span class="unveilled">${phrase}</span>
     </p>
   </li>`
   );
@@ -475,15 +475,16 @@ function refreshControl(){
   
 };
 
-// document.querySelector("#fullScreenCB").addEventListener("change", ev => {
-//   if(ev.target.checked){
-//     fullscreen()
-//   } else{
-//     exitFullscreen()
-//   };
-// });
+document.querySelector("#fullScreenCB").addEventListener("change", ev => {
+  if(ev.target.checked){
+    fullscreen()
+  } else{
+    exitFullscreen()
+  };
+});
 
 function fullscreen(){
+  console.log("fullscreen");
   const elem = document.documentElement; // The entire page         
   // Activate fullscreen
   if (elem.requestFullscreen) {
@@ -493,6 +494,7 @@ function fullscreen(){
   } else if (elem.msRequestFullscreen) { // IE/Edge
       elem.msRequestFullscreen();
   };
+  updateViewportVars();
 };
 
 function exitFullscreen(){
@@ -505,6 +507,7 @@ function exitFullscreen(){
       document.msExitFullscreen();
     };
   };
+  updateViewportVars();
 };
 
 orderSlides();

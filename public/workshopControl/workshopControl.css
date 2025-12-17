@@ -205,7 +205,7 @@ input[name="miniSlides"]:checked + label{
   background-color: var(--accent-30-coral);
 }
 
-#phraseInput{
+#phraseDropdown{
   max-width: var(--vw);
 }
 

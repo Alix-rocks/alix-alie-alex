@@ -11,6 +11,7 @@
   --accent-30-coral: rgba(255, 111, 97, .3);
   --vw: 100vw;
   --vh: 100vh;
+  --wCBT: 100%;
 }
 @font-face {
   font-family: 'Kalam';
@@ -106,6 +107,7 @@ p{
 }
 .acrostiche > h2{
   font-size: 6em;
+  margin: 1.2em auto;
 }
 .acrostiche h3{
   font-family: 'kalam', cursive;
@@ -140,11 +142,16 @@ p{
   justify-content: space-between;
 }
 
-ul.unveillingList{
+ul.unveillingList, ul.simpleList{
   list-style-type: none;
   display: flex;
   flex-direction: column;
   gap: .5em;
+}
+ul.simpleList{
+  width: fit-content;
+  margin: auto;
+  font-size: 2em;
 }
 .toUnveil{
   position: relative;
@@ -186,8 +193,9 @@ input[name="unveilable"]:checked + label > span.phraseToUnveil {
   opacity: 1;
 }
 
-.unveilled{
-  opacity: 1;
+span.unveilled{
+  display: inline-block;
+  margin-left: 35px;  
 }
 
 .bottomText{
@@ -196,11 +204,12 @@ input[name="unveilable"]:checked + label > span.phraseToUnveil {
 }
 
 #cloudBoardTotal{
-  width: 100%;
+  width: var(--wCBT);
   height: 100%;
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-around;
+  margin: auto;
 }
 .cloudBoardLine{
   width: 100%;
@@ -266,6 +275,11 @@ input[name="unveilable"]:checked + label > span.phraseToUnveil {
   transform: rotate(-7.5deg);
 }
 
+.accentCoralStrong{
+  color: var(--accent-coral);
+  font-weight: 900;
+}
+
 #fullScreenLabel{
   position: fixed;
   bottom: 12px;
@@ -274,8 +288,12 @@ input[name="unveilable"]:checked + label > span.phraseToUnveil {
   height: 50px;
   display: flex;
 }
+#fullScreenCB + label{
+  opacity: 1;
+  font-weight: 900;
+}
 #fullScreenCB:checked + label{
-  opacity: 0;
+  opacity: .1;
 }
 
 .invisible{

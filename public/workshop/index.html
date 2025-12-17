@@ -34,10 +34,10 @@
       let screenHeight = window.innerHeight - 16;
       let screenWidth = window.innerWidth - 16;
       if(screenWidth > screenHeight){ //if true => landscape mode (16:9)
-        landscapeMode = true;
+        // landscapeMode = true;
         screenWidth = screenHeight * 16 / 9;
       } else if(screenHeight > screenWidth){ // portrait mode (20:9)
-        landscapeMode = false;
+        // landscapeMode = false;
         screenHeight = screenWidth * 20 / 9;
       };
       document.documentElement.style.setProperty('--vh', `${screenHeight}px`);
@@ -61,25 +61,6 @@
     <p class="invisible" data-step="3">Comment ça marche?</p>
     <div class="bottomText invisible" data-step="4">
       <p>Pratiquer le consentement est de s’assurer que toutes les personnes impliquées dans l’interaction sont, en tout temps, parfaitement à l’aise avec ce qui se passe.</p>
-    </div>
-  </section>
-  <section data-slide="1" data-titre="BothWays" data-type="📝" class="stepped">
-    <h1 data-step="0">Avez-vous remarqué?</h1>
-    <h2>Le consentement, ça va dans les deux sens!</h2>
-    <p class="invisible" data-step="1">On doit respecter le consentement de l'autre⇒ Si ses oui ne sont pas RÉELS, c'est NON!</p>
-    <p class="invisible" data-step="2">On doit respecter son propre consentement⇒Si mes oui ne sont pas RÉELS, c'est NON!</p>
-    <div class="bottomText invisible" data-step="3">
-      <p></p>
-    </div>
-  </section>
-  <section data-slide="1" data-titre="BothWays" data-type="📝" class="stepped">
-    <h1 data-step="0">Comment éviter les faux OUI?</h1>
-    <h2>La façon la plus simple d'avoir juste des OUI libres :</h2>
-    <p class="invisible" data-step="1">Pour que le oui soit libre, il faut que le non soit facile.</p>
-    <p class="invisible" data-step="2">Pour rendre le non facile pour l'autre, il ne suffit pas d'y <strong>dire</strong> "Tu peux dire non.", il faut surtout le <strong>penser</strong>!</p>
-    <p class="invisible" data-step="3">Il faut aimer le NON autant que le OUI!</p>
-    <div class="bottomText invisible" data-step="4">
-      <p></p>
     </div>
   </section>
   <section data-slide="2" data-titre="Context" data-type="☁️" class="wordCloud stepped displayNone">
@@ -363,10 +344,14 @@
   </section>
   <section data-slide="10" data-titre="EXC Câlin" data-type="💬" class="exercice stepped">
     <h1 data-step="0">Exercice</h1>
-    <h2>Veux-tu un câlin?<br/>
+    <h2 style="margin: 2em auto 1em;">Veux-tu un câlin?<br/>
     <span data-step="1" class="invisible" style="font-size: .6em;">3 x Non, mais...</span></h2>
-    <ul>
-      <li data-step="2" class="invisible">Sourire, poignée de main, high-five, fist-bump, câlin rapide</li>
+    <ul class="simpleList invisible" data-step="2">
+      <li>☺️ Sourire</li>
+      <li>🤝 Poignée de main</li>
+      <li>✋ High-five</li>
+      <li>👊 Fist-bump</li>
+      <li>🤗 Câlin rapide</li>
     </ul>  
 
   </section>
@@ -426,6 +411,16 @@
     </div>
     <p data-step="6" class="invisible">Sinon, c'est NON!<br/><br/>
       👉 Et on aime le NON! ❤️</p>
+  </section>
+  <section data-slide="1" data-titre="Éviter fake" data-type="📝" class="stepped">
+    <h1 data-step="0">Comment éviter les faux OUI?</h1>
+    <h2>La façon la plus simple d'avoir juste des OUI libres :</h2>
+    <p class="invisible" data-step="1">Pour que le oui soit libre, il faut que le non soit facile.</p>
+    <p class="invisible" data-step="2">Pour rendre le non facile pour l'autre, il ne suffit pas d'y <strong>dire</strong> "Tu peux dire non.", il faut surtout le <strong>penser</strong>!</p>
+    <p class="invisible accentCoralStrong" data-step="3">Il faut aimer le NON autant que le OUI!</p>
+    <div class="bottomText invisible" data-step="4">
+      <p></p>
+    </div>
   </section>
   
   <section data-slide="17" data-titre="Aimer NON" data-type="✔️" class="toBeUnveilled stepped displayNone">
@@ -495,8 +490,30 @@
       <p>"MERCI!"</p>
     </div>
   </section>
-  <!-- <input type="checkbox" id="fullScreenCB" class="displayNone" />
-  <label id="fullScreenLabel" for="fullScreenCB">GO!</label> -->
+  <section data-slide="1" data-titre="BothWays" data-type="📝" class="stepped">
+    <h1 data-step="0">Avez-vous remarqué?</h1>
+    <h2>Le consentement, ça va dans les deux sens!</h2>
+    <p class="invisible" data-step="1">On doit respecter <strong>le consentement de l'autre</strong> ⇒ <span class="accentCoralStrong">Si SES oui ne sont pas RÉELS, c'est NON!</span></p>
+    <p class="invisible" data-step="2">On doit respecter <strong>son propre consentement</strong> ⇒ <span class="accentCoralStrong">Si MES oui ne sont pas RÉELS, c'est NON!</span></p>
+    <div class="bottomText invisible" data-step="3">
+      <p></p>
+    </div>
+  </section>
+  <section data-slide="1" data-titre="AllWays" data-type="📝" class="stepped">
+    <h1 data-step="0">Avez-vous remarqué?</h1>
+    <h2>L'acrostiche R.É.E.L.S. peut être utilisé à tout moment!</h2>
+    <p class="invisible" data-step="1">AVANT de poser une question</p>
+    <p class="invisible" data-step="2">APRÈS avoir posé une question</p>
+    <p class="invisible" data-step="3">AVANT de répondre à une question</p>
+    <p class="invisible" data-step="4">APRÈS avoir répondu à une question</p>
+    <p class="invisible" data-step="5">PENDANT l'interaction</p>
+    <p class="invisible" data-step="6">APRÈS l'interaction</p>
+    <div class="bottomText invisible" data-step="7">
+      <p>❤️ L'acrostiche R.É.E.L.S. te permet de <strong>prévenir</strong> et/ou d'<strong>expliquer</strong> les inconforts.</p>
+    </div>
+  </section>
+  <input type="checkbox" id="fullScreenCB" class="displayNone" />
+  <label id="fullScreenLabel" for="fullScreenCB">GO!</label>
 <!-- <script type="module" src="workshop.js"></script> -->
  <script type="module">
   import { VERSION } from "../testVersion.js";

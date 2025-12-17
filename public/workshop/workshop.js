@@ -443,6 +443,12 @@ function refreshControl(){
     words = getWords(); //array of array
   };
 
+  //toUnveil
+  let phrases = [];
+  if(sectionShowed.classList.contains("toBeUnveilled")){
+    phrases = getPhrases();
+  };
+
   let stepButtonStates = getStepButtonState(); //object
 
   let allSlides = getAllSlides(); //array of objects
@@ -451,6 +457,7 @@ function refreshControl(){
 
   let refreshAll = {
     words: words,
+    phrases: phrases,
     steps: stepButtonStates,
     slides: allSlides,
     current: currentSlide
@@ -497,7 +504,7 @@ function exitFullscreen(){
 };
 
 orderSlides();
-let sectionToShow = document.querySelector('section[data-slide="43"]');
+let sectionToShow = document.querySelector('section[data-slide="0"]');
 displaySection(sectionToShow);
 
 

@@ -118,7 +118,10 @@ function handleFeedback(need, info){
       stepButtonFixing(info.steps); //object
       if(info?.words?.length > 0) {
         wordDropdownCreation(info.words); //array
-      };      
+      };  
+      if(info?.phrases?.length > 0) {
+        toUnveilDropdownCreation(info.phrases); //array of objects
+      };    
       break;
     case "refresh":
       allSlidesCreation(info.slides); //array of objects
@@ -127,6 +130,9 @@ function handleFeedback(need, info){
       stepButtonFixing(info.steps); //object
       if(info?.words?.length > 0) {
         wordDropdownCreation(info.words); //array
+      };
+      if(info?.phrases?.length > 0) {
+        toUnveilDropdownCreation(info.phrases); //array of objects
       };
       break;
     default:

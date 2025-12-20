@@ -2305,6 +2305,19 @@ td.toWeeklyArrowLeft{
   right: 54px;
 }
 
+.taskBtns{
+  position: sticky;
+  bottom: 0;
+  padding-bottom: 15px;
+  z-index: 1001;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+  background: var(--bg-color-7);
+}
+
 #openHourToggler{
   width: 50px;
   right: 160px;

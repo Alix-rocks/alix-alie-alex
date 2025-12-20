@@ -10,10 +10,7 @@ onValue(ref(rtdb, "workshop/feedback"), (snapshot) => {
 });
 
 function askRefresh(){
-  set(ref(rtdb, "workshop/control"), {
-    action: "refresh",
-    timestamp: Date.now()
-  });
+  sendAction("refresh");
 };
 window.askRefresh = askRefresh;
 askRefresh();
@@ -179,11 +176,11 @@ function allSlidesCreation(info){
          //send control to get that slide
         let slideNum = radio.value; 
         diapoMain.innerHTML = "";
-        set(ref(rtdb, "workshop/control"), {
+        let infoToSend = {
           action: "thisSlide",
-          data: slideNum,
-          timestamp: Date.now()
-        });
+          data: slideNum
+        };
+        sendActionData(infoToSend);
       };
     });
   });
@@ -221,35 +218,23 @@ function centerActiveMiniSlide() {
 
 function slideNext(){
   diapoMain.innerHTML = "";
-  set(ref(rtdb, "workshop/control"), {
-    action: "slideNext",
-    timestamp: Date.now()
-  });
+  sendAction("slideNext");
 };
 window.slideNext = slideNext;
 
 function slidePrev(){
   diapoMain.innerHTML = "";
-  set(ref(rtdb, "workshop/control"), {
-    action: "slidePrev",
-    timestamp: Date.now()
-  });
+  sendAction("slidePrev");
 };
 window.slidePrev = slidePrev;
 
 function stepNext(){
-  set(ref(rtdb, "workshop/control"), {
-    action: "stepNext",
-    timestamp: Date.now()
-  });
+  sendAction("stepNext");
 };
 window.stepNext = stepNext;
 
 function stepPrev(){
-  set(ref(rtdb, "workshop/control"), {
-    action: "stepPrev",
-    timestamp: Date.now()
-  });
+  sendAction("stepPrev");
 };
 window.stepPrev = stepPrev;
 
@@ -273,34 +258,17 @@ function wordDropdownCreation(words){
     </optgroup>`;
   }).join("");
 
-  diapoMain.innerHTML = `<select id="wordDropdown"">
+  diapoMain.innerHTML = `<select class="selectTheirChoice" id="wordDropdown"">
       <option value="">--Options--</option>
       ${wordDropdownOptions}
     </select>
-    <input id="wordInput" type="text"></input>`;
-  let selector = diapoMain.querySelector("#wordDropdown");
-  selector.addEventListener("change",  () => {
-    makeItRain(selector.value);
-    selector.value = "";
-});
+    <input class="addTheirChoice" id="wordInput" type="text"></input>`;
+    
+  let action = "rain";
+  activateSelector(action);
+
+  activateInputAdder(action);
   
-  let adder = diapoMain.querySelector("#wordInput");
-  adder.addEventListener("change", () => {
-    makeItRain(adder.value);
-    adder.value = "";
-  });
-  
-  function makeItRain(water){
-    console.log(water);
-    if(water !== ""){
-      console.log(water);
-      set(ref(rtdb, "workshop/control"), {
-        action: "rain",
-        data: water,
-        timestamp: Date.now()
-      });
-    };
-  };
 };
 
 function toUnveilDropdownCreation(phrases){
@@ -308,39 +276,61 @@ function toUnveilDropdownCreation(phrases){
     return `<option value="${sentence.code}">${sentence.phrase}</option>`;
   }).join("");
 
-  diapoMain.innerHTML = `<select id="phraseDropdown"">
+  diapoMain.innerHTML = `<select class="selectTheirChoice" id="phraseDropdown"">
       <option value="">--Options--</option>
       ${phrasesDropdownOptions}
     </select>
-    <input id="phraseInput" type="text"></input>`;
-  let selector = diapoMain.querySelector("#phraseDropdown");
+    <input class="addTheirChoice" id="phraseInput" type="text"></input>`;
+    
+    let action = "unveilIt";
+    activateSelector(action);
+
+    let action2 = "addWisdom";
+    activateInputAdder(action2)
+ 
+};
+
+function activateSelector(action){
+  let selector = diapoMain.querySelector("select.selectTheirChoice");
   selector.addEventListener("change",  () => {
-    unveilIt(selector.value);
+    let infoToSend = {
+      action: action, //rain or unveilIt or addWisdom
+      data: selector.value
+    };
+    sendActionData(infoToSend);
+    removeOption(selector.value);
     selector.value = "";
-});
-  
-  let adder = diapoMain.querySelector("#phraseInput");
+  });
+
+};
+function activateInputAdder(action){
+  let adder = diapoMain.querySelector("input.addTheirChoice");
   adder.addEventListener("change", () => {
-    addWisdom(adder.value);
+    let infoToSend = {
+      action: action,
+      data: adder.value
+    };
+    sendActionData(infoToSend);
+    removeOption(adder.value);
     adder.value = "";
   });
-  
-  function unveilIt(wisdom){
-    if(wisdom !== ""){
-      set(ref(rtdb, "workshop/control"), {
-        action: "unveilIt",
-        data: wisdom, // code = input.value
-        timestamp: Date.now()
-      });
-    };
-  };
-  function addWisdom(wisdom){
-    set(ref(rtdb, "workshop/control"), {
-      action: "addWisdom",
-      data: wisdom,//whole sentence
-      timestamp: Date.now()
-    });
-  };
+};
+function sendActionData({action, data}){
+  set(ref(rtdb, "workshop/control"), {
+    action: action,
+    data: data,
+    timestamp: Date.now()
+  });
+};
+function removeOption(option){
+  diapoMain.querySelector(`option[value="${option}"]`).remove();
+};
+
+function sendAction(action){
+  set(ref(rtdb, "workshop/control"), {
+    action: action,
+    timestamp: Date.now()
+  });
 };
 
 document.querySelector("#fullScreenCB").addEventListener("change", ev => {
@@ -352,35 +342,11 @@ document.querySelector("#fullScreenCB").addEventListener("change", ev => {
 });
 
 function fullscreen(){
-  set(ref(rtdb, "workshop/control"), {
-    action: "fs",
-    timestamp: Date.now()
-  });
-  // const elem = document.documentElement; // The entire page         
-  // // Activate fullscreen
-  // if (elem.requestFullscreen) {
-  //     elem.requestFullscreen();
-  // } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, and Opera
-  //     elem.webkitRequestFullscreen();
-  // } else if (elem.msRequestFullscreen) { // IE/Edge
-  //     elem.msRequestFullscreen();
-  // };
+  sendAction("fs");
 };
 
 function exitFullscreen() {
-  set(ref(rtdb, "workshop/control"), {
-    action: "efs",
-    timestamp: Date.now()
-  });
-  // if (document.fullscreenElement) {
-  //   if (document.exitFullscreen) {
-  //     document.exitFullscreen();
-  //   } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
-  //     document.webkitExitFullscreen();
-  //   } else if (document.msExitFullscreen) { // IE/Edge
-  //     document.msExitFullscreen();
-  //   };
-  // };
+  sendAction("efs");
 };
 
 

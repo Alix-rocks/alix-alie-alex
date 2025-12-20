@@ -1,20 +1,5 @@
 import { rtdb, getDatabase, ref, set, onValue } from "../../myFirebase.js";
 
-set(ref(rtdb, "workshop/control"), null);
-set(ref(rtdb, "workshop/feedback"), null);
-
-onValue(ref(rtdb, "workshop/feedback"), (snapshot) => {
-  if (!snapshot.val()) return;
-  handleFeedback(snapshot.val().need, snapshot.val().info);
-  set(ref(rtdb, "workshop/feedback"), null);
-});
-
-function askRefresh(){
-  sendAction("refresh");
-};
-window.askRefresh = askRefresh;
-askRefresh();
-
 let allSlides = [];
 //let allMiniSlides = null;
 const emojiRegex = /\p{Emoji}/gu; // 'g' for global, 'u' for Unicode mode
@@ -348,6 +333,27 @@ function fullscreen(){
 function exitFullscreen() {
   sendAction("efs");
 };
+
+set(ref(rtdb, "workshop/control"), null);
+set(ref(rtdb, "workshop/feedback"), null);
+
+onValue(ref(rtdb, "workshop/feedback"), (snapshot) => {
+  const data = snapshot.val();
+  if (!data) return;
+
+  handleCommand(data.need, data.info);
+
+  set(ref(rtdb, "workshop/feedback"), null);
+});
+
+function askRefresh(){
+  sendAction("refresh");
+};
+window.askRefresh = askRefresh;
+askRefresh();
+
+
+
 
 
 

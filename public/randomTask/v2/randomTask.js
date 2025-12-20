@@ -1699,6 +1699,7 @@ function buildEverything(){
         todoCreation(todo);
       };
     });
+
     //Sorting
     if(mySettings.mySorting.length > 0){
       mySettings.mySorting.forEach((mySort, idx) => {
@@ -1724,26 +1725,22 @@ function buildEverything(){
   if(listDones.length > 0){
     let lastWeekDateString = getLastWeekDateString();
     let sortedListDones = listDones.sort((d1, d2) => (d1.date > d2.date) ? 1 : (d1.date < d2.date) ? -1 : 0);
-  sortedListDones.forEach(doned => {
-    if(doned.list.length !== 0 && doned.date > lastWeekDateString){
-      let donedDate = doned.date;
-      donedDateCreation(donedDate);
-      doned.list.forEach(tidoned => {
-        donedCreation(donedDate, tidoned);
-      });
-    };
-  });
-  refreshDoneId();
-  localStorageDones("first");
-
+    sortedListDones.forEach(doned => {
+      if(doned.list.length !== 0 && doned.date > lastWeekDateString){
+        let donedDate = doned.date;
+        donedDateCreation(donedDate);
+        doned.list.forEach(tidoned => {
+          donedCreation(donedDate, tidoned);
+        });
+      };
+    });
+    refreshDoneId();
+    localStorageDones("first");
+  };
 
   //Calendars
   createBody();
   getWeeklyCalendar();
-};
-  
-  
-
 
 };
 
@@ -6691,6 +6688,7 @@ function getWeeklyFilter(){
 window.getWeeklyFilter = getWeeklyFilter;
 
 function getWeeklyCalendar(){
+  
   let weeklyDate = new Date();
   let year = weeklyDate.getFullYear();
   let monthName = weeklyDate.toLocaleString('it-IT', { month: 'long' }).toLocaleUpperCase();
@@ -6796,7 +6794,7 @@ function getWeeklyCalendar(){
   container.style.gridTemplateColumns = nomiCols;
   
   //arrayItem.push(todayArea);
-  let arrayItems = arrayItem.join("");
+  let arrayItems = arrayItem.join("");  
   container.innerHTML = arrayItems;
 
   let date = new Date();

@@ -1,14 +1,5 @@
 import { rtdb, getDatabase, ref, set, onValue } from "../../myFirebase.js";
 
-set(ref(rtdb, "workshop/control"), null);
-set(ref(rtdb, "workshop/feedback"), null);
-
-onValue(ref(rtdb, "workshop/control"), (snapshot) => {
-  if (!snapshot.val()) return;
-  handleCommand(snapshot.val().action, snapshot.val().data);
-  set(ref(rtdb, "workshop/control"), null);
-});
-
 let landscapeMode;
 let screenHeight;
 let screenWidth;
@@ -281,19 +272,29 @@ function sendStepButtonState(stepButtonStates){
   });
 };
 
+
+
 function wordCloudCreation(){
+  const screenWidthLimit = 900;
+  const numberColumnMax = 4;
+  const numberColumnMin = 3;
+  const numberLineMax = 4;
+  const numberLineMin = 3;
+  const wordCloudMargin = 150;
 
   kasesIds = [];
   xIndex = -1;
   shuffledPositions = [];
   shuffledTilts = [];
   shuffledColors = [];
-  
-  let colNum = screenWidth > 900 ? 4 : 3;
-  let linNum = screenHeight > 900 ? 4 : 3;
-  let newWidth = landscapeMode ? screenWidth - 150 : screenWidth;
-  let kaseWidth = (newWidth) / colNum;
+
+  let newWidth = landscapeMode ? screenWidth - wordCloudMargin : screenWidth;
+  let colNum = screenWidth > screenWidthLimit ? numberColumnMax : numberColumnMin;
+  let linNum = screenHeight > screenWidthLimit ? numberLineMax : numberLineMin;
+
   document.documentElement.style.setProperty('--wCBT', `${newWidth}px`);
+  let kaseWidth = (newWidth) / colNum;
+  
 
   let topHeight = Number(getComputedStyle(sectionShowed.querySelector(".topText")).height.match(/\d+/g)[0]);
   let bottomHeight = Number(getComputedStyle(sectionShowed.querySelector(".bottomText")).height.match(/\d+/g)[0]);
@@ -317,11 +318,9 @@ function wordCloudCreation(){
   };
   let allTheLines = lins.join("");
   sectionShowed.querySelector("#cloudBoardTotal").innerHTML = allTheLines;
-  console.log(kasesIds);
 
   //Creating the randomized arrays
   kasesIds = shuffleArray(kasesIds);
-  console.log(kasesIds);
   shuffledPositions = multiShuffle(positions);
   shuffledTilts = multiShuffle(tilts);
   shuffledColors = multiShuffle(colors);
@@ -391,8 +390,6 @@ function wordRain(word){
 };
 //toUnveil?? class="typcn typcn-media-stop-outline {font-size: 2.05em; line-height: .9em;} => class="typcn typcn-input-checked {font-size: 1.8em;}
 function unveilIt(toUnveil){
-  console.log(toUnveil);
-  
   sectionShowed.querySelector(`input[name="unveilable"][value="${toUnveil}"]`).checked = true;
 };
 
@@ -519,3 +516,22 @@ displaySection(sectionToShow);
 
 
 document.body.style.visibility = "visible";
+
+const pageLoadedAt = Date.now();
+
+onValue(ref(rtdb, "workshop/control"), (snapshot) => {
+  const data = snapshot.val();
+  if (!data) return;
+
+  if (data.timestamp < pageLoadedAt && data.action !== "refresh") {
+    // old command → start fresh
+    set(ref(rtdb, "workshop/control"), null);
+    set(ref(rtdb, "workshop/feedback"), null);
+    return;
+  }; //else do "refresh" or wait for the next command
+
+  handleCommand(data.action, data.data);
+
+  set(ref(rtdb, "workshop/control"), null);
+});
+

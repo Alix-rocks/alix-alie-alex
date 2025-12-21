@@ -66,7 +66,7 @@ async function getMyBusies() {
   //   localStorage.mySettings = JSON.stringify(mySettings);
   // };
   // myBusies = JSON.parse(localStorage.myBusies);
-  // console.log(myBusies);
+  console.log(myBusies);
   getWeeklyCalendar();
 };
 

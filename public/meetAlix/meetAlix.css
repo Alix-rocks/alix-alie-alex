@@ -35,6 +35,12 @@ form input, form select, form textarea{
   background-color: var(--bg-color-7);
   color: var(--tx-color);
 }
+form ul{
+  list-style-type: none;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: .5em;
+}
 form h2{
   text-align: center;
 }
@@ -42,14 +48,17 @@ form h3{
   margin-bottom: 0;
 }
 form h6{
-  margin-top: 0;
+  margin: 0;
 }
-form h3 + p{
-  margin-top: 0;
+form h4{
+  margin: 0;
 }
 form p{
   line-height: 1.2em;
   margin-bottom: .2em;
+}
+form label{
+  display: inline-block;
 }
 form button{
   display: flex;

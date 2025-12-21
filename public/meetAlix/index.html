@@ -22,38 +22,69 @@
 <body>
   <div class="weeklyContainer">
   </div>
-  <form class="displayNone" id="addMeForm" action="get">
-    <h2>Wanna meet?</h2>
-    <h3>When?</h3>
-    <p>Date: <strong><span id="dateComplete">mercredi, le 5 mars 2024</span></strong></p>
-    <h6>You want a different date? Then click "oups!" and try again!</h6>
-    <p>From: <input id="dalleTime" type="time" /></p>
-    <p>To: <input id="alleTime" type="time" /></p>
-    <h6>Please consider meal, prep & travel times</h6>
-    <h3>Who are you?</h3>
-    <p>Your name: <input id="nameInput" type="text" /></p>
-    <p>Your contact info (one is enough):<br/>
-      email: <input id="emailInput" type="text" /><br/>
-      cell: <input id="cellInput" type="text" /><br/>
-      nickname on Messenger: <input id="messNameInput" type="text" /></p>
-    <h3>Where?</h3>
-    <p>online:</p>
-    <input id="messInput" class="myRadio" name="whereRadios" type="radio" value="mess" />
-    <label for="messInput" class="whereLabel"><span class="myRadio"></span>Messenger</label><br/>
-    <input id="meetInput" class="myRadio" name="whereRadios" type="radio" value="meet" />
-    <label for="meetInput" class="whereLabel"><span class="myRadio"></span>Google Meet</label>
-    <p>offline?!</p>
-    <input id="realInput" class="myRadio" name="whereRadios" type="radio" value="real" />
-    <label for="realInput" class="whereLabel"><span class="myRadio"></span>In person</label>
-    <p>Any preferences as to where?<br/>
-      <textarea name="where" id="whereRealInput" cols="30" rows="10"></textarea>
-    </p>
-    <h3>Why?!</h3>
-    <p>What would you like us to do? Anything I should know, prepare for or worry about?<br/>
-      <textarea name="why" id="whyInput" cols="30" rows="10"></textarea>
-    </p>
-    <button id="bookBtn" type="submit">Book it!</button>
-    <button id="cancelBtn" type="reset">oups!</button>
+  <form  id="addMeForm" action="get">
+    <h2>Wanna hangout? 🙃</h2>
+    <ul>
+      <li><h3>So you chose these date & time:</h3></li>
+      <li><h6>Is that your final answer?</h6></li>
+      <li><label for="dateComplete">Date: </label><input type="date" name="" id="dateComplete" value="" /></li>
+      <li><label for="dalleTime">From: </label><input id="dalleTime" type="time" /></li>
+      <li><label for="alleTime">To: </label><input id="alleTime" type="time" /></li>
+      <li><h6>Please consider meal, prep & travel times.<br/>As in, don't expect me to be anywhere else than my place before noon!</h6></li>
+      <li><h3>Which one(s) are you?</h3></li>
+      <li><label for="nameInput">Your name(s):<br/><h6>You and anyone else you wanna invite; be them people, imaginary friends or other of your personalities</h6></label><input id="nameInput" type="text" /></li>
+      <li>
+        <p>How shall we communicate?</p>
+        <h6>One is enough, but it really should be one of them.<br/>I don't do pigeons anymore and squirrels just aren't reliable.</h6>
+      </li>
+      <li><label for="emailInput">Email: </label><input id="emailInput" type="text" /></li>
+      <li><label for="cellInput">Cell: </label><input id="cellInput" type="text" /></li>
+      <li><label for="messengerNameInput">Nickname on Messenger: </label><input id="messengerNameInput" type="text" /></li>
+      <li><h3>Where shall we meet?</h3></li>
+      <li>
+        <h4>Online</h4>
+        <h6>As in videocall. I don't do phone calls anymore. Kinda freaks me out. Let me see your face!</h6>
+      </li>
+      <li>
+        <input id="messengerRadio" class="myRadio" name="whereRadios" type="radio" value="messenger" />
+        <label for="messengerRadio" class="whereLabel"><span class="myRadio"></span>Messenger</label>
+        <h6>Then I'll definitely need your Messenger nickname.</h6>
+      </li>
+      <li>
+        <input id="googleMeetRadio" class="myRadio" name="whereRadios" type="radio" value="googleMeet" />
+        <label for="googleMeetRadio" class="whereLabel"><span class="myRadio"></span>Google Meet</label>
+      </li>
+      <li>
+        <h4>Offline</h4>
+        <h6>As in the real world?! 😱</h6>
+      </li>
+      <li>
+        <input id="myPlaceRadio" class="myRadio" name="whereRadios" type="radio" value="realWorld" />
+        <label for="myPlaceRadio" class="whereLabel"><span class="myRadio"></span>My place</label>
+        <h6>Wait, you know where I live?! 😳</h6>
+      </li>
+      <li>
+        <input id="yourPlaceRadio" class="myRadio" name="whereRadios" type="radio" value="realWorld" />
+        <label for="yourPlaceRadio" class="whereLabel"><span class="myRadio"></span>Your place</label>
+        <h6>Sure, but do I remember where you live? You might have to remind me your address.</h6>
+        <label for="yourAddressInput">Here, give me your address<br/>
+        <h6>I promise not to get all stalkerish on you. 👀</h6></label>
+        <textarea name="where" id="yourAddressInput" cols="30" rows="5"></textarea>
+      </li>
+      <li>
+        <input id="otherPlaceRadio" class="myRadio" name="whereRadios" type="radio" value="realWorld" />
+        <label for="otherPlaceRadio" class="whereLabel"><span class="myRadio"></span>Some place else</label>
+        <label for="whereRealInput">Any preferences as to where?</label>
+        <textarea name="where" id="whereRealInput" cols="30" rows="10"></textarea>
+      </li>
+      <li><h3>Why?!</h3></li>
+      <li>
+        <p>What would you like us to do? Anything I should know, prepare for or worry about?</p>
+        <textarea name="why" id="whyInput" cols="30" rows="10"></textarea>
+      </li>
+      <li><button id="bookBtn" type="submit">Book it!</button></li>
+      <li><button id="cancelBtn" type="reset">Oups!</button></li>
+    </ul>
   </form>
   <script type="module" src="meetAlix.js"></script>
 </body>

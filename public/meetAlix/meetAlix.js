@@ -393,5 +393,36 @@ Where shall we mee?
   somewhere else:
 
 Please consider prep & travel times as well as meals
+Les zones blanches sont celles où je suis disponible... à sortir de chez moi. Donc si la zone blanche commence à 11h00, et bien n'espérez que je puisse être à l'autre bout de la ville à 11h!
 
 */
+
+function addMe(thisOne) {
+  let colNum = thisOne.style.gridColumnStart;
+  let code = mySettings.myWeeksDayArray[colNum - 2].code;
+  let colEl = document.querySelector(`[data-code="${code}"]`);
+  let colDate = colEl.dataset.date;
+  let meet = {
+    newShit: true,
+    id: crypto.randomUUID(),
+    startDate: colDate
+  };
+  let rowName = thisOne.style.gridRowStart;
+  if(rowName == "row-tutto"){
+    meet.tutto = true;
+  } else{
+    let hourMath = Number(rowName.slice(4, 6));
+    let hourEndMath = hourMath + 1;
+    let hourEndNum = hourEndMath < 24 ? hourEndMath : hourEndMath - 24;
+    meet.startTime = `${String(hourMath).padStart(2, "0")}:00`;
+    meet.stopTime = `${String(hourEndNum).padStart(2, "0")}:00`;
+    meet.tutto = false;
+  };
+  letsMeet(meet);
+};
+Window.addMe = addMe;
+
+function letsMeet(meet) {
+  
+};
+

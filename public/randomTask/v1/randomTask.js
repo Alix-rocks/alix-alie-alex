@@ -6706,11 +6706,15 @@ function busyZoneCreation(show){
   //console.log(show);
   let dayIdx = meseDayICalc(show.startDate);
   let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
-  let day = `${mySettings.myWeeksDayArray[idx].code}`;  
+  let day = `${mySettings.myWeeksDayArray[idx].day}`;  
   let start = show.startTime ? timeMath(roundFifteenTime(show.startTime), "minus", show.prima) : "11-00";
   start = start <= "11-00" ? "11-00" : start; // we should have a mySettings.myWeeksDayArray[idx].peopleClockIn instead of 11:00
+  let startMinute = Number(start.substring(3));
+  let startHour = Number(start.substring(0, 2));
   let end = show.stopTime ? timeMath(roundFifteenTime(show.stopTime), "plus", show.dopo) : "02-00";
   end = end < mySettings.myTomorrow.replace(":", "-") ? "end" : end;
+  let endMinute = Number(end.substring(3));
+  let endHour = Number(end.substring(0, 2));
   let meal = (show.showType !== "Calia" && show.prima >= "03:00") ? true : false;
   
   let busy = {
@@ -6718,7 +6722,11 @@ function busyZoneCreation(show){
     date: show.startDate,
     col: day,
     start: start,
+    startMinute: startMinute,
+    startHour: startHour,
     end: end,
+    endMinute: endMinute,
+    endHour: endHour,
     meal: meal
   }; // then all we have to do is make sure the date is in that particular showing week and we add the div to the weekly! It should go straight in the right column and rows
   myBusies.push(busy);

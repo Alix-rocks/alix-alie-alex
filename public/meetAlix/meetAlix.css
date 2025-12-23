@@ -7,7 +7,7 @@
   font-family: 'Nunito', sans-serif;
   
   box-sizing: border-box;
-  user-select: none;
+  user-select: none; 
 }
 body{
   color: var(--tx-color);

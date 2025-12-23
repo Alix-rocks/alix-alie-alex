@@ -397,6 +397,13 @@ Les zones blanches sont celles où je suis disponible... à sortir de chez moi. 
 
 */
 
+function addThisOne(thisOne) {
+  //what if all the item are checkbox? We need to check if the checkbox/item are in the same column/day and if next to each other (otherwise, the ones in-between should get automatically checked too). Only the item where I'm free should be clickable. and what about meals?
+  //getStartTime
+  //compare startTime
+  
+}
+
 function addMe(thisOne) {
   let colNum = thisOne.style.gridColumnStart;
   let code = mySettings.myWeeksDayArray[colNum - 2].code;

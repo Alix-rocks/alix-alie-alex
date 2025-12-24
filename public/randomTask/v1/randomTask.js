@@ -6715,7 +6715,7 @@ function busyZoneCreation(show){
   let end = show.stopTime ? timeMath(roundFifteenTime(show.stopTime), "plus", show.dopo) : "02-00";
   end = end < mySettings.myTomorrow.replace(":", "-") ? "end" : end;
   let endMinute = end == "end" ? 0 : Number(end.substring(3));
-  let endHour = end == "end" ? 0 : Number(end.substring(0, 2));
+  let endHour = end == "end" ? 24 : Number(end.substring(0, 2)); // 24 => pour l'instant, parce que meetAlix's days end at 24:00
   let meal = (show.showType !== "Calia" && show.prima >= "03:00") ? true : false;
   
   let busy = {

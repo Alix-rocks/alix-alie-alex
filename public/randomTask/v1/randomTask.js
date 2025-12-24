@@ -6713,8 +6713,8 @@ function busyZoneCreation(show){
   let startHour = Number(start.substring(0, 2));
   let end = show.stopTime ? timeMath(roundFifteenTime(show.stopTime), "plus", show.dopo) : "02-00";
   end = end < mySettings.myTomorrow.replace(":", "-") ? "end" : end;
-  let endMinute = Number(end.substring(3));
-  let endHour = Number(end.substring(0, 2));
+  let endMinute = end == "end" ? 0 : Number(end.substring(3));
+  let endHour = end == "end" ? 0 : Number(end.substring(0, 2));
   let meal = (show.showType !== "Calia" && show.prima >= "03:00") ? true : false;
   
   let busy = {

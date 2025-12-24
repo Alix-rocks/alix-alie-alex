@@ -976,6 +976,7 @@ async function saveToCloud(){
   });
   const docRefBusies = doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies");
   const docSnapBusies = await getDoc(docRefBusies);
+  console.log(myBusies);
   if (docSnapBusies.exists()){
     batch.update(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.update or await updateDoc
       myBusies: myBusies
@@ -6730,5 +6731,4 @@ function busyZoneCreation(show){
     meal: meal
   }; // then all we have to do is make sure the date is in that particular showing week and we add the div to the weekly! It should go straight in the right column and rows
   myBusies.push(busy);
-  console.log(myBusies);
 };

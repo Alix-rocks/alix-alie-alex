@@ -6707,6 +6707,7 @@ function busyZoneCreation(show){
   //console.log(show);
   let dayIdx = meseDayICalc(show.startDate);
   let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
+  let code = `${mySettings.myWeeksDayArray[idx].code}`; 
   let day = `${mySettings.myWeeksDayArray[idx].day}`;  
   let start = show.startTime ? timeMath(roundFifteenTime(show.startTime), "minus", show.prima) : "11-00";
   start = start <= "11-00" ? "11-00" : start; // we should have a mySettings.myWeeksDayArray[idx].peopleClockIn instead of 11:00
@@ -6721,7 +6722,8 @@ function busyZoneCreation(show){
   let busy = {
     type: "once", //"sempre" if appears at each week, like sleep and meal
     date: show.startDate,
-    col: day,
+    col: code,
+    day: day,
     start: start,
     startMinute: startMinute,
     startHour: startHour,

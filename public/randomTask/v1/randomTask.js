@@ -6730,5 +6730,5 @@ function busyZoneCreation(show){
     meal: meal
   }; // then all we have to do is make sure the date is in that particular showing week and we add the div to the weekly! It should go straight in the right column and rows
   myBusies.push(busy);
-
+  console.log(myBusies);
 };

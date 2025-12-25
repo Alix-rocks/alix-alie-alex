@@ -6,6 +6,7 @@ let unknownStartDate = "2026-01-24"; //The day the "Not sure yet" section starts
 let myEmail = "alexblade.23.49@gmail.com";
 
 let myBusies = [];
+let unavailableRanges = [];
 
 let weeksDayArray = [{
   day: 0,
@@ -66,11 +67,12 @@ async function getMyBusies() {
   //   localStorage.mySettings = JSON.stringify(mySettings);
   // };
   // myBusies = JSON.parse(localStorage.myBusies);
-  console.log(myBusies);
+  
   getWeeklyCalendar();
 };
 
 getMyBusies();
+
 
 
 //*** WEEKLY CALENDAR
@@ -84,21 +86,32 @@ let todayWholeDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(tod
 
 function getWeeklyCalendar(){
   let arrayItem = [];
-  let rowYear = `<div class="weeklyItem weeklyTitle" style="grid-row:1; border-bottom-width: 1px;"><button class="weeklyBtn" id="weekBackward" style="float: left; border-radius: 2px 5px 5px 0;"><span class="typcn typcn-media-play-reverse"></span></button><span id="weeklyYearSpan">${year}</span><button class="weeklyBtn" id="weekForward" style="float: right; border-radius: 5px 2px 0 5px;"><span class="typcn typcn-media-play"></span></button></div>`;
-  let rowMonth = `<div class="weeklyItem weeklyTitle" style="grid-row:2; border-bottom-width: 2px;"><span id="weeklyMonthSpan">${monthName}</span></div>`;
+  let rowYear = `<div class="weeklyItem weeklyTitle unavailable" style="grid-row:1; border-bottom-width: 1px;"><button class="weeklyBtn" id="weekBackward" style="float: left; border-radius: 2px 5px 5px 0;"><span class="typcn typcn-media-play-reverse"></span></button><span id="weeklyYearSpan">${year}</span><button class="weeklyBtn" id="weekForward" style="float: right; border-radius: 5px 2px 0 5px;"><span class="typcn typcn-media-play"></span></button></div>`;
+  let rowMonth = `<div class="weeklyItem weeklyTitle unavailable" style="grid-row:2; border-bottom-width: 2px;"><span id="weeklyMonthSpan">${monthName}</span></div>`;
   arrayItem.push(rowYear, rowMonth);
   let myDay = 11;
   for(let c = 1; c < 9; c++){
     let arrayC = [];
-    let rowDay = `<div ${c == 2 ? `id="Dday"` : c == 8 ? `id="Sday"` : ``} class="weeklyItem weeklyDay" style="grid-column:${c}; grid-row:3; ${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}"${c > 1 ? ` data-code="${weeksDayArray[c - 2].code}">${weeksDayArray[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : `>`}</div>`; //shall we add the date as an id, as a data-date or as an area?
+    let rowDay = `<div 
+      ${c == 2 ? `id="Dday"` : c == 8 ? `id="Sday"` : ``} 
+      class="weeklyItem weeklyDay unavailable" 
+      style="
+        grid-column:${c}; 
+        grid-row:3; 
+        ${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}
+      "
+      ${c > 1 ? `>${weeksDayArray[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : `>`}
+    </div>`;
     arrayC.push(rowDay);
     let line = 4;
-    for(let r = 1; r < 14; r++){
-      let item = `<div class="weeklyItem" ${c > 1 ? `onclick="addMe(this)"` : ``} style="grid-column:${c}; grid-row:${line} / ${line + 4};${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}">${c == 1 ? `${String(myDay).padStart(2, "0")}:00` : ``}</div>`; //non, on va créer les zones où ils peuvent cliquer; ça sera pas les weeklyItem
+    for(let r = 1; r < 14; r++){ // 13 weeklyItem per day (because it starts at 11:00 and ends at 24:00)
+      let item = `<div class="weeklyItem${c > 1 ? `" onclick="addMe(this)` : ` unavailable`}" style="grid-column:${c}; grid-row:${line} / ${line + 4};${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}">${c == 1 ? `${String(myDay).padStart(2, "0")}:00` : ``}</div>`; 
       arrayC.push(item);
       line += 4;
       myDay++;
     };
+    let lastWeeklyItem = `<div class="weeklyItem unavailable invisible" style="grid-column:${c}; grid-row:56 / 57;"></div>`;
+    arrayC.push(lastWeeklyItem);
     let arrayCs = arrayC.join("");
     arrayItem.push(arrayCs);
   };
@@ -121,7 +134,7 @@ function getWeeklyCalendar(){
     myDay++;
   };
   let firstRows = `[row-Year] 1fr [row-Month] 1fr [row-Day] 1.5fr`;
-  let lastLine = `[row-end]`;
+  let lastLine = `[row-24-00] minmax(0, 0) [row-end]`;
   nomiRow.unshift(firstRows);
   nomiRow.push(lastLine);
   let nomiRows = nomiRow.join(" ");
@@ -136,48 +149,48 @@ function getWeeklyCalendar(){
   let date = new Date();
   let dayIdx = date.getDay();
   date.setDate(date.getDate() - dayIdx);
-  putDatesInWeek(date);
+  putDatesInWeek(date); //includes getMyThisWeekBusiesAndUnavailableRanges(Dday, Sday); AND putShowsInWeek();
   
   document.querySelector("#weekBackward").addEventListener("click", () => {
-    let todayAreaDiv = document.querySelector(".todayArea");
-    if(todayAreaDiv){
-      todayAreaDiv.remove();
-    };
-    let nowAreaDiv = document.querySelector(".nowArea");
-    if(nowAreaDiv){
-      nowAreaDiv.remove();
-    };
-    let unknownAreaDiv = document.querySelector(".unknownArea");
-    if(unknownAreaDiv){
-      unknownAreaDiv.remove();
-    };
-    eraseWeek();
+    eraseWeekArea();
+    eraseWeekEvent();
     let Dday = document.querySelector("#Dday").dataset.date;
     let Ddate = getDateFromString(Dday);
     Ddate.setDate(Ddate.getDate() - 7);
-    putDatesInWeek(Ddate);
+    putDatesInWeek(Ddate); //includes getMyThisWeekBusiesAndUnavailableRanges(Dday, Sday); AND putShowsInWeek();
   });
   document.querySelector("#weekForward").addEventListener("click", () => {
-    let todayAreaDiv = document.querySelector(".todayArea");
-    if(todayAreaDiv){
-      todayAreaDiv.remove();
-    };
-    let nowAreaDiv = document.querySelector(".nowArea");
-    if(nowAreaDiv){
-      nowAreaDiv.remove();
-    };
-    let unknownAreaDiv = document.querySelector(".unknownArea");
-    if(unknownAreaDiv){
-      unknownAreaDiv.remove();
-    };
-    eraseWeek();
+    console.log("forward");
+    eraseWeekArea();
+    eraseWeekEvent();
     let Sday = document.querySelector("#Sday").dataset.date;
     let Sdate = getDateFromString(Sday);
     Sdate.setDate(Sdate.getDate() + 1);
-    putDatesInWeek(Sdate);
+    putDatesInWeek(Sdate); //includes getMyThisWeekBusiesAndUnavailableRanges(Dday, Sday); AND putShowsInWeek();
   });
 };
 
+function fromMyThisWeekBusiesToUnavailableRanges(){
+  unavailableRanges = myThisWeekBusies.map(busy => {
+    let start = {
+      dayIndex: busy.day, //if we end up with multiple days events... we'll need startDayIndex and endDayIndex
+      hour: busy.startHour,
+      minute: busy.startMinute
+    };
+    let startSlot = dateTimeToSlot(start);
+    let end = {
+      dayIndex: busy.day, //if we end up with multiple days events... we'll need startDayIndex and endDayIndex
+      hour: busy.endHour,
+      minute: busy.endMinute
+    };
+    let endSlot = dateTimeToSlot(end);
+    return {
+      start: startSlot,
+      end: endSlot
+    };
+  });
+  console.log(unavailableRanges);
+}; 
 
 
 function putDatesInWeek(date){
@@ -204,14 +217,14 @@ function putDatesInWeek(date){
     let currentHour = current.getHours();
     let currentMinute = current.getMinutes();
     let currentTime = roundFifteenArea(currentHour, currentMinute);
-    let todayDay = `${weeksDayArray[dayIdx].code}`;
+    let todayDay = `${weeksDayArray[dayIdx].day}`;
     let todayArea = `<div class="todayArea" style="grid-row: row-Day / row-end; grid-column: col-${todayDay};"></div>`;
     let nowArea = `<div class="nowArea" style="grid-row: row-${currentTime}; grid-column: col-${todayDay};"></div>`;  
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", todayArea);
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", nowArea);
-    document.querySelector("#weekBackward").classList.add("disapeared");
+    document.querySelector("#weekBackward").classList.add("invisible");
   } else{
-    document.querySelector("#weekBackward").classList.remove("disapeared");
+    document.querySelector("#weekBackward").classList.remove("invisible");
   };
   //updateSleepAreas();
 
@@ -223,7 +236,7 @@ function putDatesInWeek(date){
   const unknownTestIn = arrayDate.some(el => (el.full == unknownStartDate));
   if(unknownTestIn){
     let unknownStartIdx = meseDayICalc(unknownStartDate);
-    let unknownStart = `${weeksDayArray[unknownStartIdx].code}`;
+    let unknownStart = `${weeksDayArray[unknownStartIdx].day}`;
     unknownArea = `<div class="unknownArea" style="grid-row: row-Day / row-end; grid-column: col-${unknownStart} / col-end">Not sure yet!</div>`;
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", unknownArea);
   };
@@ -244,7 +257,8 @@ function putDatesInWeek(date){
   let SMonthName = Sdate.toLocaleString('fr-CA', { month: 'long' }).toLocaleUpperCase();
   document.querySelector("#weeklyYearSpan").innerHTML = `${DYear}${DYear !== SYear ? ` / ${SYear}` : ``}`;
   document.querySelector("#weeklyMonthSpan").innerHTML = `${DMonthName}${DMonthName !== SMonthName ? ` / ${SMonthName}` : ``}`;
-  putShowsInWeek(Dday, Sday);
+  getMyThisWeekBusiesAndUnavailableRanges(Dday, Sday);
+  putShowsInWeek();
 };
 
 
@@ -257,44 +271,29 @@ function updateSleepAreas(){
   });
   let myDay = Number(mySettings.myTomorrow.substring(0, 2));
   let sleepAreas = mySettings.myWeeksDayArray.map((clock) => {
-    return `<div class="sleepArea" style="grid-area: row-${String(myDay).padStart(2, "0")}-00 / col-${clock.code} / row-${clock.clockIn.replace(":", "-")} / col-${clock.code}"></div>
-    <div class="sleepArea" style="grid-area: row-${clock.clockOut.replace(":", "-")} / col-${clock.code} / row-end / col-${clock.code}"></div>`;
+    return `<div class="sleepArea" style="grid-area: row-${String(myDay).padStart(2, "0")}-00 / col-${clock.day} / row-${clock.clockIn.replace(":", "-")} / col-${clock.day}"></div>
+    <div class="sleepArea" style="grid-area: row-${clock.clockOut.replace(":", "-")} / col-${clock.day} / row-end / col-${clock.day}"></div>`;
   }).join("");
   document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", sleepAreas);
 };
 
-/* function putShowsInWeek(Dday, Sday){
-  console.log(Dday);
-  console.log(Sday);
-  console.log(myBusies);
-  let daysBusies = [[],[],[],[],[],[],[]];
-  myBusies.forEach(busy => {
-    // if(show.line == "recurringDay"){ 
-    //   show.recurrys.map(recurry => {
-    //   if(Dday <= recurry.date && recurry.date <= Sday){//takes only the ones that should show up this week
-    //     createWeeklyshow(recurry);
-    //   };
-    //   })
-    // } else 
-    console.log(busy.date);
-    if((Dday <= busy.date && busy.date <= Sday) || busy.type == "sempre"){//takes only the ones that should show up this week
-      createWeeklyshow(busy);
-      let idxS = busy.col;
-      let idx = idxS.slice(1)
-      daysBusies[idx].push(busy);
-    };
-  });
-  console.log(daysBusies);
-}; */
 
-function putShowsInWeek(Dday, Sday){
-  myBusies.forEach(busy => {
-    if((Dday <= busy.date && busy.date <= Sday)){//takes only the ones that should show up this week
-      console.log(busy.date);
-      createWeeklyshow(busy);
-    };
+let myThisWeekBusies = [];
+function getMyThisWeekBusiesAndUnavailableRanges(Dday, Sday){
+  myThisWeekBusies = myBusies.filter(busy =>
+    Dday <= busy.date && busy.date <= Sday
+  );
+  console.log(myThisWeekBusies);
+
+  fromMyThisWeekBusiesToUnavailableRanges();
+};
+
+function putShowsInWeek() {
+  myThisWeekBusies.forEach(busy => {
+    createWeeklyshow(busy);
   });
 };
+
 
 
 function createWeeklyshow(busy){
@@ -304,9 +303,22 @@ function createWeeklyshow(busy){
   };
 };
 
+function eraseWeekArea(){
+  let todayAreaDiv = document.querySelector(".todayArea");
+  if(todayAreaDiv){
+    todayAreaDiv.remove();
+  };
+  let nowAreaDiv = document.querySelector(".nowArea");
+  if(nowAreaDiv){
+    nowAreaDiv.remove();
+  };
+  let unknownAreaDiv = document.querySelector(".unknownArea");
+  if(unknownAreaDiv){
+    unknownAreaDiv.remove();
+  };
+};
 
-
-function eraseWeek(){
+function eraseWeekEvent(){
   document.querySelectorAll(".weeklyEvent").forEach(we => {
     we.remove();
   });
@@ -319,11 +331,12 @@ function eraseWeek(){
 };
 
 function updateWeek(){
-  eraseWeek();
-  updateSleepAreas();
-  let Dday = document.querySelector("#Dday").dataset.date;
-  let Sday = document.querySelector("#Sday").dataset.date;
-  putShowsInWeek(Dday, Sday);
+  eraseWeekArea();
+  eraseWeekEvent();
+  //updateSleepAreas();
+  let Dday = document.querySelector("#Dday").dataset.date; //wouldn't work if we haven't already set the date attribute...
+  let Ddate = getDateFromString(Dday);
+  putDatesInWeek(Ddate);
 };
 
 function getTodayDate(){
@@ -393,41 +406,179 @@ Where shall we mee?
   somewhere else:
 
 Please consider prep & travel times as well as meals
-Les zones blanches sont celles où je suis disponible... à sortir de chez moi. Donc si la zone blanche commence à 11h00, et bien n'espérez que je puisse être à l'autre bout de la ville à 11h!
+Les zones blanches sont celles où je suis disponible... à sortir de chez moi. Donc si la zone blanche commence à 11h00, et bien n'espérez pas que je puisse être à l'autre bout de la ville à 11h!
 
 */
 
-function addThisOne(thisOne) {
-  //what if all the item are checkbox? We need to check if the checkbox/item are in the same column/day and if next to each other (otherwise, the ones in-between should get automatically checked too). Only the item where I'm free should be clickable. and what about meals?
-  //getStartTime
-  //compare startTime
+/*
+const unavailableRanges = [
+  { start: 40, end: 44 }, // 10:00 → 11:00
+  { start: 52, end: 56 }, // 13:00 → 14:00
+];
+*/
+
+/* LEGEND
+  Slot = 15 minute increment
+  Range = more than 1 slot
+  WeeklyItem = the div that covers the 4 slots of a given hour
+
+*/
+
+
+
+const SLOTS_PER_DAY = 97; // 24h * 4 slots/h + 1 slot (for after "midnight")
+
+function dateTimeToSlot({ dayIndex, hour, minute }) {
+  const timeSlot = hour * 4 + minute / 15;
+  return dayIndex * SLOTS_PER_DAY + timeSlot;
+};
+
+function slotToDateTime(slot) {
+  const dayIndex = Math.floor(slot / SLOTS_PER_DAY);
+  const timeSlot = slot % SLOTS_PER_DAY;
+  const hour = Math.floor(timeSlot / 4);
+  const minute = (timeSlot % 4) * 15;
+
+  return { dayIndex, hour, minute };
+};
+
+// const userSelection = {
+//   startSlot: 0,
+//   endSlot: 4
+// };
+
+// function rangesOverlap(a, b) {
+//  return a.startSlot < b.endSlot && b.startSlot < a.endSlot;
+// } 
+
+const allTheEdges = []
+for(let d = 0; d < 7; d++){
+  let startSlotInfo = {
+    dayIndex: d,
+    hour: 11,
+    minute: 0
+  };
+  let startSlot = dateTimeToSlot(startSlotInfo);
+
+  let endSlotInfo = {
+    dayIndex: d,
+    hour: 24,
+    minute: 0
+  };
+  let endSlot = dateTimeToSlot(endSlotInfo);
+
+  let daySlots = {
+    start: startSlot,
+    end: endSlot
+  };
+
+  allTheEdges.push(daySlots);
+};
+
+
+function analyzeRelation(selected, unavailable) {
+  console.log(selected);
+  console.log(unavailable);
   
-}
+  // overlap
+  if (
+    selected.startSlot < unavailable.end &&
+    unavailable.start < selected.endSlot
+  ) {
+    return "overlap";
+  };
+
+  // unavailable ends exactly where selection starts
+  if (unavailable.end === selected.startSlot) {
+    return "topIsTouching";
+  };
+
+  // unavailable starts exactly where selection ends
+  if (unavailable.start === selected.endSlot) {
+    return "bottomIsTouching";
+  };
+
+  return "separate";
+};
+
+function analyzeEdges(selected, edge) {
+  //top of the day
+  if (selected.startSlot === edge.start) {
+    return "topIsTouching";
+  };
+
+  //bottom of the day
+  if (selected.endSlot === edge.end) {
+    return "bottomIsTouching";
+  };
+
+};
+
 
 function addMe(thisOne) {
-  let colNum = thisOne.style.gridColumnStart;
-  let code = mySettings.myWeeksDayArray[colNum - 2].code;
-  let colEl = document.querySelector(`[data-code="${code}"]`);
-  let colDate = colEl.dataset.date;
-  let meet = {
-    newShit: true,
-    id: crypto.randomUUID(),
-    startDate: colDate
+
+  // --- 1. Build the clicked weeklyItem info
+  let selectedWeeklyItemInfo = {
+    // dayIndex: mySettings.myWeeksDayArray[thisOne.style.gridColumnStart - 2].day, THAT IS FOR WHEN WE'LL USE mySettings
+    dayIndex: weeksDayArray[thisOne.style.gridColumnStart - 2].day,
+    hour: (thisOne.style.gridRowStart / 4) + 10,
+    minute: 0
   };
-  let rowName = thisOne.style.gridRowStart;
-  if(rowName == "row-tutto"){
-    meet.tutto = true;
-  } else{
-    let hourMath = Number(rowName.slice(4, 6));
-    let hourEndMath = hourMath + 1;
-    let hourEndNum = hourEndMath < 24 ? hourEndMath : hourEndMath - 24;
-    meet.startTime = `${String(hourMath).padStart(2, "0")}:00`;
-    meet.stopTime = `${String(hourEndNum).padStart(2, "0")}:00`;
-    meet.tutto = false;
+    console.log(selectedWeeklyItemInfo);
+  // --- 2. Convert to slot index (15-min resolution)
+  let startSlot = dateTimeToSlot(selectedWeeklyItemInfo);
+  let selectedWeeklyItem = {
+    startSlot: startSlot,
+    endSlot: startSlot + 4 // 4 slots of 15 min to make the 1-hour weeklyItem
   };
-  letsMeet(meet);
+  console.log(selectedWeeklyItem);
+  
+  // --- 3. Reset touching classes (important when clicking multiple times)
+  thisOne.classList.remove("topIsTouching", "bottomIsTouching");
+
+  // --- 4. Check against unavailable ranges
+  for (const unavailable of unavailableRanges) {
+
+    const relation = analyzeRelation(selectedWeeklyItem, unavailable);
+    console.log(relation);
+    
+
+    // 🚫 OVERLAP → stop immediately
+    if (relation === "overlap") {
+      //Since it's just when the user clicks (and not changes the time input), we just do nothing
+      return;
+    };
+
+    // ⬆️ touching before
+    if (relation === "topIsTouching") {
+      thisOne.classList.add("topIsTouching");
+    };
+
+    // ⬇️ touching after
+    if (relation === "bottomIsTouching") {
+      thisOne.classList.add("bottomIsTouching");
+    };
+  };
+
+  for (const edge of allTheEdges) {
+    const edging = analyzeEdges(selectedWeeklyItem, edge);
+
+    // ⬆️ touching start of day
+    if (edging === "topIsTouching") {
+      thisOne.classList.add("topIsTouching");
+    };
+
+    // ⬇️ touching end of day
+    if (edging === "bottomIsTouching") {
+      thisOne.classList.add("bottomIsTouching");
+    };
+  }
+
+  // --- 5. If we reach here, selection is valid
+  thisOne.classList.add("selected");
+
 };
-Window.addMe = addMe;
+window.addMe = addMe;
 
 function letsMeet(meet) {
   

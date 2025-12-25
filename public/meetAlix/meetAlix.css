@@ -2,6 +2,10 @@
   --bg-color: #F2F3F4;
   --bg-color-7: rgb(242, 243, 244);
   --tx-color: darkslategrey;
+  --selected-border: rgba(139, 0, 139, .5);
+  --selected-background: rgba(139, 0, 139, .25);
+  --confirmed-border: rgba(139, 0, 139, 1);
+  --confirmed-background: rgba(139, 0, 139, .8);
 }
 *{
   font-family: 'Nunito', sans-serif;
@@ -215,10 +219,40 @@ input.myRadio:checked + label span.myRadio{
 .pastEvent{
   opacity: .4;
 }
-.disapeared{
+
+.selected{
+  border-color: var(--selected-border);
+  border-style: dashed;
+  border-left-width: 2px;
+  border-right-width: 2px;
+  background-color: var(--selected-background);
+}
+.confirmed{
+  border-color: var(--confirmed-border);
+  border-style: solid;
+  border-left-width: 2px;
+  border-right-width: 2px;
+  background-color: var(--confirmed-background);
+}
+.topIsTouching{
+  border-top-width: 2px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.bottomIsTouching{
+  border-bottom-width: 2px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+.unavailable{
+  pointer-events: none;
+}
+
+.invisible{
   opacity: 0;
   visibility: hidden;
 }
+
 .displayNone{
   display: none!important;
 }

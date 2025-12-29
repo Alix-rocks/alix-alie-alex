@@ -86,15 +86,15 @@ let todayWholeDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(tod
 
 function getWeeklyCalendar(){
   let arrayItem = [];
-  let rowYear = `<div class="weeklyItem weeklyTitle unavailable" style="grid-row:1; border-bottom-width: 1px;"><button class="weeklyBtn" id="weekBackward" style="float: left; border-radius: 2px 5px 5px 0;"><span class="typcn typcn-media-play-reverse"></span></button><span id="weeklyYearSpan">${year}</span><button class="weeklyBtn" id="weekForward" style="float: right; border-radius: 5px 2px 0 5px;"><span class="typcn typcn-media-play"></span></button></div>`;
-  let rowMonth = `<div class="weeklyItem weeklyTitle unavailable" style="grid-row:2; border-bottom-width: 2px;"><span id="weeklyMonthSpan">${monthName}</span></div>`;
+  let rowYear = `<div class="weeklyItem weeklyTitle" style="grid-row:1; border-bottom-width: 1px;"><button class="weeklyBtn" id="weekBackward" style="float: left; border-radius: 2px 5px 5px 0;"><span class="typcn typcn-media-play-reverse"></span></button><span id="weeklyYearSpan">${year}</span><button class="weeklyBtn" id="weekForward" style="float: right; border-radius: 5px 2px 0 5px;"><span class="typcn typcn-media-play"></span></button></div>`;
+  let rowMonth = `<div class="weeklyItem weeklyTitle" style="grid-row:2; border-bottom-width: 2px;"><span id="weeklyMonthSpan">${monthName}</span></div>`;
   arrayItem.push(rowYear, rowMonth);
   let myDay = 11;
   for(let c = 1; c < 9; c++){
     let arrayC = [];
     let rowDay = `<div 
       ${c == 2 ? `id="Dday"` : c == 8 ? `id="Sday"` : ``} 
-      class="weeklyItem weeklyDay unavailable" 
+      class="weeklyItem weeklyDay" 
       style="
         grid-column:${c}; 
         grid-row:3; 
@@ -150,7 +150,6 @@ function getWeeklyCalendar(){
   let dayIdx = date.getDay();
   date.setDate(date.getDate() - dayIdx);
   putDatesInWeek(date); //includes getMyThisWeekBusiesAndUnavailableRanges(Dday, Sday); AND putShowsInWeek();
-  
   document.querySelector("#weekBackward").addEventListener("click", () => {
     eraseWeekArea();
     eraseWeekEvent();
@@ -160,7 +159,6 @@ function getWeeklyCalendar(){
     putDatesInWeek(Ddate); //includes getMyThisWeekBusiesAndUnavailableRanges(Dday, Sday); AND putShowsInWeek();
   });
   document.querySelector("#weekForward").addEventListener("click", () => {
-    console.log("forward");
     eraseWeekArea();
     eraseWeekEvent();
     let Sday = document.querySelector("#Sday").dataset.date;
@@ -217,7 +215,7 @@ function putDatesInWeek(date){
     let currentHour = current.getHours();
     let currentMinute = current.getMinutes();
     let currentTime = roundFifteenArea(currentHour, currentMinute);
-    let todayDay = `${weeksDayArray[dayIdx].day}`;
+    let todayDay = `${weeksDayArray[dayIdx].code}`;
     let todayArea = `<div class="todayArea" style="grid-row: row-Day / row-end; grid-column: col-${todayDay};"></div>`;
     let nowArea = `<div class="nowArea" style="grid-row: row-${currentTime}; grid-column: col-${todayDay};"></div>`;  
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", todayArea);
@@ -442,10 +440,14 @@ function slotToDateTime(slot) {
   return { dayIndex, hour, minute };
 };
 
-// const userSelection = {
-//   startSlot: 0,
-//   endSlot: 4
-// };
+// Now we need a function that will identify the corresponding weeklyItem to a slot/{dayIndex, hour, minute}
+
+const userSelection = {
+  startSlot: null,
+  endSlot: null
+};
+// userSelection.startSlot = ;
+// userSelection.endSlot = ;
 
 // function rangesOverlap(a, b) {
 //  return a.startSlot < b.endSlot && b.startSlot < a.endSlot;
@@ -477,8 +479,6 @@ for(let d = 0; d < 7; d++){
 
 
 function analyzeRelation(selected, unavailable) {
-  console.log(selected);
-  console.log(unavailable);
   
   // overlap
   if (
@@ -517,6 +517,10 @@ function analyzeEdges(selected, edge) {
 
 function addMe(thisOne) {
 
+  if(thisOne.classList.contains("selected")){
+    thisOne.classList.remove("selected"); // Although you still need to update the userSelection... but if thisOne is in the middle... then we'll have a hole! So, do we only unselect if it's at start or end, or do we unselect the whole thing?
+  };
+
   // --- 1. Build the clicked weeklyItem info
   let selectedWeeklyItemInfo = {
     // dayIndex: mySettings.myWeeksDayArray[thisOne.style.gridColumnStart - 2].day, THAT IS FOR WHEN WE'LL USE mySettings
@@ -524,7 +528,6 @@ function addMe(thisOne) {
     hour: (thisOne.style.gridRowStart / 4) + 10,
     minute: 0
   };
-    console.log(selectedWeeklyItemInfo);
   // --- 2. Convert to slot index (15-min resolution)
   let startSlot = dateTimeToSlot(selectedWeeklyItemInfo);
   let selectedWeeklyItem = {
@@ -539,9 +542,7 @@ function addMe(thisOne) {
   // --- 4. Check against unavailable ranges
   for (const unavailable of unavailableRanges) {
 
-    const relation = analyzeRelation(selectedWeeklyItem, unavailable);
-    console.log(relation);
-    
+    const relation = analyzeRelation(selectedWeeklyItem, unavailable);    
 
     // 🚫 OVERLAP → stop immediately
     if (relation === "overlap") {
@@ -576,6 +577,76 @@ function addMe(thisOne) {
 
   // --- 5. If we reach here, selection is valid
   thisOne.classList.add("selected");
+
+  let tempSelection = userSelection;
+
+  if(tempSelection.startSlot == null){
+    tempSelection.startSlot = selectedWeeklyItem.startSlot;
+  // } else if(tempSelection.startSlot < selectedWeeklyItem.startSlot && Math.abs(selectedWeeklyItem.startSlot - tempSelection.startSlot) > 4){
+  } else {
+    let diff = Math.abs(selectedWeeklyItem.startSlot - tempSelection.startSlot);
+    if(tempSelection.startSlot < selectedWeeklyItem.startSlot){
+      tempSelection.startSlot = tempSelection.startSlot;
+    } else {
+      tempSelection.startSlot = selectedWeeklyItem.startSlot;
+    };
+    if(diff > 4){
+          console.log(diff);
+      console.log("fillInTheBlanksStart");
+    } else if (diff == 0){
+      console.log("same one!");
+      thisOne.classList.remove("selected");
+    };
+  };
+    
+    
+    
+
+  if(tempSelection.endSlot == null){
+    tempSelection.endSlot = selectedWeeklyItem.endSlot;
+  // } else if(tempSelection.endSlot < selectedWeeklyItem.endSlot && Math.abs(selectedWeeklyItem.endSlot - tempSelection.endSlot) > 4){
+  } else {
+    let diff = Math.abs(selectedWeeklyItem.endSlot - tempSelection.endSlot);
+    if(tempSelection.endSlot < selectedWeeklyItem.endSlot){
+    console.log("temp < selected END") 
+      tempSelection.endSlot = selectedWeeklyItem.endSlot;
+    } else {
+      tempSelection.endSlot = tempSelection.endSlot;
+    };
+
+    if(diff > 4){
+        console.log(diff);
+      console.log("fillInTheBlanksEnd");
+    } else if (diff == 0){
+      console.log("same one!");
+      thisOne.classList.remove("selected"); //C'est pas assez... ça marche pas dans toutes les circonstances
+      // Et il faut updater le tempSelection! Est-ce qu'on fait juste endSlot - 4 ?? (et startSlot + 4, dans l'autre cas)
+    };
+  };
+  if (selectedWeeklyItem.startSlot < tempSelection.end &&
+    tempSelection.start < selectedWeeklyItem.endSlot){
+      console.log("NEW same one!");
+      thisOne.classList.remove("selected");
+    };
+
+  //You've got blanks to fill, ONLY if both start and end say "fillInTheBlanks"
+      
+     //On a le numéro du slot vide (ou du moins on peut le trouver...). Il faut juste, de un, s'assurer qu'il s'agit du premier slot d'une heure (minute = 00 et non 15, 30 ou 45) et convertir le numéro de slot en grid-row-start et le dayIndex en grid-column-start puis faire un queryselector...
+
+      
+      
+
+  // tempSelection.startSlot = tempSelection.startSlot == null ? selectedWeeklyItem.startSlot : tempSelection.startSlot < selectedWeeklyItem.startSlot ? tempSelection.startSlot : selectedWeeklyItem.startSlot;
+  // tempSelection.endSlot = tempSelection.endSlot == null ? selectedWeeklyItem.endSlot : tempSelection.endSlot < selectedWeeklyItem.endSlot ? selectedWeeklyItem.endSlot : tempSelection.endSlot;
+  //mais si la différence entre userSelection.xxxSlot et selectedWeeklyItem.xxxSlot est de plus de 4, alors il y a un ou des weeklyItem entre les deux qui doivent être sélectionnés...
+
+
+
+  // userSelection = tempSelection;
+  userSelection.startSlot = tempSelection.startSlot;
+  userSelection.endSlot = tempSelection.endSlot;
+
+  console.log(userSelection);
 
 };
 window.addMe = addMe;

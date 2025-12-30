@@ -105,7 +105,12 @@ function getWeeklyCalendar(){
     arrayC.push(rowDay);
     let line = 4;
     for(let r = 1; r < 14; r++){ // 13 weeklyItem per day (because it starts at 11:00 and ends at 24:00)
-      let item = `<div class="weeklyItem${c > 1 ? `" onclick="addMe(this)` : ` unavailable`}" style="grid-column:${c}; grid-row:${line} / ${line + 4};${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}">${c == 1 ? `${String(myDay).padStart(2, "0")}:00` : ``}</div>`; 
+      let item = `<div 
+        class="weeklyItem${c > 1 ? `" onclick="addMe(this)` : ` unavailable`}" 
+        style="grid-column:${c}; grid-row:${line} / ${line + 4};${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}" 
+        data-col="${c}" 
+        data-row="${line}"
+      >${c == 1 ? `${String(myDay).padStart(2, "0")}:00` : ``}</div>`; 
       arrayC.push(item);
       line += 4;
       myDay++;
@@ -441,6 +446,26 @@ function slotToDateTime(slot) {
 };
 
 // Now we need a function that will identify the corresponding weeklyItem to a slot/{dayIndex, hour, minute}
+function slotToWeeklyItem(slot){
+  let dayIndex = Math.floor(slot / SLOTS_PER_DAY);
+  let column = weeksDayArray[dayIndex].day + 2;
+  console.log(column);
+  let timeSlot = slot % SLOTS_PER_DAY;
+  let hour = Math.floor(timeSlot / 4);
+  let rowStart = (hour - 10) * 4;
+  console.log(rowStart);
+  
+
+  // let coordonates = {
+  //   col: column,
+  //   row: rowStart
+  // };
+  // return coordonates;
+
+  // return { column, row };
+
+  return document.querySelector(`[data-col="${column}"][data-row="${rowStart}"]`);
+};
 
 const userSelection = {
   startSlot: null,
@@ -518,7 +543,7 @@ function analyzeEdges(selected, edge) {
 function addMe(thisOne) {
 
   if(thisOne.classList.contains("selected")){
-    thisOne.classList.remove("selected"); // Although you still need to update the userSelection... but if thisOne is in the middle... then we'll have a hole! So, do we only unselect if it's at start or end, or do we unselect the whole thing?
+    thisOne.classList.remove("selected", "topIsTouching", "bottomIsTouching"); // Although you still need to update the userSelection... but if thisOne is in the middle... then we'll have a hole! So, do we only unselect if it's at start or end, or do we unselect the whole thing?
   };
 
   // --- 1. Build the clicked weeklyItem info
@@ -579,6 +604,22 @@ function addMe(thisOne) {
   thisOne.classList.add("selected");
 
   let tempSelection = userSelection;
+  let fillInTheBlanksStart = false;
+  let fillInTheBlanksEnd = false;
+
+  if (selectedWeeklyItem.startSlot < (tempSelection.endSlot - 4) &&
+    selectedWeeklyItem.endSlot > (tempSelection.startSlot + 4)){
+    console.log("NEW same one!");
+    // unselectThemAll
+    for(let s = tempSelection.startSlot; s < tempSelection.endSlot + 1; s = s + 4){
+      let weeklyItem = slotToWeeklyItem(s);
+      console.log(weeklyItem);
+      weeklyItem.classList.remove("selected","topIsTouching", "bottomIsTouching");
+    };
+    tempSelection.startSlot = null;
+    tempSelection.endSlot = null;
+    return
+  };
 
   if(tempSelection.startSlot == null){
     tempSelection.startSlot = selectedWeeklyItem.startSlot;
@@ -592,10 +633,12 @@ function addMe(thisOne) {
     };
     if(diff > 4){
           console.log(diff);
+          fillInTheBlanksStart = true;
       console.log("fillInTheBlanksStart");
     } else if (diff == 0){
       console.log("same one!");
-      thisOne.classList.remove("selected");
+      thisOne.classList.remove("selected","topIsTouching", "bottomIsTouching");
+      tempSelection.startSlot = tempSelection.startSlot + 4;
     };
   };
     
@@ -616,18 +659,25 @@ function addMe(thisOne) {
 
     if(diff > 4){
         console.log(diff);
+        fillInTheBlanksEnd = true;
       console.log("fillInTheBlanksEnd");
     } else if (diff == 0){
       console.log("same one!");
-      thisOne.classList.remove("selected"); //C'est pas assez... ça marche pas dans toutes les circonstances
+      thisOne.classList.remove("selected", "topIsTouching", "bottomIsTouching"); //C'est pas assez... ça marche pas dans toutes les circonstances
       // Et il faut updater le tempSelection! Est-ce qu'on fait juste endSlot - 4 ?? (et startSlot + 4, dans l'autre cas)
+      tempSelection.endSlot = tempSelection.endSlot - 4;
     };
   };
-  if (selectedWeeklyItem.startSlot < tempSelection.end &&
-    tempSelection.start < selectedWeeklyItem.endSlot){
-      console.log("NEW same one!");
-      thisOne.classList.remove("selected");
+  
+
+  if(fillInTheBlanksStart && fillInTheBlanksEnd){
+    // fillInAllTheBlanks
+    for(let s = tempSelection.startSlot + 4; s < tempSelection.endSlot; s = s + 4){
+      let weeklyItem = slotToWeeklyItem(s);
+      console.log(weeklyItem);
+      weeklyItem.classList.add("selected");
     };
+  };
 
   //You've got blanks to fill, ONLY if both start and end say "fillInTheBlanks"
       

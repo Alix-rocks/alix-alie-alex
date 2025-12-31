@@ -39,7 +39,7 @@ button:active{
   top: 0;
   height: 100dvh; /* important on mobile */
 
-  transform: translateY(calc(100% - 160px));
+  transform: translateY(calc(100% - 170px));
   /* transition: transform 0.3s ease-out; */
   transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 }

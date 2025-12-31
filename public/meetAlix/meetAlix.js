@@ -752,6 +752,7 @@ function addMe(thisOne) {
   // userSelection = tempSelection;
   userSelection.startSlot = tempSelection.startSlot;
   userSelection.endSlot = tempSelection.endSlot;
+  userSelection.dayIndex = selectedWeeklyItem.dayIndex;
   updateSelectedTime();
   
 

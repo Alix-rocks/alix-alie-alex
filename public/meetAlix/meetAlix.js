@@ -506,6 +506,7 @@ function slotToWeeklyItem(slot){
 };
 
 const userSelection = {
+  dayIndex: null,
   startSlot: null,
   endSlot: null
 };
@@ -594,6 +595,7 @@ function addMe(thisOne) {
   // --- 2. Convert to slot index (15-min resolution)
   let startSlot = dateTimeToSlot(selectedWeeklyItemInfo);
   let selectedWeeklyItem = {
+    dayIndex: selectedWeeklyItemInfo.dayIndex,
     startSlot: startSlot,
     endSlot: startSlot + 4 // 4 slots of 15 min to make the 1-hour weeklyItem
   };
@@ -601,6 +603,21 @@ function addMe(thisOne) {
   
   // --- 3. Reset touching classes (important when clicking multiple times)
   thisOne.classList.remove("topIsTouching", "bottomIsTouching");
+  
+  let tempSelection = userSelection;
+
+  // --- Make sure there aren't already one selected in another day
+  if(tempSelection.dayIndex !== null && tempSelection.dayIndex !== selectedWeeklyItem.dayIndex){
+    for (let s = tempSelection.startSlot; s < tempSelection.endSlot + 1; s = s + 4) {
+     let weeklyItem = slotToWeeklyItem(s);
+  //console.log(weeklyItem);
+      weeklyItem.classList.remove("selected", "topIsTouching", "bottomIsTouching");
+    };
+    tempSelection.startSlot = null;
+    tempSelection.endSlot = null;
+    userSelection.startSlot = null;
+    userSelection.endSlot = null;
+  };
 
   // --- 4. Check against unavailable ranges
   for (const unavailable of unavailableRanges) {
@@ -641,7 +658,6 @@ function addMe(thisOne) {
   // --- 5. If we reach here, selection is valid
   thisOne.classList.add("selected");
 
-  let tempSelection = userSelection;
   let fillInTheBlanksStart = false;
   let fillInTheBlanksEnd = false;
 

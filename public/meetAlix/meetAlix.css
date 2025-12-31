@@ -6,6 +6,8 @@
   --selected-background: rgba(139, 0, 139, .25);
   --confirmed-border: rgba(139, 0, 139, 1);
   --confirmed-background: rgba(139, 0, 139, .8);
+  --vw: 100vw;
+  --vh: 100vh;
 }
 *{
   font-family: 'Nunito', sans-serif;
@@ -22,28 +24,84 @@ button:active{
   background-color: rgba(50,205,50,.2);
 }
 
+#formContainer{
+  /* width: var(--vw);
+  width: -webkit-fill-available;
+  position: absolute;
+  top: 0; */
+  z-index: 20;
+  background-color: rgba(0, 0, 0, 0);
+  padding: 15px;
+  display: flex;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 100dvh; /* important on mobile */
+
+  transform: translateY(calc(100% - 160px));
+  /* transition: transform 0.3s ease-out; */
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+#formContainer.expanded{
+  transform: translateY(0);
+}
+
+#handle{
+  font-size: 2em;
+  text-align: center;
+  opacity: .6;
+}
+
+#handle > .fa-minus{
+  display: block;
+}
+#handle > .fa-angle-down{
+  display: none;
+}
+#formContainer.expanded > #handle > .fa-minus{
+  display: none;
+}
+#formContainer.expanded > #handle > .fa-angle-down{
+  display: block;
+}
+
+#selectedTime{
+  text-align: center;
+  color: var(--confirmed-background);
+}
+
 form{
   border: 2px solid var(--tx-color);
   border-radius: 10px;
-  width: 90vw;
+  /* width: calc(var(--vw) * 90 / 100); */
   height: fit-content;
-  padding: 10px;
+  padding: 0 10px 10px 10px;
   /* margin: auto; useless if position absolute */
-  position: absolute;
-  top: 15px;
+  /* position: absolute;
+  top: 15px; */
   background-color: var(--bg-color-7);
-  z-index: 20;
-  left: calc(10vw / 2);
+  /* z-index: 20;
+  left: calc(var(--vw) * 5 / 100); */
 }
 form input, form select, form textarea{
   background-color: var(--bg-color-7);
   color: var(--tx-color);
 }
-form ul{
+form .wide{
+  width: -webkit-fill-available;
+}
+ul{
   list-style-type: none;
   display: flex;
   flex-flow: column nowrap;
   gap: .5em;
+  padding-inline-start: 20px;
+  padding-inline-end: 20px;
+}
+h3 + ul{
+  margin-block-start: 0;
 }
 form h2{
   text-align: center;
@@ -63,6 +121,7 @@ form p{
 }
 form label{
   display: inline-block;
+  margin-right: 8px;
 }
 form button{
   display: flex;

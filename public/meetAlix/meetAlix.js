@@ -2,7 +2,6 @@ import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, 
 
 let unknownStartDate = "2026-01-24"; //The day the "Not sure yet" section starts
 
-
 let myEmail = "alexblade.23.49@gmail.com";
 
 let myBusies = [];
@@ -43,7 +42,38 @@ let weeksDayArray = [{
   name: "samedi",
   letter: "S",
   code: "S6"
-}]
+}];
+
+const formContainer = document.querySelector("#formContainer");
+const selectedTime = document.querySelector("#selectedTime");
+const handle = document.querySelector("#handle");
+handle.addEventListener("click", () => {
+  formContainer.classList.toggle("expanded");
+});
+
+let landscapeMode;
+let screenHeight;
+let screenWidth;
+(() => {
+  screenHeight = window.innerHeight - 16;
+  screenWidth = window.innerWidth - 16;
+  if(screenWidth > screenHeight){ //if true => landscape mode (16:9)
+    landscapeMode = true;
+    screenWidth = screenHeight * 16 / 9;
+  } else if(screenHeight > screenWidth){ // portrait mode (20:9)
+    landscapeMode = false;
+    screenHeight = screenWidth * 20 / 9;
+  };
+    document.documentElement.style.setProperty('--vh', `${screenHeight}px`);
+    document.documentElement.style.setProperty('--vw', `${screenWidth}px`);
+})();
+
+
+
+
+
+
+
 
 async function getMyBusies() {
   // const getBusies = await getDoc(doc(db, "randomTask", myEmail));
@@ -100,7 +130,7 @@ function getWeeklyCalendar(){
         grid-row:3; 
         ${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}
       "
-      ${c > 1 ? `>${weeksDayArray[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : `>`}
+      ${c > 1 ? ` data-dayindex="${c - 2}">${weeksDayArray[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : `>`}
     </div>`;
     arrayC.push(rowDay);
     let line = 4;
@@ -201,7 +231,8 @@ function putDatesInWeek(date){
   for(let d = 0; d < 7; d++){
     let thisDate = {
       date: String(date.getDate()),
-      full: getStringFromDate(date)
+      fullSlash: getSlashStringFromDate(date),
+      fullDash: getDashStringFromDate(date)
     };
     arrayDate.push(thisDate);
     date.setDate(date.getDate() + 1);
@@ -209,12 +240,12 @@ function putDatesInWeek(date){
   let i = 0;
   document.querySelectorAll(".weeklyDateSpan").forEach(span => {
     span.innerHTML = arrayDate[i].date;
-    span.parentElement.setAttribute("data-date", arrayDate[i].full);
+    span.parentElement.setAttribute("data-date", arrayDate[i].fullSlash);
     i++;
   });
   let today = getTodayDate();
   let dayIdx = meseDayICalc(today);
-  const test = arrayDate.some(el => (el.full == today));
+  const test = arrayDate.some(el => (el.fullDash == today));
   if(test){   
     let current = new Date();
     let currentHour = current.getHours();
@@ -236,22 +267,22 @@ function putDatesInWeek(date){
   
   let unknownArea;
   console.log(arrayDate);
-  const unknownTestIn = arrayDate.some(el => (el.full == unknownStartDate));
+  const unknownTestIn = arrayDate.some(el => (el.fullDash == unknownStartDate));
   if(unknownTestIn){
     let unknownStartIdx = meseDayICalc(unknownStartDate);
     let unknownStart = `${weeksDayArray[unknownStartIdx].day}`;
     unknownArea = `<div class="unknownArea" style="grid-row: row-Day / row-end; grid-column: col-${unknownStart} / col-end">Not sure yet!</div>`;
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", unknownArea);
   };
-  const unknownTestAfter = unknownStartDate < arrayDate[0].full ? true : false;
+  const unknownTestAfter = unknownStartDate < arrayDate[0].fullDash ? true : false;
   if(unknownTestAfter){
     unknownArea = `<div class="unknownArea" style="grid-row: row-Day / row-end; grid-column: col-start / col-end">Not sure yet!</div>`;
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", unknownArea);
   };
   
 
-  let Dday = arrayDate[0].full;
-  let Sday = arrayDate[arrayDate.length - 1].full;
+  let Dday = arrayDate[0].fullDash;
+  let Sday = arrayDate[arrayDate.length - 1].fullDash;
   let Ddate = getDateFromString(Dday);
   let Sdate = getDateFromString(Sday);
   let DYear = Ddate.getFullYear();
@@ -351,7 +382,14 @@ function getTodayDate(){
   return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 };
 
-function getStringFromDate(date){
+function getSlashStringFromDate(date){
+  let currentDate = String(date.getDate()).padStart(2, "0");
+  let currentMonth = String(date.getMonth()+1).padStart(2, "0");
+  let currentYear = date.getFullYear();
+  let currentFullDate = `${currentYear}/${currentMonth}/${currentDate}`;
+  return currentFullDate;
+};
+function getDashStringFromDate(date){
   let currentDate = String(date.getDate()).padStart(2, "0");
   let currentMonth = String(date.getMonth()+1).padStart(2, "0");
   let currentYear = date.getFullYear();
@@ -449,11 +487,11 @@ function slotToDateTime(slot) {
 function slotToWeeklyItem(slot){
   let dayIndex = Math.floor(slot / SLOTS_PER_DAY);
   let column = weeksDayArray[dayIndex].day + 2;
-  console.log(column);
+  //console.log(column);
   let timeSlot = slot % SLOTS_PER_DAY;
   let hour = Math.floor(timeSlot / 4);
   let rowStart = (hour - 10) * 4;
-  console.log(rowStart);
+  //console.log(rowStart);
   
 
   // let coordonates = {
@@ -542,9 +580,9 @@ function analyzeEdges(selected, edge) {
 
 function addMe(thisOne) {
 
-  if(thisOne.classList.contains("selected")){
-    thisOne.classList.remove("selected", "topIsTouching", "bottomIsTouching"); // Although you still need to update the userSelection... but if thisOne is in the middle... then we'll have a hole! So, do we only unselect if it's at start or end, or do we unselect the whole thing?
-  };
+  // if(thisOne.classList.contains("selected")){
+  //   thisOne.classList.remove("selected", "topIsTouching", "bottomIsTouching"); // Although you still need to update the userSelection... but if thisOne is in the middle... then we'll have a hole! So, do we only unselect if it's at start or end, or do we unselect the whole thing?
+  // };
 
   // --- 1. Build the clicked weeklyItem info
   let selectedWeeklyItemInfo = {
@@ -559,7 +597,7 @@ function addMe(thisOne) {
     startSlot: startSlot,
     endSlot: startSlot + 4 // 4 slots of 15 min to make the 1-hour weeklyItem
   };
-  console.log(selectedWeeklyItem);
+  //console.log(selectedWeeklyItem);
   
   // --- 3. Reset touching classes (important when clicking multiple times)
   thisOne.classList.remove("topIsTouching", "bottomIsTouching");
@@ -609,15 +647,18 @@ function addMe(thisOne) {
 
   if (selectedWeeklyItem.startSlot < (tempSelection.endSlot - 4) &&
     selectedWeeklyItem.endSlot > (tempSelection.startSlot + 4)){
-    console.log("NEW same one!");
+    //console.log("NEW same one!");
     // unselectThemAll
     for(let s = tempSelection.startSlot; s < tempSelection.endSlot + 1; s = s + 4){
       let weeklyItem = slotToWeeklyItem(s);
-      console.log(weeklyItem);
+      //console.log(weeklyItem);
       weeklyItem.classList.remove("selected","topIsTouching", "bottomIsTouching");
     };
     tempSelection.startSlot = null;
     tempSelection.endSlot = null;
+    userSelection.startSlot = null;
+    userSelection.endSlot = null;
+    updateSelectedTime();
     return
   };
 
@@ -632,11 +673,11 @@ function addMe(thisOne) {
       tempSelection.startSlot = selectedWeeklyItem.startSlot;
     };
     if(diff > 4){
-          console.log(diff);
+          //console.log(diff);
           fillInTheBlanksStart = true;
-      console.log("fillInTheBlanksStart");
+      //console.log("fillInTheBlanksStart");
     } else if (diff == 0){
-      console.log("same one!");
+      //console.log("same one!");
       thisOne.classList.remove("selected","topIsTouching", "bottomIsTouching");
       tempSelection.startSlot = tempSelection.startSlot + 4;
     };
@@ -651,18 +692,18 @@ function addMe(thisOne) {
   } else {
     let diff = Math.abs(selectedWeeklyItem.endSlot - tempSelection.endSlot);
     if(tempSelection.endSlot < selectedWeeklyItem.endSlot){
-    console.log("temp < selected END") 
+    //console.log("temp < selected END") 
       tempSelection.endSlot = selectedWeeklyItem.endSlot;
     } else {
       tempSelection.endSlot = tempSelection.endSlot;
     };
 
     if(diff > 4){
-        console.log(diff);
+        //console.log(diff);
         fillInTheBlanksEnd = true;
-      console.log("fillInTheBlanksEnd");
+      //console.log("fillInTheBlanksEnd");
     } else if (diff == 0){
-      console.log("same one!");
+      //console.log("same one!");
       thisOne.classList.remove("selected", "topIsTouching", "bottomIsTouching"); //C'est pas assez... ça marche pas dans toutes les circonstances
       // Et il faut updater le tempSelection! Est-ce qu'on fait juste endSlot - 4 ?? (et startSlot + 4, dans l'autre cas)
       tempSelection.endSlot = tempSelection.endSlot - 4;
@@ -674,7 +715,7 @@ function addMe(thisOne) {
     // fillInAllTheBlanks
     for(let s = tempSelection.startSlot + 4; s < tempSelection.endSlot; s = s + 4){
       let weeklyItem = slotToWeeklyItem(s);
-      console.log(weeklyItem);
+      //console.log(weeklyItem);
       weeklyItem.classList.add("selected");
     };
   };
@@ -695,11 +736,79 @@ function addMe(thisOne) {
   // userSelection = tempSelection;
   userSelection.startSlot = tempSelection.startSlot;
   userSelection.endSlot = tempSelection.endSlot;
-
-  console.log(userSelection);
+  updateSelectedTime();
+  
 
 };
 window.addMe = addMe;
+
+function updateSelectedTime(){
+  //Update selectedTime
+  if(userSelection.startSlot == null || userSelection.endSlot == null){
+    selectedTime.innerHTML = "";
+    formContainer.classList.add("displayNone");
+  } else{
+    formContainer.classList.remove("displayNone");
+    let startDateTime = slotToDateTime(userSelection.startSlot);
+    let endDateTime = slotToDateTime(userSelection.endSlot);
+
+    console.log(startDateTime);
+    console.log(endDateTime);
+    
+    let chosenDate = document.querySelector(`[data-dayindex="${startDateTime.dayIndex}"]`).dataset.date;
+    console.log(chosenDate);
+    const today = new Date(chosenDate);
+    console.log(today);
+    
+
+// 1️⃣ Get weekday, month, day, year
+const weekday = today.toLocaleDateString("en-US", { weekday: "long" });
+const month = today.toLocaleDateString("en-US", { month: "long" });
+const day = today.getDate();
+const year = today.getFullYear();
+
+// 2️⃣ Get ordinal suffix (st, nd, rd, th)
+function getOrdinalSuffix(n) {
+  if (n >= 11 && n <= 13) return "th";
+  switch (n % 10) {
+    case 1: return "st";
+    case 2: return "nd";
+    case 3: return "rd";
+    default: return "th";
+  }
+}
+
+const suffix = getOrdinalSuffix(day);
+
+// --- TIME PART ---
+function formatTime24to12({ dayIndex, hour, minute }) {
+
+  const period = hour >= 12 ? "pm" : "am";
+  const hour12 = hour % 12 || 12;
+  const paddedMinutes = minute.toString().padStart(2, "0");
+
+  return `${hour12}:${paddedMinutes} ${period}`;
+}
+
+const startFormatted = formatTime24to12(startDateTime);
+const endFormatted   = formatTime24to12(endDateTime);
+
+// 3️⃣ Inject into HTML (with <sup>)
+selectedTime.innerHTML = `
+  ${weekday}, ${month} ${day}<sup>${suffix}</sup> ${year}
+  <br>
+  from ${startFormatted} to ${endFormatted}
+`;
+
+
+
+
+
+
+
+  };
+  
+};
 
 function letsMeet(meet) {
   

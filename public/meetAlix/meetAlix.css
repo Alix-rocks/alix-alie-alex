@@ -85,7 +85,7 @@ form{
   /* z-index: 20;
   left: calc(var(--vw) * 5 / 100); */
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* iOS 
+  -webkit-overflow-scrolling: touch; /* iOS */
 }
 form input, form select, form textarea{
   background-color: var(--bg-color-7);

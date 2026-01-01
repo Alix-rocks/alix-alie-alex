@@ -660,6 +660,8 @@ function addMe(thisOne) {
 
   let fillInTheBlanksStart = false;
   let fillInTheBlanksEnd = false;
+  let secondClickStart = false;
+  let secondClickEnd = false;
 
   if (selectedWeeklyItem.startSlot < (tempSelection.endSlot - 4) &&
     selectedWeeklyItem.endSlot > (tempSelection.startSlot + 4)){
@@ -693,6 +695,7 @@ function addMe(thisOne) {
           fillInTheBlanksStart = true;
       //console.log("fillInTheBlanksStart");
     } else if (diff == 0){
+      secondClickStart = true;
       //console.log("same one!");
       thisOne.classList.remove("selected","topIsTouching", "bottomIsTouching");
       tempSelection.startSlot = tempSelection.startSlot + 4;
@@ -720,12 +723,17 @@ function addMe(thisOne) {
       //console.log("fillInTheBlanksEnd");
     } else if (diff == 0){
       //console.log("same one!");
+      secondClickEnd = true;
       thisOne.classList.remove("selected", "topIsTouching", "bottomIsTouching"); //C'est pas assez... ça marche pas dans toutes les circonstances
       // Et il faut updater le tempSelection! Est-ce qu'on fait juste endSlot - 4 ?? (et startSlot + 4, dans l'autre cas)
       tempSelection.endSlot = tempSelection.endSlot - 4;
     };
   };
   
+  if(secondClickStart && secondClickEnd){
+    tempSelection.startSlot = null;
+    tempSelection.endSlot = null;
+  };
 
   if(fillInTheBlanksStart && fillInTheBlanksEnd){
     // fillInAllTheBlanks

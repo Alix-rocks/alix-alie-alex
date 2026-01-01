@@ -1,8 +1,44 @@
+// alix.rocks/meetAlix?type=friend
+// alix.rocks/meetAlix?type=client
+
 import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "../../myFirebase.js";
+
 
 let unknownStartDate = "2026-01-24"; //The day the "Not sure yet" section starts
 
 let myEmail = "alexblade.23.49@gmail.com";
+
+const params = new URLSearchParams(window.location.search);
+const formType = params.get("type") || "default";
+console.log(window.location.href);
+console.log(window.location.search);
+
+const formConfigs = {
+  puzzle: {
+    meet: true,
+    form: "#puzzleTour",
+    meal: true
+  },
+  friend: {
+    meet: true,
+    form: "#meetAlix",
+    meal: true
+  },
+  client: {
+    meet: true,
+    form: "#Book a meeting",
+    meal: false
+  },
+  default: {
+    meet: false,
+    form: "#meetAlix",
+    meal: true
+  }
+};
+const config = formConfigs[formType];
+console.log(config);
+
+
 
 let myBusies = [];
 let unavailableRanges = [];
@@ -44,12 +80,18 @@ let weeksDayArray = [{
   code: "S6"
 }];
 
-const formContainer = document.querySelector("#formContainer");
-const selectedTime = document.querySelector("#selectedTime");
-const handle = document.querySelector("#handle");
+const mealLegend = document.querySelector("#mealLegend");
+mealLegend.style.display = config.meal ? "flex" : "none";
+const formContainer = document.querySelector(config.form);
+const selectedTime = formContainer.querySelector(".selectedTime");
+const handle = formContainer.querySelector(".handle");
 handle.addEventListener("click", () => {
   formContainer.classList.toggle("expanded");
 });
+const dateComplete = formContainer.querySelector(".dateComplete");
+const dalleTime = formContainer.querySelector(".dalleTime");
+const alleTime = formContainer.querySelector(".alleTime");
+
 
 let landscapeMode;
 let screenHeight;
@@ -99,9 +141,20 @@ async function getMyBusies() {
   // myBusies = JSON.parse(localStorage.myBusies);
   
   getWeeklyCalendar();
+
+  let item = document.querySelector(`[data-col="2"][data-row="4"]`);
+  const itemWidth = window.getComputedStyle(item).getPropertyValue("width");
+  const itemHeight = window.getComputedStyle(item).getPropertyValue("height");
+
+
+  document.documentElement.style.setProperty('--itemWidth', `${itemWidth}`);
+  document.documentElement.style.setProperty('--itemHeight', `${itemHeight}`);
+
+  document.body.style.visibility = "visible";
 };
 
 getMyBusies();
+
 
 
 
@@ -130,13 +183,13 @@ function getWeeklyCalendar(){
         grid-row:3; 
         ${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}
       "
-      ${c > 1 ? ` data-dayindex="${c - 2}">${weeksDayArray[c - 2].letter}<br /><span class="weeklyDateSpan"></span>` : `>`}
+      ${c > 1 ? ` data-dayindex="${c - 2}"><span class="weeklyDaySpan">${weeksDayArray[c - 2].letter}</span><br /><span class="weeklyDateSpan"></span>` : `>`}
     </div>`;
     arrayC.push(rowDay);
     let line = 4;
     for(let r = 1; r < 14; r++){ // 13 weeklyItem per day (because it starts at 11:00 and ends at 24:00)
       let item = `<div 
-        class="weeklyItem${c > 1 ? `" onclick="addMe(this)` : ` unavailable`}" 
+        class="weeklyItem${c > 1 && config.meet ? `" onclick="addMe(this)` : ` unavailable`}" 
         style="grid-column:${c}; grid-row:${line} / ${line + 4};${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}" 
         data-col="${c}" 
         data-row="${line}"
@@ -256,6 +309,7 @@ function putDatesInWeek(date){
     let nowArea = `<div class="nowArea" style="grid-row: row-${currentTime}; grid-column: col-${todayDay};"></div>`;  
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", todayArea);
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", nowArea);
+    document.querySelector(`[data-dayindex="${weeksDayArray[dayIdx].day}"]`).classList.add("todayDayArea");
     document.querySelector("#weekBackward").classList.add("invisible");
   } else{
     document.querySelector("#weekBackward").classList.remove("invisible");
@@ -332,7 +386,7 @@ function putShowsInWeek() {
 
 function createWeeklyshow(busy){
   document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="weeklyBuffer" style="grid-column:col-${busy.col}; grid-row:row-${busy.start}/row-${busy.end};"></div>`);
-  if(busy.meal){
+  if(config.meal && busy.meal){
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="weeklyMeal" style="grid-column:col-${busy.col}; grid-row:row-${busy.start}/span 6;">Meal</div>`);
   };
 };
@@ -345,6 +399,10 @@ function eraseWeekArea(){
   let nowAreaDiv = document.querySelector(".nowArea");
   if(nowAreaDiv){
     nowAreaDiv.remove();
+  };
+  let todayDayAreaDiv = document.querySelector(".todayDayArea");
+  if(todayDayAreaDiv){
+    todayDayAreaDiv.classList.remove("todayDayArea");
   };
   let unknownAreaDiv = document.querySelector(".unknownArea");
   if(unknownAreaDiv){
@@ -386,15 +444,15 @@ function getSlashStringFromDate(date){
   let currentDate = String(date.getDate()).padStart(2, "0");
   let currentMonth = String(date.getMonth()+1).padStart(2, "0");
   let currentYear = date.getFullYear();
-  let currentFullDate = `${currentYear}/${currentMonth}/${currentDate}`;
-  return currentFullDate;
+
+  return `${currentYear}/${currentMonth}/${currentDate}`;
 };
 function getDashStringFromDate(date){
   let currentDate = String(date.getDate()).padStart(2, "0");
   let currentMonth = String(date.getMonth()+1).padStart(2, "0");
   let currentYear = date.getFullYear();
-  let currentFullDate = `${currentYear}-${currentMonth}-${currentDate}`;
-  return currentFullDate;
+
+  return `${currentYear}-${currentMonth}-${currentDate}`;
 };
 
 function getDateFromString(date){
@@ -477,10 +535,10 @@ function dateTimeToSlot({ dayIndex, hour, minute }) {
 function slotToDateTime(slot) {
   const dayIndex = Math.floor(slot / SLOTS_PER_DAY);
   const timeSlot = slot % SLOTS_PER_DAY;
-  const hour = Math.floor(timeSlot / 4);
+  const hour24 = Math.floor(timeSlot / 4);
   const minute = (timeSlot % 4) * 15;
 
-  return { dayIndex, hour, minute };
+  return { dayIndex, hour24, minute };
 };
 
 // Now we need a function that will identify the corresponding weeklyItem to a slot/{dayIndex, hour, minute}
@@ -782,15 +840,15 @@ function updateSelectedTime(){
     
     let chosenDate = document.querySelector(`[data-dayindex="${startDateTime.dayIndex}"]`).dataset.date;
     console.log(chosenDate);
-    const today = new Date(chosenDate);
-    console.log(today);
+    const thatDay = new Date(chosenDate);
+    console.log(thatDay);
     
 
 // 1️⃣ Get weekday, month, day, year
-const weekday = today.toLocaleDateString("en-US", { weekday: "long" });
-const month = today.toLocaleDateString("en-US", { month: "long" });
-const day = today.getDate();
-const year = today.getFullYear();
+const weekday = thatDay.toLocaleDateString("en-US", { weekday: "long" });
+const month = thatDay.toLocaleDateString("en-US", { month: "long" });
+const day = thatDay.getDate();
+const year = thatDay.getFullYear();
 
 // 2️⃣ Get ordinal suffix (st, nd, rd, th)
 function getOrdinalSuffix(n) {
@@ -806,24 +864,35 @@ function getOrdinalSuffix(n) {
 const suffix = getOrdinalSuffix(day);
 
 // --- TIME PART ---
-function formatTime24to12({ dayIndex, hour, minute }) {
+function formatTime24to12({ dayIndex, hour24, minute }) {
 
-  const period = hour >= 12 ? "pm" : "am";
-  const hour12 = hour % 12 || 12;
+  const period = hour24 >= 12 ? "pm" : "am";
+  const hour12 = hour24 % 12 || 12;
   const paddedMinutes = minute.toString().padStart(2, "0");
 
-  return `${hour12}:${paddedMinutes} ${period}`;
+  return {
+    hour24,
+    hour12,
+    paddedMinutes,
+    period
+  };
+  // return `${hour12}:${paddedMinutes} ${period}`;
 }
 
 const startFormatted = formatTime24to12(startDateTime);
 const endFormatted   = formatTime24to12(endDateTime);
+console.log(endFormatted);
+
 
 // 3️⃣ Inject into HTML (with <sup>)
 selectedTime.innerHTML = `
   ${weekday}, ${month} ${day}<sup>${suffix}</sup> ${year}
   <br>
-  from ${startFormatted} to ${endFormatted}
+  from ${startFormatted.hour12}:${startFormatted.paddedMinutes} ${startFormatted.period} to ${endFormatted.hour12}:${endFormatted.paddedMinutes} ${endFormatted.period}
 `;
+dateComplete.value = getDashStringFromDate(thatDay);
+dalleTime.value = `${startFormatted.hour24}:${startFormatted.paddedMinutes}`;
+alleTime.value = `${endFormatted.hour24}:${endFormatted.paddedMinutes}`;
 
 
 
@@ -835,7 +904,5 @@ selectedTime.innerHTML = `
   
 };
 
-function letsMeet(meet) {
-  
-};
+
 

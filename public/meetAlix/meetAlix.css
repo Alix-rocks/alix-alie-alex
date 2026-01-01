@@ -1,11 +1,23 @@
 :root{
   --bg-color: #F2F3F4;
   --bg-color-7: rgb(242, 243, 244);
-  --tx-color: darkslategrey;
+  --tx-color: rgb(47, 79, 79);  /* darkslategrey */
+  --tx-color-2: rgba(47, 79, 79, .2);
+  --tx-color-2-full: rgb(213, 220, 220);
+  --tx-color-3: rgba(47, 79, 79, .3);
+  --tx-color-4: rgba(47, 79, 79, .4);
+  --tx-color-4-full: rgb(172, 185, 185);
+  --tx-color-5: rgba(47, 79, 79, .5);
+  --now-color: rgb(64, 115, 243);
+  --now-color-5: rgba(64, 115, 243, .5);
   --selected-border: rgba(139, 0, 139, .5);
   --selected-background: rgba(139, 0, 139, .25);
   --confirmed-border: rgba(139, 0, 139, 1);
   --confirmed-background: rgba(139, 0, 139, .8);
+  --button-bg: rgb(211, 211, 211); /* lightgrey */
+  --button-bg-5: rgba(211, 211, 211, .5);
+  --itemWidth: 0px;
+  --itemHeight: 0px;
   --vw: 100vw;
   --vh: 100vh;
 }
@@ -24,7 +36,7 @@ button:active{
   background-color: rgba(50,205,50,.2);
 }
 
-#formContainer{
+.formContainer{
   /* width: var(--vw);
   width: -webkit-fill-available;
   position: absolute;
@@ -33,7 +45,7 @@ button:active{
   background-color: rgba(0, 0, 0, 0);
   padding: 15px;
   display: flex;
-  position: fixed;
+  position: absolute;
   left: 0;
   right: 0;
   top: 0;
@@ -44,30 +56,30 @@ button:active{
   transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-#formContainer.expanded{
+.formContainer.expanded{
   transform: translateY(0);
 }
 
-#handle{
+.handle{
   font-size: 2em;
   text-align: center;
   opacity: .6;
 }
 
-#handle > .fa-minus{
+.handle > .fa-minus{
   display: block;
 }
-#handle > .fa-angle-down{
+.handle > .fa-angle-down{
   display: none;
 }
-#formContainer.expanded > #handle > .fa-minus{
+.formContainer.expanded > .handle > .fa-minus{
   display: none;
 }
-#formContainer.expanded > #handle > .fa-angle-down{
+.formContainer.expanded > .handle > .fa-angle-down{
   display: block;
 }
 
-#selectedTime{
+.selectedTime{
   text-align: center;
   color: var(--confirmed-background);
 }
@@ -84,8 +96,8 @@ form{
   background-color: var(--bg-color-7);
   /* z-index: 20;
   left: calc(var(--vw) * 5 / 100); */
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* iOS */
+  /* overflow-y: auto;
+  -webkit-overflow-scrolling: touch; iOS */
 }
 form input, form select, form textarea{
   background-color: var(--bg-color-7);
@@ -139,9 +151,9 @@ form button{
   text-align: center;
   font-size: 1em;
   font-weight: 600;
-  background-color: lightgrey;
+  background-color: var(--button-bg);
 }
-#cancelBtn{
+.cancelBtn{
   border-top: 1px solid var(--tx-color);
   border-left: 1px solid var(--tx-color);
   border-right: 2px solid var(--tx-color);
@@ -150,7 +162,7 @@ form button{
   padding: 3px 7px;
   font-size: .7em;
   font-weight: 500;
-  background-color: rgba(211, 211, 211, .5);
+  background-color: var(--button-bg-5);
   color: var(--tx-color);
 }
 .myRadio{
@@ -178,12 +190,12 @@ input.myRadio:checked + label span.myRadio{
   display: grid;
   align-content: center;
   justify-content: center;
-  border: 1px solid rgba(47, 79, 79, .5);;
+  border: 1px solid var(--tx-color-5);
   border-radius: 2px;
   max-height: 92vh;
 }
 .weeklyItem{
-  border: 0.5px solid rgba(47, 79, 79, .3);
+  border: 0.5px solid var(--tx-color-3);
   border-radius: 2px;
   z-index: 1;
   font-size: 12px;
@@ -196,14 +208,17 @@ input.myRadio:checked + label span.myRadio{
   font-weight:600; 
   line-height: calc(((92vh / 22) * 1.5) / 2); 
   border-radius:2px 2px 0 0; 
-  border-bottom:1px solid rgba(47, 79, 79, .5);
+  border-bottom:1px solid var(--tx-color-5);
+}
+.weeklyDateSpan{
+  line-height: 22px;
 }
 .weeklyTitle{
   grid-column: 1 / 9;
   font-size: 14px; 
   font-weight: 600; 
   border-radius: 0; 
-  border: .5px solid rgba(47, 79, 79, .5);
+  border: .5px solid var(--tx-color-5);
 }
 .weeklyBtn{
   padding: 0 5px;
@@ -216,17 +231,27 @@ input.myRadio:checked + label span.myRadio{
 }
 .sleepArea{
   z-index: 1;
-  background-color: rgba(47, 79, 79, .2);
+  background-color: var(--tx-color-2);
 }
 .todayArea{
-  border: 2px solid rgba(64, 115, 243, 0.5);
+  border: 2px solid var(--now-color-5);
   border-radius: 3px;
-  z-index: 1;
+  z-index: 6;
 }
 .nowArea{
   /* border-top: 3px solid rgba(64, 115, 243, 0.5); */
-  background-color: rgba(64, 115, 243, 0.5);
+  background-color: var(--now-color-5);
   z-index: 6;
+}
+.todayDayArea span.weeklyDaySpan{
+  color: var(--now-color);
+}
+.todayDayArea span.weeklyDateSpan{
+  display: inline-block;
+  height: 22px;
+  width: 22px;
+  background-color: var(--now-color-5);
+  border-radius: 50px;
 }
 .weeklyEvent{
   border: 1px solid var(--tx-color);
@@ -248,14 +273,16 @@ input.myRadio:checked + label span.myRadio{
   border-radius: 5px;
   z-index: 3;
   /* background-color: rgba(47, 79, 79, .4); */
-  background-color: rgb(172,185,185);
+  /* background-color: rgb(172,185,185); */
+  background-color: var(--tx-color-4-full);
 }
 .weeklyMeal{
   border: 0.5px solid var(--tx-color);
   border-radius: 5px;
   z-index: 4;
   /* background-color: rgba(47, 79, 79, .2); */
-  background-color: rgb(213,220,220);
+  /* background-color: rgb(213,220,220); */
+  background-color: var(--tx-color-2-full);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -267,7 +294,7 @@ input.myRadio:checked + label span.myRadio{
   border: 0.5px solid var(--tx-color);
   border-radius: 5px;
   z-index: 5;
-  background-color: rgba(47, 79, 79, .4);
+  background-color: var(--tx-color-4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -275,7 +302,7 @@ input.myRadio:checked + label span.myRadio{
   font-weight: 900;
 }
 .weeklyAfterDateSpan{
-  color: rgba(47, 79, 79, .3);
+  color: var(--tx-color-3);
 }
 .pastEvent{
   opacity: .4;
@@ -307,6 +334,28 @@ input.myRadio:checked + label span.myRadio{
 }
 .unavailable{
   pointer-events: none;
+}
+
+.legend{
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 1em;
+  padding: 1em 0;
+}
+.legend p, .legend h6{
+  margin: 0;
+}
+.lineLegend{
+  display: flex;
+  flex-flow: row nowrap;
+  gap: .8em;
+}
+.textLegend{
+  flex: 1;
+}
+.itemLegend{
+  width: var(--itemWidth);
+  height: var(--itemHeight);
 }
 
 .invisible{

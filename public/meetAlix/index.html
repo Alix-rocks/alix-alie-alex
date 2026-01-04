@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="meetAlix.css">
   <!-- 1. Hide everything immediately -->
   <style>body{visibility:hidden}</style>
-  
+
   <title>Meet Alix</title>
 </head>
 
@@ -27,9 +27,14 @@
   </div>
   <div id="meetAlix" class="formContainer displayNone" >
     <form class="addMeForm" action="get">
-      <div class="handle">
-        <i class="fa-solid fa-angle-down"></i>
-        <i class="fa-solid fa-minus"></i>
+      <div class="topOfForm">
+        <button class="iconBtn" onclick="trashUserMeeting()">
+          <i class="fa-regular fa-trash-can"></i>
+        </button>
+        <div class="handle">
+          <i class="fa-solid fa-angle-down"></i>
+          <i class="fa-solid fa-minus"></i>
+        </div>
       </div>
       <h4 class="selectedTime"></h4>
       <h2>Wanna hangout? 🙃</h2>
@@ -37,21 +42,21 @@
       <h6>Is that your final answer?</h6>
       <ul>
         <li><label for="dateCompleteMeetAlix">Date: </label><input type="date" name="" id="dateCompleteMeetAlix" class="dateComplete" value="" /></li>
-        <li><label for="dalleTimeMeetAlix">From: </label><input id="dalleTimeMeetAlix" class="dalleTime" type="time" /></li>
-        <li><label for="alleTimeMeetAlix">To: </label><input id="alleTimeMeetAlix" class="alleTime" type="time" /></li>
+        <li><label for="dalleTimeMeetAlix">From: </label><input id="dalleTimeMeetAlix" class="dalleTime" type="time" step="900" /></li>
+        <li><label for="alleTimeMeetAlix">To: </label><input id="alleTimeMeetAlix" class="alleTime" type="time" step="900" /></li>
         <li><h6>Please consider meal, prep & travel times.<br/>As in, don't expect me to be anywhere else than my place before noon!</h6></li>
       </ul>
       <h3>Which one(s) are you?</h3>
       <ul>
-        <li><label for="nameInputMeetAlix">Your name(s):<br/><h6>You and anyone else you wanna invite; be them people, imaginary friends or other of your personalities</h6></label><input id="nameInputMeetAlix" class="wide" type="text" /></li>
+        <li><label for="nameInputMeetAlix">Your name(s):<br/><h6>You and anyone else you wanna invite; be them people, imaginary friends or other of your personalities</h6></label><input id="nameInputMeetAlix" class="nameInput wide" type="text" /></li>
         <li>
       </ul>
       <h3>How shall we communicate?</h3>
       <h6>One is enough, but it really should be one of them.<br/>I don't do pigeons anymore and squirrels just aren't reliable.</h6>
       <ul>
-        <li><label for="emailInputMeetAlix">Email: </label><input id="emailInputMeetAlix" class="wide" type="text" /></li>
-        <li><label for="cellInputMeetAlix">Cell (SMS): </label><input id="cellInputMeetAlix" class="wide" type="text" /></li>
-        <li><label for="messengerNameInputMeetAlix">Nickname on Messenger: </label><input id="messengerNameInputMeetAlix" class="wide" type="text" /></li>
+        <li><label for="emailInputMeetAlix">Email: </label><input id="emailInputMeetAlix" class="emailInput wide" type="text" /></li>
+        <li><label for="cellInputMeetAlix">Cell (SMS): </label><input id="cellInputMeetAlix" class="cellInput wide" type="text" /></li>
+        <li><label for="messengerNameInputMeetAlix">Nickname on Messenger: </label><input id="messengerNameInputMeetAlix" class="messengerNameInput wide" type="text" /></li>
       </ul>
       <h3>Where shall we meet?</h3>
       <h4>Online</h4>
@@ -81,14 +86,14 @@
           <h6>Sure, but do I remember where you live? You might have to remind me your address. 👇</h6>
           <label for="yourAddressInputMeetAlix">Here, give me your address<br/>
           <h6>I promise not to get all stalkerish on you. 👀</h6></label>
-          <textarea name="where" id="yourAddressInputMeetAlix" class="wide" rows="5"></textarea>
+          <textarea name="where" id="yourAddressInputMeetAlix" class="yourAddressInput wide" rows="5"></textarea>
         </li>
         <li>
           <input id="otherPlaceRadioMeetAlix" class="myRadio" name="whereRadios" type="radio" value="realWorld" />
           <label for="otherPlaceRadioMeetAlix" class="whereLabel"><span class="myRadio"></span>Some place else</label>
           <label for="whereRealInputMeetAlix">Any preferences as to where?<br/>
           <h6>As long as it's not to far from a Metro station, I'll consider it like a real place.</h6></label>
-          <textarea name="where" id="whereRealInputMeetAlix" class="wide" rows="10"></textarea>
+          <textarea name="where" id="whereRealInputMeetAlix" class="whereRealInput wide" rows="10"></textarea>
         </li>
       </ul>
       <h3>Why?!</h3>
@@ -97,10 +102,10 @@
           <label for="whyInputMeetAlix">What would you like us to do?<br/>
             <h6>Anything I should know, prepare for or worry about?</h6>
           </label>
-          <textarea name="why" id="whyInputMeetAlix" class="wide" rows="10"></textarea>
+          <textarea name="why" id="whyInputMeetAlix" class="whyInput wide" rows="10"></textarea>
         </li>
-        <li><button class="bookBtn" type="submit">Book it!</button></li>
-        <li><button class="cancelBtn" type="reset">Oups!</button></li>
+        <li><button class="textBtn submitBtn" type="submit">Book it!</button></li>
+        <li><button class="textBtn resetBtn" type="reset">Oups!</button></li>
       </ul>
     </form>
   </div>

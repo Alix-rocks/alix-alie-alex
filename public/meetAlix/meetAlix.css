@@ -60,10 +60,23 @@ button:active{
   transform: translateY(0);
 }
 
+.topOfForm{
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+button.iconBtn{
+  border: none;
+  background-color: var(--bg-color);
+  font-size: 1em;
+}
+
 .handle{
   font-size: 2em;
   text-align: center;
   opacity: .6;
+  flex: 1;
 }
 
 .handle > .fa-minus{
@@ -137,23 +150,25 @@ form label{
   display: inline-block;
   margin-right: 8px;
 }
-form button{
+button.textBtn{
   display: flex;
   margin-top: 1em;
+  color: var(--tx-color);
+  width: fit-content;
+  text-align: center;
+}
+.submitBtn{
   border-top: 2px solid var(--tx-color);
   border-left: 2px solid var(--tx-color);
   border-right: 4px solid var(--tx-color);
   border-bottom: 4px solid var(--tx-color);
   border-radius: 5px;
   padding: 5px 10px;
-  width: fit-content;
-  color: var(--tx-color);
-  text-align: center;
   font-size: 1em;
   font-weight: 600;
   background-color: var(--button-bg);
 }
-.cancelBtn{
+.resetBtn{
   border-top: 1px solid var(--tx-color);
   border-left: 1px solid var(--tx-color);
   border-right: 2px solid var(--tx-color);
@@ -163,7 +178,6 @@ form button{
   font-size: .7em;
   font-weight: 500;
   background-color: var(--button-bg-5);
-  color: var(--tx-color);
 }
 .myRadio{
   padding: 0;
@@ -308,18 +322,19 @@ input.myRadio:checked + label span.myRadio{
   opacity: .4;
 }
 
-.selected{
+
+.selected, .userMeeting{
   border-color: var(--selected-border);
   border-style: dashed;
-  border-left-width: 2px;
-  border-right-width: 2px;
+  border-width: 0 2px;
+  border-radius: 0;
+  /* border-left-width: 2px;
+  border-right-width: 2px; */
   background-color: var(--selected-background);
 }
 .confirmed{
-  border-color: var(--confirmed-border);
-  border-style: solid;
-  border-left-width: 2px;
-  border-right-width: 2px;
+  border: 2px solid var(--confirmed-border);
+  border-radius: 2px;
   background-color: var(--confirmed-background);
 }
 .topIsTouching{

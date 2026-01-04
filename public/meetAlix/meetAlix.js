@@ -80,19 +80,6 @@ let weeksDayArray = [{
   code: "S6"
 }];
 
-const mealLegend = document.querySelector("#mealLegend");
-mealLegend.style.display = config.meal ? "flex" : "none";
-const formContainer = document.querySelector(config.form);
-const selectedTime = formContainer.querySelector(".selectedTime");
-const handle = formContainer.querySelector(".handle");
-handle.addEventListener("click", () => {
-  formContainer.classList.toggle("expanded");
-});
-const dateComplete = formContainer.querySelector(".dateComplete");
-const dalleTime = formContainer.querySelector(".dalleTime");
-const alleTime = formContainer.querySelector(".alleTime");
-
-
 let landscapeMode;
 let screenHeight;
 let screenWidth;
@@ -110,7 +97,198 @@ let screenWidth;
     document.documentElement.style.setProperty('--vw', `${screenWidth}px`);
 })();
 
+const userSelection = {
+  date: null,
+  dayIndex: null,
+  col: null,
+  startSlot: null,
+  startRow: null,
+  endSlot: null,
+  endRow: null,
+  topIsTouching: false,
+  bottomIsTouching: false,
+  submitted: false
+};
 
+const formState = {
+  date: "",
+  dalle: "",
+  alle: "",
+  name: "",
+  email: "",
+  cell: "",
+  messengerName: "",
+  where: "",
+  yourAddress: "",
+  whereReal: "",
+  why: ""
+};
+
+(() => {
+  if(localStorage.getItem("meetAlixUserSelection")){
+    let tempUS = JSON.parse(localStorage.meetAlixUserSelection);
+      userSelection.date = tempUS.date;
+      userSelection.startSlot = tempUS.startSlot;
+      userSelection.startRow = tempUS.startRow;
+      userSelection.endSlot = tempUS.endSlot;
+      userSelection.endRow = tempUS.endRow;
+      userSelection.dayIndex = tempUS.dayIndex;
+      userSelection.col = tempUS.col;
+      userSelection.topIsTouching = tempUS.topIsTouching;
+      userSelection.bottomIsTouching = tempUS.bottomIsTouching;
+      userSelection.submitted = tempUS.submitted;
+  } else {
+    //resetUserSelection();
+    localStorage.setItem("meetAlixUserSelection", JSON.stringify(userSelection));
+  };
+
+  if(localStorage.getItem("meetAlixFormState")){
+    let tempFS = JSON.parse(localStorage.meetAlixFormState);
+    formState.date = tempFS.date;
+    formState.dalle = tempFS.dalle;
+    formState.alle = tempFS.alle;
+    formState.name = tempFS.name;
+    formState.email = tempFS.email;
+    formState.cell = tempFS.cell;
+    formState.messengerName = tempFS.messengerName;
+    formState.where = tempFS.where;
+    formState.yourAddress = tempFS.yourAddress;
+    formState.whereReal = tempFS.whereReal;
+    formState.why = tempFS.why;
+  } else {
+    //resetFormState();
+    localStorage.setItem("meetAlixFormState", JSON.stringify(formState));
+  };
+})();
+
+const mealLegend = document.querySelector("#mealLegend");
+mealLegend.style.display = config.meal ? "flex" : "none";
+const formContainer = document.querySelector(config.form);
+const form = formContainer.querySelector("form");
+const selectedTime = formContainer.querySelector(".selectedTime");
+const handle = formContainer.querySelector(".handle");
+handle.addEventListener("click", () => {
+  formContainer.classList.toggle("expanded");
+});
+const dateComplete = formContainer.querySelector(".dateComplete");
+const dalleTime = formContainer.querySelector(".dalleTime");
+const alleTime = formContainer.querySelector(".alleTime");
+const nameInput = formContainer.querySelector(".nameInput");
+const emailInput = formContainer.querySelector(".emailInput");
+const cellInput = formContainer.querySelector(".cellInput");
+const messengerNameInput = formContainer.querySelector(".messengerNameInput");
+const whereRadios = formContainer.querySelector('[name="whereRadios"]');
+const yourAddressInput = formContainer.querySelector(".yourAddressInput");
+const whereRealInput = formContainer.querySelector(".whereRealInput");
+const whyInput = formContainer.querySelector(".whyInput");
+
+
+dateComplete.addEventListener("change", (e) => {
+  formState.date = e.target.value;
+  localStorage.meetAlixFormState = JSON.stringify(formState);
+});
+dalleTime.addEventListener("change", (e) => {
+  const value = e.target.value; // e.g., "10:07"
+  if (!value) return;
+  const formattedTime = roundFifteenTime(value);
+  console.log(formattedTime);
+  
+  //If there's overlapping, adjust the time to the nearest possible; don't just snap back to the previous time
+  let [hours, minutes] = value.split(':').map(Number);
+  let info = {
+    dayIndex: userSelection.dayIndex,
+    hour: hours,
+    minute: minutes
+  };
+  let newStartSlot = dateTimeToSlot(info);
+  console.log(newStartSlot);
+  let newDalleSlot = checkNewDalleSlot(newStartSlot, userSelection.endSlot);
+  //CHECK WITH EDGES TOO!!
+  console.log(newDalleSlot);
+  let newDalleTime = slotToTime(newDalleSlot);
+  console.log(newDalleTime);
+  userSelection.startSlot = newDalleSlot;
+  userSelection.startRow = slotToRow(newDalleSlot);
+  updateUserMeeting();
+  updateSelectedTime();
+  // e.target.value = newDalleTime;
+  // formState.dalle = newDalleTime;
+  // localStorage.meetAlixFormState = JSON.stringify(formState);
+});
+alleTime.addEventListener("change", (e) => {
+  const value = e.target.value; // e.g., "10:07"
+  if (!value) return;
+  const formattedTime = roundFifteenTime(value); // => 10:15
+  console.log(formattedTime);
+
+  let [hours, minutes] = formattedTime.split(':').map(Number);
+  let info = {
+    dayIndex: userSelection.dayIndex,
+    hour: hours,
+    minute: minutes
+  };
+  console.log(info);
+  let newEndSlot = dateTimeToSlot(info);
+  console.log(newEndSlot);
+  let newAlleSlot = checkNewAlleSlot(userSelection.startSlot, newEndSlot);
+  //CHECK WITH EDGES TOO!!
+  console.log(newAlleSlot);
+  let newAlleTime = slotToTime(newAlleSlot);
+  console.log(newAlleTime);
+  userSelection.endSlot = newAlleSlot;
+  userSelection.endRow = slotToRow(newAlleSlot);
+  updateUserMeeting();
+  updateSelectedTime();
+  // e.target.value = newAlleTime;
+  // formState.alle = newAlleTime;
+  // //ADD AN UPDATE OF SELECTEDTIME (but not the big whole function; we need smaller functions)
+  // localStorage.meetAlixFormState = JSON.stringify(formState);
+});
+
+function roundFifteenTime(value){
+  let [hours, minutes] = value.split(':').map(Number);
+  // Round to the nearest 15
+  minutes = Math.round(minutes / 15) * 15;
+  if (minutes === 60) {
+    minutes = 0;
+    hours = (hours + 1) % 24;
+  };
+  // Format back to HH:mm
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+};
+
+nameInput.addEventListener("change", (e) => {
+  formState.name = e.target.value;
+  localStorage.meetAlixFormState = JSON.stringify(formState);
+});
+emailInput.addEventListener("change", (e) => {
+  formState.email = e.target.value;
+  localStorage.meetAlixFormState = JSON.stringify(formState);
+});
+cellInput.addEventListener("change", (e) => {
+  formState.cell = e.target.value;
+  localStorage.meetAlixFormState = JSON.stringify(formState);
+});
+messengerNameInput.addEventListener("change", (e) => {
+  formState.messengerName = e.target.value;
+  localStorage.meetAlixFormState = JSON.stringify(formState);
+});
+whereRadios.addEventListener("input", (e) => {
+  formState.where = e.target.value;
+  localStorage.meetAlixFormState = JSON.stringify(formState);
+});
+yourAddressInput.addEventListener("change", (e) => {
+  formState.yourAddress = e.target.value;
+  localStorage.meetAlixFormState = JSON.stringify(formState);
+});
+whereRealInput.addEventListener("change", (e) => {
+  formState.whereReal = e.target.value;
+  localStorage.meetAlixFormState = JSON.stringify(formState);
+});
+whyInput.addEventListener("change", (e) => {
+  formState.why = e.target.value;
+  localStorage.meetAlixFormState = JSON.stringify(formState);
+});
 
 
 
@@ -347,6 +525,14 @@ function putDatesInWeek(date){
   document.querySelector("#weeklyMonthSpan").innerHTML = `${DMonthName}${DMonthName !== SMonthName ? ` / ${SMonthName}` : ``}`;
   getMyThisWeekBusiesAndUnavailableRanges(Dday, Sday);
   putShowsInWeek();
+ 
+  if(userSelection.date !== null 
+    && Dday <= userSelection.date && userSelection.date <= Sday 
+    && userSelection.startSlot !== null 
+    && userSelection.endSlot !== null){
+    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="userMeeting${userSelection.topIsTouching ? `  topIsTouching` : ``}${userSelection.bottomIsTouching ? ` bottomIsTouching` : ``}" style="grid-column:${userSelection.col}; grid-row:${userSelection.startRow}/${userSelection.endRow};"></div>`);
+    updateSelectedTime();
+  };
 };
 
 
@@ -418,6 +604,9 @@ function eraseWeekEvent(){
     we.remove();
   });
   document.querySelectorAll(".weeklyBuffer").forEach(we => {
+    we.remove();
+  });
+  document.querySelectorAll(".userMeeting").forEach(we => {
     we.remove();
   });
 };
@@ -541,6 +730,22 @@ function slotToDateTime(slot) {
   return { dayIndex, hour24, minute };
 };
 
+function slotToRow(slot) {
+  const timeSlot = slot % SLOTS_PER_DAY;
+  const hour24 = Math.floor(timeSlot / 4);
+  const minute = (timeSlot % 4) * 15;
+
+  return `row-${hour24}-${String(minute).padStart(2, "0")}`;
+}
+
+function slotToTime(slot) {
+  const timeSlot = slot % SLOTS_PER_DAY;
+  const hour24 = Math.floor(timeSlot / 4);
+  const minute = (timeSlot % 4) * 15;
+
+  return `${String(hour24).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+}
+
 // Now we need a function that will identify the corresponding weeklyItem to a slot/{dayIndex, hour, minute}
 function slotToWeeklyItem(slot){
   let dayIndex = Math.floor(slot / SLOTS_PER_DAY);
@@ -563,11 +768,7 @@ function slotToWeeklyItem(slot){
   return document.querySelector(`[data-col="${column}"][data-row="${rowStart}"]`);
 };
 
-const userSelection = {
-  dayIndex: null,
-  startSlot: null,
-  endSlot: null
-};
+
 // userSelection.startSlot = ;
 // userSelection.endSlot = ;
 
@@ -599,6 +800,37 @@ for(let d = 0; d < 7; d++){
   allTheEdges.push(daySlots);
 };
 
+function checkNewDalleSlot(newStart, end){
+  let overlap = false;
+  let newStartSlot;
+  for (const unavailable of unavailableRanges) {
+    if(end > unavailable.end && 
+      newStart <= unavailable.end
+    ) {
+      userSelection.topIsTouching = true;
+      overlap = true;
+      newStartSlot = unavailable.end;
+    };
+  };
+  newStartSlot = overlap ? newStartSlot : newStart;
+  return newStartSlot;
+};
+
+function checkNewAlleSlot(start, newEnd){
+  let overlap = false;
+  let newEndSlot;
+  for (const unavailable of unavailableRanges) {
+    if(start < unavailable.start && 
+      newEnd >= unavailable.start
+    ) {
+      userSelection.bottomIsTouching = true;
+      overlap = true;
+      newEndSlot = unavailable.start;
+    };
+  };
+  newEndSlot = overlap ? newEndSlot : newEnd;
+  return newEndSlot;
+};
 
 function analyzeRelation(selected, unavailable) {
   
@@ -606,21 +838,51 @@ function analyzeRelation(selected, unavailable) {
   if (
     selected.startSlot < unavailable.end &&
     unavailable.start < selected.endSlot
-  ) {
-    return "overlap";
+  ) { // overlap
+    if(
+      selected.startSlot > unavailable.start && 
+      selected.endSlot < unavailable.end
+    ) { // full overlap
+      let conclusion = {
+        relation: "fullOverlap"
+      };
+      return conclusion;
+    } else {
+      let relation = "partialOverlap";
+      let startSlot = selected.startSlot < unavailable.start ? selected.startSlot : unavailable.end;
+      let endSlot = selected.startSlot < unavailable.start ? unavailable.start : selected.endSlot;
+      let touch = selected.startSlot < unavailable.start ? "bottomIsTouching" : "topIsTouching";
+      let firstSlots = selected.startSlot < unavailable.start ? 4 : selected.endSlot - unavailable.end;
+      let lastSlots = selected.startSlot < unavailable.start ? unavailable.start - selected.startSlot : 4;
+
+      let conclusion = {relation, startSlot, endSlot, touch, firstSlots, lastSlots};
+      return conclusion;
+    };
   };
 
   // unavailable ends exactly where selection starts
   if (unavailable.end === selected.startSlot) {
-    return "topIsTouching";
+    let conclusion = {
+      relation: "touching",
+      touch: "topIsTouching"
+    };
+    return conclusion;
   };
 
   // unavailable starts exactly where selection ends
   if (unavailable.start === selected.endSlot) {
-    return "bottomIsTouching";
+    let conclusion = {
+      relation: "touching",
+      touch: "bottomIsTouching"
+    };
+    return conclusion;
   };
 
-  return "separate";
+  let conclusion = {
+    relation: "separate"
+  };
+  return conclusion;
+
 };
 
 function analyzeEdges(selected, edge) {
@@ -639,10 +901,6 @@ function analyzeEdges(selected, edge) {
 
 function addMe(thisOne) {
 
-  // if(thisOne.classList.contains("selected")){
-  //   thisOne.classList.remove("selected", "topIsTouching", "bottomIsTouching"); // Although you still need to update the userSelection... but if thisOne is in the middle... then we'll have a hole! So, do we only unselect if it's at start or end, or do we unselect the whole thing?
-  // };
-
   // --- 1. Build the clicked weeklyItem info
   let selectedWeeklyItemInfo = {
     // dayIndex: mySettings.myWeeksDayArray[thisOne.style.gridColumnStart - 2].day, THAT IS FOR WHEN WE'LL USE mySettings
@@ -652,50 +910,68 @@ function addMe(thisOne) {
   };
   // --- 2. Convert to slot index (15-min resolution)
   let startSlot = dateTimeToSlot(selectedWeeklyItemInfo);
+  let preChosenDate = document.querySelector(`[data-dayindex="${selectedWeeklyItemInfo.dayIndex}"]`).dataset.date;
+  let chosenDate = preChosenDate.replaceAll("/", "-");
   let selectedWeeklyItem = {
+    date: chosenDate,
     dayIndex: selectedWeeklyItemInfo.dayIndex,
+    col: weeksDayArray[thisOne.style.gridColumnStart - 2].code,
     startSlot: startSlot,
     endSlot: startSlot + 4 // 4 slots of 15 min to make the 1-hour weeklyItem
   };
   //console.log(selectedWeeklyItem);
   
-  // --- 3. Reset touching classes (important when clicking multiple times)
-  thisOne.classList.remove("topIsTouching", "bottomIsTouching");
-  
   let tempSelection = userSelection;
+  
+  if (selectedWeeklyItem.startSlot < (tempSelection.endSlot - 4) &&
+    selectedWeeklyItem.endSlot > (tempSelection.startSlot + 4) || //That's the click on the middle of the userMeeting
+    selectedWeeklyItem.startSlot === tempSelection.startSlot && 
+    selectedWeeklyItem.endSlot === tempSelection.endSlot //That's the same one, when there's only one
+  ){
+    formContainer.classList.add("expanded");
+    return
+  };
 
   // --- Make sure there aren't already one selected in another day
   if(tempSelection.dayIndex !== null && tempSelection.dayIndex !== selectedWeeklyItem.dayIndex){
-    for (let s = tempSelection.startSlot; s < tempSelection.endSlot + 1; s = s + 4) {
-     let weeklyItem = slotToWeeklyItem(s);
-  //console.log(weeklyItem);
-      weeklyItem.classList.remove("selected", "topIsTouching", "bottomIsTouching");
-    };
+
     tempSelection.startSlot = null;
     tempSelection.endSlot = null;
-    userSelection.startSlot = null;
-    userSelection.endSlot = null;
+    tempSelection.topIsTouching = false;
+    tempSelection.bottomIsTouching = false;
   };
+
+  let firstSlots = 4;
+  let lastSlots = 4;
 
   // --- 4. Check against unavailable ranges
   for (const unavailable of unavailableRanges) {
 
-    const relation = analyzeRelation(selectedWeeklyItem, unavailable);    
+    const conclusion = analyzeRelation(selectedWeeklyItem, unavailable);    
 
     // 🚫 OVERLAP → stop immediately
-    if (relation === "overlap") {
+    if (conclusion.relation === "fullOverlap") {
       //Since it's just when the user clicks (and not changes the time input), we just do nothing
       return;
     };
 
+    if (conclusion.relation === "partialOverlap") {
+      selectedWeeklyItem.startSlot = conclusion.startSlot;
+      selectedWeeklyItem.endSlot = conclusion.endSlot;
+      firstSlots = conclusion.firstSlots;
+      lastSlots = conclusion.lastSlots;
+    };
+
     // ⬆️ touching before
-    if (relation === "topIsTouching") {
-      thisOne.classList.add("topIsTouching");
+    if (conclusion.touch === "topIsTouching") {
+      ////thisOne.classList.add("topIsTouching");
+      tempSelection.topIsTouching = true;
     };
 
     // ⬇️ touching after
-    if (relation === "bottomIsTouching") {
-      thisOne.classList.add("bottomIsTouching");
+    if (conclusion.touch === "bottomIsTouching") {
+      ////thisOne.classList.add("bottomIsTouching");
+      tempSelection.bottomIsTouching = true;
     };
   };
 
@@ -704,132 +980,120 @@ function addMe(thisOne) {
 
     // ⬆️ touching start of day
     if (edging === "topIsTouching") {
-      thisOne.classList.add("topIsTouching");
+      ////thisOne.classList.add("topIsTouching");
+      tempSelection.topIsTouching = true;
     };
 
     // ⬇️ touching end of day
     if (edging === "bottomIsTouching") {
-      thisOne.classList.add("bottomIsTouching");
+      ////thisOne.classList.add("bottomIsTouching");
+      tempSelection.bottomIsTouching = true;
     };
   }
 
-  // --- 5. If we reach here, selection is valid
-  thisOne.classList.add("selected");
-
-  let fillInTheBlanksStart = false;
-  let fillInTheBlanksEnd = false;
   let secondClickStart = false;
   let secondClickEnd = false;
 
-  if (selectedWeeklyItem.startSlot < (tempSelection.endSlot - 4) &&
-    selectedWeeklyItem.endSlot > (tempSelection.startSlot + 4)){
-    //console.log("NEW same one!");
-    // unselectThemAll
-    for(let s = tempSelection.startSlot; s < tempSelection.endSlot + 1; s = s + 4){
-      let weeklyItem = slotToWeeklyItem(s);
-      //console.log(weeklyItem);
-      weeklyItem.classList.remove("selected","topIsTouching", "bottomIsTouching");
-    };
-    tempSelection.startSlot = null;
-    tempSelection.endSlot = null;
-    userSelection.startSlot = null;
-    userSelection.endSlot = null;
-    updateSelectedTime();
+  if(tempSelection.startSlot == null){
+    tempSelection.startSlot = selectedWeeklyItem.startSlot;
+  } else if(tempSelection.startSlot == selectedWeeklyItem.startSlot) {
+    secondClickStart = true;
+    tempSelection.startSlot = tempSelection.startSlot + firstSlots;
+  } else if(tempSelection.startSlot < selectedWeeklyItem.startSlot){
+    tempSelection.startSlot = tempSelection.startSlot;
+  } else {
+    tempSelection.startSlot = selectedWeeklyItem.startSlot;
+  };
+  
+  if(tempSelection.endSlot == null){
+    tempSelection.endSlot = selectedWeeklyItem.endSlot;
+  } else if(tempSelection.endSlot == selectedWeeklyItem.endSlot){
+    secondClickEnd = true;
+    tempSelection.endSlot = tempSelection.endSlot - lastSlots;
+  } else if(tempSelection.endSlot < selectedWeeklyItem.endSlot){
+    tempSelection.endSlot = selectedWeeklyItem.endSlot;
+  } else {
+    tempSelection.endSlot = tempSelection.endSlot;
+  }; 
+  
+  if(secondClickStart && secondClickEnd){
+    trashUserMeeting();
     return
   };
 
-  if(tempSelection.startSlot == null){
-    tempSelection.startSlot = selectedWeeklyItem.startSlot;
-  // } else if(tempSelection.startSlot < selectedWeeklyItem.startSlot && Math.abs(selectedWeeklyItem.startSlot - tempSelection.startSlot) > 4){
-  } else {
-    let diff = Math.abs(selectedWeeklyItem.startSlot - tempSelection.startSlot);
-    if(tempSelection.startSlot < selectedWeeklyItem.startSlot){
-      tempSelection.startSlot = tempSelection.startSlot;
-    } else {
-      tempSelection.startSlot = selectedWeeklyItem.startSlot;
-    };
-    if(diff > 4){
-          //console.log(diff);
-          fillInTheBlanksStart = true;
-      //console.log("fillInTheBlanksStart");
-    } else if (diff == 0){
-      secondClickStart = true;
-      //console.log("same one!");
-      thisOne.classList.remove("selected","topIsTouching", "bottomIsTouching");
-      tempSelection.startSlot = tempSelection.startSlot + 4;
-    };
-  };
-    
-    
-    
-
-  if(tempSelection.endSlot == null){
-    tempSelection.endSlot = selectedWeeklyItem.endSlot;
-  // } else if(tempSelection.endSlot < selectedWeeklyItem.endSlot && Math.abs(selectedWeeklyItem.endSlot - tempSelection.endSlot) > 4){
-  } else {
-    let diff = Math.abs(selectedWeeklyItem.endSlot - tempSelection.endSlot);
-    if(tempSelection.endSlot < selectedWeeklyItem.endSlot){
-    //console.log("temp < selected END") 
-      tempSelection.endSlot = selectedWeeklyItem.endSlot;
-    } else {
-      tempSelection.endSlot = tempSelection.endSlot;
-    };
-
-    if(diff > 4){
-        //console.log(diff);
-        fillInTheBlanksEnd = true;
-      //console.log("fillInTheBlanksEnd");
-    } else if (diff == 0){
-      //console.log("same one!");
-      secondClickEnd = true;
-      thisOne.classList.remove("selected", "topIsTouching", "bottomIsTouching"); //C'est pas assez... ça marche pas dans toutes les circonstances
-      // Et il faut updater le tempSelection! Est-ce qu'on fait juste endSlot - 4 ?? (et startSlot + 4, dans l'autre cas)
-      tempSelection.endSlot = tempSelection.endSlot - 4;
-    };
-  };
-  
-  if(secondClickStart && secondClickEnd){
-    tempSelection.startSlot = null;
-    tempSelection.endSlot = null;
-  };
-
-  if(fillInTheBlanksStart && fillInTheBlanksEnd){
-    // fillInAllTheBlanks
-    for(let s = tempSelection.startSlot + 4; s < tempSelection.endSlot; s = s + 4){
-      let weeklyItem = slotToWeeklyItem(s);
-      //console.log(weeklyItem);
-      weeklyItem.classList.add("selected");
-    };
-  };
-
-  //You've got blanks to fill, ONLY if both start and end say "fillInTheBlanks"
-      
-     //On a le numéro du slot vide (ou du moins on peut le trouver...). Il faut juste, de un, s'assurer qu'il s'agit du premier slot d'une heure (minute = 00 et non 15, 30 ou 45) et convertir le numéro de slot en grid-row-start et le dayIndex en grid-column-start puis faire un queryselector...
-
-      
-      
-
-  // tempSelection.startSlot = tempSelection.startSlot == null ? selectedWeeklyItem.startSlot : tempSelection.startSlot < selectedWeeklyItem.startSlot ? tempSelection.startSlot : selectedWeeklyItem.startSlot;
-  // tempSelection.endSlot = tempSelection.endSlot == null ? selectedWeeklyItem.endSlot : tempSelection.endSlot < selectedWeeklyItem.endSlot ? selectedWeeklyItem.endSlot : tempSelection.endSlot;
-  //mais si la différence entre userSelection.xxxSlot et selectedWeeklyItem.xxxSlot est de plus de 4, alors il y a un ou des weeklyItem entre les deux qui doivent être sélectionnés...
-
-
-
   // userSelection = tempSelection;
+  userSelection.date = selectedWeeklyItem.date;
   userSelection.startSlot = tempSelection.startSlot;
+  userSelection.startRow = slotToRow(tempSelection.startSlot);
   userSelection.endSlot = tempSelection.endSlot;
+  userSelection.endRow = slotToRow(tempSelection.endSlot);
   userSelection.dayIndex = selectedWeeklyItem.dayIndex;
+  userSelection.col = `col-${selectedWeeklyItem.col}`;
+  userSelection.topIsTouching = tempSelection.topIsTouching;
+  userSelection.bottomIsTouching = tempSelection.bottomIsTouching;
   updateSelectedTime();
+  updateUserMeeting();
   
 
 };
 window.addMe = addMe;
+
+function trashUserMeeting(){
+  document.querySelectorAll(".userMeeting").forEach(we => {
+    we.remove();
+  });
+  resetUserSelection();
+  updateSelectedTime();
+};
+window.trashUserMeeting = trashUserMeeting;
+
+function updateUserMeeting(){
+  document.querySelectorAll(".userMeeting").forEach(we => {
+    we.remove();
+  });
+  if(userSelection.date !== null && userSelection.startSlot !== null && userSelection.endSlot !== null){
+    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="userMeeting${userSelection.topIsTouching ? `  topIsTouching` : ``}${userSelection.bottomIsTouching ? ` bottomIsTouching` : ``}" style="grid-column:${userSelection.col}; grid-row:${userSelection.startRow}/${userSelection.endRow};"></div>`);
+  };
+};
+
+function resetUserSelection(){
+  userSelection.date = null;
+  userSelection.startSlot = null;
+  userSelection.startRow = null;
+  userSelection.endSlot = null;
+  userSelection.endRow = null;
+  userSelection.dayIndex = null;
+  userSelection.col = null;
+  userSelection.topIsTouching = false;
+  userSelection.bottomIsTouching = false;
+  userSelection.submitted = false;
+};
+
+function resetFormState(){
+  formState.date = "";
+  formState.dalle = "";
+  formState.alle = "";
+  formState.name = "";
+  formState.email = "";
+  formState.cell = "";
+  formState.messengerName = "";
+  formState.where = "";
+  formState.yourAddress = "";
+  formState.whereReal = "";
+  formState.why = "";
+};
 
 function updateSelectedTime(){
   //Update selectedTime
   if(userSelection.startSlot == null || userSelection.endSlot == null){
     selectedTime.innerHTML = "";
     formContainer.classList.add("displayNone");
+    //reset everything to be sure
+    resetUserSelection();
+    resetFormState();
+    //save to localStorage
+    localStorage.meetAlixUserSelection = JSON.stringify(userSelection);
+    localStorage.meetAlixFormState = JSON.stringify(formState);
   } else{
     formContainer.classList.remove("displayNone");
     let startDateTime = slotToDateTime(userSelection.startSlot);
@@ -844,65 +1108,91 @@ function updateSelectedTime(){
     console.log(thatDay);
     
 
-// 1️⃣ Get weekday, month, day, year
-const weekday = thatDay.toLocaleDateString("en-US", { weekday: "long" });
-const month = thatDay.toLocaleDateString("en-US", { month: "long" });
-const day = thatDay.getDate();
-const year = thatDay.getFullYear();
+    // 1️⃣ Get weekday, month, day, year
+    const weekday = thatDay.toLocaleDateString("en-US", { weekday: "long" });
+    const month = thatDay.toLocaleDateString("en-US", { month: "long" });
+    const day = thatDay.getDate();
+    const year = thatDay.getFullYear();
 
-// 2️⃣ Get ordinal suffix (st, nd, rd, th)
-function getOrdinalSuffix(n) {
-  if (n >= 11 && n <= 13) return "th";
-  switch (n % 10) {
-    case 1: return "st";
-    case 2: return "nd";
-    case 3: return "rd";
-    default: return "th";
-  }
-}
+    // 2️⃣ Get ordinal suffix (st, nd, rd, th)
+    function getOrdinalSuffix(n) {
+      if (n >= 11 && n <= 13) return "th";
+      switch (n % 10) {
+        case 1: return "st";
+        case 2: return "nd";
+        case 3: return "rd";
+        default: return "th";
+      }
+    }
 
-const suffix = getOrdinalSuffix(day);
+    const suffix = getOrdinalSuffix(day);
 
-// --- TIME PART ---
-function formatTime24to12({ dayIndex, hour24, minute }) {
+    // --- TIME PART ---
+    function formatTime24to12({ dayIndex, hour24, minute }) {
 
-  const period = hour24 >= 12 ? "pm" : "am";
-  const hour12 = hour24 % 12 || 12;
-  const paddedMinutes = minute.toString().padStart(2, "0");
+      const period = hour24 >= 12 ? "pm" : "am";
+      const hour12 = hour24 % 12 || 12;
+      const paddedMinutes = minute.toString().padStart(2, "0");
 
-  return {
-    hour24,
-    hour12,
-    paddedMinutes,
-    period
+      return {
+        hour24,
+        hour12,
+        paddedMinutes,
+        period
+      };
+      // return `${hour12}:${paddedMinutes} ${period}`;
+    }
+
+    const startFormatted = formatTime24to12(startDateTime);
+    const endFormatted   = formatTime24to12(endDateTime);
+    console.log(endFormatted);
+
+
+    // 3️⃣ Inject into HTML (with <sup>)
+    selectedTime.innerHTML = `
+      ${weekday}, ${month} ${day}<sup>${suffix}</sup> ${year}
+      <br>
+      from ${startFormatted.hour12}:${startFormatted.paddedMinutes} ${startFormatted.period} to ${endFormatted.hour12}:${endFormatted.paddedMinutes} ${endFormatted.period}
+    `;
+    dateComplete.value = getDashStringFromDate(thatDay);
+    dalleTime.value = `${startFormatted.hour24}:${startFormatted.paddedMinutes}`;
+    alleTime.value = `${endFormatted.hour24}:${endFormatted.paddedMinutes}`;
+
+    //update the formState
+    formState.date = getDashStringFromDate(thatDay);
+    formState.dalle = `${startFormatted.hour24}:${startFormatted.paddedMinutes}`;
+    formState.alle = `${endFormatted.hour24}:${endFormatted.paddedMinutes}`;
+
+    //save in localStorage
+    localStorage.meetAlixUserSelection = JSON.stringify(userSelection);
+    localStorage.meetAlixFormState = JSON.stringify(formState);
   };
-  // return `${hour12}:${paddedMinutes} ${period}`;
-}
-
-const startFormatted = formatTime24to12(startDateTime);
-const endFormatted   = formatTime24to12(endDateTime);
-console.log(endFormatted);
-
-
-// 3️⃣ Inject into HTML (with <sup>)
-selectedTime.innerHTML = `
-  ${weekday}, ${month} ${day}<sup>${suffix}</sup> ${year}
-  <br>
-  from ${startFormatted.hour12}:${startFormatted.paddedMinutes} ${startFormatted.period} to ${endFormatted.hour12}:${endFormatted.paddedMinutes} ${endFormatted.period}
-`;
-dateComplete.value = getDashStringFromDate(thatDay);
-dalleTime.value = `${startFormatted.hour24}:${startFormatted.paddedMinutes}`;
-alleTime.value = `${endFormatted.hour24}:${endFormatted.paddedMinutes}`;
-
-
-
-
-
-
-
-  };
-  
 };
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  // Get infos => everything is already in formState
+  // let dateCompleteValue = dateComplete.value;
+  // let dalleTimeValue = dalleTime.value;
+  // let alleTimeValue = alleTime.value;
+  // let nameInputValue = nameInput.value;
+  // let emailInputValue = emailInput.value;
+  // let cellInputValue = cellInput.value;
+  // let messengerNameInputValue = messengerNameInput.value;
+  // let whereRadiosValue = whereRadios.value;
+  // let yourAddressInputValue = yourAddressInput.value;
+  // let whereRealInputValue = whereRealInput.value;
+  // let whyInputValue = whyInput.value;
+
+  //save infos to localStorag
+  
+  //send infos to my email
+
+  //add infos to randomTask
+
+  //add infos to myBusies
+});
 
 
 

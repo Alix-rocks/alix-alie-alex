@@ -193,6 +193,7 @@ const formState = {
   };
 })();
 
+const container = document.querySelector(".weeklyContainer");
 const mealLegend = document.querySelector("#mealLegend");
 mealLegend.style.display = config.meal ? "flex" : "none";
 const formContainer = document.querySelector(config.form);
@@ -436,7 +437,6 @@ function getWeeklyCalendar(){
   nomiRow.unshift(firstRows);
   nomiRow.push(lastLine);
   let nomiRows = nomiRow.join(" ");
-  let container = document.querySelector(".weeklyContainer");
   container.style.gridTemplateRows = nomiRows;
   container.style.gridTemplateColumns = nomiCols;
   
@@ -577,7 +577,7 @@ function putDatesInWeek(date){
 
 
 function updateSleepAreas(){
-  document.querySelectorAll(".sleepArea").forEach(we => {
+  container.querySelectorAll(".sleepArea").forEach(we => {
     we.remove();
   });
   let myDay = Number(mySettings.myTomorrow.substring(0, 2));
@@ -634,16 +634,16 @@ function eraseWeekArea(){
 };
 
 function eraseWeekEvent(){
-  document.querySelectorAll(".weeklyEvent").forEach(we => {
+  container.querySelectorAll(".weeklyEvent").forEach(we => {
     we.remove();
   });
-  document.querySelectorAll(".weeklyMeal").forEach(we => {
+  container.querySelectorAll(".weeklyMeal").forEach(we => {
     we.remove();
   });
-  document.querySelectorAll(".weeklyBuffer").forEach(we => {
+  container.querySelectorAll(".weeklyBuffer").forEach(we => {
     we.remove();
   });
-  document.querySelectorAll(".userMeeting").forEach(we => {
+  container.querySelectorAll(".userMeeting").forEach(we => {
     we.remove();
   });
 };
@@ -1053,7 +1053,7 @@ function addMe(thisOne) {
 window.addMe = addMe;
 
 function trashUserMeeting(){
-  document.querySelectorAll(".userMeeting").forEach(we => {
+  container.querySelectorAll(".userMeeting").forEach(we => {
     we.remove();
   });
   resetUserSelection();
@@ -1062,7 +1062,7 @@ function trashUserMeeting(){
 window.trashUserMeeting = trashUserMeeting;
 
 function updateUserMeeting(){
-  document.querySelectorAll(".userMeeting").forEach(we => {
+  container.querySelectorAll(".userMeeting").forEach(we => {
     we.remove();
   });
   if(userSelection.date !== null && userSelection.startSlot !== null && userSelection.endSlot !== null){

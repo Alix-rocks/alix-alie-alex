@@ -539,7 +539,7 @@ function putDatesInWeek(date){
   const unknownTestIn = arrayDate.some(el => (el.fullDash == unknownStartDate));
   if(unknownTestIn){
     let unknownStartIdx = meseDayICalc(unknownStartDate);
-    let unknownStart = `${weeksDayArray[unknownStartIdx].day}`;
+    let unknownStart = `${weeksDayArray[unknownStartIdx].code}`;
     unknownArea = `<div class="unknownArea" style="grid-row: row-Day / row-end; grid-column: col-${unknownStart} / col-end">Not sure yet!</div>`;
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", unknownArea);
   };
@@ -899,18 +899,18 @@ function analyzeRelation(selected, unavailable) {
 
 };
 
-function analyzeEdges(selected, edge) {
-  //top of the day
-  if (selected.startSlot === edge.start) {
-    return "topIsTouching";
-  };
+// function analyzeEdges(selected, edge) {
+//   //top of the day
+//   if (selected.startSlot === edge.start) {
+//     return "topIsTouching";
+//   };
 
-  //bottom of the day
-  if (selected.endSlot === edge.end) {
-    return "bottomIsTouching";
-  };
+//   //bottom of the day
+//   if (selected.endSlot === edge.end) {
+//     return "bottomIsTouching";
+//   };
 
-};
+// };
 
 
 function addMe(thisOne) {
@@ -942,6 +942,7 @@ function addMe(thisOne) {
     selectedWeeklyItem.startSlot === tempSelection.startSlot && 
     selectedWeeklyItem.endSlot === tempSelection.endSlot //That's the same one, when there's only one
   ){
+    formContainer.classList.remove("displayNone");
     formContainer.classList.add("expanded");
     return
   };
@@ -989,21 +990,21 @@ function addMe(thisOne) {
     };
   };
 
-  for (const edge of allTheEdges) {
-    const edging = analyzeEdges(selectedWeeklyItem, edge);
+  // for (const edge of allTheEdges) {
+  //   const edging = analyzeEdges(selectedWeeklyItem, edge);
 
-    // ⬆️ touching start of day
-    if (edging === "topIsTouching") {
-      ////thisOne.classList.add("topIsTouching");
-      tempSelection.topIsTouching = true;
-    };
+  //   // ⬆️ touching start of day
+  //   if (edging === "topIsTouching") {
+  //     ////thisOne.classList.add("topIsTouching");
+  //     tempSelection.topIsTouching = true;
+  //   };
 
-    // ⬇️ touching end of day
-    if (edging === "bottomIsTouching") {
-      ////thisOne.classList.add("bottomIsTouching");
-      tempSelection.bottomIsTouching = true;
-    };
-  }
+  //   // ⬇️ touching end of day
+  //   if (edging === "bottomIsTouching") {
+  //     ////thisOne.classList.add("bottomIsTouching");
+  //     tempSelection.bottomIsTouching = true;
+  //   };
+  // }
 
   let secondClickStart = false;
   let secondClickEnd = false;
@@ -1051,6 +1052,11 @@ function addMe(thisOne) {
 
 };
 window.addMe = addMe;
+
+function closeTheForm(){
+  formContainer.classList.add("displayNone");
+};
+window.closeTheForm = closeTheForm;
 
 function trashUserMeeting(){
   container.querySelectorAll(".userMeeting").forEach(we => {

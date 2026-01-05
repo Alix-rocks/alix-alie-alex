@@ -68,6 +68,7 @@ button:active{
 
 button.iconBtn{
   border: none;
+  color: var(--tx-color);
   background-color: var(--bg-color);
   font-size: 1em;
 }

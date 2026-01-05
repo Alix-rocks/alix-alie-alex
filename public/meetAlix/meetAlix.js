@@ -1,6 +1,5 @@
 // alix.rocks/meetAlix?type=friend
 // alix.rocks/meetAlix?type=client
-
 import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "../../myFirebase.js";
 
 
@@ -38,12 +37,7 @@ const formConfigs = {
 const config = formConfigs[formType];
 console.log(config);
 
-
-
-let myBusies = [];
-let unavailableRanges = [];
-
-let weeksDayArray = [{
+const weeksDayArray = [{
   day: 0,
   name: "dimanche",
   letter: "D",
@@ -96,6 +90,44 @@ let screenWidth;
     document.documentElement.style.setProperty('--vh', `${screenHeight}px`);
     document.documentElement.style.setProperty('--vw', `${screenWidth}px`);
 })();
+
+const SLOTS_PER_DAY = 97; // 24h * 4 slots/h + 1 slot (for after "midnight")
+
+const allTheEdges = []
+//0 0-0 - 0-11 D am
+//1 0-23 - 1-11 D-L
+//2 1-23 - 2-11 L-M
+//3 2-23 - 3-11 M-M
+//4 3-23 - 4-11 M-J
+//5 4-23 - 5-11 J-V
+//6 5-23 - 6-11 V-S
+//7 6-23 - 6-24 S pm
+
+for(let d = 0; d < 8; d++){
+  let startSlotInfo = {
+    dayIndex: d == 0 ? 0 : d - 1,
+    hour: d == 0 ? 0 : 23,
+    minute: 0
+  };
+  let startSlot = dateTimeToSlot(startSlotInfo);
+
+  let endSlotInfo = {
+    dayIndex: d,
+    hour: d == 7 ? 24 : 11,
+    minute: 0
+  };
+  let endSlot = dateTimeToSlot(endSlotInfo);
+
+  let daySlots = {
+    start: startSlot,
+    end: endSlot
+  };
+  allTheEdges.push(daySlots); //Les ajouter dans unavailableRanges
+};
+console.log(allTheEdges);
+
+let myBusies = [];
+const unavailableRanges = [];
 
 const userSelection = {
   date: null,
@@ -203,7 +235,7 @@ dalleTime.addEventListener("change", (e) => {
   let newStartSlot = dateTimeToSlot(info);
   console.log(newStartSlot);
   let newDalleSlot = checkNewDalleSlot(newStartSlot, userSelection.endSlot);
-  //CHECK WITH EDGES TOO!!
+  //CHECK WITH EDGES TOO!! (Edges have been added to unavailableRanges)
   console.log(newDalleSlot);
   let newDalleTime = slotToTime(newDalleSlot);
   console.log(newDalleTime);
@@ -435,7 +467,8 @@ function getWeeklyCalendar(){
 };
 
 function fromMyThisWeekBusiesToUnavailableRanges(){
-  unavailableRanges = myThisWeekBusies.map(busy => {
+  unavailableRanges.length = 0;
+  myThisWeekBusies.forEach(busy => {
     let start = {
       dayIndex: busy.day, //if we end up with multiple days events... we'll need startDayIndex and endDayIndex
       hour: busy.startHour,
@@ -448,11 +481,15 @@ function fromMyThisWeekBusiesToUnavailableRanges(){
       minute: busy.endMinute
     };
     let endSlot = dateTimeToSlot(end);
-    return {
+    let busyRange = {
       start: startSlot,
       end: endSlot
     };
+    unavailableRanges.push(busyRange);
   });
+  
+  // Adding the edges 
+  unavailableRanges.push(...allTheEdges);
   console.log(unavailableRanges);
 }; 
 
@@ -714,7 +751,6 @@ const unavailableRanges = [
 
 
 
-const SLOTS_PER_DAY = 97; // 24h * 4 slots/h + 1 slot (for after "midnight")
 
 function dateTimeToSlot({ dayIndex, hour, minute }) {
   const timeSlot = hour * 4 + minute / 15;
@@ -776,29 +812,7 @@ function slotToWeeklyItem(slot){
 //  return a.startSlot < b.endSlot && b.startSlot < a.endSlot;
 // } 
 
-const allTheEdges = []
-for(let d = 0; d < 7; d++){
-  let startSlotInfo = {
-    dayIndex: d,
-    hour: 11,
-    minute: 0
-  };
-  let startSlot = dateTimeToSlot(startSlotInfo);
 
-  let endSlotInfo = {
-    dayIndex: d,
-    hour: 24,
-    minute: 0
-  };
-  let endSlot = dateTimeToSlot(endSlotInfo);
-
-  let daySlots = {
-    start: startSlot,
-    end: endSlot
-  };
-
-  allTheEdges.push(daySlots);
-};
 
 function checkNewDalleSlot(newStart, end){
   let overlap = false;

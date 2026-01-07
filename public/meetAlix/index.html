@@ -39,77 +39,244 @@
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
-      <h4 class="selectedTime"></h4>
-      <h2>Wanna hangout? 🙃</h2>
-      <h3>So you chose these date & time:</h3>
-      <h6>Is that your final answer?</h6>
-      <ul>
-        <li><label for="dateCompleteMeetAlix">Date: </label><input type="date" name="" id="dateCompleteMeetAlix" class="dateComplete" value="" /></li>
-        <li><label for="dalleTimeMeetAlix">From: </label><input id="dalleTimeMeetAlix" class="dalleTime" type="time" step="900" /></li>
-        <li><label for="alleTimeMeetAlix">To: </label><input id="alleTimeMeetAlix" class="alleTime" type="time" step="900" /></li>
-        <li><h6>Please consider meal, prep & travel times.<br/>As in, don't expect me to be anywhere else than my place before noon!</h6></li>
-      </ul>
-      <h3>Which one(s) are you?</h3>
-      <ul>
-        <li><label for="nameInputMeetAlix">Your name(s):<br/><h6>You and anyone else you wanna invite; be them people, imaginary friends or other of your personalities</h6></label><input id="nameInputMeetAlix" class="nameInput wide" type="text" /></li>
-        <li>
-      </ul>
-      <h3>How shall we communicate?</h3>
-      <h6>One is enough, but it really should be one of them.<br/>I don't do pigeons anymore and squirrels just aren't reliable.</h6>
-      <ul>
-        <li><label for="emailInputMeetAlix">Email: </label><input id="emailInputMeetAlix" class="emailInput wide" type="text" /></li>
-        <li><label for="cellInputMeetAlix">Cell (SMS): </label><input id="cellInputMeetAlix" class="cellInput wide" type="text" /></li>
-        <li><label for="messengerNameInputMeetAlix">Nickname on Messenger: </label><input id="messengerNameInputMeetAlix" class="messengerNameInput wide" type="text" /></li>
-      </ul>
-      <h3>Where shall we meet?</h3>
-      <h4>Online</h4>
-      <h6>As in videocall. I don't do phone calls anymore. Kinda freaks me out. Let me see your face so I can adjust mine!</h6>
+      <h4 data-i18n="summary_date_time" class="selectedTime"></h4>
+      <h2 data-i18n="heading_hangout">So… wanna hang out? 🙃</h2>
+      <h3 data-i18n="presentation_date_time">So you chose this date and time:</h3>
+      <h6 data-i18n="presentation_confirmation_question">Is that your final answer?</h6>
+
       <ul>
         <li>
-          <input id="messengerRadioMeetAlix" class="myRadio" name="whereRadios" type="radio" value="messenger" />
-          <label for="messengerRadioMeetAlix" class="whereLabel"><span class="myRadio"></span>Messenger</label>
-          <h6>Then I'll definitely need your Messenger nickname. ☝️</h6>
+          <label for="dateCompleteMeetAlix" data-i18n="label_date">Date:</label>
+          <input type="date" id="dateCompleteMeetAlix" class="dateComplete" />
         </li>
         <li>
-          <input id="googleMeetRadioMeetAlix" class="myRadio" name="whereRadios" type="radio" value="googleMeet" />
-          <label for="googleMeetRadioMeetAlix" class="whereLabel"><span class="myRadio"></span>Google Meet</label>
+          <label for="dalleTimeMeetAlix" data-i18n="label_time_from">From:</label>
+          <input id="dalleTimeMeetAlix" class="dalleTime" type="time" step="900" />
+        </li>
+        <li>
+          <label for="alleTimeMeetAlix" data-i18n="label_time_to">To:</label>
+          <input id="alleTimeMeetAlix" class="alleTime" type="time" step="900" />
+        </li>
+        <li>
+          <h6 data-i18n="time_warning">
+            Please consider meal, prep & travel times.<br />
+            As in: don’t expect me to be anywhere else than my place before noon!
+          </h6>
         </li>
       </ul>
-      <h4>Offline</h4>
-      <h6>As in the real world?! 😱</h6>
+
+      <h3 data-i18n="heading_identity">Which one(s) are you?</h3>
+
       <ul>
         <li>
-          <input id="myPlaceRadioMeetAlix" class="myRadio" name="whereRadios" type="radio" value="realWorld" />
-          <label for="myPlaceRadioMeetAlix" class="whereLabel"><span class="myRadio"></span>My place</label>
-          <h6>Wait, you know where I live?! 😳</h6>
-        </li>
-        <li>
-          <input id="yourPlaceRadioMeetAlix" class="myRadio" name="whereRadios" type="radio" value="realWorld" />
-          <label for="yourPlaceRadioMeetAlix" class="whereLabel"><span class="myRadio"></span>Your place</label>
-          <h6>Sure, but do I remember where you live? You might have to remind me your address. 👇</h6>
-          <label for="yourAddressInputMeetAlix">Here, give me your address<br/>
-          <h6>I promise not to get all stalkerish on you. 👀</h6></label>
-          <textarea name="where" id="yourAddressInputMeetAlix" class="yourAddressInput wide" rows="5"></textarea>
-        </li>
-        <li>
-          <input id="otherPlaceRadioMeetAlix" class="myRadio" name="whereRadios" type="radio" value="realWorld" />
-          <label for="otherPlaceRadioMeetAlix" class="whereLabel"><span class="myRadio"></span>Some place else</label>
-          <label for="whereRealInputMeetAlix">Any preferences as to where?<br/>
-          <h6>As long as it's not to far from a Metro station, I'll consider it like a real place.</h6></label>
-          <textarea name="where" id="whereRealInputMeetAlix" class="whereRealInput wide" rows="10"></textarea>
-        </li>
-      </ul>
-      <h3>Why?!</h3>
-      <ul>
-        <li>
-          <label for="whyInputMeetAlix">What would you like us to do?<br/>
-            <h6>Anything I should know, prepare for or worry about?</h6>
+          <label for="nameInputMeetAlix">
+            <span data-i18n="label_names">Your name(s):</span><br />
+            <h6 data-i18n="help_names">
+              You and anyone else you wanna invite — be them people, imaginary friends,
+              or other personalities of yours.
+            </h6>
           </label>
-          <textarea name="why" id="whyInputMeetAlix" class="whyInput wide" rows="10"></textarea>
+          <input id="nameInputMeetAlix" class="nameInput wide" type="text" />
         </li>
-        <li><button class="textBtn submitBtn" type="submit">Book it!</button></li>
-        <li><button class="textBtn resetBtn" type="reset">Oups!</button></li>
       </ul>
+
+      <h3 data-i18n="heading_communication">How shall we communicate?</h3>
+      <h6 data-i18n="communication_warning">
+        One is enough, but it really should be one of them.<br />
+        I don’t do pigeons anymore, and squirrels just aren’t reliable.
+      </h6>
+
+      <ul>
+        <li>
+          <label for="emailInputMeetAlix" data-i18n="label_email">Email:</label>
+          <input id="emailInputMeetAlix" class="emailInput wide" type="text" />
+        </li>
+        <li>
+          <label for="cellInputMeetAlix" data-i18n="label_cell">Cell (SMS):</label>
+          <input id="cellInputMeetAlix" class="cellInput wide" type="text" />
+        </li>
+        <li>
+          <label for="messengerNameInputMeetAlix" data-i18n="label_messenger_nickname">
+            Nickname on Messenger:
+          </label>
+          <input
+            id="messengerNameInputMeetAlix"
+            class="messengerNameInput wide"
+            type="text"
+          />
+        </li>
+        <li>
+          <label for="whatsAppNumberInputMeetAlix" data-i18n="label_whatsapp_number">
+            Number on WhatsApp:
+          </label>
+          <input
+            id="whatsAppNumberInputMeetAlix"
+            class="whatsAppNumberInput wide"
+            type="text"
+          />
+        </li>
+      </ul>
+
+      <h3 data-i18n="heading_location">Where shall we meet?</h3>
+
+      <h4 data-i18n="subheading_online">Online</h4>
+      <h6 data-i18n="online_description">
+        As in videocall. I don’t do phone calls anymore — kinda freaks me out.<br />
+        Let me see your face so I can adjust mine!
+      </h6>
+
+      <ul>
+        <li>
+          <input
+            id="messengerRadioMeetAlix"
+            class="myRadio"
+            name="whereRadios"
+            type="radio"
+            value="messenger"
+          />
+          <label for="messengerRadioMeetAlix" class="whereLabel">
+            <span class="myRadio"></span>
+            <span data-i18n="option_messenger">Messenger</span>
+          </label>
+          <h6 data-i18n="messenger_note">
+            Then I’ll definitely need your Messenger nickname. ☝️
+          </h6>
+        </li>
+
+        <li>
+          <input
+            id="googleMeetRadioMeetAlix"
+            class="myRadio"
+            name="whereRadios"
+            type="radio"
+            value="googleMeet"
+          />
+          <label for="googleMeetRadioMeetAlix" class="whereLabel">
+            <span class="myRadio"></span>
+            <span data-i18n="option_google_meet">Google Meet</span>
+          </label>
+        </li>
+        <li>
+          <input
+            id="whatsAppRadioMeetAlix"
+            class="myRadio"
+            name="whereRadios"
+            type="radio"
+            value="whatsApp"
+          />
+          <label for="whatsAppRadioMeetAlix" class="whereLabel">
+            <span class="myRadio"></span>
+            <span data-i18n="option_whatsapp">WhatsApp</span>
+          </label>
+        </li>
+      </ul>
+
+      <h4 data-i18n="subheading_offline">Offline</h4>
+      <h6 data-i18n="offline_description">As in the real world?! 😱</h6>
+
+      <ul>
+        <li>
+          <input
+            id="myPlaceRadioMeetAlix"
+            class="myRadio"
+            name="whereRadios"
+            type="radio"
+            value="realWorld"
+          />
+          <label for="myPlaceRadioMeetAlix" class="whereLabel">
+            <span class="myRadio"></span>
+            <span data-i18n="option_my_place">My place</span>
+          </label>
+          <h6 data-i18n="my_place_note">Wait… you know where I live?! 😳</h6>
+        </li>
+
+        <li>
+          <input
+            id="yourPlaceRadioMeetAlix"
+            class="myRadio"
+            name="whereRadios"
+            type="radio"
+            value="realWorld"
+          />
+          <label for="yourPlaceRadioMeetAlix" class="whereLabel">
+            <span class="myRadio"></span>
+            <span data-i18n="option_your_place">Your place</span>
+          </label>
+          <h6 data-i18n="your_place_note">
+            Sure, but do I remember where you live?<br />
+            You might have to remind me your address. 👇
+          </h6>
+
+          <label for="yourAddressInputMeetAlix">
+            <span data-i18n="label_your_address">Here, give me your address</span><br />
+            <h6 data-i18n="help_your_address">
+              I promise not to get all stalkerish on you. 👀
+            </h6>
+          </label>
+          <textarea
+            id="yourAddressInputMeetAlix"
+            class="yourAddressInput wide"
+            rows="5"
+          ></textarea>
+        </li>
+
+        <li>
+          <input
+            id="otherPlaceRadioMeetAlix"
+            class="myRadio"
+            name="whereRadios"
+            type="radio"
+            value="realWorld"
+          />
+          <label for="otherPlaceRadioMeetAlix" class="whereLabel">
+            <span class="myRadio"></span>
+            <span data-i18n="option_other_place">Some place else</span>
+          </label>
+
+          <label for="whereRealInputMeetAlix">
+            <span data-i18n="label_other_place">Any preferences as to where?</span><br />
+            <h6 data-i18n="help_other_place">
+              As long as it’s not too far from a Metro station, I’ll consider it a real
+              place.
+            </h6>
+          </label>
+          <textarea
+            id="whereRealInputMeetAlix"
+            class="whereRealInput wide"
+            rows="10"
+          ></textarea>
+        </li>
+      </ul>
+
+      <h3 data-i18n="heading_why">Why?!</h3>
+
+      <ul>
+        <li>
+          <label for="whyInputMeetAlix">
+            <span data-i18n="label_why">What would you like us to do?</span><br />
+            <h6 data-i18n="help_why">
+              Anything I should know, prepare for, or worry about?
+            </h6>
+          </label>
+          <textarea
+            id="whyInputMeetAlix"
+            class="whyInput wide"
+            rows="10"
+          ></textarea>
+        </li>
+
+        <li>
+          <button class="textBtn submitBtn" type="submit" data-i18n="button_submit">
+            Book it!
+          </button>
+        </li>
+        <li>
+          <button class="textBtn resetBtn" type="reset" data-i18n="button_reset">
+            Oops!
+          </button>
+        </li>
+      </ul>
+
     </form>
   </div>
   <div class="legend">

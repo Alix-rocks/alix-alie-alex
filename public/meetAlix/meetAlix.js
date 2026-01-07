@@ -1,13 +1,16 @@
-// alix.rocks/meetAlix?type=friend
-// alix.rocks/meetAlix?type=client
+// alix.rocks/meetAlix/?type=friend
+// alix.rocks/meetAlix/?type=client
+// alix.rocks/meetAlix/?lang=en
+// alix.rocks/meetAlix/?lang=fr
 import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "../../myFirebase.js";
-
+import i18n from "./i18n.js";
 
 let unknownStartDate = "2026-01-24"; //The day the "Not sure yet" section starts
 
 let myEmail = "alexblade.23.49@gmail.com";
 
 const params = new URLSearchParams(window.location.search);
+
 const formType = params.get("type") || "default";
 console.log(window.location.href);
 console.log(window.location.search);
@@ -36,6 +39,32 @@ const formConfigs = {
 };
 const config = formConfigs[formType];
 console.log(config);
+
+const lang =
+  params.get("lang") ||
+  navigator.language.slice(0, 2) ||
+  "en";
+
+function t(key, vars = {}) {
+  let text = i18n[lang]?.[key] || i18n.en[key] || key;
+
+  for (const v in vars) {
+    text = text.replaceAll(`{${v}}`, vars[v]);
+  };
+
+  return text;
+};
+
+function translatePage() {
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.dataset.i18n;
+    el.innerHTML = t(key);
+  });
+};
+translatePage();
+
+
+
 
 const weeksDayArray = [{
   day: 0,
@@ -150,6 +179,7 @@ const formState = {
   email: "",
   cell: "",
   messengerName: "",
+  whatsAppNumber: "",
   where: "",
   yourAddress: "",
   whereReal: "",
@@ -183,6 +213,7 @@ const formState = {
     formState.email = tempFS.email;
     formState.cell = tempFS.cell;
     formState.messengerName = tempFS.messengerName;
+    formState.whatsAppNumber = tempFS.whatsAppNumber;
     formState.where = tempFS.where;
     formState.yourAddress = tempFS.yourAddress;
     formState.whereReal = tempFS.whereReal;
@@ -210,6 +241,7 @@ const nameInput = formContainer.querySelector(".nameInput");
 const emailInput = formContainer.querySelector(".emailInput");
 const cellInput = formContainer.querySelector(".cellInput");
 const messengerNameInput = formContainer.querySelector(".messengerNameInput");
+const whatsAppNumberInput = formContainer.querySelector(".whatsAppNumberInput");
 const whereRadios = formContainer.querySelector('[name="whereRadios"]');
 const yourAddressInput = formContainer.querySelector(".yourAddressInput");
 const whereRealInput = formContainer.querySelector(".whereRealInput");
@@ -306,6 +338,10 @@ messengerNameInput.addEventListener("change", (e) => {
   formState.messengerName = e.target.value;
   localStorage.meetAlixFormState = JSON.stringify(formState);
 });
+whatsAppNumberInput.addEventListener("change", (e) => {
+  formState.whatsAppNumber = e.target.value;
+  localStorage.meetAlixFormState = JSON.stringify(formState);
+});
 whereRadios.addEventListener("input", (e) => {
   formState.where = e.target.value;
   localStorage.meetAlixFormState = JSON.stringify(formState);
@@ -398,7 +434,7 @@ function getWeeklyCalendar(){
     </div>`;
     arrayC.push(rowDay);
     let line = 4;
-    for(let r = 1; r < 14; r++){ // 13 weeklyItem per day (because it starts at 11:00 and ends at 24:00)
+    for(let r = 1; r < 13; r++){ // 12 weeklyItem per day (because it starts at 11:00 and ends at 23:00)
       let item = `<div 
         class="weeklyItem${c > 1 && config.meet ? `" onclick="addMe(this)` : ` unavailable`}" 
         style="grid-column:${c}; grid-row:${line} / ${line + 4};${c == 1 ? " border-radius:2px 0 0 2px; border-right:1px solid rgba(47, 79, 79, .5);" : ""}" 
@@ -409,7 +445,7 @@ function getWeeklyCalendar(){
       line += 4;
       myDay++;
     };
-    let lastWeeklyItem = `<div class="weeklyItem unavailable invisible" style="grid-column:${c}; grid-row:56 / 57;"></div>`;
+    let lastWeeklyItem = `<div class="weeklyItem unavailable invisible" style="grid-column:${c}; grid-row:52 / 53;"></div>`;
     arrayC.push(lastWeeklyItem);
     let arrayCs = arrayC.join("");
     arrayItem.push(arrayCs);
@@ -424,7 +460,7 @@ function getWeeklyCalendar(){
   let nomiCols = nomiCol.join(" ");
   let nomiRow = [];
   myDay = 11;
-  for(let h = 0; h < 13; h++){ //93
+  for(let h = 0; h < 12; h++){ //93 (quand h < 13)
     let rowH = `[row-${String(myDay).padStart(2, "0")}-00${h == 0 ? ` row-Day-end` : ``}] minmax(0, .25fr)`;
     let rowH15 = `[row-${String(myDay).padStart(2, "0")}-15] minmax(0, .25fr)`;
     let rowH30 = `[row-${String(myDay).padStart(2, "0")}-30] minmax(0, .25fr)`;
@@ -433,7 +469,8 @@ function getWeeklyCalendar(){
     myDay++;
   };
   let firstRows = `[row-Year] 1fr [row-Month] 1fr [row-Day] 1.5fr`;
-  let lastLine = `[row-24-00] minmax(0, 0) [row-end]`;
+  let lastLine = `[row-23-00] minmax(0, 0) [row-end]`;
+  // let lastLine = `[row-end]`;
   nomiRow.unshift(firstRows);
   nomiRow.push(lastLine);
   let nomiRows = nomiRow.join(" ");
@@ -782,35 +819,8 @@ function slotToTime(slot) {
   return `${String(hour24).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
 }
 
-// Now we need a function that will identify the corresponding weeklyItem to a slot/{dayIndex, hour, minute}
-function slotToWeeklyItem(slot){
-  let dayIndex = Math.floor(slot / SLOTS_PER_DAY);
-  let column = weeksDayArray[dayIndex].day + 2;
-  //console.log(column);
-  let timeSlot = slot % SLOTS_PER_DAY;
-  let hour = Math.floor(timeSlot / 4);
-  let rowStart = (hour - 10) * 4;
-  //console.log(rowStart);
-  
-
-  // let coordonates = {
-  //   col: column,
-  //   row: rowStart
-  // };
-  // return coordonates;
-
-  // return { column, row };
-
-  return document.querySelector(`[data-col="${column}"][data-row="${rowStart}"]`);
-};
 
 
-// userSelection.startSlot = ;
-// userSelection.endSlot = ;
-
-// function rangesOverlap(a, b) {
-//  return a.startSlot < b.endSlot && b.startSlot < a.endSlot;
-// } 
 
 
 
@@ -1169,11 +1179,26 @@ function updateSelectedTime(){
 
 
     // 3️⃣ Inject into HTML (with <sup>)
-    selectedTime.innerHTML = `
-      ${weekday}, ${month} ${day}<sup>${suffix}</sup> ${year}
-      <br>
-      from ${startFormatted.hour12}:${startFormatted.paddedMinutes} ${startFormatted.period} to ${endFormatted.hour12}:${endFormatted.paddedMinutes} ${endFormatted.period}
-    `;
+    // selectedTime.innerHTML = `
+    //   ${weekday}, ${month} ${day}<sup>${suffix}</sup> ${year}
+    //   <br>
+    //   from ${startFormatted.hour12}:${startFormatted.paddedMinutes} ${startFormatted.period} to ${endFormatted.hour12}:${endFormatted.paddedMinutes} ${endFormatted.period}
+    // `;
+    selectedTime.innerHTML = t("summary_date_time", {
+      weekday: weekday,
+      month: month,
+      day: day,
+      suffix: suffix,
+      year: year,
+      startHour24: startFormatted.hour24,
+      startHour12: startFormatted.hour12,
+      startMinutes: startFormatted.paddedMinutes,
+      startPeriod: startFormatted.period,
+      endHour24: endFormatted.hour24,
+      endHour12: endFormatted.hour12,
+      endMinutes: endFormatted.paddedMinutes,
+      endPeriod: endFormatted.period
+    });
     dateComplete.value = getDashStringFromDate(thatDay);
     dalleTime.value = `${startFormatted.hour24}:${startFormatted.paddedMinutes}`;
     alleTime.value = `${endFormatted.hour24}:${endFormatted.paddedMinutes}`;

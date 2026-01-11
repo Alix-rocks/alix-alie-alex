@@ -318,21 +318,21 @@ function sendAction(action){
   });
 };
 
-document.querySelector("#fullScreenCB").addEventListener("change", ev => {
-  if(ev.target.checked){
-    fullscreen()
-  } else{
-    exitFullscreen()
-  };
-});
+// document.querySelector("#fullScreenCB").addEventListener("change", ev => {
+//   if(ev.target.checked){
+//     fullscreen()
+//   } else{
+//     exitFullscreen()
+//   };
+// });
 
-function fullscreen(){
-  sendAction("fs");
-};
+// function fullscreen(){
+//   sendAction("fs");
+// };
 
-function exitFullscreen() {
-  sendAction("efs");
-};
+// function exitFullscreen() {
+//   sendAction("efs");
+// };
 
 set(ref(rtdb, "workshop/control"), null);
 set(ref(rtdb, "workshop/feedback"), null);

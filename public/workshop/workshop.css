@@ -116,14 +116,16 @@ p{
   text-align: left;
 }
 .acrostiche > p{
+  line-height: 1em;
+  margin: auto;
+}
+.acrostiche > p.boxed{
   font-size: 2em;
   font-weight: 600;
-  line-height: 1em;
   border: 3px solid;
   padding: 1em 2em;
   border-radius: 25px;
   width: fit-content;
-  margin: auto;
 }
 .exercice > p{
   font-size: 2em;

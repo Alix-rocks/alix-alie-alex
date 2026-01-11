@@ -341,7 +341,7 @@ onValue(ref(rtdb, "workshop/feedback"), (snapshot) => {
   const data = snapshot.val();
   if (!data) return;
 
-  handleCommand(data.need, data.info);
+  handleFeedback(data.need, data.info);
 
   set(ref(rtdb, "workshop/feedback"), null);
 });

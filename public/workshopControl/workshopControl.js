@@ -278,12 +278,13 @@ function toUnveilDropdownCreation(phrases){
 function activateSelector(action){
   let selector = diapoMain.querySelector("select.selectTheirChoice");
   selector.addEventListener("change",  () => {
+    let value = selector.value;
     let infoToSend = {
       action: action, //rain or unveilIt or addWisdom
-      data: selector.value
+      data: value
     };
     sendActionData(infoToSend);
-    removeOption(selector.value);
+    removeOption(value);
     selector.value = "";
   });
 
@@ -296,7 +297,6 @@ function activateInputAdder(action){
       data: adder.value
     };
     sendActionData(infoToSend);
-    removeOption(adder.value);
     adder.value = "";
   });
 };

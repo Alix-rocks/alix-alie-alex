@@ -14,38 +14,24 @@
   --wCBT: 100%;
 }
 @font-face {
-  font-family: 'Kalam';
-  src: url("../@Fonts&Icons/Kalam/Kalam-Bold.ttf") format("truetype");
-  font-weight: 700;
+  font-family: 'IBM_Plex_Sans';
+  src: url("../@Fonts&Icons/IBM_Plex_Sans/IBMPlexSans-Italic-VariableFont_wdth,wght.ttf") format("truetype");
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Zalando_Sans_SemiExpanded';
+  src: url("../@Fonts&Icons/Zalando_Sans_SemiExpanded/ZalandoSansSemiExpanded-VariableFont_wght.ttf") format("truetype");
   font-style: normal;
 }
 @font-face {
-  font-family: 'Nunito';
-  src: url("../@Fonts&Icons/Nunito/static/Nunito-Regular.ttf") format("truetype");
-  font-weight: 600;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Nunito';
-  src: url("../@Fonts&Icons/Nunito/static/Nunito-SemiBold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Nunito';
-  src: url("../@Fonts&Icons/Nunito/static/Nunito-Bold.ttf") format("truetype");
-  font-weight: 800;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Nunito';
-  src: url("../@Fonts&Icons/Nunito/static/Nunito-ExtraBold.ttf") format("truetype");
-  font-weight: 900;
-  font-style: normal;
+  font-family: 'Zalando_Sans_SemiExpanded';
+  src: url("../@Fonts&Icons/Zalando_Sans_SemiExpanded/ZalandoSansSemiExpanded-Italic-VariableFont_wght.ttf") format("truetype");
+  font-style: italic;
 }
 
 *{
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Zalando_Sans_SemiExpanded', sans-serif;
   box-sizing: border-box;
   user-select: none;
 }
@@ -74,13 +60,15 @@ section{
 }
 
 h1{
-  font-family: 'kalam', cursive;
+  font-family: 'IBM_Plex_Sans', cursive;
+  font-style: italic;
+  font-weight: 500;
   font-size: 4em;
   line-height: 1em;
   margin-bottom: 0;
 }
 h2{
-  font-family: 'nunito', sans-serif;
+  font-family: 'Zalando_Sans_SemiExpanded', sans-serif;
   font-size: 1.85em;
   margin-top: .5em;
 }
@@ -95,11 +83,13 @@ p{
   color: var(--accent-teal);
 }
 .exercice > h1, .acrostiche > h1{
-  font-family: 'nunito', sans-serif;
+  font-family: 'Zalando_Sans_SemiExpanded', sans-serif;
   font-size: 3.7em;
 }
 .exercice > h2, .acrostiche > h2{
-  font-family: 'kalam', cursive;
+  font-family: 'IBM_Plex_Sans', cursive;
+  font-style: italic;
+  font-weight: 500;
   font-size: 5em;
   line-height: 1em;
   margin: 2em auto;
@@ -110,7 +100,9 @@ p{
   margin: 1.2em auto;
 }
 .acrostiche h3{
-  font-family: 'kalam', cursive;
+  font-family: 'IBM_Plex_Sans', cursive;
+  font-style: italic;
+  font-weight: 500;
   font-size: 2.5em;
   line-height: 1.2em;
   text-align: left;

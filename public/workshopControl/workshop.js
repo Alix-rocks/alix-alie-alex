@@ -377,6 +377,7 @@ function multiShuffle(arr) {
 
 
 function wordRain(word){ 
+  console.log(word);
   xIndex++; 
   let emoji = word.match(emojiRegex) ? true : false;
   let thisKase = sectionShowed.querySelector("#" + kasesIds[xIndex]);

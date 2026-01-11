@@ -279,6 +279,7 @@ function activateSelector(action){
   let selector = diapoMain.querySelector("select.selectTheirChoice");
   selector.addEventListener("change",  () => {
     let value = selector.value;
+    console.log(value);
     let infoToSend = {
       action: action, //rain or unveilIt or addWisdom
       data: value

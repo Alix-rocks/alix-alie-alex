@@ -235,7 +235,7 @@ function wordDropdownCreation(words){
     let title = group[0];
     let options = group.map((word, idx) => {
       if(idx !== 0){
-        return `<option value="${word.match(emojiRegex) ? word.match(emojiRegex) : word}">${word}</option>`;
+        return `<option value="${word.match(emojiRegex) ? word.match(emojiRegex) : word.replace(`"`, `'`)}">${word}</option>`;
       };
     }).join("");
     return `<optgroup label="${title}">
@@ -278,7 +278,7 @@ function toUnveilDropdownCreation(phrases){
 function activateSelector(action){
   let selector = diapoMain.querySelector("select.selectTheirChoice");
   selector.addEventListener("change",  () => {
-    let value = selector.value;
+    let value = selector.value.replace(`'`, `"`);
     console.log(value);
     let infoToSend = {
       action: action, //rain or unveilIt or addWisdom

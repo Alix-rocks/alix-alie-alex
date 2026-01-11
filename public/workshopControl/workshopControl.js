@@ -235,7 +235,7 @@ function wordDropdownCreation(words){
     let title = group[0];
     let options = group.map((word, idx) => {
       if(idx !== 0){
-        return `<option value="${word.match(emojiRegex) ? word.match(emojiRegex) : word.replace(`"`, `'`)}">${word}</option>`;
+        return `<option value="${word.match(emojiRegex) ? word.match(emojiRegex) : word.replaceAll(`"`, `'`)}">${word}</option>`;
       };
     }).join("");
     return `<optgroup label="${title}">
@@ -243,11 +243,15 @@ function wordDropdownCreation(words){
     </optgroup>`;
   }).join("");
 
-  diapoMain.innerHTML = `<select class="selectTheirChoice" id="wordDropdown"">
+  diapoMain.innerHTML = `<select class="selectTheirChoice" id="wordDropdown">
       <option value="">--Options--</option>
       ${wordDropdownOptions}
     </select>
     <input class="addTheirChoice" id="wordInput" type="text"></input>`;
+
+  // diapoMain.querySelector("select").innerHTML = `
+  //     <option value="">--Options--</option>
+  //     ${wordDropdownOptions}`;
     
   let action = "rain";
   activateSelector(action);
@@ -278,7 +282,7 @@ function toUnveilDropdownCreation(phrases){
 function activateSelector(action){
   let selector = diapoMain.querySelector("select.selectTheirChoice");
   selector.addEventListener("change",  () => {
-    let value = selector.value.replace(`'`, `"`);
+    let value = selector.value.replaceAll(`'`, `"`);
     console.log(value);
     let infoToSend = {
       action: action, //rain or unveilIt or addWisdom

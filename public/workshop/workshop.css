@@ -1,23 +1,36 @@
 :root{
   --bg-color: rgb(244, 244, 244);
   --tx-color: rgb(34, 34, 34);
-  --accent-teal: rgb(0, 140, 140);
-  --accent-purple: rgb(124, 77, 255);
-  --accent-softBlue: rgb(41, 121, 255);
-  --accent-coral: rgb(255, 111, 97);
-  --accent-30-teal: rgba(0, 140, 140, .3);
-  --accent-30-purple: rgba(124, 77, 255, .3);
-  --accent-30-softBlue: rgba(41, 121, 255, .3);
-  --accent-30-coral: rgba(255, 111, 97, .3);
+  --green-dark: rgb(15, 74, 0);
+  --green-medium: rgb(23, 113, 0);
+  --green-light: rgb(30, 150, 0);
+  --green-dark-30: rgba(15, 74, 0, .3);
+  --green-medium-30: rgba(23, 113, 0, .3);
+  --green-light-30: rgba(30, 150, 0, .3);
   --vw: 100vw;
   --vh: 100vh;
   --wCBT: 100%;
+}
+html{
+  font-size: 24px;
 }
 @font-face {
   font-family: 'IBM_Plex_Sans';
   src: url("../@Fonts&Icons/IBM_Plex_Sans/IBMPlexSans-Italic-VariableFont_wdth,wght.ttf") format("truetype");
   font-weight: bold;
   font-style: italic;
+}
+@font-face {
+  font-family: 'Ruluko';
+  src: url("../@Fonts&Icons/Ruluko/Ruluko-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Imprima';
+  src: url("../@Fonts&Icons/Imprima/Imprima-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
 }
 @font-face {
   font-family: 'Zalando_Sans_SemiExpanded';
@@ -32,17 +45,16 @@
 
 *{
   font-family: 'Quicksand', sans-serif;
-  font-weight: 500;
   box-sizing: border-box;
   user-select: none;
 }
 body{
-  color: var(--tx-color);
+  color: var(--green-dark);
   background-color: var(--bg-color);
   width: var(--vw);
   height: var(--vh);
   margin: auto;
-  padding: 8px;
+  padding: 8px 188px 18px 88px;
 }
 
 section{
@@ -61,52 +73,62 @@ section{
 }
 
 h1{
-  font-family: 'IBM_Plex_Sans', cursive;
-  font-style: italic;
-  font-weight: bold;
-  font-size: 4em;
+  font-family: 'Imprima', sans-serif;
+  /* font-style: italic;
+  font-weight: bold; */
+  font-size: 2.4rem;
   line-height: 1em;
   margin-bottom: 0;
+  color: var(--green-medium);
 }
 h2{
   font-family: 'Quicksand', sans-serif;
-  font-weight: 500;
-  font-size: 1.85em;
+  font-style: italic;
+  font-size: 1.3rem;
   margin-top: .5em;
+  color: var(--green-light);
 }
-p{
-  font-size: 2em;
+p, li, ol{
+  font-size: 1rem;
   font-weight: 500;
 }
+
+.middleDiv{
+  margin: 3rem auto auto;
+}
+
 .exercice{
-  color: var(--accent-purple);
+  color: var(--green-light);
+}
+p.exercice{
+  font-size: 1.5rem;
+  font-style: italic;
+  font-weight: 400;
 }
 .acrostiche{
-  color: var(--accent-teal);
+  color: var(--green-medium);
 }
 .exercice > h1, .acrostiche > h1{
   font-family: 'Quicksand', sans-serif;
   font-weight: 500;
-  font-size: 3.7em;
+  font-size: 2rem;
 }
 .exercice > h2, .acrostiche > h2{
-  font-family: 'IBM_Plex_Sans', cursive;
-  font-style: italic;
-  font-weight: bold;
-  font-size: 5em;
+  font-family: 'imprima', sans-serif;
+  font-style: normal;
+  font-size: 4rem;
   line-height: 1em;
   margin: 2em auto;
   text-align: center;
 }
 .acrostiche > h2{
-  font-size: 6em;
   margin: 1.2em auto;
 }
 .acrostiche h3{
   font-family: 'IBM_Plex_Sans', cursive;
   font-style: italic;
   font-weight: bold;
-  font-size: 2.5em;
+  font-size: 2.5rem;
   line-height: 1.2em;
   text-align: left;
 }
@@ -115,7 +137,7 @@ p{
   margin: auto;
 }
 .acrostiche > p.boxed{
-  font-size: 2em;
+  font-size: 1.3rem;
   font-weight: 500;
   border: 3px solid;
   padding: 1em 2em;
@@ -123,7 +145,7 @@ p{
   width: fit-content;
 }
 .exercice > p{
-  font-size: 2em;
+  font-size: 1.3em;
   font-weight: 500;
   line-height: 1em;
   width: fit-content;
@@ -139,17 +161,52 @@ p{
   justify-content: space-between;
 }
 
-ul.unveillingList, ul.simpleList{
-  list-style-type: none;
+.simpleList{
   display: flex;
   flex-direction: column;
   gap: .5em;
 }
-ul.simpleList{
+.middleList{
   width: fit-content;
   margin: auto;
-  font-size: 2em;
 }
+
+ul > li::marker {
+  content: "→  ";
+}
+li.justParentLi:has(> ul)::marker {
+  content: "";
+}
+ul.noThingyList{
+  list-style-type: none;
+}
+li.doubleArrow::marker {
+  content: "⇒  ";
+}
+li.doubleArrow{
+  font-style: italic;
+  color: var(--green-medium);
+  font-size: 1.3rem;
+  margin-top: 1em;
+}
+
+h2.listSetup{
+  margin: 3em 3em 1em;
+}
+ol.listSetup, ul.listSetup{
+  margin: 0 6em;
+  gap: 1em;
+}
+ol.listSetup > li, ul.listSetup > li{
+  padding-left: .7em;
+}
+
+.accented{
+  font-style: italic;
+  color: var(--green-medium);
+  font-size: 1.3rem;
+}
+
 .toUnveil{
   position: relative;
   display: inline-block;
@@ -239,7 +296,7 @@ span.unveilled{
   border-radius: 10px;
   padding: 5px;
   font-weight: 500;
-  font-size: 2em;
+  font-size: 1em;
 }
 
 .emojiSpan{

@@ -125,16 +125,18 @@ p.exercice{
   margin: 1.2em auto;
 }
 .acrostiche h3{
-  font-family: 'IBM_Plex_Sans', cursive;
-  font-style: italic;
-  font-weight: bold;
+  font-family: 'imprima', sans-serif;
   font-size: 2.5rem;
-  line-height: 1.2em;
+  line-height: 1em;
   text-align: left;
+}
+.acrostiche h3::first-letter{
+  color: var(--green-medium);
+  font-size: 3rem;
 }
 .acrostiche > p{
   line-height: 1em;
-  margin: auto;
+  margin: 0 auto auto;
 }
 .acrostiche > p.boxed{
   font-size: 1.3rem;
@@ -194,7 +196,11 @@ li.doubleArrow{
 }
 
 h2.listSetup{
-  margin: 3em 3em 1em;
+  margin: 1.5em 3em 1em;
+  color: var(--green-medium);
+}
+h2.listSetup > strong{
+  font-weight: 900;
 }
 ol.listSetup, ul.listSetup{
   margin: 0 6em;
@@ -292,14 +298,15 @@ span.unveilled{
   display: inline-block;
   text-align: center;
   position: absolute;
-  width: min-content;
+  /* width: min-content; */
   /* max-width: 62%; */
-  line-height: 1.1;
+  line-height: 1;
   /* if with background-color */
   border-radius: 10px;
-  padding: 5px;
+  padding: 8px 10px;
   font-weight: 500;
-  font-size: 1em;
+  font-size: .8em;
+  background-color:var(--green-light-30);
 }
 
 .emojiSpan{
@@ -332,10 +339,41 @@ span.unveilled{
   transform: rotate(-7.5deg);
 }
 
-.accentCoralStrong{
-  color: var(--accent-coral);
-  font-weight: 900;
+.slogan{
+  line-height: 1em;
+  display: inline-block;
+  text-align: center;
+  transform: rotate(-15deg);
+  margin: auto;
 }
+
+.sloganText{
+  font-family: 'Quicksand', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--green-medium);
+}
+
+.sloganFIRES{
+  line-height: 6rem;
+}
+
+.sloganLettre{
+  font-family: 'imprima', sans-serif;;
+  font-size: 6rem;
+  /* font-weight: ; */
+  line-height: 1em;
+  color: var(--green-light);
+}
+
+.sloganNo{
+  font-family: inherit;
+  font-size: 4rem;
+  font-weight: 900;
+  color: var(--green-dark);
+  line-height: .7em;
+}
+
 
 .smallP p{
   margin: 0 .5em;

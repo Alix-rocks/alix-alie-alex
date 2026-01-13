@@ -332,7 +332,7 @@ function getWords(){
   sectionShowed.querySelectorAll("span.toStorm").forEach(storm => {
     let rain = [];
     storm.querySelectorAll("span").forEach(drop => {
-      rain.push(drop.innerText);
+      rain.push(drop.innerHTML);
     })
     words.push(rain);
   });
@@ -381,7 +381,8 @@ function wordRain(word){
   xIndex++; 
   let emoji = word.match(emojiRegex) ? true : false;
   let thisKase = sectionShowed.querySelector("#" + kasesIds[xIndex]);
-  thisKase.innerHTML = `<span class="wordSpan ${emoji ? "emojiSpan" : ""} ${shuffledPositions[xIndex]} ${shuffledTilts[xIndex]}" style="background-color:var(--accent-30-${shuffledColors[xIndex]})">${word}</span>`;
+  thisKase.innerHTML = `<span class="wordSpan ${emoji ? "emojiSpan" : ""} ${shuffledPositions[xIndex]} ${shuffledTilts[xIndex]}">${word}</span>`;
+  //  style="background-color:var(--accent-30-${shuffledColors[xIndex]})"
 
   // let thisSpan = thisKase.querySelector("span");
   // if(!emoji){

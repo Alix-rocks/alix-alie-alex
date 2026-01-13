@@ -313,7 +313,7 @@ function sendActionData({action, data}){
   });
 };
 function removeOption(option){
-  diapoMain.querySelector(`option[value="${option}"]`).remove();
+  diapoMain.querySelector(`option[value="${option.replaceAll(`"`, `'`)}"]`).remove();
 };
 
 function sendAction(action){

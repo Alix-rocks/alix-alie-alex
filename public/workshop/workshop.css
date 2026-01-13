@@ -127,13 +127,21 @@ p.exercice{
 .acrostiche h3{
   font-family: 'imprima', sans-serif;
   font-size: 2.5rem;
-  line-height: 1em;
+  line-height: 1.3em;
+  margin: 0;
   text-align: left;
 }
-.acrostiche h3::first-letter{
+/* .acrostiche h3::first-letter{
   color: var(--green-medium);
   font-size: 3rem;
+} */
+
+.firstLetter{
+  font-family: inherit;
+  color: var(--green-light);
+  font-size: 3rem;
 }
+
 .acrostiche > p{
   line-height: 1em;
   margin: 0 auto auto;

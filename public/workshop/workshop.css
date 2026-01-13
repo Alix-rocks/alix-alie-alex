@@ -183,6 +183,9 @@ ul.noThingyList{
 li.doubleArrow::marker {
   content: "⇒  ";
 }
+li.noThingyList::marker {
+  content: "";
+}
 li.doubleArrow{
   font-style: italic;
   color: var(--green-medium);

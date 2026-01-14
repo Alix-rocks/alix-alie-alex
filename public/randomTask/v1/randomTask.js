@@ -9,7 +9,7 @@
   Ctrl + K ... Ctrl + 1 => Fold all the first levels
 */
 
-import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "../../myFirebase.js";
+import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, getDatabase, ref, set, onValue } from "../../myFirebase.js";
 import trans from "../../trans.js";
 auth.languageCode = 'fr';
 
@@ -6734,3 +6734,61 @@ function busyZoneCreation(show){
   }; // then all we have to do is make sure the date is in that particular showing week and we add the div to the weekly! It should go straight in the right column and rows
   myBusies.push(busy);
 };
+
+const formState = {
+  date: "",
+  dalle: "",
+  alle: "",
+  name: "",
+  email: "",
+  cell: "",
+  messengerName: "",
+  whatsAppNumber: "",
+  where: "",
+  yourAddress: "",
+  whereReal: "",
+  why: ""
+};
+
+onValue(ref(rtdb, "meetAlix"), (snapshot) => {
+  const data = snapshot.val();
+  if (!data) return;
+  const info = data.data;
+
+  const type = data.type;
+
+  let todo = {
+    newShit: true,
+    id: crypto.randomUUID(),
+    task: `"Meet with ${info.name}"`, 
+    info: `Why: ${info.why}
+    email: ${info.email}
+    cell: ${info.cell}
+    messengerName: ${info.messengerName}
+    whatsAppNumber: ${info.whatsAppNumber}
+    whereElse: ${info.whereReal}`,
+    color: "0",
+    icon: "fa-solid fa-ban noIcon",
+    term: "showThing",
+    busy: true,
+    line: "todoDay",
+    startDate: info.date,
+    stopDate: info.date,
+    startTime: info.dalle,
+    stopTime: info.alle,
+    tutto: false,
+    busy: true
+  };
+
+  if(type == "friend"){
+    todo.showType = "Myself";
+    todo.STColorBG = "#06a9a9";
+    todo.STColorTX = "darkslategrey";
+  };
+
+
+  taskAddAllInfo(todo);
+
+  set(ref(rtdb, "meetAlix"), null);
+});
+

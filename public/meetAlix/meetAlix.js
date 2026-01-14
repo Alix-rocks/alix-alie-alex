@@ -2,7 +2,7 @@
 // alix.rocks/meetAlix/?type=client
 // alix.rocks/meetAlix/?lang=en
 // alix.rocks/meetAlix/?lang=fr
-import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "../../myFirebase.js";
+import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, getDatabase, ref, set, onValue } from "../../myFirebase.js";
 import i18n from "./i18n.js";
 
 let unknownStartDate = "2026-01-24"; //The day the "Not sure yet" section starts
@@ -275,7 +275,8 @@ dalleTime.addEventListener("change", (e) => {
   userSelection.startSlot = newDalleSlot;
   userSelection.startRow = slotToRow(newDalleSlot);
   updateUserMeeting();
-  updateSelectedTime();
+  updateSelectedTime(); // formContainer is technically already expanded
+  
   // e.target.value = newDalleTime;
   // formState.dalle = newDalleTime;
   // localStorage.meetAlixFormState = JSON.stringify(formState);
@@ -303,7 +304,7 @@ alleTime.addEventListener("change", (e) => {
   userSelection.endSlot = newAlleSlot;
   userSelection.endRow = slotToRow(newAlleSlot);
   updateUserMeeting();
-  updateSelectedTime();
+  updateSelectedTime(); // formContainer is technically already expanded
   // e.target.value = newAlleTime;
   // formState.alle = newAlleTime;
   // //ADD AN UPDATE OF SELECTEDTIME (but not the big whole function; we need smaller functions)
@@ -606,6 +607,7 @@ function putDatesInWeek(date){
     && userSelection.endSlot !== null){
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="userMeeting${userSelection.topIsTouching ? `  topIsTouching` : ``}${userSelection.bottomIsTouching ? ` bottomIsTouching` : ``}" style="grid-column:${userSelection.col}; grid-row:${userSelection.startRow}/${userSelection.endRow};"></div>`);
     updateSelectedTime();
+    formContainer.classList.remove("expanded");
   };
 };
 
@@ -1058,13 +1060,14 @@ function addMe(thisOne) {
   userSelection.bottomIsTouching = tempSelection.bottomIsTouching;
   updateSelectedTime();
   updateUserMeeting();
+  formContainer.classList.remove("expanded"); // formContainer is technically already not expanded
   
 
 };
 window.addMe = addMe;
 
 function closeTheForm(){
-  formContainer.classList.add("displayNone");
+  formContainer.classList.add("displayNone"); //we should update expanded (add or remove?)
 };
 window.closeTheForm = closeTheForm;
 
@@ -1074,6 +1077,7 @@ function trashUserMeeting(){
   });
   resetUserSelection();
   updateSelectedTime();
+  formContainer.classList.remove("expanded"); //par principe, même si on le voit plus
 };
 window.trashUserMeeting = trashUserMeeting;
 
@@ -1117,7 +1121,8 @@ function updateSelectedTime(){
   //Update selectedTime
   if(userSelection.startSlot == null || userSelection.endSlot == null){
     selectedTime.innerHTML = "";
-    formContainer.classList.add("displayNone");
+    formContainer.classList.add("displayNone"); 
+    formContainer.classList.remove("expanded"); //par principe, même si on le voit plus
     //reset everything to be sure
     resetUserSelection();
     resetFormState();
@@ -1216,27 +1221,24 @@ function updateSelectedTime(){
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
+  console.log(formType);
+  console.log(formState);
 
   // Get infos => everything is already in formState
-  // let dateCompleteValue = dateComplete.value;
-  // let dalleTimeValue = dalleTime.value;
-  // let alleTimeValue = alleTime.value;
-  // let nameInputValue = nameInput.value;
-  // let emailInputValue = emailInput.value;
-  // let cellInputValue = cellInput.value;
-  // let messengerNameInputValue = messengerNameInput.value;
-  // let whereRadiosValue = whereRadios.value;
-  // let yourAddressInputValue = yourAddressInput.value;
-  // let whereRealInputValue = whereRealInput.value;
-  // let whyInputValue = whyInput.value;
-
-  //save infos to localStorag
   
   //send infos to my email
 
   //add infos to randomTask
 
   //add infos to myBusies
+
+  set(ref(rtdb, "meetAlix"), {
+    type: formType,
+    data: formState,
+    timestamp: Date.now()
+  });
+
+
 });
 
 

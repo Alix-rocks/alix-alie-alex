@@ -23,9 +23,9 @@ body{
   flex-flow: column nowrap;
   justify-content: space-between;
   width: var(--vw);
-  /* height: var(--vh); */
+  height: var(--vh);
   font-size: 20px;
-  /* padding: 0 0 30px 0; */
+  padding: 0 0 20px 0;
 }
 
 hr{
@@ -64,6 +64,14 @@ section#time{
   margin: 10px auto;
   border: 2px solid;
   background-color: transparent;
+  position: relative;
+}
+#interval{
+  position: absolute;
+  top: -20px;
+  font-size: 10px;
+  line-height: 1em;
+  left: 0;
 }
 #timeDurationShow{
   width: 0;
@@ -71,6 +79,14 @@ section#time{
   border-radius: 2.5px;
   background: var(--accent-coral);
   animation-timing-function: linear;
+}
+.rig{
+  height: 35px;
+  width: 2px;
+  border: 1px solid var(--accent-teal);
+  position: absolute;
+  top: -9px;
+  border-radius: 25px;
 }
 .timeDurationSides{
   display: flex;
@@ -96,7 +112,7 @@ section#time{
   appearance: none;
   color: inherit;
   text-align: center;
-  width: 70px;
+  /* width: 70px;  // inline-HTML */
 }
 .time-clean::-webkit-calendar-picker-indicator {
   display: none;
@@ -107,7 +123,7 @@ section#diapo{
   flex-flow: column nowrap;
   justify-content: space-between;
   align-items: center;
-  height: calc(var(--vh) * 38 / 100);
+  flex: 1;
 }
 
 #diapoTitle{
@@ -115,6 +131,10 @@ section#diapo{
   flex-flow: column nowrap;
   align-items: center;
   text-align: center;
+}
+
+#diapoMain{
+  font-size: 12px;
 }
 
 #wordDropdown{
@@ -130,8 +150,6 @@ section#diapo{
 }
 
 section#pages{
-  position: fixed;
-  bottom: 20px;
   width: var(--vw);
   display: flex;
   flex-flow: column nowrap;

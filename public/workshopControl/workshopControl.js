@@ -25,50 +25,105 @@ window.addEventListener('orientationchange', updateViewportVars);
 const timeNow = document.getElementById("timeNow");
 setInterval(() => {
   timeNow.innerText = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-}, 1000);
+}, 1000); // 1000 = 1 second
 
-const timeDurationShow = document.querySelector("#timeDurationShow");
-const timeDurationShowZone = document.querySelector("#timeDurationShowZone");
-const timeDurationShowZoneWidth = getComputedStyle(timeDurationShowZone).width;
+const timeDurationShow = document.querySelector("#timeDurationShow");  //remplissage
+const timeDurationShowZone = document.querySelector("#timeDurationShowZone");  //encadré pour le remplissage
+const timeDurationShowZoneWidth = getComputedStyle(timeDurationShowZone).width;  //largeur de l'encadré
+const totalWidthNum = parseFloat(getComputedStyle(timeDurationShowZone).width);  //largeur de l'encadré; chiffre seulement (sans l'unité "px")
 //document.getElementById("timeDurationShow").innerText = timeDurationShowZoneWidth;
 
-const timeDurationStartInput = document.querySelector("#timeDurationStartInput");
-const timeDurationEndInput = document.querySelector("#timeDurationEndInput");
+const intervalInput = document.querySelector("#intervalInput");
+let interval = intervalInput.value * 60 * 1000; // la value est en minute; on le met en secondes
 
-if(localStorage.getItem("WCTimeStart") && localStorage.getItem("WCTimeStart") !== "" 
-&& localStorage.getItem("WCTimeEnd") && localStorage.getItem("WCTimeEnd") !== "" 
-&& localStorage.getItem("WCTimeEnd") >= new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })){
-  timeDurationStartInput.value = localStorage.getItem("WCTimeStart");
+const timeDurationStartInput = document.querySelector("#timeDurationStartInput");  // input pour l'heure de début
+const timeDurationEndInput = document.querySelector("#timeDurationEndInput");  // input pour l'heure de fin
+let totalDuration = 0; 
+
+
+
+
+// let startTime = timeDurationStartInput.value;  // or localStorage
+// let endTime = timeDurationEndInput.value;  // or localStorage
+
+// let totalDuration = durationCalculation(startTime, endTime);
+// let totalWidthNum = parseFloat(timeDurationShowZoneWidth);  // or parseFloat(getComputedStyle(timeDurationShowZone).width)
+// let pxPerSec = totalWidthNum * 1000 / totalDuration;
+// let pastDuration = durationCalculation(startTime, new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
+// let pastWidth =  
+
+
+
+
+
+
+if(localStorage.getItem("WCTimeStart") && localStorage.getItem("WCTimeStart") !== "" // Si on a une heure de début
+&& localStorage.getItem("WCTimeEnd") && localStorage.getItem("WCTimeEnd") !== ""   // Et une heure de fin
+&& localStorage.getItem("WCTimeEnd") >= new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })){  //Et que l'heure de fin est plus grande que maintenant
+  timeDurationStartInput.value = localStorage.getItem("WCTimeStart");   //on met ces valeurs dans les inputs de temps
   timeDurationEndInput.value = localStorage.getItem("WCTimeEnd");
 
-  let totalDuration = durationCalculation(timeDurationStartInput.value, timeDurationEndInput.value); 
+  totalDuration = durationCalculation(timeDurationStartInput.value, timeDurationEndInput.value); 
   let pastDuration = durationCalculation(timeDurationStartInput.value, new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
-  let totalWidthNum = parseFloat(getComputedStyle(timeDurationShowZone).width);
   let pastWidth = totalWidthNum * pastDuration / totalDuration;
 
   let restDuration = totalDuration - pastDuration;
 
+  updateRigs();
   timeDurationShow.animate([{width: pastWidth + "px"},{width: timeDurationShowZoneWidth}], restDuration);
-} else{
+} else if(timeDurationStartInput.value !== null && timeDurationEndInput.value !== null){
+  totalDuration = durationCalculation(timeDurationStartInput.value, timeDurationEndInput.value);
   localStorage.clear();
 };
 
 timeDurationEndInput.addEventListener("input", () => {
 
   if(timeDurationEndInput.value !== null && timeDurationStartInput.value !== null){
-    let duration = durationCalculation(timeDurationStartInput.value, timeDurationEndInput.value);
+    totalDuration = durationCalculation(timeDurationStartInput.value, timeDurationEndInput.value);
+
+    updateRigs();
   
-    timeDurationShow.animate([{width: "0"},{width: timeDurationShowZoneWidth}], duration);
+    timeDurationShow.animate([{width: "0"},{width: timeDurationShowZoneWidth}], totalDuration);
 
     localStorage.setItem("WCTimeStart", timeDurationStartInput.value);
     localStorage.setItem("WCTimeEnd", timeDurationEndInput.value);
   };
 });
 
+intervalInput.addEventListener("change", () => {
+  interval = intervalInput.value !== null ? intervalInput.value * 60 * 1000 : 300000; // la value est en minute => on le met en secondes ; si la value est null, on met 5 min (300 000 secondes)
+  updateRigs();
+});
+
+function updateRigs(){
+  //on enlève les rigs déjà là
+  removeRigs();
+  console.log(totalDuration);
+  console.log(interval);
+  const nbrOfSection = (totalDuration / interval);
+  const nbrOfRig = nbrOfSection - 1;
+  const rigWidth = 2;
+  const sectionWidth = (totalWidthNum - (nbrOfRig * rigWidth)) / nbrOfSection;
+  for(let r = 0; r < nbrOfRig; r++){
+    let left = (sectionWidth * (r + 1)) + (r * rigWidth);
+    timeDurationShowZone.insertAdjacentHTML("beforeend", `<span class="rig" style="left: ${left}px"></span>`);
+  };
+};
+
+function removeRigs(){
+  let allRigs = timeDurationShowZone.querySelectorAll(".rig");
+  allRigs.forEach(rig => {
+    rig.remove();
+  });
+};
+  
+
 function resetLocalTime(){
   timeDurationStartInput.value = "";
   timeDurationEndInput.value = "";
   localStorage.clear();
+  timeDurationShow.style.width = "0";
+  removeRigs();
 };
 window.resetLocalTime = resetLocalTime;
 
@@ -96,26 +151,31 @@ function handleFeedback(need, info){
       allSlidesCreation(info);
       break;
     case "display":
+      console.log("DISPLAY");
+      console.log(info);
       currentSlideSetting(info.current); //object
       stepButtonFixing(info.steps); //object
-      if(info?.words?.length > 0) {
-        wordDropdownCreation(info.words); //array
-      };  
-      if(info?.phrases?.length > 0) {
-        toUnveilDropdownCreation(info.phrases); //array of objects
-      };    
+      diapoMainFilling(info.html);
+      // if(info?.words?.length > 0) {
+      //   wordDropdownCreation(info.words); //array
+      // };  
+      // if(info?.phrases?.length > 0) {
+      //   toUnveilDropdownCreation(info.phrases); //array of objects
+      // };    
       break;
     case "refresh":
+      console.log("REFRESH");
+      console.log(info);
       allSlidesCreation(info.slides); //array of objects
-      console.log("REFRESH currentSlideSetting " + info);
       currentSlideSetting(info.current); //object
       stepButtonFixing(info.steps); //object
-      if(info?.words?.length > 0) {
-        wordDropdownCreation(info.words); //array
-      };
-      if(info?.phrases?.length > 0) {
-        toUnveilDropdownCreation(info.phrases); //array of objects
-      };
+      diapoMainFilling(info.html);
+      // if(info?.words?.length > 0) {
+      //   wordDropdownCreation(info.words); //array
+      // };
+      // if(info?.phrases?.length > 0) {
+      //   toUnveilDropdownCreation(info.phrases); //array of objects
+      // };
       break;
     default:
       console.log(need, info);
@@ -131,10 +191,23 @@ function handleFeedback(need, info){
 
 const diapoTitle = document.querySelector("#diapoTitle");
 
-function currentSlideSetting(info){
+function diapoMainFilling(html){
+  console.log(html);
   diapoMain.innerHTML = "";
+  diapoMain.innerHTML = html;
+};
+
+function currentSlideSetting(info){
+  // diapoMain.innerHTML = "";
   
-  diapoTitle.innerHTML = `<span class="diapoTitleTitre">${info.titre}</span><span class="diapoTitleType">${info.type}</span>`;
+  // diapoTitle.innerHTML = `<span class="diapoTitleTitre">${info.titre}</span><span class="diapoTitleType">${info.type}</span>`;
+
+  if(info?.words?.length > 0) {
+    wordDropdownCreation(info.words); //array
+  };
+  if(info?.phrases?.length > 0) {
+    toUnveilDropdownCreation(info.phrases); //array of objects
+  };
 
   document.querySelector(`#mini${info.num}`).checked = true;
   centerActiveMiniSlide();
@@ -231,23 +304,23 @@ function stepButtonFixing(info){
 };
 
 function wordDropdownCreation(words){
-  let wordDropdownOptions = words.map(group => {
-    let title = group[0];
-    let options = group.map((word, idx) => {
-      if(idx !== 0){
-        return `<option value="${word.match(emojiRegex) ? word.match(emojiRegex) : word.replaceAll(`"`, `'`)}">${word}</option>`;
-      };
-    }).join("");
-    return `<optgroup label="${title}">
-      ${options}
-    </optgroup>`;
-  }).join("");
+  // let wordDropdownOptions = words.map(group => {
+  //   let title = group[0];
+  //   let options = group.map((word, idx) => {
+  //     if(idx !== 0){
+  //       return `<option value="${word.match(emojiRegex) ? word.match(emojiRegex) : word.replaceAll(`"`, `'`)}">${word}</option>`;
+  //     };
+  //   }).join("");
+  //   return `<optgroup label="${title}">
+  //     ${options}
+  //   </optgroup>`;
+  // }).join("");
 
-  diapoMain.innerHTML = `<select class="selectTheirChoice" id="wordDropdown">
-      <option value="">--Options--</option>
-      ${wordDropdownOptions}
-    </select>
-    <input class="addTheirChoice" id="wordInput" type="text"></input>`;
+  // diapoMain.innerHTML = `<select class="selectTheirChoice" id="wordDropdown">
+  //     <option value="">--Options--</option>
+  //     ${wordDropdownOptions}
+  //   </select>
+  //   <input class="addTheirChoice" id="wordInput" type="text"></input>`;
 
   // diapoMain.querySelector("select").innerHTML = `
   //     <option value="">--Options--</option>
@@ -261,15 +334,15 @@ function wordDropdownCreation(words){
 };
 
 function toUnveilDropdownCreation(phrases){
-  let phrasesDropdownOptions = phrases.map((sentence) => {
-    return `<option value="${sentence.code}">${sentence.phrase}</option>`;
-  }).join("");
+  // let phrasesDropdownOptions = phrases.map((sentence) => {
+  //   return `<option value="${sentence.code}">${sentence.phrase}</option>`;
+  // }).join("");
 
-  diapoMain.innerHTML = `<select class="selectTheirChoice" id="phraseDropdown"">
-      <option value="">--Options--</option>
-      ${phrasesDropdownOptions}
-    </select>
-    <input class="addTheirChoice" id="phraseInput" type="text"></input>`;
+  // diapoMain.innerHTML = `<select class="selectTheirChoice" id="phraseDropdown"">
+  //     <option value="">--Options--</option>
+  //     ${phrasesDropdownOptions}
+  //   </select>
+  //   <input class="addTheirChoice" id="phraseInput" type="text"></input>`;
     
     let action = "unveilIt";
     activateSelector(action);

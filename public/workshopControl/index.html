@@ -54,18 +54,19 @@
     <div id="timeNow">Now</div>
     <div id="timeDuration">
       <div id="timeDurationShowZone">
+        <div id="interval"><input id="intervalInput" class="time-clean" type="number" min="0" max="30" step="5" value="5" />min</div>
         <div id="timeDurationShow"></div>
       </div>
       <div id="timeDurationTimes">
         <div class="timeDurationSides">
           <label for="timeDurationStartInput">Start</label>
           <span></span>
-          <input id="timeDurationStartInput" class="time-clean" type="time" value="" />
+          <input id="timeDurationStartInput" class="time-clean" style="width: 70px;" type="time" value="" />
         </div>
         <button id="resetTime" onclick="resetLocalTime()">Reset</button>
         <div class="timeDurationSides">
           <label for="timeDurationEndInput">End</label>
-          <input id="timeDurationEndInput" class="time-clean" type="time" value="" />
+          <input id="timeDurationEndInput" class="time-clean" style="width: 70px;" type="time" value="" />
         </div>
       </div>
     </div>

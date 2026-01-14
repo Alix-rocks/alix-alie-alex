@@ -505,12 +505,15 @@ function refreshControl(){
 
   let currentSlide = getCurrentSlideInfo(); //object
 
+  let currentSlideHTML = getCurrentSlideHTML();
+
   let refreshAll = {
     words: words,
     phrases: phrases,
     steps: stepButtonStates,
     slides: allSlides,
-    current: currentSlide
+    current: currentSlide,
+    html: currentSlideHTML
   };
 
   set(ref(rtdb, "workshop/feedback"), {

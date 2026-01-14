@@ -220,6 +220,7 @@ function getCurrentSlideHTML(){
     <input class="addTheirChoice" id="wordInput" type="text"></input>`;
 
     removeStuff(clone, "span.toStorm");
+    removeStuff(clone, "div.cloudBoardTotal");
   };
 
   if(sectionShowed.classList.contains("toBeUnveilled")){

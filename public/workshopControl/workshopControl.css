@@ -137,13 +137,13 @@ section#diapo{
   font-size: 12px;
 }
 
-#wordDropdown{
+#wordDropdown, #phraseDropdown{
   display: block;
   margin: auto;
   height: 30px;
 }
 
-#wordInput{
+#wordInput, #phraseInput{
   display: block;
   margin: 20px auto;
   height: 30px;
@@ -250,10 +250,11 @@ button#pagePrev, button#pageNext{
   font-size: 1.3em;
 }
 
+/* Otherwise all the stuff from workshop won't show in diapoMain (unless I remove all the .invisible in all the class, in all the element...)
 .invisible{
   opacity: 0;
   visibility: hidden;
-}
+} */
 
 .displayNone{
   display: none;

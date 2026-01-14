@@ -122,7 +122,7 @@ function sendAllSlides(allSlides){
   });
 };
 
-function displaySection(sectionToShow){ //sending two things at once!!
+function displaySection(sectionToShow){
   allSteps = null;
   stepCurrentIndex = 0;
   stepCurrent = null;
@@ -167,13 +167,16 @@ function displaySection(sectionToShow){ //sending two things at once!!
 
   //currentSlide
   let currentSlideInfo = getCurrentSlideInfo();
+
+  let currentSlideHTML = getCurrentSlideHTML();
   
 
   let wholeDisplay = {
     words: words,
     phrases: phrases,
     steps: stepButtonStates,
-    current: currentSlideInfo
+    current: currentSlideInfo,
+    html: currentSlideHTML
   };
   set(ref(rtdb, "workshop/feedback"), {
     need: "display",
@@ -191,16 +194,60 @@ function getCurrentSlideInfo(){
   return currentSlideInfo;
 };
 
-function sendCurrentSlideInfo(currentSlideInfo){
-  set(ref(rtdb, "workshop/feedback"), {
-    need: "cs",
-    info: currentSlideInfo,
-    timestamp: Date.now()
-  });
-  console.log("sent");
-  
+function getCurrentSlideHTML(){
+  const original = sectionShowed;
+  const clone = original.cloneNode(true);
+
+  if(sectionShowed.classList.contains("wordCloud")){
+    const words = getWords();
+
+    let wordDropdownOptions = words.map(group => {
+      let title = group[0];
+      let options = group.map((word, idx) => {
+        if(idx !== 0){
+          return `<option value="${word.match(emojiRegex) ? word.match(emojiRegex) : word.replaceAll(`"`, `'`)}">${word}</option>`;
+        };
+      }).join("");
+      return `<optgroup label="${title}">
+        ${options}
+      </optgroup>`;
+    }).join("");
+
+    clone.querySelector("div.toStorm").innerHTML = `<select class="selectTheirChoice" id="wordDropdown">
+      <option value="">--Options--</option>
+      ${wordDropdownOptions}
+    </select>
+    <input class="addTheirChoice" id="wordInput" type="text"></input>`;
+
+    removeStuff(clone, "span.toStorm");
+  };
+
+  if(sectionShowed.classList.contains("toBeUnveilled")){
+    const phrases = getPhrases();
+
+    let phrasesDropdownOptions = phrases.map((sentence) => {
+      return `<option value="${sentence.code}">${sentence.phrase}</option>`;
+    }).join("");
+
+    clone.querySelector("div.toBeUnveilled").innerHTML = `<select class="selectTheirChoice" id="phraseDropdown"">
+      <option value="">--Options--</option>
+      ${phrasesDropdownOptions}
+    </select>
+    <input class="addTheirChoice" id="phraseInput" type="text"></input>`;
+
+    removeStuff(clone, "ul.unveillingList");
+  };
+
+
+  return clone.outerHTML;
 };
 
+function removeStuff(endroit, element){
+  let allTheStuff = endroit.querySelectorAll(element);
+  allTheStuff.forEach(stuff => {
+    stuff.remove();
+  });
+};
 
 function slideNext(){
   let sectionShowedNum = Number(sectionShowed.dataset.slide);

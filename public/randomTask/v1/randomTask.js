@@ -57,7 +57,7 @@ onAuthStateChanged(auth, (user) => {
     // createBody();
     // getWeeklyCalendar();
     // logInScreen.classList.add("displayNone");
-    if(auth.currentUser.email == "alexblade.23.49@gmail.com"){
+    if(auth.currentUser.email === "alexblade.23.49@gmail.com"){
       loadBookings();
     };
   } else{
@@ -545,26 +545,26 @@ onChildAdded(ref(rtdb, "meetAlix"), (snap) => {
 const newBookingAlert = document.querySelector("#newBookingAlert");
 const newBookingList = document.querySelector("#newBookingList");
 function updateInbox(){
-  console.log(bookingQueue);
-  newBookingAlert.innerText = bookingQueue.length;
-  if(!bookingQueue.length){ // bookingQueue.length == 0
-    newBookingAlert.classList.add("displayNone");
-  } else{
-    newBookingAlert.classList.remove("displayNone");
+  if(auth.currentUser.email === "alexblade.23.49@gmail.com"){
+    console.log(bookingQueue);
+    newBookingAlert.innerText = bookingQueue.length;
+    if(!bookingQueue.length){ // bookingQueue.length == 0
+      newBookingAlert.classList.add("displayNone");
+    } else{
+      newBookingAlert.classList.remove("displayNone");
+    };
+    newBookingList.innerHTML = bookingQueue.map(meet => {
+      return `<li data-rtdbKey="${meet.id}" onclick="toTIdeBQaC(this)">${meet.data.name}</li>`
+    }).join("");
   };
-  newBookingList.innerHTML = bookingQueue.map(meet => {
-    return `<li data-rtdbKey="${meet.id}" onclick="toTIdeBQaC(this)">${meet.data.name}</li>`
-  }).join("");
 };
 
 function toTIdeBQaC(thisOne){
   console.log(thisOne);
   const key = thisOne.dataset.rtdbkey;
-  console.log(key);
-  const info = bookingQueue.find((meet) => meet.id == key).data;
-  // const bookingIdx = bookingQueue.findIndex((meet) => meet.id == key);
-  // console.log(bookingIdx);
-  // const info = bookingQueue[bookingIdx].data;
+  const booking = bookingQueue.find((meet) => meet.id == key);
+  const info = booking.data;
+  console.log(booking);
   console.log(info);
 
   let todo = {
@@ -590,7 +590,7 @@ function toTIdeBQaC(thisOne){
     rtdbKey: key
   };
 
-  if(info.type == "friend"){
+  if(booking.type == "friend"){
     todo.showType = "Myself";
     todo.STColorBG = "#06a9a9";
     todo.STColorTX = "darkslategrey";

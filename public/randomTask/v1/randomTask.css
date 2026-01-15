@@ -518,6 +518,23 @@ input[type="radio"]{
 #switchMenuInput:checked ~ div#otherPagesMenu{
   display: flex;
 }
+#newBookingAlert{
+  position: absolute;
+  background-color: #1E9600;
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
+  top: -15px;
+  right: -15px;
+  color: white;
+  font-weight: 700;
+  line-height: 25px;
+  text-align: center;
+  z-index: 1;
+}
+#switchMenuInput:checked ~ #newBookingAlert{
+  top: -155px;
+}
 .bottomBtn{
   width: 35px;
   height: 35px;
@@ -557,19 +574,6 @@ input[name="choicePageRadios"]:checked + label{
 }
 input[name="choicePageRadios"]:checked + label i{
   color: var(--bg-color);
-}
-
-#newBookingAlert{
-  position: absolute;
-  background-color: #1E9600;
-  width: 25px;
-  height: 25px;
-  border-radius: 25px;
-  top: -15px;
-  right: -15px;
-  color: white;
-  font-weight: 700;
-  line-height: 25px;
 }
 
 .taskInfoClass, #calendarDiv.onIcon, .reDateDiv{

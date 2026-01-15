@@ -1,1 +1,3 @@
-let version = "v1";
+// let version = "v1";
+
+export const version = "v1";

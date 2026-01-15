@@ -671,11 +671,25 @@ Options for sorting
     <button id="cloudIt"><span class="typcn typcn-cloud-storage-outline" style="font-size: 1em;"></span></button>
   </div>
 
-<script src="../version.js"></script>
+<!-- <script src="../version.js"></script>
 <script id="scriptModule" type="module"></script>
 <script>
   let scriptLocation = `./${version}/randomTask.js`;
   document.getElementById("scriptModule").src = scriptLocation;
+</script> -->
+<script type="module">
+  import { VERSION } from "../testVersion.js";
+  import { version } from "../version.js";
+  
+  const script = document.createElement("script");
+  script.type = "module";
+  script.src = `./${version}/randomTask.js?v=${VERSION}`;
+  document.head.appendChild(script);
+
+  const style = document.createElement("link");
+  style.rel = "stylesheet";
+  style.href = `./${version}/randomTask.css?v=${VERSION}`;
+  document.head.appendChild(style);
 </script>
 </body>
 

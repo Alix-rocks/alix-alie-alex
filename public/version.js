@@ -1,3 +1,3 @@
-// let version = "v1";
+// let versionNb = "v1";
 
-export const version = "v1";
+export const versionNb = "v1";

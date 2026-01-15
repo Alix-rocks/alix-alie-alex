@@ -679,16 +679,18 @@ Options for sorting
 </script> -->
 <script type="module">
   import { VERSION } from "../testVersion.js";
-  import { version } from "../version.js";
+  import { versionNb } from "../version.js";
   
+  console.log(versionNb);
+  console.log(VERSION);
   const script = document.createElement("script");
   script.type = "module";
-  script.src = `./${version}/randomTask.js?v=${VERSION}`;
+  script.src = `./${versionNb}/randomTask.js?v=${VERSION}`;
   document.head.appendChild(script);
 
   const style = document.createElement("link");
   style.rel = "stylesheet";
-  style.href = `./${version}/randomTask.css?v=${VERSION}`;
+  style.href = `./${versionNb}/randomTask.css?v=${VERSION}`;
   document.head.appendChild(style);
 </script>
 </body>

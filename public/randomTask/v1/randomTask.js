@@ -531,7 +531,7 @@ async function loadBookings() {
     ([id, data]) => ({ id, ...data })
   );
   bookingQueue.sort((a, b) => a.timestamp - b.timestamp);
-
+  console.log(bookingQueue[0]);
   updateInbox();
 };
 

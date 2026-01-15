@@ -213,7 +213,10 @@ Options for sorting
   <input id="switchPageInputConvo" name="switchPageRadios" type="radio" class="displayNone">
   <div id="convoPage" data-movingzone="fixedBottom" class="wholeScreenCalendar onePage displayNone">
     <div class="">
-      <h1>CRM!</h1>
+      <h1>New Bookings</h1>
+      <ul id="newBookingList">
+
+      </ul>
     </div>
   </div>
 
@@ -633,8 +636,9 @@ Options for sorting
       </div>
     </label>
     <div id="allPagesMenu">
-      <label for="switchPageInputConvo" data-page="switchPageInputConvo" class="bottomBtn menuLabel purpleOnWhite">
+      <label for="switchPageInputConvo" data-page="switchPageInputConvo" class="bottomBtn menuLabel purpleOnWhite" style="position: relative;">
         <i class="fa-solid fa-comments" style="font-size: 20px;"></i>
+        <span id="newBookingAlert" class="displayNone"></span>
       </label>
       <label for="switchPageInputWeek" data-page="switchPageInputWeek" class="bottomBtn menuLabel purpleOnWhite">
         <i class="fa-solid fa-calendar-week"></i>

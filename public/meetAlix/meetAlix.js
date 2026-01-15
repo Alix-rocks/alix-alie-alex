@@ -2,7 +2,7 @@
 // alix.rocks/meetAlix/?type=client
 // alix.rocks/meetAlix/?lang=en
 // alix.rocks/meetAlix/?lang=fr
-import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, getDatabase, ref, set, onValue } from "../../myFirebase.js";
+import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, getDatabase, ref, push, onValue } from "../../myFirebase.js";
 import i18n from "./i18n.js";
 
 let unknownStartDate = "2026-01-24"; //The day the "Not sure yet" section starts
@@ -1232,7 +1232,7 @@ form.addEventListener("submit", (e) => {
 
   //add infos to myBusies
 
-  set(ref(rtdb, "meetAlix"), {
+  push(ref(rtdb, "meetAlix"), {
     type: formType,
     data: formState,
     timestamp: Date.now()

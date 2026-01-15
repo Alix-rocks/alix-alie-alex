@@ -559,6 +559,19 @@ input[name="choicePageRadios"]:checked + label i{
   color: var(--bg-color);
 }
 
+#newBookingAlert{
+  position: absolute;
+  background-color: #1E9600;
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
+  top: -15px;
+  right: -15px;
+  color: white;
+  font-weight: 700;
+  line-height: 25px;
+}
+
 .taskInfoClass, #calendarDiv.onIcon, .reDateDiv{
   color: var(--tx-color);
   background-color: var(--bg-color);

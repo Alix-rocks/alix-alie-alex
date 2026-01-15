@@ -9,7 +9,7 @@
   Ctrl + K ... Ctrl + 1 => Fold all the first levels
 */
 
-import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, getDatabase, ref, set, onValue } from "../../myFirebase.js";
+import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, get, onChildAdded, ref, remove } from "../../myFirebase.js";
 import trans from "../../trans.js";
 auth.languageCode = 'fr';
 
@@ -57,6 +57,9 @@ onAuthStateChanged(auth, (user) => {
     // createBody();
     // getWeeklyCalendar();
     // logInScreen.classList.add("displayNone");
+    if(auth.currentUser.email == "alexblade.23.49@gmail.com"){
+      loadBookings();
+    };
   } else{
     userConnected = false;
     console.log("no user");
@@ -517,6 +520,105 @@ function getCloudBC(){
     localStorage.setItem("cBC", cBC);
   };
 };
+
+// MARK: getBookings
+let bookingQueue = [];
+async function loadBookings() {
+  const snapshot = await get(ref(rtdb, "meetAlix"));
+  if (!snapshot.exists()) return;
+
+  bookingQueue = Object.entries(snapshot.val()).map(
+    ([id, data]) => ({ id, ...data })
+  );
+  bookingQueue.sort((a, b) => a.timestamp - b.timestamp);
+
+  updateInbox();
+};
+
+onChildAdded(ref(rtdb, "meetAlix"), (snap) => {
+  const booking = { id: snap.key, ...snap.val() };
+
+  bookingQueue.push(booking);
+  updateInbox();
+});
+
+const newBookingAlert = document.querySelector("#newBookingAlert");
+const newBookingList = document.querySelector("#newBookingList");
+function updateInbox(){
+  newBookingAlert.innerText = bookingQueue.length;
+  if(!bookingQueue.length){ // bookingQueue.length == 0
+    newBookingAlert.classList.add("displayNone");
+  } else{
+    newBookingAlert.classList.remove("displayNone");
+  };
+  newBookingList.innerHTML = bookingQueue.map(meet => {
+    return `<li data-rtdbKey="${meet.id}" onclick="toTIdeBQaC(this)">${meet.name}</li>`
+  }).join("");
+};
+
+function toTIdeBQaC(thisOne){
+  const key = thisOne.dataset.rtdbKey;
+  const info = bookingQueue.find((meet) => meet.id == key);
+
+  let todo = {
+    newShit: true,
+    id: crypto.randomUUID(),
+    task: `Meet with ${info.name}`, 
+    info: `Why: ${info.why}
+    email: ${info.email}
+    cell: ${info.cell}
+    messengerName: ${info.messengerName}
+    whatsAppNumber: ${info.whatsAppNumber}`,
+    color: "0",
+    icon: "fa-solid fa-hand-holding-heart",
+    term: "showThing",
+    busy: true,
+    line: "todoDay",
+    startDate: info.date,
+    stopDate: info.date,
+    startTime: info.dalle,
+    stopTime: info.alle,
+    tutto: false,
+    busy: true,
+    rtdbKey: key
+  };
+
+  if(info.type == "friend"){
+    todo.showType = "Myself";
+    todo.STColorBG = "#06a9a9";
+    todo.STColorTX = "darkslategrey";
+  };
+
+  switch(info.where){
+    case "messenger":
+      todo.where = "Messenger";
+      break;
+    case "googleMeet":
+      todo.where = "Google Meet";
+      break;
+    case "whatsApp":
+      todo.where = "WhatsApp";
+      break;
+    case "myRealWorld":
+      todo.where = "home";
+      break;
+    case "yourRealWorld":
+     todo.where = info.yourAddress;
+      break;
+    case "elseRealWorld":
+      todo.where = info.whereReal;
+      break;
+    default:
+      console.log("oups!");
+      break;
+  };
+
+
+  taskAddAllInfo(todo);
+
+};
+window.toTIdeBQaC = toTIdeBQaC;
+
 
 let lastUpdateLocalStorageRandomTask = "";
 let lastUpdateFireStore = "";
@@ -5620,6 +5722,11 @@ function taskAddAllInfo(todo){
     console.log(todo);
     parent = ``;
     console.log(parent);
+
+    if(todo.rtdbKey && todo.rtdbKey !== null){
+      remove(ref(rtdb, `meetAlix/${todo.rtdbKey}`));
+      delete todo.rtdbKey;
+    };
   };
 
   function moveOn(){
@@ -6735,60 +6842,4 @@ function busyZoneCreation(show){
   myBusies.push(busy);
 };
 
-const formState = {
-  date: "",
-  dalle: "",
-  alle: "",
-  name: "",
-  email: "",
-  cell: "",
-  messengerName: "",
-  whatsAppNumber: "",
-  where: "",
-  yourAddress: "",
-  whereReal: "",
-  why: ""
-};
-
-onValue(ref(rtdb, "meetAlix"), (snapshot) => {
-  const data = snapshot.val();
-  if (!data) return;
-  const info = data.data;
-
-  const type = data.type;
-
-  let todo = {
-    newShit: true,
-    id: crypto.randomUUID(),
-    task: `"Meet with ${info.name}"`, 
-    info: `Why: ${info.why}
-    email: ${info.email}
-    cell: ${info.cell}
-    messengerName: ${info.messengerName}
-    whatsAppNumber: ${info.whatsAppNumber}
-    whereElse: ${info.whereReal}`,
-    color: "0",
-    icon: "fa-solid fa-ban noIcon",
-    term: "showThing",
-    busy: true,
-    line: "todoDay",
-    startDate: info.date,
-    stopDate: info.date,
-    startTime: info.dalle,
-    stopTime: info.alle,
-    tutto: false,
-    busy: true
-  };
-
-  if(type == "friend"){
-    todo.showType = "Myself";
-    todo.STColorBG = "#06a9a9";
-    todo.STColorTX = "darkslategrey";
-  };
-
-
-  taskAddAllInfo(todo);
-
-  set(ref(rtdb, "meetAlix"), null);
-});
 

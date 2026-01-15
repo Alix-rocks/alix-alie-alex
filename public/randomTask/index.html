@@ -672,7 +672,14 @@ Options for sorting
   </div>
 
 
-<script type="module">
+<script src="../version.js"></script>
+<script id="scriptModule" type="module"></script>
+<script>
+  let scriptLocation = `./${version}/randomTask.js`;
+  document.getElementById("scriptModule").src = scriptLocation;
+</script>
+
+<!-- <script type="module">
   import { VERSION } from "../testVersion.js";
   import { versionNb } from "../version.js";
 
@@ -684,7 +691,9 @@ Options for sorting
   style.rel = "stylesheet";
   style.href = `/randomTask/${versionNb}/randomTask.css?v=${VERSION}`;
   document.head.appendChild(style);
-</script>
+</script> -->
+
+
 
 </body>
 

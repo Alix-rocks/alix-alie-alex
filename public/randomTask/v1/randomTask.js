@@ -559,11 +559,12 @@ function updateInbox(){
 
 function toTIdeBQaC(thisOne){
   console.log(thisOne);
-  const key = thisOne.dataset.rtdbKey;
+  const key = thisOne.dataset.rtdbkey;
   console.log(key);
-  const bookingIdx = bookingQueue.findIndex((meet) => meet.id == key);
-  console.log(bookingIdx);
-  const info = bookingQueue[bookingIdx].data;
+  const info = bookingQueue.find((meet) => meet.id == key).data;
+  // const bookingIdx = bookingQueue.findIndex((meet) => meet.id == key);
+  // console.log(bookingIdx);
+  // const info = bookingQueue[bookingIdx].data;
   console.log(info);
 
   let todo = {

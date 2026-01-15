@@ -545,6 +545,7 @@ onChildAdded(ref(rtdb, "meetAlix"), (snap) => {
 const newBookingAlert = document.querySelector("#newBookingAlert");
 const newBookingList = document.querySelector("#newBookingList");
 function updateInbox(){
+  console.log(bookingQueue);
   newBookingAlert.innerText = bookingQueue.length;
   if(!bookingQueue.length){ // bookingQueue.length == 0
     newBookingAlert.classList.add("displayNone");

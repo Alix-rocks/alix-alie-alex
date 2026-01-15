@@ -553,7 +553,7 @@ function updateInbox(){
     newBookingAlert.classList.remove("displayNone");
   };
   newBookingList.innerHTML = bookingQueue.map(meet => {
-    return `<li data-rtdbKey="${meet.id}" onclick="toTIdeBQaC(this)">${meet.name}</li>`
+    return `<li data-rtdbKey="${meet.id}" onclick="toTIdeBQaC(this)">${meet.data.name}</li>`
   }).join("");
 };
 

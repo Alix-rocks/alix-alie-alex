@@ -559,7 +559,7 @@ function updateInbox(){
 
 function toTIdeBQaC(thisOne){
   const key = thisOne.dataset.rtdbKey;
-  const info = bookingQueue.find((meet) => meet.id == key);
+  const info = bookingQueue.find((meet) => meet.id == key).data;
 
   let todo = {
     newShit: true,

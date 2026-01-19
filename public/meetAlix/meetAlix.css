@@ -1,6 +1,5 @@
 :root{
-  --bg-color: #F2F3F4;
-  --bg-color-7: rgb(242, 243, 244);
+  --bg-color: rgb(242, 243, 244);
   --tx-color: rgb(47, 79, 79);  /* darkslategrey */
   --tx-color-2: rgba(47, 79, 79, .2);
   --tx-color-2-full: rgb(213, 220, 220);
@@ -12,8 +11,13 @@
   --now-color-5: rgba(64, 115, 243, .5);
   --selected-border: rgba(139, 0, 139, .5);
   --selected-background: rgba(139, 0, 139, .25);
-  --confirmed-border: rgba(139, 0, 139, 1);
-  --confirmed-background: rgba(139, 0, 139, .8);
+  --pending-border: rgb(255, 166, 58);
+  --pending-background: rgba(255, 193, 58, .8);
+  --confirmed-border: rgb(23, 113, 0);
+  --confirmed-background: rgba(23, 113, 0, .8);
+  --cancelled-border: rgb(133, 67, 67);
+  --cancelled-background: rgba(133, 67, 67, .5);
+  --selected-time: rgba(139, 0, 139, .8);
   --button-bg: rgb(211, 211, 211); /* lightgrey */
   --button-bg-5: rgba(211, 211, 211, .5);
   --itemWidth: 0px;
@@ -95,7 +99,7 @@ button.iconBtn{
 
 .selectedTime{
   text-align: center;
-  color: var(--confirmed-background);
+  color: var(--selected-time);
 }
 
 form{
@@ -107,14 +111,14 @@ form{
   /* margin: auto; useless if position absolute */
   /* position: absolute;
   top: 15px; */
-  background-color: var(--bg-color-7);
+  background-color: var(--bg-color);
   /* z-index: 20;
   left: calc(var(--vw) * 5 / 100); */
   /* overflow-y: auto;
   -webkit-overflow-scrolling: touch; iOS */
 }
 form input, form select, form textarea{
-  background-color: var(--bg-color-7);
+  background-color: var(--bg-color);
   color: var(--tx-color);
 }
 form .wide{
@@ -324,7 +328,7 @@ input.myRadio:checked + label span.myRadio{
 }
 
 
-.selected, .userMeeting{
+.selected{
   border-color: var(--selected-border);
   border-style: dashed;
   border-width: 0 2px;
@@ -333,10 +337,26 @@ input.myRadio:checked + label span.myRadio{
   border-right-width: 2px; */
   background-color: var(--selected-background);
 }
+.pending{
+  border: 2px solid var(--pending-border);
+  border-radius: 5px;
+  background-color: var(--pending-background);
+  z-index: 3;
+}
 .confirmed{
   border: 2px solid var(--confirmed-border);
-  border-radius: 2px;
+  border-radius: 5px;
   background-color: var(--confirmed-background);
+  z-index: 3;
+}
+.cancelled{
+  border: 2px dotted var(--cancelled-border);
+  border-radius: 5px;
+  background-color: var(--cancelled-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
 }
 .topIsTouching{
   border-top-width: 2px;
@@ -373,6 +393,39 @@ input.myRadio:checked + label span.myRadio{
   width: var(--itemWidth);
   height: var(--itemHeight);
 }
+
+#messageBox{
+  position: fixed;
+  top: 15px;
+  z-index: 25;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.message{
+  border: 2px solid var(--tx-color);
+  border-radius: 10px;
+  height: fit-content;
+  padding: 20px 30px 10px;
+  background-color: var(--bg-color);
+  text-align: center;
+  position: relative;
+}
+
+.topRightCorner{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+/* .waitingScreen{
+  background-color: var(--bg-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
 
 .invisible{
   opacity: 0;

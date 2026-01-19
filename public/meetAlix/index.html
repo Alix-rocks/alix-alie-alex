@@ -25,17 +25,19 @@
 <body>
   <div class="weeklyContainer">
   </div>
+  <div id="messageBox">
+  </div>
   <div id="meetAlix" class="formContainer displayNone" >
-    <form class="addMeForm" action="get">
+    <form class="addMeForm" data-bookingkey="" action="get">
       <div class="topOfForm">
-        <button class="iconBtn" onclick="trashUserMeeting()">
+        <button type="button" class="iconBtn" onclick="trashUserMeeting(this)">
           <i class="fa-regular fa-trash-can"></i>
         </button>
         <div class="handle">
           <i class="fa-solid fa-angle-down"></i>
           <i class="fa-solid fa-minus"></i>
         </div>
-        <button class="iconBtn" onclick="closeTheForm()">
+        <button type="button" class="iconBtn" onclick="closeTheForm()">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
@@ -168,6 +170,9 @@
             <span class="myRadio"></span>
             <span data-i18n="option_whatsapp">WhatsApp</span>
           </label>
+          <h6 data-i18n="whatsapp_note">
+            Then I’ll definitely need your WhatsApp number. ☝️
+          </h6>
         </li>
       </ul>
 
@@ -291,6 +296,28 @@
       <div class="textLegend">
         <p>That's when I'm eating.</p>
         <h6>Yes, we could eat together then, but I'll have to go get busy afterwards.</h6>
+      </div>
+    </div>
+    <div class="lineLegend userLegend displayNone" id="pendingLegend">
+      <div class="itemLegend userMeeting pending"></div>
+      <div class="textLegend">
+        <p>That one's waiting for me to confirm.</p>
+        <h6>So just be patient! Yes, it may take me up to 12 hours to get back to you, but I will!</h6>
+      </div>
+    </div>
+    <div class="lineLegend userLegend displayNone" id="confirmedLegend">
+      <div class="itemLegend userMeeting confirmed"></div>
+      <div class="textLegend">
+        <p>That one's been confirmed.</p>
+        <h6>So if every goes according to plan, we shall see each other then! Lucky you!</h6>
+      </div>
+    </div>
+    <div class="lineLegend userLegend displayNone" id="cancelledLegend">
+      <div class="itemLegend userMeeting cancelled"></div>
+      <div class="textLegend">
+        <p>That one's been cancelled.</p>
+        <h6>Don't take it personally; it's the stars! It's always the stars! They just weren't aligned.<br/>
+        Now, just hit the trash button, it's already too late for it anyway; might as well end its suffering.</h6>
       </div>
     </div>
   </div>

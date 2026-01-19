@@ -9,7 +9,7 @@
   Ctrl + K ... Ctrl + 1 => Fold all the first levels
 */
 
-import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, get, onChildAdded, ref, remove } from "../../myFirebase.js";
+import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, get, onChildAdded, ref, onChildChanged, onChildRemoved, remove } from "../../myFirebase.js";
 import trans from "../../trans.js";
 auth.languageCode = 'fr';
 
@@ -528,7 +528,10 @@ async function loadBookings() {
   if (!snapshot.exists()) return;
 
   bookingQueue = Object.entries(snapshot.val()).map(
-    ([id, data]) => ({ id, ...data })
+    ([bookingKey, data]) => ({ 
+      key: bookingKey, 
+      ...data 
+    })
   );
   bookingQueue.sort((a, b) => a.timestamp - b.timestamp);
   console.log(bookingQueue[0]);
@@ -536,11 +539,55 @@ async function loadBookings() {
 };
 
 onChildAdded(ref(rtdb, "meetAlix"), (snap) => {
-  const booking = { id: snap.key, ...snap.val() };
-
-  bookingQueue.push(booking);
+  const booking = { key: snap.key, ...snap.val() };
+  //check if booking.key already is in bookingQueue, and if yes, then update that one, otherwise, push it
+  const bookingIndex = bookingQueue.findIndex(book => book.key === booking.key);
+  if(bookingIndex !== -1){
+    bookingQueue[bookingIndex] = booking;
+  } else{
+    bookingQueue.push(booking);
+  };
   updateInbox();
 });
+
+onChildChanged(ref(rtdb, "meetAlix"), (snap) => {
+  const booking = { key: snap.key, ...snap.val() };
+  //check if booking.key already is in bookingQueue, and if yes, then update that one, otherwise, push it
+  const bookingIndex = bookingQueue.findIndex(book => book.key === booking.key);
+  if(bookingIndex !== -1){
+    bookingQueue[bookingIndex] = booking;
+  } else{
+    bookingQueue.push(booking);
+  };
+  updateInbox();
+});
+
+onChildRemoved(ref(rtdb, "meetAlix"), (snap) => {
+  const bookingKey = snap.key;
+  bookingQueue = bookingQueue.filter(
+    book => book.key !== bookingKey
+  );
+  updateInbox();
+});
+
+async function updateBooking(key, newStatus) {
+  try {
+    await update(
+      ref(rtdb, `meetAlix/${key}`),
+      {
+        status: newStatus,
+        timestamp: Date.now()
+      }
+    );
+    console.log("Booking updated in RTDB");
+  } catch (err) {
+    console.error("Failed to update booking:", err);
+  };
+};
+
+
+
+
 
 const newBookingAlert = document.querySelector("#newBookingAlert");
 const newBookingList = document.querySelector("#newBookingList");
@@ -554,7 +601,7 @@ function updateInbox(){
       newBookingAlert.classList.remove("displayNone");
     };
     newBookingList.innerHTML = bookingQueue.map(meet => {
-      return `<li data-rtdbKey="${meet.id}" onclick="toTIdeBQaC(this)">${meet.data.name}</li>`
+      return `<li data-rtdbKey="${meet.key}" onclick="toTIdeBQaC(this)">${meet.data.name}</li>`
     }).join("");
   };
 };
@@ -562,7 +609,7 @@ function updateInbox(){
 function toTIdeBQaC(thisOne){
   console.log(thisOne);
   const key = thisOne.dataset.rtdbkey;
-  const booking = bookingQueue.find((meet) => meet.id == key);
+  const booking = bookingQueue.find((book) => book.key == key);
   const info = booking.data;
   console.log(booking);
   console.log(info);
@@ -4539,7 +4586,7 @@ function taskAddAllInfo(todo){
         </div>
         <div class="topSection topSectionPart">
           <input id="trashIt" type="checkbox" class="cossin cornerItInput" />
-          <label for="trashIt" class="cornerItLabel${(todo.newShit || todo.recycled) ? ` hidden` : ``}">
+          <label for="trashIt" class="cornerItLabel${((todo.newShit && !todo.rtdbKey) || todo.recycled) ? ` hidden` : ``}">
             <i class="fa-regular fa-trash-can cornerItUnChecked"></i>
             <i class="fa-solid fa-trash-can cornerItChecked"></i>
           </label>
@@ -5636,16 +5683,29 @@ function taskAddAllInfo(todo){
 
       //WOLA si todo était stored ou stock et là devient reccuringDay?!
 
-      let todoIndex = listTasks.findIndex(td => td.id == todo.id);
-      if(todoIndex == -1){
-        listTasks.push(todo);
-      };
-
       if(quickyIt.checked){
         todo.quicky = true;
       } else{
         delete todo.quicky;
       };
+
+      if(todo.rtdbKey){
+        updateBooking(todo.rtdbKey, "confirmed");
+        //update bookingQueue and inbox
+        bookingQueue = bookingQueue.filter(
+          book => book.key !== todo.rtdbKey
+        );
+        updateInbox();
+        delete todo.rtdbKey;
+      };
+
+
+      let todoIndex = listTasks.findIndex(td => td.id == todo.id);
+      if(todoIndex == -1){
+        listTasks.push(todo);
+      };
+
+      
 
       //Now we identify all the parents before doing any todoCreation
       //in the swipingDay Section if it's the date the todo is...)
@@ -5684,6 +5744,13 @@ function taskAddAllInfo(todo){
     } else if(trashIt.checked){ //if it's new, there's nothing to do, the todo doesn't exist yet in the listTasks
       if(todo.recurry == true){ //the parent will be removed, but we need to remove the date in the recurring.recurryDates
         getRecurryDateOut(todo); // donc la date du todo est enlevée des recurryDates de son recurringDay        
+      } else if(todo.rtdbKey){
+        updateBooking(todo.rtdbKey, "cancelled"); //We need to let meetAlix know that it had been refused... so it can update storedBookings
+        //update bookingQueue and inbox
+        bookingQueue = bookingQueue.filter(
+          book => book.key !== todo.rtdbKey
+        );
+        updateInbox();
       } else{
         let trashIndex = listTasks.findIndex(td => td.id == todo.id);
         if(trashIndex !== -1){
@@ -5730,10 +5797,7 @@ function taskAddAllInfo(todo){
     parent = ``;
     console.log(parent);
 
-    if(todo.rtdbKey && todo.rtdbKey !== null){
-      remove(ref(rtdb, `meetAlix/${todo.rtdbKey}`));
-      delete todo.rtdbKey;
-    };
+    
   };
 
   function moveOn(){
@@ -5758,6 +5822,8 @@ function taskAddAllInfo(todo){
   
 };
 window.taskAddAllInfo = taskAddAllInfo;
+
+
 
 function t(key){
   return trans.randomTask[key]?.or ?? key; // regarde si randomTask[key] existe, si oui retourne .or, si non retourne key

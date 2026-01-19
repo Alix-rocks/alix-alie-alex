@@ -2,7 +2,7 @@
 // alix.rocks/meetAlix/?type=client
 // alix.rocks/meetAlix/?lang=en
 // alix.rocks/meetAlix/?lang=fr
-import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, getDatabase, ref, push, onValue } from "../../myFirebase.js";
+import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, getDatabase, ref, push, update, onValue, remove } from "../../myFirebase.js";
 import i18n from "./i18n.js";
 
 let unknownStartDate = "2026-01-24"; //The day the "Not sure yet" section starts
@@ -155,6 +155,18 @@ for(let d = 0; d < 8; d++){
 };
 console.log(allTheEdges);
 
+const container = document.querySelector(".weeklyContainer");
+const mealLegend = document.querySelector("#mealLegend");
+mealLegend.style.display = config.meal ? "flex" : "none";
+const formContainer = document.querySelector(config.form);
+const form = formContainer.querySelector("form");
+const selectedTime = formContainer.querySelector(".selectedTime");
+const handle = formContainer.querySelector(".handle");
+handle.addEventListener("click", () => {
+  formContainer.classList.toggle("expanded");
+});
+const submitBtn = formContainer.querySelector(".submitBtn");
+
 let myBusies = [];
 const unavailableRanges = [];
 
@@ -171,20 +183,253 @@ const userSelection = {
   submitted: false
 };
 
-const formState = {
-  date: "",
-  dalle: "",
-  alle: "",
-  name: "",
-  email: "",
-  cell: "",
-  messengerName: "",
-  whatsAppNumber: "",
-  where: "",
-  yourAddress: "",
-  whereReal: "",
-  why: ""
+
+const formFields = {
+  date: {
+    selector: ".dateComplete",
+    type: "simple"
+  },
+  dalle: {
+    selector: ".dalleTime",
+    type: "dalle"
+  },
+  alle: {
+    selector: ".alleTime",
+    type: "alle"
+  },
+  name: {
+    selector: ".nameInput",
+    type: "simple"
+  },
+  email: {
+    selector: ".emailInput",
+    type: "simple"
+  },
+  cell: {
+    selector: ".cellInput",
+    type: "simple"
+  },
+  messengerName: {
+    selector: ".messengerNameInput",
+    type: "simple"
+  },
+  whatsAppNumber: {
+    selector: ".whatsAppNumberInput",
+    type: "simple"
+  },
+  where: {
+    selector: '[name="whereRadios"]',
+    type: "radio"
+  },
+  yourAddress: {
+    selector: ".yourAddressInput",
+    type: "simple"
+  },
+  whereReal: {
+    selector: ".whereRealInput",
+    type: "simple"
+  },
+  why: {
+    selector: ".whyInput",
+    type: "simple"
+  }
 };
+
+const formState = Object.fromEntries(
+  Object.keys(formFields).map(key => [key, ""])
+);
+console.log(formState);
+// That code (up) basically creates this (down):
+// const formState = {
+//   date: "",
+//   dalle: "",
+//   alle: "",
+//   name: "",
+//   email: "",
+//   cell: "",
+//   messengerName: "",
+//   whatsAppNumber: "",
+//   where: "",
+//   yourAddress: "",
+//   whereReal: "",
+//   why: ""
+// };
+
+const inputs = {};
+
+for (const key in formFields) {
+  const { selector, type } = formFields[key];
+  if (type === "radio"){
+    inputs[key] = formContainer.querySelectorAll(selector);
+  } else{
+    inputs[key] = formContainer.querySelector(selector);
+  };
+};
+console.log(inputs);
+// That code (up) basically does this (down):
+// const dateComplete = formContainer.querySelector(".dateComplete");
+// const dalleTime = formContainer.querySelector(".dalleTime");
+// const alleTime = formContainer.querySelector(".alleTime");
+// const nameInput = formContainer.querySelector(".nameInput");
+// const emailInput = formContainer.querySelector(".emailInput");
+// const cellInput = formContainer.querySelector(".cellInput");
+// const messengerNameInput = formContainer.querySelector(".messengerNameInput");
+// const whatsAppNumberInput = formContainer.querySelector(".whatsAppNumberInput");
+// const whereRadios = formContainer.querySelector('[name="whereRadios"]');
+// const yourAddressInput = formContainer.querySelector(".yourAddressInput");
+// const whereRealInput = formContainer.querySelector(".whereRealInput");
+// const whyInput = formContainer.querySelector(".whyInput");
+// and creates this:
+// const inputs = {
+//   date: dateComplete,
+//   dalle: dalleTime,
+//   alle: alleTime,
+//   name: nameInput,
+//   email: emailInput,
+//   cell: cellInput,
+//   messengerName: messengerNameInput,
+//   whatsAppNumber: whatsAppNumberInput,
+//   yourAddress: yourAddressInput,
+//   whereReal: whereRealInput,
+//   why: whyInput
+// };
+
+const savedFormState = localStorage.getItem("meetAlixFormState");
+
+if (savedFormState) {
+  Object.assign(formState, JSON.parse(savedFormState));
+} else {
+  localStorage.setItem(
+    "meetAlixFormState",
+    JSON.stringify(formState)
+  );
+};
+console.log(formState);
+// That code (up) basically creates this (down):
+//  if(localStorage.getItem("meetAlixFormState")){
+//     let tempFS = JSON.parse(localStorage.meetAlixFormState);
+//     formState.date = tempFS.date;
+//     formState.dalle = tempFS.dalle;
+//     formState.alle = tempFS.alle;
+//     formState.name = tempFS.name;
+//     formState.email = tempFS.email;
+//     formState.cell = tempFS.cell;
+//     formState.messengerName = tempFS.messengerName;
+//     formState.whatsAppNumber = tempFS.whatsAppNumber;
+//     formState.where = tempFS.where;
+//     formState.yourAddress = tempFS.yourAddress;
+//     formState.whereReal = tempFS.whereReal;
+//     formState.why = tempFS.why;
+//   } else {
+//     localStorage.setItem("meetAlixFormState", JSON.stringify(formState));
+//   };
+
+const fieldHandlers = {
+  simple(key) {
+    console.log("simple " + key + " " + inputs[key]);
+    inputs[key].addEventListener("change", e => {
+      formState[key] = e.target.value;
+      localStorage.setItem(
+        "meetAlixFormState",
+        JSON.stringify(formState)
+      );
+    });
+  },
+
+  dalle(key) {
+    console.log("dalle " + key + " " + inputs[key]);
+    inputs[key].addEventListener("change", e => {
+      const value = e.target.value; // e.g., "10:07"
+      if (!value) return;
+      const formattedTime = roundFifteenTime(value);
+      console.log(formattedTime);
+      
+      //If there's overlapping, adjust the time to the nearest possible; don't just snap back to the previous time
+      let [hours, minutes] = formattedTime.split(':').map(Number);
+      let info = {
+        dayIndex: userSelection.dayIndex,
+        hour: hours,
+        minute: minutes
+      };
+      let newStartSlot = dateTimeToSlot(info);
+      let newDalleSlot = checkNewDalleSlot(newStartSlot, userSelection.endSlot);
+      //CHECK WITH EDGES TOO!! (Edges have been added to unavailableRanges)
+      // let newDalleTime = slotToTime(newDalleSlot);
+      userSelection.startSlot = newDalleSlot;
+      userSelection.startRow = slotToRow(newDalleSlot);
+      updateUserMeeting();
+      updateSelectedTime(); // formContainer is technically already expanded
+      //updateSelectedTime includes: 
+      // e.target.value = newDalleTime;
+      // formState.dalle = newDalleTime;
+      // localStorage.meetAlixFormState = JSON.stringify(formState);
+    });
+  },
+
+  alle(key) {
+    console.log("alle " + key + " " + inputs[key]);
+    inputs[key].addEventListener("change", e => {
+      const value = e.target.value; // e.g., "10:07"
+      if (!value) return;
+      const formattedTime = roundFifteenTime(value);
+      console.log(formattedTime);
+      
+      //If there's overlapping, adjust the time to the nearest possible; don't just snap back to the previous time
+      let [hours, minutes] = formattedTime.split(':').map(Number);
+      let info = {
+        dayIndex: userSelection.dayIndex,
+        hour: hours,
+        minute: minutes
+      };
+      let newEndSlot = dateTimeToSlot(info);
+      let newAlleSlot = checkNewAlleSlot(userSelection.startSlot, newEndSlot);
+      //CHECK WITH EDGES TOO!!
+      let newAlleTime = slotToTime(newAlleSlot);
+      userSelection.endSlot = newAlleSlot;
+      userSelection.endRow = slotToRow(newAlleSlot);
+      updateUserMeeting();
+      updateSelectedTime(); // formContainer is technically already expanded
+      //updateSelectedTime includes: 
+      // e.target.value = newDalleTime;
+      // formState.dalle = newDalleTime;
+      // localStorage.meetAlixFormState = JSON.stringify(formState);
+    });
+  },
+
+  radio(key) {
+    console.log("radio " + key + " " + inputs[key]);
+    inputs[key].forEach(radio => {
+      radio.addEventListener("change", e => {
+        if (e.target.checked) {
+          formState[key] = e.target.value;
+          localStorage.setItem(
+            "meetAlixFormState",
+            JSON.stringify(formState)
+          );
+        };
+      });
+    });
+  }
+};
+
+for (const key in formFields) {
+  const { selector, type } = formFields[key];
+
+  const handler = fieldHandlers[type];
+
+  handler(key);
+};
+
+
+
+
+
+// That code (up) basically creates this (down):
+
+
+
+const storedBookings =
+      JSON.parse(localStorage.getItem("meetAlixBookings")) || [];
 
 (() => {
   if(localStorage.getItem("meetAlixUserSelection")){
@@ -203,113 +448,42 @@ const formState = {
     //resetUserSelection();
     localStorage.setItem("meetAlixUserSelection", JSON.stringify(userSelection));
   };
-
-  if(localStorage.getItem("meetAlixFormState")){
-    let tempFS = JSON.parse(localStorage.meetAlixFormState);
-    formState.date = tempFS.date;
-    formState.dalle = tempFS.dalle;
-    formState.alle = tempFS.alle;
-    formState.name = tempFS.name;
-    formState.email = tempFS.email;
-    formState.cell = tempFS.cell;
-    formState.messengerName = tempFS.messengerName;
-    formState.whatsAppNumber = tempFS.whatsAppNumber;
-    formState.where = tempFS.where;
-    formState.yourAddress = tempFS.yourAddress;
-    formState.whereReal = tempFS.whereReal;
-    formState.why = tempFS.why;
-  } else {
-    //resetFormState();
-    localStorage.setItem("meetAlixFormState", JSON.stringify(formState));
-  };
 })();
 
-const container = document.querySelector(".weeklyContainer");
-const mealLegend = document.querySelector("#mealLegend");
-mealLegend.style.display = config.meal ? "flex" : "none";
-const formContainer = document.querySelector(config.form);
-const form = formContainer.querySelector("form");
-const selectedTime = formContainer.querySelector(".selectedTime");
-const handle = formContainer.querySelector(".handle");
-handle.addEventListener("click", () => {
-  formContainer.classList.toggle("expanded");
-});
-const dateComplete = formContainer.querySelector(".dateComplete");
-const dalleTime = formContainer.querySelector(".dalleTime");
-const alleTime = formContainer.querySelector(".alleTime");
-const nameInput = formContainer.querySelector(".nameInput");
-const emailInput = formContainer.querySelector(".emailInput");
-const cellInput = formContainer.querySelector(".cellInput");
-const messengerNameInput = formContainer.querySelector(".messengerNameInput");
-const whatsAppNumberInput = formContainer.querySelector(".whatsAppNumberInput");
-const whereRadios = formContainer.querySelector('[name="whereRadios"]');
-const yourAddressInput = formContainer.querySelector(".yourAddressInput");
-const whereRealInput = formContainer.querySelector(".whereRealInput");
-const whyInput = formContainer.querySelector(".whyInput");
 
 
-dateComplete.addEventListener("change", (e) => {
-  formState.date = e.target.value;
-  localStorage.meetAlixFormState = JSON.stringify(formState);
-});
-dalleTime.addEventListener("change", (e) => {
-  const value = e.target.value; // e.g., "10:07"
-  if (!value) return;
-  const formattedTime = roundFifteenTime(value);
-  console.log(formattedTime);
+
+// dateComplete.addEventListener("change", (e) => {
+//   formState.date = e.target.value;
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
+// dalleTime.addEventListener("change", (e) => {
   
-  //If there's overlapping, adjust the time to the nearest possible; don't just snap back to the previous time
-  let [hours, minutes] = value.split(':').map(Number);
-  let info = {
-    dayIndex: userSelection.dayIndex,
-    hour: hours,
-    minute: minutes
-  };
-  let newStartSlot = dateTimeToSlot(info);
-  console.log(newStartSlot);
-  let newDalleSlot = checkNewDalleSlot(newStartSlot, userSelection.endSlot);
-  //CHECK WITH EDGES TOO!! (Edges have been added to unavailableRanges)
-  console.log(newDalleSlot);
-  let newDalleTime = slotToTime(newDalleSlot);
-  console.log(newDalleTime);
-  userSelection.startSlot = newDalleSlot;
-  userSelection.startRow = slotToRow(newDalleSlot);
-  updateUserMeeting();
-  updateSelectedTime(); // formContainer is technically already expanded
-  
-  // e.target.value = newDalleTime;
-  // formState.dalle = newDalleTime;
-  // localStorage.meetAlixFormState = JSON.stringify(formState);
-});
-alleTime.addEventListener("change", (e) => {
-  const value = e.target.value; // e.g., "10:07"
-  if (!value) return;
-  const formattedTime = roundFifteenTime(value); // => 10:15
-  console.log(formattedTime);
+// });
+// alleTime.addEventListener("change", (e) => {
+//   const value = e.target.value; // e.g., "10:07"
+//   if (!value) return;
+//   const formattedTime = roundFifteenTime(value); // => 10:15
 
-  let [hours, minutes] = formattedTime.split(':').map(Number);
-  let info = {
-    dayIndex: userSelection.dayIndex,
-    hour: hours,
-    minute: minutes
-  };
-  console.log(info);
-  let newEndSlot = dateTimeToSlot(info);
-  console.log(newEndSlot);
-  let newAlleSlot = checkNewAlleSlot(userSelection.startSlot, newEndSlot);
-  //CHECK WITH EDGES TOO!!
-  console.log(newAlleSlot);
-  let newAlleTime = slotToTime(newAlleSlot);
-  console.log(newAlleTime);
-  userSelection.endSlot = newAlleSlot;
-  userSelection.endRow = slotToRow(newAlleSlot);
-  updateUserMeeting();
-  updateSelectedTime(); // formContainer is technically already expanded
-  // e.target.value = newAlleTime;
-  // formState.alle = newAlleTime;
-  // //ADD AN UPDATE OF SELECTEDTIME (but not the big whole function; we need smaller functions)
-  // localStorage.meetAlixFormState = JSON.stringify(formState);
-});
+//   let [hours, minutes] = formattedTime.split(':').map(Number);
+//   let info = {
+//     dayIndex: userSelection.dayIndex,
+//     hour: hours,
+//     minute: minutes
+//   };
+//   let newEndSlot = dateTimeToSlot(info);
+//   let newAlleSlot = checkNewAlleSlot(userSelection.startSlot, newEndSlot);
+//   //CHECK WITH EDGES TOO!!
+//   let newAlleTime = slotToTime(newAlleSlot);
+//   userSelection.endSlot = newAlleSlot;
+//   userSelection.endRow = slotToRow(newAlleSlot);
+//   updateUserMeeting();
+//   updateSelectedTime(); // formContainer is technically already expanded
+//   // e.target.value = newAlleTime;
+//   // formState.alle = newAlleTime;
+//   // //ADD AN UPDATE OF SELECTEDTIME (but not the big whole function; we need smaller functions)
+//   // localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
 
 function roundFifteenTime(value){
   let [hours, minutes] = value.split(':').map(Number);
@@ -323,44 +497,57 @@ function roundFifteenTime(value){
   return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
 };
 
-nameInput.addEventListener("change", (e) => {
-  formState.name = e.target.value;
-  localStorage.meetAlixFormState = JSON.stringify(formState);
-});
-emailInput.addEventListener("change", (e) => {
-  formState.email = e.target.value;
-  localStorage.meetAlixFormState = JSON.stringify(formState);
-});
-cellInput.addEventListener("change", (e) => {
-  formState.cell = e.target.value;
-  localStorage.meetAlixFormState = JSON.stringify(formState);
-});
-messengerNameInput.addEventListener("change", (e) => {
-  formState.messengerName = e.target.value;
-  localStorage.meetAlixFormState = JSON.stringify(formState);
-});
-whatsAppNumberInput.addEventListener("change", (e) => {
-  formState.whatsAppNumber = e.target.value;
-  localStorage.meetAlixFormState = JSON.stringify(formState);
-});
-whereRadios.addEventListener("input", (e) => {
-  formState.where = e.target.value;
-  localStorage.meetAlixFormState = JSON.stringify(formState);
-});
-yourAddressInput.addEventListener("change", (e) => {
-  formState.yourAddress = e.target.value;
-  localStorage.meetAlixFormState = JSON.stringify(formState);
-});
-whereRealInput.addEventListener("change", (e) => {
-  formState.whereReal = e.target.value;
-  localStorage.meetAlixFormState = JSON.stringify(formState);
-});
-whyInput.addEventListener("change", (e) => {
-  formState.why = e.target.value;
-  localStorage.meetAlixFormState = JSON.stringify(formState);
-});
+// nameInput.addEventListener("change", (e) => {
+//   formState.name = e.target.value;
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
+// emailInput.addEventListener("change", (e) => {
+//   formState.email = e.target.value;
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
+// cellInput.addEventListener("change", (e) => {
+//   formState.cell = e.target.value;
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
+// messengerNameInput.addEventListener("change", (e) => {
+//   formState.messengerName = e.target.value;
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
+// whatsAppNumberInput.addEventListener("change", (e) => {
+//   formState.whatsAppNumber = e.target.value;
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
+// whereRadios.addEventListener("change", (e) => {
+//   console.log(e.target.value);
+//   formState.where = e.target.value;
+//   console.log(formState.where);
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
+// yourAddressInput.addEventListener("change", (e) => {
+//   formState.yourAddress = e.target.value;
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
+// whereRealInput.addEventListener("change", (e) => {
+//   formState.whereReal = e.target.value;
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
+// whyInput.addEventListener("change", (e) => {
+//   formState.why = e.target.value;
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
 
 
+onChildChanged(ref(rtdb, "meetAlix"), (snap) => {
+  const booking = { key: snap.key, ...snap.val() };
+  //check if booking.key already is in bookingQueue, and if yes, then update that one, otherwise, push it
+  const bookingIndex = storedBookings.findIndex(book => book.key === booking.key);
+  if(bookingIndex !== -1){
+    storedBookings[bookingIndex].status = booking.status;
+  } else{
+    storedBookings.push(booking);
+  };
+  
+});
 
 
 
@@ -485,26 +672,28 @@ function getWeeklyCalendar(){
   let date = new Date();
   let dayIdx = date.getDay();
   date.setDate(date.getDate() - dayIdx);
-  putDatesInWeek(date); //includes getMyThisWeekBusiesAndUnavailableRanges(Dday, Sday); AND putShowsInWeek();
+  putDatesInWeek(date); //includes getThisWeekStuffAndUnavailableRanges(Dday, Sday); AND putShowsInWeek();
+
   document.querySelector("#weekBackward").addEventListener("click", () => {
     eraseWeekArea();
     eraseWeekEvent();
     let Dday = document.querySelector("#Dday").dataset.date;
     let Ddate = getDateFromString(Dday);
     Ddate.setDate(Ddate.getDate() - 7);
-    putDatesInWeek(Ddate); //includes getMyThisWeekBusiesAndUnavailableRanges(Dday, Sday); AND putShowsInWeek();
+    putDatesInWeek(Ddate); //includes getThisWeekStuffAndUnavailableRanges(Dday, Sday); AND putShowsInWeek();
   });
+
   document.querySelector("#weekForward").addEventListener("click", () => {
     eraseWeekArea();
     eraseWeekEvent();
     let Sday = document.querySelector("#Sday").dataset.date;
     let Sdate = getDateFromString(Sday);
     Sdate.setDate(Sdate.getDate() + 1);
-    putDatesInWeek(Sdate); //includes getMyThisWeekBusiesAndUnavailableRanges(Dday, Sday); AND putShowsInWeek();
+    putDatesInWeek(Sdate); //includes getThisWeekStuffAndUnavailableRanges(Dday, Sday); AND putShowsInWeek();
   });
 };
 
-function fromMyThisWeekBusiesToUnavailableRanges(){
+function fromThisWeekStuffToUnavailableRanges(){
   unavailableRanges.length = 0;
   myThisWeekBusies.forEach(busy => {
     let start = {
@@ -525,6 +714,29 @@ function fromMyThisWeekBusiesToUnavailableRanges(){
     };
     unavailableRanges.push(busyRange);
   });
+
+  if(config.meet && theirThisWeekBookings.length){
+    theirThisWeekBookings.forEach(book => {
+      // let start = {
+      //   dayIndex: book.event.dayIndex, //if we end up with multiple days events... we'll need startDayIndex and endDayIndex
+      //   hour: book.event.startHour,
+      //   minute: book.event.startMinute
+      // };
+      // let startSlot = dateTimeToSlot(start);
+      // let end = {
+      //   dayIndex: book.event.dayIndex, //if we end up with multiple days events... we'll need startDayIndex and endDayIndex
+      //   hour: book.event.endHour,
+      //   minute: book.event.endMinute
+      // };
+      // let endSlot = dateTimeToSlot(end);
+      let bookRange = {
+        start: book.event.startSlot,
+        end: book.event.endSlot
+      };
+      console.log(bookRange);
+      unavailableRanges.push(bookRange);
+    });
+  };
   
   // Adding the edges 
   unavailableRanges.push(...allTheEdges);
@@ -598,17 +810,17 @@ function putDatesInWeek(date){
   let SMonthName = Sdate.toLocaleString('fr-CA', { month: 'long' }).toLocaleUpperCase();
   document.querySelector("#weeklyYearSpan").innerHTML = `${DYear}${DYear !== SYear ? ` / ${SYear}` : ``}`;
   document.querySelector("#weeklyMonthSpan").innerHTML = `${DMonthName}${DMonthName !== SMonthName ? ` / ${SMonthName}` : ``}`;
-  getMyThisWeekBusiesAndUnavailableRanges(Dday, Sday);
+  getThisWeekStuffAndUnavailableRanges(Dday, Sday);
   putShowsInWeek();
  
   if(userSelection.date !== null 
     && Dday <= userSelection.date && userSelection.date <= Sday 
     && userSelection.startSlot !== null 
     && userSelection.endSlot !== null){
-    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="userMeeting${userSelection.topIsTouching ? `  topIsTouching` : ``}${userSelection.bottomIsTouching ? ` bottomIsTouching` : ``}" style="grid-column:${userSelection.col}; grid-row:${userSelection.startRow}/${userSelection.endRow};"></div>`);
+    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="userMeeting selected${userSelection.topIsTouching ? `  topIsTouching` : ``}${userSelection.bottomIsTouching ? ` bottomIsTouching` : ``}" style="grid-column:${userSelection.col}; grid-row:${userSelection.startRow}/${userSelection.endRow};"></div>`);
     updateSelectedTime();
     formContainer.classList.remove("expanded");
-  };
+  }; // add an other one for the confirmed ones
 };
 
 
@@ -629,22 +841,32 @@ function updateSleepAreas(){
 
 
 let myThisWeekBusies = [];
-function getMyThisWeekBusiesAndUnavailableRanges(Dday, Sday){
+let theirThisWeekBookings = [];
+function getThisWeekStuffAndUnavailableRanges(Dday, Sday){
   myThisWeekBusies = myBusies.filter(busy =>
     Dday <= busy.date && busy.date <= Sday
   );
   console.log(myThisWeekBusies);
+  if(config.meet && storedBookings.length){
+    theirThisWeekBookings = storedBookings.filter(book =>
+      Dday <= book.event.date && book.event.date <= Sday
+    );
+  }; 
 
-  fromMyThisWeekBusiesToUnavailableRanges();
+  fromThisWeekStuffToUnavailableRanges();
 };
+
 
 function putShowsInWeek() {
   myThisWeekBusies.forEach(busy => {
     createWeeklyshow(busy);
   });
+  if(!theirThisWeekBookings.length) return
+  theirThisWeekBookings.forEach(book => {
+    createWeeklyBook(book);
+    updateLegend(book.status);
+  });
 };
-
-
 
 function createWeeklyshow(busy){
   document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="weeklyBuffer" style="grid-column:col-${busy.col}; grid-row:row-${busy.start}/row-${busy.end};"></div>`);
@@ -652,6 +874,35 @@ function createWeeklyshow(busy){
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="weeklyMeal" style="grid-column:col-${busy.col}; grid-row:row-${busy.start}/span 6;">Meal</div>`);
   };
 };
+
+function createWeeklyBook(book){
+  document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div 
+    data-bookingkey="${book.key}" 
+    onclick="openForm(this)"
+    class="userMeeting ${book.status}${book.event.topIsTouching ? `  topIsTouching` : ``}${book.event.bottomIsTouching ? ` bottomIsTouching` : ``}" 
+    style="grid-column:${book.event.col}; grid-row:${book.event.startRow}/${book.event.endRow};">
+      ${book.status == "cancelled" ? `<span class="iconBtn" onclick="trashCancelled(this)"><i class="fa-regular fa-trash-can"></i></span>` : ``}
+  </div>`);
+};
+
+function updateLegend(status){
+  console.log(status);
+  document.querySelector(`#${status}Legend`).classList.remove("displayNone");
+};
+
+function trashCancelled(thisOne){ //That is when they click on the trash button in the cancelled event in the calendar (see userTrashMeeting for when they click the trash button from the formContainer)
+  const book = thisOne.parentElement;
+  const bookingKey = book.dataset.bookingkey;
+  storedBookings = storedBookings.filter(
+    booking => booking.key !== bookingKey
+  ); // or, more acuratly, keeps all the booking that doesn't have that bookingKey
+  // const bookingIndex = storedBookings.findIndex(book => book.key == bookingKey);
+  // storedBookings.splice(bookingIndex, 1);
+  localStorage.meetAlixBookings = JSON.stringify(storedBookings);
+  trashBookingInRTDB(bookingKey); // Check if it's still in the rtdb, and if it is, remove it there too
+  book.remove();
+};
+window.trashCancelled = trashCancelled;
 
 function eraseWeekArea(){
   let todayAreaDiv = document.querySelector(".todayArea");
@@ -684,6 +935,9 @@ function eraseWeekEvent(){
   });
   container.querySelectorAll(".userMeeting").forEach(we => {
     we.remove();
+  });
+  document.querySelectorAll(".userLegend").forEach(we => {
+    we.classList.add("displayNone");
   });
 };
 
@@ -877,32 +1131,32 @@ function analyzeRelation(selected, unavailable) {
       let relation = "partialOverlap";
       let startSlot = selected.startSlot < unavailable.start ? selected.startSlot : unavailable.end;
       let endSlot = selected.startSlot < unavailable.start ? unavailable.start : selected.endSlot;
-      let touch = selected.startSlot < unavailable.start ? "bottomIsTouching" : "topIsTouching";
+      //let touch = selected.startSlot < unavailable.start ? "bottomIsTouching" : "topIsTouching"; //we shouldn't need that one if we analyzeTouch at the end
       let firstSlots = selected.startSlot < unavailable.start ? 4 : selected.endSlot - unavailable.end;
       let lastSlots = selected.startSlot < unavailable.start ? unavailable.start - selected.startSlot : 4;
 
-      let conclusion = {relation, startSlot, endSlot, touch, firstSlots, lastSlots};
+      let conclusion = {relation, startSlot, endSlot, firstSlots, lastSlots};
       return conclusion;
     };
   };
 
-  // unavailable ends exactly where selection starts
-  if (unavailable.end === selected.startSlot) {
-    let conclusion = {
-      relation: "touching",
-      touch: "topIsTouching"
-    };
-    return conclusion;
-  };
+  // // unavailable ends exactly where selection starts
+  // if (unavailable.end === selected.startSlot) {
+  //   let conclusion = {
+  //     relation: "touching",
+  //     touch: "topIsTouching"
+  //   };
+  //   return conclusion;
+  // };
 
-  // unavailable starts exactly where selection ends
-  if (unavailable.start === selected.endSlot) {
-    let conclusion = {
-      relation: "touching",
-      touch: "bottomIsTouching"
-    };
-    return conclusion;
-  };
+  // // unavailable starts exactly where selection ends
+  // if (unavailable.start === selected.endSlot) {
+  //   let conclusion = {
+  //     relation: "touching",
+  //     touch: "bottomIsTouching"
+  //   };
+  //   return conclusion;
+  // };
 
   let conclusion = {
     relation: "separate"
@@ -964,8 +1218,8 @@ function addMe(thisOne) {
 
     tempSelection.startSlot = null;
     tempSelection.endSlot = null;
-    tempSelection.topIsTouching = false;
-    tempSelection.bottomIsTouching = false;
+    // tempSelection.topIsTouching = false;
+    // tempSelection.bottomIsTouching = false;  // no need, we do it at the end
   };
 
   let firstSlots = 4;
@@ -989,65 +1243,65 @@ function addMe(thisOne) {
       lastSlots = conclusion.lastSlots;
     };
 
-    // ⬆️ touching before
-    if (conclusion.touch === "topIsTouching") {
-      ////thisOne.classList.add("topIsTouching");
+  };
+
+  if(tempSelection.startSlot == null || tempSelection.endSlot == null){
+    tempSelection.startSlot = selectedWeeklyItem.startSlot;
+    tempSelection.endSlot = selectedWeeklyItem.endSlot;
+  } else if(tempSelection.startSlot == selectedWeeklyItem.startSlot && tempSelection.endSlot == selectedWeeklyItem.endSlot) { // second click
+    trashUserMeeting();
+    return
+  } else if(tempSelection.startSlot == selectedWeeklyItem.startSlot){
+    tempSelection.startSlot = tempSelection.startSlot + firstSlots;
+  } else if(tempSelection.endSlot == selectedWeeklyItem.endSlot){
+    tempSelection.endSlot = tempSelection.endSlot - lastSlots;
+  } else { // < or >
+    const envelopes = checkEnvelope(Math.min(tempSelection.startSlot, selectedWeeklyItem.startSlot), Math.max(tempSelection.endSlot, selectedWeeklyItem.endSlot))
+    if(envelopes){
+      tempSelection.startSlot = selectedWeeklyItem.startSlot; // to restart it
+      tempSelection.endSlot = selectedWeeklyItem.endSlot; // to restart it
+    } else {
+      if(tempSelection.startSlot < selectedWeeklyItem.startSlot){
+        tempSelection.startSlot = tempSelection.startSlot;
+      } else{
+        tempSelection.startSlot = selectedWeeklyItem.startSlot;
+      };
+      if(tempSelection.endSlot < selectedWeeklyItem.endSlot){
+        tempSelection.endSlot = selectedWeeklyItem.endSlot;
+      } else{
+        tempSelection.endSlot = tempSelection.endSlot;
+      };
+    };
+  };
+
+  // check if there is an unavailableRange IN the selection
+  function checkEnvelope(startSlot, endSlot){
+    let envelopes = false;
+    for (const unavailable of unavailableRanges){
+      if (
+        startSlot < unavailable.start &&
+        unavailable.end < endSlot
+      ) {
+        envelopes = true;
+      };
+    };
+    return envelopes;
+  };
+
+  // analyze if tempSelection is touching any unavailableRanges
+  tempSelection.topIsTouching = false;
+  tempSelection.bottomIsTouching = false;
+  for (const unavailable of unavailableRanges){
+
+    if(unavailable.end === tempSelection.startSlot){
       tempSelection.topIsTouching = true;
     };
 
-    // ⬇️ touching after
-    if (conclusion.touch === "bottomIsTouching") {
-      ////thisOne.classList.add("bottomIsTouching");
+    if (unavailable.start === tempSelection.endSlot){
       tempSelection.bottomIsTouching = true;
-    };
-  };
-
-  // for (const edge of allTheEdges) {
-  //   const edging = analyzeEdges(selectedWeeklyItem, edge);
-
-  //   // ⬆️ touching start of day
-  //   if (edging === "topIsTouching") {
-  //     ////thisOne.classList.add("topIsTouching");
-  //     tempSelection.topIsTouching = true;
-  //   };
-
-  //   // ⬇️ touching end of day
-  //   if (edging === "bottomIsTouching") {
-  //     ////thisOne.classList.add("bottomIsTouching");
-  //     tempSelection.bottomIsTouching = true;
-  //   };
-  // }
-
-  let secondClickStart = false;
-  let secondClickEnd = false;
-
-  if(tempSelection.startSlot == null){
-    tempSelection.startSlot = selectedWeeklyItem.startSlot;
-  } else if(tempSelection.startSlot == selectedWeeklyItem.startSlot) {
-    secondClickStart = true;
-    tempSelection.startSlot = tempSelection.startSlot + firstSlots;
-  } else if(tempSelection.startSlot < selectedWeeklyItem.startSlot){
-    tempSelection.startSlot = tempSelection.startSlot;
-  } else {
-    tempSelection.startSlot = selectedWeeklyItem.startSlot;
+    };      
   };
   
-  if(tempSelection.endSlot == null){
-    tempSelection.endSlot = selectedWeeklyItem.endSlot;
-  } else if(tempSelection.endSlot == selectedWeeklyItem.endSlot){
-    secondClickEnd = true;
-    tempSelection.endSlot = tempSelection.endSlot - lastSlots;
-  } else if(tempSelection.endSlot < selectedWeeklyItem.endSlot){
-    tempSelection.endSlot = selectedWeeklyItem.endSlot;
-  } else {
-    tempSelection.endSlot = tempSelection.endSlot;
-  }; 
-  
-  if(secondClickStart && secondClickEnd){
-    trashUserMeeting();
-    return
-  };
-
   // userSelection = tempSelection;
   userSelection.date = selectedWeeklyItem.date;
   userSelection.startSlot = tempSelection.startSlot;
@@ -1056,37 +1310,60 @@ function addMe(thisOne) {
   userSelection.endRow = slotToRow(tempSelection.endSlot);
   userSelection.dayIndex = selectedWeeklyItem.dayIndex;
   userSelection.col = `col-${selectedWeeklyItem.col}`;
-  userSelection.topIsTouching = tempSelection.topIsTouching;
+  userSelection.topIsTouching = tempSelection.topIsTouching; 
   userSelection.bottomIsTouching = tempSelection.bottomIsTouching;
   updateSelectedTime();
   updateUserMeeting();
   formContainer.classList.remove("expanded"); // formContainer is technically already not expanded
-  
+  console.log(userSelection);
 
 };
 window.addMe = addMe;
 
 function closeTheForm(){
   formContainer.classList.add("displayNone"); //we should update expanded (add or remove?)
+  formContainer.classList.remove("expanded");
 };
 window.closeTheForm = closeTheForm;
 
-function trashUserMeeting(){
-  container.querySelectorAll(".userMeeting").forEach(we => {
-    we.remove();
-  });
+function trashUserMeeting(thisOne){
+  let bookingKey = thisOne.parentElement.parentElement.dataset.bookingkey;
+  // removing the userMeeting from the calendar
+  let userMeeting = container.querySelector(`[data-bookingkey="${bookingKey}"]`);
+  userMeeting.remove();
+  // removing it from storedBookings
+  storedBookings = storedBookings.filter(
+    booking => booking.key !== bookingKey
+  ); // or, more acuratly, keeps all the booking that doesn't have that bookingKey
+  // const bookingIndex = storedBookings.findIndex(book => book.key == bookingKey);
+  // storedBookings.splice(bookingIndex, 1);
+  localStorage.meetAlixBookings = JSON.stringify(storedBookings);
+  // removing it from rtdb (if it's still there)
+  trashBookingInRTDB(bookingKey);
+
+  // reset everything
   resetUserSelection();
-  updateSelectedTime();
-  formContainer.classList.remove("expanded"); //par principe, même si on le voit plus
+  updateSelectedTime(); // resets formState and remove formContainer too since userSelection is now null 
+  form.reset();
 };
 window.trashUserMeeting = trashUserMeeting;
 
+async function trashBookingInRTDB(bookingKey){
+  try {
+    await remove(ref(rtdb, `meetAlix/${bookingKey}`));
+    messageBox.innerHTML = confirmTrashMessage;
+  } catch (err) {
+    console.error("Failed to delete booking", err);
+    messageBox.innerHTML = errorMessage;
+  };
+};
+
 function updateUserMeeting(){
-  container.querySelectorAll(".userMeeting").forEach(we => {
+  container.querySelectorAll(".userMeeting.selected").forEach(we => {
     we.remove();
   });
   if(userSelection.date !== null && userSelection.startSlot !== null && userSelection.endSlot !== null){
-    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="userMeeting${userSelection.topIsTouching ? `  topIsTouching` : ``}${userSelection.bottomIsTouching ? ` bottomIsTouching` : ``}" style="grid-column:${userSelection.col}; grid-row:${userSelection.startRow}/${userSelection.endRow};"></div>`);
+    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="userMeeting selected${userSelection.topIsTouching ? `  topIsTouching` : ``}${userSelection.bottomIsTouching ? ` bottomIsTouching` : ``}" style="grid-column:${userSelection.col}; grid-row:${userSelection.startRow}/${userSelection.endRow};"></div>`);
   };
 };
 
@@ -1102,20 +1379,33 @@ function resetUserSelection(){
   userSelection.bottomIsTouching = false;
   userSelection.submitted = false;
 };
-
-function resetFormState(){
-  formState.date = "";
-  formState.dalle = "";
-  formState.alle = "";
-  formState.name = "";
-  formState.email = "";
-  formState.cell = "";
-  formState.messengerName = "";
-  formState.where = "";
-  formState.yourAddress = "";
-  formState.whereReal = "";
-  formState.why = "";
+function resetFormState() {
+  Object.assign(
+    formState,
+    Object.fromEntries(
+      Object.keys(formFields).map(key => [key, ""])
+    )
+  );
 };
+// That code (up) basically does this (down): 
+// function resetFormState(){ 
+//   const tempFormState = Object.fromEntries( Object.keys(formFields).map(key => [key, ""]) ); 
+//   Object.assign(formState, tempFormState); 
+// };
+// That code (up) basically does this (down): (no need to use structuredClone because nobody is using that tempFormState notebook anyway)
+// function resetFormState(){
+//   formState.date = "";
+//   formState.dalle = "";
+//   formState.alle = "";
+//   formState.name = "";
+//   formState.email = "";
+//   formState.cell = "";
+//   formState.messengerName = "";
+//   formState.where = "";
+//   formState.yourAddress = "";
+//   formState.whereReal = "";
+//   formState.why = "";
+// };
 
 function updateSelectedTime(){
   //Update selectedTime
@@ -1134,13 +1424,9 @@ function updateSelectedTime(){
     let startDateTime = slotToDateTime(userSelection.startSlot);
     let endDateTime = slotToDateTime(userSelection.endSlot);
 
-    console.log(startDateTime);
-    console.log(endDateTime);
     
     let chosenDate = document.querySelector(`[data-dayindex="${startDateTime.dayIndex}"]`).dataset.date;
-    console.log(chosenDate);
     const thatDay = new Date(chosenDate);
-    console.log(thatDay);
     
 
     // 1️⃣ Get weekday, month, day, year
@@ -1180,7 +1466,6 @@ function updateSelectedTime(){
 
     const startFormatted = formatTime24to12(startDateTime);
     const endFormatted   = formatTime24to12(endDateTime);
-    console.log(endFormatted);
 
 
     // 3️⃣ Inject into HTML (with <sup>)
@@ -1204,9 +1489,12 @@ function updateSelectedTime(){
       endMinutes: endFormatted.paddedMinutes,
       endPeriod: endFormatted.period
     });
-    dateComplete.value = getDashStringFromDate(thatDay);
-    dalleTime.value = `${startFormatted.hour24}:${startFormatted.paddedMinutes}`;
-    alleTime.value = `${endFormatted.hour24}:${endFormatted.paddedMinutes}`;
+    // dateComplete.value = getDashStringFromDate(thatDay);
+    inputs.date.value = getDashStringFromDate(thatDay); // same as inputs["date"].value ! but [] will be prefered when the key is a variable... for exemple: let dateVariable = "date" then inputs[dateVariable].value
+    // dalleTime.value = `${startFormatted.hour24}:${startFormatted.paddedMinutes}`;
+    inputs.dalle.value = `${startFormatted.hour24}:${startFormatted.paddedMinutes}`;
+    // alleTime.value = `${endFormatted.hour24}:${endFormatted.paddedMinutes}`;
+    inputs.alle.value = `${endFormatted.hour24}:${endFormatted.paddedMinutes}`;
 
     //update the formState
     formState.date = getDashStringFromDate(thatDay);
@@ -1219,27 +1507,209 @@ function updateSelectedTime(){
   };
 };
 
-form.addEventListener("submit", (e) => {
+function openForm(thisOne){
+  console.log("openForm");
+  const book = thisOne;
+  console.log(book);
+  const bookingKey = book.dataset.bookingkey;
+  console.log(bookingKey);
+  const booking = storedBookings.find((book) => book.key == bookingKey);
+  console.log(booking);
+  //update formState
+  Object.assign(formState, structuredClone(booking.form));
+  // That code (up) basically does this (down): (but it creates a deep copy/clone instead of sharing reference (in case of nested objects), so I get two notebook on the table instead of one with two post-its which would have been Object.assign(formState, booking.form);.)
+  // formState.date = booking.form.date;
+  // formState.dalle = booking.form.dalle;
+  // formState.alle = booking.form.alle;
+  // formState.name = booking.form.name;
+  // formState.email = booking.form.email;
+  // formState.cell = booking.form.cell;
+  // formState.messengerName = booking.form.messengerName;
+  // formState.whatsAppNumber = booking.form.whatsAppNumber;
+  // formState.where = booking.form.where;
+  // formState.yourAddress = booking.form.yourAddress;
+  // formState.whereReal = booking.form.whereReal;
+  // formState.why = booking.form.why;
+
+  //Add the bookingKey to formState
+  formState.key = bookingKey;
+
+  //Fill up the form
+  for (const key in inputs) {
+    if (formState[key] !== undefined) {
+      inputs[key].value = formState[key];
+    };
+  };
+// That code (up) basically does this (down):
+  // dateComplete.value = booking.form.date;
+  // dalleTime.value = booking.form.dalle;
+  // alleTime.value = booking.form.alle;
+  // nameInput.value = booking.form.name;
+  // emailInput.value = booking.form.email;
+  // cellInput.value = booking.form.cell;
+  // messengerNameInput.value = booking.form.messengerName;
+  // whatsAppNumberInput.value = booking.form.whatsAppNumber;
+  // whereRadios.value = booking.form.where;
+  // yourAddressInput.value = booking.form.yourAddress;
+  // whereRealInput.value = booking.form.whereReal;
+  // whyInput.value = booking.form.why;
+
+  selectedTime.innerHTML = "";
+  submitBtn.innerText = "Save";
+  formContainer.classList.remove("displayNone");
+  formContainer.classList.add("expanded");
+
+
+};
+window.openForm = openForm;
+
+const messageBox = document.querySelector("#messageBox");
+const waitingMessage = `<div id="waitingMessage" class="message">
+    <button class="iconBtn topRightCorner" onclick="removeMessage()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <h2>Wait For It…</h2>
+    <span class="typcn typcn-wine" style="font-size: 50px; line-height: 1em;"></span>
+    <h6 style="margin-top: 0.5em; margin-bottom: 2em;">Like an hourglass<br />but quicker</h6>
+  </div>`;
+const confirmMessage = `<div id="confirmMessage" class="message">
+    <button class="iconBtn topRightCorner" onclick="removeMessage()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <h2>You did it!</h2>
+    <h3 style="margin-bottom: 0;">Alright,<br/>so now that you did your part;<br/>all you've got to do is<br/>sit tight and wait for me to do mine…</h3>
+    <h6 style="margin-top: 0;">Team work makes the dream works!</h6>
+    <h2 style="color: var(--pending-border)">See you soon!<br/>🤗</h2>
+  </div>`;
+const confirmTrashMessage = `<div id="confirmTrashMessage" class="message">
+    <button class="iconBtn topRightCorner" onclick="removeMessage()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <h2>Well… I guess this is goodbye then.</h2>
+    <h3>The whole thing have been erased.</h3>
+    <h6>As if it never existed in the first place! 😶</h6>
+  </div>`;
+const errorMessage = `<div id="errorMessage" class="message">
+    <button class="iconBtn topRightCorner" onclick="removeMessage()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <h2>Oooops…</h2>
+    <h3>Something went wrong.<br/>Please try again 🙃</h3>
+    <h6>And if that still doesn't work, please let me know!</h6>
+  </div>`;
+
+
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  console.log(formType);
-  console.log(formState);
 
-  // Get infos => everything is already in formState
+  // --- 1. UI: waiting state ---
+  submitBtn.disabled = true;
+  messageBox.innerHTML = waitingMessage;
+
+  // --- 2. Gather form data ---
+  // const formData = new FormData(form);
+  // const formState = Object.fromEntries(formData.entries());
+
+  try {
+    // --- 2. Check if the booking already exists
+    if(formState.key){
+      // find the booking index in storedBooking
+      const bookingIndex = storedBookings.findIndex(book => book.key == formState.key);
+      // update the booking in storedBooking
+      storedBookings[bookingIndex].status = "pending";
+      storedBookings[bookingIndex].event = structuredClone(userSelection);
+      storedBookings[bookingIndex].form = structuredClone(formState);
+      storedBookings[bookingIndex].timestamp = Date.now();
+        // status: pending (even if it was confirmed)
+        // on update juste event (userSelection), form (formState) (what should we do about formState.key?), and timestamp
+      // update the booking in rtdb and catch
+      await update(ref(rtdb, `meetAlix/${formState.key}`), {
+        data: structuredClone(formState),
+        timestamp: Date.now()
+      });
+    } else{
+      // --- 3. Push to RTDB and get the reference ---
+      const newBookingRef = await push(ref(rtdb, "meetAlix"), {
+        type: formType,
+        status: "pending",
+        data: structuredClone(formState),
+        timestamp: Date.now()
+      });
+
+      const bookingKey = newBookingRef.key; // 🔑 THIS is the magic
+
+      // --- 4. Store booking locally ---
+      const newBooking = {
+        key: bookingKey,
+        status: "pending",
+        type: formType,
+        event: structuredClone(userSelection),
+        form: structuredClone(formState),
+        timestamp: Date.now()
+      };
+      storedBookings.push(newBooking);
+    };
+    
+
+    localStorage.setItem(
+      "meetAlixBookings",
+      JSON.stringify(storedBookings)
+    );
+
+    // --- 5. SUCCESS ---
+    // Show confirmation message
+    messageBox.innerHTML = confirmMessage;
+
+    // Remove userMeeting selected
+    container.querySelector(".userMeeting.selected").remove();
+
+    // and create a new one from storedBooking
+    createWeeklyBook(newBooking);
+    // add the proper legend if it isn't already there
+    updateLegend(newBooking.status);
   
-  //send infos to my email
 
-  //add infos to randomTask
+    // Erase and remove the form
+    form.reset();
+    formContainer.classList.add("displayNone"); 
+    formContainer.classList.remove("expanded");
 
-  //add infos to myBusies
+    // Reset userSelection and formState
+    resetUserSelection();
+    resetFormState();
+    //save to localStorage the resetted userSelection and formState
+    localStorage.meetAlixUserSelection = JSON.stringify(userSelection);
+    localStorage.meetAlixFormState = JSON.stringify(formState);
 
-  push(ref(rtdb, "meetAlix"), {
-    type: formType,
-    data: formState,
-    timestamp: Date.now()
-  });
+  } catch (error) {
+    // --- 6. FAILURE ---
+    console.error("Booking failed:", error);
 
-
+    messageBox.innerHTML = errorMessage;
+    submitBtn.disabled = false;
+  };
 });
+
+function removeMessage(){
+  messageBox.innerHTML = "";
+};
+window.removeMessage = removeMessage;
+
+
+
+
+
+  
+
+  //Change the color of the selected range genre orange
+
+  // Ajoute, dans la légende le carré orange et que ça veut dire "Keep Calm and Be Patient! I'm either in an existential crisis, stuck in traffic, or simply at work, or sleeping, or... In any case, you just got to wait!"
+
+  const pendingLegendHTML = ``;
+  const confirmedLegendHTML = ``;
+  const cancelledLegendHTML = ``;
+
+
 
 
 

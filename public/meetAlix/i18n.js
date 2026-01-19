@@ -48,6 +48,7 @@ const i18n = {
     option_google_meet: "Google Meet",
 
     option_whatsapp: "WhatsApp",
+    whatsapp_note: "Then I’ll definitely need your WhatsApp number. ☝️",
 
     /* --- Offline --- */
     subheading_offline: "Offline",

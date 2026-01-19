@@ -2,7 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebas
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
 import { getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-import { getDatabase, onChildAdded, ref, get, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js"; //realtime database
+import { getDatabase, onChildAdded, ref, get, set, push, update, onValue, onChildChanged, onChildRemoved, remove } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js"; //realtime database
 
 
 // const firebaseConfig = {
@@ -35,5 +35,5 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 export { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged,
-  rtdb, getDatabase, onChildAdded, ref, get, set, push, onValue, remove //realtime database
+  rtdb, getDatabase, onChildAdded, ref, get, set, push, update, onValue, onChildChanged, onChildRemoved, remove //realtime database
  };

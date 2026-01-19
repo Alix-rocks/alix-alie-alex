@@ -527,15 +527,16 @@ async function loadBookings() {
   const snapshot = await get(ref(rtdb, "meetAlix"));
   if (!snapshot.exists()) return;
 
-  bookingQueue = Object.entries(snapshot.val()).map(
-    ([bookingKey, data]) => ({ 
-      key: bookingKey, 
-      ...data 
-    })
-  );
-  bookingQueue.sort((a, b) => a.timestamp - b.timestamp);
-  console.log(bookingQueue[0]);
-  updateInbox();
+  bookingQueue = Object.entries(snapshot.val())
+  .filter(([_, data]) => data.status === "pending")
+  .map(([bookingKey, data]) => ({
+    key: bookingKey,
+    ...data
+  }))
+  .sort((a, b) => a.timestamp - b.timestamp);
+
+updateInbox();
+
 };
 
 onChildAdded(ref(rtdb, "meetAlix"), (snap) => {

@@ -155,6 +155,7 @@ function handleFeedback(need, info){
       console.log(info);
       currentSlideSetting(info.current); //object
       stepButtonFixing(info.steps); //object
+      notesFilling(info.notes);
       diapoMainFilling(info.html);
       // if(info?.words?.length > 0) {
       //   wordDropdownCreation(info.words); //array
@@ -169,6 +170,7 @@ function handleFeedback(need, info){
       allSlidesCreation(info.slides); //array of objects
       currentSlideSetting(info.current); //object
       stepButtonFixing(info.steps); //object
+      notesFilling(info.notes);
       diapoMainFilling(info.html);
       // if(info?.words?.length > 0) {
       //   wordDropdownCreation(info.words); //array
@@ -189,13 +191,30 @@ function handleFeedback(need, info){
 //     type: sectionShowed.dataset.type
 //   };
 
-const diapoTitle = document.querySelector("#diapoTitle");
+const notes = document.querySelector("#notes");
+
+function notesFilling(html){
+  notes.innerHTML = "";
+  notes.innerHTML = html;
+}
 
 function diapoMainFilling(html){
   console.log(html);
   diapoMain.innerHTML = "";
   diapoMain.innerHTML = html;
 };
+
+
+window.makeThisAppear = function (el) {
+  const uuid = el.dataset.uuid;
+
+  let infoToSend = {
+    action: "makeThisAppear",
+    data: uuid
+  };
+  sendActionData(infoToSend);
+};
+
 
 function currentSlideSetting(info){
   // diapoMain.innerHTML = "";

@@ -74,6 +74,9 @@ function handleCommand(action, data){
     case "addWisdom":
       addWisdom(data);
       break;
+    case "makeThisAppear":
+      makeThisAppear(data);
+      break;
     case "fs":
       fullscreen();
       break;
@@ -169,14 +172,19 @@ function displaySection(sectionToShow){
   let currentSlideInfo = getCurrentSlideInfo();
 
   let currentSlideHTML = getCurrentSlideHTML();
-  
+
+  let currentSlideNotes = "";
+  if(sectionShowed.classList.contains("noted")){
+    currentSlideNotes = getCurrentSlideNotes();
+  };  
 
   let wholeDisplay = {
     words: words,
     phrases: phrases,
     steps: stepButtonStates,
     current: currentSlideInfo,
-    html: currentSlideHTML
+    html: currentSlideHTML,
+    notes: currentSlideNotes
   };
   set(ref(rtdb, "workshop/feedback"), {
     need: "display",
@@ -238,9 +246,35 @@ function getCurrentSlideHTML(){
 
     removeStuff(clone, "ul.unveillingList");
   };
+  
+  if(sectionShowed.classList.contains("stepped")){
+    // let x = 1;
+    clone.querySelectorAll("[data-step]").forEach(el => { //il faut enlever ceux qui sont 0 (que tu veux pas qui soient comptés)
+      // if (el.dataset.step == "") {
+      //   el.dataset.step = x;
+      // };
+      // x++
 
+      el.dataset.uuid = crypto.randomUUID();
+      el.setAttribute(
+        "onclick",
+        "makeThisAppear(this)"
+      );
+    });
+  };
 
   return clone.outerHTML;
+};
+
+function getCurrentSlideNotes(){
+  const template = sectionShowed.querySelector("template");
+  const clone = template.cloneNode(true);
+  return clone.innerHTML;
+};
+
+function makeThisAppear(data){
+  const el = document.querySelector(`[data-uuid="${data}"]`);
+  el?.classList.remove("invisible");
 };
 
 function removeStuff(endroit, element){
@@ -276,10 +310,20 @@ function fixImaging(){
 function stepsCreation(){
   let unorderedAllSteps = sectionShowed.querySelectorAll('[data-step]');
   //put them in order!
-  allSteps = Array.from(unorderedAllSteps).sort((a, b) => {
-    return Number(a.dataset.step) - Number(b.dataset.step);
-  });
-  stepCurrentIndex = 0;
+  if(sectionShowed.classList.contains("numberedStepped")){
+    allSteps = Array.from(unorderedAllSteps).sort((a, b) => {
+      return Number(a.dataset.step) - Number(b.dataset.step);
+    });
+  } else{
+    let x = 1;
+    unorderedAllSteps.forEach(el => {
+      el.dataset.step = x;
+      x++
+    });
+    allSteps = Array.from(unorderedAllSteps);
+  };
+  console.log(allSteps);
+  stepCurrentIndex = -1;
   stepCurrent = allSteps[stepCurrentIndex];
 };
 
@@ -508,13 +552,19 @@ function refreshControl(){
 
   let currentSlideHTML = getCurrentSlideHTML();
 
+  let currentSlideNotes = "";
+  if(sectionShowed.classList.contains("noted")){
+    currentSlideNotes = getCurrentSlideNotes();
+  };
+
   let refreshAll = {
     words: words,
     phrases: phrases,
     steps: stepButtonStates,
     slides: allSlides,
     current: currentSlide,
-    html: currentSlideHTML
+    html: currentSlideHTML,
+    notes: currentSlideNotes
   };
 
   set(ref(rtdb, "workshop/feedback"), {

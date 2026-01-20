@@ -195,8 +195,10 @@ const notes = document.querySelector("#notes");
 
 function notesFilling(html){
   notes.innerHTML = "";
-  notes.innerHTML = html;
-}
+  if(notes !== ""){
+    notes.innerHTML = html;
+  };
+};
 
 function diapoMainFilling(html){
   console.log(html);

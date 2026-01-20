@@ -148,6 +148,16 @@ function displaySection(sectionToShow){
     fixImaging();
   };
 
+  //currentSlide
+  let currentSlideInfo = getCurrentSlideInfo();
+
+  let currentSlideHTML = getCurrentSlideHTML();
+
+  let currentSlideNotes = "";
+  if(sectionShowed.classList.contains("noted")){
+    currentSlideNotes = getCurrentSlideNotes();
+  }; 
+
   //words
   let words = [];
   if(sectionShowed.classList.contains("wordCloud")){
@@ -165,18 +175,7 @@ function displaySection(sectionToShow){
     stepsCreation();
   };
   //stepsButton (whether sectionShowed is stepped or not)
-  let stepButtonStates = getStepButtonState();
-
-
-  //currentSlide
-  let currentSlideInfo = getCurrentSlideInfo();
-
-  let currentSlideHTML = getCurrentSlideHTML();
-
-  let currentSlideNotes = "";
-  if(sectionShowed.classList.contains("noted")){
-    currentSlideNotes = getCurrentSlideNotes();
-  };  
+  let stepButtonStates = getStepButtonState(); 
 
   let wholeDisplay = {
     words: words,
@@ -269,6 +268,7 @@ function getCurrentSlideHTML(){
 function getCurrentSlideNotes(){
   const template = sectionShowed.querySelector("template");
   const clone = template.cloneNode(true);
+  console.log(clone.innerHTML);
   return clone.innerHTML;
 };
 

@@ -118,6 +118,10 @@ section#time{
   display: none;
 }
 
+section#notes h1, section#notes h2, section#notes h3, section#notes p, section#notes h4, section#notes h5, section#notes h6{
+  margin: 0;
+}
+
 section#diapo{
   display: flex;
   flex-flow: column nowrap;

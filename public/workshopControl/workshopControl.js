@@ -204,6 +204,10 @@ function diapoMainFilling(html){
   console.log(html);
   diapoMain.innerHTML = "";
   diapoMain.innerHTML = html;
+  const cloudBoardTotal = diapoMain.querySelector("#cloudBoardTotal");
+  if(cloudBoardTotal){
+    cloudBoardTotal.remove();
+  };
 };
 
 

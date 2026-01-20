@@ -5,7 +5,7 @@
 import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, getDatabase, ref, push, update, onValue, remove } from "../../myFirebase.js";
 import i18n from "./i18n.js";
 
-let unknownStartDate = "2026-01-24"; //The day the "Not sure yet" section starts
+let unknownStartDate = "2026-02-15"; //The day the "Not sure yet" section starts
 
 let myEmail = "alexblade.23.49@gmail.com";
 

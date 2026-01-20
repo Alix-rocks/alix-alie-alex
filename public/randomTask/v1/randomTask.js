@@ -593,7 +593,7 @@ async function updateBooking(key, newStatus) {
 const newBookingAlert = document.querySelector("#newBookingAlert");
 const newBookingList = document.querySelector("#newBookingList");
 function updateInbox(){
-  if(auth.currentUser.email === "alexblade.23.49@gmail.com"){
+  if(userConnected && auth.currentUser.email === "alexblade.23.49@gmail.com"){
     console.log(bookingQueue);
     newBookingAlert.innerText = bookingQueue.length;
     if(!bookingQueue.length){ // bookingQueue.length == 0
@@ -3412,7 +3412,7 @@ function creatingCalendar(todo, home, classs){
   <div class="inDaySection" style="width: -webkit-fill-available; max-width: 280px;">
     <p style="margin-top: 10px;"><span>Deadline:  </span><input id="deadlineInput" type="date" value="${todo.deadline ? todo.deadline : ``}" /></p>
     <div id="deadlineWithDate" ${todo.deadline && todo.deadline !== "" ? `` : `class="displayNone"`}>
-      <input id="tuttoUltimoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.tutto ? `checked` : todo.tutto == false ? `` : `checked`} />
+      <input id="tuttoUltimoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.dlTutto ? `checked` : todo.dlTutto == false ? `` : `checked`} />
       <div class="calendarInsideMargin tuttoGiornoDiv">
         <p style="margin: 0;">A qualunque ora??!</p>
         <label for="tuttoUltimoGiornoInput" class="slideZone">
@@ -3564,6 +3564,7 @@ function calendarSave(todo){ //
   // the 3 of them (noDay, todoDay and recurringDay) can have time and buffer
   let inDaySection = document.querySelector('input[name="whatDay"]:checked ~ div.DaySection > div.inDaySection');
   todo.tutto = inDaySection.querySelector('input[type="checkbox"].tuttoGiornoInput').checked ? true : false;
+  console.log(todo.tutto);
   let primaBuffer = document.querySelector("#durationSelectPrima");
   let dopoBuffer = document.querySelector("#durationSelectDopo");
   todo.prima = primaBuffer.value ? primaBuffer.value : "00:00";
@@ -3577,6 +3578,7 @@ function calendarSave(todo){ //
     let dalle = inDaySection.querySelector('input[type="time"].dalle');
     if(dalle && dalle.value !== ""){
       todo.startTime = dalle.value;
+      console.log(todo.startTime);
     } else{
       delete todo.startTime;
       todo.tutto = true;
@@ -3584,6 +3586,7 @@ function calendarSave(todo){ //
     let alle = inDaySection.querySelector('input[type="time"].alle');
     if(alle && alle.value !== ""){
       todo.stopTime = alle.value;
+      console.log(todo.stopTime);
     } else{
       delete todo.stopTime;
     };

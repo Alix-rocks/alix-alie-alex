@@ -1,4 +1,4 @@
-import { rtdb, getDatabase, ref, set, onValue } from "../../myFirebase.js";
+import { rtdb, getDatabase, ref, set, onValue } from "/myFirebase.js";
 
 let landscapeMode;
 let screenHeight;

@@ -1,4 +1,4 @@
-import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "../../myFirebase.js";
+import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "/myFirebase.js";
 //console.log("salut!");
 //Check, si jamais t'utilise ça pour d'autre app, isole-le, comme myFirebase
 auth.languageCode = 'fr';
@@ -48,7 +48,7 @@ onAuthStateChanged(auth,(user) => {
     document.getElementById("scheduleTime").innerHTML = ``;
     getPlans();
   } else{
-    document.getElementById("displayName").innerText = "";
+    // document.getElementById("displayName").innerText = "";
     document.getElementById("scheduleTimeWhole").classList.replace("displayNone", "popupBackDG");
     document.getElementById("scheduleTime").innerHTML = `<h4>
       <span class="h3like">First thing's first...</span>
@@ -64,7 +64,7 @@ onAuthStateChanged(auth,(user) => {
 
 let steps;
 let myScheduleList = [];
-
+// let favoriteColor = "0";
 async function getPlans() {
   console.log(auth.currentUser.email);
   const plansQuery = collection(db, "plan", eMail, "myPlans");
@@ -103,6 +103,7 @@ async function getPlans() {
     };
     displaySteps();
   };
+  // document.querySelector("#color-picker").value = "10";
 };
 // getPlans();
 

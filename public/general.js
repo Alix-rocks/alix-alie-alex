@@ -105,3 +105,17 @@ function colorSlider() {
 }
 
 //Un jour on peut mettre tout ça dans un fichier jason au lieu que tout soit dans le javascript
+
+const header = document.querySelector("#site-header");
+if (header) {
+  fetch("/partials/header.html")
+    .then(res => res.text())
+    .then(html => header.innerHTML = html);
+};
+
+const footer = document.querySelector("#site-footer");
+if (footer) {
+  fetch("/partials/footer.html")
+    .then(res => res.text())
+    .then(html => footer.innerHTML = html);
+};

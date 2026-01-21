@@ -236,27 +236,3 @@ function MyNewRand() {
   return arrTS;
 }
 
-// WROTE love
-
-const coteForm = document.querySelector('#coteForm');
-coteForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  let timeNow = Timestamp.fromDate(new Date());
-  console.log(timeNow);
-  let coteText = document.querySelector('input[name=menuText]:checked').value;
-  if(cote > 0){
-    let comment = coteForm.comment.value.replace(/\n/g, '<br>');
-    addDoc(collection(db, "love"), {
-      text: coteText,
-      love: cote,
-      comment: comment,
-      time: timeNow
-    })
-      .then(() => {
-        coteForm.reset();
-        coteFormReset();
-        document.querySelector("#coteThanks").innerHTML = "Good dog!";
-      })
-  }
-});
-window.coteFormReset = coteFormReset;

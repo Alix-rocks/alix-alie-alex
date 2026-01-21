@@ -1,0 +1,16 @@
+<div id="switchSliderWhole">
+  <div class="wrapper">
+    <h6>See, that's how great a host I am;<br/>I even let you choose the color!</h6>
+    <input oninput="colorSlider()" id="color-picker" type="range" min="0" max="10" value="7">
+  </div>
+  <div onclick="switchMode()" id="switchModeSlider">
+    <div id="switchModeLight" class="typcn typcn-weather-sunny"></div>
+    <div id="switchModeDark" class="typcn typcn-weather-night"></div>
+      <div id="switchModeBall" class="ballDark"></div>
+      <div id="switchModeBallUnder" class="ballDark"></div>
+  </div>
+</div>
+<div class="bottomButtons">
+  <div class="bottomButton backTop" onclick="backTop()" title="Again! From the top!" id="backTopButton"><span
+      class="typcn typcn-chevron-right chevronTop"></span></div>
+</div>

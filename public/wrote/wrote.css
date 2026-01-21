@@ -1,0 +1,109 @@
+.menuTextLabel{
+  display: inline-block;
+  appearance: none;
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  border-bottom: 4px solid black;
+  border-right: 3px solid black;
+  border-radius: 5px;
+  padding: 3px 5px;
+  margin: 2px;
+  opacity: .8;
+  background: var(--tx-color);
+  color: #F2F3F4;
+}
+.menuTextLabel:hover{
+  cursor: pointer;
+  opacity: .7;
+}
+.menuText:checked + .menuTextLabel{
+  background: #000;
+}
+.textPageSelected{
+  display: block;
+}
+.menuTextSection{
+  display: flex;
+  margin:auto;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.textPage{
+  margin:0 10% 15% 5%;
+}
+.textPage hr{
+  border-color: var(--tx-color);
+}
+.boxStill{
+  text-align: center;
+  border: 2px solid;
+  border-radius: 5px;
+  padding: 5%;
+  width: calc(72.93px + 32.63vw);
+  margin: auto;
+  box-shadow: 5px 5px 5px rgb(128 0 128 / 60%);
+}
+#coteForm{
+  border: var(--tx-color) 1.5px solid; 
+  border-radius: 5px; 
+  padding: 10px;
+  width: fit-content;
+  margin: auto;
+  position: relative;
+}
+.coteHeartWhole{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  width: fit-content;
+}
+.coteHeartWhole > p{
+  margin: 0 15px 0 0;
+}
+#coteForm > p{
+  margin-bottom: 0;
+}
+#coteForm > textarea{
+  border: 1px solid var(--color-8);
+  background: var(--bg-color);
+  color: var(--tx-color);
+  padding: 5px;
+  border-radius: 5px;
+  width: 200px;
+  font-family: 'Nunito', sans-serif;
+  font-size: calc(15.53px + 0.19vw);
+  font-weight: 300;
+}
+#coteForm > textarea:focus{
+  outline: 1px solid rgba(255,255,255,.5);
+}
+#coteForm button{
+  display: block;
+  border-width: 1px 1px 4px 3px;
+  border-style: solid;
+  border-color: var(--tx-color);
+  border-radius: 5px;
+  padding: 5px 10px;
+  color: var(--tx-color);
+  background: var(--bg-color);
+  text-align: center;
+  width: fit-content;
+  font-family: 'Rubik Dirt', cursive;
+  font-size: calc(15.53px + 0.19vw);
+  line-height: 1.2em;
+  font-weight: 400;
+  margin-top: 5px;
+}
+#coteForm button:hover {
+  background: var(--color-4);
+  cursor: pointer;
+}
+.coteSubDiv{
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+#coteThanks{
+  margin: 0 0 0 10px;
+}

@@ -7,6 +7,12 @@
   --green-dark-30: rgba(15, 74, 0, .3);
   --green-medium-30: rgba(23, 113, 0, .3);
   --green-light-30: rgba(30, 150, 0, .3);
+  --purple-dark: rgb(64, 0, 63);
+  --purple-medium: rgb(96, 0, 97);
+  --purple-light: rgb(129, 0, 127);
+  --purple-dark-30: rgba(64, 0, 63, .3);
+  --purple-medium-30: rgba(96, 0, 97, .3);
+  --purple-light-30: rgba(129, 0, 127, .3);
   --vw: 100vw;
   --vh: 100vh;
   --wCBT: 100%;
@@ -34,6 +40,17 @@ section{
   height: 100%;
   display: flex;
   flex-flow: column nowrap;
+}
+.titleSlide{
+  justify-content: space-evenly;
+  align-items: center;
+  text-align: center;
+}
+.titleSlide h1{
+  font-size: 5rem;
+}
+.titleSlide h2{
+  font-size: 2rem;
 }
 .landscapeMode{
   height: 100%;

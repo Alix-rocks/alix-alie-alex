@@ -327,7 +327,6 @@ input.myRadio:checked + label span.myRadio{
   opacity: .4;
 }
 
-
 .selected{
   border-color: var(--selected-border);
   border-style: dashed;
@@ -357,6 +356,11 @@ input.myRadio:checked + label span.myRadio{
   align-items: center;
   justify-content: center;
   z-index: 3;
+}
+.modifying{
+  border-style: dashed;
+  border-width: 0 2px;
+  border-radius: 0;
 }
 .topIsTouching{
   border-top-width: 2px;

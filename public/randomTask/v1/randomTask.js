@@ -623,7 +623,9 @@ function toTIdeBQaC(thisOne){
     email: ${info.email}
     cell: ${info.cell}
     messengerName: ${info.messengerName}
-    whatsAppNumber: ${info.whatsAppNumber}`,
+    whatsAppNumber: ${info.whatsAppNumber}
+    yourAddress: ${info.yourAddress}
+    whereReal: ${info.whereReal}`,
     color: "0",
     icon: "fa-solid fa-hand-holding-heart",
     term: "showThing",

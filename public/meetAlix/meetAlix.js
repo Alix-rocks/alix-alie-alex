@@ -2,7 +2,7 @@
 // alix.rocks/meetAlix/?type=client
 // alix.rocks/meetAlix/?lang=en
 // alix.rocks/meetAlix/?lang=fr
-import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, getDatabase, ref, push, update, onValue, onChildChanged, remove } from "/myFirebase.js";
+import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, getDatabase, ref, get, push, update, onValue, onChildChanged, remove } from "/myFirebase.js";
 import i18n from "./i18n.js";
 
 let unknownStartDate = "2026-02-15"; //The day the "Not sure yet" section starts
@@ -180,7 +180,8 @@ const userSelection = {
   endRow: null,
   topIsTouching: false,
   bottomIsTouching: false,
-  submitted: false
+  status: "",
+  uuid: ""
 };
 
 
@@ -335,7 +336,7 @@ const fieldHandlers = {
       );
     });
   },
-
+// WE NEED TO ADD ONE FOR DATE TOO! THAT WILL CHANGE USERSELECTION AND USERMEETING!
   dalle(key) {
     console.log("dalle " + key + " " + inputs[key]);
     inputs[key].addEventListener("change", e => {
@@ -428,8 +429,9 @@ for (const key in formFields) {
 
 
 
-const storedBookings =
-      JSON.parse(localStorage.getItem("meetAlixBookings")) || [];
+// const storedBookings =
+//       JSON.parse(localStorage.getItem("meetAlixBookings")) || [];
+// //NOOOO We need to verify, at download, if the storedBookings is up to date according to the rtdb...
 
 (() => {
   if(localStorage.getItem("meetAlixUserSelection")){
@@ -443,7 +445,8 @@ const storedBookings =
       userSelection.col = tempUS.col;
       userSelection.topIsTouching = tempUS.topIsTouching;
       userSelection.bottomIsTouching = tempUS.bottomIsTouching;
-      userSelection.submitted = tempUS.submitted;
+      userSelection.status = tempUS.status;
+      userSelection.uuid = tempUS.uuid;
   } else {
     //resetUserSelection();
     localStorage.setItem("meetAlixUserSelection", JSON.stringify(userSelection));
@@ -549,7 +552,33 @@ onChildChanged(ref(rtdb, "meetAlix"), (snap) => {
   
 });
 
+const storedBookings = JSON.parse(
+  localStorage.getItem("meetAlixBookings") || "[]"
+);
 
+async function updateBookings() {
+  await Promise.all(
+    storedBookings.map(async book => {
+      const snap = await get(ref(rtdb, `meetAlix/${book.key}`));
+
+      if (!snap.exists()) {
+        book.status = "cancelled";
+        return;
+      };
+
+      const rtdbData = snap.val();
+      if (rtdbData.status !== book.status) {
+        book.status = rtdbData.status;
+      };
+    })
+  );
+
+  localStorage.setItem(
+    "meetAlixBookings",
+    JSON.stringify(storedBookings)
+  );
+}
+updateBookings();
 
 
 async function getMyBusies() {
@@ -816,8 +845,9 @@ function putDatesInWeek(date){
   if(userSelection.date !== null 
     && Dday <= userSelection.date && userSelection.date <= Sday 
     && userSelection.startSlot !== null 
-    && userSelection.endSlot !== null){
-    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="userMeeting selected${userSelection.topIsTouching ? `  topIsTouching` : ``}${userSelection.bottomIsTouching ? ` bottomIsTouching` : ``}" style="grid-column:${userSelection.col}; grid-row:${userSelection.startRow}/${userSelection.endRow};"></div>`);
+    && userSelection.endSlot !== null
+    && (userSelection.status == "" || userSelection.status == "selected")){
+    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div ${userSelection.uuid ? `data-uuid="${userSelection.uuid}"` : ``} class="userMeeting selected modifying${userSelection.topIsTouching ? `  topIsTouching` : ``}${userSelection.bottomIsTouching ? ` bottomIsTouching` : ``}" style="grid-column:${userSelection.col}; grid-row:${userSelection.startRow}/${userSelection.endRow};"></div>`);
     updateSelectedTime();
     formContainer.classList.remove("expanded");
   }; // add an other one for the confirmed ones
@@ -864,8 +894,8 @@ function putShowsInWeek() {
   if(!theirThisWeekBookings.length) return
   theirThisWeekBookings.forEach(book => {
     createWeeklyBook(book);
-    updateLegend(book.status);
   });
+  updateLegend();
 };
 
 function createWeeklyshow(busy){
@@ -878,16 +908,24 @@ function createWeeklyshow(busy){
 function createWeeklyBook(book){
   document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div 
     data-bookingkey="${book.key}" 
-    onclick="openForm(this)"
-    class="userMeeting ${book.status}${book.event.topIsTouching ? `  topIsTouching` : ``}${book.event.bottomIsTouching ? ` bottomIsTouching` : ``}" 
+    data-status="${book.status}"
+    onclick="openForm(this)" 
+    class="userMeeting ${book.status}${book.event.topIsTouching ? ` topIsTouching` : ``}${book.event.bottomIsTouching ? ` bottomIsTouching` : ``}" 
     style="grid-column:${book.event.col}; grid-row:${book.event.startRow}/${book.event.endRow};">
       ${book.status == "cancelled" ? `<span class="iconBtn" onclick="trashCancelled(this)"><i class="fa-regular fa-trash-can"></i></span>` : ``}
   </div>`);
 };
 
-function updateLegend(status){
-  console.log(status);
-  document.querySelector(`#${status}Legend`).classList.remove("displayNone");
+function updateLegend(){
+  document.querySelectorAll(".userLegend").forEach(leg => {
+    leg.classList.add("displayNone");
+  });
+  container.querySelectorAll(".userMeeting").forEach(book => {
+    const status = book.dataset.status;
+    if(status){
+      document.querySelector(`#${status}Legend`).classList.remove("displayNone");
+    };
+  });
 };
 
 function trashCancelled(thisOne){ //That is when they click on the trash button in the cancelled event in the calendar (see userTrashMeeting for when they click the trash button from the formContainer)
@@ -1312,6 +1350,8 @@ function addMe(thisOne) {
   userSelection.col = `col-${selectedWeeklyItem.col}`;
   userSelection.topIsTouching = tempSelection.topIsTouching; 
   userSelection.bottomIsTouching = tempSelection.bottomIsTouching;
+  userSelection.uuid = tempSelection.uuid == "" ? crypto.randomUUID() : tempSelection.uuid;
+  userSelection.status = formState.key ? getBooking(formState.key).status : "selected";
   updateSelectedTime();
   updateUserMeeting();
   formContainer.classList.remove("expanded"); // formContainer is technically already not expanded
@@ -1326,20 +1366,23 @@ function closeTheForm(){
 };
 window.closeTheForm = closeTheForm;
 
-function trashUserMeeting(thisOne){
-  let bookingKey = thisOne.parentElement.parentElement.dataset.bookingkey;
-  // removing the userMeeting from the calendar
-  let userMeeting = container.querySelector(`[data-bookingkey="${bookingKey}"]`);
-  userMeeting.remove();
-  // removing it from storedBookings
-  storedBookings = storedBookings.filter(
-    booking => booking.key !== bookingKey
-  ); // or, more acuratly, keeps all the booking that doesn't have that bookingKey
-  // const bookingIndex = storedBookings.findIndex(book => book.key == bookingKey);
-  // storedBookings.splice(bookingIndex, 1);
-  localStorage.meetAlixBookings = JSON.stringify(storedBookings);
-  // removing it from rtdb (if it's still there)
-  trashBookingInRTDB(bookingKey);
+function trashUserMeeting(){
+  if(!formState.key){ // means it's a selected!
+    container.querySelector(".selected").remove(); //or use uuid
+  } else{
+    const bookingKey = formState.key;
+    // removing the userMeeting from the calendar
+    container.querySelector(`[data-bookingkey="${bookingKey}"]`).remove();
+    // removing it from storedBookings
+    storedBookings.filter(
+      booking => booking.key !== bookingKey
+    ); // or, more acuratly, keeps all the booking that doesn't have that bookingKey
+    // const bookingIndex = storedBookings.findIndex(book => book.key == bookingKey);
+    // storedBookings.splice(bookingIndex, 1);
+    localStorage.meetAlixBookings = JSON.stringify(storedBookings);
+    // removing it from rtdb (if it's still there)
+    trashBookingInRTDB(bookingKey);
+  }; 
 
   // reset everything
   resetUserSelection();
@@ -1358,12 +1401,26 @@ async function trashBookingInRTDB(bookingKey){
   };
 };
 
-function updateUserMeeting(){
-  container.querySelectorAll(".userMeeting.selected").forEach(we => {
-    we.remove();
-  });
+function updateUserMeeting(){ // if it's a pending that we are modifying, it should look like it (yellow but with dashed borders!)
+  console.log(formState);
+  let currentUserMeeting = formState.key && formState.key !== "" ? container.querySelector(`[data-bookingkey="${formState.key}"]`) : container.querySelector(`[data-uuid="${userSelection.uuid}"]`); // depending if we're updating a userMeeting or an existing booking
+  console.log(currentUserMeeting);
+  // let currentUserMeeting = container.querySelector(`[data-uuid="${userSelection.uuid}"]`);
+  console.log("container:", container);
+console.log("uuid:", userSelection.uuid);
+console.log(
+  "found:",
+  container.querySelectorAll(
+    `[data-uuid="${CSS.escape(userSelection.uuid)}" ]`
+  )
+);
+
+  // console.log(currentUserMeeting);
+  if(currentUserMeeting){currentUserMeeting.remove();};
+
   if(userSelection.date !== null && userSelection.startSlot !== null && userSelection.endSlot !== null){
-    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="userMeeting selected${userSelection.topIsTouching ? `  topIsTouching` : ``}${userSelection.bottomIsTouching ? ` bottomIsTouching` : ``}" style="grid-column:${userSelection.col}; grid-row:${userSelection.startRow}/${userSelection.endRow};"></div>`);
+    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div 
+      ${formState.key ? `data-bookingkey="${formState.key}"` : ``} data-status="${userSelection.status}" ${userSelection.uuid ? `data-uuid="${userSelection.uuid}"` : ``} class="userMeeting ${!formState.key ? `selected` : `${userSelection.status}`} modifying${userSelection.topIsTouching ? `  topIsTouching` : ``}${userSelection.bottomIsTouching ? ` bottomIsTouching` : ``}" style="grid-column:${userSelection.col}; grid-row:${userSelection.startRow}/${userSelection.endRow};"></div>`);
   };
 };
 
@@ -1377,7 +1434,8 @@ function resetUserSelection(){
   userSelection.col = null;
   userSelection.topIsTouching = false;
   userSelection.bottomIsTouching = false;
-  userSelection.submitted = false;
+  userSelection.status = "";
+  userSelection.uuid = "";
 };
 function resetFormState() {
   Object.assign(
@@ -1386,6 +1444,7 @@ function resetFormState() {
       Object.keys(formFields).map(key => [key, ""])
     )
   );
+  delete formState.key;
 };
 // That code (up) basically does this (down): 
 // function resetFormState(){ 
@@ -1507,14 +1566,28 @@ function updateSelectedTime(){
   };
 };
 
+function getBooking(bookingKey){
+  return storedBookings.find((book) => book.key == bookingKey);
+};
+
 function openForm(thisOne){
   console.log("openForm");
   const book = thisOne;
   console.log(book);
   const bookingKey = book.dataset.bookingkey;
   console.log(bookingKey);
+  // form.dataset.bookingkey = bookingKey;
   const booking = storedBookings.find((book) => book.key == bookingKey);
   console.log(booking);
+
+  // Do we want to update userSelection too?!
+  Object.assign(userSelection, structuredClone(booking.event));
+  userSelection.status = booking.status;
+  // In case there is already a userMeeting.selected, we need it removed
+  container.querySelectorAll(".userMeeting.selected").forEach(we => {
+    we.remove();
+  });
+
   //update formState
   Object.assign(formState, structuredClone(booking.form));
   // That code (up) basically does this (down): (but it creates a deep copy/clone instead of sharing reference (in case of nested objects), so I get two notebook on the table instead of one with two post-its which would have been Object.assign(formState, booking.form);.)
@@ -1534,10 +1607,20 @@ function openForm(thisOne){
   //Add the bookingKey to formState
   formState.key = bookingKey;
 
+  console.log(formState);
   //Fill up the form
   for (const key in inputs) {
     if (formState[key] !== undefined) {
-      inputs[key].value = formState[key];
+      // console.log(`${inputs[key]} : ${inputs[key].value}`);
+      // console.log(formState[key]);
+      if(inputs[key] instanceof NodeList){
+        
+        inputs[key].forEach(radio => {
+          radio.checked = radio.value == formState[key] ? true : false;
+        });
+      } else{
+       inputs[key].value = formState[key];
+      };
     };
   };
 // That code (up) basically does this (down):
@@ -1554,12 +1637,13 @@ function openForm(thisOne){
   // whereRealInput.value = booking.form.whereReal;
   // whyInput.value = booking.form.why;
 
-  selectedTime.innerHTML = "";
+  //selectedTime.innerHTML = "";
+  updateSelectedTime(); // since we have userSelection, and, anyway, if the user changes time and date, it will update SelectedTime, so might as well already have it!
   submitBtn.innerText = "Save";
-  formContainer.classList.remove("displayNone");
+  //formContainer.classList.remove("displayNone"); //already in updateSelectedTime()
   formContainer.classList.add("expanded");
-
-
+  
+  
 };
 window.openForm = openForm;
 
@@ -1611,7 +1695,10 @@ form.addEventListener("submit", async (e) => {
   // const formState = Object.fromEntries(formData.entries());
 
   try {
+    let thisBooking = {};
+    let thisUserMeeting = "";
     // --- 2. Check if the booking already exists
+    console.log(formState.key);
     if(formState.key){
       // find the booking index in storedBooking
       const bookingIndex = storedBookings.findIndex(book => book.key == formState.key);
@@ -1624,9 +1711,12 @@ form.addEventListener("submit", async (e) => {
         // on update juste event (userSelection), form (formState) (what should we do about formState.key?), and timestamp
       // update the booking in rtdb and catch
       await update(ref(rtdb, `meetAlix/${formState.key}`), {
+        status: "pending",
         data: structuredClone(formState),
         timestamp: Date.now()
       });
+      thisBooking = storedBookings[bookingIndex];
+      thisUserMeeting = container.querySelector(`[data-bookingkey="${formState.key}"]`);
     } else{
       // --- 3. Push to RTDB and get the reference ---
       const newBookingRef = await push(ref(rtdb, "meetAlix"), {
@@ -1637,9 +1727,11 @@ form.addEventListener("submit", async (e) => {
       });
 
       const bookingKey = newBookingRef.key; // 🔑 THIS is the magic
+      console.log(bookingKey);
+      userSelection.status = "pending";
 
       // --- 4. Store booking locally ---
-      const newBooking = {
+      thisBooking = {
         key: bookingKey,
         status: "pending",
         type: formType,
@@ -1647,9 +1739,10 @@ form.addEventListener("submit", async (e) => {
         form: structuredClone(formState),
         timestamp: Date.now()
       };
-      storedBookings.push(newBooking);
+      storedBookings.push(thisBooking);
+      // thisUserMeeting = container.querySelector(".userMeeting.selected");
+      thisUserMeeting = container.querySelector(`[data-uuid="${userSelection.uuid}"]`);
     };
-    
 
     localStorage.setItem(
       "meetAlixBookings",
@@ -1660,13 +1753,14 @@ form.addEventListener("submit", async (e) => {
     // Show confirmation message
     messageBox.innerHTML = confirmMessage;
 
-    // Remove userMeeting selected
-    container.querySelector(".userMeeting.selected").remove();
+    // Remove userMeeting
+    console.log(thisUserMeeting);
+    thisUserMeeting.remove();
 
     // and create a new one from storedBooking
-    createWeeklyBook(newBooking);
+    createWeeklyBook(thisBooking);
     // add the proper legend if it isn't already there
-    updateLegend(newBooking.status);
+    updateLegend();
   
 
     // Erase and remove the form

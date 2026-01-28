@@ -517,11 +517,11 @@
   <label id="fullScreenLabel" for="fullScreenCB">GO!</label>
 <!-- <script type="module" src="workshop.js"></script> -->
  <script type="module">
-  import { VERSION } from "../testVersion.js";
+  import { VERSION } from "/testVersion.js";
 
   const script = document.createElement("script");
   script.type = "module";
-  script.src = `../workshopControl/workshop.js?v=${VERSION}`;
+  script.src = `/workshopControl/workshop.js?v=${VERSION}`;
   document.head.appendChild(script);
 
   const style = document.createElement("link");

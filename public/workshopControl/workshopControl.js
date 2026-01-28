@@ -228,7 +228,7 @@ function currentSlideSetting(info){
   // diapoTitle.innerHTML = `<span class="diapoTitleTitre">${info.titre}</span><span class="diapoTitleType">${info.type}</span>`;
 
   if(info?.words?.length > 0) {
-    wordDropdownCreation(info.words); //array
+    wordDropdownCreation(); //array
   };
   if(info?.phrases?.length > 0) {
     toUnveilDropdownCreation(info.phrases); //array of objects
@@ -328,7 +328,7 @@ function stepButtonFixing(info){
   document.querySelector("#diapoActionsPrev").disabled = prevState ? false : true;
 };
 
-function wordDropdownCreation(words){
+function wordDropdownCreation(){
   // let wordDropdownOptions = words.map(group => {
   //   let title = group[0];
   //   let options = group.map((word, idx) => {

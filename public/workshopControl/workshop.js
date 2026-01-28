@@ -66,7 +66,7 @@ function handleCommand(action, data){
       stepPrev();
       break
     case "rain":
-      wordRain(data);
+      wordCheck(data); //check if 1 word or an array... then call wordRain once or multiple times
       break;
     case "unveilIt":
       unveilIt(data);
@@ -210,12 +210,16 @@ function getCurrentSlideHTML(){
 
     let wordDropdownOptions = words.map(group => {
       let title = group[0];
+      let allOfThem = [];
       let options = group.map((word, idx) => {
         if(idx !== 0){
-          return `<option value="${word.match(emojiRegex) ? word.match(emojiRegex) : word.replaceAll(`"`, `'`)}">${word}</option>`;
+          wordValue = word.match(emojiRegex) ? word.match(emojiRegex) : word.replaceAll(`"`, `'`);
+          allOfThem.push(wordValue);
+          return `<option value="${wordValue}">${word}</option>`;
         };
       }).join("");
       return `<optgroup label="${title}">
+        <option value="${allOfThem}">*** ${title}</option>
         ${options}
       </optgroup>`;
     }).join("");
@@ -465,11 +469,30 @@ function multiShuffle(arr) {
     result.push(...shuffled);
   }
   return result;
-}
+};
+
+function wordCheck(word){ //check if 1 word or an array... then call wordRain once or multiple times
+  console.log(word);
+  if (Array.isArray(word)) {
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    async function displayWords() {
+      for (const part of word) {
+        wordRain(part); // Call your existing display code here
+        await sleep(1000);         // Wait 1 second before the next loop
+      };
+    };
+    displayWords();
+  } else if (typeof word === 'string') {
+    wordRain(word);
+  };
+};
+
 
 
 function wordRain(word){ 
   console.log(word);
+  //check if 1 word or an array...
   xIndex++; 
   let emoji = word.match(emojiRegex) ? true : false;
   let thisKase = sectionShowed.querySelector("#" + kasesIds[xIndex]);

@@ -227,11 +227,11 @@ function currentSlideSetting(info){
   
   // diapoTitle.innerHTML = `<span class="diapoTitleTitre">${info.titre}</span><span class="diapoTitleType">${info.type}</span>`;
 
-  if(info?.words?.length > 0) {
+  if(info.words) {
     wordDropdownCreation(); //array
   };
-  if(info?.phrases?.length > 0) {
-    toUnveilDropdownCreation(info.phrases); //array of objects
+  if(info.phrases) {
+    toUnveilDropdownCreation(); //array of objects
   };
 
   document.querySelector(`#mini${info.num}`).checked = true;
@@ -355,10 +355,10 @@ function wordDropdownCreation(){
   activateSelector(action);
 
   activateInputAdder(action);
-  
+  console.log("words == true; everything's activated");
 };
 
-function toUnveilDropdownCreation(phrases){
+function toUnveilDropdownCreation(){
   // let phrasesDropdownOptions = phrases.map((sentence) => {
   //   return `<option value="${sentence.code}">${sentence.phrase}</option>`;
   // }).join("");

@@ -159,16 +159,16 @@ function displaySection(sectionToShow){
   }; 
 
   //words
-  let words = [];
+  let words = false;
   if(sectionShowed.classList.contains("wordCloud")){
     wordCloudCreation();
-    words = getWords();
+    words = true;
   };
 
   //toUnveil
-  let phrases = [];
+  let phrases = false;
   if(sectionShowed.classList.contains("toBeUnveilled")){
-    phrases = getPhrases();
+    phrases = true;
   };
 
   if(sectionShowed.classList.contains("stepped")){
@@ -213,13 +213,14 @@ function getCurrentSlideHTML(){
       let allOfThem = [];
       let options = group.map((word, idx) => {
         if(idx !== 0){
-          wordValue = word.match(emojiRegex) ? word.match(emojiRegex) : word.replaceAll(`"`, `'`);
+          let wordValue = word.match(emojiRegex) ? word.match(emojiRegex) : word.replaceAll(`"`, `'`);
           allOfThem.push(wordValue);
           return `<option value="${wordValue}">${word}</option>`;
         };
       }).join("");
+      const allOfThemEncoded = encodeURIComponent(JSON.stringify(allOfThem));
       return `<optgroup label="${title}">
-        <option value="${allOfThem}">*** ${title}</option>
+        <option value="${allOfThemEncoded}">*** ${title}</option>
         ${options}
       </optgroup>`;
     }).join("");
@@ -471,22 +472,33 @@ function multiShuffle(arr) {
   return result;
 };
 
-function wordCheck(word){ //check if 1 word or an array... then call wordRain once or multiple times
-  console.log(word);
-  if (Array.isArray(word)) {
-    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+function wordCheck(word) {
 
-    async function displayWords() {
-      for (const part of word) {
-        wordRain(part); // Call your existing display code here
-        await sleep(1000);         // Wait 1 second before the next loop
-      };
+  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+  async function displayWords(words) {
+    for (const part of words) {
+      wordRain(part);
+      await sleep(1000);
     };
-    displayWords();
-  } else if (typeof word === 'string') {
-    wordRain(word);
   };
+
+  try {
+    const decoded = decodeURIComponent(word);
+    const json = JSON.parse(decoded);
+
+    if (Array.isArray(json)) {
+      displayWords(json);
+      return;
+    };
+  } catch {
+    // not JSON → fall through
+  };
+
+  // Default case: single word
+  wordRain(word);
 };
+
 
 
 
@@ -556,15 +568,15 @@ async function letsFitIt(element) {
 };
 
 function refreshControl(){
-  let words = [];
+  let words = false;
   if(sectionShowed.classList.contains("wordCloud")){
-    words = getWords(); //array of array
+    words = true;
   };
 
   //toUnveil
-  let phrases = [];
+  let phrases = false;
   if(sectionShowed.classList.contains("toBeUnveilled")){
-    phrases = getPhrases();
+    phrases = true;
   };
 
   let stepButtonStates = getStepButtonState(); //object

@@ -153,10 +153,11 @@ function handleFeedback(need, info){
     case "display":
       console.log("DISPLAY");
       console.log(info);
-      currentSlideSetting(info.current); //object
       stepButtonFixing(info.steps); //object
       notesFilling(info.notes);
       diapoMainFilling(info.html);
+      currentSlideSetting(info.current); //object
+
       // if(info?.words?.length > 0) {
       //   wordDropdownCreation(info.words); //array
       // };  
@@ -168,10 +169,11 @@ function handleFeedback(need, info){
       console.log("REFRESH");
       console.log(info);
       allSlidesCreation(info.slides); //array of objects
-      currentSlideSetting(info.current); //object
       stepButtonFixing(info.steps); //object
       notesFilling(info.notes);
       diapoMainFilling(info.html);
+      currentSlideSetting(info.current); //object
+
       // if(info?.words?.length > 0) {
       //   wordDropdownCreation(info.words); //array
       // };

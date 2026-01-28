@@ -158,12 +158,12 @@ function handleFeedback(need, info){
       diapoMainFilling(info.html);
       currentSlideSetting(info.current); //object
 
-      // if(info?.words?.length > 0) {
-      //   wordDropdownCreation(info.words); //array
-      // };  
-      // if(info?.phrases?.length > 0) {
-      //   toUnveilDropdownCreation(info.phrases); //array of objects
-      // };    
+      if(info.words) {
+        wordDropdownCreation(); //array
+      };
+      if(info.phrases) {
+        toUnveilDropdownCreation(); //array of objects
+      };   
       break;
     case "refresh":
       console.log("REFRESH");
@@ -174,12 +174,12 @@ function handleFeedback(need, info){
       diapoMainFilling(info.html);
       currentSlideSetting(info.current); //object
 
-      // if(info?.words?.length > 0) {
-      //   wordDropdownCreation(info.words); //array
-      // };
-      // if(info?.phrases?.length > 0) {
-      //   toUnveilDropdownCreation(info.phrases); //array of objects
-      // };
+      if(info.words) {
+        wordDropdownCreation(); //array
+      };
+      if(info.phrases) {
+        toUnveilDropdownCreation(); //array of objects
+      };
       break;
     default:
       console.log(need, info);
@@ -225,16 +225,6 @@ window.makeThisAppear = function (el) {
 
 
 function currentSlideSetting(info){
-  // diapoMain.innerHTML = "";
-  
-  // diapoTitle.innerHTML = `<span class="diapoTitleTitre">${info.titre}</span><span class="diapoTitleType">${info.type}</span>`;
-
-  if(info.words) {
-    wordDropdownCreation(); //array
-  };
-  if(info.phrases) {
-    toUnveilDropdownCreation(); //array of objects
-  };
 
   document.querySelector(`#mini${info.num}`).checked = true;
   centerActiveMiniSlide();

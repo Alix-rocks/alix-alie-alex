@@ -213,7 +213,8 @@ function getCurrentSlideHTML(){
       let allOfThem = [];
       let options = group.map((word, idx) => {
         if(idx !== 0){
-          let wordValue = word.match(emojiRegex) ? word.match(emojiRegex) : word.replaceAll(`"`, `'`);
+          let match = word.match(emojiRegex);
+          let wordValue = match ? match[0] : word.replaceAll(`"`, `'`);
           allOfThem.push(wordValue);
           return `<option value="${wordValue}">${word}</option>`;
         };

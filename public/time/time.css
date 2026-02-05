@@ -55,7 +55,7 @@
 }
 
 #togglePlans:checked~div#mySchedules {
-  max-height: 100vh;
+  max-height: fit-content;
   transition: max-height .5s ease-in;
 }
 

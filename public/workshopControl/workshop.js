@@ -127,7 +127,7 @@ function sendAllSlides(allSlides){
 
 function displaySection(sectionToShow){
   allSteps = null;
-  stepCurrentIndex = 0;
+  stepCurrentIndex = -1;
   stepCurrent = null;
   kasesIds = [];
   xIndex = -1;
@@ -251,6 +251,12 @@ function getCurrentSlideHTML(){
 
     removeStuff(clone, "ul.unveillingList");
   };
+
+  if(sectionShowed.classList.contains("imaging")){
+    let image = clone.querySelector("img");
+    image.style.width = "20%";
+    image.style.height = "auto";
+  };
   
   if(sectionShowed.classList.contains("stepped")){
     // let x = 1;
@@ -259,6 +265,9 @@ function getCurrentSlideHTML(){
       //   el.dataset.step = x;
       // };
       // x++
+      // if(el.dataset.group){
+
+      // }
 
       el.dataset.uuid = crypto.randomUUID();
       el.setAttribute(
@@ -266,6 +275,10 @@ function getCurrentSlideHTML(){
         "makeThisAppear(this)"
       );
     });
+  };
+
+  if(sectionShowed.classList.contains("noted") || clone.querySelector("template")){
+    clone.querySelector("template").remove();
   };
 
   return clone.outerHTML;
@@ -344,7 +357,7 @@ function stepNext(){
 };
 
 function stepPrev(){
-  if(stepCurrentIndex !== 0){
+  if(stepCurrentIndex > -1){
     stepCurrent.classList.add("invisible");
     stepCurrentIndex = stepCurrentIndex - 1;
     stepCurrent = allSteps[stepCurrentIndex];
@@ -355,7 +368,7 @@ function stepPrev(){
 
 function getStepButtonState(){
   let nextState = allSteps == null ? false : stepCurrentIndex <= allSteps.length - 2 ? true : false;
-  let prevState = allSteps == null ? false : stepCurrentIndex !== 0 ? true : false;
+  let prevState = allSteps == null ? false : stepCurrentIndex !== -1 ? true : false;
   let stepButtonStates = {
     next: nextState,
     prev: prevState

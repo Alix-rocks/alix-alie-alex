@@ -47,10 +47,13 @@ section{
   text-align: center;
 }
 .titleSlide h1{
-  font-size: 5rem;
+  font-family: 'Caveat', sans-serif;
+  font-size: 8rem;
+  color: var(--green-medium);
 }
 .titleSlide h2{
-  font-size: 2rem;
+  font-size: 2.5rem;
+  color: var(--green-dark);
 }
 .landscapeMode{
   height: 100%;

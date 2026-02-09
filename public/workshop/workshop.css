@@ -63,6 +63,43 @@ section{
   width: 100%;
   height: auto;
 }
+.outsideGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 1rem;
+
+  width: 100%;
+  margin: auto;
+}
+
+.insideGrid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 3rem;
+  aspect-ratio: 0 / 1; /* 1 / 1 = perfect squares */
+}
+
+.insideGrid.centerGrid {
+  font-size: 4rem;
+  font-weight: 900;
+  font-family: 'Nosifer';
+  
+  grid-column: 2;
+  grid-row: 2;
+
+  background: rgba(0,0,0,0.05);
+  border-radius: 50px;
+  padding: 1.5rem;
+  height: 6rem;
+
+  align-self: center;
+
+  /* transform: scale(1.4); makes it bigger without breaking grid */
+}
+
 
 h1{
   font-family: 'Imprima', sans-serif;

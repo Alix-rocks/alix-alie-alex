@@ -13,6 +13,16 @@
 NOTE: For a website, you want to use .woff2 files only, ideally
 */
 
+/* More cool fonts (creepy style) :
+  -> Nosifer (dripping blood)
+  -> Creepster (vintage horror melting)
+  -> Eater (corrosive, infected look)
+  -> Butcherman
+  -> Metal Mania
+
+
+*/
+
 /* nunito-regular - latin */
 @font-face {
   font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
@@ -236,4 +246,13 @@ NOTE: For a website, you want to use .woff2 files only, ideally
   font-style: normal;
   font-weight: 700;
   src: url('/@Fonts&Icons/fonts/kalam/kalam-v18-latin-700.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* nosifer-regular - latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Nosifer';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/@Fonts&Icons/fonts/nosifer/nosifer-v23-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }

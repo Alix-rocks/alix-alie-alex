@@ -401,8 +401,9 @@ input.myRadio:checked + label span.myRadio{
 #messageBox{
   position: fixed;
   top: 15px;
+  left: 8px;
+  right: 8px;
   z-index: 25;
-  width: 100%;
   display: flex;
   justify-content: center;
 }

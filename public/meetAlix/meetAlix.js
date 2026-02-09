@@ -2,6 +2,8 @@
 // alix.rocks/meetAlix/?type=client
 // alix.rocks/meetAlix/?lang=en
 // alix.rocks/meetAlix/?lang=fr
+// alix.rocks/meetAlix/?type=friend&lang=en
+
 import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, getDatabase, ref, get, push, update, onValue, onChildChanged, remove } from "/myFirebase.js";
 import i18n from "./i18n.js";
 
@@ -12,6 +14,7 @@ let myEmail = "alexblade.23.49@gmail.com";
 const params = new URLSearchParams(window.location.search);
 
 const formType = params.get("type") || "default";
+
 console.log(window.location.href);
 console.log(window.location.search);
 
@@ -40,14 +43,18 @@ const formConfigs = {
 const config = formConfigs[formType];
 console.log(config);
 
+const type = params.get("type") || "default";
+console.log(type);
 const lang =
-  params.get("lang") ||
-  navigator.language.slice(0, 2) ||
-  "en";
+  params.get("lang") ? params.get("lang") : navigator.language.slice(0, 2) === "fr" ? "fr" : "en";
+  console.log(lang);
 
 function t(key, vars = {}) {
-  let text = i18n[lang]?.[key] || i18n.en[key] || key;
-
+  let text =
+    i18n[type]?.[lang]?.[key] ??
+    i18n.client.en[key] ??
+    key;
+  console.log(text);
   for (const v in vars) {
     text = text.replaceAll(`{${v}}`, vars[v]);
   };
@@ -58,7 +65,14 @@ function t(key, vars = {}) {
 function translatePage() {
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const key = el.dataset.i18n;
-    el.innerHTML = t(key);
+    const text = t(key);
+
+    if (text === "") {
+      el.style.display = "none";
+    } else {
+      el.innerHTML = text;
+      el.style.display = "";
+    };
   });
 };
 translatePage();
@@ -158,7 +172,7 @@ console.log(allTheEdges);
 const container = document.querySelector(".weeklyContainer");
 const mealLegend = document.querySelector("#mealLegend");
 mealLegend.style.display = config.meal ? "flex" : "none";
-const formContainer = document.querySelector(config.form);
+const formContainer = document.querySelector(".formContainer");  //config.form
 const form = formContainer.querySelector("form");
 const selectedTime = formContainer.querySelector(".selectedTime");
 const handle = formContainer.querySelector(".handle");
@@ -633,7 +647,21 @@ let todayWholeDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(tod
 
 function getWeeklyCalendar(){
   let arrayItem = [];
-  let rowYear = `<div class="weeklyItem weeklyTitle" style="grid-row:1; border-bottom-width: 1px;"><button class="weeklyBtn" id="weekBackward" style="float: left; border-radius: 2px 5px 5px 0;"><span class="typcn typcn-media-play-reverse"></span></button><span id="weeklyYearSpan">${year}</span><button class="weeklyBtn" id="weekForward" style="float: right; border-radius: 5px 2px 0 5px;"><span class="typcn typcn-media-play"></span></button></div>`;
+  let rowYear = `<div class="weeklyItem weeklyTitle" style="grid-row:1; border-bottom-width: 1px;">
+    <button class="weeklyBtn" id="weekBackward" style="float: left; border-radius: 2px 5px 5px 0;">
+      <span class="typcn typcn-media-play-reverse"></span>
+    </button>
+    <button class="weeklyBtn backToWeeklyTodayBtn displayNone" onclick="backToWeeklyToday()">
+      <i class="fa-solid fa-calendar-day" style="font-size:16px;"></i>
+    </button>
+    <span id="weeklyYearSpan">${year}</span>
+    <button class="weeklyBtn backToWeeklyTodayBtn displayNone" onclick="backToWeeklyToday()">
+      <i class="fa-solid fa-calendar-day" style="font-size:16px;"></i>
+    </button>
+    <button class="weeklyBtn" id="weekForward" style="float: right; border-radius: 5px 2px 0 5px;">
+      <span class="typcn typcn-media-play"></span>
+    </button>
+  </div>`;
   let rowMonth = `<div class="weeklyItem weeklyTitle" style="grid-row:2; border-bottom-width: 2px;"><span id="weeklyMonthSpan">${monthName}</span></div>`;
   arrayItem.push(rowYear, rowMonth);
   let myDay = 11;
@@ -805,8 +833,14 @@ function putDatesInWeek(date){
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", nowArea);
     document.querySelector(`[data-dayindex="${weeksDayArray[dayIdx].day}"]`).classList.add("todayDayArea");
     document.querySelector("#weekBackward").classList.add("invisible");
+    document.querySelectorAll(".backToWeeklyTodayBtn").forEach(btn => {
+      btn.classList.add("displayNone");
+    });
   } else{
     document.querySelector("#weekBackward").classList.remove("invisible");
+    document.querySelectorAll(".backToWeeklyTodayBtn").forEach(btn => {
+      btn.classList.remove("displayNone");
+    });
   };
   //updateSleepAreas();
 
@@ -853,7 +887,18 @@ function putDatesInWeek(date){
   }; // add an other one for the confirmed ones
 };
 
-
+function backToWeeklyToday(){
+  document.querySelectorAll(".backToWeeklyTodayBtn").forEach(btn => {
+    btn.classList.add("displayNone");
+  });
+  eraseWeekArea();
+  eraseWeekEvent();
+  let date = new Date();
+  let dayIdx = date.getDay();
+  date.setDate(date.getDate() - dayIdx);
+  putDatesInWeek(date);
+};
+window.backToWeeklyToday = backToWeeklyToday;
 
 
 
@@ -1394,10 +1439,17 @@ window.trashUserMeeting = trashUserMeeting;
 async function trashBookingInRTDB(bookingKey){
   try {
     await remove(ref(rtdb, `meetAlix/${bookingKey}`));
-    messageBox.innerHTML = confirmTrashMessage;
+    const keyTrashConfirm = "message_trash_confirm";
+    const textTrashConfirm = t(keyTrashConfirm);
+    messageBox.innerHTML = textTrashConfirm;
+    updateLegend();
+    //messageBox.innerHTML = confirmTrashMessage;
   } catch (err) {
     console.error("Failed to delete booking", err);
-    messageBox.innerHTML = errorMessage;
+    const keyError = "message_error";
+    const textError = t(keyError);
+    messageBox.innerHTML = textError;
+    //messageBox.innerHTML = errorMessage;
   };
 };
 
@@ -1655,7 +1707,7 @@ const waitingMessage = `<div id="waitingMessage" class="message">
     <h2>Wait For It…</h2>
     <span class="typcn typcn-wine" style="font-size: 50px; line-height: 1em;"></span>
     <h6 style="margin-top: 0.5em; margin-bottom: 2em;">Like an hourglass<br />but quicker</h6>
-  </div>`;
+  </div>`; //That would just be the key... then we do const text = t(key); and messageBox.innerHTML = text;
 const confirmMessage = `<div id="confirmMessage" class="message">
     <button class="iconBtn topRightCorner" onclick="removeMessage()">
       <i class="fa-solid fa-xmark"></i>
@@ -1688,7 +1740,10 @@ form.addEventListener("submit", async (e) => {
 
   // --- 1. UI: waiting state ---
   submitBtn.disabled = true;
-  messageBox.innerHTML = waitingMessage;
+  const keyWaiting = "message_waiting";
+  const textWaiting = t(keyWaiting);
+  messageBox.innerHTML = textWaiting;
+  //messageBox.innerHTML = waitingMessage;
 
   // --- 2. Gather form data ---
   // const formData = new FormData(form);
@@ -1751,7 +1806,10 @@ form.addEventListener("submit", async (e) => {
 
     // --- 5. SUCCESS ---
     // Show confirmation message
-    messageBox.innerHTML = confirmMessage;
+    const keyConfirm = "message_confirm";
+    const textConfirm = t(keyConfirm);
+    messageBox.innerHTML = textConfirm;
+    //messageBox.innerHTML = confirmMessage;
 
     // Remove userMeeting
     console.log(thisUserMeeting);
@@ -1779,7 +1837,10 @@ form.addEventListener("submit", async (e) => {
     // --- 6. FAILURE ---
     console.error("Booking failed:", error);
 
-    messageBox.innerHTML = errorMessage;
+    const keyError = "message_error";
+    const textError = t(keyError);
+    messageBox.innerHTML = textError;
+    //messageBox.innerHTML = errorMessage;
     submitBtn.disabled = false;
   };
 });

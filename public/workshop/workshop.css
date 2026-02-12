@@ -13,12 +13,19 @@
   --purple-dark-30: rgba(64, 0, 63, .3);
   --purple-medium-30: rgba(96, 0, 97, .3);
   --purple-light-30: rgba(129, 0, 127, .3);
+  --grey-dark: #3d3d3d;
   --vw: 100vw;
   --vh: 100vh;
   --wCBT: 100%;
 }
 html{
   font-size: 24px;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
 *{
@@ -29,10 +36,11 @@ html{
 body{
   color: var(--green-dark);
   background-color: var(--bg-color);
+  padding: 0 8%;
   width: var(--vw);
   height: var(--vh);
   margin: auto;
-  padding: 8px 188px 18px 88px;
+  /* padding: 8px 188px 18px 88px; */
 }
 
 section{
@@ -40,6 +48,18 @@ section{
   height: 100%;
   display: flex;
   flex-flow: column nowrap;
+}
+.topStuff{
+  justify-content: flex-start;
+}
+.middleStuff{
+  justify-content: center;
+}
+.startStuff{
+  align-items: flex-start;
+}
+.centerStuff{
+  align-items: center;
 }
 .titleSlide{
   justify-content: space-evenly;
@@ -86,7 +106,7 @@ section{
   font-size: 4rem;
   font-weight: 900;
   font-family: 'Nosifer';
-  
+
   grid-column: 2;
   grid-row: 2;
 
@@ -100,6 +120,19 @@ section{
   /* transform: scale(1.4); makes it bigger without breaking grid */
 }
 
+.stackBox{
+  /* margin-top: 10vh; */
+  position: relative;
+  /* width: 699px; */
+  /* height: 480px; */
+}
+.stackPicture{
+  height: 100%;
+  width: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 
 h1{
   font-family: 'Imprima', sans-serif;
@@ -110,6 +143,9 @@ h1{
   margin-bottom: 0;
   color: var(--green-medium);
 }
+h1:not(:has(+ h2)){
+  margin-bottom: 10vh;
+} 
 h2{
   font-family: 'Quicksand', sans-serif;
   font-style: italic;
@@ -120,6 +156,17 @@ h2{
 p, li, ol{
   font-size: 1rem;
   font-weight: 500;
+}
+p{
+  font-style: italic;
+  color: var(--green-medium);
+  font-size: 2rem;
+}
+.strong{
+  font-weight: 700;
+}
+p.strong{
+  font-size: 2.5rem;
 }
 
 .middleDiv{
@@ -151,7 +198,9 @@ p.exercice{
   text-align: center;
 }
 .acrostiche > h2{
-  margin: 1.2em auto;
+  font-size: 6rem;
+  margin: .5em auto;
+  color: var(--purple-light);
 }
 .acrostiche h3{
   font-family: 'imprima', sans-serif;
@@ -167,7 +216,7 @@ p.exercice{
 
 .firstLetter{
   font-family: inherit;
-  color: var(--green-light);
+  color: var(--purple-light);
   font-size: 3rem;
 }
 
@@ -176,12 +225,14 @@ p.exercice{
   margin: 0 auto auto;
 }
 .acrostiche > p.boxed{
-  font-size: 1.3rem;
+  font-size: 1.8rem;
   font-weight: 500;
-  border: 3px solid;
-  padding: 1em 2em;
+  border: 5px solid;
+  padding: 3% 4%;
   border-radius: 25px;
   width: fit-content;
+  color: var(--grey-dark);
+  font-style: normal;
 }
 .exercice > p{
   font-size: 1.3em;
@@ -189,6 +240,11 @@ p.exercice{
   line-height: 1em;
   width: fit-content;
   margin: auto;
+}
+
+.indent{
+  padding-left: 80px;
+  text-indent: -80px;
 }
 
 .wordCloud > span.toStorm{
@@ -245,12 +301,6 @@ ol.listSetup, ul.listSetup{
 }
 ol.listSetup > li, ul.listSetup > li{
   padding-left: .7em;
-}
-
-.accented{
-  font-style: italic;
-  color: var(--green-medium);
-  font-size: 1.3rem;
 }
 
 .toUnveil{

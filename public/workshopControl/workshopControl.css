@@ -140,6 +140,9 @@ section#diapo{
 #diapoMain{
   font-size: 12px;
 }
+#diapoMain img{
+  height: 50px;
+}
 
 #wordDropdown, #phraseDropdown{
   display: block;

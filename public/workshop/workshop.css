@@ -1,5 +1,6 @@
 :root{
-  --bg-color: rgb(244, 244, 244);
+  --bg-color: rgb(244, 244, 244);  
+  /* #f4f4f4 */
   --tx-color: rgb(34, 34, 34);
   --green-dark: rgb(15, 74, 0);
   --green-medium: rgb(23, 113, 0);
@@ -66,6 +67,42 @@ section{
   align-items: center;
   text-align: center;
 }
+h1{
+  font-family: 'Imprima', sans-serif;
+  /* font-style: italic;
+  font-weight: bold; */
+  font-size: 2.4rem;
+  line-height: 1em;
+  margin-bottom: 0;
+  color: var(--green-medium);
+}
+
+h1:not(:has(+ h2)){
+  margin-bottom: 10vh;
+} 
+h2{
+  font-family: 'Quicksand', sans-serif;
+  font-style: italic;
+  font-size: 1.3rem;
+  margin-top: .5em;
+  color: var(--green-light);
+}
+p, li, ol{
+  font-size: 1rem;
+  font-weight: 500;
+}
+p{
+  font-style: italic;
+  color: var(--green-medium);
+  font-size: 2rem;
+}
+.strong{
+  font-weight: 700;
+}
+p.strong{
+  font-size: 2.5rem;
+}
+
 .titleSlide h1{
   font-family: 'Caveat', sans-serif;
   font-size: 8rem;
@@ -133,41 +170,59 @@ section{
   top: 0;
   left: 0;
 }
-
-h1{
-  font-family: 'Imprima', sans-serif;
-  /* font-style: italic;
-  font-weight: bold; */
-  font-size: 2.4rem;
-  line-height: 1em;
-  margin-bottom: 0;
-  color: var(--green-medium);
+.RCstackBox{
+  position: relative;
+  height: 550px;
+  width: 802px;
 }
-h1:not(:has(+ h2)){
-  margin-bottom: 10vh;
-} 
-h2{
-  font-family: 'Quicksand', sans-serif;
-  font-style: italic;
-  font-size: 1.3rem;
-  margin-top: .5em;
+.RCstackPicture{
+  height: 550px;
+  width: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.RCspanR{
+  color: #ff2a2a;
+  font-weight: 700;
+  position: absolute;
+  bottom: -3%;
+  left: 27%;
+}
+.RCspanC{
+  color: #77b5fe;
+  font-weight: 700;
+  position: absolute;
+  bottom: -3%;
+  right: 48%;
+}
+.OUInonDiv{
+  display: flex; 
+  flex-flow: row nowrap; 
+  justify-content: space-evenly; 
+  align-items: center; 
+  width: 90%; 
+  text-align: center;
+}
+.OUInon1{
+  font-size: 6rem; 
+  font-weight: 900;
   color: var(--green-light);
 }
-p, li, ol{
-  font-size: 1rem;
-  font-weight: 500;
-}
-p{
-  font-style: italic;
+.OUInon2{
+  font-size: 9rem; 
+  font-weight: 900; 
+  line-height: .8em;
   color: var(--green-medium);
-  font-size: 2rem;
 }
-.strong{
-  font-weight: 700;
+.OUInon3{
+  font-family: 'Eater';
+  font-size: 4rem; 
+  font-weight: 900;
 }
-p.strong{
-  font-size: 2.5rem;
-}
+
+
+
 
 .middleDiv{
   margin: 3rem auto auto;
@@ -449,7 +504,7 @@ span.unveilled{
   font-family: 'imprima', sans-serif;;
   font-size: 6rem;
   /* font-weight: ; */
-  line-height: 1em;
+  line-height: 1.3em;
   color: var(--green-light);
 }
 
@@ -458,10 +513,52 @@ span.unveilled{
   font-size: 4rem;
   font-weight: 900;
   color: var(--green-dark);
-  line-height: .7em;
+  line-height: .4em;
 }
-
-
+h1.pourquoiNosifer{
+  font-family: 'Nosifer';
+  line-height: 2em;
+  text-align: center;
+  margin-bottom: 0;
+}
+.nonPhrase{
+  font-family: 'Caveat', sans-serif;
+  font-size: 7rem;
+  color: var(--green-medium);
+  margin-top: 0;
+}
+.excuseDiv{
+  font-size: 6rem; 
+  font-weight: 900; 
+  position: relative; 
+  margin-top: 2rem;
+}
+.excuseBan{
+  position: absolute; 
+  top: -7rem; 
+  font-size: 20rem; 
+  line-height: 1em; 
+  left: -3.2rem; 
+  color: var(--purple-light);
+}
+.aimeNonDiv{
+  font-size: 3rem; 
+  font-weight: 900; 
+  position: relative; 
+  margin-top: 2rem;
+}
+.aimeNonNon{
+  height: 10rem; 
+  display: block;
+}
+.aimeNonCoeur{
+  position: absolute; 
+  top: -5rem; 
+  font-size: 20rem; 
+  line-height: 1em; 
+  left: -3.2rem; 
+  color: var(--purple-light);
+}
 .smallP p{
   margin: 0 .5em;
 }

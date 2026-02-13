@@ -104,8 +104,18 @@ function orderSlides() {
     slideNum++;
   });
 };
+
+function idSteps(){
+  document.querySelectorAll('[data-step]').forEach(step  => {
+    if (!step.dataset.uuid?.trim()) {
+      step.dataset.uuid = crypto.randomUUID();
+    };
+  });
+};
+
 function getAllSlides(){
   orderSlides();
+  idSteps();
   let allSlides = [];
   document.querySelectorAll("section").forEach(section => {
     let slide = {
@@ -148,11 +158,6 @@ function displaySection(sectionToShow){
     fixImaging();
   };
 
-  //currentSlide
-  let currentSlideInfo = getCurrentSlideInfo();
-
-  let currentSlideHTML = getCurrentSlideHTML();
-
   let currentSlideNotes = "";
   if(sectionShowed.classList.contains("noted")){
     currentSlideNotes = getCurrentSlideNotes();
@@ -176,6 +181,11 @@ function displaySection(sectionToShow){
   };
   //stepsButton (whether sectionShowed is stepped or not)
   let stepButtonStates = getStepButtonState(); 
+
+  //currentSlide
+  let currentSlideInfo = getCurrentSlideInfo();
+
+  let currentSlideHTML = getCurrentSlideHTML();
 
   let wholeDisplay = {
     words: words,
@@ -258,24 +268,24 @@ function getCurrentSlideHTML(){
     image.style.height = "auto";
   };
   
-  if(sectionShowed.classList.contains("stepped")){
-    // let x = 1;
-    clone.querySelectorAll("[data-step]").forEach(el => { //il faut enlever ceux qui sont 0 (que tu veux pas qui soient comptés)
-      // if (el.dataset.step == "") {
-      //   el.dataset.step = x;
-      // };
-      // x++
-      // if(el.dataset.group){
+  // if(sectionShowed.classList.contains("stepped")){
+  //   // let x = 1;
+  //   clone.querySelectorAll("[data-step]").forEach(el => { //il faut enlever ceux qui sont 0 (que tu veux pas qui soient comptés)
+  //     // if (el.dataset.step == "") {
+  //     //   el.dataset.step = x;
+  //     // };
+  //     // x++
+  //     // if(el.dataset.group){
 
-      // }
+  //     // }
 
-      el.dataset.uuid = crypto.randomUUID();
-      el.setAttribute(
-        "onclick",
-        "makeThisAppear(this)"
-      );
-    });
-  };
+  //     el.dataset.uuid = crypto.randomUUID();
+  //     el.setAttribute(
+  //       "onclick",
+  //       "makeThisAppear(this)"
+  //     );
+  //   });
+  // };
 
   if(sectionShowed.classList.contains("noted") || clone.querySelector("template")){
     clone.querySelector("template").remove();
@@ -291,10 +301,10 @@ function getCurrentSlideNotes(){
   return clone.innerHTML;
 };
 
-function makeThisAppear(data){
-  const el = document.querySelector(`[data-uuid="${data}"]`);
-  el?.classList.remove("invisible");
-};
+// function makeThisAppear(data){
+//   const el = document.querySelector(`[data-uuid="${data}"]`);
+//   el?.classList.remove("invisible");
+// };
 
 function removeStuff(endroit, element){
   let allTheStuff = endroit.querySelectorAll(element);
@@ -327,10 +337,17 @@ function fixImaging(){
 };
 
 function stepsCreation(){
-  let unorderedAllSteps = sectionShowed.querySelectorAll('[data-step]');
+  let unorderedAllSteps = [];
+  sectionShowed.querySelectorAll('[data-step]').forEach(step => {
+    if(step.classList.contains("invisible")){
+      unorderedAllSteps.push(step);
+    } else {
+      step.classList.add("shown");
+    };
+  });
   //put them in order!
   if(sectionShowed.classList.contains("numberedStepped")){
-    allSteps = Array.from(unorderedAllSteps).sort((a, b) => {
+    allSteps = unorderedAllSteps.sort((a, b) => {    //allSteps = Array.from(unorderedAllSteps).sort((a, b) => {
       return Number(a.dataset.step) - Number(b.dataset.step);
     });
   } else{
@@ -339,7 +356,7 @@ function stepsCreation(){
       el.dataset.step = x;
       x++
     });
-    allSteps = Array.from(unorderedAllSteps);
+    allSteps = unorderedAllSteps;   //allSteps = Array.from(unorderedAllSteps);
   };
   console.log(allSteps);
   stepCurrentIndex = -1;
@@ -347,23 +364,36 @@ function stepsCreation(){
 };
 
 function stepNext(){
+  let shownStepUUID;
   if(stepCurrentIndex <= allSteps.length - 2){
     stepCurrentIndex = stepCurrentIndex + 1;
     stepCurrent = allSteps[stepCurrentIndex];
     stepCurrent.classList.remove("invisible");
+    shownStepUUID = stepCurrent.dataset.uuid;
+    //get the uuid and it to control so that it'll light it up
   };
   let stepButtonStates = getStepButtonState();
-  sendStepButtonState(stepButtonStates);
+  const info = {
+    sBS: stepButtonStates,
+    sSU: shownStepUUID
+  };
+  sendNewStep(info);
 };
 
 function stepPrev(){
+  let hiddenStepUUID;
   if(stepCurrentIndex > -1){
     stepCurrent.classList.add("invisible");
+    hiddenStepUUID = stepCurrent.dataset.uuid;
     stepCurrentIndex = stepCurrentIndex - 1;
     stepCurrent = allSteps[stepCurrentIndex];
   };
   let stepButtonStates = getStepButtonState();
-  sendStepButtonState(stepButtonStates);
+  const info = {
+    sBS: stepButtonStates,
+    hSU: hiddenStepUUID
+  };
+  sendOldStep(info);
 };
 
 function getStepButtonState(){
@@ -375,13 +405,24 @@ function getStepButtonState(){
   };
   return stepButtonStates;
 };
-function sendStepButtonState(stepButtonStates){
+
+function sendNewStep(info){
   set(ref(rtdb, "workshop/feedback"), {
-    need: "sbf",
-    info: stepButtonStates,
+    need: "newStep",
+    info: info,
     timestamp: Date.now()
   });
 };
+function sendOldStep(info){
+  set(ref(rtdb, "workshop/feedback"), {
+    need: "oldStep",
+    info: info,
+    timestamp: Date.now()
+  });
+};
+
+
+
 
 
 
@@ -660,6 +701,7 @@ function exitFullscreen(){
 };
 
 orderSlides();
+idSteps();
 let sectionToShow = document.querySelector('section[data-slide="0"]');
 displaySection(sectionToShow);
 

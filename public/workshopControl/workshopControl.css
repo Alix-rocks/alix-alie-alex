@@ -263,6 +263,10 @@ button#pagePrev, button#pageNext{
   visibility: hidden;
 } */
 
+.shown{
+  color: yellow;
+}
+
 .displayNone{
   display: none;
 }

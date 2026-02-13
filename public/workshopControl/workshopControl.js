@@ -147,6 +147,12 @@ function handleFeedback(need, info){
     case "sbf":
       stepButtonFixing(info);
       break;
+    case "newStep":
+      showStepAndFixButtons(info);
+      break;
+    case "oldStep":
+      hidStepAndFixButtons(info);
+      break;
     case "all":
       allSlidesCreation(info);
       break;
@@ -213,15 +219,15 @@ function diapoMainFilling(html){
 };
 
 
-window.makeThisAppear = function (el) {
-  const uuid = el.dataset.uuid;
+// window.makeThisAppear = function (el) {
+//   const uuid = el.dataset.uuid;
 
-  let infoToSend = {
-    action: "makeThisAppear",
-    data: uuid
-  };
-  sendActionData(infoToSend);
-};
+//   let infoToSend = {
+//     action: "makeThisAppear",
+//     data: uuid
+//   };
+//   sendActionData(infoToSend);
+// };
 
 
 function currentSlideSetting(info){
@@ -308,10 +314,24 @@ function stepNext(){
 };
 window.stepNext = stepNext;
 
+function showStepAndFixButtons(info){
+  // info = { sBS: stepButtonStates, sSU: shownStepUUID };
+  // stepButtonStates = { next: nextState, prev: prevState };
+  diapoMain.querySelector(`[data-uuid="${info.sSU}"]`).classList.add("shown");
+  stepButtonFixing(info.sBS);
+};
+
 function stepPrev(){
   sendAction("stepPrev");
 };
 window.stepPrev = stepPrev;
+
+function hidStepAndFixButtons(info){
+  // info = { sBS: stepButtonStates, hSU: hiddenStepUUID };
+  // stepButtonStates = { next: nextState, prev: prevState };
+  diapoMain.querySelector(`[data-uuid="${info.sSU}"]`).classList.remove("shown");
+  stepButtonFixing(info.sBS);
+}
 
 function stepButtonFixing(info){
   let nextState = info.next;

@@ -389,7 +389,7 @@ function stepNext(){
     stepCurrent = allSteps[stepCurrentIndex];
     stepCurrent.elements.forEach(element => {
       element.classList.remove("invisible");
-      shownStepUUID.push(stepCurrent.dataset.uuid);
+      shownStepUUID.push(element.dataset.uuid);
     });
     ;
     //get the uuid and it to control so that it'll light it up
@@ -407,7 +407,7 @@ function stepPrev(){
   if(stepCurrentIndex > -1){
     stepCurrent.elements.forEach(element => {
       element.classList.add("invisible");
-      hiddenStepUUID.push(stepCurrent.dataset.uuid);
+      hiddenStepUUID.push(element.dataset.uuid);
     });
     stepCurrentIndex = stepCurrentIndex - 1;
     stepCurrent = allSteps[stepCurrentIndex];

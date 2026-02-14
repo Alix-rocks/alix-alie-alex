@@ -568,6 +568,18 @@ h1.nosifer{
   margin: 0 .5em;
 }
 
+.sloganImgDiv{
+  height: var(--vh);
+  width: var(--vw);
+  position: relative;
+}
+.sloganImg{
+  position: absolute;
+  height: calc(var(--vh) * 0.65);
+  width: auto;
+  transform: rotate(-15deg);
+}
+
 h1.baiser{
   font-family: 'caveat';
   text-align: center;

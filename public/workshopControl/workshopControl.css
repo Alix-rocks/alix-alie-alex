@@ -263,9 +263,12 @@ button#pagePrev, button#pageNext{
   visibility: hidden;
 } */
 
-.shown{
+.shown:not(.boxed){
   color: yellow;
 }
+/* .boxed.shown{
+  
+} */
 
 .displayNone{
   display: none;

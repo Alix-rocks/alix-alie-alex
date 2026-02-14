@@ -5,7 +5,7 @@ let screenHeight;
 let screenWidth;
 const emojiRegex = /\p{Emoji}/gu; // 'g' for global, 'u' for Unicode mode
 let sectionShowed = null;
-let allSteps = null;
+let allSteps = [];
 let stepCurrentIndex = 0;
 let stepCurrent = null;
 let kasesIds = [];
@@ -136,7 +136,7 @@ function sendAllSlides(allSlides){
 };
 
 function displaySection(sectionToShow){
-  allSteps = null;
+  allSteps = [];
   stepCurrentIndex = -1;
   stepCurrent = null;
   kasesIds = [];
@@ -347,29 +347,51 @@ function stepsCreation(){
   });
   //put them in order!
   if(sectionShowed.classList.contains("numberedStepped")){
-    allSteps = unorderedAllSteps.sort((a, b) => {    //allSteps = Array.from(unorderedAllSteps).sort((a, b) => {
-      return Number(a.dataset.step) - Number(b.dataset.step);
+    // allSteps = unorderedAllSteps.sort((a, b) => {    //allSteps = Array.from(unorderedAllSteps).sort((a, b) => {
+    //   return Number(a.dataset.step) - Number(b.dataset.step);
+    // });
+    const grouped = {};
+    unorderedAllSteps.forEach(el => {
+      const step = Number(el.dataset.step);
+      grouped[step] ??= [];
+      grouped[step].push(el);
+      console.log(grouped[step]);
     });
+    allSteps = Object.keys(grouped)
+    .map(Number) // convert keys to numbers
+    .sort((a, b) => a - b)
+    .map(step => ({
+      step: step,
+      elements: grouped[step]
+    }));
   } else{
     let x = 1;
     unorderedAllSteps.forEach(el => {
       el.dataset.step = x;
+      const newStep = {
+        step: x,
+        elements: [el]
+      };
+      allSteps.push(newStep);
       x++
     });
-    allSteps = unorderedAllSteps;   //allSteps = Array.from(unorderedAllSteps);
+    //allSteps = unorderedAllSteps;   //allSteps = Array.from(unorderedAllSteps);
   };
   console.log(allSteps);
   stepCurrentIndex = -1;
-  stepCurrent = allSteps[stepCurrentIndex];
+  //stepCurrent = allSteps[stepCurrentIndex];
 };
 
 function stepNext(){
-  let shownStepUUID;
+  let shownStepUUID = [];
   if(stepCurrentIndex <= allSteps.length - 2){
     stepCurrentIndex = stepCurrentIndex + 1;
     stepCurrent = allSteps[stepCurrentIndex];
-    stepCurrent.classList.remove("invisible");
-    shownStepUUID = stepCurrent.dataset.uuid;
+    stepCurrent.elements.forEach(element => {
+      element.classList.remove("invisible");
+      shownStepUUID.push(stepCurrent.dataset.uuid);
+    });
+    ;
     //get the uuid and it to control so that it'll light it up
   };
   let stepButtonStates = getStepButtonState();
@@ -381,10 +403,12 @@ function stepNext(){
 };
 
 function stepPrev(){
-  let hiddenStepUUID;
+  let hiddenStepUUID = [];
   if(stepCurrentIndex > -1){
-    stepCurrent.classList.add("invisible");
-    hiddenStepUUID = stepCurrent.dataset.uuid;
+    stepCurrent.elements.forEach(element => {
+      element.classList.add("invisible");
+      hiddenStepUUID.push(stepCurrent.dataset.uuid);
+    });
     stepCurrentIndex = stepCurrentIndex - 1;
     stepCurrent = allSteps[stepCurrentIndex];
   };
@@ -397,8 +421,8 @@ function stepPrev(){
 };
 
 function getStepButtonState(){
-  let nextState = allSteps == null ? false : stepCurrentIndex <= allSteps.length - 2 ? true : false;
-  let prevState = allSteps == null ? false : stepCurrentIndex !== -1 ? true : false;
+  let nextState = allSteps == [] ? false : stepCurrentIndex <= allSteps.length - 2 ? true : false;
+  let prevState = allSteps == [] ? false : stepCurrentIndex !== -1 ? true : false;
   let stepButtonStates = {
     next: nextState,
     prev: prevState

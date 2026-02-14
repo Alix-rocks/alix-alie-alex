@@ -317,7 +317,9 @@ window.stepNext = stepNext;
 function showStepAndFixButtons(info){
   // info = { sBS: stepButtonStates, sSU: shownStepUUID };
   // stepButtonStates = { next: nextState, prev: prevState };
-  diapoMain.querySelector(`[data-uuid="${info.sSU}"]`).classList.add("shown");
+  info.sSU.forEach(suuid => {
+    diapoMain.querySelector(`[data-uuid="${suuid}"]`).classList.add("shown");
+  });
   stepButtonFixing(info.sBS);
 };
 
@@ -329,7 +331,9 @@ window.stepPrev = stepPrev;
 function hidStepAndFixButtons(info){
   // info = { sBS: stepButtonStates, hSU: hiddenStepUUID };
   // stepButtonStates = { next: nextState, prev: prevState };
-  diapoMain.querySelector(`[data-uuid="${info.sSU}"]`).classList.remove("shown");
+  info.hSU.forEach(suuid => {
+    diapoMain.querySelector(`[data-uuid="${suuid}"]`).classList.remove("shown");
+  });  
   stepButtonFixing(info.sBS);
 }
 

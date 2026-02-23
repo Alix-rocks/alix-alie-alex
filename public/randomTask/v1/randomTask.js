@@ -9,7 +9,7 @@
   Ctrl + K ... Ctrl + 1 => Fold all the first levels
 */
 
-import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, get, onChildAdded, ref, update, onChildChanged, onChildRemoved, remove } from "/myFirebase.js";
+import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, get, onChildAdded, ref, set, update, onChildChanged, onChildRemoved, remove } from "/myFirebase.js";
 import trans from "/trans.js";
 auth.languageCode = 'fr';
 
@@ -1076,6 +1076,8 @@ earthIt.addEventListener("click", updateFromCloud);
 // *** CLOUDSAVE
 
 async function saveToCloud(){
+  pushBusiesToRTDB();
+  
   let nowStamp = new Date().getTime();
   const batch = writeBatch(db);
 
@@ -1098,6 +1100,71 @@ async function saveToCloud(){
     });
   }; 
 
+  
+  // const docRefBusies = doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies");
+  // // const docSnapBusies = await getDoc(docRefBusies);
+  // console.log(myBusies);
+  // if (docSnapBusies.exists()){
+  //   batch.update(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.update or await updateDoc
+  //     myBusies: myBusies
+  //   });
+  // } else{
+  // batch.set(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.set or await setDoc
+  //   myBusies: myBusies
+  // });
+  
+  // }; 
+  listDones = JSON.parse(localStorage.listDones);
+  const docRefDones = collection(db, "randomTask", auth.currentUser.email, "myListDones");
+  const docSnapDones = await getDocs(docRefDones);
+  let modif = getModif();
+  modif.map(modifDate => {
+    let doned = listDones.find((td) => td.date == modifDate);
+    if(docSnapDones[modifDate]){
+      batch.update(doc(db, "randomTask", auth.currentUser.email, "myListDones", modifDate), {
+        dones: doned.list
+      });
+    } else{
+      batch.set(doc(db, "randomTask", auth.currentUser.email, "myListDones", modifDate), {
+        dones: doned.list
+      });
+    };
+  });  
+  /* WHEN YOU WANT TO UPDATE ALL THE DONES */
+  // listDones.forEach(td => {
+  //   if(docSnapDones[td.date]){
+  //     batch.update(doc(db, "randomTask", auth.currentUser.email, "myListDones", td.date), {
+  //       dones: td.list
+  //     });
+  //   } else{
+  //     batch.set(doc(db, "randomTask", auth.currentUser.email, "myListDones", td.date), {
+  //       dones: td.list
+  //     });
+  //   };
+  // }); 
+
+  await batch.commit();
+  localStorage.lastUpdateLocalStorageRandomTask = nowStamp;
+  resetCBC();
+  resetModif();
+};
+
+cloudIt.addEventListener("click", saveToCloud);
+
+async function pushBusiesToRTDB() {
+  createMyBusies();
+  const busiesObject = {};
+
+  myBusies.forEach((busy) => {
+    const uuid = crypto.randomUUID();
+    const id = `${busy.date}_${busy.start}_${busy.end}_${uuid}`;
+    busiesObject[id] = busy;
+  });
+
+  await set(ref(rtdb, "meetAlix/myBusies"), busiesObject);
+};
+
+function createMyBusies(){
   myBusies = [];
   listTasks.forEach(todo => {
     //Modify all the event to busy
@@ -1137,54 +1204,8 @@ async function saveToCloud(){
       };
     };
   });
-  // const docRefBusies = doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies");
-  // // const docSnapBusies = await getDoc(docRefBusies);
-  // console.log(myBusies);
-  // if (docSnapBusies.exists()){
-  //   batch.update(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.update or await updateDoc
-  //     myBusies: myBusies
-  //   });
-  // } else{
-  batch.set(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.set or await setDoc
-    myBusies: myBusies
-  });
-  // }; 
-  listDones = JSON.parse(localStorage.listDones);
-  const docRefDones = collection(db, "randomTask", auth.currentUser.email, "myListDones");
-  const docSnapDones = await getDocs(docRefDones);
-  let modif = getModif();
-  modif.map(modifDate => {
-    let doned = listDones.find((td) => td.date == modifDate);
-    if(docSnapDones[modifDate]){
-      batch.update(doc(db, "randomTask", auth.currentUser.email, "myListDones", modifDate), {
-        dones: doned.list
-      });
-    } else{
-      batch.set(doc(db, "randomTask", auth.currentUser.email, "myListDones", modifDate), {
-        dones: doned.list
-      });
-    };
-  });  
-  /* WHEN YOU WANT TO UPDATE ALL THE DONES */
-  // listDones.forEach(td => {
-  //   if(docSnapDones[td.date]){
-  //     batch.update(doc(db, "randomTask", auth.currentUser.email, "myListDones", td.date), {
-  //       dones: td.list
-  //     });
-  //   } else{
-  //     batch.set(doc(db, "randomTask", auth.currentUser.email, "myListDones", td.date), {
-  //       dones: td.list
-  //     });
-  //   };
-  // }); 
-
-  await batch.commit();
-  localStorage.lastUpdateLocalStorageRandomTask = nowStamp;
-  resetCBC();
-  resetModif();
 };
 
-cloudIt.addEventListener("click", saveToCloud);
 
 
 function updateFromCloud(){

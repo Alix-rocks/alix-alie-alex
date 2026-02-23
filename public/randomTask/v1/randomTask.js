@@ -57,6 +57,8 @@ onAuthStateChanged(auth, (user) => {
     // createBody();
     // getWeeklyCalendar();
     // logInScreen.classList.add("displayNone");
+
+    
     if(auth.currentUser.email === "alexblade.23.49@gmail.com"){
       loadBookings();
     };
@@ -909,7 +911,9 @@ async function getDones(){
     listDones = JSON.parse(localStorage.listDones);
   } else if(getDones){
     getDones.forEach((donedDate) => {
-      listDones.push({date: donedDate.id, list: donedDate.data().dones});
+      if (donedDate.id > lastWeekDateString){
+        listDones.push({date: donedDate.id, list: donedDate.data().dones});
+      };
     });
     localStorageDones("first"); // fait juste pas updateCBC...
   };
@@ -1133,18 +1137,18 @@ async function saveToCloud(){
       };
     };
   });
-  const docRefBusies = doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies");
-  const docSnapBusies = await getDoc(docRefBusies);
-  console.log(myBusies);
-  if (docSnapBusies.exists()){
-    batch.update(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.update or await updateDoc
-      myBusies: myBusies
-    });
-  } else{
-    batch.set(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.set or await setDoc
-      myBusies: myBusies
-    });
-  }; 
+  // const docRefBusies = doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies");
+  // // const docSnapBusies = await getDoc(docRefBusies);
+  // console.log(myBusies);
+  // if (docSnapBusies.exists()){
+  //   batch.update(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.update or await updateDoc
+  //     myBusies: myBusies
+  //   });
+  // } else{
+  batch.set(doc(db, "randomTask", auth.currentUser.email, "mySchedule", "myBusies"), { // or batch.set or await setDoc
+    myBusies: myBusies
+  });
+  // }; 
   listDones = JSON.parse(localStorage.listDones);
   const docRefDones = collection(db, "randomTask", auth.currentUser.email, "myListDones");
   const docSnapDones = await getDocs(docRefDones);
@@ -1976,7 +1980,7 @@ function getTogoList(todo){
       togoList = "scheduledList";
     };
   } else{ // no date or deadline is after today
-    togoList = todo.term + "List";
+    togoList = todo.term + "List"; //Unless it is sameHabit!!!
   };
   return togoList;
 };

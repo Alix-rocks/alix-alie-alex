@@ -526,7 +526,7 @@ function getCloudBC(){
 // MARK: getBookings
 let bookingQueue = [];
 async function loadBookings() {
-  const snapshot = await get(ref(rtdb, "meetAlix"));
+  const snapshot = await get(ref(rtdb, "meetAlix/bookings"));
   if (!snapshot.exists()) return;
 
   bookingQueue = Object.entries(snapshot.val())
@@ -541,7 +541,7 @@ updateInbox();
 
 };
 
-onChildAdded(ref(rtdb, "meetAlix"), (snap) => {
+onChildAdded(ref(rtdb, "meetAlix/bookings"), (snap) => {
   const booking = { key: snap.key, ...snap.val() };
   //check if booking.key already is in bookingQueue, and if yes, then update that one, otherwise, push it
   const bookingIndex = bookingQueue.findIndex(book => book.key === booking.key);
@@ -553,7 +553,7 @@ onChildAdded(ref(rtdb, "meetAlix"), (snap) => {
   updateInbox();
 });
 
-onChildChanged(ref(rtdb, "meetAlix"), (snap) => {
+onChildChanged(ref(rtdb, "meetAlix/bookings"), (snap) => {
   const booking = { key: snap.key, ...snap.val() };
   //check if booking.key already is in bookingQueue, and if yes, then update that one, otherwise, push it
   const bookingIndex = bookingQueue.findIndex(book => book.key === booking.key);
@@ -565,7 +565,7 @@ onChildChanged(ref(rtdb, "meetAlix"), (snap) => {
   updateInbox();
 });
 
-onChildRemoved(ref(rtdb, "meetAlix"), (snap) => {
+onChildRemoved(ref(rtdb, "meetAlix/bookings"), (snap) => {
   const bookingKey = snap.key;
   bookingQueue = bookingQueue.filter(
     book => book.key !== bookingKey

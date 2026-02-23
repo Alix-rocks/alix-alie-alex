@@ -4,10 +4,11 @@
 // alix.rocks/meetAlix/?lang=fr
 // alix.rocks/meetAlix/?type=friend&lang=en
 
-import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, getDatabase, ref, get, push, update, onValue, onChildChanged, remove } from "/myFirebase.js";
+import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, getDatabase, onChildAdded, ref, get, push, update, onValue, onChildChanged, onChildRemoved, remove } from "/myFirebase.js";
 import i18n from "./i18n.js";
 
-let unknownStartDate = "2026-02-15"; //The day the "Not sure yet" section starts
+const unknownStartDate = "2026-03-21"; //The day the "Not sure yet" section starts
+const nextKnownDate = "2026-04-13";
 
 let myEmail = "alexblade.23.49@gmail.com";
 
@@ -45,16 +46,15 @@ console.log(config);
 
 const type = params.get("type") || "default";
 console.log(type);
-const lang =
-  params.get("lang") ? params.get("lang") : navigator.language.slice(0, 2) === "fr" ? "fr" : "en";
-  console.log(lang);
+const lang = "en";
+  // params.get("lang") ? params.get("lang") : navigator.language.slice(0, 2) === "fr" ? "fr" : "en";
+  // console.log(lang);
 
 function t(key, vars = {}) {
   let text =
     i18n[type]?.[lang]?.[key] ??
     i18n.client.en[key] ??
     key;
-  console.log(text);
   for (const v in vars) {
     text = text.replaceAll(`{${v}}`, vars[v]);
   };
@@ -77,6 +77,11 @@ function translatePage() {
 };
 translatePage();
 
+const deviceId =
+  localStorage.getItem("meetAlixDeviceId") ||
+  crypto.randomUUID();
+
+localStorage.setItem("meetAlixDeviceId", deviceId);
 
 
 
@@ -169,6 +174,8 @@ for(let d = 0; d < 8; d++){
 };
 console.log(allTheEdges);
 
+const allTheOtherBookings = [];
+
 const container = document.querySelector(".weeklyContainer");
 const mealLegend = document.querySelector("#mealLegend");
 mealLegend.style.display = config.meal ? "flex" : "none";
@@ -182,6 +189,8 @@ handle.addEventListener("click", () => {
 const submitBtn = formContainer.querySelector(".submitBtn");
 
 let myBusies = [];
+let Dday = "";
+let Sday = "";
 const unavailableRanges = [];
 
 const userSelection = {
@@ -202,7 +211,7 @@ const userSelection = {
 const formFields = {
   date: {
     selector: ".dateComplete",
-    type: "simple"
+    type: "date"
   },
   dalle: {
     selector: ".dalleTime",
@@ -350,7 +359,28 @@ const fieldHandlers = {
       );
     });
   },
-// WE NEED TO ADD ONE FOR DATE TOO! THAT WILL CHANGE USERSELECTION AND USERMEETING!
+  date(key) { // WE NEED TO ADD ONE FOR DATE TOO! THAT WILL CHANGE USERSELECTION AND USERMEETING!
+    inputs[key].addEventListener("change", e => {
+      const value = e.target.value;
+      if (!value) return;
+      //Now, we need to check if that date & time is available...
+      //Getting the dayIndex from the date with the safest method, in case of timezones
+      const [y, m, d] = value.split("-");
+      const dayIndex = new Date(y, m - 1, d).getDay();
+
+      let selectedWeeklyItem = {
+        date: value,
+        dayIndex: dayIndex,
+        col: weeksDayArray[dayIndex].code,
+        startSlot: userSelection.startSlot,
+        endSlot: userSelection.endSlot
+      };
+      //console.log(selectedWeeklyItem);
+      confirmAvailability(selectedWeeklyItem); //includes pretty much everything...
+
+    });
+  },
+
   dalle(key) {
     console.log("dalle " + key + " " + inputs[key]);
     inputs[key].addEventListener("change", e => {
@@ -398,8 +428,8 @@ const fieldHandlers = {
       };
       let newEndSlot = dateTimeToSlot(info);
       let newAlleSlot = checkNewAlleSlot(userSelection.startSlot, newEndSlot);
-      //CHECK WITH EDGES TOO!!
-      let newAlleTime = slotToTime(newAlleSlot);
+      //CHECK WITH EDGES TOO!! (Edges have been added to unavailableRanges)
+      // let newAlleTime = slotToTime(newAlleSlot);
       userSelection.endSlot = newAlleSlot;
       userSelection.endRow = slotToRow(newAlleSlot);
       updateUserMeeting();
@@ -467,6 +497,43 @@ for (const key in formFields) {
   };
 })();
 
+//INSTEAD CREATE A FUNCTION TO GET THE USERSELECTION FROM THE FORM (BOOK.DATA)
+function fromBookToUserSelection(book){ //from storedBookings
+  // book = {
+  //   key: "",
+  //   type: formType,
+  //   status: "pending",
+  //   data: {
+  //     date: dateComplete,
+  //     dalle: dalleTime,
+  //     alle: alleTime,
+  //     name: nameInput,
+  //     email: emailInput,
+  //     cell: cellInput,
+  //     messengerName: messengerNameInput,
+  //     whatsAppNumber: whatsAppNumberInput,
+  //     yourAddress: yourAddressInput,
+  //     whereReal: whereRealInput,
+  //     why: whyInput
+  //   },
+  //   createdBy: deviceId,
+  //   timestamp: Date.now()
+  // }
+  // book.data.date
+  // book.data.dalle
+  // book.data.alle
+  userSelection.date = book.data.date;
+  userSelection.dayIndex = getDayIndex(userSelection.date);
+  userSelection.startSlot = getStartEndSlot(userSelection.dayIndex, book.data.dalle);
+  userSelection.startRow = slotToRow(userSelection.startSlot);
+  userSelection.endSlot = getStartEndSlot(userSelection.dayIndex, book.data.alle);
+  userSelection.endRow = slotToRow(userSelection.endSlot);
+  userSelection.col = `col-${weeksDayArray[userSelection.dayIndex].code}`;
+  userSelection.topIsTouching = true; //comparing userSelection.slots with unavailableRanges.slots, but only the ones for this shown week... so we can't check that unless we know it's in the currently shown week...
+  userSelection.bottomIsTouching = true; // So let's make them true so that the weeklyItem seems closed (rounded corners everywhere)
+  userSelection.status = book.status;
+  userSelection.key = book.key;
+};
 
 
 
@@ -554,70 +621,258 @@ function roundFifteenTime(value){
 // });
 
 
-onChildChanged(ref(rtdb, "meetAlix"), (snap) => {
-  const booking = { key: snap.key, ...snap.val() };
-  //check if booking.key already is in bookingQueue, and if yes, then update that one, otherwise, push it
-  const bookingIndex = storedBookings.findIndex(book => book.key === booking.key);
-  if(bookingIndex !== -1){
-    storedBookings[bookingIndex].status = booking.status;
-  } else{
-    storedBookings.push(booking);
-  };
-  
-});
+// onChildChanged(ref(rtdb, "meetAlix"), (snap) => {
+//   const booking = { key: snap.key, ...snap.val() };
+//   //check if booking.key already is in bookingQueue, and if yes, then update that one, otherwise, push it
+//   const bookingIndex = storedBookings.findIndex(book => book.key === booking.key);
+//   if(bookingIndex !== -1){
+//     storedBookings[bookingIndex].status = booking.status;
+//   } else{
+//     const otherBookingIndex = allTheOtherBookings.findIndex(book => book.key === booking.key);
+//     if(otherBookingIndex !== -1){
+//       allTheOtherBookings[otherBookingIndex].status = booking.status;
+//     };
+//     // }; else if(booking.status == "pending"){   //That should only be on childAdded
+//     //   allTheOtherBookings.push(booking);
+//     // };
+//   };
+// });
 
-const storedBookings = JSON.parse(
-  localStorage.getItem("meetAlixBookings") || "[]"
-);
+// const storedBookings = JSON.parse(
+//   localStorage.getItem("meetAlixBookings") || "[]" // or get the storedBookings from their account in firestore
+// );
+
+// async function updateBookings() {
+//   await Promise.all(
+//     storedBookings.map(async book => {
+//       const snap = await get(ref(rtdb, `meetAlix/${book.key}`));
+
+//       if (!snap.exists()) {
+//         book.status = "cancelled";
+//         return;
+//       };
+
+//       const rtdbData = snap.val();
+//       if (rtdbData.status !== book.status) {
+//         book.status = rtdbData.status;
+//       };
+//     })
+//   ); //But what if I changed something in their booking... they wouldn't be able to see it if we update only the status!
+
+//   localStorage.setItem(
+//     "meetAlixBookings",
+//     JSON.stringify(storedBookings)
+//   );
+// };
+const storedBookings = [];
+const existingKeys = new Set();
+async function getBookings() {
+  storedBookings.length = 0;
+  existingKeys.clear();
+
+  const snap = await get(ref(rtdb, "meetAlix/bookings"));
+
+  if (!snap.exists()) return;
+  const rtdbBookings = snap.val();
+  
+  for (const [key, remoteBook] of Object.entries(rtdbBookings)) {
+    existingKeys.add(key);
+    if (remoteBook.createdBy === deviceId){
+      storedBookings.push({
+        key,
+        ...remoteBook
+      });
+    } else if(remoteBook.status === "pending"){
+      allTheOtherBookings.push({
+        key,
+        ...remoteBook
+      });
+    };
+  };
+};
+
+async function addListeners() {
+  
+  onChildAdded(ref(rtdb, "meetAlix/bookings"), snapshot => {
+    const key = snapshot.key;
+    const book = snapshot.val();
+
+    if (existingKeys.has(key)) return;
+    existingKeys.add(key);
+
+    if (book.createdBy === deviceId){
+      storedBookings.push({ key, ...book }); // do we create the weeklyItem here or in the form.submit?
+    } else{
+      allTheOtherBookings.push({ key, ...book });
+
+      createWeeklyOtherBook(book); // only if it's within the week's dates!
+    };
+  });
+
+  onChildChanged(ref(rtdb, "meetAlix/bookings"), snapshot => {
+    const key = snapshot.key;
+    const book = snapshot.val();
+
+    if (book.createdBy === deviceId){
+      const bookingIndex = storedBookings.findIndex(book => book.key === key);
+      if(bookingIndex !== -1){
+        storedBookings[bookingIndex].status = book.status;
+      }; //update the corresponding weeklyItem if there is one
+    } else{
+      const otherBookingIndex = allTheOtherBookings.findIndex(book => book.key === key);
+      if(otherBookingIndex !== -1){
+        allTheOtherBookings[otherBookingIndex].status = book.status;
+      }; //update the corresponding weeklyItem if there is one or if there need to be one (check with the date!)
+    };
+  });
+
+  onChildRemoved(ref(rtdb, "meetAlix/bookings"), snapshot => {
+    const key = snapshot.key;
+    const book = snapshot.val();
+
+    if (existingKeys.has(key)) {
+      existingKeys.delete(key);
+    };
+    
+    if (book.createdBy === deviceId){
+      const bookingIndex = storedBookings.findIndex(book => book.key === key);
+      if(bookingIndex !== -1){
+        storedBookings.splice(bookingIndex, 1);
+      }; // remove the corresponding weeklyItem if there is one!
+    } else{
+      const otherBookingIndex = allTheOtherBookings.findIndex(book => book.key === key);
+      if(otherBookingIndex !== -1){
+        allTheOtherBookings.splice(otherBookingIndex, 1);
+      }; // remove the corresponding weeklyItem if there is one!
+    };
+  });
+};
 
 async function updateBookings() {
-  await Promise.all(
-    storedBookings.map(async book => {
-      const snap = await get(ref(rtdb, `meetAlix/${book.key}`));
+  const snap = await get(ref(rtdb, "meetAlix"));
 
-      if (!snap.exists()) {
-        book.status = "cancelled";
-        return;
-      };
+  if (!snap.exists()) return;
 
-      const rtdbData = snap.val();
-      if (rtdbData.status !== book.status) {
-        book.status = rtdbData.status;
-      };
-    })
+  const rtdbBookings = snap.val();
+
+  // Create quick lookup map for local bookings
+  const localMap = Object.fromEntries(
+    storedBookings.map(b => [b.key, b])
   );
+
+  Object.entries(rtdbBookings).forEach(([key, rtdbData]) => {
+    if (localMap[key]) {
+      // Exists locally → update status if needed
+      if (localMap[key].status !== rtdbData.status) {
+        localMap[key].status = rtdbData.status;
+      }
+    } else if(rtdbData.status == "pending") {
+      // Not in local → collect it
+      allTheOtherBookings.push({
+        key,
+        ...rtdbData
+      });
+    }
+  });
 
   localStorage.setItem(
     "meetAlixBookings",
     JSON.stringify(storedBookings)
   );
-}
-updateBookings();
+};
 
 
-async function getMyBusies() {
-  // const getBusies = await getDoc(doc(db, "randomTask", myEmail));
-  const getBusies = await getDoc(doc(db, "randomTask", myEmail, "mySchedule", "myBusies"));
-  /* if(localStorage.getItem("myBusies")){
-    myBusies = JSON.parse(localStorage.myBusies);
-  } else  */
-  if(getBusies.exists() && getBusies.data().myBusies){
-    myBusies = getBusies.data().myBusies;
-    //localStorage.myBusies = JSON.stringify(myBusies);
+
+
+async function listenForOtherBookings() {
+  const bookingsRef = ref(rtdb, "meetAlix");
+
+  // First load existing data
+  const snap = await get(bookingsRef);
+  const existingKeys = snap.exists()
+    ? Object.keys(snap.val())
+    : [];
+    console.log(existingKeys);
+
+  onChildAdded(bookingsRef, snapshot => {
+    const key = snapshot.key;
+    const data = snapshot.val();
+
+    // Ignore if it existed before listener started
+    if (existingKeys.includes(key)) return;
+
+    if (data.createdBy === deviceId) return;
+
+    allTheOtherBookings.push({ key, ...data });
+
+    createWeeklyOtherBook(data);
+    //showOtherBookingMessage();
+  });
+};
+
+
+async function loadMyBusies() {
+  const busiesRef = ref(rtdb, "meetAlix/myBusies");
+  const snap = await get(busiesRef);
+
+  if (!snap.exists()) {
+    myBusies = [];
+    return;
   };
-  /*  else{
-    localStorage.myBusies = JSON.stringify([]);
-  }; */
-  // if(localStorage.getItem("mySettings")){
-  //   mySettings = JSON.parse(localStorage.mySettings);
-  // } else if(getBusies.exists() && getBusies.data().mySettings){
-  //   mySettings = getBusies.data().mySettings;
-  //   localStorage.mySettings = JSON.stringify(mySettings);
-  // } else{
-  //   localStorage.mySettings = JSON.stringify(mySettings);
-  // };
-  // myBusies = JSON.parse(localStorage.myBusies);
-  
+
+  const data = snap.val();
+
+  // Convert object → array
+  myBusies = Object.entries(data).map(([key, value]) => ({
+    key,
+    ...value
+  }));
+
+};
+
+onValue(ref(rtdb, "meetAlix/myBusies"), snapshot => {
+
+  if (!snapshot.exists()) {
+    myBusies = [];
+    return;
+  };
+
+  const data = snapshot.val();
+
+  myBusies = Object.entries(data).map(([key, value]) => ({
+    key,
+    ...value
+  }));
+
+  updateCurrentWeek(); //eraseWeekEvent(); getThisWeekStuffAndUnavailableRanges(); putShowsInWeek();
+});
+
+
+// async function getMyBusies() {
+//   // const getBusies = await getDoc(doc(db, "randomTask", myEmail));
+//   const getBusies = await getDoc(doc(db, "randomTask", myEmail, "mySchedule", "myBusies"));
+//   /* if(localStorage.getItem("myBusies")){
+//     myBusies = JSON.parse(localStorage.myBusies);
+//   } else  */
+//   if(getBusies.exists() && getBusies.data().myBusies){
+//     myBusies = getBusies.data().myBusies;
+//     //localStorage.myBusies = JSON.stringify(myBusies);
+//   };
+//   /*  else{
+//     localStorage.myBusies = JSON.stringify([]);
+//   }; */
+//   // if(localStorage.getItem("mySettings")){
+//   //   mySettings = JSON.parse(localStorage.mySettings);
+//   // } else if(getBusies.exists() && getBusies.data().mySettings){
+//   //   mySettings = getBusies.data().mySettings;
+//   //   localStorage.mySettings = JSON.stringify(mySettings);
+//   // } else{
+//   //   localStorage.mySettings = JSON.stringify(mySettings);
+//   // };
+//   // myBusies = JSON.parse(localStorage.myBusies);
+// };
+
+function createCalendar(){
   getWeeklyCalendar();
 
   let item = document.querySelector(`[data-col="2"][data-row="4"]`);
@@ -631,8 +886,16 @@ async function getMyBusies() {
   document.body.style.visibility = "visible";
 };
 
-getMyBusies();
 
+initApp();
+
+
+async function initApp() {
+  await getBookings();
+  await addListeners();
+  await loadMyBusies();
+  createCalendar();
+};
 
 
 
@@ -647,20 +910,24 @@ let todayWholeDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(tod
 
 function getWeeklyCalendar(){
   let arrayItem = [];
-  let rowYear = `<div class="weeklyItem weeklyTitle" style="grid-row:1; border-bottom-width: 1px;">
-    <button class="weeklyBtn" id="weekBackward" style="float: left; border-radius: 2px 5px 5px 0;">
-      <span class="typcn typcn-media-play-reverse"></span>
-    </button>
-    <button class="weeklyBtn backToWeeklyTodayBtn displayNone" onclick="backToWeeklyToday()">
-      <i class="fa-solid fa-calendar-day" style="font-size:16px;"></i>
-    </button>
+  let rowYear = `<div class="weeklyItem weeklyTitle" style="grid-row:1; border-bottom-width: 1px; display: flex; flex-flow: row nowrap; align-items: center; justify-content: space-between;">
+    <div>
+      <button class="weeklyBtn" id="weekBackward" style="border-radius: 2px 5px 5px 0;">
+        <span class="typcn typcn-media-play-reverse"></span>
+      </button>
+      <button class="weeklyBtn backToWeeklyTodayBtn displayNone" onclick="backToWeeklyToday()">
+        <i class="fa-solid fa-calendar-day" style="font-size:16px;"></i>
+      </button>
+    </div>
     <span id="weeklyYearSpan">${year}</span>
-    <button class="weeklyBtn backToWeeklyTodayBtn displayNone" onclick="backToWeeklyToday()">
-      <i class="fa-solid fa-calendar-day" style="font-size:16px;"></i>
-    </button>
-    <button class="weeklyBtn" id="weekForward" style="float: right; border-radius: 5px 2px 0 5px;">
-      <span class="typcn typcn-media-play"></span>
-    </button>
+    <div>
+      <button class="weeklyBtn backToWeeklyTodayBtn displayNone" onclick="backToWeeklyToday()">
+        <i class="fa-solid fa-calendar-day" style="font-size:16px;"></i>
+      </button>
+      <button class="weeklyBtn" id="weekForward" style="float: right; border-radius: 5px 2px 0 5px;">
+        <span class="typcn typcn-media-play"></span>
+      </button>
+    </div>
   </div>`;
   let rowMonth = `<div class="weeklyItem weeklyTitle" style="grid-row:2; border-bottom-width: 2px;"><span id="weeklyMonthSpan">${monthName}</span></div>`;
   arrayItem.push(rowYear, rowMonth);
@@ -729,24 +996,24 @@ function getWeeklyCalendar(){
   let date = new Date();
   let dayIdx = date.getDay();
   date.setDate(date.getDate() - dayIdx);
-  putDatesInWeek(date); //includes getThisWeekStuffAndUnavailableRanges(Dday, Sday); AND putShowsInWeek();
+  putDatesInWeek(date); //includes getThisWeekStuffAndUnavailableRanges(); AND putShowsInWeek();
 
   document.querySelector("#weekBackward").addEventListener("click", () => {
     eraseWeekArea();
     eraseWeekEvent();
-    let Dday = document.querySelector("#Dday").dataset.date;
-    let Ddate = getDateFromString(Dday);
+    let DdaySlash = document.querySelector("#Dday").dataset.date;
+    let Ddate = getDateFromString(DdaySlash);
     Ddate.setDate(Ddate.getDate() - 7);
-    putDatesInWeek(Ddate); //includes getThisWeekStuffAndUnavailableRanges(Dday, Sday); AND putShowsInWeek();
+    putDatesInWeek(Ddate); //includes getThisWeekStuffAndUnavailableRanges(); AND putShowsInWeek();
   });
 
   document.querySelector("#weekForward").addEventListener("click", () => {
     eraseWeekArea();
     eraseWeekEvent();
-    let Sday = document.querySelector("#Sday").dataset.date;
-    let Sdate = getDateFromString(Sday);
+    let SdaySlash = document.querySelector("#Sday").dataset.date;
+    let Sdate = getDateFromString(SdaySlash);
     Sdate.setDate(Sdate.getDate() + 1);
-    putDatesInWeek(Sdate); //includes getThisWeekStuffAndUnavailableRanges(Dday, Sday); AND putShowsInWeek();
+    putDatesInWeek(Sdate); //includes getThisWeekStuffAndUnavailableRanges(); AND putShowsInWeek();
   });
 };
 
@@ -794,12 +1061,53 @@ function fromThisWeekStuffToUnavailableRanges(){
       unavailableRanges.push(bookRange);
     });
   };
+
+  if(config.meet && allTheOtherBookings.length){
+    theOtherThisWeekBookings.forEach(book => {
+      let [y, m, d] = book.data.date.split("-");
+      const dayIndex = new Date(y, m - 1, d).getDay();
+      let [startHours, startMinutes] = book.data.dalle.split(':').map(Number);
+      let startInfo = {
+        dayIndex: dayIndex,
+        hour: startHours,
+        minute: startMinutes
+      };
+      let startSlot = dateTimeToSlot(startInfo);
+
+      let [endHours, endMinutes] = book.data.alle.split(':').map(Number);
+      let endInfo = {
+        dayIndex: dayIndex,
+        hour: endHours,
+        minute: endMinutes
+      };
+      let endSlot = dateTimeToSlot(endInfo);
+      let bookRange = {
+        start: startSlot,
+        end: endSlot
+      };
+      unavailableRanges.push(bookRange);
+    });
+  };
   
   // Adding the edges 
   unavailableRanges.push(...allTheEdges);
   console.log(unavailableRanges);
 }; 
 
+function getDayIndex(date){ //2026-02-22
+  const [y, m, d] = date.split("-");
+  return new Date(y, m - 1, d).getDay();
+};
+
+function getStartEndSlot(dayIndex, time){ // 2, 11:30
+  const [hours, minutes] = time.split(':').map(Number);
+  const info = {
+    dayIndex: dayIndex,
+    hour: hours,
+    minute: minutes
+  };
+  return dateTimeToSlot(info);
+};
 
 function putDatesInWeek(date){
   let arrayDate = [];
@@ -853,18 +1161,18 @@ function putDatesInWeek(date){
   if(unknownTestIn){
     let unknownStartIdx = meseDayICalc(unknownStartDate);
     let unknownStart = `${weeksDayArray[unknownStartIdx].code}`;
-    unknownArea = `<div class="unknownArea" style="grid-row: row-Day / row-end; grid-column: col-${unknownStart} / col-end">Not sure yet!</div>`;
+    unknownArea = `<div class="unknownArea" style="grid-row: row-Day / row-end; grid-column: col-${unknownStart} / col-end">Not sure yet!<br/>Come back around<br/>on ${nextKnownDate}</div>`;
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", unknownArea);
   };
   const unknownTestAfter = unknownStartDate < arrayDate[0].fullDash ? true : false;
   if(unknownTestAfter){
-    unknownArea = `<div class="unknownArea" style="grid-row: row-Day / row-end; grid-column: col-start / col-end">Not sure yet!</div>`;
+    unknownArea = `<div class="unknownArea" style="grid-row: row-Day / row-end; grid-column: col-start / col-end">Not sure yet!<br/>Come back around<br/>on ${nextKnownDate}</div>`;
     document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", unknownArea);
   };
   
 
-  let Dday = arrayDate[0].fullDash;
-  let Sday = arrayDate[arrayDate.length - 1].fullDash;
+  Dday = arrayDate[0].fullDash;
+  Sday = arrayDate[arrayDate.length - 1].fullDash;
   let Ddate = getDateFromString(Dday);
   let Sdate = getDateFromString(Sday);
   let DYear = Ddate.getFullYear();
@@ -873,7 +1181,7 @@ function putDatesInWeek(date){
   let SMonthName = Sdate.toLocaleString('fr-CA', { month: 'long' }).toLocaleUpperCase();
   document.querySelector("#weeklyYearSpan").innerHTML = `${DYear}${DYear !== SYear ? ` / ${SYear}` : ``}`;
   document.querySelector("#weeklyMonthSpan").innerHTML = `${DMonthName}${DMonthName !== SMonthName ? ` / ${SMonthName}` : ``}`;
-  getThisWeekStuffAndUnavailableRanges(Dday, Sday);
+  getThisWeekStuffAndUnavailableRanges();
   putShowsInWeek();
  
   if(userSelection.date !== null 
@@ -917,7 +1225,8 @@ function updateSleepAreas(){
 
 let myThisWeekBusies = [];
 let theirThisWeekBookings = [];
-function getThisWeekStuffAndUnavailableRanges(Dday, Sday){
+let theOtherThisWeekBookings = [];
+function getThisWeekStuffAndUnavailableRanges(){
   myThisWeekBusies = myBusies.filter(busy =>
     Dday <= busy.date && busy.date <= Sday
   );
@@ -926,7 +1235,13 @@ function getThisWeekStuffAndUnavailableRanges(Dday, Sday){
     theirThisWeekBookings = storedBookings.filter(book =>
       Dday <= book.event.date && book.event.date <= Sday
     );
-  }; 
+  };
+  
+  if(config.meet && allTheOtherBookings.length){
+    theOtherThisWeekBookings = allTheOtherBookings.filter(book => 
+      Dday <= book.data.date && book.data.date <= Sday
+    );
+  };
 
   fromThisWeekStuffToUnavailableRanges();
 };
@@ -939,6 +1254,10 @@ function putShowsInWeek() {
   if(!theirThisWeekBookings.length) return
   theirThisWeekBookings.forEach(book => {
     createWeeklyBook(book);
+  });
+  if(!theOtherThisWeekBookings.length) return
+  theOtherThisWeekBookings.forEach(book => {
+    createWeeklyOtherBook(book);
   });
   updateLegend();
 };
@@ -960,6 +1279,16 @@ function createWeeklyBook(book){
       ${book.status == "cancelled" ? `<span class="iconBtn" onclick="trashCancelled(this)"><i class="fa-regular fa-trash-can"></i></span>` : ``}
   </div>`);
 };
+
+function createWeeklyOtherBook(book){
+  let [y, m, d] = book.data.date.split("-");
+  const dayIndex = new Date(y, m - 1, d).getDay();
+  let col = weeksDayArray[dayIndex].code; //code
+  let start = book.data.dalle.replace(":", "-"); // start time 11-00
+  let end = book.data.alle.replace(":", "-"); // end time 23-00
+  document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="weeklyBuffer" style="grid-column:col-${col}; grid-row:row-${start}/row-${end};"></div>`);
+};
+
 
 function updateLegend(){
   document.querySelectorAll(".userLegend").forEach(leg => {
@@ -1024,12 +1353,19 @@ function eraseWeekEvent(){
   });
 };
 
+function updateCurrentWeek(){
+  eraseWeekEvent();
+  getThisWeekStuffAndUnavailableRanges();
+  putShowsInWeek();
+  console.log("currentWeekUpdated");
+};
+
 function updateWeek(){
   eraseWeekArea();
   eraseWeekEvent();
   //updateSleepAreas();
-  let Dday = document.querySelector("#Dday").dataset.date; //wouldn't work if we haven't already set the date attribute...
-  let Ddate = getDateFromString(Dday);
+  let DdaySlash = document.querySelector("#Dday").dataset.date; //wouldn't work if we haven't already set the date attribute...
+  let Ddate = getDateFromString(DdaySlash);
   putDatesInWeek(Ddate);
 };
 
@@ -1283,6 +1619,11 @@ function addMe(thisOne) {
     endSlot: startSlot + 4 // 4 slots of 15 min to make the 1-hour weeklyItem
   };
   //console.log(selectedWeeklyItem);
+  confirmAvailability(selectedWeeklyItem);
+  formContainer.classList.remove("expanded"); // formContainer is technically already not expanded
+};
+
+function confirmAvailability(selectedWeeklyItem){
   
   let tempSelection = userSelection;
   
@@ -1399,9 +1740,7 @@ function addMe(thisOne) {
   userSelection.status = formState.key ? getBooking(formState.key).status : "selected";
   updateSelectedTime();
   updateUserMeeting();
-  formContainer.classList.remove("expanded"); // formContainer is technically already not expanded
   console.log(userSelection);
-
 };
 window.addMe = addMe;
 
@@ -1774,10 +2113,11 @@ form.addEventListener("submit", async (e) => {
       thisUserMeeting = container.querySelector(`[data-bookingkey="${formState.key}"]`);
     } else{
       // --- 3. Push to RTDB and get the reference ---
-      const newBookingRef = await push(ref(rtdb, "meetAlix"), {
+      const newBookingRef = await push(ref(rtdb, "meetAlix/bookings"), {
         type: formType,
         status: "pending",
         data: structuredClone(formState),
+        createdBy: deviceId,
         timestamp: Date.now()
       });
 

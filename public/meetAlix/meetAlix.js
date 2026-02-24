@@ -699,13 +699,24 @@ async function addListeners() {
 
     if (existingKeys.has(key)) return;
     existingKeys.add(key);
+    const booking = {
+      key,
+      ...book
+    };
 
-    if (book.createdBy === deviceId){
-      storedBookings.push({ key, ...book }); // do we create the weeklyItem here or in the form.submit?
+    if (booking.createdBy === deviceId){
+      if(Dday <= booking.data.date && booking.data.date <= Sday){
+        // and create a new one from storedBooking
+        createWeeklyBook(booking);
+        // add the proper legend if it isn't already there
+        updateLegend();          
+      };
+      storedBookings.push(booking); // do we create the weeklyItem here or in the form.submit?
     } else{
-      allTheOtherBookings.push({ key, ...book });
-
-      createWeeklyOtherBook(book); // only if it's within the week's dates!
+      allTheOtherBookings.push(booking);
+      if(Dday <= booking.data.date && booking.data.date <= Sday){
+        createWeeklyOtherBook(booking);
+      };
     };
   });
 
@@ -716,13 +727,43 @@ async function addListeners() {
     if (book.createdBy === deviceId){
       const bookingIndex = storedBookings.findIndex(book => book.key === key);
       if(bookingIndex !== -1){
-        storedBookings[bookingIndex].status = book.status;
-      }; //update the corresponding weeklyItem if there is one
+        const booking = storedBookings[bookingIndex];
+        booking.status = book.status;
+       //update the corresponding weeklyItem if there is one
+        const thisUserMeeting = container.querySelector(`[data-bookingkey="${key}"]`);
+        if(thisUserMeeting){
+          thisUserMeeting.remove();
+        };
+        if(Dday <= booking.data.date && booking.data.date <= Sday){
+          // and create a new one from storedBooking
+          createWeeklyBook(booking);
+          // add the proper legend if it isn't already there
+          updateLegend();          
+        };
+      };
     } else{
-      const otherBookingIndex = allTheOtherBookings.findIndex(book => book.key === key);
-      if(otherBookingIndex !== -1){
-        allTheOtherBookings[otherBookingIndex].status = book.status;
-      }; //update the corresponding weeklyItem if there is one or if there need to be one (check with the date!)
+      if(book.status === "pending"){
+        //add to array and create it if date
+        const booking = {
+          key,
+          ...book
+        };
+        allTheOtherBookings.push(booking);
+        if(Dday <= booking.data.date && booking.data.date <= Sday){
+          createWeeklyOtherBook(booking);
+        };
+      } else {
+        //if(book.status === "confirmed") remove from array and remove item, because there will be a busy instead
+        //if(book.status === "cancelled") remove from array and remove item 
+        const otherBookingIndex = allTheOtherBookings.findIndex(book => book.key === key);
+        if(otherBookingIndex !== -1){
+          const thisOtherMeeting = container.querySelector(`[data-bookingkey="${key}"]`);
+          if(thisOtherMeeting){
+            thisOtherMeeting.remove();// remove the corresponding weeklyItem if there is one!
+          };
+          allTheOtherBookings.splice(otherBookingIndex, 1);
+        }; 
+      };
     };
   });
 
@@ -737,13 +778,21 @@ async function addListeners() {
     if (book.createdBy === deviceId){
       const bookingIndex = storedBookings.findIndex(book => book.key === key);
       if(bookingIndex !== -1){
+        const thisUserMeeting = container.querySelector(`[data-bookingkey="${key}"]`);
+        if(thisUserMeeting){
+          thisUserMeeting.remove();// remove the corresponding weeklyItem if there is one!
+        };
         storedBookings.splice(bookingIndex, 1);
-      }; // remove the corresponding weeklyItem if there is one!
+      }; 
     } else{
       const otherBookingIndex = allTheOtherBookings.findIndex(book => book.key === key);
       if(otherBookingIndex !== -1){
+        const thisOtherMeeting = container.querySelector(`[data-bookingkey="${key}"]`);
+        if(thisOtherMeeting){
+          thisOtherMeeting.remove();// remove the corresponding weeklyItem if there is one!
+        };
         allTheOtherBookings.splice(otherBookingIndex, 1);
-      }; // remove the corresponding weeklyItem if there is one!
+      }; 
     };
   });
 };
@@ -1758,12 +1807,12 @@ function trashUserMeeting(){
     // removing the userMeeting from the calendar
     container.querySelector(`[data-bookingkey="${bookingKey}"]`).remove();
     // removing it from storedBookings
-    storedBookings.filter(
-      booking => booking.key !== bookingKey
-    ); // or, more acuratly, keeps all the booking that doesn't have that bookingKey
+    //storedBookings.filter(
+      //booking => booking.key !== bookingKey
+    //); // or, more acuratly, keeps all the booking that doesn't have that bookingKey
     // const bookingIndex = storedBookings.findIndex(book => book.key == bookingKey);
     // storedBookings.splice(bookingIndex, 1);
-    localStorage.meetAlixBookings = JSON.stringify(storedBookings);
+    //localStorage.meetAlixBookings = JSON.stringify(storedBookings);
     // removing it from rtdb (if it's still there)
     trashBookingInRTDB(bookingKey);
   }; 
@@ -1777,7 +1826,7 @@ window.trashUserMeeting = trashUserMeeting;
 
 async function trashBookingInRTDB(bookingKey){
   try {
-    await remove(ref(rtdb, `meetAlix/${bookingKey}`));
+    await remove(ref(rtdb, `meetAlix/bookings/${bookingKey}`));
     const keyTrashConfirm = "message_trash_confirm";
     const textTrashConfirm = t(keyTrashConfirm);
     messageBox.innerHTML = textTrashConfirm;
@@ -2095,22 +2144,22 @@ form.addEventListener("submit", async (e) => {
     console.log(formState.key);
     if(formState.key){
       // find the booking index in storedBooking
-      const bookingIndex = storedBookings.findIndex(book => book.key == formState.key);
+      //const bookingIndex = storedBookings.findIndex(book => book.key == formState.key);
       // update the booking in storedBooking
-      storedBookings[bookingIndex].status = "pending";
-      storedBookings[bookingIndex].event = structuredClone(userSelection);
-      storedBookings[bookingIndex].form = structuredClone(formState);
-      storedBookings[bookingIndex].timestamp = Date.now();
+      //storedBookings[bookingIndex].status = "pending";
+      //storedBookings[bookingIndex].event = structuredClone(userSelection);
+      //storedBookings[bookingIndex].form = structuredClone(formState);
+      //storedBookings[bookingIndex].timestamp = Date.now();
         // status: pending (even if it was confirmed)
         // on update juste event (userSelection), form (formState) (what should we do about formState.key?), and timestamp
       // update the booking in rtdb and catch
-      await update(ref(rtdb, `meetAlix/${formState.key}`), {
+      await update(ref(rtdb, `meetAlix/bookings/${formState.key}`), {
         status: "pending",
         data: structuredClone(formState),
         timestamp: Date.now()
       });
-      thisBooking = storedBookings[bookingIndex];
-      thisUserMeeting = container.querySelector(`[data-bookingkey="${formState.key}"]`);
+      //thisBooking = storedBookings[bookingIndex];
+      //thisUserMeeting = container.querySelector(`[data-bookingkey="${formState.key}"]`);
     } else{
       // --- 3. Push to RTDB and get the reference ---
       const newBookingRef = await push(ref(rtdb, "meetAlix/bookings"), {
@@ -2121,28 +2170,25 @@ form.addEventListener("submit", async (e) => {
         timestamp: Date.now()
       });
 
-      const bookingKey = newBookingRef.key; // 🔑 THIS is the magic
+      //const bookingKey = newBookingRef.key; // 🔑 THIS is the magic
       console.log(bookingKey);
       userSelection.status = "pending";
 
       // --- 4. Store booking locally ---
-      thisBooking = {
-        key: bookingKey,
-        status: "pending",
-        type: formType,
-        event: structuredClone(userSelection),
-        form: structuredClone(formState),
-        timestamp: Date.now()
-      };
-      storedBookings.push(thisBooking);
+      //thisBooking = {
+        //key: bookingKey,
+        //status: "pending",
+        //type: formType,
+        //event: structuredClone(userSelection),
+        //form: structuredClone(formState),
+        //timestamp: Date.now()
+      //};
+      //storedBookings.push(thisBooking);
       // thisUserMeeting = container.querySelector(".userMeeting.selected");
-      thisUserMeeting = container.querySelector(`[data-uuid="${userSelection.uuid}"]`);
+      //thisUserMeeting = container.querySelector(`[data-uuid="${userSelection.uuid}"]`);
     };
 
-    localStorage.setItem(
-      "meetAlixBookings",
-      JSON.stringify(storedBookings)
-    );
+    //localStorage.setItem("meetAlixBookings", JSON.stringify(storedBookings));
 
     // --- 5. SUCCESS ---
     // Show confirmation message
@@ -2152,13 +2198,13 @@ form.addEventListener("submit", async (e) => {
     //messageBox.innerHTML = confirmMessage;
 
     // Remove userMeeting
-    console.log(thisUserMeeting);
-    thisUserMeeting.remove();
+    //console.log(thisUserMeeting);
+    //thisUserMeeting.remove();
 
     // and create a new one from storedBooking
-    createWeeklyBook(thisBooking);
+    //createWeeklyBook(thisBooking);
     // add the proper legend if it isn't already there
-    updateLegend();
+    //updateLegend();
   
 
     // Erase and remove the form

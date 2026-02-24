@@ -41,7 +41,7 @@ coteForm.addEventListener('submit', (e) => {
   e.preventDefault();
   let timeNow = Timestamp.fromDate(new Date());
   console.log(timeNow);
-  //let coteText = document.querySelector('input[name=menuText]:checked').value;
+  let coteText = document.querySelector(".textPage").dataset.title;
   if(cote > 0){
     let comment = coteForm.comment.value.replace(/\n/g, '<br>');
     addDoc(collection(db, "love"), {

@@ -1,0 +1,483 @@
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- If you want to set the link preview picture -->
+     <!-- Well, first set a preview picture! -->
+    <!-- <meta property="og:image" content="/@Pictures/preview.jpg"> -->
+    <!--
+    TO ADD IF YOU REALLY WANT IT COMPLETELY RELOAD EVERYTIME (NOT RECOMMENDED EXCEPT FOR TESTING)
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    -->
+    <!-- Local fonts -->
+    <link rel="stylesheet" href="/@Fonts&Icons/fonts/fonts.css">
+    <!-- Optional: preload main body font -->
+    <link rel="preload"
+      href="/@Fonts&Icons/fonts/nunito/nunito-v32-latin-500.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin>
+    <!-- Icons -->
+    <link rel="stylesheet" href="/@Fonts&Icons/typicons/typicons.css">
+    <link rel="stylesheet" href="/@Fonts&Icons/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/@Fonts&Icons/fontawesome/css/solid.min.css">
+    <link rel="stylesheet" href="/@Fonts&Icons/fontawesome/css/regular.min.css">
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <!-- CSS -->
+
+    
+    <title>Carte Calia</title>
+  </head>
+
+  <body>
+
+  <div class="topToggles">
+    <!-- fullScreen -->
+    <div onclick="switchScreen()" class="switchModeSlider"> 
+      <i id="switchScreenNorm" class="switchRight fa-solid fa-minimize"></i>
+      <i id="switchScreenFull" class="switchLeft fa-solid fa-maximize"></i>
+      <div class="switchModeBall"></div>
+    </div>
+    <!-- mode -->
+    <div onclick="switchMode()" class="switchModeSlider">
+      <i id="switchModeLight" class="switchRight fa-regular fa-sun"></i>
+      <i id="switchModeDark" class="switchLeft fa-solid fa-moon"></i>
+      <div class="switchModeBall"></div>
+    </div>
+    <!-- language -->
+    <div onclick="switchLang()" class="switchModeSlider">
+      <span id="switchLangFR" class="switchRight">FR</span>
+      <span id="switchLangEn" class="switchLeft">EN</span>
+      <div class="switchModeBall"></div>
+    </div>
+  </div>
+
+<img
+  id="consent"
+  class="fullscreen-image"
+  src="https://caliact.com/wp-content/uploads/2026/01/REELS_Light.png"
+  alt="Carte RÉELS / FIRES Card"
+/>
+
+<input id="helpShow" type="radio" name="helpSwitch" class="displayNone" checked />
+<input id="helpExit" type="radio" name="helpSwitch" class="displayNone" />
+
+<div class="helpDiv">
+  <label id="helpExitLabel" for="helpExit" style="float:right;"><i class="fa-solid fa-xmark"></i></label>
+  <div class="helpLegend">
+    <div class="helpLegendLine" style="width: max-content;">
+      Français
+      <img src="https://caliact.com/wp-content/uploads/2026/01/symbol_swipe.png" alt="Glissez horizontalement" />
+      English
+    </div>
+    <hr />
+    <div class="helpLegendLine">
+      <i class="fa-regular fa-sun"></i>
+      <img src="https://caliact.com/wp-content/uploads/2026/01/symbol_click.png" alt="Appuyez une fois" />
+      <i class="fa-solid fa-moon"></i>
+    </div>
+    <!-- <hr />
+    <div class="helpLegendLine" id="fullScreenHelp">
+      <i class="fa-solid fa-maximize"></i>
+      <img src="https://caliact.com/wp-content/uploads/2026/01/symbol_longPress.png" alt="Appuyez et maintenez" />
+      <i class="fa-solid fa-minimize"></i>
+    </div>
+    <div id="openBrowserHint" style="text-align: center;" hidden>
+      <span>Ouvrez dans un navigateur pour l'option Plein Écran.</span>
+    </div> -->
+  </div>
+</div>
+
+<label id="helpBtn" for="helpShow">
+  <i class="fa-regular fa-circle-question"></i>
+</label>
+
+<style>
+  /* --- layout cleanup --- */
+  aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, .frentete, .enheader, #covid-fr, #covid-en, .storefront-breadcrumb, div.sharedaddy, #content div.sharedaddy, #main div.sharedaddy {
+    display: none !important;
+  }
+
+  .entry-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100dvh;
+  }
+
+  /* --- image --- */
+  img.fullscreen-image {
+    height: 90dvh;
+    width: auto;
+    display: block;
+    margin: auto;
+    cursor: pointer;
+
+    /* animation base */
+    opacity: 1;
+    transform: translateX(0);
+    transition:
+      opacity 150ms ease-in-out,
+      transform 200ms ease-in-out;
+
+    /* allow zoom */
+    touch-action: pan-x pan-y pinch-zoom;
+  }
+
+  /* --- animation states --- */
+  img.is-fading {
+    opacity: 0;
+  }
+
+  img.slide-left {
+    transform: translateX(-30%);
+    opacity: 0;
+  }
+
+  img.slide-right {
+    transform: translateX(30%);
+    opacity: 0;
+  }
+
+  /* --- help UI --- */
+
+  .helpLegend{
+      display: flex; 
+      flex-flow: column nowrap; 
+      align-items: stretch;
+      justify-content: space-evenly;
+      gap: 1em;
+      margin: 1.7em 1em 1em;
+      width: min-content;
+    }
+  .helpLegend hr{
+      margin: 0;
+    }
+  .helpLegendLine{
+      display: flex; 
+      flex-flow: row nowrap; 
+      justify-content: space-around;
+      align-items: center;
+      font-weight: 700;
+      width: 100%;
+    }
+  .helpLegendLine img{
+      width: 10dvw;
+      height: auto;
+    }
+  .helpLegendLine i{
+      font-size: 2em;
+    }
+  .helpDiv{
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: max-content;
+    background-color: #ffffff;
+    z-index: 10;
+    border: 2px solid;
+    border-radius: 5px;
+    padding: 5px 10px;
+    /* display: none; */
+  }
+  .helpDiv p{
+      display: none;
+    }
+
+  #helpBtn{
+    display: block;
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    z-index: 5;
+    border-radius: 25px;
+    height: 24px;
+    font-size: 24px;
+    line-height: 24px;
+  }
+
+
+  .topToggles{
+    width: 90%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    margin: 5px auto 10px;
+  }
+  .switchModeSlider{
+    width: 45px;
+    height: 22px;
+    padding: 0.5px 3px;
+    border-radius: 50px; 
+    border: 1.5px solid; 
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    background-color: rgba(109, 109, 109, .2);
+  }
+
+  .switchModeSlider span{
+    font-family: "quicksand";
+    font-size: 14px;
+    font-weight: 900;
+  }
+
+  .switchModeBall{ 
+    height: 18px; 
+    width: 18px; 
+    margin: 0 1px 0 .5px;
+    border-radius: 50%; 
+    border: 1.5px solid;
+    background: #ffffff; 
+    z-index: 10;
+    position: absolute; 
+    left: 0;
+  }
+  
+
+  .displayNone { display:none!important; }
+</style>
+<script>
+
+
+
+
+  const helpShow = document.querySelector('#helpShow'); // input to open Help
+  const helpExit = document.querySelector('#helpExit'); // input to close Help
+  const helpDiv = document.querySelector('.helpDiv'); // Help div
+  const helpExitLabel = document.querySelector('#helpExitLabel'); // label to close Help
+  const helpBtn = document.querySelector('#helpBtn'); // label to open Help
+
+  let firstTime = localStorage.getItem("calia_CarteREELS_FirstTime");
+  if (firstTime === null) {
+    openHelp(); // we see the help
+    localStorage.setItem("calia_CarteREELS_FirstTime", "false");
+  } else {
+    closeHelp(); // the help is hidden
+  };
+
+  function closeHelp(){
+    helpExit.checked = true;
+    helpDiv.style.display = 'none';
+    helpBtn.style.display = 'block';
+  };
+  function openHelp(){
+    helpShow.checked = true;
+    helpDiv.style.display = 'block';
+    helpBtn.style.display = 'none';
+  };
+
+  // labels' action // Mouse / touch
+  helpBtn.addEventListener('click', openHelp);
+  helpExitLabel.addEventListener('click', closeHelp);
+  // inputs' action // Keyboard / accessibility
+  helpShow.addEventListener('change', openHelp);
+  helpExit.addEventListener('change', closeHelp);
+
+
+
+  (function () {
+    const img = document.querySelector('.fullscreen-image');
+    if (!img) return;
+
+    const kind = img.id;
+
+    /* -----------------------------
+      FULLSCREEN (LONG PRESS)
+    ----------------------------- */
+
+    let fullscreenChecked = false;
+    let fullscreenOK = false;
+
+    async function canUseFullscreen(el) {
+      if (!document.fullscreenEnabled) return false;
+
+      try {
+        await el.requestFullscreen();
+        await document.exitFullscreen();
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    async function ensureFullscreenSupport() {
+      if (fullscreenChecked) return fullscreenOK;
+
+      fullscreenChecked = true;
+      fullscreenOK = await canUseFullscreen(img);
+
+      // if (!fullscreenOK) {
+      //   document.querySelector("#openBrowserHint")?.removeAttribute("hidden");
+      //   document.querySelector("#fullScreenHelp")?.classList.add("displayNone");
+      // }
+
+      return fullscreenOK;
+    }
+
+    const LONG_PRESS_MS = 550;
+    let pressTimer = null;
+
+    function clearPressTimer() {
+      if (pressTimer !== null) {
+        clearTimeout(pressTimer);
+        pressTimer = null;
+      }
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        img.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    img.addEventListener("pointerdown", async e => {
+      // Only primary button / touch
+      if (e.button !== 0) return;
+
+      if (!(await ensureFullscreenSupport())) return;
+
+      clearPressTimer();
+      pressTimer = setTimeout(toggleFullscreen, LONG_PRESS_MS);
+    });
+
+    img.addEventListener("pointerup", clearPressTimer);
+    img.addEventListener("pointerleave", clearPressTimer);
+    img.addEventListener("pointercancel", clearPressTimer);
+
+
+    /* -----------------------------
+      STORAGE
+    ----------------------------- */
+    const STORAGE_KEY = 'allTheCardsPrefs';
+
+    function loadPrefs() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+      catch { return {}; }
+    }
+
+    function savePrefs() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ kind, language, theme }));
+      } catch {}
+    }
+
+    /* -----------------------------
+      STATE
+    ----------------------------- */
+    const prefs = loadPrefs();
+    // 1. Get the language (force lowercase to be safe)
+    const rawLang = document.documentElement.lang.toLowerCase();
+
+    // 2. Check if it starts with "en"
+    const pageLang = rawLang.startsWith("en") ? "en" : "fr";
+
+    // //That one would work too (if we lowerCase it too)
+    //const primaryLang = document.documentElement.lang.split('-')[0]; 
+    // // "en-US" becomes "en"
+    // // "fr-CA" becomes "fr"
+
+    let language = prefs.language || pageLang;
+    let theme = kind === 'loveNo' ? 'one' : (prefs.theme || 'light');
+
+    /* -----------------------------
+      IMAGES
+    ----------------------------- */
+    const images = {
+      consent: {
+        fr: {
+          light: 'https://caliact.com/wp-content/uploads/2026/01/REELS_Light.png',
+          dark:  'https://caliact.com/wp-content/uploads/2026/01/REELS_Dark.png'
+        },
+        en: {
+          light: 'https://caliact.com/wp-content/uploads/2026/01/FIRES_Light.png',
+          dark:  'https://caliact.com/wp-content/uploads/2026/01/FIRES_Dark.png'
+        }
+      },
+      loveNo: {
+        fr: { one:'https://caliact.com/wp-content/uploads/2026/01/Le-NON_Postcard_web.png' },
+        en: { one:'https://caliact.com/wp-content/uploads/2026/01/The-NO_Postcard_web.png' }
+      }
+    };
+
+    /* -----------------------------
+      PRELOAD
+    ----------------------------- */
+    Object.values(images[kind]).forEach(lang =>
+      Object.values(lang).forEach(src => {
+        const i = new Image();
+        i.src = src;
+      })
+    );
+
+    /* -----------------------------
+      UPDATE IMAGE
+    ----------------------------- */
+    function updateImage(animationClass) {
+      if (animationClass) img.classList.add(animationClass);
+
+      setTimeout(() => {
+        img.src = images[kind][language][theme];
+        savePrefs();
+
+        img.onload = () => {
+          img.classList.remove('is-fading','slide-left','slide-right');
+        };
+      }, 150);
+    }
+
+    updateImage();
+
+    /* -----------------------------
+      TAP = THEME (FADE)
+    ----------------------------- */
+    if (kind === 'consent') { // add toggle eventlisteners here
+      img.addEventListener('click', () => {
+        theme = theme === 'light' ? 'dark' : 'light';
+        img.classList.add('is-fading');
+        updateImage('is-fading');
+      });
+    }
+
+    /* -----------------------------
+      SWIPE = LANGUAGE (SLIDE)
+    ----------------------------- */
+    let startX = 0, startY = 0, isSwiping = false;
+
+    img.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      isSwiping = true;
+    }, { passive:true });
+
+    img.addEventListener('touchmove', e => {
+      if (!isSwiping) return;
+
+      const dx = e.touches[0].clientX - startX;
+      const dy = e.touches[0].clientY - startY;
+
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+        language = language === 'fr' ? 'en' : 'fr';
+        updateImage(dx > 0 ? 'slide-right' : 'slide-left'); // right for Fr and left for En
+        isSwiping = false;
+      }
+    }, { passive:true });
+
+    img.addEventListener('touchend', () => {
+      isSwiping = false;
+    });
+
+  })();
+    </script>
+
+  </body>

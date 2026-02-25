@@ -472,6 +472,38 @@ for (const key in formFields) {
 // That code (up) basically creates this (down):
 
 
+// MARK: REFLEXIONS
+/* 
+userSelection n'existe que lorsque le user a selectionné quelque chose (et jamais dans le localStorage), que ce soit un carré vide ou un de ses bookings; userSelection est resetté en même temps que le .selected est removed ou que le Form est fermé (x) ou trashed
+
+FormState apparait dans le localStorage seulement après que le user y a modifié quelque chose. 
+FormState reste dans le localStorage tant et aussi longtemps que le user ne l'a pas trashed (par le Form ou par le weeklyItem), ou saved (donc envoyé pending).
+Le FormState n'obtient un bookingKey qu'après avoir été sauvé/envoyé
+
+Le user click sur un carré vide pour la première fois
+  -> Si il y a un FormState, on rempli le Form (mais avec la nouvelle date et heures)
+  -> On cré un nouveau userSelection et un .selected (en fonction des availabilities)
+Le user click sur un deuxième carré vide (ou, plus tard, sur une extrémité du .selected (pour le racourcir))
+  -> On update userSelection (en fonction des availabilities)
+  -> On remove et recré le .selected
+  -> On update FormState et le Form
+Le user click sur un de ses bookings (pending, confirmed ou cancelled)
+  -> On cré/update userSelection à partir de FormState (le weeklyItem possède le bookingKey)
+  -> est-ce qu'on cré un .selected par-dessus ou est-ce qu'on remove et cré un nouveau weeklyItem (et si ça, est-ce qu'on met les borders en pointillés et on change la couleur, ou est-ce qu'on le laisse pareil (et est-il .selected quand même pour qu'on puisse le remove plus tard?))? 
+    => Tant que le user n'a pas sauvé le Form, le weeklyItem garde sa couleur de status; 
+    => Si le user save (après avoir modifié quelque chose; le bouton save devrait réapparaître et les borders deviennent pointillées?), il redevient "pending"
+  OU
+  On ne cré pas de userSelection et on ne remplit pas le Form; à la place, on présente une version officielle du Form (donc pas avec des champs modifiables, juste les infos) (avec un crayon dans un coin pour pouvoir le modifié)
+    Si le user click sur le crayon:
+      -> on cré un nouveau userSelection
+      -> on remove le weeklyItem et cré un .selected
+      -> on update le FormState (?? qu'est-ce qu'on y change? le status? status = "selected")
+      Si le user click sur cancel
+      -> on reset userSelection et remove .selected
+      -> à partir du bookingKey du formState, on récupère la version qui est dans storedBooking et
+      -> on recré le weeklyItem
+      -> on rerempli le Form avec les données originales
+*/
 
 // const storedBookings =
 //       JSON.parse(localStorage.getItem("meetAlixBookings")) || [];

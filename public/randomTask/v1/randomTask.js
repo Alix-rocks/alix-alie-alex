@@ -537,41 +537,43 @@ async function loadBookings() {
   }))
   .sort((a, b) => a.timestamp - b.timestamp);
 
-updateInbox();
+  updateInbox();
+
+  onChildAdded(ref(rtdb, "meetAlix/bookings"), (snap) => {
+    const booking = { key: snap.key, ...snap.val() };
+    //check if booking.key already is in bookingQueue, and if yes, then update that one, otherwise, push it
+    const bookingIndex = bookingQueue.findIndex(book => book.key === booking.key);
+    if(bookingIndex !== -1){
+      bookingQueue[bookingIndex] = booking;
+    } else{
+      bookingQueue.push(booking);
+    };
+    updateInbox();
+  });
+
+  onChildChanged(ref(rtdb, "meetAlix/bookings"), (snap) => {
+    const booking = { key: snap.key, ...snap.val() };
+    //check if booking.key already is in bookingQueue, and if yes, then update that one, otherwise, push it
+    const bookingIndex = bookingQueue.findIndex(book => book.key === booking.key);
+    if(bookingIndex !== -1){
+      bookingQueue[bookingIndex] = booking;
+    } else{
+      bookingQueue.push(booking);
+    };
+    updateInbox();
+  });
+
+  onChildRemoved(ref(rtdb, "meetAlix/bookings"), (snap) => {
+    const bookingKey = snap.key;
+    bookingQueue = bookingQueue.filter(
+      book => book.key !== bookingKey
+    );
+    updateInbox();
+  });
 
 };
 
-onChildAdded(ref(rtdb, "meetAlix/bookings"), (snap) => {
-  const booking = { key: snap.key, ...snap.val() };
-  //check if booking.key already is in bookingQueue, and if yes, then update that one, otherwise, push it
-  const bookingIndex = bookingQueue.findIndex(book => book.key === booking.key);
-  if(bookingIndex !== -1){
-    bookingQueue[bookingIndex] = booking;
-  } else{
-    bookingQueue.push(booking);
-  };
-  updateInbox();
-});
 
-onChildChanged(ref(rtdb, "meetAlix/bookings"), (snap) => {
-  const booking = { key: snap.key, ...snap.val() };
-  //check if booking.key already is in bookingQueue, and if yes, then update that one, otherwise, push it
-  const bookingIndex = bookingQueue.findIndex(book => book.key === booking.key);
-  if(bookingIndex !== -1){
-    bookingQueue[bookingIndex] = booking;
-  } else{
-    bookingQueue.push(booking);
-  };
-  updateInbox();
-});
-
-onChildRemoved(ref(rtdb, "meetAlix/bookings"), (snap) => {
-  const bookingKey = snap.key;
-  bookingQueue = bookingQueue.filter(
-    book => book.key !== bookingKey
-  );
-  updateInbox();
-});
 
 async function updateBooking(key, newStatus) {
   try {
@@ -1076,7 +1078,10 @@ earthIt.addEventListener("click", updateFromCloud);
 // *** CLOUDSAVE
 
 async function saveToCloud(){
-  pushBusiesToRTDB();
+  if(auth.currentUser.email === "alexblade.23.49@gmail.com"){
+    pushBusiesToRTDB();
+  };
+  
   
   let nowStamp = new Date().getTime();
   const batch = writeBatch(db);
@@ -3399,7 +3404,7 @@ function creatingCalendar(todo, home, classs){
   </div>`;
 
   let bufferDiv = `<div id="bufferSection" class="calendarMargin" style="margin-top:20px;">
-    <h5 class="taskInfoInput" style="margin-left: 0;">How long will that really take?</h5>
+    <h5 class="taskInfoInput" style="margin-left: 0;">How long will that really take?${auth.currentUser.email === "alexblade.23.49@gmail.com" ? ` (Meal >= "03:00")` : ``}</h5>
     <div class="inDaySection" style="width: -webkit-fill-available; max-width: 200px;">
       <p style="margin-top: 10px;">
         <span>Before: </span>

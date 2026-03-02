@@ -1700,6 +1700,7 @@ function addMe(thisOne) {
     endSlot: startSlot + 4 // 4 slots of 15 min to make the 1-hour weeklyItem
   };
   //console.log(selectedWeeklyItem);
+  console.log(formState);
   confirmAvailability(selectedWeeklyItem);
   formContainer.classList.remove("expanded"); // formContainer is technically already not expanded
 };
@@ -1818,7 +1819,7 @@ function confirmAvailability(selectedWeeklyItem){
   userSelection.topIsTouching = tempSelection.topIsTouching; 
   userSelection.bottomIsTouching = tempSelection.bottomIsTouching;
   userSelection.uuid = tempSelection.uuid == "" ? crypto.randomUUID() : tempSelection.uuid;
-  userSelection.status = formState.key ? getBooking(formState.key).status : "selected";
+  userSelection.status = formState.key ? getBooking(formState.key) ? getBooking(formState.key).status : "selected" : "selected";
   updateSelectedTime();
   updateUserMeeting();
   console.log(userSelection);
@@ -2334,17 +2335,18 @@ form.addEventListener("submit", async (e) => {
       //thisUserMeeting = container.querySelector(`[data-bookingkey="${formState.key}"]`);
     } else{
       // --- 3. Push to RTDB and get the reference ---
-      const newBookingRef = await push(ref(rtdb, "meetAlix/bookings"), {
+      await push(ref(rtdb, "meetAlix/bookings"), {
         type: formType,
         status: "pending",
         data: structuredClone(formState),
         createdBy: deviceId,
         timestamp: Date.now()
       });
-
+      container.querySelector(".selected").remove();
       //const bookingKey = newBookingRef.key; // 🔑 THIS is the magic
-      console.log(bookingKey);
-      userSelection.status = "pending";
+      //console.log(bookingKey);
+      //userSelection.status = "pending"; //wE MIGHT AS WELL RESET USERSELECTION
+      //DO WE UPDATE THE FORMSTATE OR DO WE RESET IT?!
 
       // --- 4. Store booking locally ---
       //thisBooking = {
@@ -2385,7 +2387,7 @@ form.addEventListener("submit", async (e) => {
     resetUserSelection();
     resetFormState();
     //save to localStorage the resetted userSelection and formState
-    localStorage.meetAlixUserSelection = JSON.stringify(userSelection);
+    //localStorage.meetAlixUserSelection = JSON.stringify(userSelection);
     localStorage.meetAlixFormState = JSON.stringify(formState);
 
   } catch (error) {

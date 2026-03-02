@@ -1859,17 +1859,11 @@ window.trashUserMeeting = trashUserMeeting;
 async function trashBookingInRTDB(bookingKey){
   try {
     await remove(ref(rtdb, `meetAlix/bookings/${bookingKey}`));
-    const keyTrashConfirm = "message_trash_confirm";
-    const textTrashConfirm = t(keyTrashConfirm);
-    messageBox.innerHTML = textTrashConfirm;
+    messageBox.innerHTML = t("message_trash_confirm");
     updateLegend();
-    //messageBox.innerHTML = confirmTrashMessage;
   } catch (err) {
     console.error("Failed to delete booking", err);
-    const keyError = "message_error";
-    const textError = t(keyError);
-    messageBox.innerHTML = textError;
-    //messageBox.innerHTML = errorMessage;
+    messageBox.innerHTML = t("message_error");
   };
 };
 
@@ -1974,8 +1968,8 @@ function updateSelectedTime(){
         case 2: return "nd";
         case 3: return "rd";
         default: return "th";
-      }
-    }
+      };
+    };
 
     const suffix = getOrdinalSuffix(day);
 
@@ -2038,85 +2032,234 @@ function updateSelectedTime(){
   };
 };
 
+function getDateTimeFromBook(book){
+  const thatDay = new Date(book.data.date);
+    
+  // 1️⃣ Get weekday, month, day, year
+  const weekday = thatDay.toLocaleDateString("en-US", { weekday: "long" });
+  const month = thatDay.toLocaleDateString("en-US", { month: "long" });
+  const day = thatDay.getDate();
+  const year = thatDay.getFullYear();
+
+  // 2️⃣ Get ordinal suffix (st, nd, rd, th)
+  function getOrdinalSuffix(n) {
+    if (n >= 11 && n <= 13) return "th";
+    switch (n % 10) {
+      case 1: return "st";
+      case 2: return "nd";
+      case 3: return "rd";
+      default: return "th";
+    };
+  };
+
+  const suffix = getOrdinalSuffix(day);
+
+  // --- TIME PART ---
+    function formatTime24to12(hour24, minute) {
+
+      const period = hour24 >= 12 ? "pm" : "am";
+      const hour12 = hour24 % 12 || 12;
+      const paddedMinutes = minute.toString().padStart(2, "0");
+
+      return {
+        hour24,
+        hour12,
+        paddedMinutes,
+        period
+      };
+    };
+    let [startHours, startMinutes] = book.data.dalle.split(':').map(Number);
+    let [endHours, endMinutes] = book.data.alle.split(':').map(Number);
+    const startFormatted = formatTime24to12(startHours, startMinutes);
+    const endFormatted   = formatTime24to12(endHours, endMinutes);
+
+  let dateTime = t("summary_date_time", {
+    weekday: weekday,
+    month: month,
+    day: day,
+    suffix: suffix,
+    year: year,
+    startHour24: startFormatted.hour24,
+    startHour12: startFormatted.hour12,
+    startMinutes: startFormatted.paddedMinutes,
+    startPeriod: startFormatted.period,
+    endHour24: endFormatted.hour24,
+    endHour12: endFormatted.hour12,
+    endMinutes: endFormatted.paddedMinutes,
+    endPeriod: endFormatted.period
+  });
+
+  return dateTime;
+}
+
 function getBooking(bookingKey){
   return storedBookings.find((book) => book.key == bookingKey);
 };
 
 function openForm(thisOne){
-  console.log("openForm");
   const book = thisOne;
-  console.log(book);
   const bookingKey = book.dataset.bookingkey;
-  console.log(bookingKey);
-  // form.dataset.bookingkey = bookingKey;
   const booking = storedBookings.find((book) => book.key == bookingKey);
-  console.log(booking);
 
-  // Do we want to update userSelection too?!
-  Object.assign(userSelection, structuredClone(booking.event));
-  userSelection.status = booking.status;
+  // Do we want to update userSelection too?! If we do, we'll use getUserselectionFromForm
+
   // In case there is already a userMeeting.selected, we need it removed
   container.querySelectorAll(".userMeeting.selected").forEach(we => {
     we.remove();
   });
 
-  //update formState
-  Object.assign(formState, structuredClone(booking.form));
-  // That code (up) basically does this (down): (but it creates a deep copy/clone instead of sharing reference (in case of nested objects), so I get two notebook on the table instead of one with two post-its which would have been Object.assign(formState, booking.form);.)
-  // formState.date = booking.form.date;
-  // formState.dalle = booking.form.dalle;
-  // formState.alle = booking.form.alle;
-  // formState.name = booking.form.name;
-  // formState.email = booking.form.email;
-  // formState.cell = booking.form.cell;
-  // formState.messengerName = booking.form.messengerName;
-  // formState.whatsAppNumber = booking.form.whatsAppNumber;
-  // formState.where = booking.form.where;
-  // formState.yourAddress = booking.form.yourAddress;
-  // formState.whereReal = booking.form.whereReal;
-  // formState.why = booking.form.why;
-
+  //NO NEED TO update formState
+  // Object.assign(formState, structuredClone(booking.data));
+  
   //Add the bookingKey to formState
-  formState.key = bookingKey;
+  // formState.key = bookingKey;
 
-  console.log(formState);
-  //Fill up the form
-  for (const key in inputs) {
-    if (formState[key] !== undefined) {
-      // console.log(`${inputs[key]} : ${inputs[key].value}`);
-      // console.log(formState[key]);
-      if(inputs[key] instanceof NodeList){
-        
-        inputs[key].forEach(radio => {
-          radio.checked = radio.value == formState[key] ? true : false;
-        });
-      } else{
-       inputs[key].value = formState[key];
-      };
-    };
+  //Create the booking summary
+  let i18nWhere = "";
+  let address = "";
+  switch(booking.data.where){
+    case "messenger":
+      i18nWhere = "summary_where_messenger";
+      break;
+    case "googleMeet":
+      i18nWhere = "summary_where_googleMeet";
+      break;
+    case "whatsApp":
+      i18nWhere = "summary_where_whatsApp";
+      break;
+    case "myRealWorld":
+      i18nWhere = "summary_where_mine";
+      break;
+    case "yourRealWorld":
+      i18nWhere = "summary_where_at";
+      address = booking.data.yourAddress;
+      break;
+    case "elseRealWorld":
+      i18nWhere = "summary_where_at";
+      address = booking.data.whereReal;
+      break;
+    default:
+      console.log("oups!");
+      break;
   };
-// That code (up) basically does this (down):
-  // dateComplete.value = booking.form.date;
-  // dalleTime.value = booking.form.dalle;
-  // alleTime.value = booking.form.alle;
-  // nameInput.value = booking.form.name;
-  // emailInput.value = booking.form.email;
-  // cellInput.value = booking.form.cell;
-  // messengerNameInput.value = booking.form.messengerName;
-  // whatsAppNumberInput.value = booking.form.whatsAppNumber;
-  // whereRadios.value = booking.form.where;
-  // yourAddressInput.value = booking.form.yourAddress;
-  // whereRealInput.value = booking.form.whereReal;
-  // whyInput.value = booking.form.why;
+  const summary = `<div id="summaryContainer">
+    <div class="summary">
+      <div class="topButtons">
+        <button id="trashBookingFromSummary" class="iconBtn">
+          <i class="fa-regular fa-trash-can"></i>
+        </button>
+        <button id="closeSummary" class="iconBtn">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <h2 data-i18n="summary_presentation">${t("summary_presentation")}</h2>
+      <h3>${booking.data.name}<span data-i18n="summary_andMe">${t("summary_andMe")}</span><span data-i18n="summary_shall">${t("summary_shall")}</span><br/>
+        <span>${getDateTimeFromBook(booking)}</span>
+        <span data-i18n="${i18nWhere}">${t(i18nWhere)}</span>${address}.
+      </h3>
+      <h3><span data-i18n="summary_why">${t("summary_why")}</span><br/>
+      ${booking.data.why}</h3>
+      <button id="modifyBooking" class="textBtn submitBtn" data-i18n="button_modify">
+        ${t("button_modify")}
+      </button>
+    </div>
+  </div>`;
 
-  //selectedTime.innerHTML = "";
-  updateSelectedTime(); // since we have userSelection, and, anyway, if the user changes time and date, it will update SelectedTime, so might as well already have it!
-  submitBtn.innerText = "Save";
-  //formContainer.classList.remove("displayNone"); //already in updateSelectedTime()
-  formContainer.classList.add("expanded");
-  
-  
+  document.body.insertAdjacentHTML("beforeend", summary);
+
+  document.querySelector("#trashBookingFromSummary").addEventListener("click", () => {
+    document.querySelector("#summaryContainer").remove();
+    //remove the weeklyItem
+    container.querySelector(`[data-bookingkey="${bookingKey}"]`).remove();
+    //remove in rtdb
+    trashBookingInRTDB(bookingKey); //storedBookings will be updated through the change in rtdb
+  });
+  document.querySelector("#closeSummary").addEventListener("click", () => {
+    document.querySelector("#summaryContainer").remove();
+  });
+  document.querySelector("#modifyBooking").addEventListener("click", () => {
+    document.querySelector("#summaryContainer").remove();
+    //userSelection
+    //openForm
+  });
+
 };
+
+// function openForm(thisOne){ //First version...
+//   console.log("openForm");
+//   const book = thisOne;
+//   console.log(book);
+//   const bookingKey = book.dataset.bookingkey;
+//   console.log(bookingKey);
+//   // form.dataset.bookingkey = bookingKey;
+//   const booking = storedBookings.find((book) => book.key == bookingKey);
+//   console.log(booking);
+
+//   // Do we want to update userSelection too?!
+//   Object.assign(userSelection, structuredClone(booking.event));
+//   userSelection.status = booking.status;
+//   // In case there is already a userMeeting.selected, we need it removed
+//   container.querySelectorAll(".userMeeting.selected").forEach(we => {
+//     we.remove();
+//   });
+
+//   //update formState
+//   Object.assign(formState, structuredClone(booking.form));
+//   // That code (up) basically does this (down): (but it creates a deep copy/clone instead of sharing reference (in case of nested objects), so I get two notebook on the table instead of one with two post-its which would have been Object.assign(formState, booking.form);.)
+//   // formState.date = booking.form.date;
+//   // formState.dalle = booking.form.dalle;
+//   // formState.alle = booking.form.alle;
+//   // formState.name = booking.form.name;
+//   // formState.email = booking.form.email;
+//   // formState.cell = booking.form.cell;
+//   // formState.messengerName = booking.form.messengerName;
+//   // formState.whatsAppNumber = booking.form.whatsAppNumber;
+//   // formState.where = booking.form.where;
+//   // formState.yourAddress = booking.form.yourAddress;
+//   // formState.whereReal = booking.form.whereReal;
+//   // formState.why = booking.form.why;
+
+//   //Add the bookingKey to formState
+//   formState.key = bookingKey;
+
+//   console.log(formState);
+//   //Fill up the form
+//   for (const key in inputs) {
+//     if (formState[key] !== undefined) {
+//       // console.log(`${inputs[key]} : ${inputs[key].value}`);
+//       // console.log(formState[key]);
+//       if(inputs[key] instanceof NodeList){
+        
+//         inputs[key].forEach(radio => {
+//           radio.checked = radio.value == formState[key] ? true : false;
+//         });
+//       } else{
+//        inputs[key].value = formState[key];
+//       };
+//     };
+//   };
+// // That code (up) basically does this (down):
+//   // dateComplete.value = booking.form.date;
+//   // dalleTime.value = booking.form.dalle;
+//   // alleTime.value = booking.form.alle;
+//   // nameInput.value = booking.form.name;
+//   // emailInput.value = booking.form.email;
+//   // cellInput.value = booking.form.cell;
+//   // messengerNameInput.value = booking.form.messengerName;
+//   // whatsAppNumberInput.value = booking.form.whatsAppNumber;
+//   // whereRadios.value = booking.form.where;
+//   // yourAddressInput.value = booking.form.yourAddress;
+//   // whereRealInput.value = booking.form.whereReal;
+//   // whyInput.value = booking.form.why;
+
+//   //selectedTime.innerHTML = "";
+//   updateSelectedTime(); // since we have userSelection, and, anyway, if the user changes time and date, it will update SelectedTime, so might as well already have it!
+//   submitBtn.innerText = "Save";
+//   //formContainer.classList.remove("displayNone"); //already in updateSelectedTime()
+//   formContainer.classList.add("expanded");
+  
+  
+// };
 window.openForm = openForm;
 
 const messageBox = document.querySelector("#messageBox");
@@ -2160,10 +2303,7 @@ form.addEventListener("submit", async (e) => {
 
   // --- 1. UI: waiting state ---
   submitBtn.disabled = true;
-  const keyWaiting = "message_waiting";
-  const textWaiting = t(keyWaiting);
-  messageBox.innerHTML = textWaiting;
-  //messageBox.innerHTML = waitingMessage;
+  messageBox.innerHTML = t("message_waiting");
 
   // --- 2. Gather form data ---
   // const formData = new FormData(form);
@@ -2224,10 +2364,7 @@ form.addEventListener("submit", async (e) => {
 
     // --- 5. SUCCESS ---
     // Show confirmation message
-    const keyConfirm = "message_confirm";
-    const textConfirm = t(keyConfirm);
-    messageBox.innerHTML = textConfirm;
-    //messageBox.innerHTML = confirmMessage;
+    messageBox.innerHTML = t("message_confirm");
 
     // Remove userMeeting
     //console.log(thisUserMeeting);
@@ -2255,10 +2392,7 @@ form.addEventListener("submit", async (e) => {
     // --- 6. FAILURE ---
     console.error("Booking failed:", error);
 
-    const keyError = "message_error";
-    const textError = t(keyError);
-    messageBox.innerHTML = textError;
-    //messageBox.innerHTML = errorMessage;
+    messageBox.innerHTML = t("message_error");
     submitBtn.disabled = false;
   };
 });

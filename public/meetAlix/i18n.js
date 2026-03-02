@@ -78,9 +78,21 @@ const i18n = {
       label_why: "What would you like us to do?",
       help_why: "Anything I should know, prepare for, or worry about?",
 
+      /* ===== Summary ===== */
+      summary_presentation: "Here's a glimpse into our future:",
+      summary_andMe: ", and me",
+      summary_shall: " shall be hanging out on ",
+      summary_where_messenger: "on Messenger",
+      summary_where_googleMeet: "on Google Meet",
+      summary_where_whatsApp: "on WhatsApp",
+      summary_where_mine: "at 8419 Henri-Julien ave, Montreal, Qc, H2P 2J5",
+      summary_where_at: "at ",
+      summary_why: "BTW:",
+
       /* ===== Buttons ===== */
       button_submit: "Book it!",
       button_reset: "Oops!",
+      button_modify: "Modify",
 
       message_waiting: `<div id="waitingMessage" class="message">
         <button class="iconBtn topRightCorner" onclick="removeMessage()">
@@ -218,9 +230,23 @@ const i18n = {
       help_why:
         "Include any relevant information or requirements.",
 
+      /* ===== Summary ===== */
+      summary_presentation: "Meeting summary:",
+      summary_andMe: ", and me",
+      summary_shall: " shall meet on ",
+      summary_where_messenger: "on Messenger",
+      summary_where_googleMeet: "on Google Meet",
+      summary_where_whatsApp: "on WhatsApp",
+      summary_where_mine: "at 8419 Henri-Julien ave, Montreal, Qc, H2P 2J5",
+      summary_where_at: "at ",
+      summary_why: "Notes:",
+
       /* ===== Buttons ===== */
       button_submit: "Submit",
       button_reset: "Reset",
+      button_modify: "Modify",
+
+
       message_waiting: `<div id="waitingMessage" class="message">
         <button class="iconBtn topRightCorner" onclick="removeMessage()">
           <i class="fa-solid fa-xmark"></i>
@@ -264,8 +290,8 @@ const i18n = {
         <h6>If the problem persists, please contact support.</h6>
       </div>`,
 
-      legend_busy: "Unavailable time slot.",
-      legend_meal: "Meal break.",
+      legend_busy: "Unavailable time slot",
+      legend_meal: "Meal break",
       legend_meal_help:
         "This time slot can be scheduled; however, availability will be limited immediately afterward.",
 

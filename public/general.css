@@ -31,6 +31,11 @@ input:focus, textarea:focus, select:focus{
 body{
   background: var(--bg-color);
   color: var(--tx-color);
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  align-items: center;
+  min-height: calc(100% - 16px);
   /* transition: background-color .5s ease-in-out, color .5s ease-in-out; */
 }
 .mainContainer{
@@ -41,6 +46,7 @@ body{
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 /* h1 font-size: 36 - 38*/
 h1, .h1like{
@@ -142,7 +148,7 @@ footer#site-footer > hr{
 footer#site-footer > div{
   background:var(--color-2);
   padding: 10px;
-  margin: 0 -8px;
+  margin: 0 -8px -8px;
   text-align: center;
 }
 footer#site-footer > div > h5{

@@ -40,6 +40,31 @@ button:active{
   background-color: rgba(50,205,50,.2);
 }
 
+#summaryContainer{
+  z-index: 30;
+  background-color: rgba(0, 0, 0, 0);
+  padding: 15px;
+  display: flex;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 100dvh; /* important on mobile */
+}
+.summary{
+  border: 2px solid var(--tx-color);
+  border-radius: 10px;
+  height: 100%;
+  padding: 0 10px 10px 10px;
+  background-color: var(--bg-color);
+}
+
+.topButtons{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+}
+
 .formContainer{
   /* width: var(--vw);
   width: -webkit-fill-available;
@@ -69,6 +94,8 @@ button:active{
   flex-flow: row nowrap;
   align-items: center;
 }
+
+
 
 button.iconBtn{
   border: none;

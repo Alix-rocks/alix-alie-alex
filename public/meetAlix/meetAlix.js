@@ -75,7 +75,7 @@ const switchLang = document.querySelector("#switchLang");
   // console.log(lang);
 
 function t(key, vars = {}) {
-  console.log(i18n?.[type]?.[lang]?.[key]);
+  // console.log(i18n?.[type]?.[lang]?.[key]);
   let text =
     i18n?.[type]?.[lang]?.[key] ??
     key;
@@ -252,9 +252,9 @@ const userSelection = {
   endRow: null,
   topIsTouching: false,
   bottomIsTouching: false,
-  status: "",
+  // status: "",
   // uuid: "",
-  key: ""
+  // key: ""
 };
 
 
@@ -1069,15 +1069,18 @@ function putShowsInWeek() {
   myThisWeekBusies.forEach(busy => {
     createWeeklyshow(busy);
   });
-  if(!theirThisWeekBookings.length) return
-  theirThisWeekBookings.forEach(book => {
-    createWeeklyBook(book);
-  });
-  resetUserSelection();
-  if(!theOtherThisWeekBookings.length) return
-  theOtherThisWeekBookings.forEach(book => {
-    createWeeklyOtherBook(book);
-  });
+  if(theirThisWeekBookings.length){
+    theirThisWeekBookings.forEach(book => {
+      createWeeklyBook(book);
+    });
+    resetUserSelection();
+  };
+  if(theOtherThisWeekBookings.length){
+    theOtherThisWeekBookings.forEach(book => {
+      createWeeklyOtherBook(book);
+    });
+  };
+  console.log(theOtherThisWeekBookings);
   updateLegend();
 };
 
@@ -1101,6 +1104,7 @@ function createWeeklyBook(book){
 };
 
 function createWeeklyOtherBook(book){
+  console.log("other");
   let [y, m, d] = book.data.date.split("-");
   const dayIndex = new Date(y, m - 1, d).getDay();
   let col = weeksDayArray[dayIndex].code; //code
@@ -1358,6 +1362,7 @@ function analyzeRelation(selected, unavailable) {
 
 
 function addMe(thisOne) {
+  console.log(userSelection);
 
   // --- 1. Build the clicked weeklyItem info
   let selectedWeeklyItemInfo = {

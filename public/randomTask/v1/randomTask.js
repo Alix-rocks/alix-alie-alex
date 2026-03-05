@@ -578,7 +578,7 @@ async function loadBookings() {
 async function updateBooking(key, newStatus) {
   try {
     await update(
-      ref(rtdb, `meetAlix/${key}`),
+      ref(rtdb, `meetAlix/bookings/${key}`),
       {
         status: newStatus,
         timestamp: Date.now()

@@ -166,7 +166,7 @@ const i18n = {
       legend_waiting_help: "So just be patient! Although, if you don’t hear back in 24 hours, assume I got distracted and text me.",
 
       legend_confirm: "That one's been confirmed.",
-      legend_confirm_help: "So if every goes according to plan, we shall see each other then! Lucky you!",
+      legend_confirm_help: "So if everything goes according to plan, we shall see each other then! Lucky you!",
 
       legend_trash: "That one's been cancelled.",
       legend_trash_help: "Don't take it personally; it's the stars! It's always the stars! They just weren't aligned.<br/>Now, just hit the trash button, it's already too late for it anyway; might as well end its suffering."

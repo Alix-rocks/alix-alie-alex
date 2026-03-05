@@ -66,7 +66,7 @@ button:active{
   height: 22px;
   padding-left: 4px;
   border-radius: 50px; 
-  border: 1.5px solid; 
+  border: 1px solid; 
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -358,6 +358,7 @@ input.myRadio:checked + label span.myRadio{
   border: 2px solid var(--now-color-5);
   border-radius: 3px;
   z-index: 6;
+  pointer-events: none;
 }
 .nowArea{
   /* border-top: 3px solid rgba(64, 115, 243, 0.5); */

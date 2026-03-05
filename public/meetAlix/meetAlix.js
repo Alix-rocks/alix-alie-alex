@@ -16,8 +16,8 @@ const params = new URLSearchParams(window.location.search);
 
 const formType = params.get("type") || "default";
 
-console.log(window.location.href);
-console.log(window.location.search);
+//console.log(window.location.href);
+//console.log(window.location.search);
 
 const formConfigs = {
   puzzle: {
@@ -42,10 +42,10 @@ const formConfigs = {
   }
 };
 const config = formConfigs[formType];
-console.log(config);
+//console.log(config);
 
 let type = params.get("type") || "client";
-console.log(type);
+//console.log(type);
 if(type === "friend"){
   document.querySelector(".topToggles").insertAdjacentHTML("beforeend", `<label class="beigeToggler">
       <input type="checkbox" id="beigeToggle">
@@ -88,7 +88,7 @@ function t(key, vars = {}) {
 };
 
 function translatePage() {
-  console.log(lang);
+  //console.log(lang);
   
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const key = el.dataset.i18n;
@@ -105,7 +105,7 @@ function translatePage() {
   translateMonth();
 
   if (!formContainer.classList.contains("displayNone") && formState.date !== "") {
-    console.log(formState.date);
+    //console.log(formState.date);
     let string = getDateTimeFromBook(formState);
     let stringLang = lang === "en" ? string : string.charAt(0).toUpperCase() + string.slice(1);
     selectedTime.innerHTML = stringLang;
@@ -220,7 +220,7 @@ for(let d = 0; d < 8; d++){
   };
   allTheEdges.push(daySlots); //Les ajouter dans unavailableRanges
 };
-console.log(allTheEdges);
+////console.log(allTheEdges);
 
 const allTheOtherBookings = [];
 
@@ -337,7 +337,6 @@ if (savedFormState) {
 
 const fieldHandlers = {
   simple(key) {
-    console.log("simple " + key + " " + inputs[key]);
     inputs[key].addEventListener("change", e => {
       formState[key] = e.target.value;
       localStorage.setItem(
@@ -367,12 +366,10 @@ const fieldHandlers = {
   },
 
   dalle(key) {
-    console.log("dalle " + key + " " + inputs[key]);
     inputs[key].addEventListener("change", e => {
       const value = e.target.value; // e.g., "10:07"
       if (!value) return;
       const formattedTime = roundFifteenTime(value);
-      console.log(formattedTime);
       
       //If there's overlapping, adjust the time to the nearest possible; don't just snap back to the previous time
       let [hours, minutes] = formattedTime.split(':').map(Number);
@@ -397,12 +394,10 @@ const fieldHandlers = {
   },
 
   alle(key) {
-    console.log("alle " + key + " " + inputs[key]);
     inputs[key].addEventListener("change", e => {
       const value = e.target.value; // e.g., "10:07"
       if (!value) return;
       const formattedTime = roundFifteenTime(value);
-      console.log(formattedTime);
       
       //If there's overlapping, adjust the time to the nearest possible; don't just snap back to the previous time
       let [hours, minutes] = formattedTime.split(':').map(Number);
@@ -427,7 +422,6 @@ const fieldHandlers = {
   },
 
   radio(key) {
-    console.log("radio " + key + " " + inputs[key]);
     inputs[key].forEach(radio => {
       radio.addEventListener("change", e => {
         if (e.target.checked) {
@@ -625,12 +619,12 @@ async function addListeners() {
       } else {
         //if(book.status === "confirmed") remove from array and remove item, because there will be a busy instead
         //if(book.status === "cancelled") remove from array and remove item 
+        const thisOtherMeeting = container.querySelector(`[data-bookingkey="${key}"]`);
+        if(thisOtherMeeting){
+          thisOtherMeeting.remove();// remove the corresponding weeklyItem if there is one!
+        };
         const otherBookingIndex = allTheOtherBookings.findIndex(book => book.key === key);
         if(otherBookingIndex !== -1){
-          const thisOtherMeeting = container.querySelector(`[data-bookingkey="${key}"]`);
-          if(thisOtherMeeting){
-            thisOtherMeeting.remove();// remove the corresponding weeklyItem if there is one!
-          };
           allTheOtherBookings.splice(otherBookingIndex, 1);
         }; 
       };
@@ -646,21 +640,21 @@ async function addListeners() {
     };
     
     if (book.createdBy === deviceId){
+      const thisUserMeeting = container.querySelector(`[data-bookingkey="${key}"]`);
+      if(thisUserMeeting){
+        thisUserMeeting.remove();// remove the corresponding weeklyItem if there is one!
+      };
       const bookingIndex = storedBookings.findIndex(book => book.key === key);
       if(bookingIndex !== -1){
-        const thisUserMeeting = container.querySelector(`[data-bookingkey="${key}"]`);
-        if(thisUserMeeting){
-          thisUserMeeting.remove();// remove the corresponding weeklyItem if there is one!
-        };
         storedBookings.splice(bookingIndex, 1);
       }; 
     } else{
+      const thisOtherMeeting = container.querySelector(`[data-bookingkey="${key}"]`);
+      if(thisOtherMeeting){
+        thisOtherMeeting.remove();// remove the corresponding weeklyItem if there is one!
+      };
       const otherBookingIndex = allTheOtherBookings.findIndex(book => book.key === key);
       if(otherBookingIndex !== -1){
-        const thisOtherMeeting = container.querySelector(`[data-bookingkey="${key}"]`);
-        if(thisOtherMeeting){
-          thisOtherMeeting.remove();// remove the corresponding weeklyItem if there is one!
-        };
         allTheOtherBookings.splice(otherBookingIndex, 1);
       }; 
     };
@@ -714,7 +708,6 @@ function createCalendar(){
   document.documentElement.style.setProperty('--itemWidth', `${itemWidth}`);
   document.documentElement.style.setProperty('--itemHeight', `${itemHeight}`);
 
-  document.body.style.visibility = "visible";
 };
 
 
@@ -728,6 +721,7 @@ async function initApp() {
   createCalendar();
   translatePage();
   updateSwitchLang();
+  document.body.style.visibility = "visible";
 };
 
 
@@ -884,7 +878,7 @@ function fromThisWeekStuffToUnavailableRanges(){
         start: startSlot,
         end: endSlot
       };
-      console.log(bookRange);
+      //console.log(bookRange);
       unavailableRanges.push(bookRange);
     });
   };
@@ -905,7 +899,7 @@ function fromThisWeekStuffToUnavailableRanges(){
   
   // Adding the edges 
   unavailableRanges.push(...allTheEdges);
-  console.log(unavailableRanges);
+  //console.log(unavailableRanges);
 }; 
 
 function getDayIndex(date){ //2026-02-22
@@ -967,7 +961,7 @@ function putDatesInWeek(date){
   //updateSleepAreas();
   
   let unknownArea;
-  console.log(arrayDate);
+  //console.log(arrayDate);
   const unknownTestIn = arrayDate.some(el => (el.fullDash == unknownStartDate));
   if(unknownTestIn){
     let unknownStartIdx = meseDayICalc(unknownStartDate);
@@ -1048,7 +1042,7 @@ function getThisWeekStuffAndUnavailableRanges(){
   myThisWeekBusies = myBusies.filter(busy =>
     Dday <= busy.date && busy.date <= Sday
   );
-  console.log(myThisWeekBusies);
+  //console.log(myThisWeekBusies);
   if(config.meet && storedBookings.length){
     theirThisWeekBookings = storedBookings.filter(book =>
       Dday <= book.data.date && book.data.date <= Sday
@@ -1073,14 +1067,13 @@ function putShowsInWeek() {
     theirThisWeekBookings.forEach(book => {
       createWeeklyBook(book);
     });
-    resetUserSelection();
   };
   if(theOtherThisWeekBookings.length){
     theOtherThisWeekBookings.forEach(book => {
       createWeeklyOtherBook(book);
     });
   };
-  console.log(theOtherThisWeekBookings);
+  //console.log(theOtherThisWeekBookings);
   updateLegend();
 };
 
@@ -1092,19 +1085,29 @@ function createWeeklyshow(busy){
 };
 
 function createWeeklyBook(book){
-  fromBookToUserSelection(book);
+  //fromBookToUserSelection(book);
+  const tempSelection = structuredClone(userSelection);
+  tempSelection.date = book.data.date;
+  tempSelection.dayIndex = getDayIndex(tempSelection.date);
+  tempSelection.startSlot = getStartEndSlot(tempSelection.dayIndex, book.data.dalle);
+  tempSelection.startRow = slotToRow(tempSelection.startSlot);
+  tempSelection.endSlot = getStartEndSlot(tempSelection.dayIndex, book.data.alle);
+  tempSelection.endRow = slotToRow(tempSelection.endSlot);
+  tempSelection.col = `col-${weeksDayArray[tempSelection.dayIndex].code}`;
+  tempSelection.topIsTouching = true;
+  tempSelection.bottomIsTouching = true;
   document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div 
     data-bookingkey="${book.key}" 
     data-status="${book.status}"
     onclick="openSummary(this)" 
-    class="userMeeting ${book.status}${userSelection.topIsTouching ? ` topIsTouching` : ``}${userSelection.bottomIsTouching ? ` bottomIsTouching` : ``}" 
-    style="grid-column:${userSelection.col}; grid-row:${userSelection.startRow}/${userSelection.endRow};">
+    class="userMeeting ${book.status}${tempSelection.topIsTouching ? ` topIsTouching` : ``}${tempSelection.bottomIsTouching ? ` bottomIsTouching` : ``}" 
+    style="grid-column:${tempSelection.col}; grid-row:${tempSelection.startRow}/${tempSelection.endRow};">
       ${book.status == "cancelled" ? `<span class="iconBtn" onclick="trashCancelled(this)"><i class="fa-regular fa-trash-can"></i></span>` : ``}
   </div>`);
 };
 
 function createWeeklyOtherBook(book){
-  console.log("other");
+  //console.log("other");
   let [y, m, d] = book.data.date.split("-");
   const dayIndex = new Date(y, m - 1, d).getDay();
   let col = weeksDayArray[dayIndex].code; //code
@@ -1181,7 +1184,7 @@ function updateCurrentWeek(){
   eraseWeekEvent();
   getThisWeekStuffAndUnavailableRanges();
   putShowsInWeek();
-  console.log("currentWeekUpdated");
+  //console.log("currentWeekUpdated");
 };
 
 function updateWeek(){
@@ -1362,7 +1365,7 @@ function analyzeRelation(selected, unavailable) {
 
 
 function addMe(thisOne) {
-  console.log(userSelection);
+  //console.log(userSelection);
 
   // --- 1. Build the clicked weeklyItem info
   let selectedWeeklyItemInfo = {
@@ -1389,8 +1392,9 @@ function addMe(thisOne) {
 };
 
 function confirmAvailability(selectedWeeklyItem){
-  
+  console.log(userSelection);
   let tempSelection = userSelection;
+  console.log(tempSelection);
   
   if (selectedWeeklyItem.startSlot < (tempSelection.endSlot - 4) &&
     selectedWeeklyItem.endSlot > (tempSelection.startSlot + 4) || //That's the click on the middle of the userMeeting
@@ -1437,9 +1441,6 @@ function confirmAvailability(selectedWeeklyItem){
   if(tempSelection.startSlot == null || tempSelection.endSlot == null){
     tempSelection.startSlot = selectedWeeklyItem.startSlot;
     tempSelection.endSlot = selectedWeeklyItem.endSlot;
-  } else if(tempSelection.startSlot == selectedWeeklyItem.startSlot && tempSelection.endSlot == selectedWeeklyItem.endSlot) { // second click
-    trashUserMeeting();
-    return
   } else if(tempSelection.startSlot == selectedWeeklyItem.startSlot){
     tempSelection.startSlot = tempSelection.startSlot + firstSlots;
   } else if(tempSelection.endSlot == selectedWeeklyItem.endSlot){
@@ -1543,7 +1544,7 @@ async function trashBookingInRTDB(bookingKey){
 };
 
 function updateUserMeeting(){ 
-
+  console.log("updateUserMeeting");
   container.querySelectorAll(".userMeeting.selected").forEach(we => {
     we.remove();
   });

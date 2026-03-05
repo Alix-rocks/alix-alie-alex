@@ -13,6 +13,8 @@ import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, 
 import trans from "/trans.js";
 auth.languageCode = 'fr';
 
+const lastUpdate = "2026-03-05 10h14";
+
 const cloudIt = document.querySelector("#cloudIt");
 const earthIt = document.querySelector("#earthIt");
 const movingzone = document.querySelector("#movingzone");
@@ -652,21 +654,27 @@ function toTIdeBQaC(thisOne){
 
   switch(info.where){
     case "messenger":
+      todo.home = true;
       todo.where = "Messenger";
       break;
     case "googleMeet":
+      todo.home = true;
       todo.where = "Google Meet";
       break;
     case "whatsApp":
+      todo.home = true;
       todo.where = "WhatsApp";
       break;
     case "myRealWorld":
+      todo.home = true;
       todo.where = "home";
       break;
     case "yourRealWorld":
-     todo.where = info.yourAddress;
+      todo.home = false;
+      todo.where = info.yourAddress;
       break;
     case "elseRealWorld":
+      todo.home = false;
       todo.where = info.whereReal;
       break;
     default:
@@ -756,6 +764,9 @@ async function getTasksSettings() {
   oggiDemainTime = timeLimit("oggiDemain");
   
   listTasks.forEach(todo => {
+
+    //Fixing the todo.home vs todo.where
+    todo.home = todo.where == "home" ? true : todo.where == "not home" ? false : true;
     
     if(!todo.pPosition || (todo.pPosition && todo.pPosition == "out")){
       //We could remove most of the recurryDates of the recurring var==anno that still have like 48 recurryDates in their array...!
@@ -1352,7 +1363,8 @@ function resetCBC(){
     </div>
     <button id="settingsBtn" class="ScreenBtn1">yep <span class="typcn typcn-thumbs-up" style="padding: 0;font-size: 1em;"></span></button>
     <button id="cancelBtn" class="ScreenBtn2">Cancel</button>
-    <button id="logOutBtn" onclick="logOut()" class="ScreenBtn1" style="margin-right: 0; margin-bottom: 0; border-radius: 15px; font-size: .8em;">I'm out! <i class="fa-solid fa-person-through-window" style="display: block; margin-top: 3px;"></i></button>`;
+    <button id="logOutBtn" onclick="logOut()" class="ScreenBtn1" style="margin-right: 0; margin-bottom: 0; border-radius: 15px; font-size: .8em;">I'm out! <i class="fa-solid fa-person-through-window" style="display: block; margin-top: 3px;"></i></button>
+    <p>Last update: ${lastUpdate}</p>`;
 
     let switchModeSlider = document.querySelector("#switchModeSlider");
     let timeInput = document.querySelector("#timeInput");
@@ -4846,12 +4858,12 @@ function taskAddAllInfo(todo){
       <input id="tellWhereInput" type="checkbox" class="cossin taskToggleInput" />
       <div>
         <label for="tellWhereInput" class="taskToggleLabel taskInfoSectionLabel" style="margin-top: 20px;">
-          <h5 class="topList">Tell me where...<span class="tellYou" id="tellYouWhere">${todo.where == "home" || !todo.where ? "(home)" : "(somewhere)"}</span></h5>
+          <h5 class="topList">Tell me where...<span class="tellYou" id="tellYouWhere">${todo.home == true || todo.where == "home" || !todo.where ? "(home)" : "(somewhere)"}</span></h5>
           <span class="typcn typcn-chevron-right-outline taskToggleChevron"></span>
         </label>
         <div class="taskToggleList taskInfoInput relDiv">
           <div class="inDaySection taskInfoInput" style="width: -webkit-fill-available; max-width: 280px;">
-            <input id="whereHomeInput" type="checkbox" class="tuttoGiornoInput cossin" ${(!todo.where || (todo.where && todo.where == "home")) ? `checked` : ``} />
+            <input id="whereHomeInput" type="checkbox" class="tuttoGiornoInput cossin" ${(todo.home == true || (todo.where && todo.where == "home") || !todo.where) ? `checked` : ``} />
             <div class="calendarInsideMargin tuttoGiornoDiv" style="justify-content: flex-start;">
               <label for="whereHomeInput" class="slideZone">
                 <div class="slider">
@@ -5640,7 +5652,8 @@ function taskAddAllInfo(todo){
       };
 
       let whereText = document.querySelector("#whereInput");
-      todo.where = whereCheck.checked ? "home" : whereText.value !== "" ? whereText.value : "not home";
+      todo.home = whereCheck.checked ? true : false;
+      todo.where = whereText.value !== "" ? whereText.value : whereCheck.checked ? "home" : "not home";
 
       todo.color = newcolor;
       todo.icon = newicon;
@@ -5662,6 +5675,14 @@ function taskAddAllInfo(todo){
           console.log("should stop");
           e.preventDefault();//This is not working
           e.currentTarget.insertAdjacentHTML("beforebegin", `<h5>You need to decide what kinda show that is</h5>`);
+        };
+        if(todo.showType == "Cancelled" && todo.rtdbKey){
+          updateBooking(todo.rtdbKey, "cancelled"); //We need to let meetAlix know that it had been refused... so it can update storedBookings
+          //update bookingQueue and inbox
+          bookingQueue = bookingQueue.filter(
+            book => book.key !== todo.rtdbKey
+          );
+          updateInbox();
         };
       } else{
         delete todo.showType;
@@ -5732,7 +5753,6 @@ function taskAddAllInfo(todo){
           book => book.key !== todo.rtdbKey
         );
         updateInbox();
-        delete todo.rtdbKey;
       };
 
 

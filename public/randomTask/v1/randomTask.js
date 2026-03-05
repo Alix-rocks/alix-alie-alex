@@ -2224,7 +2224,7 @@ function recurryCreation(todo){
             listTasks.splice(todoIndex, 1);
             localStorage.listTasks = JSON.stringify(listTasks);
             updateCBC();
-            //But how do we make it keep going to the next todo?!?!
+            //But how do we make it keep going to the next todo?!?!...well if it's supposed to be over; there shouldn't be any next... no?
           };
         };
       } else{

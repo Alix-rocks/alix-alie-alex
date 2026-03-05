@@ -40,11 +40,83 @@ button:active{
   background-color: rgba(50,205,50,.2);
 }
 
+.topToggles{
+  width: 100%;
+  display: flex;
+  flex-flow: row-reverse nowrap;
+  justify-content: space-between;
+  margin: 5px auto 10px;
+}
+.switchModeSlider{
+  width: 45px;
+  height: 22px;
+  padding: 0.5px 3px;
+  border-radius: 50px; 
+  border: 1.5px solid; 
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  background-color: rgba(109, 109, 109, .2);
+}
+
+.beigeToggler{
+  height: 22px;
+  padding-left: 4px;
+  border-radius: 50px; 
+  border: 1.5px solid; 
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(109, 109, 109, .1);
+}
+
+.switchModeSlider input, .beigeToggler input {
+  display: none;
+}
+
+.switchModeSlider span, .beigeToggler span{
+  font-family: "quicksand";
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.switchModeBall{ 
+  height: 18px; 
+  width: 18px; 
+  margin: 0 1px 0 .5px;
+  border-radius: 50%; 
+  border: 1.5px solid;
+  background: #ffffff; 
+  z-index: 10;
+  position: absolute; 
+  left: 0;
+  transition: transform 0.2s ease;
+}
+
+#switchLang:checked ~ .switchModeBall {
+  transform: translateX(22px);
+}
+
+#beigeCheck::before {
+  font-family: typicons;
+  font-style: normal;
+  font-size: 1.2em;
+  content: "\e11d"; /* Unicode for tick-outline */
+  opacity: .5;
+}
+#beigeToggle:checked ~ #beigeCheck::before {
+  content: "\e11e"; /* Unicode for tick */
+  opacity: 1;
+}
+
 #summaryContainer{
   z-index: 30;
   background-color: rgba(0, 0, 0, 0);
   padding: 15px;
-  display: flex;
   position: absolute;
   left: 0;
   right: 0;
@@ -55,14 +127,17 @@ button:active{
   border: 2px solid var(--tx-color);
   border-radius: 10px;
   height: 100%;
-  padding: 0 10px 10px 10px;
+  padding: 10px;
   background-color: var(--bg-color);
+  text-align: center;
+  width: 100%;
+  align-items: center
 }
 
 .topButtons{
   display: flex;
   flex-flow: row nowrap;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
 .formContainer{

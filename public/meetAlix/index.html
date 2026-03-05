@@ -36,6 +36,15 @@
 </head>
 
 <body>
+  <div class="topToggles"> 
+    <!-- language -->
+    <label class="switchModeSlider">
+      <input type="checkbox" id="switchLang">
+      <span id="switchLangFR" class="switchRight">FR</span>
+      <span id="switchLangEn" class="switchLeft">EN</span>
+      <div class="switchModeBall"></div>
+    </label>
+  </div>
   <div class="weeklyContainer">
   </div>
   <div id="messageBox">
@@ -303,10 +312,11 @@
       <div class="itemLegend weeklyBuffer"></div>
       <div class="textLegend">
         <p data-i18n="legend_busy">That's when I'm busy.</p>
+        <h6 data-i18n="legend_busy_help">So no, I'm not available.</h6>
       </div>
     </div>
     <div class="lineLegend" id="mealLegend">
-      <div class="itemLegend weeklyMeal">Meal</div>
+      <div class="itemLegend weeklyMeal"><span data-i18n="meal">Meal</span></div>
       <div class="textLegend">
         <p data-i18n="legend_meal">That's when I'm eating.</p>
         <h6 data-i18n="legend_meal_help">Yes, we could eat together then, but I'll have to go get busy afterwards.</h6>

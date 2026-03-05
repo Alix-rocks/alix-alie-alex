@@ -64,10 +64,9 @@ if(type === "friend"){
     translatePage();
   });
 };
-const allowedLangs = ["fr", "en"];
 const localLang = localStorage.getItem("meetAlixLang");
 const navLang = navigator.language.slice(0, 2);
-let lang = localLang ? localLang : allowedLangs.includes(navLang) ? navLang : "en";
+let lang = localLang ? localLang : navLang == "fr" || "en" ? navLang : "fr";
 localStorage.setItem("meetAlixLang", lang);
 const switchLang = document.querySelector("#switchLang");
 
@@ -75,7 +74,6 @@ const switchLang = document.querySelector("#switchLang");
   // console.log(lang);
 
 function t(key, vars = {}) {
-  console.log(i18n?.[type]?.[lang]?.[key]);
   let text =
     i18n?.[type]?.[lang]?.[key] ??
     key;
@@ -235,7 +233,6 @@ handle.addEventListener("click", () => {
   formContainer.classList.toggle("expanded");
 });
 const submitBtn = formContainer.querySelector(".submitBtn");
-const messageBox = document.querySelector("#messageBox");
 
 let myBusies = [];
 let Dday = "";
@@ -312,6 +309,22 @@ const formFields = {
 const formState = Object.fromEntries(
   Object.keys(formFields).map(key => [key, ""])
 );
+console.log(formState);
+// That code (up) basically creates this (down):
+// const formState = {
+//   date: "",
+//   dalle: "",
+//   alle: "",
+//   name: "",
+//   email: "",
+//   cell: "",
+//   messengerName: "",
+//   whatsAppNumber: "",
+//   where: "",
+//   yourAddress: "",
+//   whereReal: "",
+//   why: ""
+// };
 
 const inputs = {};
 
@@ -323,6 +336,34 @@ for (const key in formFields) {
     inputs[key] = formContainer.querySelector(selector);
   };
 };
+console.log(inputs);
+// That code (up) basically does this (down):
+// const dateComplete = formContainer.querySelector(".dateComplete");
+// const dalleTime = formContainer.querySelector(".dalleTime");
+// const alleTime = formContainer.querySelector(".alleTime");
+// const nameInput = formContainer.querySelector(".nameInput");
+// const emailInput = formContainer.querySelector(".emailInput");
+// const cellInput = formContainer.querySelector(".cellInput");
+// const messengerNameInput = formContainer.querySelector(".messengerNameInput");
+// const whatsAppNumberInput = formContainer.querySelector(".whatsAppNumberInput");
+// const whereRadios = formContainer.querySelector('[name="whereRadios"]');
+// const yourAddressInput = formContainer.querySelector(".yourAddressInput");
+// const whereRealInput = formContainer.querySelector(".whereRealInput");
+// const whyInput = formContainer.querySelector(".whyInput");
+// and creates this:
+// const inputs = {
+//   date: dateComplete,
+//   dalle: dalleTime,
+//   alle: alleTime,
+//   name: nameInput,
+//   email: emailInput,
+//   cell: cellInput,
+//   messengerName: messengerNameInput,
+//   whatsAppNumber: whatsAppNumberInput,
+//   yourAddress: yourAddressInput,
+//   whereReal: whereRealInput,
+//   why: whyInput
+// };
 
 const savedFormState = localStorage.getItem("meetAlixFormState");
 
@@ -334,6 +375,25 @@ if (savedFormState) {
     JSON.stringify(formState)
   );
 };
+console.log(formState);
+// That code (up) basically creates this (down):
+//  if(localStorage.getItem("meetAlixFormState")){
+//     let tempFS = JSON.parse(localStorage.meetAlixFormState);
+//     formState.date = tempFS.date;
+//     formState.dalle = tempFS.dalle;
+//     formState.alle = tempFS.alle;
+//     formState.name = tempFS.name;
+//     formState.email = tempFS.email;
+//     formState.cell = tempFS.cell;
+//     formState.messengerName = tempFS.messengerName;
+//     formState.whatsAppNumber = tempFS.whatsAppNumber;
+//     formState.where = tempFS.where;
+//     formState.yourAddress = tempFS.yourAddress;
+//     formState.whereReal = tempFS.whereReal;
+//     formState.why = tempFS.why;
+//   } else {
+//     localStorage.setItem("meetAlixFormState", JSON.stringify(formState));
+//   };
 
 const fieldHandlers = {
   simple(key) {
@@ -362,7 +422,9 @@ const fieldHandlers = {
         startSlot: userSelection.startSlot,
         endSlot: userSelection.endSlot
       };
+      //console.log(selectedWeeklyItem);
       confirmAvailability(selectedWeeklyItem); //includes pretty much everything...
+
     });
   },
 
@@ -452,6 +514,11 @@ for (const key in formFields) {
 
 
 
+
+
+// That code (up) basically creates this (down):
+
+
 // MARK: REFLEXIONS
 /* 
 userSelection n'existe que lorsque le user a selectionné quelque chose (et jamais dans le localStorage), que ce soit un carré vide ou un de ses bookings; userSelection est resetté en même temps que le .selected est removed ou que le Form est fermé (x) ou trashed
@@ -485,7 +552,31 @@ Le user click sur un de ses bookings (pending, confirmed ou cancelled)
       -> on rerempli le Form avec les données originales
 */
 
+// const storedBookings =
+//       JSON.parse(localStorage.getItem("meetAlixBookings")) || [];
+// //NOOOO We need to verify, at download, if the storedBookings is up to date according to the rtdb...
 
+// (() => {
+//   if(localStorage.getItem("meetAlixUserSelection")){
+//     let tempUS = JSON.parse(localStorage.meetAlixUserSelection);
+//       userSelection.date = tempUS.date;
+//       userSelection.startSlot = tempUS.startSlot;
+//       userSelection.startRow = tempUS.startRow;
+//       userSelection.endSlot = tempUS.endSlot;
+//       userSelection.endRow = tempUS.endRow;
+//       userSelection.dayIndex = tempUS.dayIndex;
+//       userSelection.col = tempUS.col;
+//       userSelection.topIsTouching = tempUS.topIsTouching;
+//       userSelection.bottomIsTouching = tempUS.bottomIsTouching;
+//       userSelection.status = tempUS.status;
+//       userSelection.uuid = tempUS.uuid;
+//   } else {
+//     //resetUserSelection();
+//     localStorage.setItem("meetAlixUserSelection", JSON.stringify(userSelection));
+//   };
+// })();
+
+//INSTEAD CREATE A FUNCTION TO GET THE USERSELECTION FROM THE FORM (BOOK.DATA)
 function fromBookToUserSelection(book){ //from storedBookings
   // book = {
   //   key: "",
@@ -519,8 +610,43 @@ function fromBookToUserSelection(book){ //from storedBookings
   userSelection.col = `col-${weeksDayArray[userSelection.dayIndex].code}`;
   userSelection.topIsTouching = true; //comparing userSelection.slots with unavailableRanges.slots, but only the ones for this shown week... so we can't check that unless we know it's in the currently shown week...
   userSelection.bottomIsTouching = true; // So let's make them true so that the weeklyItem seems closed (rounded corners everywhere)
+  //userSelection.status = book.status;
+  //userSelection.key = book.key;
 };
 
+
+
+// dateComplete.addEventListener("change", (e) => {
+//   formState.date = e.target.value;
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
+// dalleTime.addEventListener("change", (e) => {
+  
+// });
+// alleTime.addEventListener("change", (e) => {
+//   const value = e.target.value; // e.g., "10:07"
+//   if (!value) return;
+//   const formattedTime = roundFifteenTime(value); // => 10:15
+
+//   let [hours, minutes] = formattedTime.split(':').map(Number);
+//   let info = {
+//     dayIndex: userSelection.dayIndex,
+//     hour: hours,
+//     minute: minutes
+//   };
+//   let newEndSlot = dateTimeToSlot(info);
+//   let newAlleSlot = checkNewAlleSlot(userSelection.startSlot, newEndSlot);
+//   //CHECK WITH EDGES TOO!!
+//   let newAlleTime = slotToTime(newAlleSlot);
+//   userSelection.endSlot = newAlleSlot;
+//   userSelection.endRow = slotToRow(newAlleSlot);
+//   updateUserMeeting();
+//   updateSelectedTime(); // formContainer is technically already expanded
+//   // e.target.value = newAlleTime;
+//   // formState.alle = newAlleTime;
+//   // //ADD AN UPDATE OF SELECTEDTIME (but not the big whole function; we need smaller functions)
+//   // localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
 
 function roundFifteenTime(value){
   let [hours, minutes] = value.split(':').map(Number);
@@ -534,6 +660,89 @@ function roundFifteenTime(value){
   return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
 };
 
+// nameInput.addEventListener("change", (e) => {
+//   formState.name = e.target.value;
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
+// emailInput.addEventListener("change", (e) => {
+//   formState.email = e.target.value;
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
+// cellInput.addEventListener("change", (e) => {
+//   formState.cell = e.target.value;
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
+// messengerNameInput.addEventListener("change", (e) => {
+//   formState.messengerName = e.target.value;
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
+// whatsAppNumberInput.addEventListener("change", (e) => {
+//   formState.whatsAppNumber = e.target.value;
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
+// whereRadios.addEventListener("change", (e) => {
+//   console.log(e.target.value);
+//   formState.where = e.target.value;
+//   console.log(formState.where);
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
+// yourAddressInput.addEventListener("change", (e) => {
+//   formState.yourAddress = e.target.value;
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
+// whereRealInput.addEventListener("change", (e) => {
+//   formState.whereReal = e.target.value;
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
+// whyInput.addEventListener("change", (e) => {
+//   formState.why = e.target.value;
+//   localStorage.meetAlixFormState = JSON.stringify(formState);
+// });
+
+
+// onChildChanged(ref(rtdb, "meetAlix"), (snap) => {
+//   const booking = { key: snap.key, ...snap.val() };
+//   //check if booking.key already is in bookingQueue, and if yes, then update that one, otherwise, push it
+//   const bookingIndex = storedBookings.findIndex(book => book.key === booking.key);
+//   if(bookingIndex !== -1){
+//     storedBookings[bookingIndex].status = booking.status;
+//   } else{
+//     const otherBookingIndex = allTheOtherBookings.findIndex(book => book.key === booking.key);
+//     if(otherBookingIndex !== -1){
+//       allTheOtherBookings[otherBookingIndex].status = booking.status;
+//     };
+//     // }; else if(booking.status == "pending"){   //That should only be on childAdded
+//     //   allTheOtherBookings.push(booking);
+//     // };
+//   };
+// });
+
+// const storedBookings = JSON.parse(
+//   localStorage.getItem("meetAlixBookings") || "[]" // or get the storedBookings from their account in firestore
+// );
+
+// async function updateBookings() {
+//   await Promise.all(
+//     storedBookings.map(async book => {
+//       const snap = await get(ref(rtdb, `meetAlix/${book.key}`));
+
+//       if (!snap.exists()) {
+//         book.status = "cancelled";
+//         return;
+//       };
+
+//       const rtdbData = snap.val();
+//       if (rtdbData.status !== book.status) {
+//         book.status = rtdbData.status;
+//       };
+//     })
+//   ); //But what if I changed something in their booking... they wouldn't be able to see it if we update only the status!
+
+//   localStorage.setItem(
+//     "meetAlixBookings",
+//     JSON.stringify(storedBookings)
+//   );
+// };
 const storedBookings = [];
 const existingKeys = new Set();
 async function getBookings() {
@@ -667,6 +876,69 @@ async function addListeners() {
   });
 };
 
+async function updateBookings() {
+  const snap = await get(ref(rtdb, "meetAlix"));
+
+  if (!snap.exists()) return;
+
+  const rtdbBookings = snap.val();
+
+  // Create quick lookup map for local bookings
+  const localMap = Object.fromEntries(
+    storedBookings.map(b => [b.key, b])
+  );
+
+  Object.entries(rtdbBookings).forEach(([key, rtdbData]) => {
+    if (localMap[key]) {
+      // Exists locally → update status if needed
+      if (localMap[key].status !== rtdbData.status) {
+        localMap[key].status = rtdbData.status;
+      }
+    } else if(rtdbData.status == "pending") {
+      // Not in local → collect it
+      allTheOtherBookings.push({
+        key,
+        ...rtdbData
+      });
+    }
+  });
+
+  localStorage.setItem(
+    "meetAlixBookings",
+    JSON.stringify(storedBookings)
+  );
+};
+
+
+
+
+async function listenForOtherBookings() {
+  const bookingsRef = ref(rtdb, "meetAlix");
+
+  // First load existing data
+  const snap = await get(bookingsRef);
+  const existingKeys = snap.exists()
+    ? Object.keys(snap.val())
+    : [];
+    console.log(existingKeys);
+
+  onChildAdded(bookingsRef, snapshot => {
+    const key = snapshot.key;
+    const data = snapshot.val();
+
+    // Ignore if it existed before listener started
+    if (existingKeys.includes(key)) return;
+
+    if (data.createdBy === deviceId) return;
+
+    allTheOtherBookings.push({ key, ...data });
+
+    createWeeklyOtherBook(data);
+    //showOtherBookingMessage();
+  });
+};
+
+
 async function loadMyBusies() {
   const busiesRef = ref(rtdb, "meetAlix/myBusies");
   const snap = await get(busiesRef);
@@ -704,12 +976,37 @@ onValue(ref(rtdb, "meetAlix/myBusies"), snapshot => {
 });
 
 
+// async function getMyBusies() {
+//   // const getBusies = await getDoc(doc(db, "randomTask", myEmail));
+//   const getBusies = await getDoc(doc(db, "randomTask", myEmail, "mySchedule", "myBusies"));
+//   /* if(localStorage.getItem("myBusies")){
+//     myBusies = JSON.parse(localStorage.myBusies);
+//   } else  */
+//   if(getBusies.exists() && getBusies.data().myBusies){
+//     myBusies = getBusies.data().myBusies;
+//     //localStorage.myBusies = JSON.stringify(myBusies);
+//   };
+//   /*  else{
+//     localStorage.myBusies = JSON.stringify([]);
+//   }; */
+//   // if(localStorage.getItem("mySettings")){
+//   //   mySettings = JSON.parse(localStorage.mySettings);
+//   // } else if(getBusies.exists() && getBusies.data().mySettings){
+//   //   mySettings = getBusies.data().mySettings;
+//   //   localStorage.mySettings = JSON.stringify(mySettings);
+//   // } else{
+//   //   localStorage.mySettings = JSON.stringify(mySettings);
+//   // };
+//   // myBusies = JSON.parse(localStorage.myBusies);
+// };
+
 function createCalendar(){
   getWeeklyCalendar();
 
   let item = document.querySelector(`[data-col="2"][data-row="4"]`);
   const itemWidth = window.getComputedStyle(item).getPropertyValue("width");
   const itemHeight = window.getComputedStyle(item).getPropertyValue("height");
+
 
   document.documentElement.style.setProperty('--itemWidth', `${itemWidth}`);
   document.documentElement.style.setProperty('--itemHeight', `${itemHeight}`);
@@ -965,6 +1262,9 @@ function putDatesInWeek(date){
     });
   };
   //updateSleepAreas();
+
+// MARK: unknownDate
+// See line 5 for the unknownStartDate
   
   let unknownArea;
   console.log(arrayDate);
@@ -1191,6 +1491,10 @@ function updateWeek(){
 
 function getTodayDate(){
   let date = new Date();
+  // let currentHour = String(date.getHours()).padStart(2, "0");
+  // let currentMinute = String(date.getMinutes()).padStart(2, "0");
+  // let currentTime = `${currentHour}:${currentMinute}`;
+  // let currentDay = currentTime <= mySettings.myTomorrow ? (date.getDate() - 1) : date.getDate();
   return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 };
 
@@ -1243,6 +1547,26 @@ function roundFifteenArea(hour, min){
 
 
 
+/* Form
+Date full (mercredi, le 5 mars 2024)
+De: (hour of the selected item) (can be changed between the the row-end of the previous event and 1 hour before the row-start of the next event)
+À: (1 hour later) (can be changed between 1 hour after the row-end of the previous event and the row-start of the next event)
+Name
+Pronoun
+Email or phone number or Messenger name
+What would you like us to be doing during that time?
+Where shall we mee?
+  online Messenger
+  online Google Meet
+  in person
+    any preferences?
+  somewhere else:
+
+Please consider prep & travel times as well as meals
+Les zones blanches sont celles où je suis disponible... à sortir de chez moi. Donc si la zone blanche commence à 11h00, et bien n'espérez pas que je puisse être à l'autre bout de la ville à 11h!
+
+*/
+
 /*
 const unavailableRanges = [
   { start: 40, end: 44 }, // 10:00 → 11:00
@@ -1288,7 +1612,12 @@ function slotToTime(slot) {
   const minute = (timeSlot % 4) * 15;
 
   return `${String(hour24).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
-};
+}
+
+
+
+
+
 
 function checkNewDalleSlot(newStart, end){
   let overlap = false;
@@ -1350,11 +1679,43 @@ function analyzeRelation(selected, unavailable) {
     };
   };
 
+  // // unavailable ends exactly where selection starts
+  // if (unavailable.end === selected.startSlot) {
+  //   let conclusion = {
+  //     relation: "touching",
+  //     touch: "topIsTouching"
+  //   };
+  //   return conclusion;
+  // };
+
+  // // unavailable starts exactly where selection ends
+  // if (unavailable.start === selected.endSlot) {
+  //   let conclusion = {
+  //     relation: "touching",
+  //     touch: "bottomIsTouching"
+  //   };
+  //   return conclusion;
+  // };
+
   let conclusion = {
     relation: "separate"
   };
   return conclusion;
+
 };
+
+// function analyzeEdges(selected, edge) {
+//   //top of the day
+//   if (selected.startSlot === edge.start) {
+//     return "topIsTouching";
+//   };
+
+//   //bottom of the day
+//   if (selected.endSlot === edge.end) {
+//     return "bottomIsTouching";
+//   };
+
+// };
 
 
 function addMe(thisOne) {
@@ -1496,6 +1857,8 @@ function confirmAvailability(selectedWeeklyItem){
   userSelection.col = `col-${selectedWeeklyItem.col}`;
   userSelection.topIsTouching = tempSelection.topIsTouching; 
   userSelection.bottomIsTouching = tempSelection.bottomIsTouching;
+  //userSelection.uuid = tempSelection.uuid == "" ? crypto.randomUUID() : tempSelection.uuid;
+  //userSelection.status = formState.key ? getBooking(formState.key) ? getBooking(formState.key).status : "selected" : "selected";
   updateSelectedTime();
   updateUserMeeting();
   console.log(userSelection);
@@ -1510,13 +1873,20 @@ window.closeTheForm = closeTheForm;
 
 function trashUserMeeting(){
   if(!formState.key){ // means it's a selected!
-    container.querySelector(".selected").remove();
+    container.querySelector(".selected").remove(); //or use uuid
   } else{
     const bookingKey = formState.key;
     // removing the userMeeting from the calendar
     container.querySelector(`[data-bookingkey="${bookingKey}"]`).remove();
-
-    trashBookingInRTDB(bookingKey); // it'll then be removed from storedBookings thanks to listeners
+    // removing it from storedBookings
+    //storedBookings.filter(
+      //booking => booking.key !== bookingKey
+    //); // or, more acuratly, keeps all the booking that doesn't have that bookingKey
+    // const bookingIndex = storedBookings.findIndex(book => book.key == bookingKey);
+    // storedBookings.splice(bookingIndex, 1);
+    //localStorage.meetAlixBookings = JSON.stringify(storedBookings);
+    // removing it from rtdb (if it's still there)
+    trashBookingInRTDB(bookingKey);
   }; 
 
   // reset everything
@@ -1537,7 +1907,23 @@ async function trashBookingInRTDB(bookingKey){
   };
 };
 
-function updateUserMeeting(){ 
+function updateUserMeeting(){ // if it's a pending that we are modifying, it should look like it (yellow but with dashed borders!)
+  //console.log(formState);
+//   let currentUserMeeting = formState.key && formState.key !== "" ? container.querySelector(`[data-bookingkey="${formState.key}"]`) : container.querySelector(`[data-uuid="${userSelection.uuid}"]`); // depending if we're updating a userMeeting or an existing booking
+//   console.log(currentUserMeeting);
+//   // let currentUserMeeting = container.querySelector(`[data-uuid="${userSelection.uuid}"]`);
+//   console.log("container:", container);
+// console.log("uuid:", userSelection.uuid);
+// console.log(
+//   "found:",
+//   container.querySelectorAll(
+//     `[data-uuid="${CSS.escape(userSelection.uuid)}" ]`
+//   )
+// );
+
+//   // console.log(currentUserMeeting);
+//   if(currentUserMeeting){currentUserMeeting.remove();};
+
 
   container.querySelectorAll(".userMeeting.selected").forEach(we => {
     we.remove();
@@ -1559,6 +1945,9 @@ function resetUserSelection(){
   userSelection.col = null;
   userSelection.topIsTouching = false;
   userSelection.bottomIsTouching = false;
+  //userSelection.status = "";
+  // userSelection.uuid = "";
+  //userSelection.key = "";
 };
 function resetFormState() {
   Object.assign(
@@ -1759,15 +2148,14 @@ function openSummary(thisOne){
   const bookingKey = book.dataset.bookingkey;
   const booking = storedBookings.find((book) => book.key == bookingKey);
 
+  // Do we want to update userSelection too?! If we do, we'll use getUserselectionFromForm
+
   // In case there is already a userMeeting.selected, we need it removed
   container.querySelectorAll(".userMeeting.selected").forEach(we => {
     we.remove();
   });
-  //Also remove the formContainer
-  formContainer.classList.add("displayNone"); 
-  formContainer.classList.remove("expanded");
 
-  //NO NEED TO update formState (we'll do if they want to modify it)
+  //NO NEED TO update formState
   // Object.assign(formState, structuredClone(booking.data));
   
   //Add the bookingKey to formState
@@ -1778,20 +2166,16 @@ function openSummary(thisOne){
   let address = "";
   switch(booking.data.where){
     case "messenger":
-      i18nWhere = "summary_where_on";
-      address = t("summary_where_messenger");
+      i18nWhere = "summary_where_messenger";
       break;
     case "googleMeet":
-      i18nWhere = "summary_where_on";
-      address = t("summary_where_googleMeet");
+      i18nWhere = "summary_where_googleMeet";
       break;
     case "whatsApp":
-      i18nWhere = "summary_where_on";
-      address = t("summary_where_whatsApp");
+      i18nWhere = "summary_where_whatsApp";
       break;
     case "myRealWorld":
-      i18nWhere = "summary_where_at";
-      address = t("summary_where_mine");
+      i18nWhere = "summary_where_mine";
       break;
     case "yourRealWorld":
       i18nWhere = "summary_where_at";
@@ -1805,7 +2189,6 @@ function openSummary(thisOne){
       console.log("oups!");
       break;
   };
-  const color = `var(--${booking.status}-border)`;
   const summary = `<div id="summaryContainer">
     <div class="summary">
       <div class="topButtons">
@@ -1818,11 +2201,15 @@ function openSummary(thisOne){
       </div>
       <h2 data-i18n="summary_presentation">${t("summary_presentation")}</h2>
       <h3>
-        <span style="color:${color};">${booking.data.name}<span data-i18n="summary_andMe">${t("summary_andMe")}</span></span><br/>
+        ${booking.data.name}<span data-i18n="summary_andMe">${t("summary_andMe")}</span>
+      </h3>
+      <h3>
         <span data-i18n="summary_shall">${t("summary_shall")}</span><br/>
-        <span style="color:${color};">${getDateTimeFromBook(booking.data)}</span><br/>
+        <span>${getDateTimeFromBook(booking.data)}</span>
+      </h3>
+      <h3>
         <span data-i18n="${i18nWhere}">${t(i18nWhere)}</span><br/>
-        <span style="color:${color};">${address}</span>.
+        ${address}.
       </h3>
       <h3>
         <span data-i18n="summary_why">${t("summary_why")}</span><br/>
@@ -1855,7 +2242,7 @@ function openSummary(thisOne){
     fromBookToUserSelection(booking);
     
     //fill up formState from booking
-    openForm(booking);
+    openForm(booking)
 
     //create the new userMeeting (selected)
     updateUserMeeting();
@@ -1864,17 +2251,48 @@ function openSummary(thisOne){
 };
 window.openSummary = openSummary;
 
-function openForm(booking){ //booking is from storedBookings
+function openForm(booking){ //First version... to modify it
+  // console.log("openForm");
+  // const book = thisOne;
+  // console.log(book);
+  // const bookingKey = book.dataset.bookingkey;
+  // console.log(bookingKey);
+  // // form.dataset.bookingkey = bookingKey;
+  // const booking = storedBookings.find((book) => book.key == bookingKey);
+  // console.log(booking);
+
+  // Do we want to update userSelection too?!
+  // Object.assign(userSelection, structuredClone(booking.event));
+  // userSelection.status = booking.status;
+
+  //Get userSelection from booking
+
+
+  // In case there is already a userMeeting.selected, we need it removed
+  // container.querySelectorAll(".userMeeting.selected").forEach(we => {
+  //   we.remove();
+  // });
 
   //update formState
   Object.assign(formState, structuredClone(booking.data));
- 
+  // That code (up) basically does this (down): (but it creates a deep copy/clone instead of sharing reference (in case of nested objects), so I get two notebook on the table instead of one with two post-its which would have been Object.assign(formState, booking.form);.)
+  // formState.date = booking.form.date;
+  // formState.dalle = booking.form.dalle;
+  // formState.alle = booking.form.alle;
+  // formState.name = booking.form.name;
+  // formState.email = booking.form.email;
+  // formState.cell = booking.form.cell;
+  // formState.messengerName = booking.form.messengerName;
+  // formState.whatsAppNumber = booking.form.whatsAppNumber;
+  // formState.where = booking.form.where;
+  // formState.yourAddress = booking.form.yourAddress;
+  // formState.whereReal = booking.form.whereReal;
+  // formState.why = booking.form.why;
 
   //Add the bookingKey to formState
-  formState.key = booking.key;
+  //formState.key = bookingKey;
 
-  localStorage.meetAlixFormState = JSON.stringify(formState);
-
+  console.log(formState);
   //Fill up the form
   for (const key in inputs) {
     if (formState[key] !== undefined) {
@@ -1890,16 +2308,64 @@ function openForm(booking){ //booking is from storedBookings
       };
     };
   };
+// That code (up) basically does this (down):
+  // dateComplete.value = booking.form.date;
+  // dalleTime.value = booking.form.dalle;
+  // alleTime.value = booking.form.alle;
+  // nameInput.value = booking.form.name;
+  // emailInput.value = booking.form.email;
+  // cellInput.value = booking.form.cell;
+  // messengerNameInput.value = booking.form.messengerName;
+  // whatsAppNumberInput.value = booking.form.whatsAppNumber;
+  // whereRadios.value = booking.form.where;
+  // yourAddressInput.value = booking.form.yourAddress;
+  // whereRealInput.value = booking.form.whereReal;
+  // whyInput.value = booking.form.why;
 
+  //selectedTime.innerHTML = "";
   updateSelectedTime(); // since we have userSelection, and, anyway, if the user changes time and date, it will update SelectedTime, so might as well already have it!
-  submitBtn.innerText = t("button_save");
+  submitBtn.innerText = "Save";
   //formContainer.classList.remove("displayNone"); //already in updateSelectedTime()
   formContainer.classList.add("expanded");
+  
   
 };
 window.openForm = openForm;
 
-
+const messageBox = document.querySelector("#messageBox");
+const waitingMessage = `<div id="waitingMessage" class="message">
+    <button class="iconBtn topRightCorner" onclick="removeMessage()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <h2>Wait For It…</h2>
+    <span class="typcn typcn-wine" style="font-size: 50px; line-height: 1em;"></span>
+    <h6 style="margin-top: 0.5em; margin-bottom: 2em;">Like an hourglass<br />but quicker</h6>
+  </div>`; //That would just be the key... then we do const text = t(key); and messageBox.innerHTML = text;
+const confirmMessage = `<div id="confirmMessage" class="message">
+    <button class="iconBtn topRightCorner" onclick="removeMessage()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <h2>You did it!</h2>
+    <h3 style="margin-bottom: 0;">Alright,<br/>so now that you did your part;<br/>all you've got to do is<br/>sit tight and wait for me to do mine…</h3>
+    <h6 style="margin-top: 0;">Team work makes the dream works!</h6>
+    <h2 style="color: var(--pending-border)">See you soon!<br/>🤗</h2>
+  </div>`;
+const confirmTrashMessage = `<div id="confirmTrashMessage" class="message">
+    <button class="iconBtn topRightCorner" onclick="removeMessage()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <h2>Well… I guess this is goodbye then.</h2>
+    <h3>The whole thing have been erased.</h3>
+    <h6>As if it never existed in the first place! 😶</h6>
+  </div>`;
+const errorMessage = `<div id="errorMessage" class="message">
+    <button class="iconBtn topRightCorner" onclick="removeMessage()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <h2>Oooops…</h2>
+    <h3>Something went wrong.<br/>Please try again 🙃</h3>
+    <h6>And if that still doesn't work, please let me know!</h6>
+  </div>`;
 
 
 form.addEventListener("submit", async (e) => {
@@ -1909,19 +2375,35 @@ form.addEventListener("submit", async (e) => {
   submitBtn.disabled = true;
   messageBox.innerHTML = t("message_waiting");
 
+  // --- 2. Gather form data ---
+  // const formData = new FormData(form);
+  // const formState = Object.fromEntries(formData.entries());
+
   try {
-    // --- 1. Check if the booking already exists
-    if(formState.key){//if it already had a key, we're comming from openSummary
-      const bookingKey = formState.key;
-      delete formState.key;
-      // update the booking in rtdb and it will update in storedBookings automatically AND be created in the calendar
-      await update(ref(rtdb, `meetAlix/bookings/${bookingKey}`), {
-        status: "pending", //if it already had a key, it had a status and the user was modifying it, so whatever the status was, now it's pending again!
+    let thisBooking = {};
+    let thisUserMeeting = "";
+    // --- 2. Check if the booking already exists
+    console.log(formState.key);
+    if(formState.key){
+      // find the booking index in storedBooking
+      //const bookingIndex = storedBookings.findIndex(book => book.key == formState.key);
+      // update the booking in storedBooking
+      //storedBookings[bookingIndex].status = "pending";
+      //storedBookings[bookingIndex].event = structuredClone(userSelection);
+      //storedBookings[bookingIndex].form = structuredClone(formState);
+      //storedBookings[bookingIndex].timestamp = Date.now();
+        // status: pending (even if it was confirmed)
+        // on update juste event (userSelection), form (formState) (what should we do about formState.key?), and timestamp
+      // update the booking in rtdb and catch
+      await update(ref(rtdb, `meetAlix/bookings/${formState.key}`), {
+        status: "pending",
         data: structuredClone(formState),
         timestamp: Date.now()
       });
+      //thisBooking = storedBookings[bookingIndex];
+      //thisUserMeeting = container.querySelector(`[data-bookingkey="${formState.key}"]`);
     } else{
-      // --- Push to RTDB and it will be added in storedBookings automatically AND be created in the calendar ---
+      // --- 3. Push to RTDB and get the reference ---
       await push(ref(rtdb, "meetAlix/bookings"), {
         type: formType,
         status: "pending",
@@ -1930,11 +2412,40 @@ form.addEventListener("submit", async (e) => {
         timestamp: Date.now()
       });
       container.querySelector(".selected").remove();
+      //const bookingKey = newBookingRef.key; // 🔑 THIS is the magic
+      //console.log(bookingKey);
+      //userSelection.status = "pending"; //wE MIGHT AS WELL RESET USERSELECTION
+      //DO WE UPDATE THE FORMSTATE OR DO WE RESET IT?!
+
+      // --- 4. Store booking locally ---
+      //thisBooking = {
+        //key: bookingKey,
+        //status: "pending",
+        //type: formType,
+        //event: structuredClone(userSelection),
+        //form: structuredClone(formState),
+        //timestamp: Date.now()
+      //};
+      //storedBookings.push(thisBooking);
+      // thisUserMeeting = container.querySelector(".userMeeting.selected");
+      //thisUserMeeting = container.querySelector(`[data-uuid="${userSelection.uuid}"]`);
     };
+
+    //localStorage.setItem("meetAlixBookings", JSON.stringify(storedBookings));
 
     // --- 5. SUCCESS ---
     // Show confirmation message
-    messageBox.innerHTML = t("message_confirm");  
+    messageBox.innerHTML = t("message_confirm");
+
+    // Remove userMeeting
+    //console.log(thisUserMeeting);
+    //thisUserMeeting.remove();
+
+    // and create a new one from storedBooking
+    //createWeeklyBook(thisBooking);
+    // add the proper legend if it isn't already there
+    //updateLegend();
+  
 
     // Erase and remove the form
     form.reset();
@@ -1944,7 +2455,8 @@ form.addEventListener("submit", async (e) => {
     // Reset userSelection and formState
     resetUserSelection();
     resetFormState();
-    //save to localStorage the resetted formState
+    //save to localStorage the resetted userSelection and formState
+    //localStorage.meetAlixUserSelection = JSON.stringify(userSelection);
     localStorage.meetAlixFormState = JSON.stringify(formState);
 
   } catch (error) {
@@ -1954,37 +2466,6 @@ form.addEventListener("submit", async (e) => {
     messageBox.innerHTML = t("message_error");
     submitBtn.disabled = false;
   };
-});
-
-form.addEventListener("reset", async (e) => {
-  e.preventDefault();
-
-  // --- 1. Check if the booking already exists
-  if(formState.key){ //if it already had a key, we're comming from openSummary
-    const booking = storedBookings.find((book) => book.key == formState.key);
-    if(Dday <= booking.data.date && booking.data.date <= Sday){
-      // and create a new one from storedBooking
-      createWeeklyBook(booking);
-      // add the proper legend if it isn't already there
-      updateLegend();          
-    };
-  };
-
-  //remove the userMeeting we created
-  container.querySelectorAll(".userMeeting.selected").forEach(we => {
-    we.remove();
-  });
-
-  // Erase and remove the form
-  form.reset();
-  formContainer.classList.add("displayNone"); 
-  formContainer.classList.remove("expanded");
-
-  // Reset userSelection and formState
-  resetUserSelection();
-  resetFormState();
-  //save to localStorage the resetted formState
-  localStorage.meetAlixFormState = JSON.stringify(formState);
 });
 
 function removeMessage(){
@@ -2002,7 +2483,9 @@ window.removeMessage = removeMessage;
 
   // Ajoute, dans la légende le carré orange et que ça veut dire "Keep Calm and Be Patient! I'm either in an existential crisis, stuck in traffic, or simply at work, or sleeping, or... In any case, you just got to wait!"
 
-
+  const pendingLegendHTML = ``;
+  const confirmedLegendHTML = ``;
+  const cancelledLegendHTML = ``;
 
 
 

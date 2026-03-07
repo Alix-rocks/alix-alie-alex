@@ -38,7 +38,7 @@ const formConfigs = {
   default: {
     meet: false,
     form: "#meetAlix",
-    meal: true
+    meal: false
   }
 };
 const config = formConfigs[formType];
@@ -1086,7 +1086,7 @@ function putShowsInWeek() {
 function createWeeklyshow(busy){
   document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="weeklyBuffer" style="grid-column:col-${busy.col}; grid-row:row-${busy.start}/row-${busy.end};"></div>`);
   if(config.meal && busy.meal){
-    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="weeklyMeal${type === "friend" && beigeToggle.checked ? " displayNone" : ""}" style="grid-column:col-${busy.col}; grid-row:row-${busy.start}/span 6;"><span data-i18n="meal">${t("meal")}</span></div>`);
+    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="weeklyMeal${formType == "friend" && beigeToggle.checked ? " displayNone" : ""}" style="grid-column:col-${busy.col}; grid-row:row-${busy.start}/span 6;"><span data-i18n="meal">${t("meal")}</span></div>`);
   };
 };
 

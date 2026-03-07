@@ -1,5 +1,6 @@
 :root{
   --bg-color: rgb(242, 243, 244);
+  --bg-color-5: rgba(242, 243, 244, .5);
   --tx-color: rgb(47, 79, 79);  /* darkslategrey */
   --tx-color-2: rgba(47, 79, 79, .2);
   --tx-color-2-full: rgb(213, 220, 220);
@@ -422,6 +423,10 @@ input.myRadio:checked + label span.myRadio{
   justify-content: center;
   text-align: center;
   font-weight: 900;
+}
+.pastArea{
+  z-index: 5;
+  background-color: var(--bg-color-5);
 }
 .weeklyAfterDateSpan{
   color: var(--tx-color-3);

@@ -100,6 +100,9 @@ const i18n = {
       summary_where_mine: "8419 Henri-Julien ave, Montreal, Qc, H2P&nbsp;2J5",
       summary_where_at: "somewhere around",
       summary_why: "BTW:",
+      summary_note_pending: "Although, we're still waiting on the confirmation.",
+      summary_note_confirmed: "Yep, that has been confirmed. Yay!",
+      summary_note_cancelled: "Nevermind, that has been cancelled.",
 
       /* ===== Buttons ===== */
       button_submit: "Book it!",
@@ -269,6 +272,9 @@ const i18n = {
       summary_where_mine: "8419 avenue Henri-Julien, Montréal, Qc, H2P&nbsp;2J5",
       summary_where_at: "au",
       summary_why: "En passant&nbsp;:",
+      summary_note_pending: "Quoiqu'il faut encore attendre la confirmation.",
+      summary_note_confirmed: "Oui, oui, ça a été confirmé. Yé&nbsp;!",
+      summary_note_cancelled: "Oublies ça; ça a été annulé…",
 
       /* ===== Buttons ===== */
       button_submit: "Réserve!",
@@ -439,6 +445,9 @@ const i18n = {
       summary_where_mine: "8419 Henri-Julien ave, Montreal, Qc, H2P&nbsp;2J5",
       summary_where_at: "at",
       summary_why: "Notes:",
+      summary_note_pending: "This meeting is still waiting for confirmation.",
+      summary_note_confirmed: "This meeting has been confirmed.",
+      summary_note_cancelled: "This meeting has been cancelled.",
 
       /* ===== Buttons ===== */
       button_submit: "Submit",
@@ -609,6 +618,9 @@ const i18n = {
       summary_where_mine: "8419 Avenue Henri-Julien, Montréal, Qc, H2P&nbsp;2J5",
       summary_where_at: "au",
       summary_why: "Notes&nbsp;:",
+      summary_note_pending: "Cette rencontre est en attente de confirmation.",
+      summary_note_confirmed: "Cette rencontre a bel et bien été confirmée.",
+      summary_note_cancelled: "Cette rencontre a été annulée.",
 
       /* ===== Buttons ===== */
       button_submit: "Soumettre",
@@ -620,7 +632,7 @@ const i18n = {
         <button class="iconBtn topRightCorner" onclick="removeMessage()">
           <i class="fa-solid fa-xmark"></i>
         </button>
-        <h2>Patientez</h2>
+        <h2>Veuillez patienter</h2>
         <span class="typcn typcn-wine" style="font-size: 50px; line-height: 1em;"></span>
         <h6 style="margin-top: 0.5em; margin-bottom: 2em;">Votre demande est présentement en traitement.</h6>
       </div>`,

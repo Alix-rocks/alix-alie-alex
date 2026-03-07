@@ -952,6 +952,12 @@ function putDatesInWeek(date){
     document.querySelectorAll(".backToWeeklyTodayBtn").forEach(btn => {
       btn.classList.add("displayNone");
     });
+    //ajout d'une zone pâle pour couvrir les jours passés
+    if(dayIdx > 0){ // if dayIdx == 0, c'est dimanche, alors on n'a pas besoin de zone pâle
+      let yesterdayDay = `${weeksDayArray[dayIdx].code}`;
+      let pastArea = `<div class="pastArea" style="grid-row: row-Day-end / row-end; grid-column: col-start / col-${yesterdayDay}"></div>`;
+    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", pastArea);
+    };
   } else{
     document.querySelector("#weekBackward").classList.remove("invisible");
     document.querySelectorAll(".backToWeeklyTodayBtn").forEach(btn => {
@@ -1080,7 +1086,7 @@ function putShowsInWeek() {
 function createWeeklyshow(busy){
   document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="weeklyBuffer" style="grid-column:col-${busy.col}; grid-row:row-${busy.start}/row-${busy.end};"></div>`);
   if(config.meal && busy.meal){
-    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="weeklyMeal${beigeToggle.checked ? " displayNone" : ""}" style="grid-column:col-${busy.col}; grid-row:row-${busy.start}/span 6;"><span data-i18n="meal">${t("meal")}</span></div>`);
+    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", `<div class="weeklyMeal${type === "friend" && beigeToggle.checked ? " displayNone" : ""}" style="grid-column:col-${busy.col}; grid-row:row-${busy.start}/span 6;"><span data-i18n="meal">${t("meal")}</span></div>`);
   };
 };
 
@@ -1159,6 +1165,11 @@ function eraseWeekArea(){
   let unknownAreaDiv = document.querySelector(".unknownArea");
   if(unknownAreaDiv){
     unknownAreaDiv.remove();
+  };
+  //enlever aussi la zone pâle couvrant les jours passés
+  let pastAreaDiv = document.querySelector(".pastArea");
+  if(pastAreaDiv){
+    pastAreaDiv.remove();
   };
 };
 
@@ -1834,6 +1845,7 @@ function openSummary(thisOne){
         <span data-i18n="summary_why">${t("summary_why")}</span><br/>
         ${booking.data.why}
       </h3>
+      <p data-i18n="summary_note_${booking.status}"></p>
       <button id="modifyBooking" class="textBtn submitBtn" data-i18n="button_modify" style="margin: 2em auto 1em;">
         ${t("button_modify")}
       </button>

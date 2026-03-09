@@ -9,7 +9,7 @@
   Ctrl + K ... Ctrl + 1 => Fold all the first levels
 */
 
-import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, get, onChildAdded, ref, set, update, onChildChanged, onChildRemoved, remove } from "/myFirebase.js";
+import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, documentId, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, get, onChildAdded, ref, set, update, onChildChanged, onChildRemoved, remove } from "/myFirebase.js";
 import trans from "/trans.js";
 auth.languageCode = 'fr';
 
@@ -532,10 +532,10 @@ async function loadBookings() {
   if (!snapshot.exists()) return;
 
   bookingQueue = Object.entries(snapshot.val())
-  .filter(([_, data]) => data.status === "pending")
-  .map(([bookingKey, data]) => ({
+  .filter(([_, info]) => info.status === "pending")
+  .map(([bookingKey, info]) => ({
     key: bookingKey,
-    ...data
+    ...info
   }))
   .sort((a, b) => a.timestamp - b.timestamp);
 
@@ -543,26 +543,30 @@ async function loadBookings() {
 
   onChildAdded(ref(rtdb, "meetAlix/bookings"), (snap) => {
     const booking = { key: snap.key, ...snap.val() };
-    //check if booking.key already is in bookingQueue, and if yes, then update that one, otherwise, push it
-    const bookingIndex = bookingQueue.findIndex(book => book.key === booking.key);
-    if(bookingIndex !== -1){
-      bookingQueue[bookingIndex] = booking;
-    } else{
-      bookingQueue.push(booking);
+    if(booking.status === "pending"){
+      //check if booking.key already is in bookingQueue, and if yes, then update that one, otherwise, push it
+      const bookingIndex = bookingQueue.findIndex(book => book.key === booking.key);
+      if(bookingIndex !== -1){
+        bookingQueue[bookingIndex] = booking;
+      } else{
+        bookingQueue.push(booking);
+      };
+      updateInbox();
     };
-    updateInbox();
   });
 
   onChildChanged(ref(rtdb, "meetAlix/bookings"), (snap) => {
     const booking = { key: snap.key, ...snap.val() };
-    //check if booking.key already is in bookingQueue, and if yes, then update that one, otherwise, push it
-    const bookingIndex = bookingQueue.findIndex(book => book.key === booking.key);
-    if(bookingIndex !== -1){
-      bookingQueue[bookingIndex] = booking;
-    } else{
-      bookingQueue.push(booking);
+    if(booking.status === "pending"){
+      //check if booking.key already is in bookingQueue, and if yes, then update that one, otherwise, push it
+      const bookingIndex = bookingQueue.findIndex(book => book.key === booking.key);
+      if(bookingIndex !== -1){
+        bookingQueue[bookingIndex] = booking;
+      } else{
+        bookingQueue.push(booking);
+      };
+      updateInbox();
     };
-    updateInbox();
   });
 
   onChildRemoved(ref(rtdb, "meetAlix/bookings"), (snap) => {
@@ -961,6 +965,27 @@ async function getDones(){
   getWeeklyCalendar();
   logInScreen.classList.add("displayNone");
   document.getElementById("loadingScreen").classList.replace("waitingScreen", "displayNone");
+};
+
+async function getMoreDones(fromDate, toDate) { 
+  const q = query(
+    collection(db, "randomTask", auth.currentUser.email, "myListDones"),
+    where(documentId(), ">=", fromDate),
+    where(documentId(), "<=", toDate)
+  );
+
+  const snapshot = await getDocs(q);
+
+  snapshot.forEach(doc => {
+    if (!listDones.some(d => d.date === doc.id)) {
+      listDones.push({
+        date: doc.id,
+        list: doc.data().dones
+      });
+    };
+  });
+
+  localStorageDones("first");
 };
 
 
@@ -6565,8 +6590,15 @@ function putDatesInWeek(date){
   };
   updateSleepAreas();
 
-  let Dday = arrayDate[0].full; 
+  let Dday = arrayDate[0].full; //2026-03-01
   let Sday = arrayDate[arrayDate.length - 2].full;//maybe use the one with myTomorrow dateTime so that we can make sure the events between 00:00 and myTomorrow are in the right week/col
+  //Check if we have the dones for these dates, and if not, go get them
+  const allDatesLoaded = arrayDate.every(date =>
+    listDones.some(d => d.date === date)
+  );
+  if (!allDatesLoaded) {
+    getMoreDones(arrayDate[0], arrayDate[arrayDate.length - 1]);
+  };
   let Ddate = getDateFromString(Dday);
   let Sdate = getDateFromString(Sday);
   let DYear = Ddate.getFullYear();
@@ -6897,7 +6929,7 @@ function getWeeklyCalendar(){
   
   document.querySelector("#weekBackward").addEventListener("click", () => {
     eraseWeek();
-    let Dday = document.querySelector("#Dday").dataset.date;
+    let Dday = document.querySelector("#Dday").dataset.date; // 2026-03-01
     let Ddate = getDateFromString(Dday);
     Ddate.setDate(Ddate.getDate() - 7);
     putDatesInWeek(Ddate);

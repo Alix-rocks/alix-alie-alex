@@ -7,8 +7,8 @@
 import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, getDatabase, onChildAdded, ref, get, push, update, onValue, onChildChanged, onChildRemoved, remove } from "/myFirebase.js";
 import i18n from "./i18n.js";
 
-const unknownStartDate = "2026-03-21"; //The day the "Not sure yet" section starts
-const nextKnownDate = "2026-04-13";
+const unknownStartDate = "2026-03-18"; //The day the "Not sure yet" section starts
+const nextKnownDate = "2026-03-18";
 
 const myEmail = "alexblade.23.49@gmail.com";
 

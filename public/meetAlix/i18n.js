@@ -184,7 +184,7 @@ const i18n = {
       calendar_thursday: "J",
       calendar_friday: "V",
       calendar_saturday: "S",
-      calendar_unknown: "Je sais pas encore&nbsp;!<br/>Reviens autour<br/>du",
+      calendar_unknown: "C'est pas encore sûr&nbsp;!<br/>Reviens autour<br/>du",
       
       /* ===== Headings & summaries ===== */
       summary_date_time: 
@@ -358,7 +358,7 @@ const i18n = {
       calendar_thursday: "T",
       calendar_friday: "F",
       calendar_saturday: "S",
-      calendar_unknown: "Availabilities unknown.<br/>Please come back around<br/>the",
+      calendar_unknown: "Availabilities unsure yet.<br/>Please come back around<br/>the",
       
       /* ===== Headings & summaries ===== */
       summary_date_time:
@@ -531,7 +531,7 @@ const i18n = {
       calendar_thursday: "J",
       calendar_friday: "V",
       calendar_saturday: "S",
-      calendar_unknown: "Disponibilités inconnues.<br/>Veuillez revenir autour<br/>du",
+      calendar_unknown: "Disponibilités incertaines.<br/>Veuillez revenir autour<br/>du",
       
       /* ===== Headings & summaries ===== */
       summary_date_time:

@@ -199,7 +199,7 @@ const i18n = {
       label_time_to: "À&nbsp;:",
       time_warning:
         "STP, prends en compte le temps de préparation, repas et déplacements.<br/>" +
-        "Genre, attends-toi pas à c'que puisse être ailleurs que chez nous avant midi&nbsp;!",
+        "Genre, attends-toi pas à c'que j'puisse être ailleurs que chez nous avant midi&nbsp;!",
 
       /* ===== Identity section ===== */
       heading_identity: "Qui êtes-vous?",

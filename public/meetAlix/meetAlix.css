@@ -8,6 +8,7 @@
   --tx-color-4: rgba(47, 79, 79, .4);
   --tx-color-4-full: rgb(172, 185, 185);
   --tx-color-5: rgba(47, 79, 79, .5);
+  --tx-color-7-full: rgb(106,128,129);
   --now-color: rgb(64, 115, 243);
   --now-color-5: rgba(64, 115, 243, .5);
   --selected-border: rgba(139, 0, 139, .5);
@@ -223,7 +224,12 @@ form{
 form input, form select, form textarea{
   background-color: var(--bg-color);
   color: var(--tx-color);
+  border-radius: 0 5px 8px 5px;
+  border-color: var(--tx-color-7-full);
+  border-style: dashed dotted dotted dashed;
+  border-width: 1.5px;
 }
+
 form .wide{
   width: -webkit-fill-available;
 }

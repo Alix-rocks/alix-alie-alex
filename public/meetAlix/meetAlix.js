@@ -19,6 +19,9 @@ const formType = params.get("type") || "default";
 //console.log(window.location.href);
 //console.log(window.location.search);
 
+// TODO: allo
+// NOTE: salut
+
 const formConfigs = {
   puzzle: {
     meet: true,
@@ -104,7 +107,7 @@ function translatePage() {
 
   translateMonth();
 
-  if (!formContainer.classList.contains("displayNone") && formState.date !== "") {
+  if (formState.date !== "") {
     //console.log(formState.date);
     let string = getDateTimeFromBook(formState);
     let stringLang = lang === "en" ? string : string.charAt(0).toUpperCase() + string.slice(1);

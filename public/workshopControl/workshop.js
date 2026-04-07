@@ -3,6 +3,7 @@ import { rtdb, getDatabase, ref, set, onValue } from "/myFirebase.js";
 let landscapeMode;
 let screenHeight;
 let screenWidth;
+let rootFontSize;
 const emojiRegex = /\p{Emoji}/gu; // 'g' for global, 'u' for Unicode mode
 let sectionShowed = null;
 let allSteps = [];
@@ -27,8 +28,10 @@ let shuffledColors = [];
     landscapeMode = false;
     screenHeight = screenWidth * 20 / 9;
   };
+  rootFontSize = screenHeight / 32;
     document.documentElement.style.setProperty('--vh', `${screenHeight}px`);
     document.documentElement.style.setProperty('--vw', `${screenWidth}px`);
+    document.documentElement.style.setProperty('--fs', `${rootFontSize}px`);
 })();
 
 function updateViewportVars() {

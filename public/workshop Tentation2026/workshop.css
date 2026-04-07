@@ -2,8 +2,6 @@
   --bg-color: rgb(244, 244, 244);  
   /* #f4f4f4 */
   --tx-color: rgb(34, 34, 34);
-  --red-dark: darkred;
-  --red-medium: red;
   --green-dark: rgb(15, 74, 0);
   --green-medium: rgb(23, 113, 0);
   --green-light: rgb(30, 150, 0);
@@ -20,10 +18,9 @@
   --vw: 100vw;
   --vh: 100vh;
   --wCBT: 100%;
-  --fs: 24px;
 }
 html{
-  font-size: var(--fs);
+  font-size: 24px;
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -38,7 +35,7 @@ html{
   user-select: none;
 }
 body{
-  color: var(--grey-dark);
+  color: var(--green-dark);
   background-color: var(--bg-color);
   padding: 0 8%;
   width: var(--vw);
@@ -53,11 +50,6 @@ section{
   display: flex;
   flex-flow: column nowrap;
 }
-.titleSlide{
-  justify-content: space-evenly;
-  align-items: center;
-  text-align: center;
-}
 .topStuff{
   justify-content: flex-start;
 }
@@ -70,7 +62,11 @@ section{
 .centerStuff{
   align-items: center;
 }
-
+.titleSlide{
+  justify-content: space-evenly;
+  align-items: center;
+  text-align: center;
+}
 h1{
   font-family: 'Imprima', sans-serif;
   /* font-style: italic;
@@ -78,7 +74,7 @@ h1{
   font-size: 2.4rem;
   line-height: 1em;
   margin-bottom: 0;
-  color: var(--grey-dark);
+  color: var(--green-medium);
 }
 
 h1:not(:has(+ h2)){
@@ -89,7 +85,7 @@ h2{
   font-style: italic;
   font-size: 1.3rem;
   margin-top: .5em;
-  color: var(--grey-dark);
+  color: var(--green-light);
 }
 p, li, ol{
   font-size: 1rem;
@@ -97,7 +93,7 @@ p, li, ol{
 }
 p{
   font-style: italic;
-  color: var(--grey-dark);
+  color: var(--green-medium);
   font-size: 2rem;
 }
 .strong{
@@ -110,11 +106,11 @@ p.strong{
 .titleSlide h1{
   font-family: 'Caveat', sans-serif;
   font-size: 8rem;
-  color: var(--grey-dark);
+  color: var(--green-medium);
 }
 .titleSlide h2{
   font-size: 2.5rem;
-  color: var(--grey-dark);
+  color: var(--green-dark);
 }
 .landscapeMode{
   height: 100%;
@@ -211,19 +207,18 @@ p.strong{
 .OUInon1{
   font-size: 6rem; 
   font-weight: 900;
-  color: var(--grey-dark);
+  color: var(--green-light);
 }
 .OUInon2{
   font-size: 9rem; 
   font-weight: 900; 
   line-height: .8em;
-  color: var(--tx-color);
+  color: var(--green-medium);
 }
 .OUInon3{
   font-family: 'Eater';
   font-size: 4rem; 
   font-weight: 900;
-  color: var(--red-dark);
 }
 
 
@@ -242,16 +237,28 @@ p.exercice{
   font-weight: 400;
 }
 .acrostiche{
-  color: var(--grey-dark);
+  color: var(--green-medium);
 }
-.acrostiche h1, .acrostiche p{
+.exercice > h1, .acrostiche > h1{
   font-family: 'Quicksand', sans-serif;
   font-weight: 700;
-  font-size: 1.8rem;
-  margin: 0;
-  color: var(--grey-dark);
+  font-size: 2rem;
+  margin-bottom: 5vh;
+  color: var(--green-dark);
 }
-
+.exercice > h2, .acrostiche > h2{
+  font-family: 'imprima', sans-serif;
+  font-style: normal;
+  font-size: 4rem;
+  line-height: 1em;
+  margin: 2em auto;
+  text-align: center;
+}
+.acrostiche > h2{
+  font-size: 6rem;
+  margin: .5em auto;
+  color: var(--purple-light);
+}
 .acrostiche h3{
   font-family: 'imprima', sans-serif;
   font-size: 2.5rem;
@@ -260,34 +267,41 @@ p.exercice{
   text-align: left;
   height: 4rem;
 }
-
-.acroCritereAll{
-  display: flex;
-  flex-flow: column wrap;
-
-}
-.acroCritere{
-  font-family: 'caveat', sans-serif;
-  font-size: 3.5rem;
-  margin: 0;
-  text-align: left;
-  height: 4rem;
-  display: flex;
-  align-items: flex-end;
-  line-height: 1;
-  font-weight: 800;
-}
+/* .acrostiche h3::first-letter{
+  color: var(--green-medium);
+  font-size: 3rem;
+} */
 
 .firstLetter{
   font-family: 'Quicksand';
   color: var(--purple-light);
   font-size: 4rem;
-  font-weight: 800;
-  height: 100%;
-  line-height: 1;
+  line-height: 4rem;
+  height: 4rem;
+  display: inline-block;
 }
 
-
+.acrostiche > p{
+  line-height: 1em;
+  margin: 0 auto auto;
+}
+.acrostiche > p.boxed{
+  font-size: 1.8rem;
+  font-weight: 500;
+  border: 5px solid;
+  padding: 3% 4%;
+  border-radius: 25px;
+  width: fit-content;
+  color: var(--grey-dark);
+  font-style: normal;
+}
+.exercice > p{
+  font-size: 1.3em;
+  font-weight: 500;
+  line-height: 1em;
+  width: fit-content;
+  margin: auto;
+}
 
 .indent{
   padding-left: 80px;
@@ -512,13 +526,6 @@ h1.nosifer{
   line-height: 2em;
   text-align: center;
 }
-.creepy{
-  font-family: 'Nosifer';
-  font-size: 3rem;
-  line-height: 1.6;
-  text-align: center;
-  color: var(--red-dark);
-}
 .nonPhrase{
   font-family: 'Caveat', sans-serif;
   font-size: 7rem;
@@ -555,7 +562,7 @@ h1.nosifer{
   font-size: 20rem; 
   line-height: 1em; 
   left: -3.2rem; 
-  color: var(--red-medium);
+  color: var(--purple-light);
 }
 .smallP p{
   margin: 0 .5em;

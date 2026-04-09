@@ -2456,6 +2456,11 @@ input[name="convoStatusRadios"]:checked + label > span.statusTitle{
   width: 100%;
 }
 
+#newBookingList li{
+  border: solid 1.5px var(--tx-color);
+  padding: 3px 8px;
+}
+
 .cossin{
   /* NOT WORKING! */
   /* width: 0.1px;

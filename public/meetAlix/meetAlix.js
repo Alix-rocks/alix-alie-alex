@@ -7,8 +7,8 @@
 import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, getDatabase, onChildAdded, ref, get, push, update, onValue, onChildChanged, onChildRemoved, remove } from "/myFirebase.js";
 import i18n from "./i18n.js";
 
-const unknownStartDate = "2026-04-20"; //The day the "Not sure yet" section starts
-const nextKnownDate = "2026-04-13";
+const unknownStartDate = ""; //The day the "Not sure yet" section starts
+const nextKnownDate = "";
 
 const myEmail = "alexblade.23.49@gmail.com";
 
@@ -700,6 +700,50 @@ onValue(ref(rtdb, "meetAlix/myBusies"), snapshot => {
   updateCurrentWeek(); //eraseWeekEvent(); getThisWeekStuffAndUnavailableRanges(); putShowsInWeek();
 });
 
+async function getBlurryDate() {
+  const blurryDateRef = ref(rtdb, "meetAlix/myBlurryDate");
+  const snap = await get(blurryDateRef);
+
+  if (!snap.exists()) {
+    unknownStartDate = "";
+    return;
+  };
+  unknownStartDate = snap.val();
+};
+
+onValue(ref(rtdb, "meetAlix/myBlurryDate"), snapshot => {
+
+  if (!snapshot.exists()) {
+    return;
+  };
+
+  unknownStartDate = snapshot.val();
+
+  updateCurrentWeek(); //eraseWeekEvent(); getThisWeekStuffAndUnavailableRanges(); putShowsInWeek();
+});
+
+async function getNetDate() {
+  const netDateRef = ref(rtdb, "meetAlix/myNetDate");
+  const snap = await get(netDateRef);
+
+  if (!snap.exists()) {
+    nextKnownDate = "";
+    return;
+  };
+  nextKnownDate = snap.val();
+};
+
+onValue(ref(rtdb, "meetAlix/myNetDate"), snapshot => {
+
+  if (!snapshot.exists()) {
+    return;
+  };
+
+  nextKnownDate = snapshot.val();
+
+  updateCurrentWeek(); //eraseWeekEvent(); getThisWeekStuffAndUnavailableRanges(); putShowsInWeek();
+});
+
 
 function createCalendar(){
   getWeeklyCalendar();
@@ -721,6 +765,8 @@ async function initApp() {
   await getBookings();
   await addListeners();
   await loadMyBusies();
+  await getBlurryDate();
+  await getNetDate();
   createCalendar();
   translatePage();
   updateSwitchLang();
@@ -920,8 +966,9 @@ function getStartEndSlot(dayIndex, time){ // 2, 11:30
   return dateTimeToSlot(info);
 };
 
+let arrayDate = [];
 function putDatesInWeek(date){
-  let arrayDate = [];
+  arrayDate = [];
   for(let d = 0; d < 7; d++){
     let thisDate = {
       date: String(date.getDate()),
@@ -969,21 +1016,7 @@ function putDatesInWeek(date){
   };
   //updateSleepAreas();
   
-  let unknownArea;
-  //console.log(arrayDate);
-  const unknownTestIn = arrayDate.some(el => (el.fullDash == unknownStartDate));
-  if(unknownTestIn){
-    let unknownStartIdx = meseDayICalc(unknownStartDate);
-    let unknownStart = `${weeksDayArray[unknownStartIdx].code}`;
-    unknownArea = `<div class="unknownArea" style="grid-row: row-Day / row-end; grid-column: col-${unknownStart} / col-end"><p><span data-i18n="calendar_unknown">${t("calendar_unknown")}</span> ${nextKnownDate}</p></div>`;
-    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", unknownArea);
-  };
-  const unknownTestAfter = unknownStartDate < arrayDate[0].fullDash ? true : false;
-  if(unknownTestAfter){
-    unknownArea = `<div class="unknownArea" style="grid-row: row-Day / row-end; grid-column: col-start / col-end"><p><span data-i18n="calendar_unknown">${t("calendar_unknown")}</span> ${nextKnownDate}</p></div>`;
-    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", unknownArea);
-  };
-  
+  testAndAddUnknownArea();  
 
   Dday = arrayDate[0].fullDash;
   Sday = arrayDate[arrayDate.length - 1].fullDash;
@@ -1006,6 +1039,23 @@ function putDatesInWeek(date){
     updateSelectedTime();
     formContainer.classList.remove("expanded");
   }; // add an other one for the confirmed ones
+};
+
+function testAndAddUnknownArea(){
+  let unknownArea;
+  //console.log(arrayDate);
+  const unknownTestIn = unknownStartDate !== "" ? arrayDate.some(el => (el.fullDash == unknownStartDate)) : false;
+  if(unknownTestIn){
+    let unknownStartIdx = meseDayICalc(unknownStartDate);
+    let unknownStart = `${weeksDayArray[unknownStartIdx].code}`;
+    unknownArea = `<div class="unknownArea" style="grid-row: row-Day / row-end; grid-column: col-${unknownStart} / col-end"><p><span data-i18n="calendar_unknown">${t("calendar_unknown")}</span> ${nextKnownDate !== "" ? nextKnownDate : "🤷‍♀️"}</p></div>`;
+    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", unknownArea);
+  };
+  const unknownTestAfter = unknownStartDate < arrayDate[0].fullDash ? true : false;
+  if(unknownTestAfter){
+    unknownArea = `<div class="unknownArea" style="grid-row: row-Day / row-end; grid-column: col-start / col-end"><p><span data-i18n="calendar_unknown">${t("calendar_unknown")}</span> ${nextKnownDate !== "" ? nextKnownDate : "🤷‍♀️"}</p></div>`;
+    document.querySelector(".weeklyContainer").insertAdjacentHTML("beforeend", unknownArea);
+  };
 };
 
 function translateMonth(){
@@ -1198,6 +1248,7 @@ function updateCurrentWeek(){
   eraseWeekEvent();
   getThisWeekStuffAndUnavailableRanges();
   putShowsInWeek();
+  testAndAddUnknownArea();
   //console.log("currentWeekUpdated");
 };
 

@@ -13,7 +13,7 @@ import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, 
 import trans from "/trans.js";
 auth.languageCode = 'fr';
 
-const lastUpdate = "2026-03-05 10h14";
+const lastUpdate = "2026-04-11 12h10";
 
 const cloudIt = document.querySelector("#cloudIt");
 const earthIt = document.querySelector("#earthIt");
@@ -692,6 +692,17 @@ function toTIdeBQaC(thisOne){
 };
 window.toTIdeBQaC = toTIdeBQaC;
 
+// MARK: meetAlixSettings
+async function setMeetAlixSettings(setting, value) {
+  if (!setting) return;
+  try {
+    await set(
+      ref(rtdb, `meetAlix/${setting}`), value
+    );
+  } catch (err) {
+    console.error("Failed to update setting ${setting}:", err);
+  };
+};
 
 let lastUpdateLocalStorageRandomTask = "";
 let lastUpdateFireStore = "";
@@ -1367,7 +1378,7 @@ function resetCBC(){
       <i class="fa-solid fa-comments" style="font-size: 20px;"></i>
     </label>
     <h3>What time does your day really end?</h3>
-    <input id="timeInput" type="time">
+    <input id="timeInput" type="time" value="${mySettings.myTomorrow ? mySettings.myTomorrow : ""}">
     <h3>What day does your week actually start?</h3>
     <select id="firstDayOfWeekInput">
       ${firstDayOptions}
@@ -1386,6 +1397,10 @@ function resetCBC(){
     <div class="clockingDiv">
       ${clockingOptions}
     </div>
+    ${userConnected && auth.currentUser.email === "alexblade.23.49@gmail.com" ? `<h3>When does it start to get blurry?</h3>
+      <input id="blurryDate" type="date" value="${mySettings.myBlurryDate ? mySettings.myBlurryDate : ""}">
+      <h3>When does it get net again?</h3>
+      <input id="netDate" type="date" value="${mySettings.myNetDate ? mySettings.myNetDate : ""}">` : ``}
     <button id="settingsBtn" class="ScreenBtn1">yep <span class="typcn typcn-thumbs-up" style="padding: 0;font-size: 1em;"></span></button>
     <button id="cancelBtn" class="ScreenBtn2">Cancel</button>
     <button id="logOutBtn" onclick="logOut()" class="ScreenBtn1" style="margin-right: 0; margin-bottom: 0; border-radius: 15px; font-size: .8em;">I'm out! <i class="fa-solid fa-person-through-window" style="display: block; margin-top: 3px;"></i></button>
@@ -1393,15 +1408,17 @@ function resetCBC(){
 
     let switchModeSlider = document.querySelector("#switchModeSlider");
     let timeInput = document.querySelector("#timeInput");
+    let blurryDate = document.querySelector("#blurryDate");
+    let netDate = document.querySelector("#netDate");
     let sleepZonesInput = document.querySelector("#sleepZonesInput");
     let exitX = document.querySelector("#exitX");
     let cancelBtn = document.querySelector("#cancelBtn");
     let settingsBtn = document.querySelector("#settingsBtn");
     
-    if(mySettings.myTomorrow){
-      timeInput.value = mySettings.myTomorrow;
-    };
-    let previousTomorrow = timeInput.value;
+    // if(mySettings.myTomorrow){
+    //   timeInput.value = mySettings.myTomorrow;
+    // };
+    let previousTomorrow = mySettings.myTomorrow;
     let previousSleepZones = mySettings.mySleepZones;
     if(mySettings.myFavoriteView){
       document.getElementById(mySettings.myFavoriteView).checked = true;
@@ -1459,7 +1476,7 @@ function resetCBC(){
     });
 
     settingsBtn.addEventListener("click", () => {
-      mySettings.myTomorrow = `${timeInput.value}`;
+      mySettings.myTomorrow = timeInput.value;
       if(previousTomorrow !== mySettings.myTomorrow){
         document.getElementById("todaysDateSpan").innerHTML = getTodayDateString();
         document.getElementById("todaysDaySpan").innerHTML = getDayNameFromString(getTodayDateString());
@@ -1473,6 +1490,16 @@ function resetCBC(){
 
       mySettings.myFavoriteView = document.querySelector('input[name="choicePageRadios"]:checked').value;
       
+      if(blurryDate){
+        mySettings.myBlurryDate = blurryDate.value;
+        setMeetAlixSettings("myBlurryDate", blurryDate.value);
+      };
+
+      if(netDate){
+        mySettings.myNetDate = netDate.value;
+        setMeetAlixSettings("myNetDate", netDate.value);
+      };
+
       mySettings.mySleepZones = sleepZonesInput.checked ? true : false;
       if(previousSleepZones !== mySettings.mySleepZones){
         getWeeklyCalendar();

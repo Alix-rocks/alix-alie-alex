@@ -7,8 +7,9 @@
 import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, getDatabase, onChildAdded, ref, get, push, update, onValue, onChildChanged, onChildRemoved, remove } from "/myFirebase.js";
 import i18n from "./i18n.js";
 
-const unknownStartDate = ""; //The day the "Not sure yet" section starts
-const nextKnownDate = "";
+let unknownStartDate = ""; //The day the "Not sure yet" section starts
+let nextKnownDate = "";
+let arrayDate = [];
 
 const myEmail = "alexblade.23.49@gmail.com";
 
@@ -664,24 +665,24 @@ async function addListeners() {
   });
 };
 
-async function loadMyBusies() {
-  const busiesRef = ref(rtdb, "meetAlix/myBusies");
-  const snap = await get(busiesRef);
+// async function loadMyBusies() {
+//   const busiesRef = ref(rtdb, "meetAlix/myBusies");
+//   const snap = await get(busiesRef);
 
-  if (!snap.exists()) {
-    myBusies = [];
-    return;
-  };
+//   if (!snap.exists()) {
+//     myBusies = [];
+//     return;
+//   };
 
-  const data = snap.val();
+//   const data = snap.val();
 
-  // Convert object → array
-  myBusies = Object.entries(data).map(([key, value]) => ({
-    key,
-    ...value
-  }));
+//   // Convert object → array
+//   myBusies = Object.entries(data).map(([key, value]) => ({
+//     key,
+//     ...value
+//   }));
 
-};
+// };
 
 onValue(ref(rtdb, "meetAlix/myBusies"), snapshot => {
 
@@ -690,26 +691,38 @@ onValue(ref(rtdb, "meetAlix/myBusies"), snapshot => {
     return;
   };
 
-  const data = snapshot.val();
-
-  myBusies = Object.entries(data).map(([key, value]) => ({
+  let myNewBusies = Object.entries(snapshot.val()).map(([key, value]) => ({
     key,
     ...value
   }));
+  console.log(myBusies);
+  console.log(myNewBusies);
 
-  updateCurrentWeek(); //eraseWeekEvent(); getThisWeekStuffAndUnavailableRanges(); putShowsInWeek();
+  if(myBusies == ""){
+    console.log("debut!");
+    myBusies = myNewBusies;
+    return; 
+  } else if (JSON.stringify(myBusies) === JSON.stringify(myNewBusies)) {
+    console.log("pareil!");
+    return; 
+  } else{
+    myBusies = myNewBusies;
+    updateCurrentWeek(); //eraseWeekEvent(); getThisWeekStuffAndUnavailableRanges(); putShowsInWeek();
+  };
+
+  
 });
 
-async function getBlurryDate() {
-  const blurryDateRef = ref(rtdb, "meetAlix/myBlurryDate");
-  const snap = await get(blurryDateRef);
+// async function getBlurryDate() {
+//   const blurryDateRef = ref(rtdb, "meetAlix/myBlurryDate");
+//   const snap = await get(blurryDateRef);
 
-  if (!snap.exists()) {
-    unknownStartDate = "";
-    return;
-  };
-  unknownStartDate = snap.val();
-};
+//   if (!snap.exists()) {
+//     unknownStartDate = "";
+//     return;
+//   };
+//   unknownStartDate = snap.val();
+// };
 
 onValue(ref(rtdb, "meetAlix/myBlurryDate"), snapshot => {
 
@@ -717,31 +730,37 @@ onValue(ref(rtdb, "meetAlix/myBlurryDate"), snapshot => {
     return;
   };
 
-  unknownStartDate = snapshot.val();
-
-  updateCurrentWeek(); //eraseWeekEvent(); getThisWeekStuffAndUnavailableRanges(); putShowsInWeek();
+  if(unknownStartDate == ""){
+    unknownStartDate = snapshot.val();
+  } else{
+    unknownStartDate = snapshot.val();
+    updateCurrentWeek(); //eraseWeekEvent(); getThisWeekStuffAndUnavailableRanges(); putShowsInWeek();
+  };
 });
 
-async function getNetDate() {
-  const netDateRef = ref(rtdb, "meetAlix/myNetDate");
-  const snap = await get(netDateRef);
+// async function getNetDate() {
+//   const netDateRef = ref(rtdb, "meetAlix/myNetDate");
+//   const snap = await get(netDateRef);
 
-  if (!snap.exists()) {
-    nextKnownDate = "";
-    return;
-  };
-  nextKnownDate = snap.val();
-};
+//   if (!snap.exists()) {
+//     nextKnownDate = "";
+//     return;
+//   };
+//   nextKnownDate = snap.val();
+// };
 
 onValue(ref(rtdb, "meetAlix/myNetDate"), snapshot => {
 
   if (!snapshot.exists()) {
     return;
   };
+  if(nextKnownDate == ""){
+    nextKnownDate = snapshot.val();
+  } else{
+    nextKnownDate = snapshot.val();
+    updateCurrentWeek(); //eraseWeekEvent(); getThisWeekStuffAndUnavailableRanges(); putShowsInWeek();
+  };
 
-  nextKnownDate = snapshot.val();
-
-  updateCurrentWeek(); //eraseWeekEvent(); getThisWeekStuffAndUnavailableRanges(); putShowsInWeek();
 });
 
 
@@ -764,9 +783,9 @@ initApp();
 async function initApp() {
   await getBookings();
   await addListeners();
-  await loadMyBusies();
-  await getBlurryDate();
-  await getNetDate();
+  // await loadMyBusies();
+  // await getBlurryDate();
+  // await getNetDate();
   createCalendar();
   translatePage();
   updateSwitchLang();
@@ -966,7 +985,7 @@ function getStartEndSlot(dayIndex, time){ // 2, 11:30
   return dateTimeToSlot(info);
 };
 
-let arrayDate = [];
+
 function putDatesInWeek(date){
   arrayDate = [];
   for(let d = 0; d < 7; d++){
@@ -1042,6 +1061,11 @@ function putDatesInWeek(date){
 };
 
 function testAndAddUnknownArea(){
+  let unknownAreaDiv = document.querySelector(".unknownArea");
+  if(unknownAreaDiv){
+    unknownAreaDiv.remove();
+  };
+
   let unknownArea;
   //console.log(arrayDate);
   const unknownTestIn = unknownStartDate !== "" ? arrayDate.some(el => (el.fullDash == unknownStartDate)) : false;

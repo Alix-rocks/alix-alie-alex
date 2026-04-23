@@ -3490,7 +3490,7 @@ function creatingCalendar(todo, home, classs){
   let busyDiv = `<div id="busySection" class="calendarMargin" style="margin-top:20px;">
     <h5 class="taskInfoInput" style="margin-left: 0;">Shall we consider you unavailable?</h5>
     <div class="inDaySection" style="width: -webkit-fill-available; max-width: 200px;">
-      <input id="busyInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.busy || todo.term == "showThing" ? `checked` : ``} />
+      <input id="busyInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.busy == true ? `checked` : ``} />
       <div class="calendarInsideMargin tuttoGiornoDiv">
         <p style="margin: 0;">Busy busy!</p>
         <label for="busyInput" class="slideZone">
@@ -5471,27 +5471,27 @@ function taskAddAllInfo(todo){
         if(radio == "showThing"){
           colorIt.classList.add("hidden");
           taskTitle.style.color = mySettings.myBaseColors[0].colorBG;
-          busyInput.checked = todo.busy ? true : todo.busy == false ? false : true;
+          busyInput.checked = todo.busy === true ? true : todo.busy === false ? false : true;
         } else{
           colorIt.classList.remove("hidden");
           taskTitle.style.color = newcolor ? mySettings.myBaseColors[newcolor].colorBG : mySettings.myBaseColors[todo.color].colorBG;
-          busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
+          busyInput.checked = todo.busy === true ? true : todo.busy === false ? false : false;
         };
       } else if(radio == "showThing" || radio == "reminder"){
         setTR();
         if(radio == "showThing"){
           colorIt.classList.add("hidden");
           taskTitle.style.color = mySettings.myBaseColors[0].colorBG;
-          busyInput.checked = todo.busy ? true : todo.busy == false ? false : true;
+          busyInput.checked = todo.busy === true ? true : todo.busy === false ? false : true;
         } else if(radio == "reminder"){
           colorIt.classList.remove("hidden");
           taskTitle.style.color = newcolor ? mySettings.myBaseColors[newcolor].colorBG : mySettings.myBaseColors[todo.color].colorBG;
-          busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
+          busyInput.checked = todo.busy === true ? true : todo.busy === false ? false : false;
         };
       } else{
         colorIt.classList.remove("hidden");
         taskTitle.style.color = newcolor ? mySettings.myBaseColors[newcolor].colorBG : mySettings.myBaseColors[todo.color].colorBG;
-        busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
+        busyInput.checked = todo.busy === true ? true : todo.busy === false ? false : false;
         setTRN();
       };
     });
@@ -5505,17 +5505,17 @@ function taskAddAllInfo(todo){
         if(radio.value == "showThing"){
           colorIt.classList.add("hidden");
           taskTitle.style.color = mySettings.myBaseColors[0].colorBG;
-          busyInput.checked = todo.busy ? true : todo.busy == false ? false : true;
+          busyInput.checked = todo.busy === true ? true : todo.busy === false ? false : true;
         } else if(radio.value == "reminder"){
           colorIt.classList.remove("hidden");
           taskTitle.style.color = newcolor ? mySettings.myBaseColors[newcolor].colorBG : mySettings.myBaseColors[todo.color].colorBG;
-          busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
+          busyInput.checked = todo.busy === true ? true : todo.busy === false ? false : false;
           document.querySelector("#tellYouShowType").innerText = ``;
         };
       } else{
         colorIt.classList.remove("hidden");
         taskTitle.style.color = newcolor ? mySettings.myBaseColors[newcolor].colorBG : mySettings.myBaseColors[todo.color].colorBG;
-        busyInput.checked = todo.busy ? true : todo.busy == false ? false : false;
+        busyInput.checked = todo.busy === true ? true : todo.busy === false ? false : false;
         document.querySelector("#tellYouShowType").innerText = ``;
         if(storeIt && storeIt.checked && !todo.recycled){ // if it's a recurry, that used to make it bug because there was no storeIt to check if it's checked or not, so I added storeIt
           setN();

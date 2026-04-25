@@ -2064,13 +2064,13 @@ function getTogoList(todo){
       togoList = "listToday";
     };
   } else if(todoDateTime > oggiDemainTime){
-    if(todo.term == "showThing" || todo.term == "reminder"){ //date is after today
+    if(todo.term == "showThing" || todo.term == "reminder" || todo.term == "sameHabit"){ //date is after today
     togoList = "";
     } else{
       togoList = "scheduledList";
     };
   } else{ // no date or deadline is after today
-    togoList = todo.term + "List"; //Unless it is sameHabit!!!
+    togoList = todo.term == "sameHabit" ? "" : todo.term + "List";
   };
   return togoList;
 };

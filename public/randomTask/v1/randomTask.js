@@ -986,6 +986,7 @@ async function getMoreDones(fromDate, toDate) {
   );
 
   const snapshot = await getDocs(q);
+  if (!snapshot.exists()) return;
 
   snapshot.forEach(doc => {
     if (!listDones.some(d => d.date === doc.id)) {
@@ -6621,9 +6622,13 @@ function putDatesInWeek(date){
   let Sday = arrayDate[arrayDate.length - 2].full;//maybe use the one with myTomorrow dateTime so that we can make sure the events between 00:00 and myTomorrow are in the right week/col
   //Check if we have the dones for these dates, and if not, go get them
   const allDatesLoaded = arrayDate.every(date =>
-    listDones.some(d => d.date === date)
+    listDones.some(d => d.date === date.full)
   );
-  if (!allDatesLoaded) {
+  if (!allDatesLoaded && !test) {
+    console.log(allDatesLoaded);
+    console.log(arrayDate[arrayDate.length - 1].full);
+    
+    
     getMoreDones(arrayDate[0].full, arrayDate[arrayDate.length - 1].full);
   };
   let Ddate = getDateFromString(Dday);

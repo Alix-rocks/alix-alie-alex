@@ -6624,7 +6624,7 @@ function putDatesInWeek(date){
     listDones.some(d => d.date === date)
   );
   if (!allDatesLoaded) {
-    getMoreDones(arrayDate[0], arrayDate[arrayDate.length - 1]);
+    getMoreDones(arrayDate[0].full, arrayDate[arrayDate.length - 1].full);
   };
   let Ddate = getDateFromString(Dday);
   let Sdate = getDateFromString(Sday);

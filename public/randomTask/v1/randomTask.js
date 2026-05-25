@@ -61,7 +61,7 @@ onAuthStateChanged(auth, (user) => {
     // logInScreen.classList.add("displayNone");
 
     
-    if(auth.currentUser.email === "alexblade.23.49@gmail.com"){
+    if(userConnected && auth.currentUser.email === "alexblade.23.49@gmail.com"){
       loadBookings();
     };
   } else{
@@ -1346,8 +1346,10 @@ function resetCBC(){
     let clockingOptions = mySettings.myWeeksDayArray.map(day => {
       return `<div id="${day.code}Clocks" class="dayClocksDiv">
       <p>${day.name1Maj}</p>
-      <p>Clock in: <input id="${day.code}clockIn" class="clocks clockIn" type="time" value="${day.clockIn}" /></p>
-      <p>Clock out: <input id="${day.code}clockOut" class="clocks clockOut" type="time" value="${day.clockOut}" /></p>
+      <p>Clock in: <input id="${day.code}ClockIn" class="clocks clockIn" type="time" value="${day.clockIn}" /></p>
+      <p>People Clock in: <input id="${day.code}PeopleClockIn" class="clocks peopleClockIn" type="time" value="${day.peopleClockIn}" /></p>
+      <p>People Clock out: <input id="${day.code}PeopleClockOut" class="clocks peopleClockOut" type="time" value="${day.peopleClockOut}" /></p>
+      <p>Clock out: <input id="${day.code}ClockOut" class="clocks clockOut" type="time" value="${day.clockOut}" /></p>
     </div>`;
     }).join("");
     document.querySelector("#settingsDiv").innerHTML = `<span id="exitX">x</span>
@@ -1476,7 +1478,7 @@ function resetCBC(){
       });
     });
 
-    settingsBtn.addEventListener("click", () => {
+    settingsBtn.addEventListener("click", () => { //SAVE
       mySettings.myTomorrow = timeInput.value;
       if(previousTomorrow !== mySettings.myTomorrow){
         document.getElementById("todaysDateSpan").innerHTML = getTodayDateString();
@@ -1513,13 +1515,15 @@ function resetCBC(){
       };
       
       if(clockChangeListener){ //if there are clocks: mySettings.offAreas = true
-        // document.querySelectorAll(".dayClocksDiv").forEach(div => {
-        //   let thisCode = div.id.substring(0, 2);
-        //   let codeIdx = mySettings.myWeeksDayArray.indexOf(day => day.code == thisCode);
-        //   //let clockInTime = div.querySelector(".clockIn").value;
-        //   mySettings.myWeeksDayArray[codeIdx].clockIn = div.querySelector(".clockIn").value;
-        //   mySettings.myWeeksDayArray[codeIdx].clockOut = div.querySelector(".clockOut").value;
-        // });
+        document.querySelectorAll(".dayClocksDiv").forEach(div => {
+          let thisCode = div.id.substring(0, 2);
+          let codeIdx = mySettings.myWeeksDayArray.indexOf(day => day.code == thisCode);
+          //let clockInTime = div.querySelector(".clockIn").value;
+          mySettings.myWeeksDayArray[codeIdx].clockIn = div.querySelector(".clockIn").value;
+          mySettings.myWeeksDayArray[codeIdx].clockOut = div.querySelector(".clockOut").value;
+          mySettings.myWeeksDayArray[codeIdx].peopleClockIn = div.querySelector(".peopleClockIn").value;
+          mySettings.myWeeksDayArray[codeIdx].peopleClockOut = div.querySelector(".peopleClockOut").value;
+        });
         //createBody(); I don't think we need to redo the monthly...
         //getWeeklyCalendar(); we don't need to redo the whole weekly either, just the sleepy area
         updateSleepAreas();
@@ -1992,6 +1996,7 @@ function todoCreation(todo){
             <i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.deadline ? `doneDay` : todo.line}"></i>
             <span class="${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? `` : `displayNone`}" style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? numberedDays : ``}</span>
           </div>
+          <!-- <div class="handle" style="padding: 0; width: 30px; height: 33px; line-height: 33px; text-align: center; flex-shrink: 0;">☰</div> -->
         </li>`);
       };
     } else if(!document.getElementById(togoList) && !todo.stock){
@@ -3469,7 +3474,7 @@ function creatingCalendar(todo, home, classs){
   </div>`;
 
   let bufferDiv = `<div id="bufferSection" class="calendarMargin" style="margin-top:20px;">
-    <h5 class="taskInfoInput" style="margin-left: 0;">How long will that really take?${auth.currentUser.email === "alexblade.23.49@gmail.com" ? ` (Meal >= "03:00")` : ``}</h5>
+    <h5 class="taskInfoInput" style="margin-left: 0;">How long will that really take?${userConnected && auth.currentUser.email === "alexblade.23.49@gmail.com" ? ` (Meal >= "03:00")` : ``}</h5>
     <div class="inDaySection" style="width: -webkit-fill-available; max-width: 200px;">
       <p style="margin-top: 10px;">
         <span>Before: </span>
@@ -7009,12 +7014,14 @@ function busyZoneCreation(show){
   let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
   let code = `${mySettings.myWeeksDayArray[idx].code}`; 
   let day = `${mySettings.myWeeksDayArray[idx].day}`;  
-  let start = show.startTime ? timeMath(roundFifteenTime(show.startTime), "minus", show.prima) : "11-00";
-  start = start <= "11-00" ? "11-00" : start; // we should have a mySettings.myWeeksDayArray[idx].peopleClockIn instead of 11:00
+  let peopleClockIn = mySettings.myWeeksDayArray[idx].peopleClockIn;
+  let peopleClockOut = mySettings.myWeeksDayArray[idx].peopleClockOut;
+  let start = show.startTime ? timeMath(roundFifteenTime(show.startTime), "minus", show.prima) : mySettings.myWeeksDayArray[idx].peopleClockIn;
+  start = start <= peopleClockIn ? peopleClockIn : start; // we should have a mySettings.myWeeksDayArray[idx].peopleClockIn instead of 11:00
   let startMinute = Number(start.substring(3));
   let startHour = Number(start.substring(0, 2));
-  let end = show.stopTime ? timeMath(roundFifteenTime(show.stopTime), "plus", show.dopo) : "02-00";
-  end = end < mySettings.myTomorrow.replace(":", "-") ? "end" : end;
+  let end = show.stopTime ? timeMath(roundFifteenTime(show.stopTime), "plus", show.dopo) : peopleClockOut;
+  end = end >= peopleClockOut ? "end" : end;
   let endMinute = end == "end" ? 0 : Number(end.substring(3));
   let endHour = end == "end" ? 24 : Number(end.substring(0, 2)); // 24 => pour l'instant, parce que meetAlix's days end at 24:00
   let meal = (show.showType !== "Calia" && show.prima >= "03:00") ? true : false;

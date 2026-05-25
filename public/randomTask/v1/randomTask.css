@@ -249,6 +249,9 @@ input[type="radio"]{
   text-decoration: underline;
   font-weight: 700;
 }
+.clockingDiv input{
+  width: min-content;
+}
 .ScreenBtn1{
   display: block;
   margin: 25px auto 10px;

@@ -13,7 +13,7 @@ import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, 
 import trans from "/trans.js";
 auth.languageCode = 'fr';
 
-const lastUpdate = "2026-05-25 8h06";
+const lastUpdate = "2026-05-25 11h39";
 
 const cloudIt = document.querySelector("#cloudIt");
 const earthIt = document.querySelector("#earthIt");
@@ -1517,7 +1517,11 @@ function resetCBC(){
       if(clockChangeListener){ //if there are clocks: mySettings.offAreas = true
         document.querySelectorAll(".dayClocksDiv").forEach(div => {
           let thisCode = div.id.substring(0, 2);
-          let codeIdx = mySettings.myWeeksDayArray.indexOf(day => day.code == thisCode);
+          console.log(thisCode);
+          
+          let codeIdx = mySettings.myWeeksDayArray.findIndex((day) => day.code == thisCode);
+          console.log(codeIdx);
+          
           //let clockInTime = div.querySelector(".clockIn").value;
           mySettings.myWeeksDayArray[codeIdx].clockIn = div.querySelector(".clockIn").value;
           mySettings.myWeeksDayArray[codeIdx].clockOut = div.querySelector(".clockOut").value;

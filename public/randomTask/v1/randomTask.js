@@ -13,7 +13,7 @@ import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, 
 import trans from "/trans.js";
 auth.languageCode = 'fr';
 
-const lastUpdate = "2026-05-25 11h39";
+const lastUpdate = "2026-05-25 11h56";
 
 const cloudIt = document.querySelector("#cloudIt");
 const earthIt = document.querySelector("#earthIt");
@@ -1346,10 +1346,10 @@ function resetCBC(){
     let clockingOptions = mySettings.myWeeksDayArray.map(day => {
       return `<div id="${day.code}Clocks" class="dayClocksDiv">
       <p>${day.name1Maj}</p>
-      <p>Clock in: <input id="${day.code}ClockIn" class="clocks clockIn" type="time" value="${day.clockIn}" /></p>
-      <p>People Clock in: <input id="${day.code}PeopleClockIn" class="clocks peopleClockIn" type="time" value="${day.peopleClockIn}" /></p>
-      <p>People Clock out: <input id="${day.code}PeopleClockOut" class="clocks peopleClockOut" type="time" value="${day.peopleClockOut}" /></p>
-      <p>Clock out: <input id="${day.code}ClockOut" class="clocks clockOut" type="time" value="${day.clockOut}" /></p>
+      <p>Clock in: <input id="${day.code}ClockIn" class="clocks clockIn" type="time" value="${day.clockIn ? day.clockIn : ""}" /></p>
+      <p>People Clock in: <input id="${day.code}PeopleClockIn" class="clocks peopleClockIn" type="time" value="${day.peopleClockIn ? day.peopleClockIn : ""}" /></p>
+      <p>People Clock out: <input id="${day.code}PeopleClockOut" class="clocks peopleClockOut" type="time" value="${day.peopleClockOut ? day.peopleClockOut : ""}" /></p>
+      <p>Clock out: <input id="${day.code}ClockOut" class="clocks clockOut" type="time" value="${day.clockOut ? day.clockOut : ""}" /></p>
     </div>`;
     }).join("");
     document.querySelector("#settingsDiv").innerHTML = `<span id="exitX">x</span>

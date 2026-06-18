@@ -826,7 +826,7 @@ function getWeeklyCalendar(){
   </div>`;
   let rowMonth = `<div class="weeklyItem weeklyTitle" style="grid-row:2; border-bottom-width: 2px;"><span id="weeklyMonthSpan">${monthName}</span></div>`;
   arrayItem.push(rowYear, rowMonth);
-  let myDay = 11;
+  let myDay = 8;
   for(let c = 1; c < 9; c++){
     let arrayC = [];
     let rowDay = `<div 
@@ -867,7 +867,7 @@ function getWeeklyCalendar(){
   nomiCol.push(lastCol);
   let nomiCols = nomiCol.join(" ");
   let nomiRow = [];
-  myDay = 11;
+  myDay = 8;
   for(let h = 0; h < 12; h++){ //93 (quand h < 13)
     let rowH = `[row-${String(myDay).padStart(2, "0")}-00${h == 0 ? ` row-Day-end` : ``}] minmax(0, .25fr)`;
     let rowH15 = `[row-${String(myDay).padStart(2, "0")}-15] minmax(0, .25fr)`;

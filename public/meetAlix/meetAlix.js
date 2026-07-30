@@ -223,6 +223,7 @@ for(let d = 0; d < 8; d++){
     end: endSlot
   };
   allTheEdges.push(daySlots); //Les ajouter dans unavailableRanges
+  console.log(allTheEdges);
 };
 ////console.log(allTheEdges);
 

@@ -1,0 +1,369 @@
+/*  GOLDEN RATIO : 1.618 / 0.382 */
+/*  Dynamic Viewport (dvh, dvw) */
+/*  padding/margin-block => vertical (top and bottom, if the text is read horizontaly (normal) (opposite if verticaly like chinese)
+    padding/margin-inline => horizontal (left and right, if horizontal text) */
+
+:root {
+  --ratio: 1.25;
+  /* --color-xxx-rgb => rgba(var(--color-xxx-rgb), 0.X) */
+  /* ...-xxff = xx% opacity on white, but full color */
+  /* ...-xxa = xx% real opacity, x being the a in rgba */
+  --color-gray: #6d6d6d; /* rgb(109,109,109) */
+  --color-white: #ffffff; /* rgb(255, 255, 255) */
+  --color-white-60a: rgba(255, 255, 255, 0.6);
+  --color-white-80a: rgba(255, 255, 255, 0.8);
+  --color-dark: #40003f; /* rgb(64, 0, 63) */
+  --color-dark-rgb: 64, 0, 63; 
+  --color-dark-50ff: #a0809f;
+  --color-med: #600061; /* rgb(96, 0, 97) */
+  --color-med-rgb: 96, 0, 97;
+  --color-med-20ff: #dfccdf; 
+  --color-med-50ff: #af7fb0;
+  --color-med-75ff: #884089;
+  --color-med-90ff: #701971;
+  --color-light: #81007f; /* rgb(129, 0, 127) */
+  --color-light-rgb: 129, 0, 127;
+  --color-light-20ff: #e6cce5;
+  --color-link: #1e9600;
+}
+
+[data-theme="consent"] {
+  --color-dark: #0f4a00;
+  --color-dark-rgb: 15, 74, 0; 
+  --color-dark-50ff: #87a580;
+  --color-med: #177100;
+  --color-med-rgb: 23, 113, 0;
+  --color-med-20ff: #d1e3cc; 
+  --color-med-50ff: #8bb880;
+  --color-med-75ff: #519540;
+  --color-med-90ff: #2e7f19;
+  --color-light: #1e9600;
+  --color-light-rgb: 30, 150, 0;
+  --color-light-20ff: #d2eacc;
+  --color-link: #81007f;
+}
+
+html {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  hyphens: auto; /* Make sure you have the lang attribute in the html tag: <html lang="fr-CA"> or <html lang="en-CA"> */
+  height: 100%;
+  font-size: 18px;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-dark);
+  line-height: 1.618em;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  /* opacity: 0; */
+  transition: opacity 0.3s ease-in; /* Makes it fade in smoothly */
+}
+/* This class will be added by JS once everything has been loaded */
+body.loaded {
+  opacity: 1;
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+input, button, textarea, select {
+  font: inherit;
+}
+
+/*
+input:focus, 
+textarea:focus, 
+select:focus {
+  outline: none; /* Clear the default *//*
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 4px var(--brand-accent);
+  background-color: #fff;
+}
+*/
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+a:hover {
+  opacity: 0.7;
+}
+
+a.aColorInherit {
+  color: inherit;
+  text-decoration: underline;
+  transition: opacity 0.2s ease;
+}
+a.aColorInherit:hover {
+  opacity: 0.5;
+}
+
+:focus-visible {
+  /* This applies to every clickable thing: links, buttons, inputs */
+  outline: 3px solid var(--color-link);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+h1, .h1-style {
+  font-family: 'Caveat', serif;
+  font-size: 80px;
+  font-weight: 700;
+  line-height: 1em;
+  /* hyphens: manual; To use only if necessary and with &shy; in the html */
+}
+
+h2, .h2-style{
+  font-family: 'Ruluko', sans-serif;
+  font-size: 36px;
+}
+
+h3, .h3-style{
+  font-family: 'Imprima', sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+h5, .h5-style{
+  font-size: 16px;
+  font-style: italic;
+}
+
+h6, .h6-style{
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* Style for mobile, then adjust for tablet and laptop */
+
+/* 2. Tablet Styles (Screens wider than 768px) */
+@media (min-width: 768px) {
+
+}
+
+/* 3. Desktop Styles (Screens wider than 1024px) */
+@media (min-width: 1024px) {
+
+}
+
+/* every section is inheritely full wide and gets a restraining .container for the text */
+.container-85 {
+  /* Min: 300px (don't get smaller than this) (smallest screens are now 320px)
+     Pref: 85dvw (I'd like to be exactly 85% the screen)
+     Max: 1200px (don't get bigger than this)
+  */
+  width: clamp(300px, 85dvw, 1200px);
+  margin-inline: auto;       /* Centers the container perfectly (modern replacement for margin: 0 auto) */
+  /* padding-inline: 1.5rem;    The safety space! Keeps text off the screen edges on mobile, but we don't need it if we use 85dvw */
+}
+.container-618 {
+  width: clamp(280px, 61.8dvw, 1000px);
+  margin-inline: auto;
+  text-align: center;
+}
+.container-85 h2 {
+  text-align: left;
+}
+.container-85 p {
+  text-align: justify;
+}
+
+section {
+  padding-block: 8rem; /* Large vertical space makes it feel professional */
+  min-height: 50vh;    /* Ensures a section never looks too "skinny" */
+}
+.section-entry {
+  padding-block: 0 3em;
+  min-height: 50vh;    /* Ensures a section never looks too "skinny" */
+}
+.section-entry h3 {
+  color: var(--color-dark-50ff);
+  margin: 0.8em 0 2em 0;
+}
+.section-entry p {
+  font-weight: 700;
+}
+
+/* .section-white {  NO NEED FOR THAT, THAT'S INHERIT
+  background-color: var(--color-white);
+  color: var(--color-dark);
+} */
+.section-dark {
+  background-color: var(--color-dark);
+  color: var(--color-white);
+}
+
+/* Button: let's make them at least 50px X 50px to make them thumb comfortable */
+
+.progress-section{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+}
+.progress-section h4{
+  font-size: 12px;
+  line-height: 1;
+  text-align: center;
+}
+.progress-section p{
+  font-size: 10px;
+  line-height: 1;
+  text-align: center;
+}
+.progress-section > div{
+  display: flex;
+  flex-flow: column nowrap;
+  flex-grow: 1;
+}
+.progress-section > div > div{
+  display: flex;
+  flex-flow: row nowrap;
+}
+.progress-bar{
+  height: .4rem;
+  margin-block: auto;
+  width: 100%;
+  flex-grow: 1;
+  background-color: var(--color-med-50ff);
+}
+.progress-bar-done{
+  background-color: var(--color-med);
+}
+.progress-bar-none{
+  background-color: var(--color-white);
+}
+.icon-set{
+  position: relative;
+  display: table;
+  margin-inline: .35em .55em;
+  margin-bottom: .35em;
+  line-height: 1;
+  z-index: 1;
+}
+.fa-clock{
+  position: absolute;
+  top: 40%;
+  left: 24%;
+  font-size: .48em;
+}
+.fa-circle, .fa-circle-check{
+  visibility: visible;
+  position: absolute;
+  top: 60%;
+  left: 60%;
+  font-size: .75em;
+  z-index: 10;
+}
+.icon-set.todo .fa-regular.fa-circle{
+  color: var(--color-med);
+}
+.icon-set.todo .fa-circle-check{
+  visibility: hidden;
+}
+.icon-set.doing .fa-solid.fa-circle{
+  color: var(--color-white);
+}
+.icon-set.doing .fa-regular.fa-circle{
+  color: var(--color-light);
+}
+.icon-set.doing .fa-circle-check{
+  visibility: hidden;
+}
+.icon-set.done .fa-solid.fa-circle{
+  color: var(--color-dark);
+}
+.icon-set.done .fa-regular.fa-circle{
+  color: var(--color-med);
+}
+.icon-set.done .fa-circle-check{
+  color: var(--color-white);
+  /* border: 2px solid var(--color-med);
+  border-radius: 50px; */
+}
+
+.booking-step1-Flex{
+  display: flex;
+  flex-flow: row wrap;
+  gap: 5%;
+  margin: auto;
+  width: 90vw;
+  justify-content: space-around;
+}
+
+.booking-step1-Flex > div{
+  width: 25vw;
+  border: 2px solid darkslategray;
+  border-radius: 15px;
+  padding: 5%;
+}
+
+.booking-step2-Grid{
+  display: grid;
+  max-height: 300px;
+  max-width: 300px;
+  font-size: 14px;
+  text-align: center;
+}
+
+
+.row-M-Y{
+  grid-row: 1;
+  grid-column: 1 / 8;
+}
+.row-D{
+  grid-row: 2;
+}
+.col-0{
+  grid-column: 1;
+}
+
+.today{
+  outline: 2px solid var(--color-med);
+  outline-offset: 0;
+  border-radius: 5px;
+}
+
+.available{
+  cursor: pointer;
+  font-weight: 800;
+}
+.not-available{
+  opacity: .5;
+  cursor: default;
+}
+
+.booking-step3-Flex{
+  display: flex;
+  flex-flow: row wrap;
+  gap: 5%;
+  margin: auto;
+  width: 300px;
+  max-height: 70dvh;
+  justify-content: space-around;
+}
+
+.booking-step3-Flex > div{
+  width: 20dvw;
+  border: 2px solid darkslategray;
+  border-radius: 15px;
+  padding: 5%;
+}
+

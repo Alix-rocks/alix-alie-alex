@@ -9,8 +9,8 @@
   Ctrl + K ... Ctrl + 1 => Fold all the first levels
 */
 
-import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "../../myFirebase.js";
-import trans from "../../trans.js";
+import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, getDoc, query, where, addDoc, deleteDoc, doc, setDoc, updateDoc, deleteField, writeBatch, Timestamp, getAuth, GoogleAuthProvider, signOut, signInWithRedirect, getRedirectResult, onAuthStateChanged, rtdb, get, onChildAdded, ref, update, onChildChanged, onChildRemoved, remove } from "/myFirebase.js";
+import trans from "/trans.js";
 auth.languageCode = 'fr';
 
 const cloudIt = document.querySelector("#cloudIt");
@@ -56,6 +56,10 @@ onAuthStateChanged(auth, (user) => {
     buildEverything();
     logInScreen.classList.add("displayNone");
     document.getElementById("loadingScreen").classList.replace("waitingScreen", "displayNone");
+
+    if(auth.currentUser.email === "alexblade.23.49@gmail.com"){
+          loadBookings();
+        };
   } else{
     userConnected = false;
     console.log("no user");
@@ -627,6 +631,162 @@ function getCloudBC(){
     localStorage.setItem("cBC", cBC);
   };
 };
+
+// MARK: getBookings
+let bookingQueue = [];
+async function loadBookings() {
+  const snapshot = await get(ref(rtdb, "meetAlix"));
+  if (!snapshot.exists()) return;
+
+  bookingQueue = Object.entries(snapshot.val())
+  .filter(([_, data]) => data.status === "pending")
+  .map(([bookingKey, data]) => ({
+    key: bookingKey,
+    ...data
+  }))
+  .sort((a, b) => a.timestamp - b.timestamp);
+
+updateInbox();
+
+};
+
+onChildAdded(ref(rtdb, "meetAlix"), (snap) => {
+  const booking = { key: snap.key, ...snap.val() };
+  //check if booking.key already is in bookingQueue, and if yes, then update that one, otherwise, push it
+  const bookingIndex = bookingQueue.findIndex(book => book.key === booking.key);
+  if(bookingIndex !== -1){
+    bookingQueue[bookingIndex] = booking;
+  } else{
+    bookingQueue.push(booking);
+  };
+  updateInbox();
+});
+
+onChildChanged(ref(rtdb, "meetAlix"), (snap) => {
+  const booking = { key: snap.key, ...snap.val() };
+  //check if booking.key already is in bookingQueue, and if yes, then update that one, otherwise, push it
+  const bookingIndex = bookingQueue.findIndex(book => book.key === booking.key);
+  if(bookingIndex !== -1){
+    bookingQueue[bookingIndex] = booking;
+  } else{
+    bookingQueue.push(booking);
+  };
+  updateInbox();
+});
+
+onChildRemoved(ref(rtdb, "meetAlix"), (snap) => {
+  const bookingKey = snap.key;
+  bookingQueue = bookingQueue.filter(
+    book => book.key !== bookingKey
+  );
+  updateInbox();
+});
+
+async function updateBooking(key, newStatus) {
+  try {
+    await update(
+      ref(rtdb, `meetAlix/${key}`),
+      {
+        status: newStatus,
+        timestamp: Date.now()
+      }
+    );
+    console.log("Booking updated in RTDB");
+  } catch (err) {
+    console.error("Failed to update booking:", err);
+  };
+};
+
+
+
+
+
+const newBookingAlert = document.querySelector("#newBookingAlert");
+const newBookingList = document.querySelector("#newBookingList");
+function updateInbox(){
+  if(userConnected && auth.currentUser.email === "alexblade.23.49@gmail.com"){
+    console.log(bookingQueue);
+    newBookingAlert.innerText = bookingQueue.length;
+    if(!bookingQueue.length){ // bookingQueue.length == 0
+      newBookingAlert.classList.add("displayNone");
+    } else{
+      newBookingAlert.classList.remove("displayNone");
+    };
+    newBookingList.innerHTML = bookingQueue.map(meet => {
+      return `<li data-rtdbKey="${meet.key}" onclick="toTIdeBQaC(this)">${meet.data.name}</li>`
+    }).join("");
+  };
+};
+
+function toTIdeBQaC(thisOne){
+  console.log(thisOne);
+  const key = thisOne.dataset.rtdbkey;
+  const booking = bookingQueue.find((book) => book.key == key);
+  const info = booking.data;
+  console.log(booking);
+  console.log(info);
+
+  let todo = {
+    newShit: true,
+    id: crypto.randomUUID(),
+    task: `Meet with ${info.name}`, 
+    info: `Why: ${info.why}
+    email: ${info.email}
+    cell: ${info.cell}
+    messengerName: ${info.messengerName}
+    whatsAppNumber: ${info.whatsAppNumber}
+    yourAddress: ${info.yourAddress}
+    whereReal: ${info.whereReal}`,
+    color: "0",
+    icon: "fa-solid fa-hand-holding-heart",
+    term: "showThing",
+    busy: true,
+    line: "todoDay",
+    startDate: info.date,
+    stopDate: info.date,
+    startTime: info.dalle,
+    stopTime: info.alle,
+    tutto: false,
+    busy: true,
+    rtdbKey: key
+  };
+
+  if(booking.type == "friend"){
+    todo.showType = "Myself";
+    todo.STColorBG = "#06a9a9";
+    todo.STColorTX = "darkslategrey";
+  };
+
+  switch(info.where){
+    case "messenger":
+      todo.where = "Messenger";
+      break;
+    case "googleMeet":
+      todo.where = "Google Meet";
+      break;
+    case "whatsApp":
+      todo.where = "WhatsApp";
+      break;
+    case "myRealWorld":
+      todo.where = "home";
+      break;
+    case "yourRealWorld":
+     todo.where = info.yourAddress;
+      break;
+    case "elseRealWorld":
+      todo.where = info.whereReal;
+      break;
+    default:
+      console.log("oups!");
+      break;
+  };
+
+
+  taskAddAllInfo(todo);
+
+};
+window.toTIdeBQaC = toTIdeBQaC;
+
 
 let lastUpdateLocalStorageRandomTask = "";
 let lastUpdateFireStore = "";
@@ -3357,7 +3517,7 @@ function creatingCalendar(todo, home, classs){
   <div class="inDaySection" style="width: -webkit-fill-available; max-width: 280px;">
     <p style="margin-top: 10px;"><span>Deadline:  </span><input id="deadlineInput" type="date" value="${todo.deadline ? todo.deadline : ``}" /></p>
     <div id="deadlineWithDate" ${todo.deadline && todo.deadline !== "" ? `` : `class="displayNone"`}>
-      <input id="tuttoUltimoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.tutto ? `checked` : todo.tutto == false ? `` : `checked`} />
+      <input id="tuttoUltimoGiornoInput" type="checkbox" class="tuttoGiornoInput cossin" ${todo.dlTutto ? `checked` : todo.dlTutto == false ? `` : `checked`} />
       <div class="calendarInsideMargin tuttoGiornoDiv">
         <p style="margin: 0;">A qualunque ora??!</p>
         <label for="tuttoUltimoGiornoInput" class="slideZone">
@@ -4571,7 +4731,7 @@ function taskAddAllInfo(todo){
         </div>
         <div class="topSection topSectionPart">
           <input id="trashIt" type="checkbox" class="cossin cornerItInput" />
-          <label for="trashIt" class="cornerItLabel${(todo.newShit || todo.recycled) ? ` hidden` : ``}">
+          <label for="trashIt" class="cornerItLabel${((todo.newShit && !todo.rtdbKey) || todo.recycled) ? ` hidden` : ``}">
             <i class="fa-regular fa-trash-can cornerItUnChecked"></i>
             <i class="fa-solid fa-trash-can cornerItChecked"></i>
           </label>
@@ -6851,21 +7011,32 @@ function busyZoneCreation(show){
   //console.log(show);
   let dayIdx = meseDayICalc(show.startDate);
   let idx = mySettings.myWeeksDayArray.findIndex((giorno) => giorno.day == dayIdx);
-  let day = `${mySettings.myWeeksDayArray[idx].code}`;  
+  let code = `${mySettings.myWeeksDayArray[idx].code}`; 
+  let day = `${mySettings.myWeeksDayArray[idx].day}`;  
   let start = show.startTime ? timeMath(roundFifteenTime(show.startTime), "minus", show.prima) : "11-00";
   start = start <= "11-00" ? "11-00" : start; // we should have a mySettings.myWeeksDayArray[idx].peopleClockIn instead of 11:00
+  let startMinute = Number(start.substring(3));
+  let startHour = Number(start.substring(0, 2));
   let end = show.stopTime ? timeMath(roundFifteenTime(show.stopTime), "plus", show.dopo) : "02-00";
   end = end < mySettings.myTomorrow.replace(":", "-") ? "end" : end;
+  let endMinute = end == "end" ? 0 : Number(end.substring(3));
+  let endHour = end == "end" ? 24 : Number(end.substring(0, 2)); // 24 => pour l'instant, parce que meetAlix's days end at 24:00
   let meal = (show.showType !== "Calia" && show.prima >= "03:00") ? true : false;
   
   let busy = {
     type: "once", //"sempre" if appears at each week, like sleep and meal
     date: show.startDate,
-    col: day,
+    col: code,
+    day: day,
     start: start,
+    startMinute: startMinute,
+    startHour: startHour,
     end: end,
+    endMinute: endMinute,
+    endHour: endHour,
     meal: meal
   }; // then all we have to do is make sure the date is in that particular showing week and we add the div to the weekly! It should go straight in the right column and rows
   myBusies.push(busy);
-
 };
+
+

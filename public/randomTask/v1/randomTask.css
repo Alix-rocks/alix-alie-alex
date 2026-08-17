@@ -16,6 +16,12 @@ body{
   /* max-width: 500px; Doesn't work because all the 'position:absolute;' are not affected by the body's width*/
 }
 
+#globalContainer{
+  width: 100%;
+  max-width: 500px;
+  margin-inline: auto;
+}
+
 button:active{
   outline: 1.5px solid rgba(50,205,50,.9);
 }

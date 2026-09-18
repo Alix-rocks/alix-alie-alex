@@ -1,9 +1,9 @@
 :root{
-  --bg-color: #1f1f1f;  
+  --bg-color: rgb(244, 244, 244);  
   /* #f4f4f4 */
-  --tx-color: #e5e5e5;
-  --orange: #ff8704;
-  --red: #c20000;
+  --tx-color: rgb(34, 34, 34);
+  --red-dark: darkred;
+  --red-medium: red;
   --green-dark: rgb(15, 74, 0);
   --green-medium: rgb(23, 113, 0);
   --green-light: rgb(30, 150, 0);
@@ -20,9 +20,10 @@
   --vw: 100vw;
   --vh: 100vh;
   --wCBT: 100%;
+  --fs: 24px;
 }
 html{
-  font-size: 24px;
+  font-size: var(--fs);
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -37,7 +38,7 @@ html{
   user-select: none;
 }
 body{
-  color: var(--tx-color);
+  color: var(--grey-dark);
   background-color: var(--bg-color);
   padding: 0 8%;
   width: var(--vw);
@@ -52,6 +53,11 @@ section{
   display: flex;
   flex-flow: column nowrap;
 }
+.titleSlide{
+  justify-content: space-evenly;
+  align-items: center;
+  text-align: center;
+}
 .topStuff{
   justify-content: flex-start;
 }
@@ -64,11 +70,7 @@ section{
 .centerStuff{
   align-items: center;
 }
-.titleSlide{
-  justify-content: space-evenly;
-  align-items: center;
-  text-align: center;
-}
+
 h1{
   font-family: 'Imprima', sans-serif;
   /* font-style: italic;
@@ -76,7 +78,7 @@ h1{
   font-size: 2.4rem;
   line-height: 1em;
   margin-bottom: 0;
-  color: var(--red);
+  color: var(--grey-dark);
 }
 
 h1:not(:has(+ h2)){
@@ -87,7 +89,7 @@ h2{
   font-style: italic;
   font-size: 1.3rem;
   margin-top: .5em;
-  color: var(--orange);
+  color: var(--grey-dark);
 }
 p, li, ol{
   font-size: 1rem;
@@ -95,7 +97,7 @@ p, li, ol{
 }
 p{
   font-style: italic;
-  color: var(--tx-color);
+  color: var(--grey-dark);
   font-size: 2rem;
 }
 .strong{
@@ -108,11 +110,11 @@ p.strong{
 .titleSlide h1{
   font-family: 'Caveat', sans-serif;
   font-size: 8rem;
-  color: var(--red);
+  color: var(--grey-dark);
 }
 .titleSlide h2{
   font-size: 2.5rem;
-  color: var(--orange);
+  color: var(--grey-dark);
 }
 .landscapeMode{
   height: 100%;
@@ -143,7 +145,7 @@ p.strong{
 
 .insideGrid.centerGrid {
   font-size: 4rem;
-  font-weight: 500;
+  font-weight: 900;
   font-family: 'Nosifer';
 
   grid-column: 2;
@@ -188,14 +190,14 @@ p.strong{
   color: #ff2a2a;
   font-weight: 700;
   position: absolute;
-  bottom: 1%;
+  bottom: -3%;
   left: 27%;
 }
 .RCspanC{
   color: #77b5fe;
   font-weight: 700;
   position: absolute;
-  bottom: 1%;
+  bottom: -3%;
   right: 48%;
 }
 .OUInonDiv{
@@ -207,10 +209,9 @@ p.strong{
   text-align: center;
 }
 .OUInon1{
-  font-family: 'Cherry Bomb';
   font-size: 6rem; 
   font-weight: 900;
-  color: var(--tx-color);
+  color: var(--grey-dark);
 }
 .OUInon2{
   font-size: 9rem; 
@@ -222,6 +223,7 @@ p.strong{
   font-family: 'Eater';
   font-size: 4rem; 
   font-weight: 900;
+  color: var(--red-dark);
 }
 
 
@@ -240,28 +242,16 @@ p.exercice{
   font-weight: 400;
 }
 .acrostiche{
-  color: var(--tx-color);
+  color: var(--grey-dark);
 }
-.exercice > h1, .acrostiche > h1{
+.acrostiche h1, .acrostiche p{
   font-family: 'Quicksand', sans-serif;
   font-weight: 700;
-  font-size: 2rem;
-  margin-bottom: 5vh;
-  color: var(--orange);
+  font-size: 1.8rem;
+  margin: 0;
+  color: var(--grey-dark);
 }
-.exercice > h2, .acrostiche > h2{
-  font-family: 'imprima', sans-serif;
-  font-style: normal;
-  font-size: 4rem;
-  line-height: 1em;
-  margin: 2em auto;
-  text-align: center;
-}
-.acrostiche > h2{
-  font-size: 6rem;
-  margin: .5em auto;
-  color: var(--red);
-}
+
 .acrostiche h3{
   font-family: 'imprima', sans-serif;
   font-size: 2.5rem;
@@ -269,43 +259,35 @@ p.exercice{
   margin: 0;
   text-align: left;
   height: 4rem;
-  color: var(--orange);
 }
-/* .acrostiche h3::first-letter{
-  color: var(--green-medium);
-  font-size: 3rem;
-} */
+
+.acroCritereAll{
+  display: flex;
+  flex-flow: column wrap;
+
+}
+.acroCritere{
+  font-family: 'caveat', sans-serif;
+  font-size: 3.5rem;
+  margin: 0;
+  text-align: left;
+  height: 4rem;
+  display: flex;
+  align-items: flex-end;
+  line-height: 1;
+  font-weight: 800;
+}
 
 .firstLetter{
   font-family: 'Quicksand';
-  color: var(--red);
+  color: var(--purple-light);
   font-size: 4rem;
-  line-height: 4rem;
-  height: 4rem;
-  display: inline-block;
+  font-weight: 800;
+  height: 100%;
+  line-height: 1;
 }
 
-.acrostiche > p{
-  line-height: 1em;
-  margin: 0 auto auto;
-}
-.acrostiche > p.boxed{
-  font-size: 1.8rem;
-  font-weight: 500;
-  border: 5px solid;
-  padding: 3% 4%;
-  border-radius: 25px;
-  width: fit-content;
-  color: var(--tx-color);
-  font-style: normal;
-}
-.exercice > p{
-  font-size: 1.3em;
-  font-weight: 500;
-  line-height: 1em;
-  width: fit-content;
-  margin: auto;
-}
+
 
 .indent{
   padding-left: 80px;
@@ -503,7 +485,7 @@ span.unveilled{
   font-family: 'Quicksand', sans-serif;
   font-size: 3rem;
   font-weight: 700;
-  color: var(--orange);
+  color: var(--green-medium);
 }
 
 .sloganFIRES{
@@ -515,26 +497,32 @@ span.unveilled{
   font-size: 6rem;
   /* font-weight: ; */
   line-height: 1.3em;
-  color: var(--red);
+  color: var(--green-light);
 }
 
 .sloganNo{
   font-family: inherit;
   font-size: 4rem;
   font-weight: 900;
-  color: var(--red);
+  color: var(--green-dark);
   line-height: .4em;
 }
 h1.nosifer{
   font-family: 'Nosifer';
   line-height: 2em;
   text-align: center;
-  font-weight: 500;
+}
+.creepy{
+  font-family: 'Nosifer';
+  font-size: 3rem;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--red-dark);
 }
 .nonPhrase{
   font-family: 'Caveat', sans-serif;
   font-size: 7rem;
-  color: var(--orange);
+  color: var(--green-medium);
   margin-top: 0;
 }
 .excuseDiv{
@@ -549,31 +537,7 @@ h1.nosifer{
   font-size: 20rem; 
   line-height: 1em; 
   left: -3.2rem; 
-  color: var(--red);
-}
-.excuse1{
-  position: absolute;
-  top: -300px;
-  left: -450px;
-  width: 320px;
-  font-size: 56px;
-  text-align: center;
-  line-height: 1em;
-  border: solid var(--orange);
-  border-radius: 50px 50px 0;
-  padding: 20px;
-}
-.excuse2{
-  position: absolute;
-  top: -250px;
-  right: -450px;
-  width: 320px;
-  font-size: 56px;
-  text-align: center;
-  line-height: 1em;
-  border: solid var(--orange);
-  border-radius: 50px 50px 50px 0;
-  padding: 20px;
+  color: var(--purple-light);
 }
 .aimeNonDiv{
   font-size: 6rem; 
@@ -591,25 +555,7 @@ h1.nosifer{
   font-size: 20rem; 
   line-height: 1em; 
   left: -3.2rem; 
-  color: var(--red);
-}
-.aimeStopDiv{
-  font-size: 6rem; 
-  font-weight: 900; 
-  position: relative; 
-  margin-top: 2rem;
-}
-.aimeStopStop{
-  height: 10rem; 
-  display: block;
-}
-.aimeStopCoeur{
-  position: absolute; 
-  top: -5rem; 
-  font-size: 21rem; 
-  line-height: 1em; 
-  left: -3.2rem; 
-  color: var(--red);
+  color: var(--red-medium);
 }
 .smallP p{
   margin: 0 .5em;
@@ -631,7 +577,6 @@ h1.baiser{
   font-family: 'caveat';
   text-align: center;
   font-size: 5rem;
-  color: var(--orange);
 }
 
 #fullScreenLabel{

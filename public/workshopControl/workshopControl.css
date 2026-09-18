@@ -156,6 +156,11 @@ section#diapo{
   height: 30px;
 }
 
+#diapoActions button{
+  padding: 15px;
+  margin-inline: 15px;
+}
+
 section#pages{
   width: var(--vw);
   display: flex;

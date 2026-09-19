@@ -39,6 +39,7 @@ let interval = intervalInput.value * 60 * 1000; // la value est en minute; on le
 const timeDurationStartInput = document.querySelector("#timeDurationStartInput");  // input pour l'heure de début
 const timeDurationEndInput = document.querySelector("#timeDurationEndInput");  // input pour l'heure de fin
 let totalDuration = 0; 
+let timeDurationAnimation;
 
 
 
@@ -54,41 +55,34 @@ let totalDuration = 0;
 
 
 
+timeDurationStartInput.value = localStorage.getItem("WCTimeStart") && localStorage.getItem("WCTimeStart") !== "" ? localStorage.getItem("WCTimeStart") : "";   //on met la valeur du localStorage (si y'en a une) dans l'input de start
+timeDurationEndInput.value = localStorage.getItem("WCTimeEnd") && localStorage.getItem("WCTimeEnd") !== "" ? localStorage.getItem("WCTimeEnd") : "";   //on met la valeur du localStorage (si y'en a une) dans l'input de end
 
+timeDurationStartInput.addEventListener("input", () => {
+  localStorage.setItem("WCTimeStart", timeDurationStartInput.value);
+  timeDurationSetting();
+});
+timeDurationEndInput.addEventListener("input", () => {
+  localStorage.setItem("WCTimeEnd", timeDurationEndInput.value);
+  timeDurationSetting();
+});
 
-
-if(localStorage.getItem("WCTimeStart") && localStorage.getItem("WCTimeStart") !== "" // Si on a une heure de début
-&& localStorage.getItem("WCTimeEnd") && localStorage.getItem("WCTimeEnd") !== ""   // Et une heure de fin
-&& localStorage.getItem("WCTimeEnd") >= new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })){  //Et que l'heure de fin est plus grande que maintenant
-  timeDurationStartInput.value = localStorage.getItem("WCTimeStart");   //on met ces valeurs dans les inputs de temps
-  timeDurationEndInput.value = localStorage.getItem("WCTimeEnd");
-
-  totalDuration = durationCalculation(timeDurationStartInput.value, timeDurationEndInput.value); 
-  let pastDuration = durationCalculation(timeDurationStartInput.value, new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
-  let pastWidth = totalWidthNum * pastDuration / totalDuration;
-
-  let restDuration = totalDuration - pastDuration;
-
-  updateRigs();
-  timeDurationShow.animate([{width: pastWidth + "px"},{width: timeDurationShowZoneWidth}], restDuration);
-} else if(timeDurationStartInput.value !== null && timeDurationEndInput.value !== null){
-  totalDuration = durationCalculation(timeDurationStartInput.value, timeDurationEndInput.value);
-  localStorage.clear();
+function timeDurationSetting(){
+  if(timeDurationStartInput.value !== "" 
+    && timeDurationEndInput.value !== ""
+    && timeDurationStartInput.value <= new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    && timeDurationEndInput >= new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+  ){
+    totalDuration = durationCalculation(timeDurationStartInput.value, timeDurationEndInput.value);
+    let pastDuration = durationCalculation(timeDurationStartInput.value, new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
+    let pastWidth = totalWidthNum * pastDuration / totalDuration;
+    let restDuration = totalDuration - pastDuration;
+    updateRigs();
+    timeDurationAnimation = timeDurationShow.animate([{width: pastWidth + "px"},{width: timeDurationShowZoneWidth}], restDuration);
+  };
 };
 
-timeDurationEndInput.addEventListener("input", () => {
-
-  if(timeDurationEndInput.value !== null && timeDurationStartInput.value !== null){
-    totalDuration = durationCalculation(timeDurationStartInput.value, timeDurationEndInput.value);
-
-    updateRigs();
-  
-    timeDurationShow.animate([{width: "0"},{width: timeDurationShowZoneWidth}], totalDuration);
-
-    localStorage.setItem("WCTimeStart", timeDurationStartInput.value);
-    localStorage.setItem("WCTimeEnd", timeDurationEndInput.value);
-  };
-});
+timeDurationSetting();
 
 intervalInput.addEventListener("change", () => {
   interval = intervalInput.value !== null ? intervalInput.value * 60 * 1000 : 300000; // la value est en minute => on le met en secondes ; si la value est null, on met 5 min (300 000 secondes)
@@ -117,12 +111,13 @@ function removeRigs(){
   });
 };
   
-
 function resetLocalTime(){
   timeDurationStartInput.value = "";
   timeDurationEndInput.value = "";
   localStorage.clear();
   timeDurationShow.style.width = "0";
+  timeDurationAnimation?.cancel();
+  //you also need to stop the animation
   removeRigs();
 };
 window.resetLocalTime = resetLocalTime;
@@ -275,13 +270,11 @@ function centerActiveMiniSlide() {
   if (!checkedRadio) return;
   console.log(checkedRadio);
   
-
   const label = checkedRadio.nextElementSibling;
 
   if (!label) return;
   console.log(label);
   
-
   label.scrollIntoView({
     behavior: 'smooth',
     inline: 'center',

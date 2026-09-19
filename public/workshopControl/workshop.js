@@ -342,11 +342,16 @@ function fixImaging(){
 function stepsCreation(){
   let unorderedAllSteps = [];
   sectionShowed.querySelectorAll('[data-step]').forEach(step => {
-    if(step.classList.contains("invisible")){
-      unorderedAllSteps.push(step);
-    } else {
-      step.classList.add("shown");
-    };
+    /* Pour chaque [data-step], on cré un objet avec 
+        element (ici, step)
+        shown (step.classList.contains("invisible") ? false : true) // if true, means it's showing, we see it
+    */
+    // if(step.classList.contains("invisible")){
+    //   unorderedAllSteps.push(step);
+    // } else {
+    //   step.classList.add("shown"); // j'ai l'impression que ça sert à rien...
+    // };
+    unorderedAllSteps.push(step);
   });
   //put them in order!
   if(sectionShowed.classList.contains("numberedStepped")){
@@ -364,7 +369,7 @@ function stepsCreation(){
     .map(Number) // convert keys to numbers
     .sort((a, b) => a - b)
     .map(step => ({
-      step: step,
+      step: step, //we don't actually use/need that
       elements: grouped[step]
     }));
   } else{
@@ -372,7 +377,7 @@ function stepsCreation(){
     unorderedAllSteps.forEach(el => {
       el.dataset.step = x;
       const newStep = {
-        step: x,
+        step: x, //we don't actually use/need that
         elements: [el]
       };
       allSteps.push(newStep);
@@ -380,9 +385,16 @@ function stepsCreation(){
     });
     //allSteps = unorderedAllSteps;   //allSteps = Array.from(unorderedAllSteps);
   };
-  console.log(allSteps);
-  stepCurrentIndex = -1;
+  console.log("allSteps " + allSteps);
+  //stepCurrentIndex = -1; // This will have to be found instead. Find the index of the last step that is shown.
+
+  stepCurrentIndex = allSteps.findLastIndex(step => isStepShown(step));
+  console.log("stepCurrentIndex " + stepCurrentIndex);
   //stepCurrent = allSteps[stepCurrentIndex];
+};
+
+function isStepShown(step){
+  return step.elements[0].classList.contains("invisible") ? false : true;
 };
 
 function stepNext(){
@@ -408,6 +420,7 @@ function stepNext(){
 function stepPrev(){
   let hiddenStepUUID = [];
   if(stepCurrentIndex > -1){
+    stepCurrent = allSteps[stepCurrentIndex];
     stepCurrent.elements.forEach(element => {
       element.classList.add("invisible");
       hiddenStepUUID.push(element.dataset.uuid);

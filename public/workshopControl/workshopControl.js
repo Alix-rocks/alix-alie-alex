@@ -56,13 +56,22 @@ let timeDurationAnimation;
 
 
 timeDurationStartInput.value = localStorage.getItem("WCTimeStart") && localStorage.getItem("WCTimeStart") !== "" ? localStorage.getItem("WCTimeStart") : "";   //on met la valeur du localStorage (si y'en a une) dans l'input de start
+
 timeDurationEndInput.value = localStorage.getItem("WCTimeEnd") && localStorage.getItem("WCTimeEnd") !== "" ? localStorage.getItem("WCTimeEnd") : "";   //on met la valeur du localStorage (si y'en a une) dans l'input de end
+timeDurationInputUpdate();
+
+function timeDurationInputUpdate(){
+  timeDurationStartInput.classList.toggle("empty", timeDurationStartInput.value === "");
+  timeDurationEndInput.classList.toggle("empty", timeDurationEndInput.value === "");
+};
 
 timeDurationStartInput.addEventListener("input", () => {
+  timeDurationInputUpdate();
   localStorage.setItem("WCTimeStart", timeDurationStartInput.value);
   timeDurationSetting();
 });
 timeDurationEndInput.addEventListener("input", () => {
+  timeDurationInputUpdate();
   localStorage.setItem("WCTimeEnd", timeDurationEndInput.value);
   timeDurationSetting();
 });
@@ -79,6 +88,10 @@ function timeDurationSetting(){
     let restDuration = totalDuration - pastDuration;
     updateRigs();
     timeDurationAnimation = timeDurationShow.animate([{width: pastWidth + "px"},{width: timeDurationShowZoneWidth}], restDuration);
+  } else{
+    timeDurationShow.style.width = "0";
+    timeDurationAnimation?.cancel();
+    removeRigs();
   };
 };
 
@@ -114,10 +127,10 @@ function removeRigs(){
 function resetLocalTime(){
   timeDurationStartInput.value = "";
   timeDurationEndInput.value = "";
+  timeDurationInputUpdate();
   localStorage.clear();
   timeDurationShow.style.width = "0";
   timeDurationAnimation?.cancel();
-  //you also need to stop the animation
   removeRigs();
 };
 window.resetLocalTime = resetLocalTime;

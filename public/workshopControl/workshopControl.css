@@ -88,18 +88,19 @@ section#time{
   top: -9px;
   border-radius: 25px;
 }
-.timeDurationSides{
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
-  font-size: 1em;
-}
+
 #timeDurationTimes{
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
   width: 100%;
+}
+.timeDurationSides{
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  font-size: 1em;
 }
 .time-clean {
   border: none;
@@ -112,7 +113,13 @@ section#time{
   appearance: none;
   color: inherit;
   text-align: center;
+  width: fit-content;
   /* width: 70px;  // inline-HTML */
+}
+.empty{
+  width: 70px;
+  border: solid 2px;
+  border-radius: 5px;
 }
 .time-clean::-webkit-calendar-picker-indicator {
   display: none;

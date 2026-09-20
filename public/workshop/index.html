@@ -73,7 +73,7 @@
       <h2>Test</h2>
       <p>Test les next</p>
     </template>
-    <h1>Testing... <span class="invisible" data-step="">1...</span> <span class="invisible" data-step="">2...</span></h1>
+    <h1 class="already">Testing... <span class="invisible" data-step="">1...</span> <span class="invisible" data-step="">2...</span></h1>
   </section>
 <!-- titre -->
   <section data-slide="" data-titre="titre" data-type="📣" class="middleStuff titleSlide noted">
@@ -83,8 +83,8 @@
       <p>Applaudir si tu veux que les autres arrêtent de faker</p>
       <p></p>
     </template>
-    <h1>Fini le fake!</h1>
-    <h2>5 astuces pour garder ça vrai,<br>dans la vie comme au lit.</h2>
+    <h1 class="already">Fini le Fake!</h1>
+    <h2 class="already">5 astuces pour garder ça vrai,<br>dans la vie comme au lit.</h2>
   </section>
 <!-- quoi -->
   <section data-slide="" data-titre="*quoi" data-type="🖼️" class="middleStuff imaging stepped noted">
@@ -95,7 +95,7 @@
     </template>
     <div class="invisible" data-step="" style="display: flex; flex-flow: row nowrap; justify-content: space-around; align-items: center; width: 90%; height: 80%; gap: 4em;">
       <img src="/@Pictures/Perso_DEEP_signed_nb.png" alt="" style="margin: auto;">
-      <p><span style="text-decoration: underline;">Faker</span> :<br><br>Dire <strong>OUI</strong><br>quand on aurait voulu<br>dire <strong>NON</strong>.</p>
+      <p><span style="text-decoration: underline; font-size: 1.4em;">Faker</span> :<br><br>Dire <strong>OUI</strong><br>quand on aurait voulu<br>dire <strong>NON</strong>.</p>
     </div>
   </section>
   <section data-slide="" data-titre="pasJustSex" data-type="🖼️" class="middleStuff imaging stepped noted">
@@ -107,7 +107,7 @@
     <div style="display: flex; flex-flow: row nowrap; justify-content: space-around; align-items: center; width: 90%; height: 80%; gap: 4em;">
       <img src="/@Pictures/Perso_DEEP_signed_nb.png" alt="" style="margin: auto;">
       <div style="display: flex; flex-flow: column nowrap; justify-content: space-around; height: 100%;">
-        <p class="strong" style="text-align: center;">On fake pas juste dans le lit!</p>
+        <p class="strong already" style="text-align: center;">On fake pas juste dans le lit!</p>
         <p class="indent invisible" data-step="">👉 N'importe quelle interaction entre 2 personnes ou plus qui peut créer un inconfort.</p>
       </div>
     </div>
@@ -169,7 +169,7 @@
       <p>Parce que quand le NON est trop difficile, risqué ou compliqué, le oui devient plus facile</p>
       <p>C'est tellement difficile de dir NON, qu'on préfère s'faire violer.</p>
     </template>
-    <h1 class="nosifer" style="margin-bottom: 10vh;">Pourquoi on dit OUI<br>quand même?!</h1>
+    <h1 class="nosifer-3em already" style="margin-bottom: 10vh; width: max-content;">Pourquoi on dit OUI<br>quand même?!</h1>
      <div class="invisible OUInonDiv" data-step="">
       <div class="OUInon1">OUI</div>
       <span class="OUInon2">></span>
@@ -196,7 +196,7 @@
       <p>Peur de faire du mal à l’autre</p>
       <p>Plus simple et facile</p>
     </template>
-    <h1 class="nosifer" style="margin-bottom: 0;">Pourquoi on dit OUI<br>quand même?!</h1>
+    <h1 class="nosifer-3em already" style="margin-bottom: 0; width: max-content;">Pourquoi on dit OUI<br>quand même?!</h1>
     <!-- <h2>Trop de pressions...</h2> -->
     <div class="invisible RCstackBox" style="position: relative;" data-step="1">
       <img class="invisible RCstackPicture" style="position: absolute; top: 0; left: 0; z-index: 4;" data-step="5" src="/@Pictures/Red&Blue_step4.png" alt="">
@@ -204,8 +204,8 @@
       <img class="invisible RCstackPicture" style="position: absolute; top: 0; left: 0; z-index: 2;" data-step="3" src="/@Pictures/Red&Blue_step2.png" alt="">
       <img class="invisible RCstackPicture" style="position: absolute; top: 0; left: 0; z-index: 1;" data-step="2" src="/@Pictures/Red&Blue_step1.png" alt="">
       <img class="RCstackPicture" style="position: absolute; top: 0; left: 0; z-index: 0;" src="/@Pictures/Red&Blue_step0.png" alt="">
-      <span class="RCspanR">Rouge</span>
-      <span class="RCspanC">Ciel</span>
+      <span class="RCspanR" style="z-index: 10;">Rouge</span>
+      <span class="RCspanC" style="z-index: 10;">Ciel</span>
     </div>
   </section>
 <!-- comment -->
@@ -215,11 +215,11 @@
       <p>Plus le NON est facile, plus, si la personne a besoin de dire NON, plus on a chance que la personne réussisse à dire NON!</p>
       <h2>Mais attention, il ne suffit pas de juste le dire! ...</h2>
     </template>
-    <h1>Comment éviter le fake?</h1>
-     <div class="invisible" data-step="" style="display: flex; flex-flow: row nowrap; justify-content: space-evenly; align-items: flex-start; width: 95%; text-align: center; gap:2em">
-      <div style="font-size: 6rem; font-weight: 900; position: relative;">NON</div>
-      <span style="font-size: 9rem; font-weight: 900; line-height: .8em;">>=</span>
-      <div style="font-size: 6rem; font-weight: 900;">OUI</div>
+    <h1 class="already">Comment éviter le fake?!</h1>
+     <div class="nonOuiDiv invisible" data-step="">
+      <div class="nonOui1">NON</div>
+      <span class="nonOui2">>=</span>
+      <div>OUI</div>
     </div>
   </section>
 <!-- subconscient -->
@@ -230,7 +230,7 @@
       <p>Oui vs non => fake</p>
       <p>accepter non vs désirer oui => manipulation</p>
     </template>
-    <h1 class="invisible nosifer" data-step="" style="font-size: 3rem;">Les subconscients<br>se parlent!</h1>
+    <h1 class="invisible nosifer-4em" data-step="">Les subconscients<br>se parlent!</h1>
   </section>
 <!-- aimerNon -->
   <section data-slide="" data-titre="*AimerNON" data-type="📝" class="middleStuff centerStuff stepped noted">
@@ -258,7 +258,7 @@
       <p>Donne pas d'excuse; c'est des munitions</p>
       <p>Explique, si c'est pour une relations long terme</p>
     </template>
-      <h1 class="nonPhrase">Non.</h1>      
+      <h1 class="nonPhrase already">« Non. »</h1>      
       <div class="invisible excuseDiv" data-step="">
         <span class="invisible excuse1" data-step="">Pas besoin de donner d'excuses</span>
         <span class="invisible excuse2" data-step="">Pas besoin de s'excuser</span>
@@ -295,6 +295,7 @@
       <p>Ne pas assumer les définitions</p>
       <h2>Blind dates</h2>
       <p>Au moins tu l'sais que tu l'sais pas</p>
+      <p>Prends au moins conscience de ce que tu ignore et prépare-toi en conséquence.</p>
     </template>
     <h1 class="invisible" data-step="1">Le OUI doit aussi être...</h1>
     <h2 class="invisible" data-step="2">Éclairé</h2>
@@ -318,8 +319,8 @@
       <img class="invisible stackPicture" data-step="3" src="/@Pictures/Cobalt&Lime3.png" alt="" style="position: absolute; top: 0; left: 0; z-index: 2;">
       <img class="invisible stackPicture" data-step="2" src="/@Pictures/Cobalt&Lime2.png" alt="" style="position: absolute; top: 0; left: 0; z-index: 1;">
       <img class="stackPicture" src="/@Pictures/Cobalt&Lime1.png" alt="" style="position: absolute; top: 0; left: 0; z-index: 0;">
-      <span style="color: #0066ff; font-weight: 700; font-size: 1.3rem; position: absolute; bottom: -1.5rem; left: 5rem;">Cobalt</span>
-      <span style="color: #32cd32; font-weight: 700; font-size: 1.3rem; position: absolute; bottom: -1.5rem; right: 5rem;">Lime</span>
+      <span style="color: #0066ff; font-weight: 700; font-size: 1.3rem; position: absolute; bottom: -1.5rem; left: 5rem; z-index: 4;">Cobalt</span>
+      <span style="color: #32cd32; font-weight: 700; font-size: 1.3rem; position: absolute; bottom: -1.5rem; right: 5rem; z-index: 4;">Lime</span>
     </div>
   </section>
 
@@ -343,13 +344,13 @@
       <p class="indent">
         <span class="invisible" data-step="5">🛠️ Revérifie le plus possible à chaque étape</span>
         <br>
-        <span class="invisible" data-step="6">mais pas juste "C'tu correct?"</span>
+        <span class="invisible" data-step="6">mais pas juste « C'tu correct? »</span>
       </p>
     </div>
   </section>
   <!-- baiser -->
   <section data-slide="" data-titre="*Baiser" data-type="📝" class="middleStuff centerStuff stepped">
-    <h1 class="invisible baiser" data-step="">Un oui pour un baiser<br/>n'est pas nécessairement<br/>un oui pour baiser!</h1>
+    <h1 class="invisible baiser" data-step="">« Un oui pour un baiser,<br/>c'est pas nécessairement<br/>un oui pour baiser! »</h1>
   </section>
 
 <!-- enthousiaste -->
@@ -368,7 +369,7 @@
     </p>
     <div class="bottomText">
       <p class="indent">
-        <span class="invisible" data-step="5">🛠️ "En cas de doutes, s'abstenir!"</span>
+        <span class="invisible" data-step="5">🛠️ « En cas de doutes, s'abstenir! »</span>
         <br>
         <span class="invisible" data-step="6">Ou on se crée une échelle.</span>
       </p>
@@ -410,7 +411,7 @@
   </section>
 <!-- Complet -->
   <section data-slide="" data-titre="ACRO R.É.E.L.S." data-type="💬" class="acrostiche stepped numberedStepped">
-    <h1>Donc ça prend des OUI...</h1>
+    <h1 class="already">Donc ça prend des OUI...</h1>
     <div style="width: fit-content; margin: auto;">
       <h3 data-step="5" class="invisible">Réversible</h3>
       <h3 data-step="2" class="invisible">Éclairé</h3>
@@ -425,13 +426,13 @@
   </section>
 
   <section data-slide="" data-titre="ACRO R.É.E.L.S. 2" data-type="💬" class="acrostiche stepped">
-    <h1>Donc ça prend des OUI...</h1>
+    <h1 class="already">Donc ça prend des OUI...</h1>
     <div style="width: fit-content; margin: auto;">
-      <h3><span class="firstLetter">R</span>éversible</h3>
-      <h3><span class="firstLetter">É</span>clairé</h3>
-      <h3><span class="firstLetter">E</span>nthousiaste</h3>
-      <h3><span class="firstLetter">L</span>ibre</h3>
-      <h3><span class="firstLetter">S</span>pécifique</h3>
+      <h3><span class="firstLetter already">R</span>éversible</h3>
+      <h3><span class="firstLetter already">É</span>clairé</h3>
+      <h3><span class="firstLetter already">E</span>nthousiaste</h3>
+      <h3><span class="firstLetter already">L</span>ibre</h3>
+      <h3><span class="firstLetter already">S</span>pécifique</h3>
     </div>
     <div style="width: fit-content; margin: auto;">
       <p data-step="" class="invisible" style="text-align: center;">Sinon, c'est NON!</p>
@@ -439,28 +440,36 @@
     </div>
   </section>
 
-  <section data-slide="" data-titre="SloganCarte" data-type="📝" class="topStuff centerStuff stepped noted">
+  <section data-slide="" data-titre="SloganCarte" data-type="📝" class="centerStuff stepped noted" style="justify-content: space-between;">
     <template>
       <h2>Montrer la carte</h2>
       <p>Avant, pendant, après, que tu demandes ou réponde</p>
       <p>N'importe quand ou SURTOUT quand y'a malaise!</p>
     </template>
-    <div class="slogan"><span class="sloganText">Sans OUI
+    <!-- <div class="slogan"><span class="sloganText">Sans OUI
       <br/><span class="sloganLettre">R</span>.<span class="sloganLettre">É</span>.<span class="sloganLettre">E</span>.<span class="sloganLettre">L</span>.<span class="sloganLettre">S</span>.,<br/>c'est <span class="sloganNo">NON</span>!</span>
+    </div> -->
+    <div>
+      <img class="sloganImgSmaller" src="/@Pictures/slogan_REELS_orangeOnBlack.png" alt="">
     </div>
-    <img class="invisible" data-step="" src="/@Pictures/cartes_mixte.png" alt="" height="400px">
+    <div>
+      <img class="invisible" data-step="" src="/@Pictures/Cartes_Light&Dark_RÉELS&FIRES_demo.png" alt="" height="400px">
+    </div>
   </section>
 
   <section data-slide="" data-titre="SloganCarteQR" data-type="📝" class="topStuff centerStuff noted">
     <template>
       <h2>Si toi et ton cellulaire êtes assez jeunes</h2>
     </template>
-    <div class="slogan"><span class="sloganText">Sans OUI
+    <!-- <div class="slogan"><span class="sloganText">Sans OUI
       <br/><span class="sloganLettre">R</span>.<span class="sloganLettre">É</span>.<span class="sloganLettre">E</span>.<span class="sloganLettre">L</span>.<span class="sloganLettre">S</span>.,<br/>c'est <span class="sloganNo">NON</span>!</span>
+    </div> -->
+    <div>
+      <img class="sloganImgSmaller" src="/@Pictures/slogan_REELS_orangeOnBlack.png" alt="">
     </div>
     <div>
       <img src="/@Pictures/Carte_cell-qrCode_ombre.png" alt="" height="480px">
-      <p style="text-align: center; margin: 0;">caliact.com/carte/</p>
+      <p style="text-align: center; margin-block: -20px 0;">caliact.com/carte</p>
     </div>
   </section>
 
@@ -471,14 +480,14 @@
     </div>
     <div class="invisible" data-step="">
       <img src="/@Pictures/CarteNON_cell-qrCode_ombre.png" alt="" height="480px">
-      <p style="text-align: center; margin: 0;">caliact.com/carte-non/</p>
+      <p style="text-align: center; margin-block: -20px 0;">caliact.com/carte-non</p>
     </div>
   </section>
 
   <section data-slide="" data-titre="Fin" data-type="📝" class="middleStuff centerStuff">
     <div class="sloganImgDiv">
-      <img class="sloganImg" style="top: 0; left: 0;" src="/@Pictures/slogan_REELS.png" alt="">
-      <img class="sloganImg" style="bottom: 0; right: 0;" src="/@Pictures/slogan_FIRES.png" alt="">
+      <img class="sloganImg" style="position: absolute; top: 35px; left: 35px;" src="/@Pictures/slogan_REELS_orangeOnBlack.png" alt="">
+      <img class="sloganImg" style="position: absolute; bottom: 35px; right: 35px;" src="/@Pictures/slogan_FIRES_orangeOnBlack.png" alt="">
     </div>
   </section>
 

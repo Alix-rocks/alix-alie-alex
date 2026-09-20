@@ -346,11 +346,9 @@ function stepsCreation(){
         element (ici, step)
         shown (step.classList.contains("invisible") ? false : true) // if true, means it's showing, we see it
     */
-    // if(step.classList.contains("invisible")){
-    //   unorderedAllSteps.push(step);
-    // } else {
-    //   step.classList.add("shown"); // j'ai l'impression que ça sert à rien...
-    // };
+    if(!step.classList.contains("invisible")){
+      step.classList.add("shown"); // Comme ça, il va être jaune dans WorkshopControl
+    };
     unorderedAllSteps.push(step);
   });
   //put them in order!
@@ -404,6 +402,7 @@ function stepNext(){
     stepCurrent = allSteps[stepCurrentIndex];
     stepCurrent.elements.forEach(element => {
       element.classList.remove("invisible");
+      element.classList.add("shown");
       shownStepUUID.push(element.dataset.uuid);
     });
     ;
@@ -423,6 +422,7 @@ function stepPrev(){
     stepCurrent = allSteps[stepCurrentIndex];
     stepCurrent.elements.forEach(element => {
       element.classList.add("invisible");
+      element.classList.remove("shown");
       hiddenStepUUID.push(element.dataset.uuid);
     });
     stepCurrentIndex = stepCurrentIndex - 1;

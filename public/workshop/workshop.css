@@ -1,9 +1,9 @@
 :root{
-  --bg-color: #1f1f1f;  
-  /* #f4f4f4 */
+  --bg-color: #171717;  
+  /* #1f1f1f, #f4f4f4 */
   --tx-color: #e5e5e5;
   --orange: #ff8704;
-  --red: #c20000;
+  --red: #d43c3b; /* #c20000 */
   --green-dark: rgb(15, 74, 0);
   --green-medium: rgb(23, 113, 0);
   --green-light: rgb(30, 150, 0);
@@ -73,7 +73,7 @@ h1{
   font-family: 'Imprima', sans-serif;
   /* font-style: italic;
   font-weight: bold; */
-  font-size: 2.4rem;
+  font-size: 4rem;
   line-height: 1em;
   margin-bottom: 0;
   color: var(--red);
@@ -106,9 +106,10 @@ p.strong{
 }
 
 .titleSlide h1{
-  font-family: 'Caveat', sans-serif;
+  font-family: 'Mr Dafoe', sans-serif;
   font-size: 8rem;
   color: var(--red);
+  font-weight: 500;
 }
 .titleSlide h2{
   font-size: 2.5rem;
@@ -223,6 +224,24 @@ p.strong{
   font-size: 4rem; 
   font-weight: 900;
 }
+.nonOuiDiv{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  /* width: 95%; */
+  text-align: center;
+  gap: 50px;
+  font-size: 9rem;
+  font-weight: 900;
+}
+.nonOui1{
+  font-family: 'Cherry Bomb';
+}
+.nonOui2{
+  line-height: .8em;
+}
+
 
 
 
@@ -525,15 +544,24 @@ span.unveilled{
   color: var(--red);
   line-height: .4em;
 }
-h1.nosifer{
+.nosifer-3em{
   font-family: 'Nosifer';
   line-height: 2em;
   text-align: center;
   font-weight: 500;
+  font-size: 3em;
+}
+.nosifer-4em{
+  font-family: 'Nosifer';
+  line-height: 2em;
+  text-align: center;
+  font-weight: 500;
+  font-size: 4em;
 }
 .nonPhrase{
-  font-family: 'Caveat', sans-serif;
+  font-family: 'Mr Dafoe', sans-serif;
   font-size: 7rem;
+  font-weight: 500;
   color: var(--orange);
   margin-top: 0;
 }
@@ -621,14 +649,19 @@ h1.nosifer{
   position: relative;
 }
 .sloganImg{
-  position: absolute;
-  height: calc(var(--vh) * 0.65);
+  height: calc(var(--vh) * 0.45);
+  width: auto;
+  transform: rotate(-15deg);
+}
+.sloganImgSmaller {
+  margin-top: 50px;
+  height: calc(var(--vh) * 0.35);
   width: auto;
   transform: rotate(-15deg);
 }
 
 h1.baiser{
-  font-family: 'caveat';
+  font-family: 'Mr Dafoe', sans-serif;
   text-align: center;
   font-size: 5rem;
   color: var(--orange);

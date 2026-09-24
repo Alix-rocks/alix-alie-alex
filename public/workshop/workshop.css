@@ -339,8 +339,8 @@ p.exercice{
   font-family: 'Quicksand';
   color: var(--red);
   font-size: 4rem;
-  line-height: 4rem;
-  height: 4rem;
+  /* line-height: 4rem;
+  height: 4rem; */
   display: inline-block;
 }
 

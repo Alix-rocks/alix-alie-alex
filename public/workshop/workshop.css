@@ -172,10 +172,16 @@ p.strong{
 }
 
 .stackBox{
+  position: relative;
+}
+.RCstackBox{
+  height: 550px;
+  width: 802px;
+}
+.CLstackBox{
   margin-top: 0; 
   height: var(--vh); 
   width: var(--vh); 
-  position: relative;
 }
 .stackPicture{
   height: 100%;
@@ -184,17 +190,20 @@ p.strong{
   top: 0;
   left: 0;
 }
-.RCstackBox{
-  position: relative;
-  height: 550px;
-  width: 802px;
+.stack0{
+  z-index: 0;
 }
-.RCstackPicture{
-  height: 550px;
-  width: auto;
-  position: absolute;
-  top: 0;
-  left: 0;
+.stack1{
+  z-index: 1;
+}
+.stack2{
+  z-index: 2;
+}
+.stack3{
+  z-index: 3;
+}
+.stack4{
+  z-index: 4;
 }
 .RCspanR{
   color: #ff2a2a;

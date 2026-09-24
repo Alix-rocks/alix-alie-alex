@@ -188,6 +188,10 @@ section#diapo{
   height: 50px;
 }
 
+.stackBox{
+  
+}
+
 #wordDropdown, #phraseDropdown{
   display: block;
   margin: auto;
@@ -315,8 +319,14 @@ button#pagePrev, button#pageNext{
 .shown:not(.boxed){
   color: yellow;
 }
+img.shown:not(.boxed){
+  border: solid 1.5px yellow;
+}
 .already{
   color: #ff8704;
+}
+img.already{
+  border: solid 1.5px #ff8704;
 }
 /* .boxed.shown{
   

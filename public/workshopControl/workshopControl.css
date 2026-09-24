@@ -37,15 +37,15 @@ hr{
   top: 12px;
   left: 12px;
 }
-#notes{
+#legend{
   display: none;
 }
-#notesLabel{
+#legendLabel{
   position: absolute;
   top: 12px;
   right: 12px;
 }
-#notesDiv{
+#legendDiv{
   display: none;
   position: absolute;
   top: 55px;
@@ -60,18 +60,18 @@ hr{
   padding: 10px;
   text-align: left;
 }
-#notesDiv h2{
+#legendDiv h2{
   margin-bottom: 0;
   margin-top: 1em;
 }
-#notesDiv h2:first-of-type{
+#legendDiv h2:first-of-type{
   margin-top: 0;
 }
-#notesDiv p{
+#legendDiv p{
   margin-top: .75em;
   margin-bottom: 1em;
 }
-#notes:checked ~ #notesDiv{
+#legend:checked ~ #legendDiv{
   display: block;
 }
 #fullScreenLabel{
@@ -283,7 +283,7 @@ input[name="miniSlides"]:checked + label{
   max-width: var(--vw);
 }
 
-button, #notesLabel{
+button, #legendLabel{
   border-top: 2px solid var(--tx-100-color);
   border-left: 2px solid var(--tx-100-color);
   border-right: 4px solid var(--tx-100-color);
@@ -297,7 +297,7 @@ button, #notesLabel{
   background-color: var(--tx-30-color);
 }
 
-button:disabled, #notes:checked + #notesLabel {
+button:disabled, #legend:checked + #legendLabel {
   opacity: 0.5;
   background-color: var(--bg-color);
 }

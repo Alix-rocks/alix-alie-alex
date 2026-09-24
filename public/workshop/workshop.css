@@ -105,6 +105,17 @@ p.strong{
   font-size: 2.5rem;
 }
 
+.titleDiv{
+  position: relative; 
+  height: 400px; 
+  width: 907px;
+}
+.titleDiv img{
+  position: absolute; 
+  top: 0; 
+  left: 0;
+  height: 400px;
+}
 .titleSlide h1{
   font-family: 'Mr Dafoe', sans-serif;
   font-size: 8rem;
@@ -546,10 +557,10 @@ span.unveilled{
 }
 .nosifer-3em{
   font-family: 'Nosifer';
-  line-height: 2em;
+  line-height: 1.2em;
   text-align: center;
   font-weight: 500;
-  font-size: 3em;
+  font-size: 2.8em;
 }
 .nosifer-4em{
   font-family: 'Nosifer';
@@ -653,6 +664,16 @@ span.unveilled{
   width: auto;
   transform: rotate(-15deg);
 }
+.sloganTopLeft{
+  position: absolute; 
+  top: 35px; 
+  left: 35px;
+}
+.sloganBottomRight{
+  position: absolute; 
+  bottom: 35px; 
+  right: 35px;
+}
 .sloganImgSmaller {
   margin-top: 50px;
   height: calc(var(--vh) * 0.35);
@@ -664,6 +685,7 @@ h1.baiser{
   font-family: 'Mr Dafoe', sans-serif;
   text-align: center;
   font-size: 5rem;
+  font-weight: 500;
   color: var(--orange);
 }
 

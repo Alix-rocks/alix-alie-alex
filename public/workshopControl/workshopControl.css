@@ -187,9 +187,18 @@ section#diapo{
 #diapoMain img{
   height: 50px;
 }
+#diapoMain section{
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: space-between;
+}
 
 .stackBox{
-  
+  display: flex;
+  flex-flow: nowrap row-reverse;
+  justify-content: space-between;
+  gap: 1em;
 }
 
 #wordDropdown, #phraseDropdown{

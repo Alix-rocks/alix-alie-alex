@@ -211,6 +211,7 @@ p.strong{
   position: absolute;
   bottom: 1%;
   left: 27%;
+  z-index: 10;
 }
 .RCspanC{
   color: #77b5fe;
@@ -218,6 +219,25 @@ p.strong{
   position: absolute;
   bottom: 1%;
   right: 48%;
+  z-index: 10;
+}
+.CLspanC{
+  color: #0066ff;
+  font-weight: 700;
+  font-size: 1.3rem;
+  position: absolute;
+  bottom: -1.5rem;
+  left: 5rem;
+  z-index: 4;
+}
+.CLspanL{
+  color: #32cd32;
+  font-weight: 700;
+  font-size: 1.3rem;
+  position: absolute;
+  bottom: -1.5rem;
+  right: 5rem;
+  z-index: 4;
 }
 .OUInonDiv{
   display: flex; 

@@ -704,7 +704,7 @@ span.unveilled{
   right: 35px;
 }
 .sloganImgSmaller {
-  margin-top: 50px;
+  /* margin-top: 50px; */
   height: calc(var(--vh) * 0.35);
   width: auto;
   transform: rotate(-15deg);

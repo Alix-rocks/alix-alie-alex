@@ -13,7 +13,7 @@ import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, 
 import trans from "/trans.js";
 auth.languageCode = 'fr';
 
-const lastUpdate = "2026-10-23 11h48";
+const lastUpdate = "2026-10-23 12h04";
 
 const cloudIt = document.querySelector("#cloudIt");
 const earthIt = document.querySelector("#earthIt");
@@ -1948,9 +1948,11 @@ function todoCreation(todo, batch = false){
         let pColor = 0;
         if(todo.pColor){
           pColor = todo.pColor;
-        } else if(!todo.pColor && todo.pParentId){
-          let parentTodo = listTasks[listTasks.findIndex(td => td.id == todo.pParentId)];
-          pColor = parentTodo.pColor ? parentTodo.pColor : 0;
+        } else if(todo.pParentId){
+          let parentTodo = listTasks.find(td => td.id == todo.pParentId);
+          if(parentTodo){
+            pColor = parentTodo.pColor ?? 0;
+          };
         };
 
         if(todo.stock){

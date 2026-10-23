@@ -13,7 +13,7 @@ import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, 
 import trans from "/trans.js";
 auth.languageCode = 'fr';
 
-const lastUpdate = "2026-05-25 11h56";
+const lastUpdate = "2026-10-23 9h44";
 
 const cloudIt = document.querySelector("#cloudIt");
 const earthIt = document.querySelector("#earthIt");
@@ -786,7 +786,7 @@ async function getTasksSettings() {
     if(!todo.pPosition || (todo.pPosition && todo.pPosition == "out")){
       //We could remove most of the recurryDates of the recurring var==anno that still have like 48 recurryDates in their array...!
 
-      todoCreation(todo);
+      todoCreation(todo, true);
     };
   });
   localStorage.listTasks = JSON.stringify(listTasks);
@@ -818,6 +818,7 @@ async function getTasksSettings() {
   };
   
   sortItAll(); //for the lists that don't have a mySettings.mySorting
+  reportErrors();
 };
 //{collection} randomTask
   //{document} email
@@ -890,13 +891,13 @@ function myLabelsGeneralChoice(){
           if(radio.value == "All"){
             listTasks.forEach(todo => {
               if(!todo.pPosition || (todo.pPosition && todo.pPosition == "out")){
-                todoCreation(todo);
+                todoCreation(todo, true);
               };
             });
           } else if(radio.value == "None"){
             listTasks.forEach(todo => {
               if(!todo.label && (!todo.pPosition || (todo.pPosition && todo.pPosition == "out"))){
-                todoCreation(todo);
+                todoCreation(todo, true);
               };
             });
           };
@@ -904,7 +905,7 @@ function myLabelsGeneralChoice(){
           document.querySelector("#myLabelLabel" + radio.value).style.backgroundColor = colorsList[mySettings.myLabels[radio.value].color].colorBG5;
           listTasks.forEach(todo => {
             if(todo.label && todo.LName == mySettings.myLabels[radio.value].name && (!todo.pPosition || (todo.pPosition && todo.pPosition == "out"))){
-              todoCreation(todo);
+              todoCreation(todo, true);
             };
           });
         };
@@ -926,6 +927,7 @@ function myLabelsGeneralChoice(){
           });
         };
         sortItAll(); //for the lists that don't have a mySettings.mySorting
+        reportErrors();
       };
     });
   });
@@ -1049,7 +1051,7 @@ function freeIn(){
     localStorage.listTasks = JSON.stringify(listTasks);
     listTasks.forEach(todo => {
       if(!todo.pPosition || (todo.pPosition && todo.pPosition == "out")){
-        todoCreation(todo);
+        todoCreation(todo, true);
       };
     });
     updateArrowsColor();
@@ -1070,6 +1072,7 @@ function freeIn(){
       });
     };
     sortItAll(); //for the lists that don't have a mySettings.mySorting
+    reportErrors();
   };
   //listDones
   if(localStorage.getItem("listDones")){
@@ -1484,11 +1487,12 @@ function resetCBC(){
         document.getElementById("todaysDateSpan").innerHTML = getTodayDateString();
         document.getElementById("todaysDaySpan").innerHTML = getDayNameFromString(getTodayDateString());
         listTasks.forEach(todo => {
-          todoCreation(todo);
+          todoCreation(todo, true);
         });
         updateArrowsColor();
         sortItAll();
         getWeeklyCalendar();
+        reportErrors();
       };
 
       mySettings.myFavoriteView = document.querySelector('input[name="choicePageRadios"]:checked').value;
@@ -1608,7 +1612,7 @@ function searchPage(){
         resultAll = resultTask; //should we copy it or is just like that ok?
         //also, if there's an AND, we shouldn't do the todoCreation yet! only at the end!
         resultTask.forEach(todo => {
-          todoCreation(todo);
+          todoCreation(todo, true);
           console.log(todo);
         });
         searchSwitch = false;
@@ -1632,7 +1636,7 @@ function searchPage(){
             let recurryDates = todo.recurryDates.filter(recurryDate => recurryDate == searchDate.value);
             if(recurryDates.length == 0){
             } else{
-              todoCreation(todo);
+              todoCreation(todo, true);
               console.log(todo);
               count++;
               recurryDates.forEach(recurryDate => {
@@ -1642,7 +1646,7 @@ function searchPage(){
               });
             };
           } else{
-            todoCreation(todo);
+            todoCreation(todo, true);
             console.log(todo);
             count++;
           };
@@ -1661,7 +1665,7 @@ function searchPage(){
       } else{
         nope = false;
         resultShow.forEach(todo => {
-          todoCreation(todo);
+          todoCreation(todo, true);
           console.log(todo);
         });
         searchSwitch = false;
@@ -1677,7 +1681,7 @@ function searchPage(){
       } else{
         nope = false;
         resultTerm.forEach(todo => {
-          todoCreation(todo);
+          todoCreation(todo, true);
           console.log(todo);
         });
         searchSwitch = false;
@@ -1693,7 +1697,7 @@ function searchPage(){
       } else{
         nope = false;
         resultTag.forEach(todo => {
-          todoCreation(todo);
+          todoCreation(todo, true);
           console.log(todo);
         });
         searchSwitch = false;
@@ -1707,6 +1711,7 @@ function searchPage(){
       document.querySelector("#searchFound").insertAdjacentHTML("beforeend", `<h4>Nope...</h4>`);
     };
     searchSwitch = false;
+    reportErrors();
   });
 
   document.querySelector("#searchClearFilters").addEventListener("click", () => {
@@ -1812,10 +1817,11 @@ function addThatdayTodos(){
       });
     };
     if((thatdayTime < todoDateTime) && (todoDateTime < thatnextdayTime) || (thatdayTime < todoDeadlineTime) && (todoDeadlineTime < thatnextdayTime)){
-      todoCreation(todo);
+      todoCreation(todo, true);
     };
   });
   sortIt("datetime", "listToday");
+  reportErrors();
 };
 
 
@@ -1835,6 +1841,33 @@ function openOrCloseHour(){
   
 
 // MARK: CREATION
+
+
+
+
+
+// MARK: errorHandling
+
+let errors = [];
+
+function reportErrors() {
+  if (errors.length === 0) return;
+
+  alert(
+    errors.map((item, index) =>
+      `Error ${index + 1}
+      <br>
+      Todo: ${item.todo.task}
+      <br>
+      TogoList: ${item.togoList}
+      <br>
+      Error: ${item.error.message}`
+    ).join("\n\n----------------\n\n")
+  );
+
+  console.error(errors);
+  errors = [];
+}
 
 function getTodoFrom(li) { //parent and offspring are global but it could be any other li or div
   let todo;
@@ -1875,7 +1908,7 @@ function recurryDateToTodoCreation(todo, recurryDate, fate){ //todo == the todo 
   
 };
 
-function todoCreation(todo){
+function todoCreation(todo, batch = false){
   //Si on met les sections en array (au lieu d'en HTML), togoList va être quoi? l'objet au complet comme tel, son index dans l'array ou son id? J'imagine que ça va dépendre de comment on retrouve l'élément de la liste dans le HTML (getElementbyId)...
   let togoList;
   let numberedDays;
@@ -1910,101 +1943,111 @@ function todoCreation(todo){
   };
   //console.log(togoList);
   if(togoList !== ""){ //what happens if one is stock/stored AND recurring/recurry? (tried but don't need:  && togoList !== undefined)
-    if(document.getElementById(togoList)){  
-      let pColor = 0;
-      if(todo.pColor){
-        pColor = todo.pColor;
-      } else if(!todo.pColor && todo.pParentId){
-        let parentTodo = listTasks[listTasks.findIndex(td => td.id == todo.pParentId)];
-        pColor = parentTodo.pColor;
-      };
-
-      if(todo.stock){
-        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.startTime ? `data-time="${todo.startTime}"` : ``}" 
-          class="todoLi${todo.term == "showThing" ? todo.label ? ` showLi showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : todo.term == "reminder" ? ` reminder` : ``}${pColor !== 0 ? todo.pColor ? ` projectLi` : ` offspringLi` : ``}${todo.startTime && todo.prima && todo.prima !== "00:00" ? ` showLiBuffer` : ``}" 
-          style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}${pColor !== 0 ? todo.pColor ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : `border-color:${colorsList[pColor].colorBG};` : ``}">
-        ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="labelOnglet labelLiOnglet noLabel"></div>`}
-        ${todo.pParentId && !projectSwitch ? `<div class="projectLiOngletDiv">${getProjectOnglets(todo)}</div>` : ``}
-        ${todo.startTime && todo.prima && todo.prima !== "00:00" ? `<div class="primaLiBuffer">${timeMath(roundFifteenTime(todo.startTime), "minus", todo.prima).replace("-", ":")}</div>` : ``}
-        <i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i><div class="textDiv"><span class="text" onclick="${projectSwitch ? `toTIdePSaM(this)` : `toTIdeLIaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${mySettings.myBaseColors[todo.color].colorBG};" />` : ``}<span class="timeSpan">${todo.startTime ? todo.startTime : ''}</span></div><i class="fa-solid fa-recycle" onclick="${searchSwitch ? `toTIdeSSaS(this)` : calendarStock ? `toTIdeCCaNS(this)` : projectStock ? `toTIdePaS(this)` : `toTIdeTZaS(this)`}"></i></li>`);
-      } else if(todo.line == "recurringDay"){
-        let time = todo.startTime ? todo.startTime : mySettings.myTomorrow;
-        let nextDate;
-        if(todo.recurryDates[0]){
-          nextDate = getDateTimeFromString(todo.recurryDates[0], time);
-        } else{
-          console.log(todo);
+    try{
+      if(document.getElementById(togoList)){  
+        let pColor = 0;
+        if(todo.pColor){
+          pColor = todo.pColor;
+        } else if(!todo.pColor && todo.pParentId){
+          let parentTodo = listTasks[listTasks.findIndex(td => td.id == todo.pParentId)];
+          pColor = parentTodo.pColor ? parentTodo.pColor : 0;
         };
-        numberedDays = Math.floor(Math.abs(nextDate.getTime() - todayDate.getTime())/(1000 * 3600 * 24));
-        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.startTime ? `data-time="${todo.startTime}"` : ``}" 
-          class="todoLi${todo.term == "showThing" ? todo.label ? ` showLi showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : todo.term == "reminder" ? ` reminder` : ``}${pColor !== 0 ? todo.pColor ? ` projectLi` : ` offspringLi` : ``}${todo.startTime && todo.prima && todo.prima !== "00:00" ? ` showLiBuffer` : ``}" 
-          style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}${pColor !== 0 ? todo.pColor ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : `border-color:${colorsList[pColor].colorBG};` : ``}">
-        
-        ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="labelOnglet labelLiOnglet noLabel"></div>`}
-        ${todo.pParentId && !projectSwitch ? `<div class="projectLiOngletDiv">${getProjectOnglets(todo)}</div>` : ``}
-        ${todo.startTime && todo.prima && todo.prima !== "00:00" ? `<div class="primaLiBuffer">${timeMath(roundFifteenTime(todo.startTime), "minus", todo.prima).replace("-", ":")}</div>` : ``}
-        <i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i>
-        <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i>
-        <div class="textDiv"><span class="text" onclick="${projectSwitch ? `toTIdePSaM(this)` : `toTIdeLIaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG};`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.startTime ? todo.startTime : ''}</span></div>
-        <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.dealine ? `doneDay` : todo.line}"></i><span style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${numberedDays}</span></div></li>`);
-      } else if(todo.term == "reminder"){ 
-        /*??? ${todo.pParentId && !projectSwitch ? `<div class="projectLiOngletDiv">${getProjectOnglets(todo)}</div>` : ``} */
-        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" ${todo.startDate ? `data-date="${todo.startDate}"` : ``} ${todo.startTime ? `data-time="${todo.startTime}"` : ``} ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="todoLi reminderClass">
-         
-          <i class="typcn typcn-bell" style="font-size: 1em;"></i>
-          <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" style="font-size: .8em;"></i>
-          <div class="textDiv"><span onclick="${projectSwitch ? `toTIdePSaM(this)` : `toTIdeLIaM(this)`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px; ` : ``}color:${mySettings.myBaseColors[todo.color].colorBG}; font-size: 1em;">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" style="font-size: .8em;" onclick="timeItEvent(this)">${todo.startTime ? todo.startTime : ""}</span>
-          <input type="time" class="displayNone"/></div>
-        </li>`);
-      } else if(!todo.pPosition || todo.pPosition == "out" || ((todo.pPosition == "in" || todo.pPosition == "done") && (projectSwitch || searchSwitch))){
-        
-        document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li 
-          id="${todo.id}" 
-          ${todo.startDate ? `data-date="${todo.startDate}"` : ``} 
-          ${todo.startTime ? `data-time="${todo.startTime}"` : ``} 
-          ${todo.recurry ? `data-rec="${todo.recId}"` : ``} 
-          ${todo.term == "alwaysHere" ? `data-always="here"` : ``} 
-          ${todo.openHour ? `data-openHour="true"` : ``} 
-          class="todoLi${todo.term == "showThing" ? todo.label ? ` showLi showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : ``}${pColor !== 0 ? todo.pColor ? ` projectLi` : todo.pPosition == "done" ? ` offspringLi doneOffspringLi` : ` offspringLi` : ``}${todo.startTime && todo.prima && todo.prima !== "00:00" ? ` showLiBuffer` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}${!openHourSwitch && !openHourToggle && todo.openHour ? ` displayNone` : ``}" 
-          style="
-          ${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}
-          ${pColor !== 0 ? todo.pColor ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : `border-color:${colorsList[pColor].colorBG};` : ``}
-          ">
+
+        if(todo.stock){
+          document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.startTime ? `data-time="${todo.startTime}"` : ``}" 
+            class="todoLi${todo.term == "showThing" ? todo.label ? ` showLi showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : todo.term == "reminder" ? ` reminder` : ``}${pColor !== 0 ? todo.pColor ? ` projectLi` : ` offspringLi` : ``}${todo.startTime && todo.prima && todo.prima !== "00:00" ? ` showLiBuffer` : ``}" 
+            style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}${pColor !== 0 ? todo.pColor ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : `border-color:${colorsList[pColor].colorBG};` : ``}">
           ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="labelOnglet labelLiOnglet noLabel"></div>`}
           ${todo.pParentId && !projectSwitch ? `<div class="projectLiOngletDiv">${getProjectOnglets(todo)}</div>` : ``}
           ${todo.startTime && todo.prima && todo.prima !== "00:00" ? `<div class="primaLiBuffer">${timeMath(roundFifteenTime(todo.startTime), "minus", todo.prima).replace("-", ":")}</div>` : ``}
-          <div class="checkOptions${projectSwitch ? " projectLiOptions" : ""}" style="${todo.urge ? `color: ${todo.urgeColor};` : ``}" onclick="checkOptions(this, ${pColor})">
-          ${projectSwitch ? `<span class="circleInOut" ${todo.pPosition == "out" ? `style="border-color:${colorsList[pColor].colorBG};"` : ``}></span>` : ``}
-            <i class="typcn typcn-media-stop-outline emptyCheck"></i>
-            <span class="numUrge">${todo.urge ? todo.urgeNum : ``}</span>
-          </div>
+          <i class="typcn typcn-trash" onclick="trashStockEvent(this)"></i><i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i><div class="textDiv"><span class="text" onclick="${projectSwitch ? `toTIdePSaM(this)` : `toTIdeLIaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG}; flex-shrink: 0;`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span>${todo.term !== "showThing" ? `<hr style="border-color:${mySettings.myBaseColors[todo.color].colorBG};" />` : ``}<span class="timeSpan">${todo.startTime ? todo.startTime : ''}</span></div><i class="fa-solid fa-recycle" onclick="${searchSwitch ? `toTIdeSSaS(this)` : calendarStock ? `toTIdeCCaNS(this)` : projectStock ? `toTIdePaS(this)` : `toTIdeTZaS(this)`}"></i></li>`);
+        } else if(todo.line == "recurringDay"){
+          let time = todo.startTime ? todo.startTime : mySettings.myTomorrow;
+          let nextDate;
+          if(todo.recurryDates[0]){
+            nextDate = getDateTimeFromString(todo.recurryDates[0], time);
+          } else{
+            console.log(todo);
+          };
+          numberedDays = Math.floor(Math.abs(nextDate.getTime() - todayDate.getTime())/(1000 * 3600 * 24));
+          document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" data-term="${todo.term}" ${todo.startTime ? `data-time="${todo.startTime}"` : ``}" 
+            class="todoLi${todo.term == "showThing" ? todo.label ? ` showLi showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : todo.term == "reminder" ? ` reminder` : ``}${pColor !== 0 ? todo.pColor ? ` projectLi` : ` offspringLi` : ``}${todo.startTime && todo.prima && todo.prima !== "00:00" ? ` showLiBuffer` : ``}" 
+            style="${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}${pColor !== 0 ? todo.pColor ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : `border-color:${colorsList[pColor].colorBG};` : ``}">
+          
+          ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="labelOnglet labelLiOnglet noLabel"></div>`}
+          ${todo.pParentId && !projectSwitch ? `<div class="projectLiOngletDiv">${getProjectOnglets(todo)}</div>` : ``}
+          ${todo.startTime && todo.prima && todo.prima !== "00:00" ? `<div class="primaLiBuffer">${timeMath(roundFifteenTime(todo.startTime), "minus", todo.prima).replace("-", ":")}</div>` : ``}
+          <i class="typcn typcn-trash" onclick="trashRecurringEvent(this)"></i>
           <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i>
-          <div class="textDiv"><span onclick="${projectSwitch ? `toTIdePSaM(this)` : `toTIdeLIaM(this)`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? `` : ` color:${mySettings.myBaseColors[todo.color].colorBG};`}">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.startTime ? todo.startTime : ""}</span>
-          <input type="time" class="displayNone"/>
-          ${togoList == "listOups" && numberedDays < -5 ? `<div class="proHelp">
-          <h3>You have been procrastinating that one for ${Math.abs(numberedDays)} days...</h3>
-          <p>Why haven't you done it yet?</p> 
-          <p>Is it really worth doing? Why did you want to do it in the first place?</p>
-          <p>Was it and is it still realistic to want to do it?</p>
-      
-          <h4>If you really still want to do it:</h4>
-          <p>What is missing or what is unclear?</p>
-          <p>What do you need or what would help you start this task?</p>
-          <p>What's the very first 'next action'?</p>
-      
-          <h4>If you realize you don't actually want nor need to do it:</h4>
-          <p>Then do yourself a favor and just delete it!</p>
-          <button onclick="toTIdeLIaM(this.parentElement)">Yeah, thanks</button></div>` : ``}
-          </div>
-          <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)">
-            <i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.deadline ? `doneDay` : todo.line}"></i>
-            <span class="${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? `` : `displayNone`}" style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? numberedDays : ``}</span>
-          </div>
-          <!-- <div class="handle" style="padding: 0; width: 30px; height: 33px; line-height: 33px; text-align: center; flex-shrink: 0;">☰</div> -->
-        </li>`);
+          <div class="textDiv"><span class="text" onclick="${projectSwitch ? `toTIdePSaM(this)` : `toTIdeLIaM(this)`}" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? "" : ` color:${mySettings.myBaseColors[todo.color].colorBG};`}">${todo.term == "reminder" ? `<i class="typcn typcn-bell" style="font-size: 1em; padding: 0 5px 0 0;"></i>` : ``}${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan">${todo.startTime ? todo.startTime : ''}</span></div>
+          <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)"><i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? "" : todo.dealine ? `doneDay` : todo.line}"></i><span style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${numberedDays}</span></div></li>`);
+        } else if(todo.term == "reminder"){ 
+          /*??? ${todo.pParentId && !projectSwitch ? `<div class="projectLiOngletDiv">${getProjectOnglets(todo)}</div>` : ``} */
+          document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li id="${todo.id}" ${todo.startDate ? `data-date="${todo.startDate}"` : ``} ${todo.startTime ? `data-time="${todo.startTime}"` : ``} ${todo.recurry ? `data-rec="${todo.recId}"` : ``} class="todoLi reminderClass">
+          
+            <i class="typcn typcn-bell" style="font-size: 1em;"></i>
+            <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" style="font-size: .8em;"></i>
+            <div class="textDiv"><span onclick="${projectSwitch ? `toTIdePSaM(this)` : `toTIdeLIaM(this)`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px; ` : ``}color:${mySettings.myBaseColors[todo.color].colorBG}; font-size: 1em;">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" style="font-size: .8em;" onclick="timeItEvent(this)">${todo.startTime ? todo.startTime : ""}</span>
+            <input type="time" class="displayNone"/></div>
+          </li>`);
+        } else if(!todo.pPosition || todo.pPosition == "out" || ((todo.pPosition == "in" || todo.pPosition == "done") && (projectSwitch || searchSwitch))){
+          
+          document.getElementById(togoList).insertAdjacentHTML("beforeend", `<li 
+            id="${todo.id}" 
+            ${todo.startDate ? `data-date="${todo.startDate}"` : ``} 
+            ${todo.startTime ? `data-time="${todo.startTime}"` : ``} 
+            ${todo.recurry ? `data-rec="${todo.recId}"` : ``} 
+            ${todo.term == "alwaysHere" ? `data-always="here"` : ``} 
+            ${todo.openHour ? `data-openHour="true"` : ``} 
+            class="todoLi${todo.term == "showThing" ? todo.label ? ` showLi showLiLabel` : ` showLi` : todo.term == "sameHabit" ? ` sameHabit` : ``}${pColor !== 0 ? todo.pColor ? ` projectLi` : todo.pPosition == "done" ? ` offspringLi doneOffspringLi` : ` offspringLi` : ``}${todo.startTime && todo.prima && todo.prima !== "00:00" ? ` showLiBuffer` : ``}${togoList == "listOups" && numberedDays < -5 ? ` selectedTask` : ``}${!openHourSwitch && !openHourToggle && todo.openHour ? ` displayNone` : ``}" 
+            style="
+            ${todo.term == "showThing" ? `background-color: ${todo.STColorBG}; color: ${todo.STColorTX};` : ``}
+            ${pColor !== 0 ? todo.pColor ? `outline-color: ${colorsList[pColor].colorBG5}; border-color:${colorsList[pColor].colorBG};` : `border-color:${colorsList[pColor].colorBG};` : ``}
+            ">
+            ${todo.label ? `<div class="labelOnglet labelLiOnglet" style="background-color:${colorsList[todo.LColor].colorBG}; color:${colorsList[todo.LColor].colorTX};">${todo.LName}</div>` : `<div class="labelOnglet labelLiOnglet noLabel"></div>`}
+            ${todo.pParentId && !projectSwitch ? `<div class="projectLiOngletDiv">${getProjectOnglets(todo)}</div>` : ``}
+            ${todo.startTime && todo.prima && todo.prima !== "00:00" ? `<div class="primaLiBuffer">${timeMath(roundFifteenTime(todo.startTime), "minus", todo.prima).replace("-", ":")}</div>` : ``}
+            <div class="checkOptions${projectSwitch ? " projectLiOptions" : ""}" style="${todo.urge ? `color: ${todo.urgeColor};` : ``}" onclick="checkOptions(this, ${pColor})">
+            ${projectSwitch ? `<span class="circleInOut" ${todo.pPosition == "out" ? `style="border-color:${colorsList[pColor].colorBG};"` : ``}></span>` : ``}
+              <i class="typcn typcn-media-stop-outline emptyCheck"></i>
+              <span class="numUrge">${todo.urge ? todo.urgeNum : ``}</span>
+            </div>
+            <i onclick="iconChoice(this)" class="IconI ${todo.icon ? todo.icon : 'fa-solid fa-ban noIcon'}" ${todo.quicky ? `style="color:mediumvioletred;"` : ``}></i>
+            <div class="textDiv"><span onclick="${projectSwitch ? `toTIdePSaM(this)` : `toTIdeLIaM(this)`}" class="text" style="${todo.miniList ? `text-decoration:underline; text-decoration-thickness:1px;` : ``}${todo.term == "showThing" ? `` : ` color:${mySettings.myBaseColors[todo.color].colorBG};`}">${todo.info ? '*' : ''}${todo.task}</span><span class="timeSpan" onclick="timeItEvent(this)">${todo.startTime ? todo.startTime : ""}</span>
+            <input type="time" class="displayNone"/>
+            ${togoList == "listOups" && numberedDays < -5 ? `<div class="proHelp">
+            <h3>You have been procrastinating that one for ${Math.abs(numberedDays)} days...</h3>
+            <p>Why haven't you done it yet?</p> 
+            <p>Is it really worth doing? Why did you want to do it in the first place?</p>
+            <p>Was it and is it still realistic to want to do it?</p>
+        
+            <h4>If you really still want to do it:</h4>
+            <p>What is missing or what is unclear?</p>
+            <p>What do you need or what would help you start this task?</p>
+            <p>What's the very first 'next action'?</p>
+        
+            <h4>If you realize you don't actually want nor need to do it:</h4>
+            <p>Then do yourself a favor and just delete it!</p>
+            <button onclick="toTIdeLIaM(this.parentElement)">Yeah, thanks</button></div>` : ``}
+            </div>
+            <div class="numberedCal ${mySettings.mySide == "dark" ? `numberedCalDark` : ``}" onclick="smallCalendarChoice(this)">
+              <i class="typcn typcn-calendar-outline calendarSpan ${todo.term == "showThing" ? `` : todo.recurry ? "recurry" : todo.deadline ? `doneDay` : todo.line}"></i>
+              <span class="${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? `` : `displayNone`}" style="${todo.term == "showThing" ? `text-shadow: -0.75px -0.75px 0 ${todo.STColorBG}, 0 -0.75px 0 ${todo.STColorBG}, 0.75px -0.75px 0 ${todo.STColorBG}, 0.75px 0 0 ${todo.STColorBG}, 0.75px 0.75px 0 ${todo.STColorBG}, 0 0.75px 0 ${todo.STColorBG}, -0.75px 0.75px 0 ${todo.STColorBG}, -0.75px 0 0 ${todo.STColorBG}; color:${todo.STColorTX};` : ``}">${(todo.deadline && todo.deadline !== "") || togoList == "listOups" ? numberedDays : ``}</span>
+            </div>
+            <!-- <div class="handle" style="padding: 0; width: 30px; height: 33px; line-height: 33px; text-align: center; flex-shrink: 0;">☰</div> -->
+          </li>`);
+        };
+      } else if(!document.getElementById(togoList) && !todo.stock){
+        throw new Error(`Oups! "${todo.task}" was supposed to go to "${togoList}", but that one seemed to have been lost...`);
       };
-    } else if(!document.getElementById(togoList) && !todo.stock){
-      alert(`Oups! "${todo.task}" doesn't have anywhere to go!`);
+    } catch(error){
+      errors.push({
+        todo: todo,
+        togoList: togoList,
+        error: error
+      });
+
+      if (!batch) reportErrors();
     };
   };
 };
@@ -2039,10 +2082,10 @@ function getTogoList(todo){
         recurryCreation(todo);
       } else{
         let answer = prompt(todo.task + ", C'est finnnniiiiiiii!!!\nLet's say goodbye!");
-        if(answer == null){
+        if(answer === null){
           console.log("null");
           togoList = "";
-        } else if(answer == ""){ // ok
+        } else if(answer === ""){ // ok
           console.log("ok");
           let todoIndex = listTasks.findIndex(tod => tod.id == todo.id);
           console.log(todoIndex);
@@ -2383,7 +2426,7 @@ addForm.addEventListener("submit", (e) => {
       task: newTask,
       color: "0", // (== var(--tx-color))
       icon: "fa-solid fa-ban noIcon",
-      term: "oneTime",
+      term: "nextThing",
       line: "noDay"
     };
     listTasks.push(todo);
@@ -2413,7 +2456,7 @@ function getStorage(){
   });
   listTasks.forEach(todo => {
     if(todo.stock){
-      todoCreation(todo);
+      todoCreation(todo, true);
     };
   });
   storageSwitch = false;
@@ -2427,6 +2470,7 @@ function getStorage(){
       document.getElementById(`allStock${term}SubList`).insertAdjacentElement("afterend", stockLis[i]);
     };
   };
+  reportErrors();
 };
 window.getStorage = getStorage;
 
@@ -3098,7 +3142,7 @@ const listPage = document.querySelector("#listPage");
 const toDoPage = document.querySelector("#toDoPage");
 shuffleBtn.addEventListener("click", () => {
   let todayDate = getTodayDateString();
-  wheneverList = listTasks.filter(task => (task.term == "oneTime" || task.term == "longTerm" || task.term == "alwaysHere") && !task.stock && task.line !== "recurringDay" && (task.line == "noDay" || task.startDate == todayDate) && task.quicky); 
+  wheneverList = listTasks.filter(task => (task.term == "nextThing" || task.term == "oneTime" || task.term == "longTerm" || task.term == "alwaysHere") && !task.stock && task.line !== "recurringDay" && (task.line == "noDay" || task.startDate == todayDate) && task.quicky); 
   for (let i = wheneverList.length - 1; i > 0; i--) { 
     const j = Math.floor(Math.random() * (i + 1)); 
     [wheneverList[i], wheneverList[j]] = [wheneverList[j], wheneverList[i]]; 
@@ -4290,7 +4334,7 @@ function toTIdeTZaN(){ // de TodoZone à New (addForm but without the addInput.v
     id: crypto.randomUUID(),
     color: "0",
     icon: "fa-solid fa-ban noIcon",
-    term: "oneTime",
+    term: "nextThing",
     line: "noDay"
   };
   taskAddAllInfo(todo);

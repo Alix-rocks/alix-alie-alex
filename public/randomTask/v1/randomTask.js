@@ -13,7 +13,7 @@ import { app, analytics, db, auth, provider, getFirestore, collection, getDocs, 
 import trans from "/trans.js";
 auth.languageCode = 'fr';
 
-const lastUpdate = "2026-10-23 9h44";
+const lastUpdate = "2026-10-23 11h18";
 
 const cloudIt = document.querySelector("#cloudIt");
 const earthIt = document.querySelector("#earthIt");

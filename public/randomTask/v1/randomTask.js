@@ -1334,7 +1334,7 @@ function resetCBC(){
   localStorage.cBC = cBC;
 };
 
-// *** SETTINGS
+// MARK: SETTINGS
 //How to know if you need to update it? (otherwise, it would still show "updated"; if not, shows "update"). Update because the version you have is older than the version on the cloud (because last time you saved on the cloud it was from an other localStorage/device... but it can't be because myList and list are different, because that doesn't tell you which one is the newer one... timestamps?)
 //Is there a real way to check if it all really worked out before changing it to "updated!"?
 // settings.addEventListener("click", () => {
@@ -1487,7 +1487,9 @@ function resetCBC(){
         document.getElementById("todaysDateSpan").innerHTML = getTodayDateString();
         document.getElementById("todaysDaySpan").innerHTML = getDayNameFromString(getTodayDateString());
         listTasks.forEach(todo => {
-          todoCreation(todo, true);
+          if(!todo.pPosition || (todo.pPosition && todo.pPosition == "out")){
+            todoCreation(todo, true);
+          };
         });
         updateArrowsColor();
         sortItAll();
@@ -2428,7 +2430,7 @@ addForm.addEventListener("submit", (e) => {
       task: newTask,
       color: "0", // (== var(--tx-color))
       icon: "fa-solid fa-ban noIcon",
-      term: "nextThing",
+      term: "nextActions",
       line: "noDay"
     };
     listTasks.push(todo);
@@ -3144,7 +3146,7 @@ const listPage = document.querySelector("#listPage");
 const toDoPage = document.querySelector("#toDoPage");
 shuffleBtn.addEventListener("click", () => {
   let todayDate = getTodayDateString();
-  wheneverList = listTasks.filter(task => (task.term == "nextThing" || task.term == "oneTime" || task.term == "longTerm" || task.term == "alwaysHere") && !task.stock && task.line !== "recurringDay" && (task.line == "noDay" || task.startDate == todayDate) && task.quicky); 
+  wheneverList = listTasks.filter(task => (task.term == "nextActions" || task.term == "nextThing" || task.term == "oneTime" || task.term == "longTerm" || task.term == "alwaysHere") && !task.stock && task.line !== "recurringDay" && (task.line == "noDay" || task.startDate == todayDate) && task.quicky); 
   for (let i = wheneverList.length - 1; i > 0; i--) { 
     const j = Math.floor(Math.random() * (i + 1)); 
     [wheneverList[i], wheneverList[j]] = [wheneverList[j], wheneverList[i]]; 
@@ -3832,7 +3834,7 @@ todo.task
 todo.info
 todo.color => number (index in mySettings.myBaseColors)
 todo.icon
-todo.term => {project: "wholeProject"}, {rappel: "reminder"}, {habit: "sameHabit"}, {task: "topPriority", "nextThing", "longTerm", "oneTime", "alwaysHere", "waitForIt", "thinkBoutIt", "crazyShit", "nevermind"}, {event: "showThing"}
+todo.term => {project: "wholeProject"}, {rappel: "reminder"}, {habit: "sameHabit"}, {task: "topPriority", "nextActions", "nextThing", "longTerm", "oneTime", "alwaysHere", "waitForIt", "thinkBoutIt", "crazyShit", "nevermind"}, {event: "showThing"}
 todo.quicky => could be done in 15min or less
 todo.urge
 todo.urgeNum
@@ -4336,7 +4338,7 @@ function toTIdeTZaN(){ // de TodoZone à New (addForm but without the addInput.v
     id: crypto.randomUUID(),
     color: "0",
     icon: "fa-solid fa-ban noIcon",
-    term: "nextThing",
+    term: "nextActions",
     line: "noDay"
   };
   taskAddAllInfo(todo);

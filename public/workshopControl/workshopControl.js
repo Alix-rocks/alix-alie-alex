@@ -1,3 +1,21 @@
+/*
+Un bouton dans wc:
+w mesure h et w de l'écran réel
+on sait déjà les h et w de notre écran et c'est nos dimensions de base. On veut garder le même ratio.
+Si h est plus grand que w (portrait) on utilise 100% de w et limite h.
+Si w est plus grand que h (landscape) on utilise 100% de h et limite w.
+le body reste 100% partout (pour que le background soit uniforme), mais le container est limité pour garder le même ratio.
+on calcule aussi le pourcentage de différence entre la taille de l'écran et notre écran; règle de trois
+1/mon h = ?/new h
+? = ratio pour transformer toutes les valeurs qui sont en pixels (à mettre à jour dans le root du w.css (--ratio))
+-> dans w.html et w.css tout ce qui peut être en %, tant mieux, mais tout ce qui est en pixels, on va les changer pour:
+calc(..px * var(--ratio))
+
+....
+C'est la même chose que d'utiliser des rem pour tout et juste changer le body font-size px ... (ce que j'avais déjà à moitié fait dans w.js...)
+*/
+
+
 import { rtdb, getDatabase, ref, set, onValue } from "/myFirebase.js";
 
 let allSlides = [];

@@ -19,16 +19,18 @@
   --grey-dark: #3d3d3d;
   --vw: 100vw;
   --vh: 100vh;
+  --fs: 24px;
   --wCBT: 100%;
 }
 html{
-  font-size: 24px;
+  font-size: var(--fs);
   height: 100vh;
   width: 100vw;
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-evenly;
   align-items: center;
+  background-color: var(--bg-color);
 }
 
 *{
@@ -359,7 +361,7 @@ p.exercice{
   font-style: normal;
 }
 .exercice > p{
-  font-size: 1.3em;
+  font-size: 1.3rem;
   font-weight: 500;
   line-height: 1em;
   width: fit-content;
@@ -436,7 +438,7 @@ ol.listSetup > li, ul.listSetup > li{
   padding: 10px 20px 10px 10px;
   margin: 0;
   line-height: 1.1em;
-  font-size: 1.5em;
+  font-size: 1.5rem;
   font-weight: 700;
 }
 
@@ -516,12 +518,12 @@ span.unveilled{
   border-radius: 10px;
   padding: 8px 10px;
   font-weight: 500;
-  font-size: .8em;
+  font-size: .8rem;
   background-color:var(--green-light-30);
 }
 
 .emojiSpan{
-  font-size: 4.7em;
+  font-size: 4.7rem;
 }
 
 .top{
@@ -589,14 +591,14 @@ span.unveilled{
   line-height: 1.2em;
   text-align: center;
   font-weight: 500;
-  font-size: 2.8em;
+  font-size: 2.8rem;
 }
 .nosifer-4em{
   font-family: 'Nosifer';
   line-height: 2em;
   text-align: center;
   font-weight: 500;
-  font-size: 4em;
+  font-size: 4rem;
 }
 .nonPhrase{
   font-family: 'Mr Dafoe', sans-serif;
@@ -624,7 +626,7 @@ span.unveilled{
   top: -300px;
   left: -450px;
   width: 320px;
-  font-size: 56px;
+  font-size: 2.33rem;
   text-align: center;
   line-height: 1em;
   border: solid var(--orange);
@@ -636,7 +638,7 @@ span.unveilled{
   top: -250px;
   right: -450px;
   width: 320px;
-  font-size: 56px;
+  font-size: 2.33rem;
   text-align: center;
   line-height: 1em;
   border: solid var(--orange);

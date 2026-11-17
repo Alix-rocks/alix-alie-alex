@@ -24,11 +24,11 @@ let shuffledColors = [];
   if(screenWidth > screenHeight){ //if true => landscape mode (16:9)
     landscapeMode = true;
     screenWidth = screenHeight * 16 / 9;
-  } else if(screenHeight > screenWidth){ // portrait mode (20:9)
+  } else if(screenHeight > screenWidth){ // portrait mode (20:9) //shouldn't we keep the same ratio instead?
     landscapeMode = false;
     screenHeight = screenWidth * 20 / 9;
   };
-  rootFontSize = screenHeight / 32;
+  rootFontSize = screenHeight / 32; // not sure that's the way... why not a règle de trois?
     document.documentElement.style.setProperty('--vh', `${screenHeight}px`);
     document.documentElement.style.setProperty('--vw', `${screenWidth}px`);
     document.documentElement.style.setProperty('--fs', `${rootFontSize}px`);

@@ -76,11 +76,11 @@
     <template>
     </template>
     <div class="slashedTitle invisible" data-step="1">
-      <h1 class="underSlash">Non, c'est non!</h1>
+      <h2 class="underSlash">Non, c'est non!</h2>
       <span class="slash invisible" data-step="2"></span>
     </div>
     <div class="slashedTitle invisible" data-step="3">
-      <h1 class="underSlash">Sans oui, c'est non!</h1>
+      <h2 class="underSlash">Sans oui, c'est non!</h2>
       <span class="slash invisible" data-step=""></span>
     </div>
   </section>
@@ -91,47 +91,21 @@
     <div class="invisible" data-step="" style="display: flex; flex-flow: row nowrap; justify-content: space-around; align-items: center; width: 90%; height: 80%; gap: 4em;">
       <img src="/@Pictures/Perso_DEEP_signed_nb.png" alt="" style="margin: auto;">
       <div class="slashedTitle invisible" data-step="">
-      <h2 class="underSlash">NON</h2>
+      <h2 class="underSlash" style="margin: .5em; font-size: 4em;">NON</h2>
       <span class="slash invisible" data-step=""></span>
-      <h3 class="aboveSlash invisible" data-step="">oui</h3>
+      <h3 class="aboveSlash invisible" style="font-size: 4em; margin: 0;" data-step="">oui</h3>
     </div>
-    </div>
-  </section>
-  <section data-slide="" data-titre="pasJustSex" data-type="🖼️" class="middleStuff imaging stepped noted">
-    <template>
-      <h2>On fake pas juste dans le lit!</h2>
-      <p>Exemple: Bulle</p>
-      <p>...</p>
-      <p>Joke: Si tu fake tout seul, ça c'est un autre genre de probleme</p>
-    </template>
-    <div style="display: flex; flex-flow: row nowrap; justify-content: space-around; align-items: center; width: 90%; height: 80%; gap: 4em;">
-      <img src="/@Pictures/Perso_DEEP_signed_nb.png" alt="" style="margin: auto;">
-      <div style="display: flex; flex-flow: column nowrap; justify-content: space-around; height: 100%;">
-        <p class="strong already" style="text-align: center;">On fake pas juste dans le lit!</p>
-        <p class="indent invisible" data-step="">👉 N'importe quelle interaction entre 2 personnes ou plus qui peut créer un inconfort.</p>
-      </div>
     </div>
   </section>
 <!-- effets -->
   <section data-slide="" data-titre="*Effets" data-type="📝" class="middleStuff centerStuff stepped numberedStepped noted">
     <template>
-      <h2>Situation où avez faké</h2>
-      <p>frustration, déception, tristesse, anxiété, confusion, regret, impuissance</p>
-
-      <h2>Situation où l'autre fakait</h2>
-      <p>culpabilité, d'la frustration, d'la honte, d'la tristesse, confusion, anxiété, regret</p>
-
-      <p>Quand on fake, tout l'monde s'sent comme d'la marde!</p>
-      <p>À part de te garantir une job dans l'industrie d'la porn cheap, ça reste que faker, c'est chiant!
-      Pis, c'est t'es ici tu t'en es rendu compte pis que t'es écoeuré.
-      </p>
     </template>
     <div style="text-align: center; display: flex; flex-flow: column nowrap; justify-content: space-evenly">
       <p class="strong invisible" data-step="1">Quand on fake</p>
       <p class="strong invisible" data-step="2">tout l'monde s'sent comme d'la marde!</p>
       <img class="invisible" data-step="2" src="/@Pictures/sadPoop_nb.png" alt="" style="margin: auto; height: 32vh; width: auto;">
     </div>
-
   </section>
 <!-- pourquoi -->
   <section data-slide="" data-titre="Pourquoi" data-type="📝" class="topStuff centerStuff stepped noted">
@@ -146,6 +120,28 @@
       <span class="OUInon2">></span>
       <div class="OUInon3">NON</div>
     </div>
+  </section>
+<!-- FreeStyle -->
+  <section data-slide="" data-titre="FreeStyle" data-type="☢️" class="middleStuff centerStuff noted addingStuff">
+    <template>
+      <form id="addingForm" action="submit" style="display: flex; flex-flow: column nowrap; align-items: stretch; gap: 1dvh; padding: 1dvh 5dvw;">
+        <textarea name="addingText" style="display: block;"></textarea>
+        <label style="display: inline-flex;">
+          <input type="radio" name="addingStyle" value="h1"/>
+          <p style="font-family: 'Imprima', sans-serif; color: #d43c3b; font-weight: 600;">H1</p>
+        </label>
+        <label style="display: inline-flex;">
+          <input type="radio" name="addingStyle" value="h2"/>
+          <p style="font-family: 'Quicksand', sans-serif; font-style: italic; color: #ff8704; font-weight: 500;">H2</p>
+        </label>
+        <label style="display: inline-flex;">
+          <input type="radio" name="addingStyle" value="p"/>
+          <p style="font-family: 'Quicksand', sans-serif; color: #e5e5e5; font-weight: 500;">p</p>
+        </label>
+        <button type="submit">Go Go Go!</button>
+        <button type="reset">Nope!</button>
+      </form>
+    </template>
   </section>
 <!-- pression -->
   <section data-slide="" data-titre="Pressions" data-type="🖼️" class="topStuff centerStuff numberedStepped stepped noted">

@@ -190,6 +190,9 @@ function handleFeedback(need, info){
       diapoMainFilling(info.html);
       currentSlideSetting(info.current); //object
 
+      if(info.free) {
+        addingStuff(); //freeStyle
+      };
       if(info.words) {
         wordDropdownCreation(); //array
       };
@@ -205,7 +208,10 @@ function handleFeedback(need, info){
       notesFilling(info.notes);
       diapoMainFilling(info.html);
       currentSlideSetting(info.current); //object
-
+      
+      if(info.free) {
+        addingStuff(); //freeStyle
+      };
       if(info.words) {
         wordDropdownCreation(); //array
       };
@@ -366,6 +372,20 @@ function stepButtonFixing(info){
   let prevState = info.prev;
   document.querySelector("#diapoActionsNext").disabled = nextState ? false : true;
   document.querySelector("#diapoActionsPrev").disabled = prevState ? false : true;
+};
+
+function addingStuff(){
+  const addingForm = document.querySelector("#addingForm");
+  if(!addingForm) return
+  addingForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    let addingText = addingForm.elements.addingText.value;
+    let addingStyle = addingForm.elements.addingStyle.value;
+    console.log(addingText);
+    console.log(addingStyle);
+    
+    
+  });
 };
 
 function wordDropdownCreation(){

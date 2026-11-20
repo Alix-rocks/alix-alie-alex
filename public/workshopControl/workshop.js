@@ -166,6 +166,12 @@ function displaySection(sectionToShow){
     currentSlideNotes = getCurrentSlideNotes();
   }; 
 
+  //freeStyle
+  let free = false;
+  if(sectionShowed.classList.contains("addingStuff")){
+    free = true;
+  };
+
   //words
   let words = false;
   if(sectionShowed.classList.contains("wordCloud")){
@@ -191,6 +197,7 @@ function displaySection(sectionToShow){
   let currentSlideHTML = getCurrentSlideHTML();
 
   let wholeDisplay = {
+    free: free,
     words: words,
     phrases: phrases,
     steps: stepButtonStates,

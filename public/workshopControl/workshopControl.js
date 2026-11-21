@@ -383,8 +383,18 @@ function addingStuff(){
     let addingStyle = addingForm.elements.addingStyle.value;
     console.log(addingText);
     console.log(addingStyle);
-    
-    
+    if(addingText && addingStyle){
+      //now we send these info to workshop so that it'll insert it in the diapo, and, ideally, we also add them in the showing section of 
+      let infoToSend = {
+        action: "addingStuff",
+        data: {
+          text: addingText,
+          style: addingStyle
+        }
+      };
+      sendActionData(infoToSend);
+    };
+    diapoMain.insertAdjacentHTML("beforeend", `<${addingStyle} class="shown">${addingText}</${addingStyle}>`);
   });
 };
 

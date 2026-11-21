@@ -80,6 +80,9 @@ function handleCommand(action, data){
     case "makeThisAppear":
       makeThisAppear(data);
       break;
+    case "addingStuff":
+      addingStuff(data);
+      break;
     case "fs":
       fullscreen();
       break;
@@ -468,7 +471,9 @@ function sendOldStep(info){
   });
 };
 
-
+function addingStuff(data){
+  sectionShowed.insertAdjacentHTML("beforeend", `<${data.style}>${data.text}</${data.style}>`);
+};
 
 
 

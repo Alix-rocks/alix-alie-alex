@@ -342,6 +342,11 @@ function slidePrev(){
 };
 window.slidePrev = slidePrev;
 
+function addingSlide(){
+  sendAction("addingSlide");
+};
+window.addingSlide = addingSlide;
+
 function stepNext(){
   sendAction("stepNext");
 };

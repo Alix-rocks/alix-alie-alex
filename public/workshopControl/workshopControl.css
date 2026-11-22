@@ -315,7 +315,7 @@ button:disabled, #legend:checked + #legendLabel {
   background-color: var(--bg-color);
 }
 
-button#pagePrev, button#pageNext{
+button#pagePrev, button#pageNext, button#addingSlide{
   font-size: 1.3em;
 }
 

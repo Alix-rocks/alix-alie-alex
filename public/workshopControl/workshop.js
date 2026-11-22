@@ -68,6 +68,9 @@ function handleCommand(action, data){
     case "stepPrev":
       stepPrev();
       break
+    case "addingSlide":
+      addingSlide();
+      break
     case "rain":
       wordCheck(data); //check if 1 word or an array... then call wordRain once or multiple times
       break;
@@ -471,6 +474,41 @@ function sendOldStep(info){
   });
 };
 
+function addingSlide(){
+  sectionShowed.insertAdjacentHTML("afterend", `<section data-slide="" data-titre="FreeStyle" data-type="☢️" class="middleStuff centerStuff stepped noted addingStuff" style="text-align: center;">
+    <template>
+      <form id="addingForm" action="submit" style="display: flex; flex-flow: column nowrap; align-items: stretch; gap: 1dvh; padding: 1dvh 5dvw;">
+        <textarea name="addingText" style="display: block;"></textarea>
+        <label style="display: inline-flex;">
+          <input type="radio" name="addingStyle" value="h1"/>
+          <p style="font-family: 'Imprima', sans-serif; color: #d43c3b; font-weight: 600;">H1</p>
+        </label>
+        <label style="display: inline-flex;">
+          <input type="radio" name="addingStyle" value="h2"/>
+          <p style="font-family: 'Quicksand', sans-serif; font-style: italic; color: #ff8704; font-weight: 500;">H2</p>
+        </label>
+        <label style="display: inline-flex;">
+          <input type="radio" name="addingStyle" value="p"/>
+          <p style="font-family: 'Quicksand', sans-serif; color: #e5e5e5; font-weight: 500;">p</p>
+        </label>
+        <button type="submit">Go Go Go!</button>
+        <button type="reset">Nope!</button>
+      </form>
+    </template>
+  </section>`);
+  //now we need to have it added in wc in the allpages
+  let newAllSlides = [];
+  document.querySelectorAll("section").forEach(section => {
+    let slide = {
+      num: section.dataset.slide,
+      titre: section.dataset.titre,
+      type: section.dataset.type
+    };
+    newAllSlides.push(slide);
+  });
+  sendAllSlides(newAllSlides);
+};
+
 function addingStuff(data){
   sectionShowed.insertAdjacentHTML("beforeend", `<${data.style} data-step="${data.step}" data-uuid="${data.uuid}" class="shown">${data.text}</${data.style}>`);
   let el = sectionShowed.querySelector(`[data-uuid="${data.uuid}"]`)
@@ -481,6 +519,7 @@ function addingStuff(data){
   allSteps.push(newStep);
   stepCurrentIndex = allSteps.findLastIndex(step => isStepShown(step));
   stepCurrent = allSteps[stepCurrentIndex];
+  let shownStepUUID = [];
   shownStepUUID.push(data.uuid);
   let stepButtonStates = getStepButtonState();
   const info = {

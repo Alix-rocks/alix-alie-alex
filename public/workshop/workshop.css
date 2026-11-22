@@ -79,6 +79,7 @@ h1{
   line-height: 1em;
   margin-bottom: 0;
   color: var(--red);
+  text-align: center;
 }
 
 h1:not(:has(+ h2)){
@@ -87,7 +88,7 @@ h1:not(:has(+ h2)){
 h2{
   font-family: 'Quicksand', sans-serif;
   font-style: italic;
-  font-size: 1.3rem;
+  font-size: 2.8rem;
   margin-top: .5em;
   color: var(--orange);
 }

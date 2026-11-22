@@ -388,7 +388,7 @@ function addingStuff(){
     console.log(addingStyle);
     if(addingText && addingStyle){
       //now we send these info to workshop so that it'll insert it in the diapo, and, ideally, we also add them in the showing section of 
-      let addingUUID = crypto.randomUUID()
+      let addingUUID = crypto.randomUUID();
       let infoToSend = {
         action: "addingStuff",
         data: {
@@ -399,9 +399,10 @@ function addingStuff(){
         }
       };
       sendActionData(infoToSend);
+      diapoMain.insertAdjacentHTML("beforeend", `<${addingStyle} data-step="${freeStep}" data-uuid="${addingUUID}" class="shown">${addingText}</${addingStyle}>`);
+      freeStep++;
     };
-    diapoMain.insertAdjacentHTML("beforeend", `<${addingStyle} data-step="${freeStep}" data-uuid="${addingUUID}" class="shown">${addingText}</${addingStyle}>`);
-    freeStep++;
+    
   });
 };
 

@@ -480,6 +480,14 @@ function addingStuff(data){
   };
   allSteps.push(newStep);
   stepCurrentIndex = allSteps.findLastIndex(step => isStepShown(step));
+  stepCurrent = allSteps[stepCurrentIndex];
+  shownStepUUID.push(data.uuid);
+  let stepButtonStates = getStepButtonState();
+  const info = {
+    sBS: stepButtonStates,
+    sSU: shownStepUUID
+  };
+  sendNewStep(info);
 };
 
 

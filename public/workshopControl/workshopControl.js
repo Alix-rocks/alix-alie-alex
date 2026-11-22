@@ -19,6 +19,7 @@ C'est la même chose que d'utiliser des rem pour tout et juste changer le body f
 import { rtdb, getDatabase, ref, set, onValue } from "/myFirebase.js";
 
 let allSlides = [];
+let freeStep = 0;
 //let allMiniSlides = null;
 const emojiRegex = /\p{Emoji}/gu; // 'g' for global, 'u' for Unicode mode
 const diapoMain = document.querySelector("#diapoMain");
@@ -191,6 +192,7 @@ function handleFeedback(need, info){
       currentSlideSetting(info.current); //object
 
       if(info.free) {
+        freeStep = 0;
         addingStuff(); //freeStyle
       };
       if(info.words) {
@@ -210,6 +212,7 @@ function handleFeedback(need, info){
       currentSlideSetting(info.current); //object
       
       if(info.free) {
+        freeStep = 0;
         addingStuff(); //freeStyle
       };
       if(info.words) {
@@ -385,16 +388,20 @@ function addingStuff(){
     console.log(addingStyle);
     if(addingText && addingStyle){
       //now we send these info to workshop so that it'll insert it in the diapo, and, ideally, we also add them in the showing section of 
+      let addingUUID = crypto.randomUUID()
       let infoToSend = {
         action: "addingStuff",
         data: {
           text: addingText,
-          style: addingStyle
+          style: addingStyle,
+          step: freeStep,
+          uuid: addingUUID
         }
       };
       sendActionData(infoToSend);
     };
-    diapoMain.insertAdjacentHTML("beforeend", `<${addingStyle} class="shown">${addingText}</${addingStyle}>`);
+    diapoMain.insertAdjacentHTML("beforeend", `<${addingStyle} data-step="${freeStep}" data-uuid="${addingUUID}" class="shown">${addingText}</${addingStyle}>`);
+    freeStep++;
   });
 };
 

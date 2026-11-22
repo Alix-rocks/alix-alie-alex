@@ -472,7 +472,14 @@ function sendOldStep(info){
 };
 
 function addingStuff(data){
-  sectionShowed.insertAdjacentHTML("beforeend", `<${data.style}>${data.text}</${data.style}>`);
+  sectionShowed.insertAdjacentHTML("beforeend", `<${data.style} data-step="${data.step}" data-uuid="${data.uuid}" class="shown">${data.text}</${data.style}>`);
+  let el = sectionShowed.querySelector(`[data-uuid="${data.uuid}"]`)
+  const newStep = {
+    step: data.step, //we don't actually use/need that
+    elements: [el]
+  };
+  allSteps.push(newStep);
+  stepCurrentIndex = allSteps.findLastIndex(step => isStepShown(step));
 };
 
 

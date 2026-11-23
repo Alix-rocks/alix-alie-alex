@@ -136,10 +136,10 @@ function getAllSlides(){
   });
   return allSlides;
 };
-function sendAllSlides(allSlides){
+function sendAllSlides(inewInfonfo){
   set(ref(rtdb, "workshop/feedback"), {
     need: "all",
-    info: allSlides,
+    info: newInfo,
     timestamp: Date.now()
   });
 };
@@ -508,7 +508,12 @@ function addingSlide(){
     newAllSlides.push(slide);
   });
   console.log(newAllSlides);
-  sendAllSlides(newAllSlides);
+  let currentSlide = getCurrentSlideInfo(); //object
+  const newInfo = {
+    slides: newAllSlides,
+    current: currentSlide
+  }
+  sendAllSlides(newInfo);
 };
 
 function addingStuff(data){

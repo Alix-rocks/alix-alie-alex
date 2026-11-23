@@ -475,7 +475,8 @@ function sendOldStep(info){
 };
 
 function addingSlide(){
-  sectionShowed.insertAdjacentHTML("afterend", `<section data-slide="" data-titre="FreeStyle" data-type="☢️" class="middleStuff centerStuff stepped noted addingStuff" style="text-align: center;">
+  let slideNum = (Number(sectionShowed.dataset.slide) + 0.1).toString().replace(".", "-");
+  sectionShowed.insertAdjacentHTML("afterend", `<section data-slide="${slideNum}" data-titre="FreeStyle" data-type="☢️" class="middleStuff centerStuff stepped noted addingStuff" style="text-align: center;">
     <template>
       <form id="addingForm" action="submit" style="display: flex; flex-flow: column nowrap; align-items: stretch; gap: 1dvh; padding: 1dvh 5dvw;">
         <textarea name="addingText" style="display: block;"></textarea>
@@ -506,6 +507,7 @@ function addingSlide(){
     };
     newAllSlides.push(slide);
   });
+  console.log(newAllSlides);
   sendAllSlides(newAllSlides);
 };
 

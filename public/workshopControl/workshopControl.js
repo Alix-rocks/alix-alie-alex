@@ -280,7 +280,10 @@ function currentSlideSetting(info){
 function allSlidesCreation(info){
   allSlides = info;
   let allDivs = allSlides.map(slide => {
-    return `<input type="radio" name="miniSlides" id="mini${slide.num}" value="${slide.num}" class="displayNone" /><label for="mini${slide.num}" class="miniSlide"><span class="miniTitre">${slide.titre}</span><span class="miniType">${slide.type}</span></label>`;
+    console.log(slide);
+    console.log(slide.num);
+    console.log(`mini${slide.num}`);
+    return `<input type="radio" name="miniSlides" id="mini${slide.num}" value="${Number(slide.num.replace("-", "."))}" class="displayNone" /><label for="mini${slide.num}" class="miniSlide"><span class="miniTitre">${slide.titre}</span><span class="miniType">${slide.type}</span></label>`;
   }).join("");
   document.querySelector("#allPages").innerHTML = allDivs;
   //allMiniSlides = document.querySelectorAll(".miniSlide");

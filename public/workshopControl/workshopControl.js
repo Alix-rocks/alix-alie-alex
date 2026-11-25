@@ -330,6 +330,18 @@ function centerActiveMiniSlide() {
 // /* Optional: initial centering on load */
 // window.addEventListener('load', centerActiveMiniSlide);
 
+function stretchIt(){
+  document.querySelector("#pages").classList.add("stretched");
+  document.querySelector("#stretch").classList.add("displayNone");
+  document.querySelector("#shrink").classList.remove("displayNone");
+};
+window.stretchIt = stretchIt;
+function shrinkIt(){
+  document.querySelector("#pages").classList.remove("stretched");
+  document.querySelector("#shrink").classList.add("displayNone");
+  document.querySelector("#stretch").classList.remove("displayNone");
+};
+window.shrinkIt = shrinkIt;
 
 function slideNext(){
   diapoMain.innerHTML = "";

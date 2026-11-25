@@ -218,13 +218,7 @@ section#diapo{
   margin-inline: 30px;
 }
 
-section#pages{
-  width: var(--vw);
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: space-between;
-  align-items: center;
-}
+
 
 /* #allPages{
   display: flex;
@@ -253,6 +247,28 @@ section#pages{
   display: none;
 }
 
+section#pages{
+  width: var(--vw);
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+section#pages.stretched{
+  position: sticky;
+  bottom: 0;
+  background-color: var(--bg-color);
+  padding-block-start: 15px;
+  border-top: solid 4px rgba(164, 128, 255, .4);
+  border-radius: 5px;
+  outline: solid var(--tx-100-color) 2px;
+}
+section#pages.stretched #allPages{
+  display: block;
+}
+
+
 
 #pagesBtns{
   display: flex;
@@ -263,17 +279,15 @@ section#pages{
 }
 .miniSlide{
   border: 1px solid var(--tx-color);
-  /* display: flex; */
   display: inline-flex;     /* 👈 IMPORTANT */
   flex-flow: column nowrap;
   justify-content: space-between;
   align-items: center;
   margin: 5px;
   padding: 3px;
-}
-.miniSlide{
   flex: 0 0 auto;   /* 👈 VERY important */
   width: 80px;      /* or whatever */
+  height: 50px;
   scroll-snap-align: start; /* or "start" if you prefer */
 }
 .miniTitre{
@@ -319,6 +333,39 @@ button#pagePrev, button#pageNext, button#addingSlide{
   font-size: 1.3em;
 }
 
+#stretch{
+  background-color: var(--bg-color);
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 60px;
+  display: flex;
+  flex-flow: column nowrap;
+  border: none;
+  color: var(--tx-100-color);
+  justify-content: space-between;
+}
+#stretch i{
+  font-size: 1.3rem;
+  line-height: 1;
+}
+#shrink{
+  background-color: var(--bg-color);
+  position: absolute;
+  top: 0;
+  width: 100%;
+  border: none;
+  text-align: center;
+  line-height: 0;
+  color: var(--tx-100-color);
+}
+#shrink span{
+  display: inline-block;
+  border: solid 2px;
+  height: 0;
+  width: 20px;
+  border-radius: 50px;
+}
 /* Otherwise all the stuff from workshop won't show in diapoMain (unless I remove all the .invisible in all the class, in all the element...)
 .invisible{
   opacity: 0;
@@ -342,5 +389,5 @@ img.already{
 } */
 
 .displayNone{
-  display: none;
+  display: none!important;
 }

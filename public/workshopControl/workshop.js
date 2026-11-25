@@ -136,7 +136,7 @@ function getAllSlides(){
   });
   return allSlides;
 };
-function sendAllSlides(inewInfonfo){
+function sendAllSlides(newInfo){
   set(ref(rtdb, "workshop/feedback"), {
     need: "all",
     info: newInfo,

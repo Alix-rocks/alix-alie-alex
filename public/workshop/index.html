@@ -60,56 +60,126 @@
 <body>
 <!-- vide -->
   <section data-slide="" data-titre="Vide" data-type="🤷" class="noted">
-    <template>
+    <template class="notes">
     </template>
   </section>
 <!-- test -->
-  <section data-slide="" data-titre="test" data-type="❌" class="middleStuff centerStuff stepped noted">
-    <template>
+  <section data-slide="" data-titre="Test" data-type="❌" class="middleStuff centerStuff stepped noted">
+    <template class="notes">
       <h2>Test</h2>
       <p>Test les next</p>
     </template>
     <h1><span class="already">Testing...</span> <span class="invisible" data-step="">1...</span> <span class="invisible" data-step="">2...</span></h1>
   </section>
-<!-- titre -->
-  <section data-slide="" data-titre="*titre" data-type="📣" class="middleStuff titleSlide stepped noted">
-    <template>
+<!-- question -->
+  <section data-slide="" data-titre="Question" data-type="❓" class="middleStuff centerStuff noted questioning">
+    <template class="notes">
+      <h2>Pourquoi c'est important?</h2>
+      <p>C'est pour tlm!</p>
+      <h2>Quand? Quelles situations?</h2>
     </template>
-    <div class="slashedTitle invisible" data-step="1">
-      <h2 class="underSlash">Non, c'est non!</h2>
-      <span class="slash invisible" data-step="2"></span>
+    <template class="question">
+      <h2>Question</h2>
+      <h1>Comment je me sens quand je dis oui, alors que j'aurais voulu dire non&#8239;?</h1>
+      <hr>
+      <h2>Réponse</h2>
+      <form class="answeringForm" action="submit">
+        <input type="text" name="answerInput">
+        <button type="submit" class="orange">Envoi là-bas</button>
+        <button type="button" class="red">Efface là-bas</button>
+      </form>
+    </template>
+    <h2 class="already">Comment je me sens quand je dis oui, alors que j'aurais voulu dire non&#8239;?</h2>
+  </section>
+<!-- consent -->
+  <section data-slide="" data-titre="Consent" data-type="📝" class="middleStuff centerStuff stepped noted">
+    <template class="notes">
+      <h2>Pourquoi c'est important?</h2>
+      <p>C'est pour tlm!</p>
+      <h2>Quand? Quelles situations?</h2>
+    </template>
+    <h1 class="already">Consentement</h1>
+    <h2 class="invisible" data-step="">Pourquoi&#8239;?</h2>
+    <h2 class="invisible" data-step="">Quand&#8239;?</h2>
+  </section>
+<!-- slogans -->
+  <section data-slide="" data-titre="*Slogans" data-type="📣" class="middleStuff titleSlide stepped noted">
+    <template class="notes">
+    </template>
+    <div class="slashedTitle invisible" style="position: relative; width: fit-content;" data-step="1">
+      <h2 class="underSlash">Non, c'est non&#8239;!</h2>
+      <span class="slash invisible" style="border: solid 5px; border-radius: 0 50% 50% 0; display: block; transform: rotate(350deg); top: 45%; position: absolute; width: 100%;" data-step="2"></span>
+    </div>
+    <div class="slashedTitle invisible" style="position: relative; width: fit-content;" data-step="3">
+      <h2 class="underSlash">Sans oui, c'est non&#8239;!</h2>
+      <span class="slash invisible" style="border: solid 5px; border-radius: 0 50% 50% 0; display: block; transform: rotate(350deg); top: 45%; position: absolute; width: 100%;" data-step=""></span>
     </div>
     <div class="slashedTitle invisible" data-step="3">
-      <h2 class="underSlash">Sans oui, c'est non!</h2>
-      <span class="slash invisible" data-step=""></span>
+      <h2 class="underSlash">Sans oui R.É.E.L.S., c'est non&#8239;!</h2>
     </div>
   </section>
-<!-- quoi -->
-  <section data-slide="" data-titre="*quoi" data-type="🖼️" class="middleStuff imaging stepped noted">
-    <template>
+<!-- faker -->
+  <section data-slide="" data-titre="*Faker" data-type="🖼️" class="middleStuff imaging stepped noted">
+    <template class="notes">
     </template>
     <div class="invisible" data-step="" style="display: flex; flex-flow: row nowrap; justify-content: space-around; align-items: center; width: 90%; height: 80%; gap: 4em;">
       <img src="/@Pictures/Perso_DEEP_signed_nb.png" alt="" style="margin: auto;">
-      <div class="slashedTitle invisible" data-step="">
+      <div class="slashedTitle invisible" style="position: relative; width: fit-content;" data-step="">
       <h2 class="underSlash" style="margin: .5em; font-size: 4em;">NON</h2>
-      <span class="slash invisible" data-step=""></span>
-      <h3 class="aboveSlash invisible" style="font-size: 4em; margin: 0;" data-step="">oui</h3>
+      <span class="slash invisible" style="border: solid 5px; border-radius: 0 50% 50% 0; display: block; transform: rotate(350deg); top: 45%; position: absolute; width: 100%;" data-step=""></span>
+      <h3 class="aboveSlash invisible" style="position: absolute; top: -25%; right: 20%;font-size: 4em; margin: 0;" data-step="">oui</h3>
     </div>
     </div>
   </section>
+<!-- types -->
+  <section data-slide="" data-titre="Types" data-type="📝" class="middleStuff centerStuff stepped noted">
+    <template class="notes">
+
+    </template>
+    <h1 class="already">2 types de bris de consentement</h1>
+    <ul style="list-style-type: none;">
+      <li class="invisible" data-step="">
+        <h2 style="margin-bottom: 0.382em;"><i class="typcn typcn-arrow-right-thick"></i> par l'autre</h2>
+        <p style="margin-top: 0;">l'autre le fait même si on a dit non</p>
+      </li>
+      <li class="invisible" data-step="">
+        <h2 style="margin-bottom: 0.382em;"><i class="typcn typcn-arrow-right-thick"></i> par soi-même</h2>
+        <p style="margin-top: 0;">on dit oui même si on veut dire non</p>
+      </li>
+    </ul>
+  </section>
+<!-- situation -->
+  <section data-slide="" data-titre="Situation" data-type="📝" class="middleStuff centerStuff stepped noted">
+    <template class="notes">
+      <h2>Si on peut pas dire NON,<br>on devrait pas dire OUI</h2>
+    </template>
+    <p class="already">Si tu peux pas dire NON<br><strong>dans</strong> une situation</p>
+    <p class="invisible" data-step="">dis NON<br><strong>À</strong> la situation.</p>
+  </section>
+<!-- emotion moi -->
+<!-- emotion autre -->
 <!-- effets -->
   <section data-slide="" data-titre="*Effets" data-type="📝" class="middleStuff centerStuff stepped numberedStepped noted">
-    <template>
+    <template class="notes">
     </template>
     <div style="text-align: center; display: flex; flex-flow: column nowrap; justify-content: space-evenly">
-      <p class="strong invisible" data-step="1">Quand on fake</p>
+      <p class="strong invisible" data-step="1">Sans consentement</p>
       <p class="strong invisible" data-step="2">tout l'monde s'sent comme d'la marde!</p>
       <img class="invisible" data-step="2" src="/@Pictures/sadPoop_nb.png" alt="" style="margin: auto; height: 32vh; width: auto;">
     </div>
   </section>
+<!-- pourquoi QO -->
+  <section data-slide="" data-titre="Pourquoi QO" data-type="📝" class="middleStuff centerStuff stepped noted">
+    <template class="notes">
+      <h2>Parce que le OUI est ou semble plus facile!</h2>
+      <p>Parce que quand le NON est trop difficile, risqué ou compliqué, le oui devient plus facile</p>
+      <p>C'est tellement difficile de dire NON, qu'on préfère s'faire violer.</p>
+    </template>
+    <h1 class="nosifer-3em already" style="margin-block: .2em 10vh; width: max-content;">Pourquoi on dit OUI<br>quand même?!</h1>
+  </section>
 <!-- pourquoi -->
   <section data-slide="" data-titre="Pourquoi" data-type="📝" class="topStuff centerStuff stepped noted">
-    <template>
+    <template class="notes">
       <h2>Parce que le OUI est ou semble plus facile!</h2>
       <p>Parce que quand le NON est trop difficile, risqué ou compliqué, le oui devient plus facile</p>
       <p>C'est tellement difficile de dire NON, qu'on préfère s'faire violer.</p>
@@ -121,11 +191,9 @@
       <div class="OUInon3">NON</div>
     </div>
   </section>
-
-  
 <!-- pression -->
   <section data-slide="" data-titre="Pressions" data-type="🖼️" class="topStuff centerStuff numberedStepped stepped noted">
-    <template>
+    <template class="notes">
       <h2>Pressions extérieures</h2>
       <p>Politesse/ Éducation</p>
       <p>Culture/ Pression sociale</p>
@@ -156,13 +224,12 @@
     </div>
   </section>
 <!-- comment -->
-  <section data-slide="" data-titre="Comment" data-type="📝" class="topStuff centerStuff stepped noted">
-    <template>
+  <section data-slide="" data-titre="*Comment" data-type="📝" class="topStuff centerStuff stepped noted">
+    <template class="notes">
       <h2>Il faut que le NON soit plus ou aussi facile que le OUI</h2>
       <p>Plus le NON est facile, plus, si la personne a besoin de dire NON, plus on a chance que la personne réussisse à dire NON!</p>
       <h2>Mais attention, il ne suffit pas de juste le dire! ...</h2>
     </template>
-    <h1 class="already">Comment éviter le fake?!</h1>
      <div class="nonOuiDiv invisible" data-step="">
       <div class="nonOui1">NON</div>
       <span class="nonOui2">>=</span>
@@ -171,7 +238,7 @@
   </section>
 <!-- subconscient -->
   <section data-slide="" data-titre="*Subconscient" data-type="📝" class="middleStuff centerStuff stepped noted">
-    <template>
+    <template class="notes">
       <h2>Les subconscients se parlent</h2>
       <p>Intelligence vs cave => Condescendant</p>
       <p>Oui vs non => fake</p>
@@ -181,7 +248,7 @@
   </section>
 <!-- aimerNon -->
   <section data-slide="" data-titre="*AimerNON" data-type="📝" class="middleStuff centerStuff stepped noted">
-    <template>
+    <template class="notes">
       <p>Se respecte et prend soin de soi.</p>
       <p>Nous fait confiance pour être honnête.</p>
       <p>Valeur à ses oui.</p> 
@@ -199,7 +266,7 @@
   </section>
 <!-- Non. -->
   <section data-slide="" data-titre="Non." data-type="📝" class="middleStuff centerStuff numberedStepped stepped noted">
-    <template>
+    <template class="notes">
       <p>Non est une phrase complète</p>
       <p>Excuse-toi pas; tu rends service à tout le monde</p>
       <p>Donne pas d'excuse; c'est des munitions</p>
@@ -215,33 +282,31 @@
   </section>
 
 <!-- libre -->
-  <section data-slide="" data-titre="*ACRO Libre" data-type="💬" class="acrostiche numberedStepped stepped noted">
-    <template>
-      Joke: job esclavage, relation toxique, scientologie
-      si les gens t'empêche de dire non
-      c'est que ton oui est pas libre
-      c'est qu'on respect pas ton consentement
-      criss ton camps
+  <section data-slide="" data-titre="*ACRO Libre" data-type="💬" class="acrostiche stepped noted">
+    <template class="notes">
     </template>
-    <h1 class="invisible" data-step="1">Plus le NON est facile, plus le OUI est...</h1>
-    <h2 class="invisible" data-step="2">Libre</h2>
-    <p class="boxed invisible" data-step="3">
-      <span class="invisible" data-step="3">Sans intoxication, pression, manipulation…</span>
-      <br/><br/>
-      <span class="invisible" data-step="4">👉 Est-ce qu’un NON serait accepté ET respecté?</span>
-    </p>
-    <div class="bottomText">
-      <p class="indent">
-        <span class="invisible" data-step="5">🛠️ Si tu peux pas dire non <strong>DANS</strong> une situation</span>
-        <br>
-        <span class="invisible" data-step="6">dis NON <strong>À</strong> la situation!</span>
-      </p>
+    <h1 class="invisible" data-step="">Plus le NON est facile, plus le OUI est...</h1>
+    <h2 class="invisible" data-step="">Libre</h2>
+  </section>
+
+<!-- reels -->
+  <section data-slide="" data-titre="*RÉELS" data-type="💬" class="acrostiche numberedStepped stepped noted">
+    <template class="notes">
+    </template>
+    <h1 class="invisible" data-step="1" style="text-align: left; font-size: 2.5rem;">Sans OUI</h1>
+    <div class="invisible" data-step="1" style="width: fit-content; margin: auto;">
+      <h3><span class="firstLetter" style="font-size: 4rem; line-height: 1em;">R</span><span data-clickclass="firstLetter" onclick="clickClass(this)" class="invisible" data-step="2">éversible</span></h3>
+      <h3><span class="firstLetter" style="font-size: 4rem; line-height: 1em;">É</span><span data-clickclass="firstLetter" onclick="clickClass(this)" class="invisible" data-step="2">clairé</span></h3>
+      <h3><span class="firstLetter" style="font-size: 4rem; line-height: 1em;">E</span><span data-clickclass="firstLetter" onclick="clickClass(this)" class="invisible" data-step="2">nthousiaste</span></h3>
+      <h3><span class="firstLetter" style="font-size: 4rem; line-height: 1em;">L</span><span data-clickclass="firstLetter" onclick="clickClass(this)" class="invisible" data-step="2">ibre</span></h3>
+      <h3><span class="firstLetter" style="font-size: 4rem; line-height: 1em;">S</span><span data-clickclass="firstLetter" onclick="clickClass(this)" class="invisible" data-step="2">pécifique</span></h3>
     </div>
+    <h1 class="invisible" data-step="1" style="text-align: right; font-size: 2.5rem;">c'est NON&#8239;!</h1>
   </section>
 
 <!-- éclairé -->
-  <section data-slide="" data-titre="ACRO Éclairé" data-type="💬" class="acrostiche numberedStepped stepped noted">
-    <template>
+  <section data-slide="" data-titre="*ACRO Éclairé" data-type="💬" class="acrostiche stepped noted">
+    <template class="notes">
       <h2></h2>
       <p>*Intention</p>
       <h2>⇒ COBALT & LIME</h2>
@@ -251,23 +316,12 @@
       <p>Au moins tu l'sais que tu l'sais pas</p>
       <p>Prends au moins conscience de ce que tu ignore et prépare-toi en conséquence.</p>
     </template>
-    <h1 class="already">Le OUI doit aussi être...</h1>
-    <h2 class="invisible" data-step="2">Éclairé</h2>
-    <p class="boxed invisible" data-step="3">
-      <span class="invisible" data-step="3">Action, personne, endroit, moment, intention…</span>
-      <br/><br/>
-      <span class="invisible" data-step="4">👉 On s’assure que tout le monde a compris!</span>
-    </p>
-    <div class="bottomText">
-      <p class="indent">
-        <span class="invisible" data-step="5">🛠️ Si tu peux pas avoir tous les détails, pose des questions</span> <span class="invisible" data-step="6">ou fait comme pour les blind dates!</span>
-        <!-- prends au moins conscience de ce que tu ignore et prépare-toi en conséquence. -->
-      </p>
-    </div>
+    <h1 class="invisible" data-step="">Plus on comprend les détails, plus le OUI est...</h1>
+    <h2 class="invisible" data-step="">Éclairé</h2>
   </section>
 
   <section data-slide="" data-titre="BD Éclairé" data-type="🖼️" class="middleStuff centerStuff stepped numberedStepped noted">
-    <template>
+    <template class="notes">
       <p>Les deux se sont entendu: prendre un café, telle place, telle date, telle heure, etc</p>
       <h2>Lime -> travailler sur un projet commun</h2>
       <p>Cobalt...</p>
@@ -284,8 +338,8 @@
   </section>
 
 <!-- spécifique -->
-  <section data-slide="" data-titre="ACRO Spécifique" data-type="💬" class="acrostiche numberedStepped stepped noted">
-    <template>
+  <section data-slide="" data-titre="*ACRO Spécifique" data-type="💬" class="acrostiche stepped noted">
+    <template class="notes">
       <p>tu peux venir dans ma chambre... bouche</p>
       <p>C'est un autre niveau, une autre étape dans notre relation</p>
       <h2>⇒ BAISER</h2>
@@ -294,20 +348,8 @@
       <p>Tu veux pas qu'ça soit juste correct, tu veux qu'ça soit GÉNIAL!</p>
       <P>Justement, parlant d'enthousiasme</P>
     </template>
-    <h1 class="already">Le OUI doit aussi être...</h1>
-    <h2 class="invisible" data-step="2">Spécifique</h2>
-    <p class="boxed invisible" data-step="3">
-      <span class="invisible" data-step="3">Le OUI n’est valide que pour la question posée!</span>
-      <br/><br/>
-      <span class="invisible" data-step="4">👉 Alors on s’assure d’avoir la bonne question! 😉</span>
-    </p>
-    <div class="bottomText">
-      <p class="indent">
-        <span class="invisible" data-step="5">🛠️ Revérifie le plus possible à chaque étape</span>
-        <br>
-        <span class="invisible" data-step="6">mais pas juste « C'tu correct? »</span>
-      </p>
-    </div>
+    <h1 class="invisible" data-step="">Plus on comprend où ça finit, plus le OUI est...</h1>
+    <h2 class="invisible" data-step="">Spécifique</h2>
   </section>
   <!-- baiser -->
   <section data-slide="" data-titre="*Baiser" data-type="📝" class="middleStuff centerStuff stepped">
@@ -315,94 +357,41 @@
   </section>
 
 <!-- enthousiaste -->
-  <section data-slide="" data-titre="ACRO Enthousiaste" data-type="💬" class="acrostiche numberedStepped stepped noted">
-    <template>
+  <section data-slide="" data-titre="*ACRO Enthousiaste" data-type="💬" class="acrostiche stepped noted">
+    <template class="notes">
       <p>mes 2 exemples: "mmmm" vs "stu veux"</p>
       <p>Sentir le désire!</p>
       <p>Si la personne est trop neutre</p>
     </template>
-    <h1 class="already">Le OUI doit aussi être...</h1>
-    <h2 class="invisible" data-step="2">Enthousiaste</h2>
-    <p class="boxed invisible" data-step="3">
-      <span class="invisible" data-step="3">« Oh oui!! » ou « J’sais pas, mais j’veux essayer! »</span>
-      <br/><br/>
-      <span class="invisible" data-step="4">👉 On vérifie les ressentis et le langage corporel!</span>
-    </p>
-    <div class="bottomText">
-      <p class="indent">
-        <span class="invisible" data-step="5">🛠️ « En cas de doutes, s'abstenir! »</span>
-        <br>
-        <span class="invisible" data-step="6">🛠️ On peut se créer une échelle.</span>
-      </p>
-    </div>
+    <h1 class="invisible" data-step="">Plus on en a envie, plus le OUI est...</h1>
+    <h2 class="invisible" data-step="">Enthousiaste</h2>
   </section>
 
 <!-- réversible -->
-  <section data-slide="" data-titre="ACRO Réversible" data-type="💬" class="acrostiche numberedStepped stepped noted">
-    <template>
+  <section data-slide="" data-titre="*ACRO Réversible" data-type="💬" class="acrostiche stepped noted">
+    <template class="notes">
       <p>oui, on peut changer d'idée et arrêter n'importe quand; 5 min, milieu, 5 sec</p>
       <p>Gérer les attentes; prend pas pour acquis que vous allez vous rendre jusqu'au boutte</p>
       <p>BlueBalls</p>
       <p>Merci au lieu de s'excuser</p>
       <p>levez main stop vs viol => AimerStop</p>
     </template>
-    <h1 class="already">Le OUI doit aussi être...</h1>
-    <h2 class="invisible" data-step="2">Réversible</h2>
-    <p class="boxed invisible" data-step="3">
-      <span class="invisible" data-step="3">On peut toujours changer d’idée!</span>
-      <br/><br/>
-      <span class="invisible" data-step="4">👉 Et si on veut arrêter avant la fin?</span>
-    </p>
-    <div class="bottomText">
-      <p class="indent">
-        <span class="invisible" data-step="5">🛠️ Reste à l'affût des malaises et...</span>
-        <br>
-        <span class="invisible" data-step="6">Aime le <strong>STOP</strong> comme t'aime le <strong>NON</strong>!</span>
-      </p>
-    </div>
+    <h1 class="invisible" data-step="">Plus le STOP est facile, plus le OUI est...</h1>
+    <h2 class="invisible" data-step="">Réversible</h2>
   </section>
 <!-- aimerSTOP -->
   <section data-slide="" data-titre="AimerStop" data-type="📝" class="middleStuff centerStuff">
-    <template>
+    <template class="notes">
     </template>
       <div class="aimeStopDiv">
         <span>STOP</span>
         <span class="aimeStopCoeur"><i class="fa-regular fa-heart"></i></span>  
       </div>
   </section>
-<!-- Complet -->
-  <section data-slide="" data-titre="ACRO R.É.E.L.S." data-type="💬" class="acrostiche stepped numberedStepped">
-    <h1 class="already">Donc ça prend des OUI...</h1>
-    <div style="width: fit-content; margin: auto;">
-      <h3 data-step="5" class="invisible">Réversible</h3>
-      <h3 data-step="2" class="invisible">Éclairé</h3>
-      <h3 data-step="4" class="invisible">Enthousiaste</h3>
-      <h3 data-step="1" class="invisible">Libre</h3>
-      <h3 data-step="3" class="invisible">Spécifique</h3>
-    </div>
-    <div class="invisible" style="width: fit-content; margin: auto;">
-      <p class="invisible" style="text-align: center;">...</p>
-      <p class="invisible" style="text-align: center;">...</p>
-    </div>
-  </section>
 
-  <section data-slide="" data-titre="ACRO R.É.E.L.S. 2" data-type="💬" class="acrostiche stepped">
-    <h1 class="already">Donc ça prend des OUI...</h1>
-    <div style="width: fit-content; margin: auto;">
-      <h3 class="already"><span class="firstLetter" style="font-size: 4rem; line-height: 1em;">R</span>éversible</h3>
-      <h3 class="already"><span class="firstLetter" style="font-size: 4rem; line-height: 1em;">É</span>clairé</h3>
-      <h3 class="already"><span class="firstLetter" style="font-size: 4rem; line-height: 1em;">E</span>nthousiaste</h3>
-      <h3 class="already"><span class="firstLetter" style="font-size: 4rem; line-height: 1em;">L</span>ibre</h3>
-      <h3 class="already"><span class="firstLetter" style="font-size: 4rem; line-height: 1em;">S</span>pécifique</h3>
-    </div>
-    <div style="width: fit-content; margin: auto;">
-      <p data-step="" class="invisible" style="text-align: center;">Sinon, c'est NON!</p>
-      <p data-step="" class="invisible" style="text-align: center;">👉 Et on aime le NON! ❤️</p>
-    </div>
-  </section>
 
   <section data-slide="" data-titre="SloganCarte" data-type="📝" class="centerStuff stepped noted" style="justify-content: space-between;">
-    <template>
+    <template class="notes">
       <p>En résumé...</p>
       <p>Avant, pendant, après, que tu demandes ou réponde</p>
       <p>N'importe quand ou SURTOUT quand y'a malaise!</p>
@@ -421,7 +410,7 @@
   </section>
 
   <section data-slide="" data-titre="SloganCarteQR" data-type="📝" class="topStuff centerStuff noted">
-    <template>
+    <template class="notes">
       <h2>Si toi et ton cellulaire êtes assez jeunes</h2>
     </template>
     <!-- <div class="slogan"><span class="sloganText">Sans OUI
@@ -456,7 +445,7 @@
 
   <!-- Calia -->
   <section data-slide="" data-titre="Calia" data-type="🖼️" class="noted">
-    <template>
+    <template class="notes">
       <p>à moins qu'y en a qui veulent me faire une C.V.</p>
       <p>J'vas être ici toute la fds</p>
       <p>Pis j'frai pas une cenne</p>
@@ -471,7 +460,7 @@
 
   <!-- vide -->
   <section data-slide="" data-titre="Vide" data-type="🤷" class="noted">
-    <template>
+    <template class="notes">
       <p></p>
     </template>
   </section>

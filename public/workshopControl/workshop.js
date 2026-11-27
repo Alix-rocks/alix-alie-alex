@@ -1,4 +1,4 @@
-import { rtdb, getDatabase, ref, set, onValue } from "/myFirebase.js";
+import { rtdb, getDatabase, ref, set, onValue, onChildAdded, onChildChanged, onChildRemoved } from "/myFirebase.js";
 
 let landscapeMode;
 let screenHeight;
@@ -9,6 +9,7 @@ let sectionShowed = null;
 let allSteps = [];
 let stepCurrentIndex = 0;
 let stepCurrent = null;
+let currentQuestionID = "";
 let kasesIds = [];
 let xIndex = -1;
 const positions = ["top", "top left", "top right", "bottom", "bottom left", "bottom right", "left", "right", "center", "center", "center", "center"];
@@ -86,6 +87,9 @@ function handleCommand(action, data){
     case "addingStuff":
       addingStuff(data);
       break;
+    case "clickClass":
+      clickClass(data);
+      break;
     case "fs":
       fullscreen();
       break;
@@ -115,9 +119,15 @@ function orderSlides() {
 };
 
 function idSteps(){
-  document.querySelectorAll('[data-step]').forEach(step  => {
+  document.querySelectorAll('[data-step], [onclick], template.question').forEach(step  => {
     if (!step.dataset.uuid?.trim()) {
       step.dataset.uuid = crypto.randomUUID();
+    };
+    if (step instanceof HTMLTemplateElement) {
+      let form = step.content.querySelector('form.answeringForm');
+      if (!form.dataset.uuid?.trim()) {
+        form.dataset.uuid = crypto.randomUUID();
+      };
     };
   });
 };
@@ -145,6 +155,7 @@ function sendAllSlides(newInfo){
 };
 
 function displaySection(sectionToShow){
+  set(ref(rtdb, "workshop/participation"), null);
   allSteps = [];
   stepCurrentIndex = -1;
   stepCurrent = null;
@@ -161,7 +172,6 @@ function displaySection(sectionToShow){
     };
   });
   sectionShowed = sectionToShow;
-  console.log(sectionShowed);
 
   if(sectionShowed.classList.contains("imaging")){
     fixImaging();
@@ -170,7 +180,15 @@ function displaySection(sectionToShow){
   let currentSlideNotes = "";
   if(sectionShowed.classList.contains("noted")){
     currentSlideNotes = getCurrentSlideNotes();
-  }; 
+  };
+  
+  let question = "";
+  currentQuestionID = "";
+  if(sectionShowed.classList.contains("questioning")){
+    getQuestionID();
+    activateAnswersListeners();
+    question = getQuestion();
+  };
 
   //freeStyle
   let free = false;
@@ -206,6 +224,7 @@ function displaySection(sectionToShow){
     free: free,
     words: words,
     phrases: phrases,
+    question: question,
     steps: stepButtonStates,
     current: currentSlideInfo,
     html: currentSlideHTML,
@@ -311,9 +330,60 @@ function getCurrentSlideHTML(){
 };
 
 function getCurrentSlideNotes(){
-  const template = sectionShowed.querySelector("template");
+  const template = sectionShowed.querySelector("template.notes");
   const clone = template.cloneNode(true);
-  console.log(clone.innerHTML);
+  return clone.innerHTML;
+};
+
+function getQuestionID(){
+  const template = sectionShowed.querySelector("template.question");
+  const clone = template.cloneNode(true);
+  currentQuestionID = clone.content.querySelector("form.answeringForm").dataset.uuid;
+};
+function activateAnswersListeners(){
+  onChildAdded(ref(rtdb, `workshop/participation/answer/${currentQuestionID}`), (snap) => {
+    const answer = { user: snap.key, ...snap.val() };
+    // if (answer.timestamp < questionSentAt) {
+    //   // old answers → start fresh
+    //   set(ref(rtdb, "workshop/participation/answer"), null); //???
+    //   return;
+    // };
+    console.log(answer);
+    // check if there is already an element with the data-userID="${answer.user}"
+    const el = sectionShowed.querySelector(`[data-user="${answer.userID}"]`);
+    if(el){ // if so, then make sure the innerText === answer.answer
+      el.innerText = answer.answer;
+    } else{ // if not, add it
+      sectionShowed.insertAdjacentHTML("beforeend", `<p data-user="${answer.userID}" class="shown">${answer.answer}</p>`);
+    };
+  });
+
+  onChildChanged(ref(rtdb, `workshop/participation/answer/${currentQuestionID}`), (snap) => {
+    const answer = { user: snap.key, ...snap.val() };
+    console.log(answer);
+    // check if there is already an element with the data-userID="${answer.user}"
+    const el = sectionShowed.querySelector(`[data-user="${answer.userID}"]`);
+    if(el){ // if so, then update the innerText with answer.answer
+      el.innerText = answer.answer;
+    } else{ // if not, add it
+      sectionShowed.insertAdjacentHTML("beforeend", `<p data-user="${answer.userID}" class="shown">${answer.answer}</p>`);
+    };
+  });
+
+  onChildRemoved(ref(rtdb, `workshop/participation/answer/${currentQuestionID}`), (snap) => {
+    const answer = { user: snap.key, ...snap.val() };
+    console.log(answer);
+    // make sure there is already an element with the data-userID="${answer.userID}"
+    const el = sectionShowed.querySelector(`[data-user="${answer.userID}"]`);
+    if(el){// if so, then remove it
+      el.remove();
+    };
+  });
+};
+
+function getQuestion(){
+  const template = sectionShowed.querySelector("template.question");
+  const clone = template.cloneNode(true);
   return clone.innerHTML;
 };
 
@@ -374,7 +444,6 @@ function stepsCreation(){
       const step = Number(el.dataset.step);
       grouped[step] ??= [];
       grouped[step].push(el);
-      console.log(grouped[step]);
     });
     allSteps = Object.keys(grouped)
     .map(Number) // convert keys to numbers
@@ -396,11 +465,9 @@ function stepsCreation(){
     });
     //allSteps = unorderedAllSteps;   //allSteps = Array.from(unorderedAllSteps);
   };
-  console.log("allSteps " + allSteps);
   //stepCurrentIndex = -1; // This will have to be found instead. Find the index of the last step that is shown.
 
   stepCurrentIndex = allSteps.findLastIndex(step => isStepShown(step));
-  console.log("stepCurrentIndex " + stepCurrentIndex);
   //stepCurrent = allSteps[stepCurrentIndex];
 };
 
@@ -507,7 +574,6 @@ function addingSlide(){
     };
     newAllSlides.push(slide);
   });
-  console.log(newAllSlides);
   let currentSlide = getCurrentSlideInfo(); //object
   const newInfo = {
     slides: newAllSlides,
@@ -534,6 +600,10 @@ function addingStuff(data){
     sSU: shownStepUUID
   };
   sendNewStep(info);
+};
+
+function clickClass(data){
+  sectionShowed.querySelector(`[data-uuid="${data.uuid}"]`).classList.add(data.class);
 };
 
 

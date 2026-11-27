@@ -16,10 +16,11 @@ C'est la même chose que d'utiliser des rem pour tout et juste changer le body f
 */
 
 
-import { rtdb, getDatabase, ref, set, onValue } from "/myFirebase.js";
+import { rtdb, getDatabase, ref, set, onValue, onChildAdded, onChildChanged, onChildRemoved } from "/myFirebase.js";
 
 let allSlides = [];
 let freeStep = 0;
+let currentQuestionID = "";
 //let allMiniSlides = null;
 const emojiRegex = /\p{Emoji}/gu; // 'g' for global, 'u' for Unicode mode
 const diapoMain = document.querySelector("#diapoMain");
@@ -124,8 +125,6 @@ intervalInput.addEventListener("change", () => {
 function updateRigs(){
   //on enlève les rigs déjà là
   removeRigs();
-  console.log(totalDuration);
-  console.log(interval);
   const nbrOfSection = (totalDuration / interval);
   const nbrOfRig = nbrOfSection - 1;
   const rigWidth = 2;
@@ -165,7 +164,6 @@ function durationCalculation(startV, endV){
 function handleFeedback(need, info){
   switch(need){
     case "cs":
-      console.log("currentSlideSetting " + info);
       currentSlideSetting(info);
       break;
     case "wddc":
@@ -185,8 +183,7 @@ function handleFeedback(need, info){
       currentSlideSetting(info.current); //object
       break;
     case "display":
-      console.log("DISPLAY");
-      console.log(info);
+      currentQuestionID = "";
       stepButtonFixing(info.steps); //object
       notesFilling(info.notes);
       diapoMainFilling(info.html);
@@ -196,6 +193,11 @@ function handleFeedback(need, info){
         freeStep = 0;
         addingStuff(); //freeStyle
       };
+      if(info.question) {
+        getQuestionID(info.question);
+        activateAnswersListeners();
+        sendQuestion(info.question); //array
+      };
       if(info.words) {
         wordDropdownCreation(); //array
       };
@@ -204,8 +206,7 @@ function handleFeedback(need, info){
       };   
       break;
     case "refresh":
-      console.log("REFRESH");
-      console.log(info);
+      currentQuestionID = "";
       allSlidesCreation(info.slides); //array of objects
       stepButtonFixing(info.steps); //object
       notesFilling(info.notes);
@@ -245,7 +246,7 @@ function notesFilling(html){
 };
 
 function diapoMainFilling(html){
-  console.log(html);
+
   diapoMain.innerHTML = "";
   diapoMain.innerHTML = html;
   const cloudBoardTotal = diapoMain.querySelector("#cloudBoardTotal");
@@ -267,6 +268,7 @@ function diapoMainFilling(html){
 
 
 function currentSlideSetting(info){
+  console.log(info);
 
   document.querySelector(`#mini${info.num}`).checked = true;
   centerActiveMiniSlide();
@@ -307,15 +309,9 @@ function centerActiveMiniSlide() {
   const checkedRadio = document.querySelector(
     '#allPages input[type="radio"]:checked'
   );
-
   if (!checkedRadio) return;
-  console.log(checkedRadio);
-  
   const label = checkedRadio.nextElementSibling;
-
   if (!label) return;
-  console.log(label);
-  
   label.scrollIntoView({
     behavior: 'smooth',
     inline: 'center',
@@ -402,8 +398,6 @@ function addingStuff(){
     e.preventDefault();
     let addingText = addingForm.elements.addingText.value;
     let addingStyle = addingForm.elements.addingStyle.value;
-    console.log(addingText);
-    console.log(addingStyle);
     if(addingText && addingStyle){
       //now we send these info to workshop so that it'll insert it in the diapo, and, ideally, we also add them in the showing section of 
       let addingUUID = crypto.randomUUID();
@@ -423,6 +417,21 @@ function addingStuff(){
     
   });
 };
+
+function clickClass(thisOne){
+  const newClass = thisOne.dataset.clickclass;
+  const thisUUID = thisOne.dataset.uuid;
+  thisOne.classList.add(newClass, "clickClassed");
+  let infoToSend = {
+    action: "clickClass",
+    data: {
+      class: newClass,
+      uuid: thisUUID
+    }
+  };
+  sendActionData(infoToSend);
+};
+window.clickClass = clickClass;
 
 function wordDropdownCreation(){
   // let wordDropdownOptions = words.map(group => {
@@ -499,6 +508,100 @@ function activateInputAdder(action){
     adder.value = "";
   });
 };
+
+//MARK: Participation
+
+function getQuestionID(questionHTML){
+  const tempTemplate = document.createElement("template");
+  tempTemplate.innerHTML = questionHTML;
+
+  currentQuestionID = tempTemplate.content.querySelector("form.answeringForm").dataset.uuid;
+};
+
+function sendQuestion(question){
+  set(ref(rtdb, "workshop/participation/question"), {
+    data: question,
+    timestamp: Date.now()
+  });
+};
+
+function receiveParticipation(userID, questionID, answer){
+  console.log(userID);
+  console.log(answer);
+  let infoToSend = {
+    action: "answer",
+    data: {
+      userID: userID,
+      questionID: questionID,
+      answer: answer
+    }
+  };
+  sendActionData(infoToSend);
+};
+
+function activateAnswersListeners(){
+  onChildAdded(ref(rtdb, `workshop/participation/answer/${currentQuestionID}`), (snap) => {
+    const answer = { user: snap.key, ...snap.val() };
+    // if (answer.timestamp < questionSentAt) {
+    //   // old answers → start fresh
+    //   set(ref(rtdb, "workshop/participation/answer"), null); //???
+    //   return;
+    // };
+    console.log(answer);
+    // check if there is already an element with the data-userID="${answer.user}"
+    const el = diapoMain.querySelector(`[data-user="${answer.userID}"]`);
+    if(el){ // if so, then make sure the innerText === answer.answer
+      el.innerText = answer.answer;
+    } else{ // if not, add it
+      diapoMain.insertAdjacentHTML("beforeend", `<p data-user="${answer.userID}" class="shown">${answer.answer}</p>`);
+    };
+  });
+
+  onChildChanged(ref(rtdb, `workshop/participation/answer/${currentQuestionID}`), (snap) => {
+    const answer = { user: snap.key, ...snap.val() };
+    console.log(answer);
+    // check if there is already an element with the data-userID="${answer.user}"
+    const el = diapoMain.querySelector(`[data-user="${answer.userID}"]`);
+    if(el){ // if so, then update the innerText with answer.answer
+      el.innerText = answer.answer;
+    } else{ // if not, add it
+      diapoMain.insertAdjacentHTML("beforeend", `<p data-user="${answer.userID}" class="shown">${answer.answer}</p>`);
+    };
+  });
+
+  onChildRemoved(ref(rtdb, `workshop/participation/answer/${currentQuestionID}`), (snap) => {
+    const answer = { user: snap.key, ...snap.val() };
+    console.log(answer);
+    // make sure there is already an element with the data-userID="${answer.userID}"
+    const el = diapoMain.querySelector(`[data-user="${answer.userID}"]`);
+    if(el){// if so, then remove it
+      el.remove();
+    };
+  });
+};
+
+
+
+
+async function updateBooking(key, newStatus) {
+try {
+  await update(
+    ref(rtdb, `meetAlix/bookings/${key}`),
+    {
+      status: newStatus,
+      timestamp: Date.now()
+    }
+  );
+  console.log("Booking updated in RTDB");
+} catch (err) {
+  console.error("Failed to update booking:", err);
+};
+};
+
+
+
+
+
 function sendActionData({action, data}){
   set(ref(rtdb, "workshop/control"), {
     action: action,
@@ -535,6 +638,7 @@ function sendAction(action){
 
 set(ref(rtdb, "workshop/control"), null);
 set(ref(rtdb, "workshop/feedback"), null);
+set(ref(rtdb, "workshop/participation"), null); //don't forget to add that whenever you leave a question slide so it doesn't linger there
 
 onValue(ref(rtdb, "workshop/feedback"), (snapshot) => {
   const data = snapshot.val();
@@ -544,6 +648,23 @@ onValue(ref(rtdb, "workshop/feedback"), (snapshot) => {
 
   set(ref(rtdb, "workshop/feedback"), null);
 });
+
+// let questionSentAt = Date.now(); //add this whenever you get on the question slide
+// onValue(ref(rtdb, "workshop/participation/answer"), (snapshot) => { // Ce que les participants envoi
+//   const data = snapshot.val();
+//   if (!data) return;
+
+//   // if (data.timestamp < questionSentAt) {
+//   //   // old command → start fresh
+//   //   set(ref(rtdb, "workshop/participation/answer"), null);
+//   //   return;
+//   // }; //else wait for the next command
+
+//   // handleParticipation(data.user, data.answer); //if we ever get more than one way to receiveParticipation
+//   receiveParticipation(data.user, data.answer);
+
+//   set(ref(rtdb, "workshop/participation/answer"), null);
+// });
 
 function askRefresh(){
   sendAction("refresh");

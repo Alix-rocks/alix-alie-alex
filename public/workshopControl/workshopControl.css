@@ -387,6 +387,9 @@ img.already{
 /* .boxed.shown{
   
 } */
+.clickClassed{
+  text-shadow: -0.5px -0.5px 0 #fff, 0 -0.5px 0 #fff, 0.5px -0.5px 0 #fff, 0.5px 0 0 #fff, 0.5px 0.5px 0 #fff, 0 0.5px 0 #fff, -0.5px 0.5px 0 #fff, -0.5px 0 0 #fff;
+}
 
 .displayNone{
   display: none!important;

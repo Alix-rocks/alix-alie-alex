@@ -1,0 +1,95 @@
+:root{
+  --bg-color: #171717;  
+  --tx-color: #e5e5e5;
+  --orange: #ff8704;
+  --orange-rgb: 255, 135, 4;
+  --red: #d43c3b;
+  --red-rgb: 212, 60, 59;
+}
+*{
+  font-family: 'Nunito', sans-serif;
+  box-sizing: border-box;
+  user-select: none;
+}
+html{
+  font-size: 20px;
+}
+body{
+  color: var(--tx-color);
+  background-color: var(--bg-color);
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-evenly;
+  width: 100%;
+  height: 100dvh;
+  font-weight: 500;
+  margin: 0;
+  padding: 8px 8px 32px;
+}
+h1{
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--orange);
+  text-align: center;
+  margin-top: 0;
+}
+h2{
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: var(--tx-color);
+  text-align: center;
+}
+p{
+  font-size: 1rem;
+  color: var(--red);
+  text-align: center;
+  margin: auto;
+  font-weight: 800;
+}
+.waiting{
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+hr{
+  width: 100%;
+}
+form{
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  gap: 20px;
+}
+
+button{
+  border-color: var(--orange);
+  border-style: solid;
+  border-top-width: 2px;
+  border-left-width: 2px;
+  border-right-width: 4px;
+  border-bottom-width: 4px;
+  border-radius: 5px;
+  padding: 5px 10px;
+  width: fit-content;
+  color: var(--tx-color);
+  text-align: center;
+  font-weight: 700;
+  background-color: rgba(var(--orange-rgb), .25);
+}
+button.orange{
+  border-color: var(--orange);
+  color: var(--tx-color);
+  background-color: rgba(var(--orange-rgb), .25);
+}
+button.red{
+  border-color: var(--red);
+  color: var(--tx-color);
+  background-color: rgba(var(--red-rgb), .25);
+}
+
+button:disabled {
+  opacity: 0.5;
+  background-color: var(--bg-color);
+}

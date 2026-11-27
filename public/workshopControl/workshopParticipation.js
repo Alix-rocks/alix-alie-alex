@@ -66,6 +66,14 @@ function getAnswer(){
       
     };
     answeringForm.reset();
+    answeringForm.querySelector('button[type="submit"]').innerText = "Change";
+  });
+  answeringForm.querySelector('button.buttonEfface').addEventListener("click", () => {
+    let infoToSend = {
+        userID: userID,
+        questionID: questionID
+      };
+    removeAnswer(infoToSend);
   });
 };
 
@@ -84,6 +92,9 @@ function updateAnswer({userID, questionID, answer}){
     answer: answer,
     timestamp: Date.now()
   });
+};
+function removeAnswer({userID, questionID}){
+  remove(ref(rtdb, `workshop/participation/answer/${questionID}/${userID}`));
 };
 
 

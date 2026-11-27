@@ -46,6 +46,9 @@ p{
   margin: auto;
   font-weight: 800;
 }
+input[type="text"]{
+  font-size: .9rem;
+}
 .waiting{
   height: 100dvh;
   display: flex;
@@ -71,10 +74,11 @@ button{
   border-right-width: 4px;
   border-bottom-width: 4px;
   border-radius: 5px;
-  padding: 5px 10px;
+  padding: 10px 15px;
   width: fit-content;
   color: var(--tx-color);
   text-align: center;
+  font-size: .9rem;
   font-weight: 700;
   background-color: rgba(var(--orange-rgb), .25);
 }

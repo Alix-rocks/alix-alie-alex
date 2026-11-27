@@ -311,6 +311,21 @@ p.strong{
   margin: 3rem auto auto;
 }
 
+.questionDiv{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+   align-items: flex-start;
+}
+.questionDiv img{
+  width: 150px;
+  height: 150px;
+}
+.questionDiv h2{
+  font-size: 1.5rem;
+  text-align: left;
+}
+
 .exercice{
   color: var(--green-light);
 }

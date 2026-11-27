@@ -44,9 +44,9 @@ function getQuestion(question){
 function getAnswer(){
   const answeringForm = document.querySelector(".answeringForm");
   if(!answeringForm) return
+  const questionID = answeringForm.dataset.uuid;
   answeringForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const questionID = answeringForm.dataset.uuid;
     const answer = answeringForm.elements.answerInput.value;
     if(answer){
       //now we send these info to workshop so that it'll insert it in the diapo, and, ideally, we also add them in the showing section of 

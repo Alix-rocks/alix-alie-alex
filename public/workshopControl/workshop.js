@@ -155,7 +155,6 @@ function sendAllSlides(newInfo){
 };
 
 function displaySection(sectionToShow){
-  set(ref(rtdb, "workshop/participation"), null);
   allSteps = [];
   stepCurrentIndex = -1;
   stepCurrent = null;
@@ -182,6 +181,7 @@ function displaySection(sectionToShow){
     currentSlideNotes = getCurrentSlideNotes();
   };
   
+  set(ref(rtdb, "workshop/participation/question"), null);
   let question = "";
   currentQuestionID = "";
   if(sectionShowed.classList.contains("questioning")){
@@ -322,8 +322,11 @@ function getCurrentSlideHTML(){
   //   });
   // };
 
-  if(sectionShowed.classList.contains("noted") || clone.querySelector("template")){
-    clone.querySelector("template").remove();
+  if(sectionShowed.classList.contains("noted") || clone.querySelector("template.notes")){
+    clone.querySelector("template.notes").remove();
+  };
+  if(sectionShowed.classList.contains("questioning") || clone.querySelector("template.question")){
+    clone.querySelector("template.question").remove();
   };
 
   return clone.outerHTML;
@@ -354,7 +357,7 @@ function activateAnswersListeners(){
     if(el){ // if so, then make sure the innerText === answer.answer
       el.innerText = answer.answer;
     } else{ // if not, add it
-      sectionShowed.insertAdjacentHTML("beforeend", `<p data-user="${answer.userID}" class="shown">${answer.answer}</p>`);
+      sectionShowed.insertAdjacentHTML("beforeend", `<p data-user="${answer.userID}" class="answer shown">${answer.answer}</p>`);
     };
   });
 
@@ -366,7 +369,7 @@ function activateAnswersListeners(){
     if(el){ // if so, then update the innerText with answer.answer
       el.innerText = answer.answer;
     } else{ // if not, add it
-      sectionShowed.insertAdjacentHTML("beforeend", `<p data-user="${answer.userID}" class="shown">${answer.answer}</p>`);
+      sectionShowed.insertAdjacentHTML("beforeend", `<p data-user="${answer.userID}" class="answer shown">${answer.answer}</p>`);
     };
   });
 
@@ -400,8 +403,23 @@ function removeStuff(endroit, element){
 };
 
 function slideNext(){
-  let sectionShowedNum = Number(sectionShowed.dataset.slide);
-  let sectionToShow = document.querySelector(`section[data-slide="${sectionShowedNum + 1}"]`);
+  let sectionToShow;
+  let sectionShowedValue = sectionShowed.dataset.slide;
+  let sectionShowedNum;
+  if(sectionShowedValue.includes("-")){
+    sectionShowedNum = Number(sectionShowedValue.replace("-", "."));
+  } else{
+    sectionShowedNum = Number(sectionShowedValue);
+  };
+  console.log(sectionShowedNum);
+  if(sectionToShow = document.querySelector(`section[data-slide="${String(sectionShowedNum + .1).replace(".", "-")}"]`)){
+    sectionToShow = document.querySelector(`section[data-slide="${String(sectionShowedNum + .1).replace(".", "-")}"]`);
+    console.log(sectionToShow);
+  } else{
+    sectionToShow = document.querySelector(`section[data-slide="${Math.trunc(sectionShowedNum) + 1}"]`);
+    console.log(sectionToShow);
+  };
+  //console.log(sectionToShow.dataset.slide);
   if(sectionToShow){
     displaySection(sectionToShow);
   };
@@ -409,8 +427,21 @@ function slideNext(){
 window.slideNext = slideNext;
 
 function slidePrev(){
-  let sectionShowedNum = Number(sectionShowed.dataset.slide);
-  let sectionToShow = document.querySelector(`section[data-slide="${sectionShowedNum - 1}"]`);
+  let sectionToShow;
+  let sectionShowedValue = sectionShowed.dataset.slide;
+  let sectionShowedNum;
+  if(sectionShowedValue.includes("-")){
+    sectionShowedNum = Number(sectionShowedValue.replace("-", "."));
+  } else{
+    sectionShowedNum = Number(sectionShowedValue);
+  };
+  console.log(sectionShowedNum);
+  if(sectionToShow = document.querySelector(`section[data-slide="${String(sectionShowedNum - .1).replace(".", "-")}"]`)){
+    sectionToShow = document.querySelector(`section[data-slide="${String(sectionShowedNum - .1).replace(".", "-")}"]`);
+  } else{
+    sectionToShow = document.querySelector(`section[data-slide="${Math.trunc(sectionShowedNum) - 1}"]`);
+  };
+  console.log(sectionToShow.dataset.slide);
   if(sectionToShow){
     displaySection(sectionToShow);
   };
@@ -542,9 +573,9 @@ function sendOldStep(info){
 };
 
 function addingSlide(){
-  let slideNum = (Number(sectionShowed.dataset.slide) + 0.1).toString().replace(".", "-");
+  let slideNum = (Number(sectionShowed.dataset.slide.replace("-", ".")) + 0.1).toString().replace(".", "-");
   sectionShowed.insertAdjacentHTML("afterend", `<section data-slide="${slideNum}" data-titre="FreeStyle" data-type="☢️" class="middleStuff centerStuff stepped noted addingStuff" style="text-align: center;">
-    <template>
+    <template class="notes">
       <form id="addingForm" action="submit" style="display: flex; flex-flow: column nowrap; align-items: stretch; gap: 1dvh; padding: 1dvh 5dvw;">
         <textarea name="addingText" style="display: block;"></textarea>
         <label style="display: inline-flex;">

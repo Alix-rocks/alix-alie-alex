@@ -315,7 +315,8 @@ p.strong{
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
-   align-items: flex-start;
+  align-items: flex-start;
+  gap: 50px;
 }
 .questionDiv img{
   width: 150px;
@@ -325,7 +326,9 @@ p.strong{
   font-size: 1.5rem;
   text-align: left;
 }
-
+p.answer{
+  font-style: normal;
+}
 .exercice{
   color: var(--green-light);
 }

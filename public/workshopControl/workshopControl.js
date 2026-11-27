@@ -217,6 +217,11 @@ function handleFeedback(need, info){
         freeStep = 0;
         addingStuff(); //freeStyle
       };
+      if(info.question) {
+        getQuestionID(info.question);
+        activateAnswersListeners();
+        sendQuestion(info.question); //array
+      };
       if(info.words) {
         wordDropdownCreation(); //array
       };
@@ -525,19 +530,7 @@ function sendQuestion(question){
   });
 };
 
-function receiveParticipation(userID, questionID, answer){
-  console.log(userID);
-  console.log(answer);
-  let infoToSend = {
-    action: "answer",
-    data: {
-      userID: userID,
-      questionID: questionID,
-      answer: answer
-    }
-  };
-  sendActionData(infoToSend);
-};
+
 
 function activateAnswersListeners(){
   onChildAdded(ref(rtdb, `workshop/participation/answer/${currentQuestionID}`), (snap) => {
@@ -581,22 +574,6 @@ function activateAnswersListeners(){
 };
 
 
-
-
-async function updateBooking(key, newStatus) {
-try {
-  await update(
-    ref(rtdb, `meetAlix/bookings/${key}`),
-    {
-      status: newStatus,
-      timestamp: Date.now()
-    }
-  );
-  console.log("Booking updated in RTDB");
-} catch (err) {
-  console.error("Failed to update booking:", err);
-};
-};
 
 
 
